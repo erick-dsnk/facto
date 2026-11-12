@@ -1,0 +1,38 @@
+name: Agent task
+description: A self-contained task an agent (or a teammate) can pick up
+labels: []
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One or two sentences on the user-visible outcome.
+    validations: { required: true }
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Acceptance criteria
+      description: Observable checks. "npm run check passes" is implied.
+      value: |
+        - [ ] 
+    validations: { required: true }
+  - type: textarea
+    id: files
+    attributes:
+      label: Files owned
+      description: The only files and dirs this task may change.
+    validations: { required: true }
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+  - type: textarea
+    id: oos
+    attributes:
+      label: Out of scope
+  - type: dropdown
+    id: route
+    attributes:
+      label: Route
+      description: Add the matching label (agent:cloud / agent:copilot / agent:codex / human) after filing.
+      options: [agent:cloud, agent:copilot, agent:codex, human]

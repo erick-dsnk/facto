@@ -1,0 +1,27 @@
+name: CI
+# The required gate. AI review only advises, so this is the check that blocks merges.
+on:
+  pull_request:
+  push:
+    branches: [main]
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Detect project
+        id: detect
+        run: echo "node=$([ -f package.json ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.node == 'true'
+        with:
+          node-version: 22
+          cache: npm
+      - if: steps.detect.outputs.node == 'true'
+        run: npm ci
+      - if: steps.detect.outputs.node == 'true'
+        run: npm run check --if-present
