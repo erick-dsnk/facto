@@ -1,0 +1,411 @@
+<title>Junction Video Runbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=Instrument+Sans:wght@400;500;600&family=Fragment+Mono&display=swap">
+<style>
+/* Layout: a production call sheet. One reading column, slate-style timecode labels in the margin, tungsten amber as the single accent. */
+:root{
+  --bg:#f3f1ec; --surface:#fbfaf7; --fg:#1d1f22; --muted:#5d6168; --line:#d9d5cc;
+  --accent:#b25a0c; --accent-soft:#f3e2cf; --warn:#9a2f2f; --warn-soft:#f5dede; --ok:#2f6b46; --ok-soft:#dcebe1;
+  --code-bg:#ecE9e2;
+  --f-display:"Archivo Narrow","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"Fragment Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141518; --surface:#1b1d21; --fg:#e8e6e1; --muted:#9a9ea6; --line:#2e3137;
+  --accent:#e8964a; --accent-soft:#3a2a1b; --warn:#e48a8a; --warn-soft:#3a2020; --ok:#7fc39a; --ok-soft:#1d3226;
+  --code-bg:#22252a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141518; --surface:#1b1d21; --fg:#e8e6e1; --muted:#9a9ea6; --line:#2e3137;
+  --accent:#e8964a; --accent-soft:#3a2a1b; --warn:#e48a8a; --warn-soft:#3a2020; --ok:#7fc39a; --ok-soft:#1d3226;
+  --code-bg:#22252a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:20px;padding-block:32px 80px}
+.wrap{max-width:980px;margin:0 auto;display:grid;gap:56px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,6vw,3.6rem);letter-spacing:-.01em}
+h2{font-size:1.9rem}
+h3{font-size:1.2rem;margin-top:8px}
+p{margin:0;max-width:68ch}
+a{color:var(--accent)}
+ul,ol{margin:0;padding-left:1.2em;display:grid;gap:4px;max-width:72ch}
+.label{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tc{font-family:var(--f-mono);color:var(--accent);font-size:.8rem;letter-spacing:.06em}
+
+header{display:grid;gap:14px;border-bottom:2px solid var(--fg);padding-bottom:24px}
+.slate{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);background:var(--surface)}
+.slate div{padding:10px 16px;border-right:1px solid var(--line);display:grid;gap:2px;flex:1 1 140px;min-width:0}
+.slate div:last-child{border-right:0}
+.slate b{font-family:var(--f-display);font-size:1.25rem}
+
+section{display:grid;gap:18px}
+.sec-head{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:18px}
+
+.callout{border-left:4px solid var(--warn);background:var(--warn-soft);padding:14px 18px;display:grid;gap:8px}
+.callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+.callout strong{font-family:var(--f-display);font-size:1.1rem}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:620px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:400;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.tc{white-space:nowrap}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.grid2>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);padding:16px 18px;display:grid;gap:10px;align-content:start}
+
+.gate{display:grid;grid-template-columns:72px 1fr;gap:16px;border-top:1px solid var(--line);padding-top:16px}
+.gate>div{min-width:0;display:grid;gap:10px}
+.gate .num{font-family:var(--f-display);font-size:1.6rem;color:var(--accent);line-height:1}
+.gate .who{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.05em;padding:2px 8px;border-radius:2px;background:var(--accent-soft);color:var(--fg)}
+.pill.h{background:var(--ok-soft)}
+
+pre{position:relative;margin:0;background:var(--code-bg);border:1px solid var(--line);padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:.8rem;line-height:1.55;white-space:pre}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 4px}
+pre code{background:none;padding:0;font-size:inherit}
+.copy{position:absolute;top:6px;right:6px;font-family:var(--f-mono);font-size:.68rem;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:3px 8px;cursor:pointer}
+.copy:hover{color:var(--fg)}
+.copy:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.unv{font-family:var(--f-mono);font-size:.68rem;color:var(--warn);letter-spacing:.04em}
+.prompt{background:var(--surface);border:1px solid var(--line);padding:12px 16px;display:grid;gap:6px}
+.prompt p{font-size:.94rem}
+footer{color:var(--muted);font-size:.85rem;display:grid;gap:8px;border-top:1px solid var(--line);padding-top:18px}
+@media (max-width:560px){.gate{grid-template-columns:1fr;gap:6px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="label">Junction 2026 · Espoo · submission video</span>
+  <h1>Junction Video Runbook</h1>
+  <p>How we shoot, cut and ship a cinematic 2-minute video by Sunday morning. Claude runs the pipeline, and a human signs off at five gates. Everything is built from one script and one edit list.</p>
+  <div class="slate">
+    <div><span class="label">Length</span><b>2:00</b></div>
+    <div><span class="label">Frame</span><b>1920×1080 · 25p</b></div>
+    <div><span class="label">Upload by</span><b>Sun 15 Nov 09:00</b></div>
+    <div><span class="label">Hard deadline</span><b>Sun ~10:00</b></div>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head"><span class="tc">00:00 · Decisions</span><h2>What is locked</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Decision</th><th>Choice</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Audience</td><td>One video for judges and peer reviewers</td><td>Hook in the first 5 s for peers. Problem, demo and tech clearly stated for judges.</td></tr>
+      <tr><td>Format</td><td>Talking heads + word-synced pop-ups + screen demo + 3–4 AI hero shots</td><td>Proven launch-video shape, low shooting load</td></tr>
+      <tr><td>Frame rate</td><td><b>25 fps everywhere</b></td><td>Finland runs 50 Hz mains, so venue lights flicker at 24/30 fps. Every source is conformed to 25.</td></tr>
+      <tr><td>Assembly</td><td>Remotion renders the whole film from <code>edl.json</code></td><td>Claude edits JSON, never a timeline. One render, no compositing mismatches.</td></tr>
+      <tr><td>Pop-ups</td><td>Remotion components, triggered by Whisper word timestamps</td><td>Readable text, our brand, exact timing. AI video garbles text.</td></tr>
+      <tr><td>Gemini Omni</td><td>Hero shots only, from text or face-free stills</td><td>Editing uploaded footage is blocked in the EEA (see below)</td></tr>
+      <tr><td>Camera</td><td>Sony ZV-1 + small mic plugged into the camera</td><td>Mic in the camera means no audio sync step</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">00:10 · Omni</span><h2>Gemini Omni: what it can do for us</h2></div>
+  <div class="callout">
+    <strong>We cannot edit our own footage with Omni from Finland.</strong>
+    <p>Google's Omni docs list editing and extending <em>uploaded</em> video as unavailable in the EEA, Switzerland and the UK. Editing videos Omni generated itself still works. Do not plan on "add a hologram to our real clip" through Gemini.</p>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Use it for</h3>
+      <ul>
+        <li>Text-to-video hero shots: the hook, the problem visual, the transition, the outro</li>
+        <li>Image-to-video from a ZV-1 still with <b>no people in it</b> (laptop, desk, hall)</li>
+        <li>Multi-turn edits of a clip Omni generated</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Specs to plan around</h3>
+      <ul>
+        <li>3–15 s per clip, 720p native (1080p/4K are upscales), 16:9 or 9:16</li>
+        <li>About 24 fps <span class="unv">[third-party]</span>, so conform to 25</li>
+        <li>Generates its own audio. We strip it.</li>
+        <li>API exists: <code>gemini-omni-1.2-flash</code>, about $0.07/s at 720p <span class="unv">[third-party price]</span></li>
+        <li>App limits reset roughly every 5 h <span class="unv">[unverified]</span>. Check the usage meter.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>If we really want an element added into real footage</h3>
+    <p>Test once, on a shot with no faces (a laptop close-up), through Higgsfield, which is already connected to Claude. In an independent six-model test, Runway Aleph 2 was the most reliable at adding objects with correct shadows. Omni Flash tended to regenerate the whole scene. Kling O1 is the backup. If the test looks off, fake the effect with a Remotion overlay. Never run AI edits on talking-head shots. Faces drift.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">00:18 · References</span><h2>What our two references actually do</h2>
+  <p>Measured on the downloaded files: cut detection with ffmpeg and a frame sheet at 1 frame per second.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>X: "episode 1" (@wordisbonz)</th><th>Instagram: "buddy for your cursor" (@farza954)</th></tr></thead>
+    <tbody>
+      <tr><td>Format</td><td>1920×1080, 30 fps, 1:30</td><td>720×1280 vertical, 30 fps, 0:55</td></tr>
+      <tr><td>Cuts</td><td>62 cuts, <b>one every 1.4 s</b></td><td>31 cuts, <b>one every 1.8 s</b>, bursts of 0.1 s flash cuts</td></tr>
+      <tr><td>Hook</td><td>Character intro: "My name is…", "She's a producer", street and club shots</td><td>Founder to camera: "Last week I went super viral… this week I'm in Y Combinator?!" with the 2.8M-views screenshot as proof</td></tr>
+      <tr><td>Product appears</td><td>About 0:45, after a whole story about wanting to make music</td><td>About 0:12, right after "Let me show you"</td></tr>
+      <tr><td>Text on screen</td><td>Small white subtitle, one phrase at a time, lower centre</td><td>Bold white sans, 2–4 words at a time, <b>centre of frame</b>, soft shadow</td></tr>
+      <tr><td>Screens</td><td>Screens filmed with the camera, shallow focus, extreme close-ups (Google search bar, YouTube "Most replayed")</td><td>UI pushed in 2–4× with blur at the edges. The product's animated cursor floats over real apps (DaVinci, Figma, chess).</td></tr>
+      <tr><td>Cutaways</td><td>Black-and-white archive footage (trombones, cinema crowd), lips close-up, FaceTime call</td><td>Desert sky with the cursor flying across it, a wall of real tweets as social proof</td></tr>
+      <tr><td>Look</td><td>Warm and teal filmic grade, crushed blacks, handheld</td><td>Soft window backlight, muted warm-green grade, low contrast</td></tr>
+      <tr><td>Ending</td><td>"Comment and I'll send you the link to Farza's app"</td><td>Lying on the rug, overhead: "Just download my app… press the hotkey", then a blooper</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout ok">
+    <strong>What this changes in our plan</strong>
+    <ul>
+      <li><b>Captions are the main text layer.</b> Neither video uses boxed pop-up cards. Our default is Farza-style centred captions, with only 3–5 real pop-ups (one stat, the logo, the architecture).</li>
+      <li><b>The "AI animation" is the product itself</b>, moving over real UI. If our product has any visual element, animate that in Remotion over zoomed screen footage.</li>
+      <li><b>Film the laptop screen with the ZV-1</b>, close up with shallow focus, as well as recording it. It is the cheapest cinematic shot in both videos.</li>
+      <li><b>Cut every 1.5 s</b> in montage sections. Talking lines run longer, but punch in or change angle at least every 3 s.</li>
+      <li><b>Proof shots work</b>: real screenshots, real numbers, real people reacting.</li>
+      <li><b>End on personality</b>: a loose CTA and a blooper make it human. Judges and peers remember it.</li>
+      <li>Omni hero shots play the part of the archive and desert cutaways: 1–2 s metaphor shots, never the main content.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">00:25 · Story</span><h2>The 2:00 beat sheet</h2>
+  <p>Built from launch-video norms and tightened against the two references. Montage sections cut every 1.5 s.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Time</th><th>On screen</th><th>Cut rhythm</th><th>Sound</th><th>Pop-up</th></tr></thead>
+    <tbody>
+      <tr><td class="tc">0:00–0:05</td><td>Omni hero shot or fast b-roll of the problem</td><td>3 cuts</td><td>Drone, hit at 0:03</td><td>One huge stat or question</td></tr>
+      <tr><td class="tc">0:05–0:15</td><td>Speaker A states the problem to camera</td><td>4–5 s, then punch-in</td><td>Pulse bed enters</td><td>Kinetic text, 2–3 keywords</td></tr>
+      <tr><td class="tc">0:15–0:25</td><td>B-roll montage of the pain + one hero shot</td><td>1.5–2 s each</td><td>Riser builds</td><td>Label chips</td></tr>
+      <tr><td class="tc">0:25–0:30</td><td>Silence, then title card</td><td>1 shot</td><td>0.4 s silence, bass hit</td><td>Logo + tagline</td></tr>
+      <tr><td class="tc">0:30–0:45</td><td>Speaker B: the one-line solution and who it is for</td><td>3 shots</td><td>Music lifts</td><td>One-line description</td></tr>
+      <tr><td class="tc">0:45–1:15</td><td><b>Demo</b>: 3 moments of the core flow, zoomed on the action</td><td>5–7 s per step</td><td>UI clicks, soft whoosh per step</td><td>Numbered steps, callouts</td></tr>
+      <tr><td class="tc">1:15–1:35</td><td><b>Tech</b>: animated architecture + one A-roll line</td><td>3–4 s</td><td>Tick per node</td><td>Diagram, stack logos</td></tr>
+      <tr><td class="tc">1:35–1:50</td><td><b>Impact</b>: the result number + vision hero shot</td><td>2–3 s, building</td><td>Riser, hit on the number</td><td>Counter animation</td></tr>
+      <tr><td class="tc">1:50–2:00</td><td>Whole team, one closing line, end card</td><td>Slow push, fade</td><td>Music resolves</td><td>Name, URL, QR</td></tr>
+    </tbody>
+  </table></div>
+  <p>Demo plus tech get about 50 seconds. Judges score what the product does, so the cinematic work goes around the demo and the demo itself stays plain and readable.</p>
+  <h3>Cheap tricks that read as cinematic</h3>
+  <ul>
+    <li>Punch-in: scale 1.00 → 1.08 over 6 frames, landed on a whoosh, at every new talking line</li>
+    <li>J and L cuts: next shot's audio starts 0.5 s before its picture</li>
+    <li>Silence drop: 0.3–0.5 s of nothing before the title or key line</li>
+    <li>Speed ramp 100% → 30% → 100% on b-roll actions</li>
+    <li>One LUT, grain and vignette over everything, AI clips included, so it looks like one film</li>
+  </ul>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">00:45 · Pipeline</span><h2>Five stages, five gates</h2>
+  <p>Claude does the work in each stage. A human approves at the gate before the next stage starts. Feedback format: <code>s3@0:04 cut 0.5s</code>, <code>s2 swap take B</code>, <code>popup2 bigger</code>.</p></div>
+
+  <div class="gate"><span class="num">G1</span><div>
+    <h3>Script</h3>
+    <div class="who"><span class="pill">Claude drafts</span><span class="pill h">Team approves</span></div>
+    <p>About 240–280 spoken words in 6 beats. Every line is tagged <code>[TALK:name]</code>, <code>[DEMO]</code>, <code>[HERO:prompt]</code> or <code>[POPUP:type]</code>. Claude also writes <code>shots.md</code> and a <code>prompter.html</code> teleprompter (large text, speed slider) to read from a laptop under the lens, one scene per take.</p>
+    <p><b>Pass when</b> everyone can say every line out loud without tripping.</p>
+  </div></div>
+
+  <div class="gate"><span class="num">G2</span><div>
+    <h3>Ingest, transcribe, pick takes</h3>
+    <div class="who"><span class="pill">Claude runs</span><span class="pill h">Human picks or swaps</span></div>
+<pre><code>mkdir -p ~/junction-video/{script,raw/{cam,screen,omni,broll},work/conform,edl,remotion,out}
+
+# conform everything to 1080p 25 fps CFR, 48 kHz
+for f in raw/{cam,screen,broll}/*; do
+  ffmpeg -n -i "$f" -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:-1:-1,fps=25,format=yuv420p" \
+    -c:v h264_videotoolbox -b:v 30M -c:a aac -ar 48000 -b:a 256k "work/conform/$(basename "${f%.*}").mp4"
+done
+
+# Omni clips: 24 → 25 fps by a 4% speed-up, audio dropped
+for f in raw/omni/*.mp4; do
+  ffmpeg -n -i "$f" -vf "setpts=PTS*24/25,scale=1920:1080:flags=lanczos,fps=25" -an \
+    -c:v libx264 -crf 14 -pix_fmt yuv420p "work/conform/omni_$(basename "$f")"
+done
+
+# word-level transcript (put product names in the prompt so Whisper spells them right)
+pip install mlx-whisper rapidfuzz
+mlx_whisper work/conform/take.mp4 --model mlx-community/whisper-large-v3-turbo \
+  --word-timestamps True --output-format json --initial-prompt "ProductName, TeamName"</code></pre>
+    <p>The take picker (about 40 lines of Python) scores each take's transcript against its script line with <code>rapidfuzz</code>, penalises long takes with restarts and writes the in/out points into <code>edl.json</code>. Claude shows the pick and two runner-ups per scene in a small HTML page.</p>
+  </div></div>
+
+  <div class="gate"><span class="num">G3</span><div>
+    <h3>Rough cut</h3>
+    <div class="who"><span class="pill">Claude assembles</span><span class="pill h">Human watches 720p preview</span></div>
+    <p>Remotion renders the cut straight from <code>edl.json</code> with no pop-ups yet. Judge only order, pacing and sound.</p>
+<pre><code>{"fps":25,"scenes":[
+ {"id":"s1","type":"hero","src":"omni_hook.mp4","trim":[0,4]},
+ {"id":"s2","type":"talk","src":"takeA_s2.mp4","in":3.2,"out":11.8},
+ {"id":"s3","type":"demo","src":"demo_main.mp4","trim":[12,40],"speed":1.5}]}</code></pre>
+  </div></div>
+
+  <div class="gate"><span class="num">G4</span><div>
+    <h3>Pop-ups and look</h3>
+    <div class="who"><span class="pill">Claude writes cues.json</span><span class="pill h">Human checks spelling, numbers, timing</span></div>
+    <p>Claude reads the transcript and ties each pop-up to a spoken word. Remotion looks up that word's start time and brings the pop-up in 3 frames early, so it lands as the word is said.</p>
+<pre><code>{"cues":[
+ {"id":"c1","word":"agents","dur":2.5,"type":"kinetic","props":{"text":"Coordination for AI agents"}},
+ {"id":"c2","word":"conflicts","dur":3,"type":"stat","props":{"value":87,"suffix":"%","label":"fewer merge conflicts"}},
+ {"id":"c3","at":31,"dur":4,"type":"uiCard","props":{"src":"demo1.png","side":"right"}}]}</code></pre>
+  </div></div>
+
+  <div class="gate"><span class="num">G5</span><div>
+    <h3>Final</h3>
+    <div class="who"><span class="pill">Claude renders and masters</span><span class="pill h">Watch on a phone and on laptop speakers</span></div>
+<pre><code>npx remotion render Main out/final.mp4 --codec=h264 --crf=16 --concurrency=8
+ffmpeg -i out/final.mp4 -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:v copy -c:a aac -b:a 256k \
+  -movflags +faststart out/final_master.mp4</code></pre>
+    <p>Upload to YouTube unlisted (or whatever Junction asks for), attach the SRT captions from Whisper, open the link in an incognito window, and keep the file on Drive as a backup.</p>
+  </div></div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">01:05 · Remotion</span><h2>Building the pop-up engine</h2></div>
+<pre><code>npx create-video@latest            # choose Blank, TypeScript, Tailwind
+cd my-video
+npx remotion skills add             # official Claude Code skills; start with /remotion-best-practices
+npm i @remotion/transitions @remotion/captions @remotion/media-utils \
+      @remotion/google-fonts @remotion/motion-blur @remotion/paths
+npm run dev                          # Studio on localhost:3000 for scrubbing and prop edits</code></pre>
+  <p>Remotion 4.0.543 is current. Pin every <code>@remotion/*</code> package to the same version. The licence is free for organisations of up to 3 people, so check the <a href="https://www.remotion.dev/docs/license">licence page</a> if the team is bigger. Set both compositions to <code>fps: 25</code>.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Component set</h3>
+      <ul>
+        <li>Kinetic keyword: per-word spring up with blur 12px → 0</li>
+        <li>Stat counter: 0 → value over 30 frames, tabular numbers</li>
+        <li>UI card: glass card slides 80px in with a slight 3D tilt</li>
+        <li>Callout: circle scales in, line draws, label types on</li>
+        <li>Lower third: bar wipe, name and role stagger in</li>
+        <li>Split screen: A-roll shrinks aside, demo fills the rest</li>
+        <li>Centred captions, 2–4 words at a time, bold white with a soft shadow (the default text layer)</li>
+        <li>Zoomed UI: screen footage pushed in 2–4× with blurred edges</li>
+        <li>Full-screen title card for chapter breaks</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Motion and finish</h3>
+      <ul>
+        <li>Entrances 12–20 frames, <code>spring({damping:200})</code>. Exits are 6–8 frame fades.</li>
+        <li>Hold each pop-up 2–3.5 s. One accent colour only.</li>
+        <li>Transitions: mostly hard cuts. Whip pan = slide + camera motion blur.</li>
+        <li>Grain loop at 12% overlay, radial vignette, letterbox on hero shots only</li>
+        <li>Whoosh 3 frames before each cut, music at 0.12 ducked under voice</li>
+        <li>Use <code>OffthreadVideo</code>, never <code>Video</code></li>
+        <li>Demo zoom: record with Screen Studio (trial) or Cap (free), both auto-zoom on clicks</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">01:20 · Shoot</span><h2>Camera, sound and b-roll</h2>
+  <p>Settings were researched from memory and not checked against the ZV-1 manual. Confirm menu names on the camera.</p></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>ZV-1 settings</h3>
+      <ul>
+        <li>NTSC/PAL selector set to <b>PAL</b>, then XAVC S HD 1080/25p 50M</li>
+        <li>M mode, shutter <b>1/50</b>, widest aperture (f/1.8 at 24 mm)</li>
+        <li>Auto ISO capped at 3200, ND off indoors</li>
+        <li>Picture profile off, Standard, contrast −1. Skip S-Log.</li>
+        <li>Custom white balance on a white sheet under the real light</li>
+        <li>AF-C, Face/Eye AF on, Product Showcase off, Background Defocus on</li>
+        <li>Auto power-off temp: High. Spare NP-BX1 or USB-C power bank.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Where and how</h3>
+      <ul>
+        <li>Quiet side room, dark background, a lamp or monitor glow behind you</li>
+        <li>Light the face from 45° with a window (sunset about 15:45) or a laptop showing a white page</li>
+        <li>Mic 15–25 cm from the mouth, peaks around −12 dB</li>
+        <li>Voice Memos backup on a phone, one clap per take, 10 s of room tone</li>
+        <li>Hook and closing line to the lens. Everything else slightly off-lens, interview style.</li>
+        <li>Clean up audio: DeepFilterNet locally, or Adobe Podcast Enhance mixed 70/30 with the original</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>B-roll in 20 minutes (S&amp;Q 100 fps for slow motion)</h3>
+    <p>Hands on keyboard lit by the screen · screen glow on a face in the dark · whiteboard marker close-up · fist bump · can cracking open · sticky-note wall slide · hall wide from the stairs · cables and hardware · timer close-up · finger hitting Enter on deploy. The clean, people-free shots double as image-to-video inputs for Omni.</p>
+  </div>
+  <div class="card">
+    <h3>Screen demo</h3>
+    <p>Display at 1920×1080, Do Not Disturb on, fresh Chrome profile, Dock hidden, larger cursor, demo data pre-filled. Write the 5–7 click path, rehearse once, record 2–3 takes, and pause for a second before and after every action so the edit can speed-ramp.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">01:35 · Prompts</span><h2>Omni hero shot prompts</h2>
+  <p>End each one with: <i>Single continuous shot, no cuts, 16:9, cinematic, diegetic sound only.</i> Swap in our real problem and product.</p></div>
+  <div class="grid2">
+    <div class="prompt"><span class="label">Hook · text to video</span><p>Slow dolly-in on a dark hackathon hall at 3am, hundreds of laptops glowing, one developer's screen floods with red error text. Shallow depth of field, teal-and-amber grade.</p></div>
+    <div class="prompt"><span class="label">Problem · text to video</span><p>Overhead orbit around two developers at one desk, their code drawn as glowing threads that collide and tangle above the table, sparks where they cross. Moody, low-key light.</p></div>
+    <div class="prompt"><span class="label">Product comes alive · image to video</span><p>Using the reference image as the first frame, a translucent holographic dashboard rises from the laptop screen and floats above the keyboard. Slow push-in. Keep the laptop, desk and lighting identical. Text on the hologram stays soft and unreadable.</p></div>
+    <div class="prompt"><span class="label">Transition · text to video</span><p>Camera flies into a laptop's glowing screen, through a tunnel of data streams, and emerges as a wide shot of a city skyline at dawn. One continuous move.</p></div>
+    <div class="prompt"><span class="label">Outro · text to video</span><p>Slow pull-back from a team silhouetted against a large window at sunrise, lens flare, dust drifting in the light, calm and hopeful. Clear dark space on the right for a logo.</p></div>
+    <div class="prompt"><span class="label">Rules</span><p>Use 3–4 s from each clip, the cleanest part. Put any readable text in Remotion, never in the prompt. Grade and grain hero shots with the rest of the footage.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">01:50 · Schedule</span><h2>Counting back from Sunday 10:00</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>When</th><th>What</th><th>Gate</th></tr></thead>
+    <tbody>
+      <tr><td class="tc">Thu night</td><td>Dry run on dummy phone clips and a screen recording, ingest to final export. Fix what breaks.</td><td></td></tr>
+      <tr><td class="tc">Fri</td><td>Build the pipeline: conform script, transcription, take picker, Remotion composition from <code>edl.json</code>, pop-up components, export script. Pick music and SFX (Pixabay or YouTube Audio Library; keep titles for credits).</td><td></td></tr>
+      <tr><td class="tc">Sat 09–12</td><td>Final script and teleprompter. Generate Omni hero shots in the Gemini app.</td><td>G1</td></tr>
+      <tr><td class="tc">Sat 12–14</td><td>Record the demo twice</td><td></td></tr>
+      <tr><td class="tc">Sat 14–17:30</td><td>Talking heads (30–45 min block) + b-roll walk</td><td></td></tr>
+      <tr><td class="tc">Sat 18–21</td><td>Ingest, take picker, auto-assemble</td><td>G2</td></tr>
+      <tr><td class="tc">Sat 21–24</td><td>Rough cut review, then pop-ups and look</td><td>G3 · G4</td></tr>
+      <tr><td class="tc">Overnight</td><td>Sleep. Renders run unattended.</td><td></td></tr>
+      <tr><td class="tc">Sun 07–08</td><td>Final review and fixes</td><td>G5</td></tr>
+      <tr><td class="tc">Sun 08–09</td><td>Master, upload, test the link</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout ok">
+    <strong>Panic mode, about 15 minutes</strong>
+    <p>If Remotion breaks on Sunday: concat the picked takes with the ffmpeg concat demuxer using the in/out points from <code>edl.json</code>, lay music under, burn in captions with <code>-vf subtitles=captions.srt</code>, run loudnorm, upload. No pop-ups, no hero shots.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="tc">01:58 · Open items</span><h2>Check before relying on it</h2></div>
+  <ul>
+    <li>Confirm the camera model (ZV-1, ZV-1 II or ZV-E10) and that the 1080/25p option shows after switching to PAL</li>
+    <li>Try one text-to-video prompt in the Gemini app today to see quality, fps and whether a visible watermark appears</li>
+    <li>Check Junction's submission rules: file or link, size cap, exact deadline</li>
+    <li>If testing an AI insert, check in Higgsfield which of Runway Aleph 2 and Kling O1 are available, and the credit cost</li>
+    <li>Decide whether our hook is a character story (X reference) or a founder talking to camera with proof (Instagram reference). For a 2-minute judged video, founder plus proof gets to the product faster.</li>
+  </ul>
+</section>
+
+<footer>
+  <span class="label">Sources</span>
+  <p><a href="https://aistudio.google.com/docs/omni">Gemini Omni docs</a> · <a href="https://gemini.google/overview/video-generation/">Gemini video overview</a> · <a href="https://journal.everypixel.com/6-video-editing-models">Everypixel six-model editing test</a> · <a href="https://higgsfield.ai/blog/gemini-omni-flash-vfx-video-editing">Higgsfield Omni VFX guide</a> · <a href="https://www.remotion.dev/docs/ai/skills">Remotion agent skills</a> · <a href="https://speedrun.substack.com/p/how-to-make-a-viral-launch-video">Speedrun: viral launch video</a></p>
+  <p>Compiled 12 Nov 2026 from five parallel research passes. Camera settings, ffmpeg recipes and pacing numbers came from model knowledge without live checks.</p>
+</footer>
+
+</div>
+
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='copy';
+  b.addEventListener('click',()=>{
+    const t=pre.querySelector('code').innerText;
+    const done=()=>{b.textContent='copied';setTimeout(()=>b.textContent='copy',1400)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,()=>sel(pre))}else sel(pre);
+  });
+  pre.appendChild(b);
+});
+function sel(el){const r=document.createRange();r.selectNodeContents(el.querySelector('code'));const s=getSelection();s.removeAllRanges();s.addRange(r)}
+</script>
