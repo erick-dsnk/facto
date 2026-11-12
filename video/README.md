@@ -34,16 +34,18 @@ Cut timestamps are in `refs/*.cuts.txt`.
 
 ## Beat sheet (2:00)
 
-| Time | On screen |
+Rebuilt from a teardown of 13 AI launch videos and Farza's YC interview. Read `launch-teardowns/SYNTHESIS.md` first.
+
+| Time | Beat |
 |---|---|
-| 0:00–0:05 | Hook: hero cutaway or founder line + proof |
-| 0:05–0:25 | Problem: A-roll + 1.5 s montage |
-| 0:25–0:30 | Silence drop → title card |
-| 0:30–0:45 | One-line solution, who it's for |
-| 0:45–1:15 | **Demo**: 3 moments, zoomed |
-| 1:15–1:35 | **Tech**: animated architecture |
-| 1:35–1:50 | Impact number + vision shot |
-| 1:50–2:00 | Team, closing line, end card (+ blooper) |
+| 0:00–0:03 | Hook: moving first frame, product handed to the lens, hook line |
+| 0:03–0:12 | Who we are + what's going on, one proof card |
+| 0:12–0:15 | 0.4 s audio dip → product name, music hits |
+| 0:15–0:35 | Problem as our own: list-of-three, 1 s shots, B&W, 1–2 Omni cutaways sharing one motif |
+| 0:35–1:05 | "Check this out": one 10–15 s uncut demo, then 1 s proof in 4–5 contexts, colour back |
+| 1:05–1:30 | How it works: line-art architecture + one tech line |
+| 1:30–1:50 | Proof: before → after, real number, reaction |
+| 1:50–2:00 | Team two-shot, URL, blooper |
 
 ## Pipeline and gates
 
