@@ -41,6 +41,8 @@ The full research behind these choices, with sources, is in [research.md](resear
 | Want | Do |
 |---|---|
 | Agent works an issue in the cloud | `/dispatch <wave>`, or `claude --cloud "Use work-issue for #12"` |
+| Send a whole wave to Claude cloud sessions (your plan, steerable) | `/dispatch 2 --all cloud` |
+| Send a whole wave to the GitHub Action (team can watch on the issues) | `/dispatch 2 --all action` |
 | Local isolated session | `claude -w issue-12` → `/work-issue 12` |
 | Pull a cloud session back to your machine | `claude --teleport` |
 | Agent fixes a PR | comment `@claude <what to fix>` on the PR |
