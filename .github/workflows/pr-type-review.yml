@@ -1,0 +1,59 @@
+name: Type Review Cycle
+# Each teammate has a type. A PR gets its owner's type label and a review
+# request from the type that beats it; that reviewer merges once CI is green.
+#   🔥 fire  (Cipriamn)   reviewed by 💧 water (erick-dsnk)
+#   💧 water (erick-dsnk) reviewed by 🌱 grass (Davidtzuke)
+#   🌱 grass (Davidtzuke) reviewed by 🔥 fire  (Cipriamn)
+# Owner = the type:* label on the issue the PR closes (so agent PRs go to
+# whoever owns the issue), else the PR author's type.
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+jobs:
+  assign:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const TEAM = {
+              fire:  { login: 'Cipriamn',   emoji: '🔥', reviewer: 'water' },
+              water: { login: 'erick-dsnk', emoji: '💧', reviewer: 'grass' },
+              grass: { login: 'Davidtzuke', emoji: '🌱', reviewer: 'fire'  },
+            };
+            const pr = context.payload.pull_request;
+            const { owner, repo } = context.repo;
+            const typeOfLabels = labels =>
+              labels.map(l => (l.name || l).match(/^type:(fire|water|grass)$/)?.[1]).find(Boolean);
+
+            let type = typeOfLabels(pr.labels);
+            let source = 'PR label';
+            const closes = (pr.body || '').match(/\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/i);
+            if (!type && closes) {
+              const { data: issue } = await github.rest.issues.get({ owner, repo, issue_number: +closes[1] });
+              type = typeOfLabels(issue.labels);
+              source = `issue #${closes[1]}`;
+            }
+            if (!type) {
+              type = Object.keys(TEAM).find(t => TEAM[t].login.toLowerCase() === pr.user.login.toLowerCase());
+              source = 'PR author';
+            }
+            if (!type) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr.number,
+                body: 'No owner type found. Add a `type:fire|water|grass` label to this PR (or to the issue it closes), then close and reopen the PR to route review.' });
+              return;
+            }
+
+            const reviewerType = TEAM[type].reviewer;
+            const reviewer = TEAM[reviewerType].login;
+            await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: [`type:${type}`] });
+            if (reviewer.toLowerCase() !== pr.user.login.toLowerCase()) {
+              await github.rest.pulls.requestReviewers({ owner, repo, pull_number: pr.number, reviewers: [reviewer] });
+            }
+            core.summary.addRaw(`${TEAM[type].emoji} ${type} (from ${source}) → reviewer ${TEAM[reviewerType].emoji} @${reviewer}`).write();
