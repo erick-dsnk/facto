@@ -20,7 +20,7 @@ Shared context for Claude Code, Codex and Copilot. `CLAUDE.md` is a symlink to t
 - One GitHub issue → one branch → one PR. Branch `<agent>/<issue#>-<slug>`, PR title `#<issue> <summary>`, body has `Closes #<issue>`.
 - Each issue has a **Files owned** list. Stay inside it. If you need to change shared code (types, DB schema, migrations, API contracts), stop and say so in the PR rather than doing it.
 - Don't add dependencies unless the issue needs them. Justify each one in the PR body.
-- Do not merge. A human integrator merges.
+- Do not merge. Review follows the type cycle: 🔥 fire (Cipriamn) is reviewed by 💧 water (erick-dsnk), water by 🌱 grass (Davidtzuke), and grass by fire. The reviewer merges once CI is green. A PR inherits the `type:*` label of the issue it closes, which is applied automatically.
 
 ## Conventions
 - Demo first: stub auth and payments, and put external APIs behind one module with a mock.

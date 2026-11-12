@@ -1,6 +1,6 @@
 ---
 name: dispatch
-description: Fan out ready GitHub issues to agents. Claude cloud sessions for agent:cloud, Copilot for agent:copilot, Codex for agent:codex. Use when the integrator says to dispatch a wave.
+description: Fan out ready GitHub issues to agents. Claude cloud sessions for agent:cloud, Copilot for agent:copilot, Codex for agent:codex. Use when the team says to dispatch a wave.
 disable-model-invocation: true
 argument-hint: <wave-number>
 ---

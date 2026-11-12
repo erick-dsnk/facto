@@ -3,8 +3,15 @@
 The full research behind these choices, with sources, is in [research.md](research.md).
 
 ## Roles
-- **Integrator** (1 person): owns `main`, merges every PR, resolves conflicts, decides on shared-file changes. Merging is the bottleneck, so keep it in one person's hands.
-- **Builders** (1-2 people): each runs 1-2 local worktree sessions on the hard or demo-critical issues (`human` label).
+- **Type cycle**: everyone builds and everyone reviews exactly one teammate. The reviewer approves and merges once CI is green.
+  | Owner | Reviewed and merged by |
+  |---|---|
+  | 🔥 fire: Cipriamn | 💧 water: erick-dsnk |
+  | 💧 water: erick-dsnk | 🌱 grass: Davidtzuke |
+  | 🌱 grass: Davidtzuke | 🔥 fire: Cipriamn |
+
+  The **Type Review Cycle** workflow labels each PR with its owner's type and requests the review. The type comes from the issue the PR closes, so agent PRs reach the right reviewer too, or failing that from the PR author.
+- **Shared foundations** (schema, shared types, API contracts) are owned by one person in wave 1. Later PRs that need changes there flag it under **Needs owner** and don't make the change themselves.
 - **Agents**: cloud sessions, Copilot and Codex take the `agent:*` issues. Keep **no more than ~5 agent PRs open** at once.
 
 ## Week before (~3-4 h total)
@@ -24,9 +31,9 @@ The full research behind these choices, with sources, is in [research.md](resear
 ## Day of
 1. **Plan (45-90 min, everyone):** write the PRD together in plan mode and save it as `docs/plan.md`. Decide the architecture yourselves, not the agents.
 2. **Ticketize (15 min):** run `/ticketize`. Check the table: wave 1 holds the foundations, and no two issues in a wave own the same file. Approve it.
-3. **Wave 1 (humans):** builders do the foundations locally (`claude -w <name>` per issue, then `/work-issue <n>`). The integrator merges.
+3. **Wave 1 (humans):** builders do the foundations locally (`claude -w <name>` per issue, then `/work-issue <n>`). Your reviewer merges.
 4. **Dispatch waves 2+:** `/dispatch 2`. Cloud sessions, Copilot and Codex open PRs, and Claude Review comments on each.
-5. **Integrate loop (integrator):** CI must be green. Read the evidence in the PR body and fix or ask (`@claude <fix>` on the PR, or turn on auto-fix in the cloud session). Merge. Ask the next PRs to rebase.
+5. **Review loop (everyone):** clear your review queue (`gh pr list --search "review-requested:@me"`) before you dispatch more work. CI must be green. Read the evidence in the PR body and fix or ask (`@claude <fix>` on the PR, or turn on auto-fix in the cloud session). Merge, then ask the next PRs in that area to rebase.
 6. **Every ~4 h:** check you could demo right now. If not, stop dispatching and fix the main flow.
 7. **Final 2 h:** freeze features. Polish the demo flow, run `/code-review` locally on the final diff, and rehearse.
 
