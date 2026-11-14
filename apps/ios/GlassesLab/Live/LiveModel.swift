@@ -71,7 +71,8 @@ final class PlaybackRelay: PlaybackReporting {
 
 // MARK: - Status
 
-/// What the Live screen shows at the top. Each failure has its own state, so a broken
+/// The backend half of the home screen's status line (HomeStatus adds the glasses). Each
+/// failure has its own state, so a broken
 /// connection never looks like "no alerts" (decision 9).
 enum LiveStatus: Equatable, Sendable {
   case offline
@@ -116,19 +117,20 @@ enum LiveStatus: Equatable, Sendable {
 
   var title: String {
     switch self {
-    case .offline: "Not connected"
+    case .offline: "Offline"
     case .connecting: "Connecting…"
-    case .connected: "Connected, not listening"
+    case .connected: "Online"
     case .startingToListen: "Starting to listen…"
     case .listening: "Listening"
     case .reconnecting: "Reconnecting…"
     case .listeningStopped(let reason):
       switch reason {
-      case .glassesDisconnected: "Stopped: glasses disconnected"
-      case .noConnection: "Stopped: no connection"
-      case .sessionEnded: "Stopped: session ended"
-      case .audioUnavailable: "Stopped: listening unavailable"
-      case .requested: "Not listening"
+      case .glassesDisconnected: "Listening stopped: glasses disconnected"
+      case .noConnection: "Listening stopped: no connection"
+      case .sessionEnded: "Listening stopped: session ended"
+      case .audioUnavailable: "Listening stopped: mic unavailable"
+      // `make` turns the user's own Stop into `.connected`.
+      case .requested: "Online"
       }
     case .backendError(let code): Self.errorTitle(code)
     }
@@ -136,21 +138,16 @@ enum LiveStatus: Equatable, Sendable {
 
   var detail: String {
     switch self {
-    case .offline: "Enter the backend URL and join code, then tap Connect."
-    case .connecting: "Opening a session on the backend."
-    case .connected: "Tap Start listening, or Check this to read text in front of you."
+    case .offline: "Tap Reconnect to go online."
+    case .connecting: "Opening a session."
+    case .connected: "Tap Start listening, or Check this to read what’s in front of you."
     case .startingToListen: "Waiting for the glasses stream and the backend."
-    case .listening: "No alert does not mean a claim was verified."
+    case .listening: "No alert doesn’t mean a claim is true."
     case .reconnecting(let attempt):
-      attempt > 0
-        ? "Connection dropped. Attempt \(attempt) of 3. Audio from the gap is discarded."
-        : "Connection dropped. Audio from the gap is discarded."
-    case .listeningStopped(let reason):
-      switch reason {
-      case .audioUnavailable(let code), .sessionEnded(let code): "Reason: \(code). Tap Start listening to try again."
-      default: "Tap Start listening to try again."
-      }
-    case .backendError(let code): "Reason: \(code). Tap Connect to try again."
+      attempt > 0 ? "Connection dropped. Attempt \(attempt) of 3." : "Connection dropped."
+    case .listeningStopped: "Tap Start listening to try again."
+    case .backendError(let code):
+      code == "missing_join_code" ? "Add your join code in Settings." : "Reason: \(code)."
     }
   }
 
@@ -178,10 +175,10 @@ enum LiveStatus: Equatable, Sendable {
   private static func errorTitle(_ code: String) -> String {
     switch code {
     case "network_lost", "connect_failed": "Connection lost"
-    case "unauthorized": "Join code or session rejected"
-    case "deleted", "expired": "Session ended by the backend"
+    case "unauthorized", "http_401", "http_403": "Join code rejected"
+    case "deleted", "expired": "Session ended"
     case "connect_timeout", "timed_out": "Backend not responding"
-    case "missing_join_code": "Join code missing"
+    case "missing_join_code": "Join code needed"
     case "invalid_url": "Backend URL not valid"
     case "insecure_url": "Backend URL needs https"
     default: "Backend error"
@@ -214,6 +211,10 @@ final class LiveModel {
   /// A manual check with no outcome after this long is reported as "The check didn't finish."
   /// The backend's own deadline is 10 s.
   nonisolated static let defaultCheckTimeout: TimeInterval = 15
+  /// Shown when Start listening or Check this runs without a backend session.
+  static let offlineMessage = "Facto is offline. Tap Reconnect."
+  /// Shown when a paused backend session didn't resume in time.
+  static let pausedMessage = "The backend session is paused. Tap Reconnect."
 
   // MARK: Settings (UserDefaults)
 
@@ -432,16 +433,44 @@ final class LiveModel {
     connection = backend.connectionState
   }
 
+  /// Connects on launch and whenever the app comes back to the foreground, so the wearer never
+  /// has to connect by hand. Does nothing without a saved join code, while a connection is open or
+  /// opening, or after the backend refused the join code or the URL: those need the user to
+  /// change Settings first, and retrying them on every foreground would only fail again.
+  func connectIfConfigured() async {
+    guard canEditBackend, !joinCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+    if case .disconnected(let reason) = connection, Self.settingsErrorCodes.contains(reason) { return }
+    await connect()
+  }
+
+  /// Disconnects, then connects again with the current URL and join code.
+  func reconnect() async {
+    await disconnect()
+    await connect()
+  }
+
+  /// Disconnects and deletes the saved join code, so the next launch stays offline.
+  func forgetJoinCode() async {
+    await disconnect()
+    joinCode = ""
+    secrets.write(nil, for: BackendConfig.joinCodeKey)
+  }
+
+  /// Disconnect reasons only a change in Settings can fix: the join code or the URL.
+  nonisolated static let settingsErrorCodes: Set<String> = [
+    "missing_join_code", "unauthorized", "http_401", "http_403", "invalid_url", "insecure_url",
+  ]
+
   /// What to do about a failed connect, by the client's reason code.
   static func connectFailureNotice(_ reason: String) -> String? {
     switch reason {
     case "closed", "cancelled": nil
-    case "missing_join_code": "Enter the join code, then tap Connect."
-    case "unauthorized", "http_401", "http_403": "The backend rejected the join code. Check it, then tap Connect."
-    case "connect_timeout", "timed_out": "The backend didn't answer in time. Check the URL and mobile data, then tap Connect."
-    case "network_lost": "No network. Check mobile data, then tap Connect."
+    case "missing_join_code": "Add your join code in Settings."
+    case "unauthorized", "http_401", "http_403": "The backend rejected the join code. Check it in Settings."
+    case "connect_timeout", "timed_out": "The backend didn't answer in time. Check the URL and mobile data, then tap Reconnect."
+    case "network_lost": "No network. Check mobile data, then tap Reconnect."
     case "session_capacity", "rate_limited", "http_429": "The backend has no free sessions right now. Try again in a minute."
-    default: "Couldn't connect (\(reason)). Check the URL and join code, then tap Connect."
+    default: "Couldn't connect (\(reason)). Check the URL and join code, then tap Reconnect."
     }
   }
 
@@ -475,7 +504,7 @@ final class LiveModel {
   /// Starts the glasses stream with mic audio (when needed) and streams audio to the backend.
   func startListening() async {
     guard isConnected, let streamer else {
-      notice = "Connect to the backend first."
+      notice = Self.offlineMessage
       return
     }
     guard !streamer.phase.isActive, !isStartingStream else { return }
@@ -493,7 +522,7 @@ final class LiveModel {
       return
     }
     guard await ensureSessionActive() else {
-      notice = "The backend session is paused. Disconnect and connect again."
+      notice = Self.pausedMessage
       return
     }
     guard isConnected, self.streamer === streamer else { return }
@@ -517,13 +546,13 @@ final class LiveModel {
   /// the checker.
   func checkThis() async {
     guard isConnected, let coordinator else {
-      checkMessage = "Connect to the backend first."
+      checkMessage = Self.offlineMessage
       return
     }
     guard !coordinator.isRunning else { return }
     checkMessage = nil
     guard await ensureSessionActive() else {
-      checkMessage = "The backend session is paused. Disconnect and connect again."
+      checkMessage = Self.pausedMessage
       return
     }
     coordinator.trigger(.button)
@@ -700,7 +729,7 @@ final class LiveModel {
       } catch {
         self.log.error("session.resume failed \(BackendClient.reasonCode(for: error), privacy: .public)")
         self.debugLog.log("live.resume_failed", ["epoch": epoch, "error": String(describing: error)])
-        self.notice = "Couldn't resume the backend session. Disconnect and connect again."
+        self.notice = "Couldn't resume the backend session. Tap Reconnect."
       }
     }
   }
@@ -728,7 +757,7 @@ final class LiveModel {
     guard canRenew else {
       // listeningStopped already spoke the reason, because no renewal was due.
       listenAfterRenewal = false
-      notice = "The backend ended the session (\(reason)). Tap Connect for a new one."
+      notice = "The backend ended the session (\(reason)). Tap Reconnect for a new one."
       return
     }
     lastRenewalAt = uptime()
@@ -744,7 +773,7 @@ final class LiveModel {
         self.log.error("session renewal failed \(BackendClient.reasonCode(for: error), privacy: .public)")
         self.debugLog.log("live.renew_failed", ["reason": BackendClient.reasonCode(for: error), "error": String(describing: error)])
         self.connection = backend.connectionState
-        self.notice = "The backend ended the session and a new one didn't open. Tap Connect."
+        self.notice = "The backend ended the session and a new one didn't open. Tap Reconnect."
         if self.listenAfterRenewal { self.speakStopReason(.sessionEnded(reasonCode: reason)) }
         self.listenAfterRenewal = false
         return
@@ -866,8 +895,8 @@ final class LiveModel {
 
   static func checkFailureMessage(_ reason: String) -> String {
     switch reason {
-    case "no_session": "No backend session. Connect first."
-    case "session_paused": "The backend session is paused. Disconnect and connect again."
+    case "no_session": offlineMessage
+    case "session_paused": pausedMessage
     case "photo_failed": "The photo didn't arrive. Check the glasses and try again."
     case "ocr_failed": "The photo couldn't be read. Try again."
     case "submit_failed": "The backend didn't accept the text. Check the connection."
