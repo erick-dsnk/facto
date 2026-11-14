@@ -1,0 +1,31 @@
+TAP version 13
+# {"scenario":"block-overrun","calls":1,"usage":320001,"stop":"measured_input_token_cap"}
+# Subtest: actual runner records complete measured block overrun and suppresses all later dispatches
+ok 1 - actual runner records complete measured block overrun and suppresses all later dispatches
+  ---
+  duration_ms: 176.027415
+  type: 'test'
+  ...
+# {"scenario":"clock-10000","calls":1,"stop":"timeout","unknown":1}
+# Subtest: actual runner halts on inherited absolute deadline after clock advances 10000ms
+ok 2 - actual runner halts on inherited absolute deadline after clock advances 10000ms
+  ---
+  duration_ms: 200.498465
+  type: 'test'
+  ...
+# {"scenario":"clock-120000","calls":1,"stop":"absolute_wall_deadline","unknown":1}
+# Subtest: actual runner halts on inherited absolute deadline after clock advances 120000ms
+ok 3 - actual runner halts on inherited absolute deadline after clock advances 120000ms
+  ---
+  duration_ms: 82.703313
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1030.055747

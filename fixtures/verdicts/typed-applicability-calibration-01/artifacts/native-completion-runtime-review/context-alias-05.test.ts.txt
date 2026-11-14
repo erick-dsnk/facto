@@ -1,0 +1,71 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import type { AcceptedClaim, Evidence, ProviderContext } from '/workspace/stack-20/packages/contracts/src/index.js';
+import { Session, type RequestRecord } from '/workspace/stack-20/services/api/src/runtime/session.js';
+import { AttemptBudget } from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import { loadInstalledManifest, resolveReceipt, retireInstalledManifest } from '../record-capability-prototype-02/src/manifest.js';
+import { loadSnapshot, snapshotState } from '../record-capability-prototype-02/src/snapshot.js';
+import { verifyCapability } from '../record-capability-prototype-02/src/evaluate.js';
+import { captureSelectionMaterial, inspectMaterial, captureRuntimeOwner, deriveInitialGraph, assertPrototypeCompatible } from '../capability-selection-seam-02/material.js';
+import { captureDispatchOwner, inspectDispatchOwner } from '/workspace/task-evidence/typed-applicability-adapter-05/runtime-owner.js';
+import { createApplicabilityAdapter, verifySemanticEligibility, verifyCompletedJudgment } from '/workspace/task-evidence/typed-applicability-adapter-05/adapter.js';
+import type { JevQuestion } from '/workspace/stack-20/services/api/src/providers/jev/client.js';
+const root = '/workspace/task-evidence/record-capability-prototype-02/installed';
+const pin = '7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4';
+async function setup(options: { clip?: boolean; current?: boolean; companions?: number; padding?: number; title?: string; idWidth?: number; reservedJev?: number; responseStatus?: number; blockFetch?: boolean; deadlineRemainingMs?: number; responseFactory?: (signal:AbortSignal)=>Response; originChoice?: string } = {}) {
+ const manifest = await loadInstalledManifest(root,pin), receipt = resolveReceipt(manifest,'RA03').receipt;
+ const artifact = await loadSnapshot(manifest,receipt.proofId), text = snapshotState(artifact,manifest).text;
+ const unit = receipt.units[0]!, excerpt = text.slice(unit.start,unit.end);
+ const exactClaim = options.current ? 'The latest Fiction prize winner was The Night Watchman.' : 'The 2021 Pulitzer Prize in Fiction winner was The Night Watchman by Louise Erdrich.';
+ const source: Evidence = { id:'target',url:receipt.canonicalURL,title:options.title ?? 'Award record',publisher:null,publishedAt:null,
+  retrievedAt:'2026-11-14T10:00:00Z',contentBasis:'page_text',excerpt:options.clip ? excerpt.slice(0,80) : excerpt,
+  sourceGroup:'pulitzer.org',echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated',stanceProbability:null };
+ const records = [source,...Array.from({length:options.companions ?? 0},(_,i)=>({...source,id:`control-${i}`+"i".repeat(options.idWidth ?? 0),url:`https://control-${i}.example.org/record`,sourceGroup:'example.org',
+  excerpt: ('Unrelated control record. '+ 'x'.repeat(options.padding ?? 0)).slice(0,2000) }))];
+ const material = captureSelectionMaterial({existing:records,incoming:[],checkedText:exactClaim});
+ let clock = Date.parse('2026-11-14T10:00:00Z'), generation = inspectMaterial(material).materialGeneration, install = pin;
+ const session = new Session(()=>clock);
+ const record: RequestRecord = {input:{schemaVersion:1,sessionId:session.id,sessionEpoch:session.epoch,requestId:'adapter-request',revision:1,
+  text:exactClaim,context:[],mode:'typed',language:'en',capturedAt:new Date(clock).toISOString(),capture:{source:'typed_fixture',segmentId:'adapter-fixture',confidence:1},userInitiated:true},
+  budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:options.deadlineRemainingMs===undefined ? clock : clock-10000+options.deadlineRemainingMs,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map(),fingerprint:'synthetic-test'};
+ session.requests.set(record.input.requestId,record);
+ const claim: AcceptedClaim = {id:'adapter-request-claim-0',originalText:exactClaim,checkedText:exactClaim,sourceSpan:{start:0,end:Array.from(exactClaim).length},
+  admission:{assertionStatus:'asserted',hasPracticalConsequence:null,matchedSelectedTopic:null,admissionAction:'check',reasonCode:'synthetic-public-test'}};
+ const dispatchOwner = captureDispatchOwner(material,{reservedJev:options.reservedJev ?? 0,session,record,claimSlot:0,admittedClaim:claim,readMaterialGeneration:()=>generation,readInstallGeneration:()=>install});
+ const owner=inspectDispatchOwner(dispatchOwner).owner;
+ let releaseTransport=()=>{};let startedResolve=()=>{};const started=new Promise<void>(resolve=>{startedResolve=resolve;});
+ const originalBudget=record.budget;
+ let transportSignal:AbortSignal|undefined;
+ let calls=0, lastBody=''; let choice='covered', score=.99, risk='ordinary', intervention=()=>{};
+ const fetcher: typeof fetch = async (_url,init) => {
+  calls++;transportSignal=init?.signal as AbortSignal;startedResolve();if(options.blockFetch)await new Promise<void>(resolve=>{releaseTransport=resolve;}); if(options.responseStatus) return new Response("transient",{status:options.responseStatus}); lastBody=String(init?.body); const request=JSON.parse(lastBody);
+  const answers=Object.fromEntries(Object.entries(request.questions as Record<string,JevQuestion>).map(([key,q])=>{
+   if(q.type==='noul') return [key,{noul:.99}];
+   const keys=Object.keys(q.criteria);
+   const selected = key.endsWith('_origin')&&options.originChoice?options.originChoice:key.endsWith('_applicability') ? choice : key==='claim_risk' ? risk : key==='verdict' ? 'insufficient_evidence'
+    :key==='selected_evidence' ? 'none' : key.endsWith('_content_basis') ? 'original_record'
+    :key.endsWith('_stance') ? 'supports' : keys.includes('none') ? 'none' : keys[keys.length-1]!;
+   const p=key.endsWith('_applicability') ? score:.99;
+   return [key,{choice:selected,probabilities:Object.fromEntries(keys.map(k=>[k,k===selected?p:(1-p)/(keys.length-1)]))}];
+  }));
+  intervention(); if(options.responseFactory)return options.responseFactory(transportSignal!);return new Response(JSON.stringify({answers,usage:{input_tokens:123}}),{status:200});
+ };
+
+ const execute = createApplicabilityAdapter({manifest,dispatchOwner,semanticAsOf:'2026-11-14T06:00:00Z',bindings:[{receiptAlias:'RA03',artifact,evidenceId:'target'}],apiKey:'offline-test-key',fetch:fetcher});
+ const run=()=>execute(claim);
+ return {manifest,artifact,material,owner,claim,record,session,dispatchOwner,execute:run,started,releaseTransport:()=>releaseTransport(),transportSignal:()=>transportSignal,originalBudget,stats:()=>({calls,consumed:record.budget.jev,lastBody}),
+  intervene:(fn:()=>void)=>{intervention=fn;},advance:()=>{clock+=10001;},atDeadline:()=>{clock+=10000;},cancel:()=>record.controller.abort(),
+  replaceMaterial:()=>{generation='new';},replaceInstall:()=>{install='new';},setAnswer:(c:string,p=.99)=>{choice=c;score=p;},setRisk:(v:string)=>{risk=v;}};
+}
+import { contextInputDigest } from '/workspace/task-evidence/record-capability-prototype-02/src/types.js';
+
+test('mutating returned assessment context cannot refresh private completed or eligibility binding',async()=>{
+ const s=await setup();const r=await s.execute();const context=r.assessmentContext!;
+ context.retainedRecords[0]!.excerpt='Caller replaced the observed passage.';
+ context.originNodes.find(n=>n.key===context.retainedNodeKeys[0])!.record.excerpt=context.retainedRecords[0]!.excerpt;
+ context.assessment.inputSHA256=contextInputDigest(context);
+ const completed=verifyCompletedJudgment(r.completedJudgment!.token,{material:s.material,dispatchOwner:s.dispatchOwner,context});
+ const eligible=verifySemanticEligibility(r.eligibility[0]!.token,{manifest:s.manifest,material:s.material,owner:s.owner,context});
+ console.log(JSON.stringify({returnedContextFrozen:Object.isFrozen(context),changedPassageAcceptedAsCompleted:completed,changedPassageAcceptedAsEligibility:eligible,attempts:s.record.budget.jev}));
+ assert.equal(completed,false);assert.equal(eligible,false);
+});

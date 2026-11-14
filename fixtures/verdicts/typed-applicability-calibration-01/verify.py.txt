@@ -1,0 +1,51 @@
+"""Portable stdlib-only archive verification; no original workspace or network."""
+import pathlib,json,gzip,hashlib,argparse,collections
+root=pathlib.Path(__file__).resolve().parent
+mapping=json.loads((root/'original-path-map.json').read_text())
+rows={r['originalPath']:r for r in mapping['files']}
+def sha(b):return hashlib.sha256(b).hexdigest()
+def raw(path):
+ row=rows[path];blob=(root/row['archivedPath']).read_bytes();assert sha(blob)==row['archivedSHA256'],path
+ data=gzip.decompress(blob)if row['encoding']=='gzip'else blob
+ assert len(data)==row['originalBytes']and sha(data)==row['originalSHA256'],path
+ return data
+def obj(path):return json.loads(raw(path))
+parser=argparse.ArgumentParser();parser.add_argument('--extract',nargs=2,metavar=('ORIGINAL_PATH','OUTPUT'));args=parser.parse_args()
+if args.extract:
+ original,output=args.extract;data=raw(original);pathlib.Path(output).write_bytes(data);print(json.dumps({'extractedBytes':len(data),'SHA256':sha(data)}));raise SystemExit
+for path in rows:raw(path)
+base='/workspace/task-evidence/typed-applicability-calibration-01/'
+plan=obj(base+'applicability42-plan.json');digest=sha(json.dumps(plan,separators=(',',':'),ensure_ascii=False).encode())
+assert digest=='6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0'
+for path,expected in plan['sourceHashes'].items():assert sha(raw(path))==expected,path
+assert sha(raw(base+'root-authorization.json'))=='a3ae86d7714e3b7c70d0b26e37e3ffe60685563dc9751a093a1813a6656f601a'
+report=obj(base+'live-first-run/report.json');journal=[json.loads(line)for line in raw(base+'live-first-run/checkpoints.jsonl').splitlines()]
+assert sha(raw(base+'live-first-run/report.json'))=='5e39c5fbdab55e902d82b91e2cc5e7385af03a1f7e1c7c08e3ba4c76737cf153'
+assert sha(raw(base+'live-first-run/checkpoints.jsonl'))=='2d250065d00f5b22d15a28778416fbc02d2dad9f3384fcc9021ced800e67b802'
+assert sha(raw('/workspace/task-evidence/selector-seam-implementation-01/legacy-oracle.ts'))=='a77c104ab31c2b8391881dcfadadbe47ac9c9ee5491330b78098b7dbaa8725c6'
+assert sha(raw('/workspace/junction-2026/services/api/src/runtime/budget.ts'))=='6d138f30452ae02af6822b72d60a963fbef870f6bcc46861550fb18d0a53016a'
+assert sha(raw('/workspace/task-evidence/jev-question-visibility-findings-01.json'))=='960fe23ff87914fc12b03c451c4c17087d3d287a5146d39f571e90731b375e97'
+assert sha(raw('/workspace/task-evidence/applicability84-wire-visibility-independent-correction.json'))=='c1ff1afe5b1d4b1acd9e79ec0828a838c321309e729dda53c71aeb1f7011f5b5'
+assert len(plan['semanticIds'])==42 and len(plan['bindingIds'])==2 and len(plan['guard']['calls'])==84
+assert [b['limits']['maxCalls']for b in plan['guard']['blocks']]==[22,22,20,20]
+assert collections.Counter(l['cohort']for l in plan['denominatorLabels'])=={'original36':34,'identity8':8}
+assert collections.Counter(l['expected']for l in plan['denominatorLabels'])=={'covered':18,'not_covered':18,'uncertain':6}
+assert report['completedAllCalls']and report['stop']is None and len(report['rows'])==84
+counts=report['guard']['totals'];assert counts=={'reservedCalls':84,'actualStartedJev':84,'actualStartedExa':0,'requestBytes':3758808,'responseBytes':512132,'measuredInputTokens':846340,'usageKnownCalls':84,'usageUnknownCalls':0}
+assert report['runtimeLedger']=={'consumedJevAttempts':84,'measuredInputTokens':846340}
+assert len(journal)==504 and collections.Counter(x['type']for x in journal)=={k:84 for k in ['call_reserved','request_prepared','request_started','response_headers','usage_observed','call_terminal']}
+requests=obj(base+'requests.07.json')['calls'];bycall={r['callId']:r for r in report['rows']}
+for call in requests:
+ assert sha(call['body'].encode())==call['requestSHA256']==bycall[call['callId']]['dispatch']['requestSHA256']
+s=report['scoring'];candidate=s['byArm']['applicability']
+assert candidate['declared']==42 and candidate['applicabilityQuestionAsked']==37 and candidate['rawTernaryExact']==27
+assert candidate['combinedAvailabilityAndCoverageGate']['positiveAccepted']==0 and candidate['privateTypedEligibility']['issued']==0
+assert candidate['combinedAvailabilityAndCoverageGate']['negativeAccepted']==0 and candidate['combinedAvailabilityAndCoverageGate']['unsafeUncertainGrants']==0
+assert s['byArm']['baseline_anchor']['rawTernaryExact']is None
+assert all(r['policy']['verdict']=='insufficient_evidence'for r in report['rows'])and not s['selectedCitationAuditInputs']
+for n in range(1,8):
+ path=f'/workspace/task-evidence/typed-applicability-adapter-{n:02}/manifest.json';manifest=obj(path)
+ for name,expected in manifest['files'].items():assert sha(raw(str(pathlib.PurePosixPath(path).parent/name)))==expected
+for n in range(2,8):assert raw(f'/workspace/task-evidence/typed-applicability-adapter-{n:02}/question.ts')==raw('/workspace/task-evidence/typed-applicability-adapter-02/question.ts')
+assert raw('/workspace/task-evidence/typed-applicability-adapter-07/identity-contract.json')==raw('/workspace/task-evidence/typed-applicability-adapter-02/identity-contract.json')
+print(json.dumps({'archiveFilesVerified':len(rows),'exactPlanSourcePins':len(plan['sourceHashes']),'liveActualJev':84,'liveExa':0,'measuredInputTokens':846340,'rows':84,'semanticUnits':42,'offlineBindingControls':2,'rawTernaryExactAllDeclared':'27/42','rawTernaryExactObserved':'27/37','positivePassesAt85':'0/18','negativeAcceptsAt85':'0/18','uncertainGrantsAt85':'0/6','policyDefinitives':0,'providerCallsDuringVerification':0}))

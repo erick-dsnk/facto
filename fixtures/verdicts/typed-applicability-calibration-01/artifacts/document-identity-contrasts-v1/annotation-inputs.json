@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Prospective OPEN document-identity applicability contrasts, separate from36; no truth/coverage/promotion claim.",
+  "asOf": "2026-11-14T06:00:00Z",
+  "trustedDescriptorMeaning": "Only an admin-installed reviewed receipt plus matching private canonical snapshot may provide this descriptor. This fixture does not create a handle from a source-provided object. It identifies a record; it never fills operative answers.",
+  "sourcesRef": "sources.json",
+  "units": [
+    {
+      "id": "DI08",
+      "exactClaimText": "The 28 June 2022 first rounded Census 2021 release records 700,000 usual residents aged exactly seven in England and Wales on 21 March 2021.",
+      "receiptAlias": "RA04",
+      "proofId": "RP04",
+      "evidence": {
+        "id": "DI08-evidence",
+        "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+        "excerpt": "Population and household estimates, England and Wales: Census 2021 Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. This is not the latest release. View latest release Contact: Email Michael Roskams Release date: 28 June 2022 Next release: To be announced Table of contents Main points Population growth of England and Wales between 2011 and 2021 Population sizes and changes for regions and local authorities Age and sex of the population Population and land area Number of households Future publications Population and household estimates, England and Wales: data Glossary Measuring the data Strengths and limitations Related links Print this Statistical bulletin Download as PDF View all data used in this Statistical bulletin 1. Main points This page is also available in Welsh (Cymraeg). On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300 (56,489,800 in England and 3,107,500 in Wales); this was the largest population ever recorded through a census in England and Wales."
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "ONS-Census2021-EW-population-first-release-20220628",
+        "versionId": "28June2022 first rounded release; explicitly not latest",
+        "documentClass": "official_statistical_report",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "partition": "semantic_applicability",
+      "category": "recorded_value_missing"
+    },
+    {
+      "id": "DI05",
+      "exactClaimText": "RFC 8174 was formally adopted by the IETF in May 2017.",
+      "receiptAlias": "RA01",
+      "proofId": "RP01",
+      "evidence": {
+        "id": "DI05-evidence",
+        "url": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document."
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "RFC8174",
+        "versionId": "May2017; BCP14 update to RFC2119",
+        "documentClass": "normative_definition",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "RFC8174",
+      "partition": "semantic_applicability",
+      "category": "adoption_date"
+    },
+    {
+      "id": "DI04",
+      "exactClaimText": "RFC 8174 was published in May 2017.",
+      "receiptAlias": "RA01",
+      "proofId": "RP01",
+      "evidence": {
+        "id": "DI04-evidence",
+        "url": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document."
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "RFC8174",
+        "versionId": "May2017; BCP14 update to RFC2119",
+        "documentClass": "normative_definition",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "RFC8174",
+      "partition": "semantic_applicability",
+      "category": "publication_date"
+    },
+    {
+      "id": "DI06",
+      "exactClaimText": "As of 14 November 2026, section 2 of the Canadian Holidays Act is in force as the current law governing Canada Day when July 1 is a Sunday.",
+      "receiptAlias": "RA02",
+      "proofId": "RP02",
+      "evidence": {
+        "id": "DI06-evidence",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+        "excerpt": "Canada Day Marginal note: Canada Day 2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". Marginal note: When July 1 is a Sunday (2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". R.S., c. H-7, s. 2"
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "CA-RSC1985-H5",
+        "versionId": "consolidation-current-to-2026-10-19; last-amended-2018-03-01",
+        "documentClass": "operative_legal_text",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "CA-RSC1985-H5",
+      "partition": "semantic_applicability",
+      "category": "current_force"
+    },
+    {
+      "id": "DI03",
+      "exactClaimText": "In the 28 June 2022 first rounded Census 2021 release, the usual-resident population of England and Wales on Census Day, 21 March 2021, was 59,597,300.",
+      "receiptAlias": "RA04",
+      "proofId": "RP04",
+      "evidence": {
+        "id": "DI03-evidence",
+        "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+        "excerpt": "Population and household estimates, England and Wales: Census 2021 Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. This is not the latest release. View latest release Contact: Email Michael Roskams Release date: 28 June 2022 Next release: To be announced Table of contents Main points Population growth of England and Wales between 2011 and 2021 Population sizes and changes for regions and local authorities Age and sex of the population Population and land area Number of households Future publications Population and household estimates, England and Wales: data Glossary Measuring the data Strengths and limitations Related links Print this Statistical bulletin Download as PDF View all data used in this Statistical bulletin 1. Main points This page is also available in Welsh (Cymraeg). On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300 (56,489,800 in England and 3,107,500 in Wales); this was the largest population ever recorded through a census in England and Wales."
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "ONS-Census2021-EW-population-first-release-20220628",
+        "versionId": "28June2022 first rounded release; explicitly not latest",
+        "documentClass": "official_statistical_report",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "partition": "semantic_applicability",
+      "category": "referent_binding"
+    },
+    {
+      "id": "DI02",
+      "exactClaimText": "RFC 8174 (May 2017) gives the listed BCP14 keywords their special meanings even when they are written in lowercase.",
+      "receiptAlias": "RA01",
+      "proofId": "RP01",
+      "evidence": {
+        "id": "DI02-evidence",
+        "url": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document."
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "RFC8174",
+        "versionId": "May2017; BCP14 update to RFC2119",
+        "documentClass": "normative_definition",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "RFC8174",
+      "partition": "semantic_applicability",
+      "category": "referent_binding"
+    },
+    {
+      "id": "DI01",
+      "exactClaimText": "RFC 8174 (May 2017) gives the listed BCP14 keywords their special meanings only when they are written in all capitals.",
+      "receiptAlias": "RA01",
+      "proofId": "RP01",
+      "evidence": {
+        "id": "DI01-evidence",
+        "url": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document."
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "RFC8174",
+        "versionId": "May2017; BCP14 update to RFC2119",
+        "documentClass": "normative_definition",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "RFC8174",
+      "partition": "semantic_applicability",
+      "category": "referent_binding"
+    },
+    {
+      "id": "DI07",
+      "exactClaimText": "The 2021 Pulitzer Prize in Fiction entry records that The Night Watchman was Louise Erdrich's first Pulitzer Prize in Fiction.",
+      "receiptAlias": "RA03",
+      "proofId": "RP03",
+      "evidence": {
+        "id": "DI07-evidence",
+        "url": "https://www.pulitzer.org/winners/louise-erdrich",
+        "excerpt": "The 2021 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Night Watchman , by Louise Erdrich (Harper)"
+      },
+      "trustedDocumentDescriptor": {
+        "canonicalDocumentId": "Pulitzer-2021-Fiction-winner",
+        "versionId": "2021 award edition; snapshot at recorded access time",
+        "documentClass": "award_register",
+        "provenanceMode": "dated_reviewed_snapshot"
+      },
+      "asOf": "2026-11-14T06:00:00Z",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "partition": "semantic_applicability",
+      "category": "first_ordinal"
+    }
+  ],
+  "limitations": [
+    "All8 retained excerpts are exact complete audited record units; no clipped binding failure is counted as learned semantics.",
+    "Identity descriptors contain only canonical document/version/class and dated-snapshot mode; no raw-source asserted trust or operative value is installed.",
+    "Wrong compared values can remain covered when their actual record fields are present.",
+    "Four saved record families and repeated passages are correlated, not eight new facts.",
+    "No forthcoming adapter02 wording/code/results, sourceGETs or provider calls were read or executed."
+  ]
+}

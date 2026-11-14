@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-14T05:46:24.781289+00:00",
+  "reviewer": "runtime_evaluation",
+  "outcome": "approved_for_unwired_selection_and_lifecycle_seam_only",
+  "materialSHA256": "2bb9266824beb12cb5029250f0b71f84497fdbe4c4b2e2b8f6486b2e3048008a",
+  "testsSHA256": "1d6172523f755ed00159c4e5f0e61e46b8a7a90f5e4760122c9cb90cc1a446bb",
+  "validationSHA256": "4e4e02024aaacc3493c7ab9e33807402eb37587601f169e5a6d8cbc2971b854e",
+  "checks": [
+    "Allnormalized original/incoming raw occurrences remain before selection projection; omitted versions and bridge links stay bounded and frozen.",
+    "At most12raw nodes and66unordered pair links; no truncation to satisfy prototype bounds. Compatibility failure for actualempty/2547-character titles is explicit rather than hidden.",
+    "Same exact prior checkedText now required; initial-only capture omits prior assessment rather than fabricating one.",
+    "Runtime owner now binds actual admitted claim ID/checkedText/originalText/scalar source span to current request slot, and rechecks mutation.",
+    "Session/epoch/request-record/revision/running-state/signal/absolute-deadline/material/install gates hold before and after awaits and immediately before futurecommit.",
+    "New dispatch/assessment/trust issuance and derived cache revocation remain separate responsibilities, not credited by this seam."
+  ],
+  "reproductions": {
+    "beforeFailures": 2,
+    "beforeLog": "before.tap",
+    "afterPass": 2,
+    "afterLog": "after.tap",
+    "afterProbeDifference": "Secondprobe now supplies a well-shaped AcceptedClaim for the unrelated current request, proving semantic binding rejection rather than a missingargument failure."
+  },
+  "independentTests": {
+    "pass": 23,
+    "log": "author-tests-reviewer-run.tap"
+  },
+  "limitations": [
+    "Unwired outsideGit only; no production code/selection/prompt/threshold/provider DTO change authorized.",
+    "Graph completeness is normalizedselector-boundary completeness, not all providerbody/acquisition/history variants.",
+    "Distinct publisher or owner identity does not establish source authority, independence or assessment freshness.",
+    "AdmittedClaim and generation readers remain trustedruntime inputs; this seam checks binding, not semantic admission correctness.",
+    "No model/provider/network calls by reviewer; no currentproductionbug asserted."
+  ]
+}
