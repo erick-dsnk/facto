@@ -44,11 +44,13 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
   const unchanged = new Set(original.filter(record => material(record) === material(candidates.get(record.id)!)).map(record => record.id));
   const judged = new Map(judgment.evidence.filter(record => unchanged.has(record.id)
     && material(record) === material(candidates.get(record.id)!)).map(record => [record.id, record]));
-  const substantive = (id: string) => {
-    if (!assessment || !Object.hasOwn(assessment.sourceAssessments, id)) return false;
+  const substantiveConfidence = (id: string): number | undefined => {
+    if (!assessment || !Object.hasOwn(assessment.sourceAssessments, id)) return undefined;
     const source = assessment.sourceAssessments[id];
-    return source.confidence >= ASSESSMENT_THRESHOLD && ['original_record', 'attributable_research', 'substantive_secondary'].includes(source.contentBasis);
+    return ['original_record', 'attributable_research', 'substantive_secondary'].includes(source.contentBasis)
+      ? source.confidence : undefined;
   };
+  const substantive = (id: string) => (substantiveConfidence(id) ?? -1) >= ASSESSMENT_THRESHOLD;
   const rank = (records: Evidence[]) => mergeRetainedEvidence([], records, checkedText).map(record => candidates.get(record.id)!);
   const rankedOld = rank(original.map(record => candidates.get(record.id)!));
   const directOld = rankedOld.filter(record => judged.has(record.id) && isDirectEvidence(judged.get(record.id)!));
@@ -82,7 +84,13 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
   const freshFamilies = new Set(additions.filter(record => !originalById.has(record.id) || !unchanged.has(record.id)).map(record => family.get(record.id)!));
   // Fresh family material gets a slot before an unchanged old witness;
   // otherwise a positive sibling could hide the new contrary passage.
-  const usefulOld = directOld.filter(record => substantive(record.id) && !freshFamilies.has(family.get(record.id)!));
+  // A promising old record can merit another reading even below the verdict's
+  // substance threshold. Rank that scheduling preference by confidence rather
+  // than discarding it in favor of unassessed topical repetitions. The same two
+  // reserved slots and all family/material guards still apply; qualification is
+  // decided only from the fresh judgment, never from this selection preference.
+  const usefulOld = directOld.filter(record => substantiveConfidence(record.id) !== undefined && !freshFamilies.has(family.get(record.id)!))
+    .sort((left, right) => substantiveConfidence(right.id)! - substantiveConfidence(left.id)!);
   const protectedOld: Evidence[] = [];
   const supports = directOld.filter(record => judged.get(record.id)!.stance === 'supports');
   const contradicts = directOld.filter(record => judged.get(record.id)!.stance === 'contradicts');
