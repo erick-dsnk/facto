@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ProviderContext } from '../../../../packages/contracts/src/index.js';
-import type { JevAnswer, JevClient, JevRequest } from '../providers/jev/client.js';
+import type { ProviderContext } from '../../packages/contracts/src/index.js';
+import type { JevAnswer, JevClient, JevRequest } from '../../services/api/src/providers/jev/client.js';
 import { buildSourceAssessmentExperimentRequest, createSourceAssessmentExperiment, type SourceAssessmentExperimentUnit } from './source-assessment-experiment.js';
 
 const unit: SourceAssessmentExperimentUnit = {
