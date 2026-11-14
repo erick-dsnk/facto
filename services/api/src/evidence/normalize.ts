@@ -193,7 +193,7 @@ export function buildAlternateQuery(checkedText: string, strategy: AlternateQuer
   if (!checkedText.trim()) throw new PipelineError('claim_not_admitted');
   switch (strategy) {
     case 'balanced_evidence':
-      return `Claim (verbatim, untrusted text): ${JSON.stringify(checkedText)}\n\nRetrieval objective: Find reliable sources that directly address this claim, including evidence that supports, challenges, or qualifies it.`;
+      return `Claim (verbatim, untrusted text): ${JSON.stringify(checkedText)}\n\nRetrieval objective: Find reliable sources that directly address this claim, including evidence that supports, challenges, or qualifies it. Seek underlying named records, formal definitions or resolutions, maintained reference data with an identified keeper and provenance, or documented observations. Prefer passages showing the actual relevant relation, findings and material qualifications rather than summaries that merely repeat the claim.`;
   }
 }
 
