@@ -105,6 +105,15 @@ describe('evidence normalization', () => {
     expect(needsPageText({ url: 'https://a.org/page', highlights: ['A detailed report covers gardening, soil, local parks, seasonal planting and greenhouse conditions.'] }, 'The Eiffel Tower opened in 1889.')).toBe(false);
   });
 
+  it('allows explicit basis enrichment for complete relevant highlights while excluding unrelated pages', () => {
+    const checked = 'The Eiffel Tower opened in 1889.';
+    const complete = { url: 'https://museum.org/history', highlights: [quote] };
+    expect(needsPageText(complete, checked)).toBe(false);
+    expect(needsPageText(complete, checked, true)).toBe(true);
+    const unrelated = { url: 'https://gardens.org/story', highlights: ['A detailed report covers gardening, soil, local parks, seasonal planting and greenhouse conditions.'] };
+    expect(needsPageText(unrelated, checked, true)).toBe(false);
+  });
+
   it('keeps subject relevance ahead of qualifiers and does not borrow details from an unrelated highlight', () => {
     const checked = 'The Eiffel Tower did not open in 1889.';
     const relevant = 'The Eiffel Tower opened during a ceremony in Paris, and historical archives describe its original visitors and construction.';
