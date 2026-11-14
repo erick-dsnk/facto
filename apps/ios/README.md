@@ -114,6 +114,8 @@ needed for these fixtures.
    on that tab. This invokes the SDK's `startTestServer(port: 9000)` API, following
    Meta's DisplayAccess sample; it is a different rendering path from the React
    preview at port 3030. Keep this development server local to your Mac.
+   If port 9000 is already taken on the Mac (Docker often holds it), the app falls
+   back to a free port and shows the exact URL under the button.
 6. Capture True, False and the source-arrival sequence for comparison. **Stop
    native fixture** ends its DAT session; **Stop native simulator server** stops
    the SDK server. Stopping/replacing the simulated glasses also stops the server.

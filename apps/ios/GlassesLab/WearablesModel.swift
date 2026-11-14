@@ -53,7 +53,13 @@ final class WearablesModel {
       await previous?.value
       guard let self, self.nativePreviewServerGeneration == generation, self.mockModel == .display else { return }
       do {
-        let port = try await MockDeviceKit.shared.startTestServer(port: 9000)
+        // Prefer 9000 as documented; fall back to a system-assigned port when it is taken.
+        let port: UInt16
+        do {
+          port = try await MockDeviceKit.shared.startTestServer(port: 9000)
+        } catch {
+          port = try await MockDeviceKit.shared.startTestServer(port: 0)
+        }
         guard self.nativePreviewServerGeneration == generation, self.mockModel == .display else {
           await MockDeviceKit.shared.stopTestServer()
           return

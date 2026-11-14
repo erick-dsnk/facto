@@ -60,7 +60,9 @@ struct LiveSections: View {
         }
       }
       if live.displayOutputMode == .web {
-        TextField("HTTPS glasses web app URL", text: $live.webDisplay.appURLText)
+        TextField("HTTPS glasses web app URL", text: Binding(
+          get: { live.webDisplay.appURLText }, set: { live.webDisplay.appURLText = $0 }
+        ))
           .keyboardType(.URL)
           .textContentType(.URL)
           .textInputAutocapitalization(.never)
