@@ -1,7 +1,14 @@
 # Fact-checking pipeline evaluation
 
-Status on 14 November 2026: deterministic backend evaluation, bounded direct Jev/Exa adapter checks, live Jev classification probes, and one maximum-size source-assessment wire probe have run. Integration commit `ecda5dafe6254d80d2c173adea4fe9435ce46e68` passed 291/291 tests, and an independent review passed 35 targeted checks. The local final issue stack at `cedf29cd7f615e44e8d7b6be7e596620ffc21304` (`codex/20-runtime-stack`) passed a fresh `npm ci`, `npm run check` (291/291 tests), and `npm run evaluate` (36/36 development scenarios; presentation fixtures 21/21). Its E33/E43 runtime measurements were 139 ms and 10,018 ms. The evaluator did not persist a new `development-results.json`, so the checked-in artifact below remains an earlier frozen-commit run, not the latest timing record. A later authenticated HTTP/WebSocket provider campaign was interrupted by harness defects and is not a completed end-to-end validation. These results do not establish general fact-checking accuracy.
+Current continuation, 14 November 2026: the backend and durable live harness are frozen at `b66fa5dcbc1e4a58665bc110cb0ab1b6dccf950f` (source SHA-256 `71f6fb9504e9045763f081b885fdf63fbcccfc8b138f845953b1575b5b2072e3`). Lint, typecheck and **341 tests** passed; the refreshed development artifact records **36/36 scenarios** and **21/21 presentation fixtures**. Later commits propagate the same fact-checking implementation through the issue stack. A subsequent harness-only reporting fix preserves validated presentation fields on future non-result terminals; its gate passed **350 tests**. It changes no runtime policy and was not retroactively applied to the frozen reports or evaluated live.
 
+The actual authenticated HTTP/WebSocket development campaign now has durable attempt checkpoints, separate byte/token/call budgets, named Jev answers, exact public queries, retained evidence and correlated terminal receipts. Its final replay completed 8/8 requests with **2/5 correct definitive outcomes on unique eligible public claims** and three abstentions. The initial network failure and two zero-coverage campaigns remain recorded. Real invalid-key probes returned one sanitized nonretryable HTTP 401 per provider. Independent citation inspection opened 7/8 selected development URLs; one remains inaccessible. These are agent inspections, not human demo sign-off.
+
+A newly authored and independently reviewed 10-case sealed set was run **once** against the frozen source. All 10 requests reached terminal events, but only **2/8 eligible factual claims received correct definitive labels**; five abstained and one received no verdict. Conditional definitive precision was 2/2; this small purposive sample does not estimate population accuracy. Admission matched 8/10 expectations, and no forbidden-private query was observed in 12 searches. This is a substantial coverage/admission failure, not a completion or readiness claim. No implementation changes were made in response to the sealed cases, and implementers did not inspect their bodies.
+
+See [the authenticated campaign record](live-campaign-2026-11-14.md), [the independent first-run report](blind-evaluation-2026-11-14.md), and `fixtures/evaluation/live/`. The original 12 reserved records remain unchanged and unrun, with their earlier exposure caveat retained. Glasses, native decoding, ASR, deployment and listening-time measurements remain outside this backend continuation.
+
+The sections below preserve earlier evidence and limitations. The previous handoff had 291 passing tests and an interrupted, unavailable live runner; those historical records must not be substituted for the current durable results.
 ## Reproducible development result
 
 Run `npm run evaluate` from the repository root. The machine-readable development report is `fixtures/evaluation/development-results.json`; dataset loading and held-out isolation are explained in `fixtures/evaluation/README.md`. The runner reads the metadata-only manifest, selects the development split, and only then opens the development case bodies. The 12 held-out bodies are in a separate file and are not read during the default run.
@@ -16,8 +23,8 @@ At integration commit `ecda5dafe6254d80d2c173adea4fe9435ce46e68`, `npm run check
 | Presentation stage | 17 executed | Manual completion and automatic restraint with injected session state |
 | Malformed-provider fixture | 1 executed | Invalid Jev answers fail as an operational error |
 | Shared presentation fixtures | 21 passed / 21 | Same action/reason fixtures as B7's policy tests |
-| Correction sequencing (E33) | Pass; latest stacked-branch execution 139 ms; checked-in artifact 264 ms | Authenticated HTTP submissions, WebSocket events; revision 1 retrieval was aborted and emitted no stale result; corrected revision 2 requested confirmation |
-| Provider deadline (E43) | Pass; latest stacked-branch execution 10,018 ms; checked-in artifact 10,033 ms | Authenticated HTTP submission and WebSocket operational error; the runtime aborted a hung injected admission provider at its 10 s deadline, with no factual result |
+| Correction sequencing (E33) | Pass; frozen continuation artifact 202 ms | Authenticated HTTP submissions, WebSocket events; revision 1 retrieval was aborted and emitted no stale result; corrected revision 2 requested confirmation |
+| Provider deadline (E43) | Pass; frozen continuation artifact 10,036 ms | Authenticated HTTP submission and WebSocket operational error; the runtime aborted a hung injected admission provider at its 10 s deadline, with no factual result |
 | Reserved held-outs | 12 / 48 cases | Default run selects development before opening case bodies; held-out blind status is qualified below |
 | Successful live admission / judgment / Exa calls | 3 / 2 / 2 | Direct adapters; separate from this fixture harness |
 | Selected live citations inspected by agent / human | 1 / 0 | Historical Sydney Opera House claim; see smoke record |
@@ -35,7 +42,7 @@ The 17 executed presentation decisions have this confusion matrix. Rows are expe
 
 The 48 scenarios use the plan's distribution: 12 personal/opinion/nonclaims, 12 public facts, 8 mixed/ambiguous, 8 capture/corrections and 8 service/lifecycle cases. Scripted model decisions cannot measure Jev's semantic accuracy, so admission precision/recall are deliberately absent. Synthetic source stances cannot establish factual correctness or source relevance. The code preserves null/unmeasured metrics instead of reporting zeros as successes.
 
-The original 12 split records remain unchanged and unrun; their canonical JSON SHA-256 is `16f927c84ed3703356280f02241b4354d35ef6337288d3495ef08b7969aa37bb`. A prior accidental search over the legacy combined corpus may have exposed held-out text in a tool result. It was not an intentional held-out run and was not used to tune the pipeline, but exposure cannot be ruled out. We therefore make no blind-held-out accuracy claim. The independently prepared replacement set from the earlier session is no longer available in this checkout or its temporary-file area. A new independent sealed set must be created and reviewed before a future blind run; its case bodies must remain outside this development report and default runner.
+The original 12 split records remain unchanged and unrun; their canonical JSON SHA-256 is `16f927c84ed3703356280f02241b4354d35ef6337288d3495ef08b7969aa37bb`. A prior accidental search over the legacy combined corpus may have exposed held-out text in a tool result. It was not an intentional held-out run and was not used to tune the pipeline, but exposure cannot be ruled out. We therefore make no blind-held-out accuracy claim. The replacement set from the earlier session was unavailable. This continuation created a different independent 10-case set, reviewed and sealed it, and preserved its first frozen-code execution in the independent report linked above. Its bodies remain outside the repository, development report and default runner.
 
 In these fixture judgments, only the predeclared Helsinki/Finland, Helsinki/Norway and lightning propositions receive explicit substantive synthetic records, ordinary-risk assessments and distinct synthetic-origin assessments. The conflicting laboratory fixture has an unknown-risk assessment, while the echoed battery promotion is assessed as promotional with a common origin. Unrecognized propositions remain unclear and do not inherit a positive source-quality assessment. These labels test the policy gates only; they are not claims of real source quality.
 
@@ -83,7 +90,7 @@ Do not resume from the old counters or describe this as a pass. Rebuild a portab
 
 ## Evidence required before live claims
 
-Keep fixture, provider-probe and live end-to-end records separate. For each backend run retain only non-sensitive aggregate telemetry: model/policy version, case label, route, cold/cached status, search/model-call counts, usage, cost if known, sanitized error class and elapsed time. Do not store original input text, rejected private context, prompts, audio, images or credentials in this report.
+Keep fixture, provider-probe and live end-to-end records separate. The current campaign and independent report above supersede the pending measurement status in the historical table below. For each backend run retain only non-sensitive aggregate telemetry: model/policy version, case label, route, cold/cached status, search/model-call counts, usage, cost if known, sanitized error class and elapsed time. Do not store original input text, rejected private context, prompts, audio, images or credentials in this report.
 
 Before putting a definitive result in the demo, a person must open its cited page, verify that the retained passage supports the exact checked proposition, and record the source URL, inspection date and any time/place/population limits. A URL or synthetic passage in a fixture is not completed source inspection.
 
@@ -101,12 +108,13 @@ Before putting a definitive result in the demo, a person must open its cited pag
 
 ## Remaining backend acceptance work
 
-- Rebuild and run a bounded live campaign through authenticated local HTTP/WebSocket with strict usage-based call/token/time budgets, exact public-query checks, relevant retained evidence, correlated terminal-event receipts, citation review, abstention and sanitized operational failures. Preserve the transcript-only interrupted run as a failure to complete, not as a pass.
-- Have a human inspect every definitive demo citation against the exact checked proposition, including source scope and independence.
-- Freeze implementation and thresholds, create and independently review a new sealed evaluation set, then run it through a separate blind executor. Do not use the current held-out set to make blind-accuracy claims.
-- Keep feature and performance claims aligned with measured backend evidence. A missing alert means no assertion of truth or verification.
+- Improve useful coverage and admission quality on newly authored development cases without inspecting or tuning against the sealed evaluation bodies. The first blind result stays 2/8 correct definitive and 8/10 admission; abstentions and clarification mistakes are failures against those expectations.
+- Investigate how to retrieve inspectable, attributable underlying records for ordinary reference facts while preserving exact public spans, independent corroboration, risk-sensitive gates and the prohibition on official-site shortcuts. Do not lower thresholds to force the existing examples through.
+- Have a human inspect each definitive demo citation. The agent inspection record includes an inaccessible URL and distinguishes independently published accounts from proven independent primary records.
+- Freeze any future changed implementation and use a newly independent set for another blind evaluation; do not rerun this set and relabel the result as fresh blind evidence.
+- Preserve all first-run artifacts, actual attempts, unknown usage/costs and failures. The Node 24 cloud runtime needs `NODE_USE_ENV_PROXY=1` where its configured network proxy is required.
 
-Native glasses capture, ASR, deployment and on-device measurements are future integration work and are outside the current backend completion gate.
+The six PRs remain drafts and no issues were closed. Native glasses capture, ASR, deployment and on-device measurements are deferred and are outside the current backend acceptance work.
 
 ## Related work
 
