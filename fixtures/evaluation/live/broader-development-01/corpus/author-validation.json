@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "static_author_validation_only",
+  "checkedAt": "2026-11-14T04:11:19.353543+00:00",
+  "passed": true,
+  "checks": {
+    "total_inputs": 16,
+    "unique_factual_claims": 12,
+    "true": 6,
+    "false": 6,
+    "controls": 4,
+    "eligible_span_occurrences": 13,
+    "no_eligible_span_inputs": 3,
+    "source_records": 25,
+    "page_text_records": 24,
+    "highlight_records": 1,
+    "all_exact_codepoint_spans_round_trip": true,
+    "public_private_spans_do_not_overlap": true,
+    "strict_live_manifest_projection_matches": true,
+    "all_source_references_resolve": true,
+    "all_facts_have_primary_material_or_maintained_primary_record": true,
+    "all_record_excerpts_in_bounded_context": true,
+    "bounded_excerpt_limit_codepoints": 600,
+    "bounded_context_limit_codepoints": 1200
+  },
+  "limitations": [
+    "No project pipeline or provider API-key calls executed.",
+    "Static checks do not independently establish truth or source independence.",
+    "Independent source/label review pending.",
+    "No pipeline latency measured."
+  ]
+}

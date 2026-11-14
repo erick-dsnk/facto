@@ -1,0 +1,832 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "broader-development-2026-11-14-v2",
+  "status": "authored_pending_independent_source_label_review",
+  "blinded": false,
+  "implementationMayInspectAndTune": true,
+  "createdAt": "2026-11-14T04:12:35.661129+00:00",
+  "sourceCheckDate": "2026-11-14",
+  "language": "en",
+  "spanConvention": "half-open Unicode code-point indices into exact unnormalised text",
+  "denominators": {
+    "totalInputs": 16,
+    "ordinaryFactualInputs": 12,
+    "trueUniqueFacts": 6,
+    "falseUniqueFacts": 6,
+    "uniqueFactualPropositions": 12,
+    "controlInputs": 4,
+    "controlTypes": {
+      "personal_experience": 1,
+      "opinion": 1,
+      "incomplete_or_unclear": 1,
+      "synthetic_private_public_mixture": 1
+    },
+    "eligiblePublicSpanOccurrences": 13,
+    "eligibleInputOccurrences": 13,
+    "inputsWithoutEligiblePublicSpans": 3,
+    "repeatedPublicFactInMixedControl": "BD07",
+    "uniqueFactMetricRule": "Score BD01-BD12 once each. Exclude BDC04 repeated BD07 from unique-fact accuracy. Report control admission/privacy separately; BDC04 is an eligible-span isolation control, not a negative-admission case."
+  },
+  "provenance": {
+    "purpose": "Open development and tuning. This is not a blind or held-out evaluation.",
+    "authorImplementationAccess": "No implementation or diffs inspected. Only project AGENTS.md and public docs/plan.md were read; eligibility/evidence sections used for labels.",
+    "sealedDataAccess": "No sealed or original heldout contents inspected or changed. Coincidental overlap with unknown sealed cases is possible and was not checked.",
+    "selectionPolicy": "Twelve diverse stable low-stakes factual topics selected before pipeline execution. No engine or provider performance used for selection. Wording clarified during source review, before any pipeline run.",
+    "wordingRefinements": [
+      "Magna Carta: replaced draft sealing-location assertion with first-issued year, because source scholarship warns against assuming one original sealing ceremony.",
+      "UNESCO: replaced draft organization-establishment wording with Constitution adoption date, distinguishing entry into force."
+    ],
+    "research": "Connected Exa search/fetch only; no project API keys, no project pipeline calls.",
+    "sourceRequests": {
+      "searchCalls": 20,
+      "searchNumResultsRequested": 80,
+      "fetchCalls": 4,
+      "fetchUrlsRequested": 32,
+      "note": "Counts describe research requests, not 80 unique reviewed or qualifying sources; repeated results are not independent evidence."
+    },
+    "review": "Independent source/label review required before use; author checks are not independent review.",
+    "latency": "Not measured. Research retrieval time is not pipeline latency.",
+    "generalization": "Small deliberately balanced development set; no population or broad accuracy claim supported."
+  },
+  "files": {
+    "sources": "../sources.json",
+    "groundTruth": "../ground-truth.md",
+    "amendment": "amendment.md",
+    "manifest": "manifest.json"
+  },
+  "cases": [
+    {
+      "id": "BD01",
+      "label": "BD01",
+      "text": "The Great Fire of London occurred in 1666.",
+      "caseType": "factual",
+      "domain": "history",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true",
+      "expectedVerdict": "supported",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD01",
+            "acceptedTexts": [
+              "The Great Fire of London occurred in 1666."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The Great Fire of London occurred in 1666."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 42,
+          "text": "The Great Fire of London occurred in 1666.",
+          "uniqueFactId": "BD01"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD01",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D01-P",
+        "D01-A",
+        "D01-C"
+      ],
+      "groundTruthRationale": "The Great Fire of London took place in September 1666; only its year is tested.",
+      "scope": "calendar year of the historical London fire",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD02",
+      "label": "BD02",
+      "text": "Magna Carta was first issued in 1216.",
+      "caseType": "factual",
+      "domain": "history",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": false,
+      "expectedTruthLabel": "false",
+      "expectedVerdict": "contradicted",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD02",
+            "acceptedTexts": [
+              "Magna Carta was first issued in 1216."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "Magna Carta was first issued in 1216."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 37,
+          "text": "Magna Carta was first issued in 1216.",
+          "uniqueFactId": "BD02"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD02",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D02-P",
+        "D02-C"
+      ],
+      "groundTruthRationale": "Its first issue dates to June 1215. The 1216 version was a later reissue.",
+      "scope": "first issue, not a later reissue; no exact sealing-location assertion",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD03",
+      "label": "BD03",
+      "text": "Mount Kilimanjaro is located in Tanzania.",
+      "caseType": "factual",
+      "domain": "geography",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true",
+      "expectedVerdict": "supported",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD03",
+            "acceptedTexts": [
+              "Mount Kilimanjaro is located in Tanzania."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "Mount Kilimanjaro is located in Tanzania."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 41,
+          "text": "Mount Kilimanjaro is located in Tanzania.",
+          "uniqueFactId": "BD03"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD03",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D03-P",
+        "D03-C"
+      ],
+      "groundTruthRationale": "The maintained volcano country record and encyclopedia place Kilimanjaro in Tanzania.",
+      "scope": "named mountain's country; no elevation/eruption-status claim",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD04",
+      "label": "BD04",
+      "text": "Lake Baikal is in Africa.",
+      "caseType": "factual",
+      "domain": "geography",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": false,
+      "expectedTruthLabel": "false",
+      "expectedVerdict": "contradicted",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD04",
+            "acceptedTexts": [
+              "Lake Baikal is in Africa."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "Lake Baikal is in Africa."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 25,
+          "text": "Lake Baikal is in Africa.",
+          "uniqueFactId": "BD04"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD04",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D04-P",
+        "D04-C"
+      ],
+      "groundTruthRationale": "Lake Baikal is in Siberia, Russia, not Africa.",
+      "scope": "named lake's continent/location; no depth ranking or volume claim",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD05",
+      "label": "BD05",
+      "text": "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz.",
+      "caseType": "factual",
+      "domain": "science",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true",
+      "expectedVerdict": "supported",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD05",
+            "acceptedTexts": [
+              "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz."
+            ],
+            "verdict": "supported",
+            "domain": "science"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 149,
+          "text": "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz.",
+          "uniqueFactId": "BD05"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD05",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D05-P",
+        "D05-C"
+      ],
+      "groundTruthRationale": "BIPM fixes this exact transition frequency to 9 192 631 770 Hz in defining the second.",
+      "scope": "SI normative definition as checked 2026-11-14; unperturbed ground state, hyperfine transition, caesium-133, exact fixed value, unit Hz",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD06",
+      "label": "BD06",
+      "text": "The chemical symbol for gold is Ag.",
+      "caseType": "factual",
+      "domain": "science",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": false,
+      "expectedTruthLabel": "false",
+      "expectedVerdict": "contradicted",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD06",
+            "acceptedTexts": [
+              "The chemical symbol for gold is Ag."
+            ],
+            "verdict": "contradicted",
+            "domain": "science"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The chemical symbol for gold is Ag."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 35,
+          "text": "The chemical symbol for gold is Ag.",
+          "uniqueFactId": "BD06"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD06",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D06-P",
+        "D06-C"
+      ],
+      "groundTruthRationale": "Gold's symbol is Au. The tested symbol Ag is not gold's symbol.",
+      "scope": "standard chemical element symbol, not an alloy/brand abbreviation",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD07",
+      "label": "BD07",
+      "text": "The Panama Canal opened to world trade in 1914.",
+      "caseType": "factual",
+      "domain": "history",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true",
+      "expectedVerdict": "supported",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 47,
+          "text": "The Panama Canal opened to world trade in 1914.",
+          "uniqueFactId": "BD07"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD07",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D07-P",
+        "D07-C"
+      ],
+      "groundTruthRationale": "The Panama Canal Authority gives 15 August 1914 as opening to world trade.",
+      "scope": "opening to world trade, not construction start, earlier test passage, expansion or transfer",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD08",
+      "label": "BD08",
+      "text": "The first modern Olympic Games were held in Paris in 1896.",
+      "caseType": "factual",
+      "domain": "history",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": false,
+      "expectedTruthLabel": "false",
+      "expectedVerdict": "contradicted",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD08",
+            "acceptedTexts": [
+              "The first modern Olympic Games were held in Paris in 1896."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The first modern Olympic Games were held in Paris in 1896."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 58,
+          "text": "The first modern Olympic Games were held in Paris in 1896.",
+          "uniqueFactId": "BD08"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD08",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D08-P",
+        "D08-C"
+      ],
+      "groundTruthRationale": "The first modern Games were held in Athens in 1896.",
+      "scope": "first modern Olympic Games; neither ancient Games nor founding of IOC in Paris",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD09",
+      "label": "BD09",
+      "text": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+      "caseType": "factual",
+      "domain": "institutional_record",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true",
+      "expectedVerdict": "supported",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD09",
+            "acceptedTexts": [
+              "UNESCO's Constitution was adopted in London on 16 November 1945."
+            ],
+            "verdict": "supported",
+            "domain": "institutional_record"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 64,
+          "text": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+          "uniqueFactId": "BD09"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD09",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D09-P",
+        "D09-C"
+      ],
+      "groundTruthRationale": "The legal text explicitly gives adoption in London on 16 November 1945; entry into force was a different event on 4 November 1946.",
+      "scope": "adoption of Constitution, place London, exact date; no member/signatory-count assertion",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD10",
+      "label": "BD10",
+      "text": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "caseType": "factual",
+      "domain": "institutional_record",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": false,
+      "expectedTruthLabel": "false",
+      "expectedVerdict": "contradicted",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 75,
+          "text": "The Smithsonian Institution was created by a British royal charter in 1846.",
+          "uniqueFactId": "BD10"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD10",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D10-P",
+        "D10-C"
+      ],
+      "groundTruthRationale": "It was established by an act of the US Congress approved on 10 August 1846, not a British royal charter.",
+      "scope": "legal establishment mechanism in 1846; founder's British nationality is separate",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD11",
+      "label": "BD11",
+      "text": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+      "caseType": "factual",
+      "domain": "institutional_record",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true",
+      "expectedVerdict": "supported",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD11",
+            "acceptedTexts": [
+              "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+            ],
+            "verdict": "supported",
+            "domain": "institutional_record"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 73,
+          "text": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+          "uniqueFactId": "BD11"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD11",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D11-P",
+        "D11-C"
+      ],
+      "groundTruthRationale": "The Nobel award record identifies Röntgen as 1901 recipient; independent biography identifies it as the first Physics Nobel.",
+      "scope": "first Physics Nobel recipient and year; not a claim about first prize in any category or discovery date",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BD12",
+      "label": "BD12",
+      "text": "The Great Barrier Reef lies off the west coast of Australia.",
+      "caseType": "factual",
+      "domain": "geography",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "public_fact",
+      "expectedTruth": false,
+      "expectedTruthLabel": "false",
+      "expectedVerdict": "contradicted",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD12",
+            "acceptedTexts": [
+              "The Great Barrier Reef lies off the west coast of Australia."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The Great Barrier Reef lies off the west coast of Australia."
+      ],
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 60,
+          "text": "The Great Barrier Reef lies off the west coast of Australia.",
+          "uniqueFactId": "BD12"
+        }
+      ],
+      "privateSpans": [],
+      "uniqueFactId": "BD12",
+      "inUniqueFactualDenominator": true,
+      "sourceIds": [
+        "D12-P",
+        "D12-C"
+      ],
+      "groundTruthRationale": "It lies off Australia's northeastern coast in the Coral Sea.",
+      "scope": "named Great Barrier Reef's location; no current ecological-status assertion",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BDC01",
+      "label": "BDC01",
+      "text": "I misplaced my blue notebook on the train yesterday.",
+      "caseType": "control",
+      "controlType": "personal_experience",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "skip",
+      "expectedClass": "personal_experience",
+      "expectedTruth": null,
+      "expectedTruthLabel": "not_applicable",
+      "expectedVerdict": null,
+      "expected": {
+        "admissionAction": "skip",
+        "claims": []
+      },
+      "allowedPublic": [],
+      "publicSpans": [],
+      "privateSpans": [
+        {
+          "start": 0,
+          "end": 52,
+          "text": "I misplaced my blue notebook on the train yesterday."
+        }
+      ],
+      "uniqueFactId": null,
+      "inUniqueFactualDenominator": false,
+      "sourceIds": [],
+      "groundTruthRationale": "A synthetic private lived event. Do not search it or issue a public truth verdict.",
+      "scope": "Synthetic control; truth labels do not apply.",
+      "sourceCheckDate": null,
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BDC02",
+      "label": "BDC02",
+      "text": "Handwritten postcards are more charming than digital messages.",
+      "caseType": "control",
+      "controlType": "opinion",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "skip",
+      "expectedClass": "opinion",
+      "expectedTruth": null,
+      "expectedTruthLabel": "not_applicable",
+      "expectedVerdict": null,
+      "expected": {
+        "admissionAction": "skip",
+        "claims": []
+      },
+      "allowedPublic": [],
+      "publicSpans": [],
+      "privateSpans": [],
+      "uniqueFactId": null,
+      "inUniqueFactualDenominator": false,
+      "sourceIds": [],
+      "groundTruthRationale": "A pure aesthetic preference with no separable factual proposition.",
+      "scope": "Synthetic control; truth labels do not apply.",
+      "sourceCheckDate": null,
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    },
+    {
+      "id": "BDC03",
+      "label": "BDC03",
+      "text": "The treaty was signed in",
+      "caseType": "control",
+      "controlType": "incomplete_or_unclear",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "needs_confirmation",
+      "expectedClass": "incomplete_or_unclear",
+      "expectedTruth": null,
+      "expectedTruthLabel": "not_applicable",
+      "expectedVerdict": null,
+      "expected": {
+        "admissionAction": "needs_confirmation",
+        "claims": []
+      },
+      "allowedPublic": [],
+      "publicSpans": [],
+      "privateSpans": [],
+      "uniqueFactId": null,
+      "inUniqueFactualDenominator": false,
+      "sourceIds": [],
+      "groundTruthRationale": "Unresolved treaty referent and unfinished time/place clause. An explicit manual request must receive clarification (terminal needs_confirmation). Initial bounded waiting may occur; no public search or truth verdict is permitted.",
+      "scope": "Synthetic control; truth labels do not apply.",
+      "sourceCheckDate": null,
+      "latencyMs": null,
+      "latencyStatus": "not_measured",
+      "expectedLifecycle": {
+        "permittedIntermediateAdmission": "wait",
+        "terminalManualAdmission": "needs_confirmation",
+        "withoutContinuation": "clarification_without_search_or_truth_verdict",
+        "truthVerdictPermitted": false
+      },
+      "expectedAdmissionScope": "terminal_manual_outcome"
+    },
+    {
+      "id": "BDC04",
+      "label": "BDC04",
+      "text": "My rent is €980 a month. The Panama Canal opened to world trade in 1914.",
+      "caseType": "control",
+      "controlType": "synthetic_private_public_mixture",
+      "automatic": false,
+      "final": true,
+      "expectedAdmission": "check",
+      "expectedClass": "mixed",
+      "expectedTruth": true,
+      "expectedTruthLabel": "true_for_public_span_only",
+      "expectedVerdict": "supported_for_public_span_only",
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ]
+      },
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "publicSpans": [
+        {
+          "start": 25,
+          "end": 72,
+          "text": "The Panama Canal opened to world trade in 1914.",
+          "uniqueFactId": "BD07"
+        }
+      ],
+      "privateSpans": [
+        {
+          "start": 0,
+          "end": 24,
+          "text": "My rent is €980 a month."
+        }
+      ],
+      "uniqueFactId": "BD07",
+      "inUniqueFactualDenominator": false,
+      "sourceIds": [
+        "D07-P",
+        "D07-C"
+      ],
+      "groundTruthRationale": "Synthetic rent statement must stay out of every public query. Only the exact independent second sentence is eligible; it reuses BD07 and adds no unique fact.",
+      "scope": "Mixed control tests isolation/privacy; truth applies only to public clause, never to private rent.",
+      "sourceCheckDate": "2026-11-14",
+      "latencyMs": null,
+      "latencyStatus": "not_measured"
+    }
+  ],
+  "version": "v2",
+  "parentVersion": {
+    "path": "../cases.json",
+    "sha256": "9c2dbb4779e1ae1c436126721eed76d2ec66e73955ed16b658a7d17ba5b9862f"
+  },
+  "amendment": {
+    "changedCase": "BDC03",
+    "changedField": "expected.admissionAction",
+    "before": "wait",
+    "after": "needs_confirmation",
+    "meaning": "Terminal manual incomplete-request outcome; initial waiting is permitted intermediate behavior.",
+    "basis": "Public docs/plan.md section 8: An explicit request gets a clarification response instead of indefinite silence.",
+    "beforeProviderExecution": true,
+    "engineOutputsUsed": false
+  }
+}
