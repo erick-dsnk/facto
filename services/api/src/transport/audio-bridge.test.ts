@@ -57,6 +57,31 @@ describe('injectable audio bridge', () => {
     expect(invalid.final).not.toHaveBeenCalled();
   });
 
+  it('passes low-confidence words to checking but keeps them out of transcript events', async () => {
+    const state = setup(); await state.bridge.start(config); await state.bridge.accept(frame());
+    const lowConfidenceWords = [{ text: 'on', confidence: 0.42 }, { text: 'Tropical', confidence: 0.38 }];
+    state.publish({ ...transcript, lowConfidenceWords });
+    await vi.waitFor(() => expect(state.final).toHaveBeenCalledWith(expect.objectContaining({ lowConfidenceWords }), config, expect.any(Number)));
+    expect(state.events.find(event => event.type === 'transcript.final')?.payload).not.toHaveProperty('lowConfidenceWords');
+    state.publish({ ...transcript, segmentId: 'older-adapter' });
+    await vi.waitFor(() => expect(state.final).toHaveBeenCalledTimes(2));
+    expect(state.final.mock.calls[1]).toEqual([expect.not.objectContaining({ lowConfidenceWords: expect.anything() }), config, expect.any(Number)]);
+    await state.bridge.stop();
+  });
+
+  it.each([
+    ['thirteen words', Array.from({ length: 13 }, (_, index) => ({ text: `w${index}`, confidence: 0.5 }))],
+    ['an overlong word', [{ text: 'x'.repeat(65), confidence: 0.5 }]],
+    ['a blank word', [{ text: '  ', confidence: 0.5 }]],
+    ['a confidence above 1', [{ text: 'on', confidence: 1.2 }]],
+    ['an unknown field', [{ text: 'on', confidence: 0.4, start: 1 }]],
+  ])('fails closed on low-confidence words with %s', async (_label, lowConfidenceWords) => {
+    const state = setup(); await state.bridge.start(config); await state.bridge.accept(frame());
+    state.publish({ ...transcript, lowConfidenceWords } as AsrTranscript);
+    await vi.waitFor(() => expect(state.events.some(event => event.type === 'pipeline.error')).toBe(true));
+    expect(state.final).not.toHaveBeenCalled();
+  });
+
   it('stops listening at once when the adapter reports a provider failure after audio.ready', async () => {
     let failure!: (reasonCode: string) => void;
     const opening = vi.fn<AsrAdapter['start']>(async (_config, _onTranscript, _signal, onFailure) => { failure = onFailure!; return { write: async () => {}, stop: async () => {} }; });

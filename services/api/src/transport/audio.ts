@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PipelineError } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, type LowConfidenceWord } from '../../../../packages/contracts/src/index.js';
 
 export const AUDIO_HEADER_BYTES = 13;
 export const audioStartSchema = z.object({
@@ -13,8 +13,14 @@ export type AudioFrame = {
   streamGeneration: number; sequence: number; captureOffsetMs: number;
   pcm: Uint8Array; durationMs: number;
 };
-/** `speaker` is the provider's 0-based diarization index for the sentence, or null/absent when unknown. */
-export type AsrTranscript = { text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number; speaker?: number | null };
+/**
+ * `speaker` is the provider's 0-based diarization index for the sentence, or null/absent when unknown. `lowConfidenceWords` lists the
+ * words the recogniser was unsure of, in sentence order (at most 12); absent when there are none or the adapter does not report them.
+ */
+export type AsrTranscript = {
+  text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number; speaker?: number | null;
+  lowConfidenceWords?: LowConfidenceWord[];
+};
 /** The input owner supplies this adapter. Transport never stores audio or chooses a microphone. */
 export interface AsrAdapter {
   /**
