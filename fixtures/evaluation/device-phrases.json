@@ -1,0 +1,138 @@
+[
+  {
+    "id": "dev-affair",
+    "text": "Jensen Huang's fourth affair.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.93,
+    "expected": "speculation",
+    "why": "An allegation about an identifiable person's private life. It is never searched and answers Speculation with private_life_not_checked."
+  },
+  {
+    "id": "dev-ipo",
+    "text": "Anthropic will IPO at a 2.5 trillion dollar valuation.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.92,
+    "expected": "false",
+    "why": "A future claim whose figure is far outside credible published estimates and reporting on Anthropic's valuation as of November 2026."
+  },
+  {
+    "id": "dev-goldfish",
+    "text": "Goldfish only remember three seconds.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.95,
+    "expected": "false",
+    "why": "A popular myth: studies show goldfish keep memories for months. Admission must treat it as a claim even when Jev leans towards opinion."
+  },
+  {
+    "id": "dev-great-wall",
+    "text": "The Great Wall of China is visible from space.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.94,
+    "expected": "false",
+    "why": "A common misconception: astronauts report the wall is not visible to the naked eye from orbit, and myth sources count as false."
+  },
+  {
+    "id": "dev-helsinki",
+    "text": "Helsinki is the capital of Finland.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.97,
+    "expected": "true",
+    "why": "A stable fact that Wikipedia and Wikidata settle without a paid search."
+  },
+  {
+    "id": "dev-eiffel-context",
+    "text": "It opened in 1889.",
+    "context": ["The Eiffel Tower is in Paris."],
+    "mode": "audio",
+    "confidence": 0.95,
+    "expected": "true",
+    "why": "The subject comes from the earlier sentence: the Eiffel Tower opened in 1889 for the Exposition Universelle."
+  },
+  {
+    "id": "dev-nasa-moon",
+    "text": "According to NASA, the Moon is shrinking.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.94,
+    "expected": "true",
+    "why": "NASA reports that the Moon has shrunk by about 150 feet as its interior cools. Attributed to an outlet, so the check is whether NASA reported it."
+  },
+  {
+    "id": "dev-opinion",
+    "text": "Pineapple on pizza tastes amazing.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.95,
+    "expected": "not_a_claim",
+    "why": "A matter of taste. Asked about, it answers \"That's an opinion.\" with no search."
+  },
+  {
+    "id": "dev-question",
+    "text": "Is the Eiffel Tower taller than the Statue of Liberty?",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.95,
+    "expected": "not_a_claim",
+    "why": "A question states no fact. Asked about, it answers \"That's a question.\""
+  },
+  {
+    "id": "dev-prediction",
+    "text": "My team is going to win the hackathon tomorrow.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.94,
+    "expected": "not_a_claim",
+    "why": "A pure guess about the future that no plan, announcement, estimate or forecast could confirm. Asked about, it answers \"That's a prediction.\""
+  },
+  {
+    "id": "dev-misheard",
+    "text": "You heard that on Tropical IPO for $2,500,000,000,000?",
+    "context": ["Speaker 1: Did you see the news about Anthropic?"],
+    "mode": "audio",
+    "confidence": 0.71,
+    "lowConfidenceWords": [{ "text": "on", "confidence": 0.42 }, { "text": "Tropical", "confidence": 0.38 }],
+    "expected": "needs_confirmation",
+    "why": "A misheard \"Anthropic\": the low-confidence words change the claim, so an explicit request answers \"I'm not sure what was said.\""
+  },
+  {
+    "id": "dev-attributed-recent",
+    "text": "Jensen Huang said a memory chip glut is unlikely before 2029.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.93,
+    "expected": "true",
+    "why": "Huang said at Nvidia GTC Berlin that memory oversupply by 2029 is unlikely; reported 22-23 October 2026. A named speaker on a recent event, so the check is whether he said it."
+  },
+  {
+    "id": "dev-everest",
+    "text": "Mount Everest is the highest mountain above sea level.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.96,
+    "expected": "true",
+    "why": "A stable fact: Everest's summit, 8,849 m, is the highest above sea level."
+  },
+  {
+    "id": "dev-sydney-capital",
+    "text": "Sydney is the capital of Australia.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.96,
+    "expected": "false",
+    "why": "A common mistake: Canberra is the capital of Australia."
+  },
+  {
+    "id": "dev-hearsay-bulls",
+    "text": "I heard that bulls get angry when they see the colour red.",
+    "context": [],
+    "mode": "audio",
+    "confidence": 0.93,
+    "expected": "false",
+    "why": "Hearsay framing is ignored and the content is judged: bulls are red-green colourblind and react to the cape's movement, not its colour."
+  }
+]

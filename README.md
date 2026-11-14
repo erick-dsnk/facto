@@ -31,7 +31,7 @@ The API runs as one Cloudflare Container behind a Worker (issue #43). The Worker
 
 ### Configuration
 
-Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `MIN_CAPTURE_CONFIDENCE=0.6` (capture confidence below this asks for confirmation; the server default is 0.8) and `DEBUG_TRANSCRIPTS=1` (logs every final Deepgram result with per-word confidence as `[asr:final]` lines, which includes what bystanders said; set it to `0` once debugging is done). The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
+Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `DEEPGRAM_KEYTERMS` (optional comma list of extra names for Deepgram keyterm prompting, added to Facto, Anthropic, Nvidia, Jensen Huang, Meta, Ray-Ban and OpenAI; empty adds nothing) and `DEBUG_TRANSCRIPTS=1` (logs every final Deepgram result with per-word confidence as `[asr:final]` lines, which includes what bystanders said; set it to `0` once debugging is done). The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
 
 Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc`. Wrangler prompts for the value. Never commit or paste values anywhere:
 
@@ -40,6 +40,7 @@ Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrang
 | `JEV_API_KEY` | Jev key (live mode refuses to start without it) |
 | `EXA_API_KEY` | Exa key (same) |
 | `DEEPGRAM_API_KEY` | Deepgram key (without it `/health` shows `"asr":"not_configured"`) |
+| `GOOGLE_FACTCHECK_API_KEY` | Optional Google Fact Check Tools key. Without it the fact-check source is skipped |
 | `DEMO_JOIN_CODE` | 8+ characters |
 | `DEMO_JOIN_EXPIRES_AT` | ISO timestamp after the demo, e.g. `2026-12-31T23:59:00Z` |
 | `ALLOWED_ORIGINS` | `https://actually-api.<account-subdomain>.workers.dev` (for the `/` console page; the iOS app sends no `Origin`) |
@@ -95,7 +96,7 @@ If a request gets Cloudflare error 1010 (Browser Integrity Check on `workers.dev
 The API runs as one Railway service in EU West. `railway.json` sets the start command (`npm start`, which runs `tsx`, now a runtime dependency), the `/health` healthcheck and a single replica, because sessions live in memory.
 
 1. Create the service from this repo and enable auto-deploy from `main`.
-2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
+2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, optionally `GOOGLE_FACTCHECK_API_KEY` and `DEEPGRAM_KEYTERMS`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
 3. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset. Railway terminates TLS, so clients use `https://` and `wss://` on the Railway domain.
 4. Check `GET /health` on the public domain. It reports mode and provider readiness without credentials.
 
