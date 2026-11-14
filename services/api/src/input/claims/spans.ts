@@ -60,7 +60,9 @@ export function deterministicIssue(text: string): 'incomplete' | 'private_data' 
   const trimmed = text.trim();
   if (/\b(my (?:salary|income|address|phone number|diagnosis|password|social security)|i (?:feel|felt|visited|was diagnosed)|my (?:wife|husband|child|doctor))\b/i.test(trimmed) || /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(trimmed)) return 'private_data';
   if (attribution.test(trimmed) || /\b(?:imagine|hypothetically|suppose|just kidding)\b/i.test(trimmed)) return 'nonliteral';
-  if (trimmed.split(/\s+/u).length < 3 || /^(?:he|she|it|they|this|that|these|those|there|and|but|because)\b/i.test(trimmed)) return 'incomplete';
+  if (trimmed.split(/\s+/u).length < 3 || /^(?:he|she|it|they|this|that|these|those|and|but|because)\b/i.test(trimmed)) return 'incomplete';
+  // Existential “there are” states a proposition; locative “there” still needs a referent.
+  if (/^there\b/i.test(trimmed) && !/^there(?:['’](?:s|re|ve)|\s+(?:(?:is|are|was|were)(?:n['’]t)?|has\s+been|have\s+been|exists?|remain(?:s|ed)?))\b/i.test(trimmed)) return 'incomplete';
   if (/(?:\b(?:and|but|if|because|of|to|than|is|are|was|were|has|have)|[,;:—-])\s*$/i.test(trimmed)) return 'incomplete';
   if (/^(?:unemployment|inflation|the rate|the population)\s+(?:is|was|rose|fell)\s+\d[\d.,]*%?\.?$/i.test(trimmed)) return 'incomplete';
   return null;

@@ -67,10 +67,11 @@ function sameFamily(a: Evidence, b: Evidence): boolean {
   const left = safeSourceURL(a.url), right = safeSourceURL(b.url);
   if (!left || !right) return true;
   const domain = (url: URL) => getDomain(url.hostname, { allowPrivateDomains: true }) ?? url.hostname;
+  const publisher = a.publisher?.trim().toLowerCase();
   return domain(left) === domain(right)
     || a.sourceGroup === b.sourceGroup
     || (a.echoGroup !== null && a.echoGroup === b.echoGroup)
-    || (a.publisher !== null && b.publisher !== null && a.publisher.trim().toLowerCase() === b.publisher.trim().toLowerCase())
+    || (Boolean(publisher) && publisher === b.publisher?.trim().toLowerCase())
     || copiedPassage(a, b);
 }
 
