@@ -1,0 +1,31 @@
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import type {Evidence} from '/workspace/stack-20/packages/contracts/src/index.js';
+const getDomain:(host:string,options:{allowPrivateDomains:boolean})=>string|null = createRequire('/workspace/stack-20/package.json')('tldts').getDomain;
+export const PATHS={original:'/workspace/task-evidence/record-capability-contrasts-v1/annotation-inputs.json',identity:'/workspace/task-evidence/document-identity-contrasts-v1/annotation-inputs.json',sources:'/workspace/task-evidence/record-capability-contrasts-v1/sources.json',companions:'/workspace/task-evidence/applicability-companion-pools-01/companions.json'};
+export interface Unit {id:string;exactClaimText:string;receiptAlias:string;proofId:string;evidence:{id:string;url:string;excerpt:string};asOf:string;sourceFamily:string;partition:string;category:string}
+export interface StudyContext {unit:Unit;cohort:'original36'|'identity8';records:Evidence[];excludedSameURLCompanions:string[];targetPosition:number;blockId:string;index:number;arms:('baseline_anchor'|'applicability')[]}
+const evidence=(input:{id:string;url:string;excerpt:string;title?:string;publisher?:string|null;publishedAt?:string|null;retrievedAt:string}):Evidence=>({id:input.id,url:input.url,title:input.title??'Saved record passage',publisher:input.publisher??null,publishedAt:input.publishedAt??null,retrievedAt:input.retrievedAt,contentBasis:'page_text',excerpt:input.excerpt,sourceGroup:getDomain(new URL(input.url).hostname,{allowPrivateDomains:true})!,echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated',stanceProbability:null});
+export async function loadContexts(){
+ const read=async(path:string)=>JSON.parse(await readFile(path,'utf8'));
+ const original=await read(PATHS.original),identity=await read(PATHS.identity),catalogue=(await read(PATHS.sources)).savedRecordSources,companions=await read(PATHS.companions);
+ const all=[...original.units.map((unit:Unit)=>({unit,cohort:'original36' as const})),...identity.units.map((unit:Unit)=>({unit,cohort:'identity8' as const}))];
+ const binding=all.filter(x=>x.unit.partition==='binding_precondition_control');
+ if(binding.length!==2||binding.map(x=>x.unit.id).sort().join(',')!=='AC-B01,AC-B02')throw Error('binding_inventory_changed');
+ const semantic=all.filter(x=>x.unit.partition!=='binding_precondition_control');if(semantic.length!==42)throw Error('semantic_inventory_changed');
+ const contexts:StudyContext[]=semantic.map(({unit,cohort},index)=>{
+  const family=catalogue.find((s:any)=>s.receiptAlias===unit.receiptAlias);if(!family)throw Error('missing_source');
+  const target=evidence({...unit.evidence,retrievedAt:family.originalAcquiredAt});
+  const other=catalogue.filter((s:any)=>s.receiptAlias!==unit.receiptAlias).map((s:any)=>evidence({id:`receipt-${s.receiptAlias}`,url:s.canonicalURL,excerpt:s.recordUnit.content,retrievedAt:s.originalAcquiredAt}));
+  const familyCompanions=companions.familyPools[unit.receiptAlias].map((id:string)=>companions.records.find((r:any)=>r.id===id));
+  const excluded=familyCompanions.filter((r:any)=>r.url===unit.evidence.url);
+  const retained=familyCompanions.filter((r:any)=>r.url!==unit.evidence.url).map((r:any)=>evidence(r));
+  const records=[target,...other,...retained];if(records.length!==(unit.receiptAlias==='RA01'?6:5)||new Set(records.map(r=>r.url)).size!==records.length||new Set(records.map(r=>r.id)).size!==records.length)throw Error('pool_url_or_id_inventory');
+  const rotation=index%records.length;const ordered=[...records.slice(rotation),...records.slice(0,rotation)];
+  if(ordered.some(r=>Array.from(r.excerpt).length>2000))throw Error('excerpt_bound');
+  return {unit,cohort,records:ordered,excludedSameURLCompanions:excluded.map((r:any)=>r.id),targetPosition:ordered.findIndex(r=>r.id===unit.evidence.id),blockId:index<11?'block1':index<22?'block2':index<32?'block3':'block4',index,arms:index%2===0?['baseline_anchor','applicability']:['applicability','baseline_anchor']};
+ });
+ const hashes=Object.fromEntries(await Promise.all(Object.entries(PATHS).map(async([key,path])=>[key,{path,sha256:createHash('sha256').update(await readFile(path)).digest('hex')}])));
+ return {contexts,binding:binding.map(x=>x.unit),hashes};
+}

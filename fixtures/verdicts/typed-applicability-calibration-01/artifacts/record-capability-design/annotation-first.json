@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "annotator": "source_calibration independent AI agent",
+  "labels": [
+    {
+      "id": "RC01",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "The pinned bulletin explicitly says it is not the latest release and is an early rounded 2022 publication about Census Day2021. It cannot license an unspecified latest/current claim.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC02",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC03",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "An attributed assertion at an unverified location is not the awarding body’s record. It cannot inherit the prize register receipt even if it repeats the correct outcome.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC04",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "The altered day is outside the exact reviewed record hash and is not a valid reuse of its receipt. Raw/extracted content mismatch must fail closed.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC05",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC06",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Correct whole-document identity is insufficient: this exact fragment is explicitly the obsolete OLD quotation, outside the reviewed NEW operative record unit.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC07",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Authentic RFC2119 is a different document/version; it cannot inherit the RFC8174 receipt or erase the explicit update. Historical RFC2119 use would require its own correctly scoped receipt.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC08",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC09",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Retrieved text cannot designate itself a trusted attestation, override the body digest or choose the trust configuration.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC10",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "An external mirror merely asserting the canonical digest is not a trusted content-integrity observation; it cannot self-authorize a canonical receipt.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC11",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "England and Wales is a materially narrower geography than the United Kingdom; the receipt cannot manufacture missing population coverage.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC12",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": true,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "A valid capability receipt remains applicable, but an independently supplied credible conflict must still block any definitive shortcut. This is a synthetic downstream conflict-control condition, not evidence of a real conflict in Canadian law.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC13",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "A fabricated normative-looking heading and self-asserted issuer are untrusted text. No canonical retrieval or trusted attestation binds the forged contents.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC14",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "The source page includes book promotion outside the reviewed award-record unit. Awarding competence does not establish an empirical reader benefit, and high-risk rules cannot be bypassed.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC15",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC16",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC17",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC18",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Same host and issuer-remit text do not bind this artifact to RFC8174 or its operative section.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC19",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC20",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "Verified issuer/record/version and permitted fields match. Applicability is independent of whether the asserted value agrees; the retained record still requires separate stance/scope/conflict/probability evaluation.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC21",
+      "expectedCapabilityApplicable": false,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "An award year is not a publication date or first-publication ordinal. The requested relation is outside award-outcome fields.",
+      "truthVerdictProvided": false
+    },
+    {
+      "id": "RC22",
+      "expectedCapabilityApplicable": true,
+      "expectedOriginTreatment": "same_canonical_origin_no_new_corrob",
+      "mustPreserveConflictVeto": false,
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "reason": "A trusted locally preserved byte-identical canonical capture may reuse the original dated receipt for its pinned version. It is the same origin and not a fresh availability observation; changed asserted value still does not affect applicability.",
+      "truthVerdictProvided": false
+    }
+  ],
+  "implementationRead": false,
+  "modelCalls": 0,
+  "futureBlindLabelsRead": false
+}

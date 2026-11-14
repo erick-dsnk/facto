@@ -1,0 +1,44 @@
+{
+  "kind": "independent_unwired_record_capability_code_review",
+  "reviewedAt": "2026-11-14T05:23:21.991395+00:00",
+  "verdict": "acceptable_dated_snapshot_prototype_with_explicit_integration_limits",
+  "moduleSHA256": {
+    "src/applicability.ts": "8e0848f9f4047bee30562682eefc09554ec9f1e7eb2a8becabc02b1ac1d045ff",
+    "src/bind.ts": "3fb74cc1ec343de11796bea75f20d6d018d3471f693881e7bf5ee95f935a56e9",
+    "src/evaluate.ts": "92d5745bec2c1f27f6b312c2d9f80ab2eed37b023ec060c057696c2798c8fddc",
+    "src/files.ts": "93dd25e9ac33a1cebb503d0738647011561854ee2878db6260de49b73217cc18",
+    "src/install.ts": "462d15576ee47d64eb053f7aa4e00b9c6ce7c0885297620d3ce671cb8cec06ef",
+    "src/manifest.ts": "6f1419047abfa82e0bb3e8e7320dffd4154fee09714114172ffd11a78fc6b0d1",
+    "src/shadow.ts": "dc4ed43b2953c4c715635162ac14c88188b83b34cd118c47517978cfa686b1a4",
+    "src/snapshot.ts": "0d66184e2e2e45dee204420e3e2bef02c26a2162475895491713bb17c4e6875f",
+    "src/types.ts": "6f2463981e5affcfed709762e6db00d5de23c327d341ca22945e9e81d2954801"
+  },
+  "testSHA256": "7e706b766381d7acd414b16ebd93e745d22592474c28d626e1dcaad48e0287f3",
+  "shadowReportSHA256": "258401671fe320bea66408713221757bfb7334edb2b1ad944283adedb12b04e9",
+  "positiveFindings": [
+    "Admin-pinned manifest and private WeakMap identities prevent caller-authored verified bits, serialized handles or source-controlled receipt strings from manufacturing authority.",
+    "Exact canonical URL, trusted raw/extraction hashes and complete audited unit alignment preserve missing-qualifier/title/altered-text boundaries.",
+    "Frozen exact-claim frames and exact relation/material context are separate from truth; counterfactual values remain applicable.",
+    "Current/latest/unresolved time fail closed; original proof dates and origin lineage preserved, no extra independent credit or final verdict.",
+    "Receipt revocation and explicit installed-manifest retirement prevent old handle/token reuse across manifests.",
+    "Bounded local files and artifact totals; no provider/network adapter or production imports in the core."
+  ],
+  "findings": [
+    {
+      "severity": "integration_blocker",
+      "location": "src/evaluate.ts Audit.contextSHA256 / verifyCapability; src/types.ts Context",
+      "issue": "Token binds risk/conflict Boolean, retained IDs and origin links, but no companion record material. A same-ID companion excerpt can change without invalidating the token when metadata is held fixed. Current contextSHA is not full retained-pool identity.",
+      "currentImpact": "Unwired capability grants source provenance only and explicitly requires all other gates; it does not currently assign a verdict or suppress conflict.",
+      "requiredBeforeRuntimeHook": "Bind a deterministic digest of each retained record material and relevant graph/assessment identity, supplied by the trusted runtime; add same-ID companion text/URL/metadata replacement regressions. Recompute ordinary risk/conflict/scope/stance on changed evidence even when provenance receipt remains reusable."
+    }
+  ],
+  "evaluationLimits": [
+    "Saved22/22 applicability on curated frozen structured frames is a deterministic mechanism check, not evidence that natural-language claim routing works.",
+    "Four paired record passages are correlated; no final source-quality model/verdict policy or backend coverage was evaluated.",
+    "Issuer identity/competence remains an independently reviewed administrative attestation; integrity verifies installed proof bytes, not an issuer cryptographic signature.",
+    "No fresh canonical network reader, current-version authentication or generic raw-English adapter is implemented.",
+    "Tests were reviewed with author-reported32 passing; not rerun because runShadow rewrites the saved results."
+  ],
+  "providerCalls": 0,
+  "productionFilesModified": 0
+}

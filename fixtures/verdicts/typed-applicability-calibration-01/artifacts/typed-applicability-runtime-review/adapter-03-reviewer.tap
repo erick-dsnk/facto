@@ -1,0 +1,215 @@
+TAP version 13
+# Subtest: same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability
+ok 1 - same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability
+  ---
+  duration_ms: 159.797446
+  type: 'test'
+  ...
+# Subtest: clipped entire-unit binding fails before ask but unchanged baseline still executes once
+ok 2 - clipped entire-unit binding fails before ask but unchanged baseline still executes once
+  ---
+  duration_ms: 106.890007
+  type: 'test'
+  ...
+# Subtest: fails closed on not_covered 0.99
+ok 3 - fails closed on not_covered 0.99
+  ---
+  duration_ms: 111.709867
+  type: 'test'
+  ...
+# Subtest: fails closed on uncertain 0.99
+ok 4 - fails closed on uncertain 0.99
+  ---
+  duration_ms: 39.255703
+  type: 'test'
+  ...
+# Subtest: fails closed on covered 0.84
+ok 5 - fails closed on covered 0.84
+  ---
+  duration_ms: 27.715833
+  type: 'test'
+  ...
+# Subtest: public/current wording cannot acquire freshness by covered answer
+ok 6 - public/current wording cannot acquire freshness by covered answer
+  ---
+  duration_ms: 35.903975
+  type: 'test'
+  ...
+# Subtest: post-await advance invalidates response
+ok 7 - post-await advance invalidates response
+  ---
+  duration_ms: 33.400154
+  type: 'test'
+  ...
+# Subtest: post-await cancel invalidates response
+ok 8 - post-await cancel invalidates response
+  ---
+  duration_ms: 45.344543
+  type: 'test'
+  ...
+# Subtest: post-await replaceMaterial invalidates response
+ok 9 - post-await replaceMaterial invalidates response
+  ---
+  duration_ms: 36.086009
+  type: 'test'
+  ...
+# Subtest: post-await replaceInstall invalidates response
+ok 10 - post-await replaceInstall invalidates response
+  ---
+  duration_ms: 47.507572
+  type: 'test'
+  ...
+# Subtest: retirement invalidates a previously issued semantic token
+ok 11 - retirement invalidates a previously issued semantic token
+  ---
+  duration_ms: 36.178008
+  type: 'test'
+  ...
+# Subtest: same-ID companion and assessment changes do not validate token
+ok 12 - same-ID companion and assessment changes do not validate token
+  ---
+  duration_ms: 42.03597
+  type: 'test'
+  ...
+# Subtest: nonordinary risk never gains semantic eligibility even with covered answer
+ok 13 - nonordinary risk never gains semantic eligibility even with covered answer
+  ---
+  duration_ms: 36.513913
+  type: 'test'
+  ...
+# Subtest: prototype width mismatch preserves exact baseline title and disables optional route
+ok 14 - prototype width mismatch preserves exact baseline title and disables optional route
+  ---
+  duration_ms: 38.922661
+  type: 'test'
+  ...
+# REQUEST_BYTES {"baseline":63394,"augmentation":0,"actual":63394}
+# Subtest: maximal legal companion material preflights actual serialization without dropping any source
+ok 15 - maximal legal companion material preflights actual serialization without dropping any source
+  ---
+  duration_ms: 44.029243
+  type: 'test'
+  ...
+# Subtest: over-limit augmentation preserves baseline byte for byte and sends no optional item
+ok 16 - over-limit augmentation preserves baseline byte for byte and sends no optional item
+  ---
+  duration_ms: 35.976895
+  type: 'test'
+  ...
+# Subtest: shared inherited exhausted allowance prevents any HTTP attempt
+ok 17 - shared inherited exhausted allowance prevents any HTTP attempt
+  ---
+  duration_ms: 36.402656
+  type: 'test'
+  ...
+# Subtest: actual response token accounting charges the same request budget
+ok 18 - actual response token accounting charges the same request budget
+  ---
+  duration_ms: 61.328237
+  type: 'test'
+  ...
+# Subtest: explicit second-claim reservation cannot be stolen by optional question
+ok 19 - explicit second-claim reservation cannot be stolen by optional question
+  ---
+  duration_ms: 34.569305
+  type: 'test'
+  ...
+# Subtest: stale owner is rechecked on every consume, not just factory creation
+ok 20 - stale owner is rechecked on every consume, not just factory creation
+  ---
+  duration_ms: 48.226084
+  type: 'test'
+  ...
+# Subtest: transient HTTP failure is terminal with one actual attempt and no hidden allowance
+ok 21 - transient HTTP failure is terminal with one actual attempt and no hidden allowance
+  ---
+  duration_ms: 89.717353
+  type: 'test'
+  ...
+# Subtest: forged or serialized dispatch-owner handle is rejected before ask
+ok 22 - forged or serialized dispatch-owner handle is rejected before ask
+  ---
+  duration_ms: 42.6994
+  type: 'test'
+  ...
+# Subtest: hung transport settles on Session.cancel before release; late result creates no answer/usage/commit
+ok 23 - hung transport settles on Session.cancel before release; late result creates no answer/usage/commit
+  ---
+  duration_ms: 62.740724
+  type: 'test'
+  ...
+# Subtest: hung transport settles at inherited absolute deadline even if injected transport ignores signal
+ok 24 - hung transport settles at inherited absolute deadline even if injected transport ignores signal
+  ---
+  duration_ms: 59.305259
+  type: 'test'
+  ...
+# Subtest: captured budget replacement fails before any dispatch
+ok 25 - captured budget replacement fails before any dispatch
+  ---
+  duration_ms: 31.154663
+  type: 'test'
+  ...
+# Subtest: captured controller replacement fails before any dispatch
+ok 26 - captured controller replacement fails before any dispatch
+  ---
+  duration_ms: 29.508533
+  type: 'test'
+  ...
+# Subtest: captured clock replacement fails before any dispatch
+ok 27 - captured clock replacement fails before any dispatch
+  ---
+  duration_ms: 45.726729
+  type: 'test'
+  ...
+# Subtest: captured acceptedAt replacement fails before any dispatch
+ok 28 - captured acceptedAt replacement fails before any dispatch
+  ---
+  duration_ms: 33.421386
+  type: 'test'
+  ...
+# Subtest: budget replaced during hung transport cannot receive usage or validate old response
+ok 29 - budget replaced during hung transport cannot receive usage or validate old response
+  ---
+  duration_ms: 48.216249
+  type: 'test'
+  ...
+# Subtest: deadline aborts actual local transport signal without aborting pinned request controller
+ok 30 - deadline aborts actual local transport signal without aborting pinned request controller
+  ---
+  duration_ms: 66.096969
+  type: 'test'
+  ...
+# Subtest: deadline during ignored-signal body read cancels owned underlying reader and settles
+ok 31 - deadline during ignored-signal body read cancels owned underlying reader and settles
+  ---
+  duration_ms: 48.68202
+  type: 'test'
+  ...
+# Subtest: postheaders owner failure cancels exact returned body; reject cleanup cannot mask or delay failure
+ok 32 - postheaders owner failure cancels exact returned body; reject cleanup cannot mask or delay failure
+  ---
+  duration_ms: 35.096108
+  type: 'test'
+  ...
+# Subtest: postheaders owner failure cancels exact returned body; hang cleanup cannot mask or delay failure
+ok 33 - postheaders owner failure cancels exact returned body; hang cleanup cannot mask or delay failure
+  ---
+  duration_ms: 25.925407
+  type: 'test'
+  ...
+# Subtest: owner failure aborts local transport but never a replacement controller
+ok 34 - owner failure aborts local transport but never a replacement controller
+  ---
+  duration_ms: 43.994541
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2378.594162

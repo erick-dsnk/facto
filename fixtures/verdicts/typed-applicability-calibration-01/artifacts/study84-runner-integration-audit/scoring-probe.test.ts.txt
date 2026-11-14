@@ -1,0 +1,39 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { scoreStudy, type Denominator } from '../typed-applicability-calibration-01/scoring.ts';
+const labels: Denominator[] = [
+  { id: 'P', cohort: 'probe', category: 'positive', sourceFamily: 'synthetic-probe', expected: 'covered', excludeFromPrimary: false },
+  { id: 'N', cohort: 'probe', category: 'negative', sourceFamily: 'synthetic-probe', expected: 'not_covered', excludeFromPrimary: false },
+  { id: 'U', cohort: 'probe', category: 'uncertain', sourceFamily: 'synthetic-probe', expected: 'uncertain', excludeFromPrimary: true },
+];
+function row(id: string, asked: boolean, covered = false) {
+  return { unitId: id, arm: 'applicability', targetId: 'target',
+    dispatch: { questionMap: asked ? [{ evidenceId: 'target', questionId: 'a0_applicability' }] : [] },
+    answers: asked ? { a0_applicability: { choice: covered ? 'covered' : 'uncertain', probabilities: { covered: covered ? .9 : .05 } } } : {},
+    eligibility: covered ? [{}] : [], unavailable: asked ? [] : [{ reason: 'current_version_proof_unavailable' }],
+    policy: { verdict: 'insufficient_evidence', selectedEvidenceIds: [] }, judgment: { checkedText: 'Synthetic accounting probe', evidence: [], sourceAssessments: {} } };
+}
+test('missing negative and uncertain outcomes stay in fixed declared denominators', () => {
+  const result = scoreStudy(labels, [row('P', true, true)]);
+  const m = result.byArm.applicability!;
+  assert.equal(result.declaredSemanticUnits, 3); assert.equal(m.declared, 3);
+  assert.equal(m.completed, 1); assert.equal(m.missing, 2);
+  assert.deepEqual(m.declaredByExpected, { covered: 1, not_covered: 1, uncertain: 1 });
+  assert.deepEqual(m.missingByExpected, { not_covered: 1, uncertain: 1 });
+  assert.equal(m.rawTernaryDenominator, 3); assert.equal(m.rawTernaryObserved, 1);
+});
+test('deterministic unavailability stays completed but unasked, never a guessed correct answer', () => {
+  const result = scoreStudy(labels, [row('P', false)]);
+  const m = result.byArm.applicability!;
+  assert.equal(m.completed, 1); assert.equal(m.applicabilityQuestionAsked, 0);
+  assert.equal(m.combinedAvailabilityAndCoverageGate.positiveDeclared, 1);
+  assert.equal(m.combinedAvailabilityAndCoverageGate.positiveAccepted, 0);
+  assert.equal(m.rawTernaryExact, 0); assert.deepEqual(m.deterministicOrGuardUnavailable.map(x => x.id), ['P']);
+});
+test('uncertain sentinel unsafe coverage and eligibility grants remain observable', () => {
+  const result = scoreStudy(labels, [row('U', true, true)]);
+  const m = result.byArm.applicability!;
+  assert.equal(m.combinedAvailabilityAndCoverageGate.uncertainDeclared, 1);
+  assert.equal(m.combinedAvailabilityAndCoverageGate.unsafeUncertainGrants, 1);
+  assert.equal(m.privateTypedEligibility.uncertainGrants, 1);
+});

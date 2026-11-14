@@ -1,0 +1,159 @@
+import { resolveReceipt, manifestIdentity, type InstalledManifest } from './manifest.js';
+import { snapshotState, type VerifiedSnapshot } from './snapshot.js';
+import { assertApplicable, frameState, type FrozenClaimFrame } from './applicability.js';
+import { bindExcerpt, type Alignment } from './bind.js';
+import { canonical, deepFreeze, digest, fail, object, parseContext, parseEvidence, string, time, ValidationError, type Context, type Evidence } from './types.js';
+declare const tokenBrand: unique symbol;
+export type RecordCapability = {
+    readonly [tokenBrand]: true;
+};
+export interface Audit {
+    manifestSHA256: string;
+    receiptSHA256: string;
+    canonicalDocumentId: string;
+    versionId: string;
+    canonicalURL: string;
+    proofId: string;
+    rawBodySHA256: string;
+    extractionSHA256: string;
+    originalFinalURL: string;
+    originalRedirects: string[];
+    originalProofAt: string;
+    newOriginObservation: false;
+    originFamily: string;
+    independentCorroborationCredit: false;
+    claimSHA256: string;
+    frameSHA256: string;
+    evidenceId: string;
+    evidenceURL: string;
+    excerptSHA256: string;
+    contextSHA256: string;
+    contextSchemaVersion: 2;
+    retainedMaterialSHA256: string;
+    originGraphSHA256: string;
+    assessmentSHA256: string;
+    assessmentId: string;
+    assessmentRevision: string;
+    claimRevision: string;
+    originNodeKeys: string[];
+    retainedEvidenceIds: string[];
+    originLinks: Context['originLinks'];
+    credibleConflictPresent: boolean;
+    conflictVetoMustRemain: true;
+    allOtherPolicyGatesRequired: true;
+    verdictAssigned: false;
+    productionWired: false;
+    alignment: Alignment;
+    limitations: string[];
+}
+export type Evaluation = {
+    kind: 'capability';
+    token: RecordCapability;
+    audit: Audit;
+} | {
+    kind: 'unavailable';
+    reason: string;
+    verdictAssigned: false;
+    allOtherPolicyGatesRequired: true;
+    productionWired: false;
+};
+type TokenState = {
+    manifest: InstalledManifest;
+    receiptAlias: string;
+    audit: Audit;
+};
+const tokens = new WeakMap<object, TokenState>();
+export function evaluate(input: unknown): Evaluation {
+    try {
+        const v = object(input, ['manifest', 'artifact', 'receiptAlias', 'evidence', 'frame', 'exactClaimText', 'context', 'now']);
+        const manifest = v.manifest as InstalledManifest;
+        const identity = manifestIdentity(manifest);
+        const entry = resolveReceipt(manifest, v.receiptAlias);
+        const artifact = snapshotState(v.artifact, manifest);
+        const frame = frameState(v.frame, manifest);
+        const evidence = parseEvidence(v.evidence);
+        const context = parseContext(v.context);
+        const now = time(v.now);
+        const exactClaimText = string(v.exactClaimText, 4000);
+        if (context.claim.exactText !== exactClaimText)
+            return fail('context_claim_mismatch');
+        if (exactClaimText !== frame.frame.exactText || digest(exactClaimText) !== frame.frame.exactTextSHA256)
+            return fail('claim_frame_mismatch');
+        if (!context.retainedEvidenceIds.includes(evidence.id))
+            return fail('evidence_missing_from_context');
+        const targetRecord = context.retainedRecords.find(r => r.id === evidence.id)!;
+        if (targetRecord.url !== evidence.url || targetRecord.excerpt !== evidence.excerpt)
+            return fail('target_material_mismatch');
+        if (context.risk !== 'ordinary')
+            return fail('risk_requires_existing_stronger_route');
+        if (artifact.proof.id !== entry.receipt.proofId || artifact.proof.rawBodySHA256 !== entry.receipt.rawBodySHA256 || artifact.proof.extractionSHA256 !== entry.receipt.extractionSHA256 || artifact.proof.requestedURL !== entry.receipt.canonicalURL)
+            return fail('artifact_receipt_mismatch');
+        if (evidence.url !== entry.receipt.canonicalURL)
+            return fail('canonical_evidence_url_mismatch');
+        assertApplicable(entry.receipt, frame.frame, now, artifact.proof.acquiredAt);
+        const alignment = bindExcerpt(entry.receipt, artifact.text, evidence.excerpt);
+        const audit: Audit = deepFreeze({
+            manifestSHA256: identity, receiptSHA256: entry.sha256,
+            canonicalDocumentId: entry.receipt.canonicalDocumentId, versionId: entry.receipt.versionId,
+            canonicalURL: entry.receipt.canonicalURL, proofId: artifact.proof.id,
+            rawBodySHA256: artifact.proof.rawBodySHA256, extractionSHA256: artifact.proof.extractionSHA256,
+            originalFinalURL: artifact.proof.finalURL, originalRedirects: [...artifact.proof.redirects],
+            originalProofAt: artifact.proof.acquiredAt, newOriginObservation: false,
+            originFamily: entry.receipt.originFamily, independentCorroborationCredit: false,
+            claimSHA256: frame.frame.exactTextSHA256, frameSHA256: frame.sha256,
+            evidenceId: evidence.id, evidenceURL: evidence.url, excerptSHA256: digest(evidence.excerpt),
+            contextSHA256: digest(canonical(context)), contextSchemaVersion: 2,
+            retainedMaterialSHA256: digest(canonical(context.retainedRecords)),
+            originGraphSHA256: digest(canonical({ nodes: context.originNodes, links: context.originLinks, state: context.originGraphState, retainedNodeKeys: context.retainedNodeKeys })),
+            assessmentSHA256: digest(canonical(context.assessment)), assessmentId: context.assessment.id,
+            assessmentRevision: context.assessment.revision, claimRevision: context.claim.revision,
+            originNodeKeys: context.originNodes.map(n => n.key), retainedEvidenceIds: [...context.retainedEvidenceIds],
+            originLinks: context.originLinks.map(p => ({ ...p })), credibleConflictPresent: context.credibleConflictPresent,
+            conflictVetoMustRemain: true, allOtherPolicyGatesRequired: true,
+            verdictAssigned: false, productionWired: false, alignment,
+            limitations: [...entry.receipt.limitations,
+                'Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.',
+                'Full supplied retained material, raw graph versions and assessment state are bound; completeness and assessment correctness remain trusted-runtime responsibilities.']
+        });
+        const token = Object.freeze(Object.create(null)) as RecordCapability;
+        tokens.set(token, { manifest, receiptAlias: string(v.receiptAlias, 64), audit });
+        return { kind: 'capability', token, audit };
+    }
+    catch (error) {
+        if (error instanceof ValidationError)
+            return { kind: 'unavailable', reason: error.code, verdictAssigned: false, allOtherPolicyGatesRequired: true, productionWired: false };
+        throw error;
+    }
+}
+/** Token serialization or caller-authored verified objects cannot recreate this private identity. */
+export function verifyCapability(token: unknown, input: {
+    manifest: InstalledManifest;
+    evidence: unknown;
+    frame: FrozenClaimFrame;
+    exactClaimText: string;
+    context: unknown;
+}): boolean {
+    try {
+        if (!token || typeof token !== 'object')
+            return false;
+        const s = tokens.get(token);
+        if (!s || s.manifest !== input.manifest)
+            return false;
+        resolveReceipt(input.manifest, s.receiptAlias);
+        const e = parseEvidence(input.evidence), f = frameState(input.frame, input.manifest), c = parseContext(input.context);
+        return e.id === s.audit.evidenceId && e.url === s.audit.evidenceURL && digest(e.excerpt) === s.audit.excerptSHA256 && f.sha256 === s.audit.frameSHA256 && input.exactClaimText === f.frame.exactText && digest(input.exactClaimText) === s.audit.claimSHA256 && digest(canonical(c)) === s.audit.contextSHA256;
+    }
+    catch {
+        return false;
+    }
+}
+export type EvaluateInput = {
+    manifest: InstalledManifest;
+    artifact: VerifiedSnapshot | unknown;
+    receiptAlias: string;
+    evidence: Evidence;
+    frame: FrozenClaimFrame | unknown;
+    exactClaimText: string;
+    context: Context;
+    now: string;
+};

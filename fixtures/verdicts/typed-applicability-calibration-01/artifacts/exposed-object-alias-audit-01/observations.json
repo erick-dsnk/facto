@@ -1,0 +1,113 @@
+{
+  "kind": "actual_returned_object_alias_audit",
+  "projectProviderCalls": 0,
+  "networkCalls": 0,
+  "injectedFetchOnly": true,
+  "known05ContextAliasExcludedAsNewFinding": true,
+  "observations": [
+    {
+      "version": "05",
+      "surface": "returned_judgment",
+      "writable": true,
+      "privateBindingChanged": false
+    },
+    {
+      "version": "05",
+      "surface": "dispatch_audit_handles",
+      "frozenAndBindingStable": true
+    },
+    {
+      "version": "05",
+      "surface": "envelopes_and_binding_inputs",
+      "writableEnvelope": true,
+      "privateRetargeting": false
+    },
+    {
+      "version": "05",
+      "surface": "material_owner_snapshots",
+      "frozenNestedMetadata": true,
+      "contextSignalFrozen": false,
+      "signalIsNativeAlias": true
+    },
+    {
+      "version": "05",
+      "surface": "exposed_transport_signal",
+      "actualMutation": "shadow addEventListener on returned native object",
+      "controlSettledAfterCancel": true,
+      "mutatedSettledAfter30ms": false,
+      "lateAuthorityIssued": false,
+      "mockAttemptsCharged": 1,
+      "projectProviderCalls": 0,
+      "scope": "Trusted in-process caller can alter exposed native signal; no remote source/provider control demonstrated."
+    },
+    {
+      "version": "05",
+      "surface": "signal_vs_private_token_owner",
+      "cancellationAuthorityBypass": false
+    },
+    {
+      "version": "06",
+      "surface": "returned_judgment",
+      "writable": true,
+      "privateBindingChanged": false
+    },
+    {
+      "version": "06",
+      "surface": "dispatch_audit_handles",
+      "frozenAndBindingStable": true
+    },
+    {
+      "version": "06",
+      "surface": "envelopes_and_binding_inputs",
+      "writableEnvelope": true,
+      "privateRetargeting": false
+    },
+    {
+      "version": "06",
+      "surface": "material_owner_snapshots",
+      "frozenNestedMetadata": true,
+      "contextSignalFrozen": false,
+      "signalIsNativeAlias": true
+    },
+    {
+      "version": "06",
+      "surface": "exposed_transport_signal",
+      "actualMutation": "shadow addEventListener on returned native object",
+      "controlSettledAfterCancel": true,
+      "mutatedSettledAfter30ms": false,
+      "lateAuthorityIssued": false,
+      "mockAttemptsCharged": 1,
+      "projectProviderCalls": 0,
+      "scope": "Trusted in-process caller can alter exposed native signal; no remote source/provider control demonstrated."
+    },
+    {
+      "version": "06",
+      "surface": "signal_vs_private_token_owner",
+      "cancellationAuthorityBypass": false
+    },
+    {
+      "version": "06",
+      "surface": "known_context_alias_fix_extended_paths",
+      "actualMutationsBlocked": true,
+      "original05PassageAliasReproductionRepeated": false
+    },
+    {
+      "surface": "prototype02_issuer_receipt_proof_frame_snapshot",
+      "nestedActualMutationBlocked": true
+    },
+    {
+      "surface": "prototype02_capability_audit",
+      "actualAuditMutationBlocked": true,
+      "originalInputDetached": true
+    },
+    {
+      "surface": "standalone_alignment",
+      "mutableDataOnly": true,
+      "privateAuthorityChanged": false
+    },
+    {
+      "surface": "native_signal_freeze_control",
+      "blanketFreezeBreaksAbort": true
+    }
+  ]
+}

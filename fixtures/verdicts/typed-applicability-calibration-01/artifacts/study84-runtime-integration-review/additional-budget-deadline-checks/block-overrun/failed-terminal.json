@@ -1,0 +1,18 @@
+{
+  "callId": "AC-T02:baseline_anchor",
+  "blockId": "block1",
+  "status": "failed",
+  "actualStartedJev": 1,
+  "requestBytes": 40958,
+  "responseBytes": 5410,
+  "measuredInputTokens": 320001,
+  "unknownUsage": false,
+  "failure": {
+    "kind": "local_guard",
+    "code": "measured_input_token_cap",
+    "callId": "AC-T02:baseline_anchor",
+    "blockId": "block1"
+  },
+  "runtimeChargedAttempts": 1,
+  "runtimeMeasuredInputTokens": 0
+}

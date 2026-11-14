@@ -1,0 +1,208 @@
+{
+  "kind": "frozen_author_document_identity_applicability_labels",
+  "createdAt": "2026-11-14T05:58:30.639873+00:00",
+  "inputSHA256": "17edb0a1eef8b6aba555e5daeae7a15d0d771cf172b842fa30e24d96149221b3",
+  "labels": [
+    {
+      "id": "DI01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The words have the meanings specified herein only when they are in\n      all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 737,
+        "end": 823
+      },
+      "rationale": "The trusted canonical descriptor identifies which document/version This document refers to. The operative capitalization rule itself is in the retained full unit; no rule value is inferred from identity.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit immutable May2017 version; capitalization condition is the compared field",
+      "contrastGroup": "rfc-identity-opposed-value",
+      "gatingLayer": "semantic_referent_binding_with_retained_operative_fields",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "4c32141beed3966fc66274c70b7dd56886115cc9b06e7db6885249b334a138bf",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      }
+    },
+    {
+      "id": "DI02",
+      "expectedApplicability": "covered",
+      "supportingSpan": "When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document.",
+      "supportingSpanCodepoints": {
+        "start": 831,
+        "end": 953
+      },
+      "rationale": "Same identified version, relation and referent as DI01. The wrong asserted capitalization value remains covered because the retained unit states the operative field; agreement is separate stance.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit immutable May2017 version; opposite compared capitalization value",
+      "contrastGroup": "rfc-identity-opposed-value",
+      "gatingLayer": "semantic_referent_binding_with_retained_operative_fields",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "3733860dbbaf8b95aefa3572f5cdc6fea65c3a09a4e0897340c8b2ca21a610e2",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      }
+    },
+    {
+      "id": "DI03",
+      "expectedApplicability": "covered",
+      "supportingSpan": "On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300",
+      "supportingSpanCodepoints": {
+        "start": 875,
+        "end": 982
+      },
+      "rationale": "The canonical descriptor identifies the historical release. The actual excerpt supplies geography, population, reference date, rounded-release nature and value together; the descriptor supplies none of those operative answers.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit historical release and reference date",
+      "contrastGroup": "population-value-present-versus-missing",
+      "gatingLayer": "semantic_referent_binding_with_retained_operative_fields",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "1d41e7fe105722bfd3df9924142005edfb5bda161f1a3320cedabe346a7374c3",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      }
+    },
+    {
+      "id": "DI04",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 299,
+        "end": 409
+      },
+      "rationale": "May2017 identifies the audited version, but this operative unit has no publication-event/date field and its permitted relation is keyword interpretation. Descriptor identity is not retained publication evidence.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "document publication date requested; version label is not the asserted event record",
+      "contrastGroup": "descriptor-date-as-answer",
+      "gatingLayer": "semantic_relation_and_missing_operative_fact",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "7e4cfe6d5535e0413e41a7e30c62f59439cce745fccdbf8a1f51895d2e877a0b",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      }
+    },
+    {
+      "id": "DI05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 299,
+        "end": 409
+      },
+      "rationale": "A version label/document class cannot supply a formal adoption event or its date. No adoption record appears in the retained NEW unit; publication, adoption and interpretation are distinct relations.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "formal adoption event/date requested; no operative adoption field",
+      "contrastGroup": "descriptor-date-as-answer",
+      "gatingLayer": "semantic_relation_and_missing_operative_fact",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "b6b1ad91d37c245ab7650f73c7bc620360c6b264805d5e086febfb75ab3db8e5",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      }
+    },
+    {
+      "id": "DI06",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "When July 1 is a Sunday, July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 224,
+        "end": 274
+      },
+      "rationale": "The descriptor identifies the consolidation current-to19October2026. It is a saved dated snapshot, not current/effective/recheck proof at14November. Matching an operative holiday rule cannot establish its current legal force.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit current-force date2026-11-14; no verified effective/recheck interval",
+      "contrastGroup": "descriptor-version-not-current-force",
+      "gatingLayer": "semantic_current_force_then_missing_effective_current_proof",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "64fd5f5847068317f2708227891e89fdc7acb9b31725437ea655ee167ca82c9c",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      }
+    },
+    {
+      "id": "DI07",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "Identity/category/edition and winning-work fields do not include an author-career first ordinal or complete earlier award history. The descriptor cannot add that missing historical universe.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "career-wide ordinal requested from one award-edition entry",
+      "contrastGroup": "descriptor-category-not-ordinal",
+      "gatingLayer": "semantic_relation_and_missing_operative_fact",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "e200ea8312356f3310d246a5bbb3b7426e956c97f58739f60ac700817a310751",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      }
+    },
+    {
+      "id": "DI08",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "the size of the usual resident population in England and Wales was 59,597,300",
+      "supportingSpanCodepoints": {
+        "start": 905,
+        "end": 982
+      },
+      "rationale": "The full retained unit gives the overall usual-resident estimate, not an exact-age-seven count. An identified population release and an age-group table topic do not supply a number absent from the retained unit. This is a requested population/measure field missing, not merely a different compared value of the overall count.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "historical release/date match, but exact-age population/count absent",
+      "contrastGroup": "population-value-present-versus-missing",
+      "gatingLayer": "semantic_relation_and_missing_operative_fact",
+      "fullUnitBinding": "exact_complete_audited_unit_preserved",
+      "descriptorMayIdentifyRecord": true,
+      "descriptorMaySupplyOperativeAnswer": false,
+      "preserveConflictVeto": true,
+      "claimSHA256": "d9c16d1765d7c5e12fa844153966b1c17c90ca7d9db385a073e67a3f850904ae",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      }
+    }
+  ],
+  "stanceTruthOrContentBasisLabelsAssigned": false
+}
