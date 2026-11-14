@@ -291,12 +291,32 @@ describe('evidence normalization', () => {
   it('keeps alternate-query claim and neutral retrieval objective separate', () => {
     const checked = 'According to the 2024 report, the bridge did not open before May.';
     const query = buildAlternateQuery(checked, 'balanced_evidence');
-    expect(query).toContain(JSON.stringify(checked));
+    expect(query).toContain(checked);
+    expect(query).not.toContain(JSON.stringify(checked));
     expect(query).not.toContain('Retrieval objective:');
     expect(RETRIEVAL_OBJECTIVE).toContain('supports, challenges, or qualifies');
     expect(query).toContain('underlying named record');
     expect(query).toContain('identified keeper and provenance');
     expect(query).not.toContain('private salary');
+  });
+
+  it('does not add an exact-phrase search restriction to a false assertion or silently correct its value', () => {
+    const checked = 'The chemical symbol for copper is He.';
+    const query = buildAlternateQuery(checked, 'balanced_evidence');
+    expect(query.endsWith(`: ${checked}`)).toBe(true);
+    expect(query).not.toContain('"');
+    expect(query).not.toContain('Cu');
+    expect(RETRIEVAL_OBJECTIVE).toContain('supports, challenges, or qualifies');
+  });
+
+  it('preserves user-owned quotes, backslashes, newlines and Unicode verbatim in the alternate query', () => {
+    const checked = 'The "İzmir 🦉" log labels the event “first” on 4 May.\nIts register path is C:\\records.';
+    const query = buildAlternateQuery(checked, 'balanced_evidence');
+    expect(query.endsWith(`: ${checked}`)).toBe(true);
+    expect(query.split('"').length - 1).toBe(2);
+    expect(query).not.toContain(JSON.stringify(checked));
+    // Ordinary JSON transport escaping must decode back to the exact query.
+    expect(JSON.parse(JSON.stringify({ query })).query).toBe(query);
   });
 
   it('bare URLs and synthesized answers cannot become evidence', () => {
