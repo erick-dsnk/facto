@@ -26,10 +26,18 @@ enum BackendClientError: Error, Equatable, Sendable {
 struct ReconnectPolicy: Equatable, Sendable {
   /// Wait before each attempt. One attempt per entry, then give up.
   var delays: [TimeInterval] = [0.5, 1, 2]
-  /// How long a new socket may take to deliver its first event (`session.ready`).
+  /// How long a reconnect socket may take to deliver its first event (`session.ready`).
   var openTimeout: TimeInterval = 3
+  /// The same for the first connect, which may need a cold TLS handshake on a venue or
+  /// cellular network.
+  var initialOpenTimeout: TimeInterval = 10
   /// Gaps shorter than this may auto-resume; longer ones stop listening.
   var autoResumeWindow: TimeInterval = 5
+  /// A ping goes out this often while connected; 0 turns the heartbeat off.
+  var pingInterval: TimeInterval = 2
+  /// A pong missing for this long means the socket is half-open: it is torn down and the
+  /// normal reconnect runs.
+  var pingTimeout: TimeInterval = 2.5
 }
 
 /// What happened during the last reconnect. Read it when the state returns to `.connected`
@@ -60,6 +68,13 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   private(set) var expiresAt: String?
   private(set) var capabilities: SessionCreateResponse.Capabilities?
   private(set) var lastReconnect: ReconnectInfo?
+  /// Events that arrived but could not be read: a broken envelope, or a known type whose
+  /// payload does not match the contract. Counts only; the payload is never logged.
+  private(set) var unreadableEventCount = 0
+  /// Called on the main actor for every unreadable event, e.g. to tell the user the app and
+  /// backend versions may not match. The argument is the envelope's `type` when it is a
+  /// plain event name.
+  var onUnreadableEvent: (@MainActor (_ type: String?) -> Void)?
   private(set) var connectionState: ChannelConnectionState = .idle {
     didSet {
       guard connectionState != oldValue else { return }
@@ -83,6 +98,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   private var filter: ServerEventFilter?
   private var socket: WebSocketConnection?
   private var socketTask: Task<Void, Never>?
+  private var heartbeatTask: Task<Void, Never>?
   /// Runs apart from `socketTask`, because opening a socket tears down the old receive task.
   private var reconnectTask: Task<Void, Never>?
   /// Bumped for every socket so callbacks from a replaced socket are ignored.
@@ -296,7 +312,8 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   private func openStream(reconnectAttempt: (attempt: Int, lostAt: TimeInterval, previousEpoch: Int?)?) async throws {
     let (id, bearer) = try sessionCredentials()
     guard let url = config.streamURL(sessionId: id) else { throw BackendClientError.noSession }
-    var request = URLRequest(url: url, timeoutInterval: policy.openTimeout)
+    let openTimeout = reconnectAttempt == nil ? policy.initialOpenTimeout : policy.openTimeout
+    var request = URLRequest(url: url, timeoutInterval: openTimeout)
     request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
 
     tearDownSocket(code: .goingAway)
@@ -308,7 +325,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
 
     let first: WebSocketFrame
     do {
-      first = try await Self.firstFrame(from: connection, timeout: policy.openTimeout)
+      first = try await Self.firstFrame(from: connection, timeout: openTimeout)
     } catch {
       connection.cancel(with: .goingAway)
       if current == connectionID { socket = nil }
@@ -343,6 +360,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     }
     if let firstEvent, let decision { deliver(firstEvent, decision) }
     startReceiving(on: connection, id: current)
+    startHeartbeat(on: connection, id: current)
   }
 
   private func startReceiving(on connection: WebSocketConnection, id: Int) {
@@ -361,9 +379,36 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     }
   }
 
+  /// Pings the server while the socket is current. A missing pong cancels the socket, so the
+  /// receive loop reports the loss and the normal reconnect runs (decision 9). Without it a
+  /// half-open mobile connection stays `.connected` while sends pile up.
+  private func startHeartbeat(on connection: WebSocketConnection, id: Int) {
+    heartbeatTask?.cancel()
+    heartbeatTask = nil
+    let interval = policy.pingInterval
+    let timeout = policy.pingTimeout
+    guard interval > 0 else { return }
+    heartbeatTask = Task { [weak self] in
+      while !Task.isCancelled {
+        try? await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
+        guard !Task.isCancelled, let current = self, current.connectionID == id, !current.closing else { return }
+        do {
+          try await connection.sendPing(timeout: timeout)
+        } catch {
+          guard !Task.isCancelled, let current = self, current.connectionID == id, !current.closing else { return }
+          Self.log.info("stream ping failed, dropping the socket")
+          connection.cancel(with: .goingAway)
+          return
+        }
+      }
+    }
+  }
+
   private func socketEnded(connection: WebSocketConnection, id: Int, error: Error) {
     guard id == connectionID, !closing else { return }
     socket = nil
+    heartbeatTask?.cancel()
+    heartbeatTask = nil
     // The session is over on the server; the next connect() creates a new one.
     if let terminalReason {
       forgetSession()
@@ -378,6 +423,9 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     let nsError = error as NSError
     Self.log.info("stream lost \(nsError.domain, privacy: .public) \(nsError.code)")
     let lostAt = uptime()
+    // Leave `.connected` now, not when the reconnect task first runs: senders must see the
+    // loss at once instead of failing against a nil socket while the state still says connected.
+    connectionState = .reconnecting(attempt: 1)
     reconnectTask?.cancel()
     reconnectTask = Task { [weak self] in await self?.reconnect(lostAt: lostAt) }
   }
@@ -387,7 +435,11 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     let previousEpoch = sessionEpoch
     for (index, delay) in policy.delays.enumerated() {
       let attempt = index + 1
-      guard !closing, sessionId != nil else { return }
+      guard !closing else { return }
+      guard sessionId != nil else {
+        connectionState = .disconnected(reason: "no_session")
+        return
+      }
       connectionState = .reconnecting(attempt: attempt)
       do {
         try await sleep(delay)
@@ -427,14 +479,36 @@ final class BackendClient: SessionChannel, CheckSubmitter {
       do {
         return try ServerEvent.decode(from: Data(text.utf8))
       } catch {
-        Self.log.error("undecodable event envelope bytes=\(text.utf8.count)")
+        let type = Self.envelopeType(in: Data(text.utf8))
+        Self.log.error("undecodable event envelope type=\(type ?? "-", privacy: .public) bytes=\(text.utf8.count)")
+        reportUnreadable(type: type)
         return nil
       }
     }
   }
 
+  private func reportUnreadable(type: String?) {
+    unreadableEventCount += 1
+    onUnreadableEvent?(type)
+  }
+
+  /// The envelope's `type` when it is a plain event name such as "claim.result". Anything
+  /// else is dropped so no payload text reaches the logs.
+  static func envelopeType(in data: Data) -> String? {
+    struct Envelope: Decodable { var type: String? }
+    guard let type = (try? JSONDecoder().decode(Envelope.self, from: data))?.type,
+          (1...64).contains(type.count),
+          type.allSatisfy({ $0.isASCII && ($0.isLowercase || $0.isNumber || $0 == "_" || $0 == ".") })
+    else { return nil }
+    return type
+  }
+
   private func deliver(_ event: ServerEvent, _ decision: ServerEventFilter.Decision) {
     switch decision {
+    case .drop(.malformedPayload):
+      Self.log.error("dropped \(event.logSummary, privacy: .public) reason=malformed_payload")
+      reportUnreadable(type: event.type.rawValue)
+      return
     case .drop(let reason):
       Self.log.debug("dropped \(event.logSummary, privacy: .public) reason=\(reason.rawValue, privacy: .public)")
       return
@@ -451,6 +525,8 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     connectionID += 1
     socketTask?.cancel()
     socketTask = nil
+    heartbeatTask?.cancel()
+    heartbeatTask = nil
     socket?.cancel(with: code)
     socket = nil
   }

@@ -119,6 +119,27 @@ final class AudioStreamerTests: XCTestCase {
     XCTAssertEqual(offset, 0)
   }
 
+  func testReadyFlushesOnlyTheNewestSecondFromSequenceZero() async {
+    let h = makeHarness()
+    h.streamer.start()
+    await h.streamer.waitUntilSent()
+    h.channel.clearSent()
+    h.streamer.appendPCM16(pcm(ms: 1_000, fill: 0x01))
+    h.streamer.appendPCM16(pcm(ms: 1_000, fill: 0x02))
+    h.streamer.handle(AudioEvents.ready(generation: 1))
+    h.streamer.appendPCM16(pcm(ms: 40, fill: 0x03))
+    await h.streamer.waitUntilSent()
+
+    let frames = h.channel.binaries
+    XCTAssertEqual(frames.count, AudioStreamer.maxHandshakeFlushFrames + 1, "a 1 s burst, then live audio")
+    for (index, frame) in frames.enumerated() {
+      let (generation, sequence, offset) = header(frame)
+      XCTAssertEqual([generation, sequence, offset], [1, UInt32(index), UInt32(index * 40)])
+    }
+    XCTAssertEqual(frames.first?[frames.first!.startIndex + 13], 0x02, "the oldest second is dropped")
+    XCTAssertEqual(frames.last?[frames.last!.startIndex + 13], 0x03)
+  }
+
   func testDatFloatBuffersAreConvertedBeforeFraming() async throws {
     let h = makeHarness()
     await startStreaming(h)
@@ -148,6 +169,27 @@ final class AudioStreamerTests: XCTestCase {
     await h.streamer.waitUntilSent()
     XCTAssertEqual(h.streamer.phase, .awaitingReady(generation: 2))
     XCTAssertEqual(h.channel.timeline, ["control:audio.start", "control:audio.stop", "control:audio.start"])
+  }
+
+  func testStrayFramesAfterAServerStopNeverCostARestart() async {
+    let h = makeHarness()
+    await startStreaming(h)
+    h.streamer.handle(AudioEvents.stopped(generation: 1, reason: "asr_failed"))
+    XCTAssertEqual(h.streamer.phase, .awaitingReady(generation: 2))
+    // Frames already in flight hit a closed generation: one audio_not_ready each, before or
+    // after the stop's own trailing error.
+    h.streamer.handle(AudioEvents.error("audio_not_ready"))
+    h.streamer.handle(AudioEvents.error("asr_unavailable"))
+    for _ in 0..<5 { h.streamer.handle(AudioEvents.error("audio_not_ready")) }
+    h.streamer.handle(AudioEvents.error("automatic_cooldown"))
+    XCTAssertEqual(h.streamer.phase, .awaitingReady(generation: 2))
+    await h.streamer.waitUntilSent()
+    XCTAssertEqual(h.channel.timeline, ["control:audio.start"])
+
+    h.streamer.handle(AudioEvents.ready(generation: 2))
+    XCTAssertEqual(h.streamer.phase, .streaming(generation: 2))
+    XCTAssertTrue(stops.isEmpty)
+    XCTAssertFalse(AudioStreamer.startRejectionCodes.contains("audio_not_ready"))
   }
 
   func testSessionWithoutAsrStopsWithReason() {
@@ -244,14 +286,64 @@ final class AudioStreamerTests: XCTestCase {
     XCTAssertEqual(h.channel.timeline, ["control:audio.stop", "control:audio.start"], "queued frames are dropped, not sent late")
   }
 
-  func testSendFailuresWhileConnectedEndWithinBudget() async {
+  func testFailedSendIsAConnectionLossAndCostsNoRestart() async {
+    let h = makeHarness()
+    await startStreaming(h)
+    // The socket is gone but the channel has not noticed yet: it still says connected.
+    h.channel.failSends = true
+    h.channel.sendError = BackendClientError.notConnected
+    h.streamer.appendPCM16(pcm(ms: 400))
+    await h.streamer.waitUntilSent()
+    XCTAssertEqual(h.streamer.phase, .reconnecting)
+    XCTAssertEqual(h.channel.failedSendCount, 1, "one failure decides; the rest of the queue is dropped")
+    XCTAssertTrue(stops.isEmpty)
+
+    // The session comes back inside the window: listening resumes on the next generation.
+    h.channel.failSends = false
+    h.channel.sessionEpoch = 2
+    h.streamer.handle(AudioEvents.sessionReady(active: false, epoch: 2))
+    await h.streamer.waitUntilSent()
+    XCTAssertEqual(h.channel.timeline, ["control:session.resume", "control:audio.start"])
+    XCTAssertEqual(h.streamer.phase, .awaitingReady(generation: 2))
+    XCTAssertEqual(resumes, 1)
+  }
+
+  func testFailedSendWithoutReconnectStopsWithNoConnection() async {
     let h = makeHarness()
     await startStreaming(h)
     h.channel.failSends = true
     h.streamer.appendPCM16(pcm(ms: 40))
     await h.streamer.waitUntilSent()
+    XCTAssertEqual(h.streamer.phase, .reconnecting)
+    h.clock.advance(by: 5)
+    XCTAssertEqual(h.streamer.phase, .stopped(.noConnection))
+    XCTAssertEqual(stops, [.noConnection])
+  }
+
+  func testLocalSendFailuresRestartWithinBudget() async {
+    let h = makeHarness()
+    await startStreaming(h)
+    h.channel.failSends = true
+    h.channel.sendError = EncodingError.invalidValue(0, .init(codingPath: [], debugDescription: "test"))
+    h.streamer.appendPCM16(pcm(ms: 40))
+    await h.streamer.waitUntilSent()
     XCTAssertEqual(h.streamer.phase, .stopped(.audioUnavailable(reasonCode: "send_failed")))
     XCTAssertEqual(stops.count, 1)
+  }
+
+  func testANewSessionStartsAgainAtItsOwnEpoch() async {
+    let h = makeHarness()
+    await startStreaming(h)
+    // The old session ends after a pause raised its epoch to 3.
+    h.streamer.handle(AudioEvents.sessionEnded(reason: "deleted", epoch: 3))
+    XCTAssertEqual(h.streamer.phase, .stopped(.sessionEnded(reasonCode: "deleted")))
+
+    h.channel.sessionId = "sess-new"
+    h.channel.sessionEpoch = 1
+    h.channel.clearSent()
+    h.streamer.start()
+    await h.streamer.waitUntilSent()
+    XCTAssertEqual(h.channel.controls.first?["sessionEpoch"] as? Int, 1, "an epoch from the old session is never reused")
   }
 
   // MARK: Stop reasons

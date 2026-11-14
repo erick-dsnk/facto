@@ -1,4 +1,5 @@
 import Foundation
+import Security
 
 // Seams between the live-pipeline modules. Each module codes against these protocols and
 // ships a concrete type plus a test fake; app wiring connects the concrete types.
@@ -112,9 +113,10 @@ protocol PlaybackReporting: AnyObject {
 
 // MARK: - Backend configuration
 
-/// Where the app finds the backend. Values come from UserDefaults so a build can point at
-/// a laptop or at Railway without code changes. No secrets in source: the join code
-/// defaults to empty and is entered on the device.
+/// Where the app finds the backend. The base URL comes from UserDefaults so a build can point
+/// at a laptop or at Railway without code changes. The join code creates sessions, so it is
+/// kept in the Keychain. No secrets in source: the join code defaults to empty and is
+/// entered on the device.
 struct BackendConfig: Equatable, Sendable {
   static let baseURLKey = "backend.baseURL"
   static let joinCodeKey = "backend.joinCode"
@@ -129,20 +131,27 @@ struct BackendConfig: Equatable, Sendable {
     self.joinCode = joinCode
   }
 
-  static func load(from defaults: UserDefaults = .standard) -> BackendConfig {
+  static func load(from defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) -> BackendConfig {
     let url = defaults.string(forKey: baseURLKey)
       .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
       .flatMap(URL.init(string:))
       .flatMap { $0.scheme == "http" || $0.scheme == "https" ? $0 : nil }
-    return BackendConfig(
-      baseURL: url ?? defaultBaseURL,
-      joinCode: defaults.string(forKey: joinCodeKey) ?? ""
-    )
+    var joinCode = secrets.read(joinCodeKey)
+    // Builds before the Keychain kept the join code in UserDefaults: move it once.
+    if let legacy = defaults.string(forKey: joinCodeKey) {
+      if joinCode == nil {
+        secrets.write(legacy, for: joinCodeKey)
+        joinCode = legacy
+      }
+      defaults.removeObject(forKey: joinCodeKey)
+    }
+    return BackendConfig(baseURL: url ?? defaultBaseURL, joinCode: joinCode ?? "")
   }
 
-  func save(to defaults: UserDefaults = .standard) {
+  func save(to defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) {
     defaults.set(baseURL.absoluteString, forKey: Self.baseURLKey)
-    defaults.set(joinCode, forKey: Self.joinCodeKey)
+    defaults.removeObject(forKey: Self.joinCodeKey)
+    secrets.write(joinCode, for: Self.joinCodeKey)
   }
 
   /// `POST /v1/sessions`
@@ -159,6 +168,42 @@ struct BackendConfig: Equatable, Sendable {
     else { return nil }
     components.scheme = components.scheme == "https" ? "wss" : "ws"
     return components.url
+  }
+}
+
+// MARK: - Secrets
+
+/// Small secrets the app keeps on the device, such as the join code.
+protocol SecretStoring: Sendable {
+  func read(_ key: String) -> String?
+  /// Nil or empty deletes the value.
+  func write(_ value: String?, for key: String)
+}
+
+/// The Keychain, readable after the first unlock and never synced to other devices.
+struct KeychainSecretStore: SecretStoring {
+  var service = "com.davidvasilescu.junction.glasseslab"
+
+  func read(_ key: String) -> String? {
+    var query = baseQuery(key)
+    query[kSecReturnData as String] = true
+    query[kSecMatchLimit as String] = kSecMatchLimitOne
+    var item: CFTypeRef?
+    guard SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess, let data = item as? Data else { return nil }
+    return String(data: data, encoding: .utf8)
+  }
+
+  func write(_ value: String?, for key: String) {
+    SecItemDelete(baseQuery(key) as CFDictionary)
+    guard let value, !value.isEmpty else { return }
+    var attributes = baseQuery(key)
+    attributes[kSecValueData as String] = Data(value.utf8)
+    attributes[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    SecItemAdd(attributes as CFDictionary, nil)
+  }
+
+  private func baseQuery(_ key: String) -> [String: Any] {
+    [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service, kSecAttrAccount as String: key]
   }
 }
 

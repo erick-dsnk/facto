@@ -9,12 +9,13 @@ final class FakeSessionChannel: SessionChannel {
     case binary(Data)
   }
 
-  struct SendFailure: Error {}
-
   var sessionId: String? = "sess-test"
   var sessionEpoch: Int? = 1
   var connectionState: ChannelConnectionState = .connected
   var failSends = false
+  /// What a failing send throws. The default stands for a dead socket.
+  var sendError: Error = URLError(.networkConnectionLost)
+  private(set) var failedSendCount = 0
   private(set) var sent: [Sent] = []
 
   private var eventContinuations: [AsyncStream<ServerEvent>.Continuation] = []
@@ -34,12 +35,18 @@ final class FakeSessionChannel: SessionChannel {
   }
 
   func sendControl<Message: Encodable & Sendable>(_ message: Message) async throws {
-    if failSends { throw SendFailure() }
+    if failSends {
+      failedSendCount += 1
+      throw sendError
+    }
     sent.append(.control(try JSONEncoder().encode(message)))
   }
 
   func sendBinary(_ data: Data) async throws {
-    if failSends { throw SendFailure() }
+    if failSends {
+      failedSendCount += 1
+      throw sendError
+    }
     sent.append(.binary(data))
   }
 
@@ -122,10 +129,12 @@ final class ManualClock: AudioStreamerClock {
 enum AudioEvents {
   private static var seq = 0
 
-  private static func event(_ type: ServerEventType, epoch: Int, requestId: String? = nil, payload: ServerEventPayload) -> ServerEvent {
+  private static func event(
+    _ type: ServerEventType, epoch: Int, requestId: String? = nil, session: String = "sess-test", payload: ServerEventPayload
+  ) -> ServerEvent {
     seq += 1
     return ServerEvent(
-      eventId: "evt-\(seq)", eventSeq: seq, sessionId: "sess-test", sessionEpoch: epoch,
+      eventId: "evt-\(seq)", eventSeq: seq, sessionId: session, sessionEpoch: epoch,
       requestId: requestId, type: type, serverAt: "2026-11-14T10:00:00.000Z", payload: payload
     )
   }
@@ -144,8 +153,8 @@ enum AudioEvents {
     event(.sessionReady, epoch: epoch, payload: .sessionReady(SessionReadyPayload(active: active, expiresAt: nil, mode: "live", audio: audio)))
   }
 
-  static func sessionEnded(reason: String, epoch: Int = 1) -> ServerEvent {
-    event(.sessionEnded, epoch: epoch, payload: .sessionEnded(SessionEndedPayload(reasonCode: reason, active: false)))
+  static func sessionEnded(reason: String, epoch: Int = 1, session: String = "sess-test") -> ServerEvent {
+    event(.sessionEnded, epoch: epoch, session: session, payload: .sessionEnded(SessionEndedPayload(reasonCode: reason, active: false)))
   }
 
   static func error(_ reason: String, requestId: String? = nil, epoch: Int = 1) -> ServerEvent {

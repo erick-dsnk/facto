@@ -75,7 +75,7 @@ enum AudioStreamerPhase: Equatable, Sendable {
   case idle
   /// `start()` ran before the channel was connected.
   case waitingForConnection
-  /// `audio.start` sent; frames are buffered (at most 2 s) until `audio.ready`.
+  /// `audio.start` sent; audio is buffered (at most 2 s) until `audio.ready`.
   case awaitingReady(generation: Int)
   case streaming(generation: Int)
   /// Spoken output is playing; no generation is open. `playbackEnded()` opens a higher one.
@@ -111,7 +111,9 @@ enum AudioStreamerPhase: Equatable, Sendable {
 ///
 /// Rules it enforces:
 /// - No frame goes out before `audio.ready` for its generation. While waiting it buffers at
-///   most 2 s; past that it drops the buffer and opens a new generation.
+///   most 2 s; past that it drops the buffer and opens a new generation. On `audio.ready` it
+///   sends only the newest 1 s of that buffer, so the burst stays well under the server's
+///   2 s backlog while live frames keep arriving.
 /// - Every new generation is strictly higher than the last, with sequence and capture offset
 ///   back at 0. Audio is never spliced across a gap.
 /// - It is the app's `PlaybackReporting`: `playbackStarted()` closes the generation and sends
@@ -119,7 +121,8 @@ enum AudioStreamerPhase: Equatable, Sendable {
 ///   Route every playback report through this object while it is in use.
 /// - A connection loss discards pending audio. If the session comes back within 5 s it sends
 ///   `session.resume`, opens a higher generation and calls `onAutoResumed` (play a quiet chime).
-///   Otherwise it stops with `.noConnection`.
+///   Otherwise it stops with `.noConnection`. A failed send counts as a connection loss, so a
+///   dead socket never spends the restart budget.
 /// - It never logs audio, transcripts or any payload text: only generations, counts and codes.
 @MainActor
 final class AudioStreamer: PlaybackReporting {
@@ -127,11 +130,16 @@ final class AudioStreamer: PlaybackReporting {
   /// Unplanned generation restarts allowed per window before giving up.
   static let maxRestartsPerWindow = 3
   static let restartWindow: TimeInterval = 30
-  /// `pipeline.error` codes that mean the server refused our `audio.start`.
+  /// `pipeline.error` codes that mean the server refused our `audio.start`: the only codes
+  /// AudioBridge.start, AudioFrameValidator.start and server.ts raise for it. "audio_not_ready"
+  /// is not one of them: the server sends it for each binary frame that arrives after it
+  /// stopped a generation, so stragglers never cost a restart.
   static let startRejectionCodes: Set<String> = [
     "asr_unavailable", "playback_active", "audio_already_started", "invalid_audio_start",
-    "invalid_audio_generation", "old_epoch", "audio_not_ready",
+    "invalid_audio_generation", "old_epoch",
   ]
+  /// Most handshake audio sent in one burst on `audio.ready`: 1 s of the 2 s buffer.
+  static let maxHandshakeFlushFrames = AudioWireFormat.maxBufferedFrames / 2
 
   /// `audio.stopped` codes the server follows with one `pipeline.error` (AudioBridge in
   /// services/api). Other stops, such as "playback" or "stopped", have no trailing error.
@@ -176,7 +184,9 @@ final class AudioStreamer: PlaybackReporting {
   private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "audio-streamer")
 
   private var framer: PCM16Framer?
-  private var handshakeFrames: [Data] = []
+  /// PCM16 bytes received while waiting for `audio.ready`. Framed on `audio.ready`, so the
+  /// frames that go out start at sequence 0 even when the oldest audio is dropped.
+  private var handshakePCM = Data()
   private var outbox: [Outgoing] = []
   private var drainTask: Task<Void, Never>?
   private var subscriptions: [Task<Void, Never>] = []
@@ -184,7 +194,9 @@ final class AudioStreamer: PlaybackReporting {
   private var restartTimes: [TimeInterval] = []
   /// The server follows an `audio.stopped` it caused with one `pipeline.error`; skip that one.
   private var expectsTrailingError = false
-  private var lastEventEpoch: Int?
+  /// Highest epoch seen in events, per session. A new session starts again at epoch 1, so an
+  /// epoch from an older session is never used.
+  private var lastEvent: (sessionId: String, epoch: Int)?
 
   init(
     channel: SessionChannel,
@@ -240,26 +252,25 @@ final class AudioStreamer: PlaybackReporting {
 
   /// 16 kHz mono PCM16 little-endian bytes, for callers that convert elsewhere.
   func appendPCM16(_ pcm: Data) {
-    guard phase.hasOpenGeneration, var framer else { return }
-    let frames = framer.append(pcm)
-    self.framer = framer
-    for frame in frames {
-      switch phase {
-      case .awaitingReady:
-        handshakeFrames.append(frame)
-        if handshakeFrames.count > maxBufferedFrames {
-          restartGeneration(reasonCode: "audio_ready_timeout", sendAudioStop: true)
-          return
-        }
-      case .streaming:
+    switch phase {
+    case .awaitingReady:
+      handshakePCM.append(pcm)
+      if handshakePCM.count > maxBufferedFrames * AudioWireFormat.payloadBytes {
+        restartGeneration(reasonCode: "audio_ready_timeout", sendAudioStop: true)
+      }
+    case .streaming:
+      guard var framer else { return }
+      let frames = framer.append(pcm)
+      self.framer = framer
+      for frame in frames {
         enqueue(.binary(frame))
         if outbox.lazy.filter(\.isBinary).count > maxBufferedFrames {
           restartGeneration(reasonCode: "send_backlog", sendAudioStop: true)
           return
         }
-      default:
-        return
       }
+    default:
+      return
     }
   }
 
@@ -310,7 +321,11 @@ final class AudioStreamer: PlaybackReporting {
   }
 
   func handle(_ event: ServerEvent) {
-    lastEventEpoch = max(lastEventEpoch ?? event.sessionEpoch, event.sessionEpoch)
+    if let lastEvent, lastEvent.sessionId == event.sessionId {
+      self.lastEvent = (event.sessionId, max(lastEvent.epoch, event.sessionEpoch))
+    } else {
+      lastEvent = (event.sessionId, event.sessionEpoch)
+    }
     guard phase.isActive else { return }
     switch event.payload {
     case .sessionReady(let payload):
@@ -325,22 +340,20 @@ final class AudioStreamer: PlaybackReporting {
       guard case .awaitingReady(let current) = phase, payload.streamGeneration == current else { return }
       phase = .streaming(generation: current)
       expectsTrailingError = false
-      let buffered = handshakeFrames
-      handshakeFrames = []
-      for frame in buffered { enqueue(.binary(frame)) }
-      log.info("audio generation \(current, privacy: .public) ready, flushed \(buffered.count, privacy: .public) frames")
+      flushHandshakeAudio(generation: current)
     case .audioStopped(let payload):
       guard phase.hasOpenGeneration, payload.streamGeneration == generation else { return }
       restartGeneration(reasonCode: payload.reasonCode, sendAudioStop: false)
       expectsTrailingError = phase.hasOpenGeneration && Self.stopCodesWithTrailingError.contains(payload.reasonCode)
     case .pipelineError(let payload):
-      // Audio errors carry no request id; check errors belong to other modules.
-      guard event.requestId == nil, phase.hasOpenGeneration else { return }
+      // Audio errors carry no request id; check errors belong to other modules. Only a code
+      // `audio.start` can produce, while waiting for `audio.ready`, is a start rejection. Any
+      // other code (stray frames, admission throttling) never costs a restart.
+      guard event.requestId == nil, case .awaitingReady = phase, Self.startRejectionCodes.contains(payload.reasonCode) else { return }
       if expectsTrailingError {
         expectsTrailingError = false
         return
       }
-      guard case .awaitingReady = phase, Self.startRejectionCodes.contains(payload.reasonCode) else { return }
       restartGeneration(reasonCode: payload.reasonCode, sendAudioStop: true)
     default:
       break
@@ -350,7 +363,26 @@ final class AudioStreamer: PlaybackReporting {
   // MARK: Generations
 
   private var currentEpoch: Int? {
-    [channel.sessionEpoch, lastEventEpoch].compactMap { $0 }.max()
+    let eventEpoch = lastEvent.flatMap { $0.sessionId == channel.sessionId ? $0.epoch : nil }
+    return [channel.sessionEpoch, eventEpoch].compactMap { $0 }.max()
+  }
+
+  /// Frames the newest second of handshake audio from sequence 0 and queues it. Older
+  /// handshake audio is dropped, never spliced.
+  private func flushHandshakeAudio(generation current: Int) {
+    var pcm = handshakePCM
+    handshakePCM = Data()
+    let flushBytes = Self.maxHandshakeFlushFrames * AudioWireFormat.payloadBytes
+    var droppedBytes = max(0, pcm.count - flushBytes)
+    droppedBytes += droppedBytes % AudioWireFormat.bytesPerSample
+    if droppedBytes > 0 { pcm = pcm.subdata(in: (pcm.startIndex + droppedBytes)..<pcm.endIndex) }
+    var framer = PCM16Framer(generation: UInt32(truncatingIfNeeded: current))
+    let frames = framer.append(pcm)
+    self.framer = framer
+    for frame in frames { enqueue(.binary(frame)) }
+    log.info(
+      "audio generation \(current, privacy: .public) ready, flushed \(frames.count, privacy: .public) frames, dropped \(droppedBytes / AudioWireFormat.payloadBytes, privacy: .public)"
+    )
   }
 
   private func beginGeneration(epoch: Int? = nil) {
@@ -364,7 +396,6 @@ final class AudioStreamer: PlaybackReporting {
       return
     }
     generation += 1
-    framer = PCM16Framer(generation: UInt32(truncatingIfNeeded: generation))
     enqueue(.audioStart(AudioStartControl(sessionEpoch: epoch, streamGeneration: generation, source: source)))
     phase = .awaitingReady(generation: generation)
     log.info("audio generation \(self.generation, privacy: .public) requested")
@@ -436,7 +467,7 @@ final class AudioStreamer: PlaybackReporting {
   /// partial frame in progress.
   private func dropQueuedAudio() {
     outbox.removeAll(where: \.isGenerationScoped)
-    handshakeFrames = []
+    handshakePCM = Data()
     framer = nil
     converter.reset()
   }
@@ -499,21 +530,36 @@ final class AudioStreamer: PlaybackReporting {
         case .binary(let frame): try await channel.sendBinary(frame)
         }
       } catch {
-        handleSendFailure()
+        handleSendFailure(error)
       }
     }
     drainTask = nil
   }
 
-  private func handleSendFailure() {
-    log.error("audio send failed in phase \(String(describing: self.phase), privacy: .public)")
-    guard phase.hasOpenGeneration || phase == .pausedForPlayback else { return }
-    if channel.connectionState == .connected {
-      if phase.hasOpenGeneration {
-        restartGeneration(reasonCode: "send_failed", sendAudioStop: true)
-      }
-    } else {
-      enterReconnecting()
+  /// One decision per failed send. The rest of the queue would fail the same way, so it is
+  /// dropped rather than retried item by item.
+  private func handleSendFailure(_ error: Error) {
+    let local = Self.isLocalSendFailure(error)
+    log.error("audio send failed in phase \(String(describing: self.phase), privacy: .public) local=\(local, privacy: .public)")
+    guard phase.hasOpenGeneration || phase == .pausedForPlayback else {
+      outbox.removeAll()
+      return
     }
+    if !local {
+      // The socket is gone or going. BackendClient reconnects; the grace window decides.
+      enterReconnecting()
+    } else if phase.hasOpenGeneration {
+      restartGeneration(reasonCode: "send_failed", sendAudioStop: true)
+    } else {
+      outbox.removeAll()
+    }
+  }
+
+  /// A send that failed before reaching the socket. Every other failure (not connected, a
+  /// URL or POSIX error from the socket) means the connection is lost.
+  static func isLocalSendFailure(_ error: Error) -> Bool {
+    if error is EncodingError { return true }
+    if case BackendClientError.invalidResponse = error { return true }
+    return false
   }
 }

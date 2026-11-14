@@ -123,6 +123,17 @@ final class ResultPresenter: ResultPresenting {
     return true
   }
 
+  /// `claim.superseded`: a correction replaced the request's earlier result. Marks it in
+  /// history and takes its card off the lens. With `announce` it says the plan's brief
+  /// non-verdict update once; it never presents the new statement as checked.
+  func supersede(requestId: String, revision: Int?, announce: Bool) {
+    let cards = history.markSuperseded(requestId: requestId, throughRevision: revision)
+    guard !cards.isEmpty else { return }
+    if let shown = lens.card, cards.contains(shown) { lens.clear() }
+    Self.log.info("superseded req=\(requestId, privacy: .public) rev=\(revision ?? 0) entries=\(cards.count) announce=\(announce)")
+    if announce, !isMuted { speak(ResultWording.correctionLine) }
+  }
+
   /// Dismiss: clears the active card. History keeps it.
   func dismissCard() {
     lens.clear()

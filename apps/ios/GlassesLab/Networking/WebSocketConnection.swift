@@ -15,6 +15,9 @@ protocol WebSocketConnection: AnyObject, Sendable {
   func send(_ frame: WebSocketFrame) async throws
   /// Waits for the next message. Throws once the socket fails or closes.
   func receive() async throws -> WebSocketFrame
+  /// Sends a ping and waits for the pong. Throws when the socket fails or no pong arrives
+  /// within `timeout` seconds.
+  func sendPing(timeout: TimeInterval) async throws
   /// Closes the socket. A pending `receive()` throws.
   func cancel(with code: URLSessionWebSocketTask.CloseCode)
   /// HTTP status of a rejected handshake (e.g. 401), nil while unknown.
@@ -57,6 +60,21 @@ final class URLSessionWebSocketConnection: WebSocketConnection, @unchecked Senda
     }
   }
 
+  func sendPing(timeout: TimeInterval) async throws {
+    // The pong handler may never run on a half-open socket, so a timer resumes instead.
+    let once = ResumeOnce()
+    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+      task.sendPing { error in
+        guard once.claim() else { return }
+        if let error { continuation.resume(throwing: error) } else { continuation.resume() }
+      }
+      DispatchQueue.global().asyncAfter(deadline: .now() + max(0, timeout)) {
+        guard once.claim() else { return }
+        continuation.resume(throwing: URLError(.timedOut))
+      }
+    }
+  }
+
   func cancel(with code: URLSessionWebSocketTask.CloseCode) {
     task.cancel(with: code, reason: nil)
   }
@@ -64,5 +82,19 @@ final class URLSessionWebSocketConnection: WebSocketConnection, @unchecked Senda
   var handshakeStatusCode: Int? {
     guard let status = (task.response as? HTTPURLResponse)?.statusCode, status != 101 else { return nil }
     return status
+  }
+}
+
+/// Lets exactly one of several callbacks resume a continuation.
+private final class ResumeOnce: @unchecked Sendable {
+  private let lock = NSLock()
+  private var claimed = false
+
+  func claim() -> Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    guard !claimed else { return false }
+    claimed = true
+    return true
   }
 }

@@ -30,6 +30,11 @@ final class CameraModel {
   /// Live level of the glasses microphone, in dBFS.
   var audioLevelDb: Double = -160
   var audioBufferCount = 0
+  /// SDK buffers that couldn't be copied (allocation failed). Each one is a gap the backend
+  /// only sees as missing time, so it is counted and logged.
+  var droppedAudioBufferCount = 0
+  /// SDK audio buffers in delivery order, consumed by one task on the main actor.
+  @ObservationIgnored private var audioDeliveries: AsyncStream<AudioDelivery>.Continuation?
 
   /// Last full-quality still from the glasses, and how long it took to arrive.
   var photo: UIImage?
@@ -61,6 +66,8 @@ final class CameraModel {
   @ObservationIgnored private var userStoppedStream = false
   /// Callers of `captureStillDuringStream()` waiting for the current photo.
   @ObservationIgnored private var photoWaiters: [CheckedContinuation<Data, Error>] = []
+  /// Quality for a stream that Live mode starts (LiveModel keeps it in sync with Demo quality).
+  @ObservationIgnored var liveQuality: StreamQuality = .demo
 
   var hasSession: Bool { session != nil }
   var isStreaming: Bool { camera != nil }
@@ -189,14 +196,20 @@ final class CameraModel {
         Task { @MainActor in self?.handlePhoto(data) }
       }.store(in: streamTokens)
       if captureStreamAudio {
-        stream.audioFramePublisher.listen { [weak self] audioFrame in
+        // One ordered stream and one consumer: separate tasks per buffer have no FIFO
+        // guarantee, and a reordered buffer would corrupt the PCM without any sequence error.
+        let (deliveries, continuation) = AsyncStream<AudioDelivery>.makeStream()
+        audioDeliveries = continuation
+        Task { @MainActor [weak self] in
+          for await delivery in deliveries { self?.handleAudio(delivery) }
+        }
+        stream.audioFramePublisher.listen { audioFrame in
           // Measure the buffer as delivered; the requested format is not trusted.
           let buffer = audioFrame.pcmBuffer
           let format = AudioMeter.describe(buffer.format)
           let level = AudioMeter.levelDb(buffer)
           // Copied here because the SDK may reuse the buffer once this callback returns.
-          let copy = PCMBufferCopy(buffer)
-          Task { @MainActor in self?.handleAudio(format: format, level: level, copy: copy) }
+          continuation.yield(AudioDelivery(format: format, level: level, copy: PCMBufferCopy(buffer)))
         }.store(in: streamTokens)
       }
       stream.videoFramePublisher.listen { [weak self] videoFrame in
@@ -212,11 +225,18 @@ final class CameraModel {
     }
   }
 
-  private func handleAudio(format: String, level: Double, copy: PCMBufferCopy) {
+  private func handleAudio(_ delivery: AudioDelivery) {
     audioBufferCount += 1
-    audioFormat = format
-    audioLevelDb = level
-    if let buffer = copy.buffer { onAudioBuffer?(buffer) }
+    audioFormat = delivery.format
+    audioLevelDb = delivery.level
+    if let buffer = delivery.copy.buffer {
+      onAudioBuffer?(buffer)
+    } else if delivery.copy.sourceFrameCount > 0 {
+      droppedAudioBufferCount += 1
+      if droppedAudioBufferCount == 1 || droppedAudioBufferCount % 50 == 0 {
+        NSLog("[GlassesLab][audio] buffer copy failed, dropped %d so far", droppedAudioBufferCount)
+      }
+    }
   }
 
   // MARK: Step 3: photo during the live stream (never pauses the stream)
@@ -387,7 +407,9 @@ final class CameraModel {
       failPhoto("Photo arrived but couldn't be decoded.")
       return
     }
-    photo = image
+    // A look-and-check photo goes to OCR and is then discarded (decision 5); only lab photos
+    // stay on screen.
+    photo = photoWaiters.isEmpty ? image : nil
     let now = CACurrentMediaTime()
     let total = photoRequestedAt > 0 ? now - photoRequestedAt : 0
     // Before the first progress event the glasses are taking and encoding the shot;
@@ -453,6 +475,8 @@ final class CameraModel {
   private func clearStream() {
     let hadStream = camera != nil
     streamTokens.clear()
+    audioDeliveries?.finish()
+    audioDeliveries = nil
     camera = nil
     streamState = .stopped
     if hadStream {
@@ -542,6 +566,16 @@ extension CameraModel: LiveCamera {
   /// starts a stream first when none is running. A second caller shares the photo in flight.
   func captureStillDuringStream() async throws -> Data {
     guard await ensureSessionStarted() else { throw PhotoCaptureError.noSession }
+    if !isStreaming, !isCapturingPhoto {
+      // Only the first start decides whether the stream carries mic audio, and only the user
+      // stops a stream. So a stream that "Check this" starts is the listening stream; if mic
+      // audio is refused, a plain stream still gives the photo.
+      do {
+        try await startListeningStream(quality: liveQuality)
+      } catch {
+        captureStreamAudio = false
+      }
+    }
     return try await withCheckedThrowingContinuation { continuation in
       photoWaiters.append(continuation)
       guard !isCapturingPhoto else { return }
@@ -590,9 +624,12 @@ extension CameraModel: LiveCamera {
 /// main actor. Nothing touches it after the copy, so crossing the actor boundary is safe.
 final class PCMBufferCopy: @unchecked Sendable {
   let buffer: AVAudioPCMBuffer?
+  /// Frames in the SDK buffer; nonzero with a nil `buffer` means the copy failed.
+  let sourceFrameCount: AVAudioFrameCount
 
   init(_ source: AVAudioPCMBuffer) {
     let frames = source.frameLength
+    sourceFrameCount = frames
     guard frames > 0, let copy = AVAudioPCMBuffer(pcmFormat: source.format, frameCapacity: frames) else {
       buffer = nil
       return
@@ -608,6 +645,13 @@ final class PCMBufferCopy: @unchecked Sendable {
     }
     buffer = copy
   }
+}
+
+/// One SDK audio buffer with its measurements, on its way to the main actor.
+struct AudioDelivery: Sendable {
+  let format: String
+  let level: Double
+  let copy: PCMBufferCopy
 }
 
 /// Focus measure: variance of a Laplacian over a small grayscale copy. Higher is sharper.

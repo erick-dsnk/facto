@@ -313,6 +313,26 @@ final class ResultPresenterTests: XCTestCase {
     XCTAssertEqual(history.entries.first?.card.kind, .needsConfirmation)
   }
 
+  func testSupersededResultLeavesTheLensAndIsNeverRepeated() {
+    present(result(.contradicted, action: .notify), identity("c1", request: "asr-1-1-x", revision: 1))
+    XCTAssertEqual(lens.card?.kind, .contradicted)
+
+    presenter.supersede(requestId: "asr-1-1-x", revision: 1, announce: true)
+
+    XCTAssertNil(lens.card)
+    XCTAssertEqual(history.entries.first?.superseded, true)
+    XCTAssertNil(history.latestDelivered, "a corrected result is not repeated")
+    XCTAssertEqual(speaker.spoken, [ResultWording.correctionLine])
+    XCTAssertEqual(playback.events, ["started", "speak"], "the update is speech, so it is reported")
+
+    // An unrelated request, or a later revision of the same one, is left alone.
+    present(result(.supported, action: .notify), identity("c1", request: "asr-1-1-x", revision: 2))
+    presenter.supersede(requestId: "asr-1-1-y", revision: 3, announce: true)
+    presenter.supersede(requestId: "asr-1-1-x", revision: 1, announce: true)
+    XCTAssertEqual(lens.card?.kind, .supported)
+    XCTAssertEqual(speaker.spoken.count, 1)
+  }
+
   func testLensChangeCallbackFires() {
     var seen: [ResultCard?] = []
     lens.onChange = { seen.append($0) }

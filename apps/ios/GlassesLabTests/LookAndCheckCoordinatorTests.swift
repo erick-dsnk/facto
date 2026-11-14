@@ -82,6 +82,23 @@ private final class FakeSubmitter: CheckSubmitter, @unchecked Sendable {
   }
 }
 
+/// Rejects the first submit as stale after raising the channel's epoch, like a reconnect
+/// that lands while the request is in flight.
+@MainActor
+private final class StaleOnceSubmitter: CheckSubmitter {
+  let channel: FakeChannel
+  private(set) var attempts: [TextInputEnvelope] = []
+  init(channel: FakeChannel) { self.channel = channel }
+
+  func submit(_ input: TextInputEnvelope) async throws {
+    attempts.append(input)
+    if attempts.count == 1 {
+      channel.sessionEpoch = 4
+      throw BackendClientError.staleEpoch(current: 4, envelope: input.sessionEpoch)
+    }
+  }
+}
+
 // MARK: - Tests
 
 @MainActor
@@ -159,6 +176,57 @@ final class LookAndCheckCoordinatorTests: XCTestCase {
     guard case .submitted(let ids, let dropped) = outcome else { return XCTFail("expected submitted, got \(String(describing: outcome))") }
     XCTAssertEqual(ids, envelopes.map(\.requestId))
     XCTAssertGreaterThan(dropped, 0, "text past three chunks is recorded")
+    let keys = Set(envelopes.map { LookAndCheckCoordinator.photoKey(forRequestId: $0.requestId) })
+    XCTAssertEqual(keys.count, 1, "chunks of one photo share a key")
+    XCTAssertNotNil(keys.first ?? nil)
+  }
+
+  func testPhotoKeyGroupsChunksOnly() {
+    let base = WireID.makeRequestId(prefix: "ocr")
+    XCTAssertEqual(LookAndCheckCoordinator.photoKey(forRequestId: "\(base)-1"), base)
+    XCTAssertEqual(LookAndCheckCoordinator.photoKey(forRequestId: "\(base)-3"), base)
+    XCTAssertNil(LookAndCheckCoordinator.photoKey(forRequestId: base), "a UUID group is not a chunk number")
+    XCTAssertNil(LookAndCheckCoordinator.photoKey(forRequestId: "asr-1-2-3"))
+  }
+
+  func testSessionAndEpochAreReadAfterThePhoto() async throws {
+    let coordinator = makeCoordinator()
+    let done = expectation(description: "outcome")
+    coordinator.onOutcome = { _ in done.fulfill() }
+    photo.holdNext = true
+    coordinator.trigger(.button)
+    while photo.gate == nil { await Task.yield() }
+    // A reconnect while the photo is on its way raises the epoch.
+    channel.sessionEpoch = 5
+    photo.release()
+    await fulfillment(of: [done], timeout: 2)
+    XCTAssertEqual(submitter.envelopes.first?.sessionEpoch, 5)
+  }
+
+  func testStaleEpochIsRetriedOnceWithTheNewEpoch() async throws {
+    let stale = StaleOnceSubmitter(channel: channel)
+    let coordinator = LookAndCheckCoordinator(
+      channel: channel, photo: photo, recognizer: recognizer, submitter: stale, now: { [fixedDate] in fixedDate }
+    )
+    let outcome = await coordinator.performCheck(source: .button)
+    XCTAssertEqual(stale.attempts.map(\.sessionEpoch), [3, 4])
+    XCTAssertEqual(Set(stale.attempts.map(\.requestId)).count, 1, "the retry keeps the request id")
+    XCTAssertEqual(outcome?.submittedCount, 1)
+    XCTAssertTrue(LookAndCheckCoordinator.isStaleSession(BackendClientError.http(status: 409, code: "old_epoch")))
+    XCTAssertFalse(LookAndCheckCoordinator.isStaleSession(BackendClientError.http(status: 429, code: "queue_full")))
+  }
+
+  func testPausedSessionFailsBeforeSubmitting() async {
+    let coordinator = makeCoordinator()
+    var asked = 0
+    coordinator.prepareSubmit = {
+      asked += 1
+      return false
+    }
+    let outcome = await coordinator.performCheck(source: .voice)
+    XCTAssertEqual(outcome, .failed(reason: "session_paused"))
+    XCTAssertEqual(asked, 1)
+    XCTAssertTrue(submitter.envelopes.isEmpty)
   }
 
   func testCaptureRequestEventTriggersACheck() async throws {

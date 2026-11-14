@@ -26,6 +26,9 @@ final class ResultHistory {
     var card: ResultCard
     var delivery: OutputDelivery
     var receivedAt: Date
+    /// A correction replaced this result (`claim.superseded`). Kept for inspection, never
+    /// repeated.
+    var superseded = false
   }
 
   nonisolated static let defaultCapacity = 50
@@ -73,9 +76,23 @@ final class ResultHistory {
     return true
   }
 
-  /// The newest entry the wearer saw or heard (anything but `silent`).
+  /// The newest current entry the wearer saw or heard (anything but `silent`).
   var latestDelivered: Entry? {
-    entries.first { $0.delivery != .silent }
+    entries.first { $0.delivery != .silent && !$0.superseded }
+  }
+
+  /// Marks the request's results up to `revision` (all of them when nil) as superseded and
+  /// returns their cards.
+  @discardableResult
+  func markSuperseded(requestId: String, throughRevision revision: Int?) -> [ResultCard] {
+    var cards: [ResultCard] = []
+    for index in entries.indices {
+      guard let identity = entries[index].identity, identity.requestId == requestId, !entries[index].superseded else { continue }
+      if let revision, identity.revision > revision { continue }
+      entries[index].superseded = true
+      cards.append(entries[index].card)
+    }
+    return cards
   }
 
   func clear() {

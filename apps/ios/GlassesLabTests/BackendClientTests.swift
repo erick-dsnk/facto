@@ -164,7 +164,7 @@ final class BackendClientTests: XCTestCase {
     serve()
     let silent = FakeWebSocket()
     sockets.enqueue(silent)
-    let client = makeClient(policy: ReconnectPolicy(openTimeout: 0.05))
+    let client = makeClient(policy: ReconnectPolicy(openTimeout: 0.05, initialOpenTimeout: 0.05))
     do {
       try await client.connect()
       XCTFail("Expected an error")
@@ -173,6 +173,20 @@ final class BackendClientTests: XCTestCase {
     }
     XCTAssertEqual(client.connectionState, .disconnected(reason: "connect_timeout"))
     XCTAssertTrue(silent.cancelled)
+  }
+
+  func testFirstConnectWaitsLongerThanAReconnect() async throws {
+    serve()
+    let slow = FakeWebSocket()
+    sockets.enqueue(slow)
+    let client = makeClient(policy: ReconnectPolicy(openTimeout: 0.05, initialOpenTimeout: 1))
+    Task {
+      try? await Task.sleep(nanoseconds: 200_000_000)
+      slow.push(json: EventJSON.ready(id: "ready-1"))
+    }
+    try await client.connect()
+    XCTAssertEqual(client.connectionState, .connected)
+    XCTAssertEqual(sockets.requests.first?.timeoutInterval, 1)
   }
 
   // MARK: Events
@@ -199,6 +213,23 @@ final class BackendClientTests: XCTestCase {
     try? await Task.sleep(nanoseconds: 50_000_000)
     XCTAssertEqual(first.values.map(\.eventId), ["ready-1", "e1", "e4"])
     XCTAssertEqual(second.values.map(\.eventId), ["ready-1", "e1", "e4"])
+  }
+
+  func testUnreadableEventsAreCountedAndReported() async throws {
+    let (client, socket) = try await connectedClient()
+    var reported: [String?] = []
+    client.onUnreadableEvent = { reported.append($0) }
+
+    socket.push(.text("not json"))
+    socket.push(json: EventJSON.make(id: "bad-1", type: "claim.result", requestId: "req-1", claimId: "req-1-c1", revision: 1, payload: "{\"verdict\":7}"))
+    socket.push(json: EventJSON.make(id: "e9", type: "session.future_thing", payload: "{}"))
+
+    await waitUntil { client.unreadableEventCount == 2 }
+    try? await Task.sleep(nanoseconds: 50_000_000)
+    XCTAssertEqual(client.unreadableEventCount, 2, "an unknown event type is ignored, not unreadable")
+    XCTAssertEqual(reported, [nil, "claim.result"])
+    XCTAssertEqual(BackendClient.envelopeType(in: Data(#"{"type":"claim.result","payload":7}"#.utf8)), "claim.result")
+    XCTAssertNil(BackendClient.envelopeType(in: Data(#"{"type":"Free text with spaces"}"#.utf8)))
   }
 
   func testHigherEpochFromTheServerUpdatesSessionEpoch() async throws {
@@ -378,6 +409,57 @@ final class BackendClientTests: XCTestCase {
     XCTAssertEqual(info.gap, 5.5, accuracy: 0.001)
     XCTAssertFalse(info.isWithinAutoResumeWindow)
     XCTAssertEqual(client.connectionState, .connected)
+  }
+
+  func testHalfOpenSocketIsDroppedAfterAMissedPongAndReconnects() async throws {
+    serve()
+    let halfOpen = FakeWebSocket()
+    halfOpen.push(json: EventJSON.ready(id: "ready-1"))
+    halfOpen.answersPings = false
+    let replacement = FakeWebSocket()
+    replacement.push(json: EventJSON.ready(id: "ready-2", epoch: 2, active: false))
+    sockets.enqueue(halfOpen)
+    sockets.enqueue(replacement)
+    let client = makeClient(policy: ReconnectPolicy(openTimeout: 1, pingInterval: 0.05, pingTimeout: 0.05))
+    try await client.connect()
+
+    await waitUntil { client.lastReconnect != nil && client.connectionState == .connected }
+    XCTAssertGreaterThanOrEqual(halfOpen.pings, 1)
+    XCTAssertTrue(halfOpen.cancelled)
+    XCTAssertEqual(client.sessionEpoch, 2)
+    XCTAssertEqual(sockets.requests.count, 2)
+    await waitUntil { replacement.pings >= 1 }
+    XCTAssertFalse(replacement.cancelled, "a socket that answers pings stays up")
+  }
+
+  func testDroppedSocketMovesListeningToReconnectingAndResumesWithoutARestart() async throws {
+    let (client, socket) = try await connectedClient()
+    let streamer = AudioStreamer(channel: client)
+    var stops: [AudioStreamerStopReason] = []
+    streamer.onStopped = { stops.append($0) }
+    streamer.start()
+    await streamer.waitUntilSent()
+    socket.push(json: EventJSON.make(id: "audio-ready-1", type: "audio.ready", payload: #"{"streamGeneration":1,"encoding":"pcm_s16le","sampleRateHz":16000,"channels":1,"source":"glasses_stream_audio"}"#))
+    await waitUntil { streamer.phase == .streaming(generation: 1) }
+
+    let replacement = FakeWebSocket()
+    sockets.enqueue(replacement)
+    socket.fail()
+    // Frames sent while the socket is gone fail; that is a connection loss, not an audio fault.
+    for _ in 0..<10 { streamer.appendPCM16(Data(repeating: 0x11, count: 1_280)) }
+    await waitUntil { streamer.phase == .reconnecting }
+    XCTAssertEqual(client.connectionState, .reconnecting(attempt: 1))
+
+    replacement.push(json: EventJSON.ready(id: "ready-2", epoch: 2, active: false))
+    await waitUntil { streamer.phase == .awaitingReady(generation: 2) }
+    await streamer.waitUntilSent()
+    let types = replacement.sent.compactMap { frame -> String? in
+      guard case .text(let text) = frame else { return nil }
+      return (try? JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any])?["type"] as? String
+    }
+    XCTAssertEqual(types, ["session.resume", "audio.start"])
+    XCTAssertTrue(stops.isEmpty)
+    XCTAssertEqual(streamer.generation, 2, "the dead socket cost no restarts")
   }
 
   func testReconnectGivesUpAfterThreeAttemptsWithBoundedBackoff() async throws {

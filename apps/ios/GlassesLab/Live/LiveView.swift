@@ -28,7 +28,8 @@ struct LiveSections: View {
         .textInputAutocapitalization(.never)
         .autocorrectionDisabled()
         .disabled(!live.canEditBackend)
-      TextField("Join code", text: $live.joinCode)
+      SecureField("Join code", text: $live.joinCode)
+        .textContentType(.password)
         .textInputAutocapitalization(.never)
         .autocorrectionDisabled()
         .disabled(!live.canEditBackend)
@@ -75,10 +76,11 @@ struct LiveSections: View {
       Toggle("Demo quality", isOn: $live.demoQuality)
         .disabled(camera.isStreaming)
       Toggle("Mute speech and chimes", isOn: $live.isMuted)
+      Toggle("Automatic alerts", isOn: $live.automaticAlerts)
     } header: {
       Text("Listen and check")
     } footer: {
-      Text("Demo quality on: \(StreamQuality.demo.summary). Off: \(StreamQuality.listening.summary), for long listening. Applies when the stream starts. Say “check this” or tap Check this: the photo comes from the running stream, which never pauses.")
+      Text("Demo quality on: \(StreamQuality.demo.summary). Off: \(StreamQuality.listening.summary), for long listening. Applies when the stream starts. Say “check this” or tap Check this: the photo comes from the running stream, which never pauses. Automatic alerts: a chime and a card when the backend hears a contradicted claim. The phone stays awake while listening; keep Glasses Lab in the foreground.")
     }
   }
 
@@ -202,6 +204,7 @@ private struct HistoryRow: View {
     case .cardOnly: parts.append("card only")
     case .silent: parts.append("silent")
     }
+    if entry.superseded { parts.append("corrected") }
     if let source = entry.card.sourceLine { parts.append(source) }
     return parts.joined(separator: " · ")
   }

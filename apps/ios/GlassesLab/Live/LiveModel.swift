@@ -2,6 +2,7 @@ import AVFoundation
 import Foundation
 import Observation
 import os
+import UIKit
 
 // Live mode: wires BackendClient, AudioStreamer, LookAndCheckCoordinator and ResultPresenter
 // to the glasses camera and display. Rules from docs/live-pipeline.md that apply here:
@@ -30,6 +31,8 @@ enum StreamQuality: String, CaseIterable, Sendable {
 @MainActor
 protocol LiveBackend: SessionChannel, CheckSubmitter {
   var config: BackendConfig { get }
+  /// Called for each event the app couldn't read (contract drift). Argument: the event type.
+  var onUnreadableEvent: (@MainActor (_ type: String?) -> Void)? { get set }
   func connect() async throws
   func close() async
 }
@@ -40,6 +43,8 @@ extension BackendClient: LiveBackend {}
 @MainActor
 protocol LiveCamera: PhotoCapturing {
   var isStreaming: Bool { get }
+  /// Quality for a stream that Live mode starts, including one started by "Check this".
+  var liveQuality: StreamQuality { get set }
   var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)? { get set }
   var onStreamStopped: (@MainActor (_ byUser: Bool) -> Void)? { get set }
   func startListeningStream(quality: StreamQuality) async throws
@@ -176,6 +181,7 @@ enum LiveStatus: Equatable, Sendable {
     case "connect_timeout", "timed_out": "Backend not responding"
     case "missing_join_code": "Join code missing"
     case "invalid_url": "Backend URL not valid"
+    case "insecure_url": "Backend URL needs https"
     default: "Backend error"
     }
   }
@@ -188,6 +194,21 @@ enum LiveStatus: Equatable, Sendable {
 final class LiveModel {
   static let demoQualityKey = "live.demoQuality"
   static let mutedKey = "live.muted"
+  static let automaticAlertsKey = "live.automaticAlerts"
+  /// `session.ended` reasons after which Live mode opens a new session by itself. Server
+  /// sessions last 5 minutes and are never extended (services/api session.ts).
+  static let renewableEndReasons: Set<String> = ["deleted", "expired"]
+  /// At most one automatic renewal per this many seconds, so a backend that ends every new
+  /// session at once can't cause a loop.
+  nonisolated static let minimumRenewalInterval: TimeInterval = 60
+  /// `pipeline.error` codes without a request id that are routine: admission throttling of
+  /// automatic sentences, and audio stragglers AudioStreamer recovers from on its own.
+  /// They are counted in the log, never shown as a backend error.
+  static let quietErrorCodes: Set<String> = [
+    "automatic_cooldown", "queue_full", "stale_capture", "request_capacity", "idempotency_conflict", "old_revision",
+    "audio_not_ready", "audio_backlog", "audio_gap", "audio_already_started", "playback_active",
+    "invalid_audio_generation", "old_epoch", "invalid_asr_transcript",
+  ]
   /// A manual check with no outcome after this long is reported as "The check didn't finish."
   /// The backend's own deadline is 10 s.
   nonisolated static let defaultCheckTimeout: TimeInterval = 15
@@ -197,7 +218,10 @@ final class LiveModel {
   var baseURLText: String
   var joinCode: String
   var demoQuality: Bool {
-    didSet { defaults.set(demoQuality, forKey: Self.demoQualityKey) }
+    didSet {
+      defaults.set(demoQuality, forKey: Self.demoQualityKey)
+      camera.liveQuality = quality
+    }
   }
   var isMuted: Bool {
     didSet {
@@ -205,11 +229,25 @@ final class LiveModel {
       defaults.set(isMuted, forKey: Self.mutedKey)
     }
   }
+  /// Lets the backend flag contradicted claims it hears with a chime and a card (decision 7).
+  /// Sent as `session.preferences`; the server's own default is off.
+  var automaticAlerts: Bool {
+    didSet {
+      defaults.set(automaticAlerts, forKey: Self.automaticAlertsKey)
+      if automaticAlerts != oldValue { sendPreferences() }
+    }
+  }
 
   // MARK: State
 
   private(set) var connection: ChannelConnectionState = .idle
-  private(set) var listening: AudioStreamerPhase = .idle
+  private(set) var listening: AudioStreamerPhase = .idle {
+    didSet {
+      // Keep the phone awake while listening: a locked phone suspends the app, and with it
+      // the socket and the audio pipeline.
+      if listening.isActive != oldValue.isActive { idleTimer(listening.isActive) }
+    }
+  }
   private(set) var isStartingStream = false
   /// The last non-fatal problem, e.g. a stream that wouldn't start or a backend error code.
   private(set) var notice: String?
@@ -251,7 +289,10 @@ final class LiveModel {
   @ObservationIgnored private let audioClock: AudioStreamerClock?
   @ObservationIgnored private let checkTimeout: TimeInterval
   @ObservationIgnored private let defaults: UserDefaults
+  @ObservationIgnored private let secrets: SecretStoring
   @ObservationIgnored private let configureAudioSession: () -> Void
+  @ObservationIgnored private let idleTimer: (_ keepAwake: Bool) -> Void
+  @ObservationIgnored private let uptime: () -> TimeInterval
   @ObservationIgnored private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "live")
 
   @ObservationIgnored private var backend: LiveBackend?
@@ -262,27 +303,53 @@ final class LiveModel {
   @ObservationIgnored private var checkTimers: [String: Task<Void, Never>] = [:]
   /// Manual request ids that already had an outcome, so a late 202 starts no timer.
   @ObservationIgnored private var resolvedChecks: Set<String> = []
+  /// Outcomes of each photo's chunks, keyed by `LookAndCheckCoordinator.photoKey`.
+  @ObservationIgnored private var photoChecks: [String: PhotoCheck] = [:]
+  /// Lens updates go through one ordered stream, so a quick show then clear can't arrive out
+  /// of order. Only the newest pending card is kept.
+  @ObservationIgnored private var lensUpdates: AsyncStream<ResultCard?>.Continuation?
+  @ObservationIgnored private var lensPump: Task<Void, Never>?
+  /// Session renewal after the server ended the session (expiry).
+  @ObservationIgnored private var listenAfterRenewal = false
+  @ObservationIgnored private var isRenewing = false
+  @ObservationIgnored private var lastRenewalAt: TimeInterval?
+
+  /// What one photo's chunks came back with. The user hears one answer per photo: a verdict
+  /// is presented as it arrives; a "not sure" or failure only when no chunk gave a verdict.
+  private struct PhotoCheck {
+    var expected: Int?
+    var resolved: Set<String> = []
+    var hadResult = false
+    var failed = false
+    /// Some chunk came back skipped or unclear, as opposed to only cancelled.
+    var unsure = false
+  }
 
   init(
     camera: LiveCamera,
     display: LensDisplaying?,
     defaults: UserDefaults = .standard,
+    secrets: SecretStoring = KeychainSecretStore(),
     speaker: SpeechSpeaking? = nil,
     chime: ChimePlaying? = nil,
     recognizer: TextRecognizing? = nil,
     audioClock: AudioStreamerClock? = nil,
     checkTimeout: TimeInterval = LiveModel.defaultCheckTimeout,
     configureAudioSession: (() -> Void)? = nil,
+    idleTimer: ((_ keepAwake: Bool) -> Void)? = nil,
+    uptime: (() -> TimeInterval)? = nil,
     makeBackend: (@MainActor (BackendConfig) -> LiveBackend)? = nil
   ) {
-    let config = BackendConfig.load(from: defaults)
+    let config = BackendConfig.load(from: defaults, secrets: secrets)
     self.baseURLText = config.baseURL.absoluteString
     self.joinCode = config.joinCode
     self.demoQuality = defaults.object(forKey: Self.demoQualityKey) as? Bool ?? true
     self.isMuted = defaults.bool(forKey: Self.mutedKey)
+    self.automaticAlerts = defaults.object(forKey: Self.automaticAlertsKey) as? Bool ?? true
     self.camera = camera
     self.display = display
     self.defaults = defaults
+    self.secrets = secrets
     let speaker = speaker ?? SystemSpeechSpeaker()
     let chime = chime ?? ToneChimePlayer()
     self.speaker = speaker
@@ -291,6 +358,8 @@ final class LiveModel {
     self.audioClock = audioClock
     self.checkTimeout = checkTimeout
     self.configureAudioSession = configureAudioSession ?? LiveModel.configureSpokenOutput
+    self.idleTimer = idleTimer ?? { UIApplication.shared.isIdleTimerDisabled = $0 }
+    self.uptime = uptime ?? { ProcessInfo.processInfo.systemUptime }
     self.makeBackend = makeBackend ?? { BackendClient(config: $0) }
     let history = ResultHistory()
     let lens = LensCardViewModel()
@@ -301,9 +370,11 @@ final class LiveModel {
     self.presenter = ResultPresenter(speaker: speaker, chime: chime, playback: relay, history: history, lens: lens)
     presenter.isMuted = isMuted
 
-    lens.onChange = { [weak self] card in self?.sendToLens(card) }
+    lens.onChange = { [weak self] card in self?.lensUpdates?.yield(card) }
+    camera.liveQuality = quality
     camera.onStreamStopped = { [weak self] byUser in self?.streamStopped(byUser: byUser) }
     camera.onAudioBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
+    startLensPump()
   }
 
   // MARK: Connection
@@ -312,11 +383,19 @@ final class LiveModel {
   func connect() async {
     guard canEditBackend else { return }
     notice = nil
-    guard let config = makeConfig() else {
+    let text = baseURLText.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard let url = URL(string: text), url.scheme == "http" || url.scheme == "https", let host = url.host() else {
       connection = .disconnected(reason: "invalid_url")
       return
     }
-    config.save(to: defaults)
+    // The join code and the session token must never cross the internet in clear text.
+    guard url.scheme == "https" || Self.allowsCleartext(host: host) else {
+      connection = .disconnected(reason: "insecure_url")
+      notice = "Use an https:// URL. Plain http works only for localhost and private network addresses."
+      return
+    }
+    let config = BackendConfig(baseURL: url, joinCode: joinCode.trimmingCharacters(in: .whitespacesAndNewlines))
+    config.save(to: defaults, secrets: secrets)
     if backend?.config != config {
       await tearDown()
       build(config)
@@ -329,8 +408,38 @@ final class LiveModel {
       try await backend.connect()
     } catch {
       log.error("connect failed \(BackendClient.reasonCode(for: error), privacy: .public)")
+      if case .disconnected(let reason) = backend.connectionState {
+        notice = Self.connectFailureNotice(reason)
+      }
     }
     connection = backend.connectionState
+  }
+
+  /// What to do about a failed connect, by the client's reason code.
+  static func connectFailureNotice(_ reason: String) -> String? {
+    switch reason {
+    case "closed", "cancelled": nil
+    case "missing_join_code": "Enter the join code, then tap Connect."
+    case "unauthorized", "http_401", "http_403": "The backend rejected the join code. Check it, then tap Connect."
+    case "connect_timeout", "timed_out": "The backend didn't answer in time. Check the URL and mobile data, then tap Connect."
+    case "network_lost": "No network. Check mobile data, then tap Connect."
+    case "session_capacity", "rate_limited", "http_429": "The backend has no free sessions right now. Try again in a minute."
+    default: "Couldn't connect (\(reason)). Check the URL and join code, then tap Connect."
+    }
+  }
+
+  /// Hosts that may use plain http: this device and private networks (a laptop on the same
+  /// Wi-Fi). Everything else needs https.
+  static func allowsCleartext(host: String) -> Bool {
+    let host = host.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: "[]"))
+    if host == "localhost" || host.hasSuffix(".local") || host == "::1" { return true }
+    let parts = host.split(separator: ".").compactMap { Int($0) }
+    guard parts.count == 4, host.split(separator: ".").count == 4, parts.allSatisfy({ (0...255).contains($0) }) else { return false }
+    switch (parts[0], parts[1]) {
+    case (127, _), (10, _), (192, 168), (169, 254): return true
+    case (172, 16...31): return true
+    default: return false
+    }
   }
 
   /// The user's Disconnect: stops listening, then closes and deletes the session.
@@ -422,12 +531,15 @@ final class LiveModel {
 
   private func build(_ config: BackendConfig) {
     let backend = makeBackend(config)
+    backend.onUnreadableEvent = { [weak self] type in self?.unreadableEvent(type) }
     let streamer = AudioStreamer(channel: backend, clock: audioClock)
     streamer.onStopped = { [weak self] reason in self?.listeningStopped(reason) }
     streamer.onAutoResumed = { [weak self] in self?.autoResumed() }
     relay.target = streamer
     let coordinator = LookAndCheckCoordinator(channel: backend, photo: camera, recognizer: recognizer, submitter: backend)
     coordinator.onOutcome = { [weak self] outcome in self?.checkFinished(outcome) }
+    // Voice triggers too: a session the server paused after a reconnect is resumed first.
+    coordinator.prepareSubmit = { [weak self] in await self?.ensureSessionActive() ?? false }
     self.backend = backend
     self.streamer = streamer
     self.coordinator = coordinator
@@ -469,6 +581,9 @@ final class LiveModel {
 
   private func handle(_ state: ChannelConnectionState) {
     connection = state
+    if case .disconnected(let reason) = state, Self.renewableEndReasons.contains(reason) {
+      renewSession(after: reason)
+    }
     syncListening()
   }
 
@@ -477,6 +592,9 @@ final class LiveModel {
     case .sessionReady(let payload):
       sessionActive = payload.active
       speechAvailable = payload.audio
+      // Every session starts with the server's defaults (automatic alerts off), so the
+      // preferences go out on each session.ready, including the one after a resume.
+      sendPreferences(epoch: event.sessionEpoch)
       // After a disconnect the server pauses the session. While listening, AudioStreamer
       // resumes it (within 5 s). Otherwise resume here so manual checks keep working.
       if !payload.active, !(streamer?.phase.isActive ?? false) {
@@ -484,35 +602,50 @@ final class LiveModel {
       }
     case .sessionEnded(let payload):
       sessionActive = false
-      if ["deleted", "expired"].contains(payload.reasonCode) {
-        notice = "The backend ended the session (\(payload.reasonCode)). Tap Connect for a new one."
+      if Self.renewableEndReasons.contains(payload.reasonCode) {
+        if streamer?.phase.isActive ?? false { listenAfterRenewal = true }
+        notice = "The backend ended the session (\(payload.reasonCode)). Opening a new one…"
       }
     case .claimResult(let result):
       let manual = isUserInitiated(event.requestId)
-      resolveCheck(event.requestId)
-      guard let identity = ClaimIdentity(event: event) else { return }
+      guard let identity = ClaimIdentity(event: event) else {
+        // claim.result always carries all three ids; without them it can't be tracked. A
+        // check the user asked for still gets an answer.
+        log.error("claim.result without ids \(event.logSummary, privacy: .public)")
+        resolveManual(event.requestId, failed: true)
+        return
+      }
+      resolveManual(event.requestId, hadResult: true)
       presenter.present(result, presentation: result.presentation, userInitiated: manual, identity: identity)
-    case .claimNeedsConfirmation:
-      let manual = isUserInitiated(event.requestId)
-      resolveCheck(event.requestId)
-      presenter.presentOutcome(.needsConfirmation(heard: !isPhotoRequest(event.requestId)), userInitiated: manual)
-    case .claimSkipped:
-      // An explicit request always gets an answer; automatic skips stay quiet.
-      let manual = isUserInitiated(event.requestId)
-      resolveCheck(event.requestId)
-      if manual {
-        presenter.presentOutcome(.needsConfirmation(heard: !isPhotoRequest(event.requestId)), userInitiated: true)
+    case .claimNeedsConfirmation, .claimSkipped:
+      // An explicit request always gets an answer; automatic ones stay quiet (skips) or in
+      // history (needs confirmation).
+      if isUserInitiated(event.requestId) {
+        resolveManual(event.requestId)
+      } else if event.type == .claimNeedsConfirmation {
+        presenter.presentOutcome(.needsConfirmation(heard: true), userInitiated: false)
       }
     case .pipelineError(let payload):
       if let requestId = event.requestId {
-        let manual = isUserInitiated(requestId)
-        resolveCheck(requestId)
-        presenter.presentOutcome(.checkFailed, userInitiated: manual)
+        if isUserInitiated(requestId) {
+          resolveManual(requestId, failed: true)
+        } else {
+          presenter.presentOutcome(.checkFailed, userInitiated: false)
+        }
+      } else if Self.quietErrorCodes.contains(payload.reasonCode) {
+        log.info("routine backend code \(payload.reasonCode, privacy: .public)")
       } else {
         notice = "Backend error: \(payload.reasonCode)"
       }
-    case .checkCancelled, .claimSuperseded:
+    case .claimSuperseded(let payload):
       resolveCheck(event.requestId)
+      if let requestId = event.requestId {
+        // "That statement was corrected" only while listening: never after the user's Stop.
+        let announce = payload.presentation?.action == .respond && (streamer?.phase.isActive ?? false)
+        presenter.supersede(requestId: requestId, revision: event.revision, announce: announce)
+      }
+    case .checkCancelled:
+      if isUserInitiated(event.requestId) { resolveManual(event.requestId, cancelled: true) }
     case .captureRequest:
       // LookAndCheckCoordinator takes the photo itself; this is only the phone-side note.
       checkMessage = "Heard “check this”."
@@ -530,8 +663,74 @@ final class LiveModel {
         try await backend.sendControl(ControlMessage.resume(epoch: epoch))
       } catch {
         self.log.error("session.resume failed \(BackendClient.reasonCode(for: error), privacy: .public)")
+        self.notice = "Couldn't resume the backend session. Disconnect and connect again."
       }
     }
+  }
+
+  /// `session.preferences` for the current session. `muted` stays false on the server: the
+  /// app's own mute keeps cards and history, while a server mute would turn every result,
+  /// even a requested one, silent.
+  private func sendPreferences(epoch: Int? = nil) {
+    guard let backend, backend.connectionState == .connected, let epoch = epoch ?? backend.sessionEpoch else { return }
+    let preferences = SessionPreferences(muted: false, automaticNotifications: automaticAlerts, selectedTopics: [])
+    Task {
+      do {
+        try await backend.sendControl(ControlMessage.preferences(preferences, epoch: epoch))
+        self.log.info("session.preferences automatic=\(preferences.automaticNotifications, privacy: .public)")
+      } catch {
+        self.log.error("session.preferences failed \(BackendClient.reasonCode(for: error), privacy: .public)")
+      }
+    }
+  }
+
+  /// The server ended the session (5 minute lifetime). Opens a new one with the same join
+  /// code and resumes listening if it was on, instead of stopping mid-demo.
+  private func renewSession(after reason: String) {
+    guard let backend, !isRenewing else { return }
+    guard canRenew else {
+      // listeningStopped already spoke the reason, because no renewal was due.
+      listenAfterRenewal = false
+      notice = "The backend ended the session (\(reason)). Tap Connect for a new one."
+      return
+    }
+    lastRenewalAt = uptime()
+    isRenewing = true
+    sessionActive = nil
+    log.info("session ended (\(reason, privacy: .public)), opening a new one")
+    Task {
+      defer { self.isRenewing = false }
+      do {
+        try await backend.connect()
+      } catch {
+        self.log.error("session renewal failed \(BackendClient.reasonCode(for: error), privacy: .public)")
+        self.connection = backend.connectionState
+        self.notice = "The backend ended the session and a new one didn't open. Tap Connect."
+        if self.listenAfterRenewal { self.speakStopReason(.sessionEnded(reasonCode: reason)) }
+        self.listenAfterRenewal = false
+        return
+      }
+      // Read only now: the streamer's own stop may land after the disconnect.
+      let listen = self.listenAfterRenewal
+      self.listenAfterRenewal = false
+      self.connection = backend.connectionState
+      guard listen else {
+        self.notice = "The session expired, so a new one started."
+        return
+      }
+      await self.startListening()
+      if self.isListening {
+        self.notice = "The session expired, so a new one started. Listening resumed."
+        if !self.isMuted { self.chime.playChime() }
+      } else if self.notice == nil {
+        self.notice = "The session expired, so a new one started. Tap Start listening."
+      }
+    }
+  }
+
+  private func unreadableEvent(_ type: String?) {
+    log.error("unreadable backend event type=\(type ?? "-", privacy: .public)")
+    notice = "The backend sent an update this app can't read. Check that the app and backend versions match."
   }
 
   /// Resumes a paused session and waits up to 2 s for `session.ready` with `active: true`.
@@ -549,10 +748,24 @@ final class LiveModel {
   private func listeningStopped(_ reason: AudioStreamerStopReason) {
     listening = .stopped(reason)
     log.info("listening stopped \(reason.code, privacy: .public)")
-    // A distinct spoken reason for every failure (decision 9). Nil for the user's own Stop.
+    if case .sessionEnded(let code) = reason, Self.renewableEndReasons.contains(code), canRenew || isRenewing {
+      // A new session opens and listening resumes; the reason is spoken only if that fails.
+      listenAfterRenewal = true
+      return
+    }
+    speakStopReason(reason)
+  }
+
+  /// A distinct spoken reason for every failure (decision 9). Nil for the user's own Stop.
+  private func speakStopReason(_ reason: AudioStreamerStopReason) {
     if let message = reason.spokenMessage, !isMuted {
       speaker.speak(message, rate: presenter.speechRate) {}
     }
+  }
+
+  private var canRenew: Bool {
+    guard let lastRenewalAt else { return true }
+    return uptime() - lastRenewalAt >= Self.minimumRenewalInterval
   }
 
   private func autoResumed() {
@@ -580,6 +793,10 @@ final class LiveModel {
         message += " Some text was too long and was left out."
       }
       checkMessage = message
+      if let key = requestIds.first.flatMap(LookAndCheckCoordinator.photoKey(forRequestId:)) {
+        photoChecks[key, default: PhotoCheck()].expected = requestIds.count
+        settlePhoto(key)
+      }
       for requestId in requestIds where !resolvedChecks.contains(requestId) {
         startTimer(for: requestId)
       }
@@ -595,6 +812,7 @@ final class LiveModel {
   static func checkFailureMessage(_ reason: String) -> String {
     switch reason {
     case "no_session": "No backend session. Connect first."
+    case "session_paused": "The backend session is paused. Disconnect and connect again."
     case "photo_failed": "The photo didn't arrive. Check the glasses and try again."
     case "ocr_failed": "The photo couldn't be read. Try again."
     case "submit_failed": "The backend didn't accept the text. Check the connection."
@@ -628,10 +846,44 @@ final class LiveModel {
 
   private func checkTimedOut(_ requestId: String) {
     checkTimers[requestId] = nil
-    guard pendingChecks.remove(requestId) != nil else { return }
-    resolvedChecks.insert(requestId)
+    guard pendingChecks.contains(requestId) else { return }
     log.info("manual check timed out req=\(requestId, privacy: .public)")
-    presenter.presentOutcome(.checkFailed, userInitiated: true)
+    resolveManual(requestId, failed: true)
+  }
+
+  /// Records one manual request's outcome and answers the user once per photo: a verdict is
+  /// presented by the caller as it arrives; "not sure" or "didn't finish" only once every
+  /// chunk of the photo is back without a verdict, so a skipped chunk never talks over
+  /// another chunk's verdict.
+  private func resolveManual(_ requestId: String?, hadResult: Bool = false, failed: Bool = false, cancelled: Bool = false) {
+    guard let requestId else { return }
+    let wasOpen = !resolvedChecks.contains(requestId) || pendingChecks.contains(requestId)
+    resolveCheck(requestId)
+    guard let key = LookAndCheckCoordinator.photoKey(forRequestId: requestId) else {
+      // Not a photo chunk: answer it on its own.
+      if hadResult || cancelled || !wasOpen { return }
+      presenter.presentOutcome(failed ? .checkFailed : .needsConfirmation(heard: true), userInitiated: true)
+      return
+    }
+    var check = photoChecks[key, default: PhotoCheck()]
+    check.resolved.insert(requestId)
+    check.hadResult = check.hadResult || hadResult
+    check.failed = check.failed || failed
+    check.unsure = check.unsure || !(hadResult || failed || cancelled)
+    photoChecks[key] = check
+    settlePhoto(key)
+  }
+
+  private func settlePhoto(_ key: String) {
+    guard let check = photoChecks[key], let expected = check.expected, check.resolved.count >= expected else { return }
+    photoChecks[key] = nil
+    if check.hadResult { return }
+    if check.failed {
+      presenter.presentOutcome(.checkFailed, userInitiated: true)
+    } else if check.unsure {
+      presenter.presentOutcome(.needsConfirmation(heard: false), userInitiated: true)
+    }
+    // Only cancelled: the user called it off, so nothing more is said.
   }
 
   private func resolveCheck(_ requestId: String?) {
@@ -646,19 +898,28 @@ final class LiveModel {
     for task in checkTimers.values { task.cancel() }
     checkTimers.removeAll()
     pendingChecks.removeAll()
+    photoChecks.removeAll()
   }
 
   // MARK: Lens and listening state
 
-  private func sendToLens(_ card: ResultCard?) {
-    guard let display, display.isConnected else { return }
+  /// One task sends lens updates in order. Each send finishes before the next starts.
+  private func startLensPump() {
+    let (updates, continuation) = AsyncStream<ResultCard?>.makeStream(bufferingPolicy: .bufferingNewest(1))
+    lensUpdates = continuation
+    let display = display
     let onRepeat: @Sendable () -> Void = { [weak self] in
       Task { @MainActor in self?.repeatLatest() }
     }
     let onDismiss: @Sendable () -> Void = { [weak self] in
       Task { @MainActor in self?.dismissCard() }
     }
-    Task { await display.showCard(card, onRepeat: card == nil ? nil : onRepeat, onDismiss: card == nil ? nil : onDismiss) }
+    lensPump = Task {
+      for await card in updates {
+        guard let display, display.isConnected else { continue }
+        await display.showCard(card, onRepeat: card == nil ? nil : onRepeat, onDismiss: card == nil ? nil : onDismiss)
+      }
+    }
   }
 
   /// AudioStreamer is not observable, so its phase is copied after every input and on a short
@@ -683,12 +944,6 @@ final class LiveModel {
         }
       }
     }
-  }
-
-  private func makeConfig() -> BackendConfig? {
-    let text = baseURLText.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard let url = URL(string: text), url.scheme == "http" || url.scheme == "https", url.host() != nil else { return nil }
-    return BackendConfig(baseURL: url, joinCode: joinCode.trimmingCharacters(in: .whitespacesAndNewlines))
   }
 
   /// Spoken answers play through the glasses speakers even with the ring switch on silent.
