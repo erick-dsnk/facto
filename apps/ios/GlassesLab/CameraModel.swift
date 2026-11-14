@@ -289,7 +289,8 @@ final class CameraModel {
       // Starting a stream is fine; stopping one for a photo is not.
       await startStream()
     }
-    for _ in 0..<60 where streamState != .streaming {
+    // The first stream start also brings up the glasses' Wi-Fi link, which can take >6 s.
+    for _ in 0..<150 where streamState != .streaming {
       try? await Task.sleep(for: .milliseconds(100))
     }
     guard isCapturingPhoto else { return }
