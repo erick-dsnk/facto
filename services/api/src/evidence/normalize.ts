@@ -87,7 +87,7 @@ function subjectMargin(text: string, querySubjects: Set<string>): number {
   let first: number | undefined;
   let last = 0;
   for (const match of text.matchAll(/[\p{L}\p{N}]+/gu)) {
-    if (!querySubjects.has(match[0].toLocaleLowerCase('en'))) continue;
+    if (!words(match[0]).some(token => querySubjects.has(token))) continue;
     first ??= match.index;
     last = match.index + match[0].length;
   }
