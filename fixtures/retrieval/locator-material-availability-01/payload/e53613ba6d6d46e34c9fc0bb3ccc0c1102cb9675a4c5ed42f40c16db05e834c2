@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: exact SDK body/headers, one dispatch, durable reservation, EOF cost and decoded outer-field envelope; no follow links
+ok 1 - exact SDK body/headers, one dispatch, durable reservation, EOF cost and decoded outer-field envelope; no follow links
+  ---
+  duration_ms: 90.825529
+  type: 'test'
+  ...
+# Subtest: live run without exact root approval never dispatches or reads a key
+ok 2 - live run without exact root approval never dispatches or reads a key
+  ---
+  duration_ms: 14.640468
+  type: 'test'
+  ...
+# Subtest: source hash mismatch rejects before reserving output or transport
+ok 3 - source hash mismatch rejects before reserving output or transport
+  ---
+  duration_ms: 12.298046
+  type: 'test'
+  ...
+# Subtest: non-2xx503 cancels error body and native retry cannot dispatch second attempt
+ok 4 - non-2xx503 cancels error body and native retry cannot dispatch second attempt
+  ---
+  duration_ms: 53.953912
+  type: 'test'
+  ...
+# Subtest: outer authentication is distinct from source error and never retries
+ok 5 - outer authentication is distinct from source error and never retries
+  ---
+  duration_ms: 111.270667
+  type: 'test'
+  ...
+# Subtest: HTTP200 target error stays unresolved even when text and links are present; cost/body retained
+ok 6 - HTTP200 target error stays unresolved even when text and links are present; cost/body retained
+  ---
+  duration_ms: 52.942182
+  type: 'test'
+  ...
+# Subtest: URL mismatch is unresolved and cannot borrow parent identity
+ok 7 - URL mismatch is unresolved and cannot borrow parent identity
+  ---
+  duration_ms: 56.404783
+  type: 'test'
+  ...
+# Subtest: missing cost remains unknown rather than zero on fully drained success
+ok 8 - missing cost remains unknown rather than zero on fully drained success
+  ---
+  duration_ms: 46.916125
+  type: 'test'
+  ...
+# Subtest: oversized declared length cancels once; rejected cancellation remains sticky unknown
+ok 9 - oversized declared length cancels once; rejected cancellation remains sticky unknown
+  ---
+  duration_ms: 46.982774
+  type: 'test'
+  ...
+# Subtest: malformed content-length is local guard outcome with one settled cancellation
+ok 10 - malformed content-length is local guard outcome with one settled cancellation
+  ---
+  duration_ms: 49.987015
+  type: 'test'
+  ...
+# Subtest: streaming overflow counts incoming chunk, cancels, stores no false complete body
+ok 11 - streaming overflow counts incoming chunk, cancels, stores no false complete body
+  ---
+  duration_ms: 49.827041
+  type: 'test'
+  ...
+# Subtest: rejected503 cancellation remains unknown, with exactly one dispatch and no retry
+ok 12 - rejected503 cancellation remains unknown, with exactly one dispatch and no retry
+  ---
+  duration_ms: 54.788369
+  type: 'test'
+  ...
+# Subtest: never-settled cancellation at original deadline stays unknown without waiting a new window
+ok 13 - never-settled cancellation at original deadline stays unknown without waiting a new window
+  ---
+  duration_ms: 56.4369
+  type: 'test'
+  ...
+# Subtest: fetch rejection is an observed settled failure, never a second dispatch
+ok 14 - fetch rejection is an observed settled failure, never a second dispatch
+  ---
+  duration_ms: 55.730009
+  type: 'test'
+  ...
+# Subtest: late response is not accepted under original10s and its body is cancelled once
+ok 15 - late response is not accepted under original10s and its body is cancelled once
+  ---
+  duration_ms: 54.607598
+  type: 'test'
+  ...
+# Subtest: response write failure stays storage_failure and retains observed EOF/cost
+ok 16 - response write failure stays storage_failure and retains observed EOF/cost
+  ---
+  duration_ms: 51.939609
+  type: 'test'
+  ...
+# Subtest: post-dispatch declaration drift is distinct from provider failure and retains body/cost
+ok 17 - post-dispatch declaration drift is distinct from provider failure and retains body/cost
+  ---
+  duration_ms: 38.441141
+  type: 'test'
+  ...
+# Subtest: malformed JSON is provider response failure with EOF preserved and unknown cost
+ok 18 - malformed JSON is provider response failure with EOF preserved and unknown cost
+  ---
+  duration_ms: 56.849827
+  type: 'test'
+  ...
+# Subtest: invalid response contract retains raw body/cost but returns no decoded material
+ok 19 - invalid response contract retains raw body/cost but returns no decoded material
+  ---
+  duration_ms: 110.516421
+  type: 'test'
+  ...
+# Subtest: raw and encoded credential echo never become archived response/decoded fields
+ok 20 - raw and encoded credential echo never become archived response/decoded fields
+  ---
+  duration_ms: 110.28601
+  type: 'test'
+  ...
+# Subtest: decoded-field last-step storage failure stays local while preserving raw response cost and one attempt
+ok 21 - decoded-field last-step storage failure stays local while preserving raw response cost and one attempt
+  ---
+  duration_ms: 50.694502
+  type: 'test'
+  ...
+# Subtest: body EOF after original deadline records actual drain but accepts no late material or invented cost
+ok 22 - body EOF after original deadline records actual drain but accepts no late material or invented cost
+  ---
+  duration_ms: 47.662087
+  type: 'test'
+  ...
+# Subtest: typed and contradictory provider envelopes suppress all material while preserving EOF cost and one attempt
+ok 23 - typed and contradictory provider envelopes suppress all material while preserving EOF cost and one attempt
+  ---
+  duration_ms: 464.071945
+  type: 'test'
+  ...
+# Subtest: unknown per-URL provider tag stays unresolved rather than source success
+ok 24 - unknown per-URL provider tag stays unresolved rather than source success
+  ---
+  duration_ms: 47.920081
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2369.347603
