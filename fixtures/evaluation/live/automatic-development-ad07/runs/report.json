@@ -1,0 +1,1094 @@
+{
+  "schemaVersion": 1,
+  "kind": "authenticated_http_websocket_live_development",
+  "startedAt": "2026-11-14T04:43:38.220Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.1",
+  "metadata": {
+    "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+    "dirty": false,
+    "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+    "casesSHA256": "cb3e436d23bc45afa11f8df188dc962a518432c4195aa3c2e6d4efba1c27fa68",
+    "campaignName": "automatic-supported-silence-followup-ad07"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 300000,
+    "inputTokens": 80000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 6,
+      "search": 2,
+      "contents": 3
+    },
+    "wallMs": 30000
+  },
+  "predeclaredCases": [
+    {
+      "label": "AD07-supported-silence-followup",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": []
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    }
+  ],
+  "counts": {
+    "declared": 1,
+    "observed": 1,
+    "terminalReceipts": 1,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "completed": true,
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "transportFailure": null,
+  "totals": {
+    "attempts": 3,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 2,
+      "search": 1,
+      "contents": 0
+    },
+    "requestBytes": 55046,
+    "measuredInputTokens": 13243,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 13243,
+    "knownCostUSD": 0.007,
+    "attemptsWithUnknownCost": 2,
+    "elapsedMs": 779
+  },
+  "cases": [
+    {
+      "label": "AD07-supported-silence-followup",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 583,
+      "schedulingDelayMs": 0,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 3,
+          "revision": 1,
+          "receivedMs": 19
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 4,
+          "revision": 1,
+          "claimId": "AD07-supported-silence-followup-7b864f75-claim-0",
+          "receivedMs": 213,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 5,
+          "revision": 1,
+          "claimId": "AD07-supported-silence-followup-7b864f75-claim-0",
+          "receivedMs": 582,
+          "reasonCode": "qualifying_evidence",
+          "verdict": "supported",
+          "checkedPublicText": "The Panama Canal opened to world trade in 1914.",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-f72fcf7616e02e44a3fd",
+            "ev-9f6b071f258ff2a1591d"
+          ],
+          "evidence": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "contentBasis": "highlight",
+              "excerpt": "# The Panama Canal Celebrates 100 Years Connecting the World\n\nPanama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n“Going forward, the Panama Canal will continue to connect the world, supported by all the modernization efforts since its construction,” said Panama Canal Administrator Jorge L. Quijano. “The Expansion will change trade patterns just as the Canal opening did a century ago.”\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.\n\nAbout the Panama Canal Authority (ACP) The ACP is the autonomous agency of the Government of Panama in charge of managing, operating and maintaining the Panama Canal. The operation of the ACP is based on its organic law and the regulations approved by its Board of Directors. For more information, please refer to the ACP’s website: http://www.pancanal.com/. You can also follow us on Twitter @thepanamacanal.",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "contentBasis": "highlight",
+              "excerpt": "Maritime trade in the Americas before the Panama Canal opened 107 years ago required sailing around Cape Horn, the southernmost tip of South America, a voyage that could take up to two months. Today, sailing from US East Coast to Asia through the Panama Canal takes approximately 26 days, compared to 43 days for voyages through Cape Horn, 37 days through Cape of Good Hope, or 33 days if transiting through the Suez Canal.\n\nToday, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\nAs we look ahead to the future, take a look back at key moments in the Canal’s 107-year history:\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.\n\n##### MAY 12, 1963 – 24/7 Operation\n\nThe Panama Canal starts operations 24 hours a day, seven days a week. This was made possible with the installation of fluorescent lighting at the locks and the Culebra Cut, allowing night transits and increasing overall transits to the waterway.",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "contentBasis": "highlight",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.\n\nBefore World War I, all oceangoing shipping transiting between the Atlantic and Pacific oceans had to take the arduous route around Cape Horn at the southern tip of South America. It was—and still is—one of the most dangerous ocean passages in the world, on account of extreme winds, waters, and weather. Unforgiving rocks invisible in the area's frequent fog made winter voyages challenging, and from the 16th century to the present day, hundreds of ships developed leaks and had to turn back, tore out their bottoms and  sank, or simply disappeared.\n\n...\n\nDiscussions about cutting canals across various points in South America had been ongoing for centuries, but nothing was ever accomplished. The region was unhealthy, portions were unexplored, and sometimes the local populations were hostile to outsiders. Then a railway was built across the Panama Isthmus in 1855 to accommodate the California Gold Rush, and a report produced for the American government advocated cutting a canal across Panama at the Isthmus.\n\nBanking on their success with the Suez Canal, a French effort started cutting the Panama Canal in 1881. It proved nearly impossible to construct, and poor planning, mismanagement, and mosquito-borne diseases were some of the factors leading to bankruptcy of various French corporations. The United States took over in 1904 and completed the difficult engineering project ten years later.\n\n...\n\nTo honor the occasion, a quick review was in order of the museum'",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "contentBasis": "highlight",
+              "excerpt": "# Anniversary of the Opening of the Panama Canal\n\nPublished: August 14, 2018\n\n On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight \n\n The Panama Canal Commission \n\n The Panama Canal Commission was established by Pub. Law 96-70 (the Panama Canal Act of 1979) and began operations on October 1, 1979. The Commission functioned as an independent agency with the primary purpose of operating and maintaining the Panama Canal and associated facilities in cooperation with the Republic of Panama. On December 31, 1999, the Commission’s duties and sovereignty over the canal were transferred to the Republic of Panama, upon the termination of the Panama Canal Treaty of 1977. (Source: Office of the Federal Register )\n\n1994 Public Papers 676 - Message to the Congress on the Panama Canal Commission PDF Details\n\n1999 Public Papers 2299 - Statement on the Transfer of the Panama Canal to the Republic of Panama PDF Details",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "contentBasis": "highlight",
+              "excerpt": "neered in large part by Philippe-Jean Bunau-Varilla and his canal company. On November 3, 1903, a faction of Panamanians issued a declaration of independence from Colombia. The U.S.-administered railroad removed its trains from the northern terminus of Colón, thus stranding Colombian troops sent to crush the rebellion. Other Colombian forces were discouraged from marching on Panama by the arrival of U.S. warship Nashville.\n\nOn November 6, the United States recognized the Republic of Panama, and on November 18 the Hay-Bunau-Varilla Treaty was signed with Panama, granting the U.S. exclusive and permanent possession of the Panama Canal Zone. In exchange, Panama received $10 million and an annuity of $250,000 beginning nine years later. The treaty was negotiated by U.S. Secretary of State John Hay and Bunau-Varilla, who had been given plenipotentiary powers to negotiate on behalf of Panama. Almost immediately, the treaty was condemned by many Panamanians as an infringement on their country’s new national sovereignty.\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.\n\nPanama later pushed to revoke the Hay-Bunau-Varilla Treaty, and in 1977 U.S. President Jimmy Carter and Panamanian dictator Omar Torrijos signed a treaty to turn over the canal to Panama by the end of the century. A peaceful transfer occurred at noon on December 31, 1999.\n\nA staggering 25,000 workers lost their lives. Meanwhile, artificial limb makers clamored for contracts with the canal builders.",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.99
+            }
+          ],
+          "presentation": {
+            "action": "silent",
+            "reasonCode": "automatic_noncontradiction"
+          },
+          "durationMs": 569.8790019999999
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 1,
+          "dispatched": true,
+          "requestBytes": 6495,
+          "startedMs": 203.14567799999998,
+          "durationMs": 186,
+          "inputTokens": 1693,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.96
+            },
+            "span_0_private_data": {
+              "noul": 0.01
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.18
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 2,
+          "dispatched": true,
+          "requestBytes": 944,
+          "startedMs": 397.01965399999995,
+          "durationMs": 127,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "The Panama Canal opened to world trade in 1914.",
+          "retrievalTextSHA256": {
+            "objective": "b4facf845dd30588477e9312dda3765a79ad012c95e0c130f5ca0b9fa21e2130",
+            "highlightQuery": "5b390d662a2c40baf36db153eb09d22e7b46a1b0e385dc5c00c46bb76d3af9bc"
+          }
+        },
+        {
+          "kind": "jev",
+          "ordinal": 3,
+          "dispatched": true,
+          "requestBytes": 47607,
+          "startedMs": 571.331737,
+          "durationMs": 179,
+          "inputTokens": 11550,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "supported",
+              "probabilities": {
+                "supported": 0.91,
+                "contradicted": 0,
+                "misleading": 0.05,
+                "insufficient_evidence": 0.04
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.86,
+                "e1": 0.01,
+                "e2": 0.03,
+                "e3": 0.04,
+                "e4": 0.06
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.92,
+                "omitted_condition": 0.07,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.98
+            },
+            "e0_scope": {
+              "noul": 0.98
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.96,
+                "omitted_condition": 0.04,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.56
+            },
+            "e0_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.34,
+                "attributable_research": 0,
+                "substantive_secondary": 0.4,
+                "bare_assertion": 0.22,
+                "attributed": 0.03,
+                "promotional": 0.01,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.96
+            },
+            "e1_scope": {
+              "noul": 0.96
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.93,
+                "omitted_condition": 0.04,
+                "outdated_fact": 0.02,
+                "exaggeration": 0.01
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.39
+            },
+            "e1_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.49,
+                "attributable_research": 0,
+                "substantive_secondary": 0.39,
+                "bare_assertion": 0.12,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.97
+            },
+            "e2_scope": {
+              "noul": 0.96
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.9,
+                "omitted_condition": 0.06,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.03
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.43
+            },
+            "e2_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.43,
+                "attributable_research": 0,
+                "substantive_secondary": 0.49,
+                "bare_assertion": 0.08,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e3_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.98,
+                "contradicts": 0.01,
+                "unrelated": 0.01
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.96
+            },
+            "e3_scope": {
+              "noul": 0.93
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.65,
+                "omitted_condition": 0.3,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.04
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.38
+            },
+            "e3_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.09,
+                "attributable_research": 0,
+                "substantive_secondary": 0.3,
+                "bare_assertion": 0.59,
+                "attributed": 0.02,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e4_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.99,
+                "contradicts": 0,
+                "unrelated": 0.01
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.94
+            },
+            "e4_scope": {
+              "noul": 0.94
+            },
+            "e4_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.9,
+                "omitted_condition": 0.08,
+                "outdated_fact": 0,
+                "exaggeration": 0.02
+              }
+            },
+            "e4_context_established": {
+              "noul": 0.42
+            },
+            "e4_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.11,
+                "attributable_research": 0,
+                "substantive_secondary": 0.4,
+                "bare_assertion": 0.49,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "common_origin",
+              "probabilities": {
+                "common_origin": 0.54,
+                "distinct_origins": 0.02,
+                "unclear": 0.44
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.27,
+                "unclear": 0.69
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.07,
+                "distinct_origins": 0.45,
+                "unclear": 0.48
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.28,
+                "unclear": 0.71
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.08,
+                "distinct_origins": 0.27,
+                "unclear": 0.65
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.19,
+                "distinct_origins": 0.2,
+                "unclear": 0.61
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.19,
+                "unclear": 0.8
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.21,
+                "unclear": 0.75
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.2,
+                "unclear": 0.76
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.12,
+                "distinct_origins": 0.3,
+                "unclear": 0.58
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 200.02770799999985,
+        "retrieval": 175.20018099999993,
+        "judgment": 187.43554399999994
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "# The Panama Canal Celebrates 100 Years Connecting the World\n\nPanama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n“Going forward, the Panama Canal will continue to connect the world, supported by all the modernization efforts since its construction,” said Panama Canal Administrator Jorge L. Quijano. “The Expansion will change trade patterns just as the Canal opening did a century ago.”\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.\n\nAbout the Panama Canal Authority (ACP) The ACP is the autonomous agency of the Government of Panama in charge of managing, operating and maintaining the Panama Canal. The operation of the ACP is based on its organic law and the regulations approved by its Board of Directors. For more information, please refer to the ACP’s website: http://www.pancanal.com/. You can also follow us on Twitter @thepanamacanal.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "Maritime trade in the Americas before the Panama Canal opened 107 years ago required sailing around Cape Horn, the southernmost tip of South America, a voyage that could take up to two months. Today, sailing from US East Coast to Asia through the Panama Canal takes approximately 26 days, compared to 43 days for voyages through Cape Horn, 37 days through Cape of Good Hope, or 33 days if transiting through the Suez Canal.\n\nToday, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\nAs we look ahead to the future, take a look back at key moments in the Canal’s 107-year history:\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.\n\n##### MAY 12, 1963 – 24/7 Operation\n\nThe Panama Canal starts operations 24 hours a day, seven days a week. This was made possible with the installation of fluorescent lighting at the locks and the Culebra Cut, allowing night transits and increasing overall transits to the waterway.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.\n\nBefore World War I, all oceangoing shipping transiting between the Atlantic and Pacific oceans had to take the arduous route around Cape Horn at the southern tip of South America. It was—and still is—one of the most dangerous ocean passages in the world, on account of extreme winds, waters, and weather. Unforgiving rocks invisible in the area's frequent fog made winter voyages challenging, and from the 16th century to the present day, hundreds of ships developed leaks and had to turn back, tore out their bottoms and  sank, or simply disappeared.\n\n...\n\nDiscussions about cutting canals across various points in South America had been ongoing for centuries, but nothing was ever accomplished. The region was unhealthy, portions were unexplored, and sometimes the local populations were hostile to outsiders. Then a railway was built across the Panama Isthmus in 1855 to accommodate the California Gold Rush, and a report produced for the American government advocated cutting a canal across Panama at the Isthmus.\n\nBanking on their success with the Suez Canal, a French effort started cutting the Panama Canal in 1881. It proved nearly impossible to construct, and poor planning, mismanagement, and mosquito-borne diseases were some of the factors leading to bankruptcy of various French corporations. The United States took over in 1904 and completed the difficult engineering project ten years later.\n\n...\n\nTo honor the occasion, a quick review was in order of the museum'",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "# Anniversary of the Opening of the Panama Canal\n\nPublished: August 14, 2018\n\n On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight \n\n The Panama Canal Commission \n\n The Panama Canal Commission was established by Pub. Law 96-70 (the Panama Canal Act of 1979) and began operations on October 1, 1979. The Commission functioned as an independent agency with the primary purpose of operating and maintaining the Panama Canal and associated facilities in cooperation with the Republic of Panama. On December 31, 1999, the Commission’s duties and sovereignty over the canal were transferred to the Republic of Panama, upon the termination of the Panama Canal Treaty of 1977. (Source: Office of the Federal Register )\n\n1994 Public Papers 676 - Message to the Congress on the Panama Canal Commission PDF Details\n\n1999 Public Papers 2299 - Statement on the Transfer of the Panama Canal to the Republic of Panama PDF Details",
+              "contentBasis": "highlight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "neered in large part by Philippe-Jean Bunau-Varilla and his canal company. On November 3, 1903, a faction of Panamanians issued a declaration of independence from Colombia. The U.S.-administered railroad removed its trains from the northern terminus of Colón, thus stranding Colombian troops sent to crush the rebellion. Other Colombian forces were discouraged from marching on Panama by the arrival of U.S. warship Nashville.\n\nOn November 6, the United States recognized the Republic of Panama, and on November 18 the Hay-Bunau-Varilla Treaty was signed with Panama, granting the U.S. exclusive and permanent possession of the Panama Canal Zone. In exchange, Panama received $10 million and an annuity of $250,000 beginning nine years later. The treaty was negotiated by U.S. Secretary of State John Hay and Bunau-Varilla, who had been given plenipotentiary powers to negotiate on behalf of Panama. Almost immediately, the treaty was condemned by many Panamanians as an infringement on their country’s new national sovereignty.\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.\n\nPanama later pushed to revoke the Hay-Bunau-Varilla Treaty, and in 1977 U.S. President Jimmy Carter and Panamanian dictator Omar Torrijos signed a treaty to turn over the canal to Panama by the end of the century. A peaceful transfer occurred at noon on December 31, 1999.\n\nA staggering 25,000 workers lost their lives. Meanwhile, artificial limb makers clamored for contracts with the canal builders.",
+              "contentBasis": "highlight",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "# The Panama Canal Celebrates 100 Years Connecting the World\n\nPanama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n“Going forward, the Panama Canal will continue to connect the world, supported by all the modernization efforts since its construction,” said Panama Canal Administrator Jorge L. Quijano. “The Expansion will change trade patterns just as the Canal opening did a century ago.”\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.\n\nAbout the Panama Canal Authority (ACP) The ACP is the autonomous agency of the Government of Panama in charge of managing, operating and maintaining the Panama Canal. The operation of the ACP is based on its organic law and the regulations approved by its Board of Directors. For more information, please refer to the ACP’s website: http://www.pancanal.com/. You can also follow us on Twitter @thepanamacanal.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "Maritime trade in the Americas before the Panama Canal opened 107 years ago required sailing around Cape Horn, the southernmost tip of South America, a voyage that could take up to two months. Today, sailing from US East Coast to Asia through the Panama Canal takes approximately 26 days, compared to 43 days for voyages through Cape Horn, 37 days through Cape of Good Hope, or 33 days if transiting through the Suez Canal.\n\nToday, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\nAs we look ahead to the future, take a look back at key moments in the Canal’s 107-year history:\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.\n\n##### MAY 12, 1963 – 24/7 Operation\n\nThe Panama Canal starts operations 24 hours a day, seven days a week. This was made possible with the installation of fluorescent lighting at the locks and the Culebra Cut, allowing night transits and increasing overall transits to the waterway.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.\n\nBefore World War I, all oceangoing shipping transiting between the Atlantic and Pacific oceans had to take the arduous route around Cape Horn at the southern tip of South America. It was—and still is—one of the most dangerous ocean passages in the world, on account of extreme winds, waters, and weather. Unforgiving rocks invisible in the area's frequent fog made winter voyages challenging, and from the 16th century to the present day, hundreds of ships developed leaks and had to turn back, tore out their bottoms and  sank, or simply disappeared.\n\n...\n\nDiscussions about cutting canals across various points in South America had been ongoing for centuries, but nothing was ever accomplished. The region was unhealthy, portions were unexplored, and sometimes the local populations were hostile to outsiders. Then a railway was built across the Panama Isthmus in 1855 to accommodate the California Gold Rush, and a report produced for the American government advocated cutting a canal across Panama at the Isthmus.\n\nBanking on their success with the Suez Canal, a French effort started cutting the Panama Canal in 1881. It proved nearly impossible to construct, and poor planning, mismanagement, and mosquito-borne diseases were some of the factors leading to bankruptcy of various French corporations. The United States took over in 1904 and completed the difficult engineering project ten years later.\n\n...\n\nTo honor the occasion, a quick review was in order of the museum'",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "# Anniversary of the Opening of the Panama Canal\n\nPublished: August 14, 2018\n\n On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight \n\n The Panama Canal Commission \n\n The Panama Canal Commission was established by Pub. Law 96-70 (the Panama Canal Act of 1979) and began operations on October 1, 1979. The Commission functioned as an independent agency with the primary purpose of operating and maintaining the Panama Canal and associated facilities in cooperation with the Republic of Panama. On December 31, 1999, the Commission’s duties and sovereignty over the canal were transferred to the Republic of Panama, upon the termination of the Panama Canal Treaty of 1977. (Source: Office of the Federal Register )\n\n1994 Public Papers 676 - Message to the Congress on the Panama Canal Commission PDF Details\n\n1999 Public Papers 2299 - Statement on the Transfer of the Panama Canal to the Republic of Panama PDF Details",
+              "contentBasis": "highlight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:43:38.756Z",
+              "excerpt": "neered in large part by Philippe-Jean Bunau-Varilla and his canal company. On November 3, 1903, a faction of Panamanians issued a declaration of independence from Colombia. The U.S.-administered railroad removed its trains from the northern terminus of Colón, thus stranding Colombian troops sent to crush the rebellion. Other Colombian forces were discouraged from marching on Panama by the arrival of U.S. warship Nashville.\n\nOn November 6, the United States recognized the Republic of Panama, and on November 18 the Hay-Bunau-Varilla Treaty was signed with Panama, granting the U.S. exclusive and permanent possession of the Panama Canal Zone. In exchange, Panama received $10 million and an annuity of $250,000 beginning nine years later. The treaty was negotiated by U.S. Secretary of State John Hay and Bunau-Varilla, who had been given plenipotentiary powers to negotiate on behalf of Panama. Almost immediately, the treaty was condemned by many Panamanians as an infringement on their country’s new national sovereignty.\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.\n\nPanama later pushed to revoke the Hay-Bunau-Varilla Treaty, and in 1977 U.S. President Jimmy Carter and Panamanian dictator Omar Torrijos signed a treaty to turn over the canal to Panama by the end of the century. A peaceful transfer occurred at noon on December 31, 1999.\n\nA staggering 25,000 workers lost their lives. Meanwhile, artificial limb makers clamored for contracts with the canal builders.",
+              "contentBasis": "highlight",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.99
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-76fec2672b529967532e"
+          ],
+          "sourceAssessments": {
+            "ev-76fec2672b529967532e": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.74
+            },
+            "ev-f72fcf7616e02e44a3fd": {
+              "contentBasis": "original_record",
+              "confidence": 0.88
+            },
+            "ev-9f6b071f258ff2a1591d": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.9199999999999999
+            },
+            "ev-77bf5dacc342631f57f0": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.39
+            },
+            "ev-a38329850f933790097c": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.51
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "common_origin",
+              "confidence": 0.54
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-9f6b071f258ff2a1591d"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.69
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.48
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.71
+            },
+            {
+              "evidenceIds": [
+                "ev-f72fcf7616e02e44a3fd",
+                "ev-9f6b071f258ff2a1591d"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.65
+            },
+            {
+              "evidenceIds": [
+                "ev-f72fcf7616e02e44a3fd",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.61
+            },
+            {
+              "evidenceIds": [
+                "ev-f72fcf7616e02e44a3fd",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.8
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.75
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.76
+            },
+            {
+              "evidenceIds": [
+                "ev-77bf5dacc342631f57f0",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.58
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "rejectedAdmissionCount": 0,
+      "deterministicPublicIssues": [
+        {
+          "text": "The Panama Canal opened to world trade in 1914.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 13243
+      },
+      "usage": {
+        "measuredInputTokens": 13243,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 55046,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      }
+    }
+  ],
+  "evaluation": {
+    "labeledCases": 1,
+    "unlabeledCases": 0,
+    "admission": {
+      "unit": "final admitted exact proposition, matched once per expected claim; unsafe attempts counted without retaining their text",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "unobservedExpected": 0,
+      "precision": 1,
+      "recall": 1
+    },
+    "factual": {
+      "expected": 1,
+      "correctDefinitive": 1,
+      "wrongDefinitive": 0,
+      "abstained": 0,
+      "noResult": 0,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 0,
+      "coldCorrect": 1,
+      "cachedResults": 0,
+      "definitiveCoverage": 1,
+      "sourceVerifiedCoverage": 0
+    },
+    "byDomain": {
+      "history": {
+        "expected": 1,
+        "correctDefinitive": 1,
+        "wrongDefinitive": 0,
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0,
+        "sourceVerifiedCorrect": 0,
+        "coldCorrect": 1,
+        "cachedResults": 0,
+        "definitiveCoverage": 1,
+        "sourceVerifiedCoverage": 0
+      }
+    },
+    "byExpectedVerdict": {
+      "supported": {
+        "expected": 1,
+        "correctDefinitive": 1,
+        "wrongDefinitive": 0,
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0,
+        "sourceVerifiedCorrect": 0,
+        "coldCorrect": 1,
+        "cachedResults": 0,
+        "definitiveCoverage": 1,
+        "sourceVerifiedCoverage": 0
+      }
+    },
+    "actions": {
+      "admissionActionChecks": 1,
+      "admissionActionMatches": 1,
+      "presentationChecks": 1,
+      "presentationMatches": 1
+    },
+    "claimOutcomes": [
+      {
+        "caseLabel": "AD07-supported-silence-followup",
+        "expectedClaimId": "BD07",
+        "domain": "history",
+        "expectedVerdict": "supported",
+        "verdict": "supported",
+        "result": "correct",
+        "cached": false,
+        "sourceVerification": "unreviewed",
+        "selectedReferences": 2
+      }
+    ],
+    "limitations": [
+      "Admission metrics score final admitted propositions, not every overlapping internal candidate or model probability.",
+      "Not-observed expected claims remain misses in declared-cohort recall and coverage; report unobservedExpected separately.",
+      "Correct verdicts receive no source-verified coverage credit until every selected retained reference has explicit external review.",
+      "Cache results and duplicate public propositions require separate cohort accounting; they are not independent cold factual samples."
+    ]
+  },
+  "limitations": [
+    "Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.",
+    "24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.",
+    "A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.",
+    "Known costs are partial when any attempt has unknown cost. No prices are invented.",
+    "No held-out bodies, raw private text, provider prompts, session credentials or keys are retained. Native/iOS/ASR paths are untested."
+  ],
+  "followupPlan": {
+    "kind": "automatic_supported_silence_followup_ad07",
+    "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+    "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+    "manifestSHA256": "cb3e436d23bc45afa11f8df188dc962a518432c4195aa3c2e6d4efba1c27fa68",
+    "wrapperSHA256": "35ffa46d0dff5e8af021a0785110da90434b1d891ed99f80fd71b198c1be5035",
+    "limits": {
+      "requestBytes": 65536,
+      "totalRequestBytes": 300000,
+      "inputTokens": 80000,
+      "unknownInputTokensPerAttempt": 24000,
+      "calls": {
+        "jev": 6,
+        "search": 2,
+        "contents": 3
+      },
+      "wallMs": 30000
+    },
+    "freshSession": true,
+    "newFactualAccuracyFacts": 0,
+    "cases": [
+      {
+        "label": "AD07-supported-silence-followup",
+        "allowedPublic": [
+          "The Panama Canal opened to world trade in 1914."
+        ],
+        "automatic": true,
+        "final": true,
+        "cancellation": false,
+        "preferences": {
+          "muted": false,
+          "automaticNotifications": true,
+          "selectedTopics": []
+        },
+        "expected": {
+          "claims": [
+            {
+              "id": "BD07",
+              "acceptedTexts": [
+                "The Panama Canal opened to world trade in 1914."
+              ],
+              "verdict": "supported",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "silent"
+          ]
+        }
+      }
+    ]
+  },
+  "actionEvaluation": {
+    "outcome": "passed",
+    "reason": "actual_cold_supported_automatic_silence",
+    "factualSourceVerification": "pending_independent_review"
+  }
+}

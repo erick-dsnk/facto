@@ -1,0 +1,7 @@
+# AD07 selected citations: exact proof reuse
+
+Both selected references support the exact public claim, “The Panama Canal opened to world trade in 1914.” Their IDs, URLs and excerpt SHA256 hashes exactly match the prior AD06 selected references. The preserved operator chronology records the August 15, 1914 inauguration and opening to the world; the museum account explicitly records opening for business on that date. Incidental marketing, carbon, voyage-time and first-ship statements are not certified.
+
+This audit made zero new source or project-provider requests. It reverified the prior saved HTML byte counts/body hashes and extracted-text hashes, and independently aligned every retained excerpt segment to that text. The prior review timestamp remains 2026-11-14T04:42:02.662940+00:00; origin GET timestamps remain 2026-11-14T04:38:11.279062+00:00 and 2026-11-14T04:38:11.279532+00:00. Those earlier HTTP200 observations are not relabeled as fresh AD07 source opens and do not guarantee later accessibility.
+
+The strict CitationReview rows validate against the actual AD07 run and manifest: one cold supported result has both selected references verified. This is a separate purposive presentation probe, contributes zero new unique factual claims, and does not replace the original AD03 abstention. Different publishers do not prove fully independent historical origins. Agent inspection is not human review or deliberate user source opening.
