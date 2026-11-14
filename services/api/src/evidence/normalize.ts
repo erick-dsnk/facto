@@ -62,6 +62,9 @@ export function parseExaContentsResponse(value: unknown, requestedURLs: string[]
       'SOURCE_NOT_AVAILABLE', 'UNSUPPORTED_URL'].includes(tag) || Boolean(httpTag));
     if (!known) throw new PipelineError('exa_content_failed', true);
     if (httpTag && targetHttpStatus !== null && Number(httpTag[1]) !== targetHttpStatus) throw new PipelineError('malformed_exa_response');
+    // The documented not-found example maps to 404. A conflicting numeric
+    // status is not evidence of that narrowly recognized extraction failure.
+    if (tag === 'CRAWL_NOT_FOUND' && targetHttpStatus !== null && targetHttpStatus !== 404) throw new PipelineError('malformed_exa_response');
     pageFailures.push({ url, tag: tag!, targetHttpStatus });
   }
   const failed = new Set(pageFailures.map(failure => failure.url));
