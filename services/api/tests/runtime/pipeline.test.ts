@@ -74,9 +74,9 @@ describe('bounded pipeline runtime', () => {
   it.each([
     { selectedTopics: [' LIGHTNING '], automaticNotifications: true, action: 'notify', reasonCode: 'selected_topic_contradiction' },
     { selectedTopics: ['Lightning'], automaticNotifications: false, action: 'silent', reasonCode: 'notifications_disabled' },
-    { selectedTopics: [], automaticNotifications: true, action: 'silent', reasonCode: 'insufficient_priority' },
-    { selectedTopics: ['weather'], automaticNotifications: true, action: 'silent', reasonCode: 'insufficient_priority' },
-    { selectedTopics: ['light'], automaticNotifications: true, action: 'silent', reasonCode: 'insufficient_priority' },
+    { selectedTopics: [], automaticNotifications: true, action: 'notify', reasonCode: 'automatic_contradiction' },
+    { selectedTopics: ['weather'], automaticNotifications: true, action: 'notify', reasonCode: 'automatic_contradiction' },
+    { selectedTopics: ['light'], automaticNotifications: true, action: 'notify', reasonCode: 'automatic_contradiction' },
   ])('matches only enabled literal topics after actual public admission: $selectedTopics / $automaticNotifications', async ({ selectedTopics, automaticNotifications, action, reasonCode }) => {
     const { session, runtime, events } = setup(topicAdapters());
     session.preferences = { muted: false, automaticNotifications, selectedTopics };
@@ -93,7 +93,7 @@ describe('bounded pipeline runtime', () => {
     })); await flush();
     expect(retrieve).toHaveBeenCalledTimes(1);
     expect(retrieve.mock.calls[0][0].checkedText).toBe('Lightning never strikes the same place twice.');
-    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ verdict: 'contradicted', checkedText: 'Lightning never strikes the same place twice.', presentation: { action: 'silent', reasonCode: 'insufficient_priority' } });
+    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ verdict: 'contradicted', checkedText: 'Lightning never strikes the same place twice.', presentation: { action: 'notify', reasonCode: 'automatic_contradiction' } });
   });
 
   it('recomputes topic relevance for cached results and corrected revisions using current preferences', async () => {
@@ -106,10 +106,11 @@ describe('bounded pipeline runtime', () => {
     await vi.advanceTimersByTimeAsync(4_000);
     session.preferences = { muted: false, automaticNotifications: true, selectedTopics: [] };
     runtime.submit(session, input(session, 'next', { text, userInitiated: false })); await flush();
-    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ cached: true, presentation: { action: 'silent', reasonCode: 'insufficient_priority' } });
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ cached: true, presentation: { action: 'notify', reasonCode: 'automatic_contradiction' } });
     session.preferences.selectedTopics = ['Lightning'];
     runtime.submit(session, input(session, 'next', { text, revision: 2, userInitiated: false })); await flush();
-    expect(events.filter(event => event.type === 'claim.result').at(-1)).toMatchObject({ revision: 2, payload: { cached: true, presentation: { action: 'notify', reasonCode: 'selected_topic_contradiction' } } });
+    // Revision 1 already alerted, so a corrected revision of the same claim never re-alerts.
+    expect(events.filter(event => event.type === 'claim.result').at(-1)).toMatchObject({ revision: 2, payload: { cached: true, presentation: { action: 'silent', reasonCode: 'duplicate' } } });
     session.preferences.selectedTopics = [];
     runtime.submit(session, input(session, 'next', { text, revision: 3, userInitiated: false })); await flush();
     expect(events.filter(event => event.type === 'claim.result').at(-1)).toMatchObject({ revision: 3, payload: { cached: true, presentation: { action: 'silent' } } });
@@ -146,7 +147,7 @@ describe('bounded pipeline runtime', () => {
     runtime.submit(session, input(session, 'changing-topic', { text: 'Lightning never strikes the same place twice.', userInitiated: false })); await flush();
     session.preferences.selectedTopics = enabled ? ['Lightning'] : [];
     resolve(pending); await flush();
-    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ presentation: { action: enabled ? 'notify' : 'silent', reasonCode: enabled ? 'selected_topic_contradiction' : 'insufficient_priority' } });
+    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ presentation: { action: 'notify', reasonCode: enabled ? 'selected_topic_contradiction' : 'automatic_contradiction' } });
   });
 
   it.each([true, false])('preserves manual and practical-consequence behavior without topic matches: manual=%s', async userInitiated => {
