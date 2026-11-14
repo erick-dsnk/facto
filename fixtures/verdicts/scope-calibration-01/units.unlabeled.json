@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "units": [
+    {
+      "id": "SC11",
+      "proposition": "A typical adult human skeleton contains 208 bones.",
+      "title": "Physiology, Bone | StatPearls",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK441968/",
+      "excerpt": "The adult human skeleton is composed of 206 bones.",
+      "partition": "open_development",
+      "sourceFamily": "S06",
+      "stratum": "same_age_population_different_count",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 25890,
+        "end": 25940,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC08",
+      "proposition": "In 1900, the U.S. survey foot was exactly 0.3048 meter.",
+      "title": "U.S. Survey Foot | NIST",
+      "url": "https://www.nist.gov/pml/us-surveyfoot",
+      "excerpt": "Beginning on January 1, 2023, the U.S. survey foot should be avoided, except for historic and legacy applications and has been superseded by the international foot definition (i.e., 1 foot = 0.3048 meter exactly) in all applications.",
+      "partition": "open_development",
+      "sourceFamily": "S04",
+      "stratum": "different_historical_standard",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 18539,
+        "end": 18772,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC13",
+      "proposition": "Methane boils at -150 degrees Celsius at a pressure of one atmosphere.",
+      "title": "Atomic and nuclear properties of methane",
+      "url": "https://pdg.lbl.gov/2015/AtomicNuclearProperties/HTML/methane.html",
+      "excerpt": "Atomic and nuclear properties of methane (CH 4) \n\n| Quantity | Value | Units | Value | Units |\n| --- | --- | --- | --- | --- |\n| < Z/A> | 0.62334 | | | |\n| Specific gravity (20° C, 1 atm) | 6.672E-04 | g cm -3 | | |\n| Mean excitation energy | 41.7 | eV | | |\n| Minimum ionization | 2.417 | MeV g -1 cm 2 | 1.613E-03 | MeV cm -1 |\n| Nuclear collision length | 54.0 | g cm -2 | 8.096E+04 | cm |\n| Nuclear interaction length | 73.8 | g cm -2 | 1.106E+05 | cm |\n| Pion collision length | 81.8 | g cm -2 | 1.226E+05 | cm |\n| Pion interaction length | 105.4 | g cm -2 | 1.580E+05 | cm |\n| Radiation length | 46.47 | g cm -2 | 6.965E+04 | cm |\n| Critical energy | 146.86 | MeV (for e -) | 143.82 | MeV (for e +) |\n| Molière radius | 6.71 | g cm -2 | 1.006E+04 | cm |\n| Plasma energy ℏω p | 0.59 | eV | | |\n| Muon critical energy | 1716. | GeV | | |\n| Melting point | 90.68 | K | -182.5 | C |\n| Boiling point @ 1 atm | 111.7 | K | -161.5 | C |\n| Index of refraction (0° C, 1 atm, Na D) | 444. | (n-1)x10 6 | | |",
+      "partition": "open_development",
+      "sourceFamily": "S07",
+      "stratum": "same_pressure_different_value",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 37136,
+        "end": 38139,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC07",
+      "proposition": "After January 1, 2023, an international foot is exactly 0.3049 meter.",
+      "title": "U.S. Survey Foot | NIST",
+      "url": "https://www.nist.gov/pml/us-surveyfoot",
+      "excerpt": "Beginning on January 1, 2023, the U.S. survey foot should be avoided, except for historic and legacy applications and has been superseded by the international foot definition (i.e., 1 foot = 0.3048 meter exactly) in all applications.",
+      "partition": "open_development",
+      "sourceFamily": "S04",
+      "stratum": "formal_definition_different_value",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 18539,
+        "end": 18772,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC14",
+      "proposition": "Methane boils at -161.5 degrees Celsius at a pressure of ten atmospheres.",
+      "title": "Atomic and nuclear properties of methane",
+      "url": "https://pdg.lbl.gov/2015/AtomicNuclearProperties/HTML/methane.html",
+      "excerpt": "Atomic and nuclear properties of methane (CH 4) \n\n| Quantity | Value | Units | Value | Units |\n| --- | --- | --- | --- | --- |\n| < Z/A> | 0.62334 | | | |\n| Specific gravity (20° C, 1 atm) | 6.672E-04 | g cm -3 | | |\n| Mean excitation energy | 41.7 | eV | | |\n| Minimum ionization | 2.417 | MeV g -1 cm 2 | 1.613E-03 | MeV cm -1 |\n| Nuclear collision length | 54.0 | g cm -2 | 8.096E+04 | cm |\n| Nuclear interaction length | 73.8 | g cm -2 | 1.106E+05 | cm |\n| Pion collision length | 81.8 | g cm -2 | 1.226E+05 | cm |\n| Pion interaction length | 105.4 | g cm -2 | 1.580E+05 | cm |\n| Radiation length | 46.47 | g cm -2 | 6.965E+04 | cm |\n| Critical energy | 146.86 | MeV (for e -) | 143.82 | MeV (for e +) |\n| Molière radius | 6.71 | g cm -2 | 1.006E+04 | cm |\n| Plasma energy ℏω p | 0.59 | eV | | |\n| Muon critical energy | 1716. | GeV | | |\n| Melting point | 90.68 | K | -182.5 | C |\n| Boiling point @ 1 atm | 111.7 | K | -161.5 | C |\n| Index of refraction (0° C, 1 atm, Na D) | 444. | (n-1)x10 6 | | |",
+      "partition": "open_development",
+      "sourceFamily": "S07",
+      "stratum": "different_pressure_condition",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 37136,
+        "end": 38139,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC03",
+      "proposition": "The 2021 Canadian census counted 40,000,000 people.",
+      "title": "Canada tops G7 growth despite COVID | Statistics Canada",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/220209/dq220209a-eng.htm",
+      "excerpt": "Population, 2021 — Canada \n\n36,991,981\n\n2021 Census of population",
+      "partition": "open_development",
+      "sourceFamily": "S02",
+      "stratum": "same_census_different_value",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 1584,
+        "end": 1649,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC12",
+      "proposition": "A newborn human skeleton contains 206 bones.",
+      "title": "Physiology, Bone | StatPearls",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK441968/",
+      "excerpt": "The adult human skeleton is composed of 206 bones.",
+      "partition": "open_development",
+      "sourceFamily": "S06",
+      "stratum": "different_age_population",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 25890,
+        "end": 25940,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC15",
+      "proposition": "The Suez Canal is 200 kilometers long.",
+      "title": "FAQ | Suez Canal Authority",
+      "url": "https://www.suezcanal.gov.eg/English/Pages/FAQ.aspx",
+      "excerpt": "Suez Canal \n\n How old is the canal ?\n\n​ The canal has been opened for navigation for the first time in Nov. 1869.\n\n What is the depth of the canal ?\n\n​ Maximum water depth is 24 m.\n\n What is the length of the Canal ?\n\n​ The length of the canal is 193.30 Km.",
+      "partition": "open_development",
+      "sourceFamily": "S08",
+      "stratum": "same_dimension_different_value",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 38502,
+        "end": 38759,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC05",
+      "proposition": "Aconcagua is located in Europe.",
+      "title": "South America: Physical Geography | National Geographic",
+      "url": "https://education.nationalgeographic.org/resource/south-america-physical-geography/",
+      "excerpt": "South America’s primary mountain sy stem, the Andes, is also the world’s longest. The range covers about 8,850 kilometers (5,500 miles). Situated on the far western edge of the continent, the Andes stretch from the southern tip to the northernmost coast of South America. There are hundreds of peaks more than 4,500 meters (15,000 feet) tall, many of which are volcanic. The highest peak in the Andes, Aconcagua, stands at 6,962 meters (22,841 feet) and straddles the Argentina-Chile border. Aconcagua is the tallest mountain outside Asia.",
+      "partition": "open_development",
+      "sourceFamily": "S03",
+      "stratum": "country_continent_relation",
+      "sourceExtractionSpan": {
+        "file": "geography-source.md",
+        "start": 1645,
+        "end": 2184,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC16",
+      "proposition": "The Suez Canal earns annual revenue of 193.30 million US dollars.",
+      "title": "FAQ | Suez Canal Authority",
+      "url": "https://www.suezcanal.gov.eg/English/Pages/FAQ.aspx",
+      "excerpt": "Suez Canal \n\n How old is the canal ?\n\n​ The canal has been opened for navigation for the first time in Nov. 1869.\n\n What is the depth of the canal ?\n\n​ Maximum water depth is 24 m.\n\n What is the length of the Canal ?\n\n​ The length of the canal is 193.30 Km.",
+      "partition": "open_development",
+      "sourceFamily": "S08",
+      "stratum": "different_relation_same_entity",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 38502,
+        "end": 38759,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC09",
+      "proposition": "All mammals give birth to live young rather than laying eggs.",
+      "title": "What is a monotreme? | Australian Museum",
+      "url": "https://australian.museum/learn/species-identification/ask-an-expert/what-is-a-monotreme/",
+      "excerpt": "Ornithorhynchus anatinus, is a unique Australian species. Along with echidnas, platypus are grouped in a separate order of mammals known as monotremes, which are distinguished from all other mammals because they lay eggs.",
+      "partition": "open_development",
+      "sourceFamily": "S05",
+      "stratum": "universal_counterexample",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 23235,
+        "end": 23456,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC04",
+      "proposition": "The 2016 Canadian census counted 36,991,981 people.",
+      "title": "Canada tops G7 growth despite COVID | Statistics Canada",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/220209/dq220209a-eng.htm",
+      "excerpt": "Population, 2021 — Canada \n\n36,991,981\n\n2021 Census of population",
+      "partition": "open_development",
+      "sourceFamily": "S02",
+      "stratum": "different_census_period",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 1584,
+        "end": 1649,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC06",
+      "proposition": "Mont Blanc is located on the Argentina-Chile border.",
+      "title": "South America: Physical Geography | National Geographic",
+      "url": "https://education.nationalgeographic.org/resource/south-america-physical-geography/",
+      "excerpt": "South America’s primary mountain sy stem, the Andes, is also the world’s longest. The range covers about 8,850 kilometers (5,500 miles). Situated on the far western edge of the continent, the Andes stretch from the southern tip to the northernmost coast of South America. There are hundreds of peaks more than 4,500 meters (15,000 feet) tall, many of which are volcanic. The highest peak in the Andes, Aconcagua, stands at 6,962 meters (22,841 feet) and straddles the Argentina-Chile border. Aconcagua is the tallest mountain outside Asia.",
+      "partition": "open_development",
+      "sourceFamily": "S03",
+      "stratum": "different_geographic_entity",
+      "sourceExtractionSpan": {
+        "file": "geography-source.md",
+        "start": 1645,
+        "end": 2184,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC01",
+      "proposition": "Frankenstein was first published in 1831.",
+      "title": "Public Sentiment | Marriott Library",
+      "url": "https://lib.utah.edu/collections/rarebooks/exhibits/past/publicsentiment.php",
+      "excerpt": "FRANKENSTEIN, OR, THE MODERN PROMETHEUS… \n\nMary Wollstonecraft Shelley (1797-1851)\n\nLondon: Henry Colburn and Richard Bentley…Bell and Bradfute, Edinburgh; and Cumin, Dublin, 1831\n\nRef., corrected, and illustrated/with a new introduction, by the author\n\nPR5397 F7 1831\n\nFrankenstein was first published anonymously in 1818 in an edition of five hundred copies of three volumes, a standard format of the time for novels. The first edition contained a preface written by Percy Bysshe Shelley and a dedication to Mary Shelley’s father, philosopher William Godwin. The novel had been rejected by Percy Bysshe Shelley’s publisher and by Lord Byron’s publisher. The second edition was released in 1823 as a two volume set with Mary Shelley’s name as author. The third printing was published in one volume as part of Bentley’s Standard Novels and also included other stories by Shelley. This edition included many revisions, although Shelley claimed in a new Introduction, that the revisions were “confined to such parts as are mere adjuncts to the story, leaving the core and substance of it untouched.” This is the first illustrated edition of Frankenstein. Engraved title-page and frontispiece illustrations engraved by W. Chevalier after T. [von] Holst. Each part has separate title-page and pagination. University of Utah copy gift of Eleanore Nichols.",
+      "partition": "open_development",
+      "sourceFamily": "S01",
+      "stratum": "first_event_vs_edition",
+      "sourceExtractionSpan": {
+        "file": "edition-alternatives-source.md",
+        "start": 6166,
+        "end": 7516,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": true,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC10",
+      "proposition": "All birds lay eggs.",
+      "title": "What is a monotreme? | Australian Museum",
+      "url": "https://australian.museum/learn/species-identification/ask-an-expert/what-is-a-monotreme/",
+      "excerpt": "Ornithorhynchus anatinus, is a unique Australian species. Along with echidnas, platypus are grouped in a separate order of mammals known as monotremes, which are distinguished from all other mammals because they lay eggs.",
+      "partition": "open_development",
+      "sourceFamily": "S05",
+      "stratum": "different_taxonomic_population",
+      "sourceExtractionSpan": {
+        "file": "source-capture.md",
+        "start": 23235,
+        "end": 23456,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    },
+    {
+      "id": "SC02",
+      "proposition": "The third edition of Frankenstein was published in 1830.",
+      "title": "Public Sentiment | Marriott Library",
+      "url": "https://lib.utah.edu/collections/rarebooks/exhibits/past/publicsentiment.php",
+      "excerpt": "Frankenstein was first published anonymously in 1818 in an edition of five hundred copies of three volumes, a standard format of the time for novels.",
+      "partition": "open_development",
+      "sourceFamily": "S01",
+      "stratum": "different_edition",
+      "sourceExtractionSpan": {
+        "file": "edition-alternatives-source.md",
+        "start": 6436,
+        "end": 6585,
+        "unit": "unicode_code_points"
+      },
+      "syntheticPassage": false,
+      "counterfactualProposition": false,
+      "notes": "Scope only. Proposition may intentionally be false; text is an exact contiguous public-source extraction. Metadata identifies context but cannot supply absent factual evidence."
+    }
+  ]
+}
