@@ -19,7 +19,7 @@ Read `AGENTS.md`, `docs/plan.md`, `apps/console/README.md`, `packages/contracts/
 
 ## Current integration and completed public evidence
 
-Current integration passes lint/typecheck and **530 tests across 25 files**. It includes a later deferred-variant fallback fix outside the completed candidate09 freeze; that later change has no live success credit here. The latest completed broader public cohort is clean freeze `9a5e80d88bd1d93e4a1c194d23bc1a59662af135`, source SHA-256 `9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad`. That freeze passed 525 tests, 36/36 development scenarios and 21/21 presentation fixtures.
+Current integration passes lint/typecheck and **547 tests across 26 files**. It includes later evidence-retention and absolute-deadline fixes outside the completed candidate09 freeze; those changes have no live success credit here. The latest completed broader public cohort is clean freeze `9a5e80d88bd1d93e4a1c194d23bc1a59662af135`, source SHA-256 `9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad`. That freeze passed 525 tests, 36/36 development scenarios and 21/21 presentation fixtures.
 
 [Candidate09](broader-development-candidate09.md) produced **4/12 correct definitive unique facts**, **3/12 with every selected reference verified**, eight abstentions and no operational error. All **13/13 eligible public occurrences were admitted** and **16/16 inputs received terminals**. The mixed BD07 repeat abstained and adds no unique-fact credit. Its original guard halted between batches 1 and 2; a reviewed artifact-only correction allowed only unstarted batches 2–4, preserving batch 1 without a rerun. The selected Olympics reference remained inaccessible on a separate bounded fresh request.
 

@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "kind": "deterministic-deadline-integration",
+  "codeCommit": "ec754c618797cb6f3106cf12d94cdf24694af33d",
+  "runtimeFixCommit": "dc1d75129b67592a56a4a9c6424cbac3e2c87445",
+  "gates": {
+    "stack17": {
+      "head": "276c2b38eb2bf10acdd47725822da0db98345591",
+      "repository": "/workspace/stack-17",
+      "startedAt": "2026-11-14T05:39:47.604414+00:00",
+      "completedAt": "2026-11-14T05:40:11.513562+00:00",
+      "exitCode": 0,
+      "logSHA256": "f9b925a560b4d2df22c0fb9675c0af04e3c56c8f8d54a03f02f6d693b6f30896",
+      "testSummary": [
+        "Test Files  13 passed (13)",
+        "Tests  325 passed (325)"
+      ],
+      "headUnchanged": true
+    },
+    "stack15": {
+      "head": "497796f6fca9e5bab00ed7f7a70e430e5a13ac67",
+      "repository": "/workspace/stack-15",
+      "startedAt": "2026-11-14T05:39:47.595824+00:00",
+      "completedAt": "2026-11-14T05:40:10.165008+00:00",
+      "exitCode": 0,
+      "logSHA256": "67961231471a3449b1b30fb66ec79572bb90c5326453ba52e7ce0e582daf4772",
+      "testSummary": [
+        "Test Files  13 passed (13)",
+        "Tests  359 passed (359)"
+      ],
+      "headUnchanged": true
+    },
+    "stack24": {
+      "head": "53b28b11557d157cc65da3b0f4d2cae9be713b1f",
+      "repository": "/workspace/stack-24",
+      "startedAt": "2026-11-14T05:39:47.620085+00:00",
+      "completedAt": "2026-11-14T05:40:17.819285+00:00",
+      "exitCode": 0,
+      "logSHA256": "f02a372572a1ab33ae9894f85050d939fdde00a8e6334ba8f627254662292e29",
+      "testSummary": [
+        "Test Files  13 passed (13)",
+        "Tests  359 passed (359)"
+      ],
+      "headUnchanged": true
+    },
+    "stack20": {
+      "head": "ffea541e688d371230112f9a632054c7a2b541a0",
+      "repository": "/workspace/stack-20",
+      "startedAt": "2026-11-14T05:39:47.642790+00:00",
+      "completedAt": "2026-11-14T05:40:17.583212+00:00",
+      "exitCode": 0,
+      "logSHA256": "38038cba914abc995bb5979ba9be1a60f5b9d74cf1bfc348de23e22902e90a24",
+      "testSummary": [
+        "Test Files  22 passed (22)",
+        "Tests  500 passed (500)"
+      ],
+      "headUnchanged": true
+    },
+    "root": {
+      "head": "ec754c618797cb6f3106cf12d94cdf24694af33d",
+      "repository": "/workspace/junction-2026",
+      "startedAt": "2026-11-14T05:39:47.633989+00:00",
+      "completedAt": "2026-11-14T05:40:30.679461+00:00",
+      "exitCode": 0,
+      "logSHA256": "2931b022b643d5fcfd8938750b13cae18ce6d2562b8ca91f309a6c9b00775108",
+      "testSummary": [
+        "Test Files  26 passed (26)",
+        "Tests  547 passed (547)"
+      ],
+      "headUnchanged": true
+    }
+  },
+  "development": {
+    "selected": 36,
+    "passed": 36,
+    "failed": 0,
+    "notRun": 0,
+    "heldoutReserved": 12
+  },
+  "presentation": {
+    "passed": 21,
+    "total": 21
+  },
+  "evaluationLogSHA256": "25c80bd02c3434336abddab0d4c546b23046d2969edccec9a22b5e337ea3e64b",
+  "runtimeReproductions": {
+    "before": {
+      "failed": 3,
+      "passed": 0
+    },
+    "after": {
+      "failed": 0,
+      "passed": 3
+    },
+    "newRegressionTests": 17,
+    "independentReviewSHA256": "fb74ce9e95dbc55d3f4b4f38f122b0111ac3133bd47a8d7ffad52ed5b3b06e99"
+  },
+  "limits": [
+    "Scripted/injected providers; zero new live-provider calls.",
+    "The three historical sealed sets and original reserved cases were not opened or rerun.",
+    "Frozen candidate09 and its525-test validation remain unchanged.",
+    "The preceding e88b41e runtime gate had483 tests; its combined integration had530.",
+    "Public evaluation and factual coverage are separate from these runtime regressions."
+  ]
+}
