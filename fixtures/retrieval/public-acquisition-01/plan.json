@@ -1,0 +1,37 @@
+{
+  "kind": "public_acquisition_diagnostic",
+  "startedAt": "2026-11-14T04:13:34.594Z",
+  "reportPath": "/workspace/junction-2026/fixtures/evaluation/live/live-development-07.json",
+  "reportSHA256": "08568d66d77d0fd234bc66b3a4d8ab7afbcca67e4aa2e85dbb8cb89a5b090695",
+  "cases": [
+    {
+      "label": "L2-lightning",
+      "checkedText": "Lightning never strikes the same place twice."
+    },
+    {
+      "label": "L4-mixed",
+      "checkedText": "Oslo is the capital of Norway."
+    },
+    {
+      "label": "L8-first-person",
+      "checkedText": "I think Helsinki is the capital of Norway."
+    }
+  ],
+  "limits": {
+    "search": 6,
+    "contents": 9,
+    "jev": 0,
+    "perClaimSearch": 2,
+    "perClaimContents": 3,
+    "requestBytes": 262144,
+    "responseBytes": 262144,
+    "totalRequestBytes": 1048576,
+    "wallMs": 60000
+  },
+  "sourceHashes": {
+    "services/api/src/providers/exa/retrieval.ts": "20594f6151b82f8aea3dae8a7fb1b3c73453b6afe5355f80a39d49e7965d4cb3",
+    "services/api/src/providers/exa/client.ts": "9d399fd5c8b3c8abad3847c76dbbc17204c59b05ee9a337287ea31f2bbc5de6e",
+    "services/api/src/evidence/normalize.ts": "e7c7e44ad4e254bff9fe72ef701546ad57cef562a0ea758b7b1439838cc47d7c"
+  },
+  "interpretation": "Acquisition only. No engine verdicts or judgments; indexed content is not proof of current origin accessibility."
+}
