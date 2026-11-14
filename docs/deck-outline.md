@@ -40,7 +40,11 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-Current integration passes lint/typecheck and **564 tests across 28 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; later runtime/cache/selector changes are outside that freeze and have no live credit here.
+Current integration passes lint/typecheck and **580 tests across 29 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; later runtime/cache/selector changes are outside that freeze and have no live credit here.
+
+The [Exa cleanup integration](../fixtures/evaluation/live/exa-cleanup-integration-01/validation.json), tested clean at `d5dcde2`, also passed a fresh 36/36 development evaluation and 21/21 presentation fixtures. It preserves known provider/status/size errors when response cleanup rejects or remains pending. A native local HTTP peer-reset reproduction and separate injected-stream regressions support the fix; retries, actual charges and deadlines remain unchanged. The runtime branch passed 533 tests, and the source-quality branch 341; these are separate from the 580-test root gate.
+
+The [first experimental applicability study](../fixtures/verdicts/typed-applicability-calibration-01/README.md) completed 84 Jev calls over 42 paired cases but issued no eligibility grants: 0/18 positives passed .85, and both arms abstained on every case. Exact ternary matches were 27/42 declared cases (27/37 asked); five current-status exclusions remain in the denominator. Later vendor documentation established that the added question lacked its own explicit evidence/descriptor reference: question IDs are hidden and sibling questions cannot supply that binding. The archive preserves the failed run and corrected review inference. A separate structural correction remains experimental; no causal recovery, authority activation or factual-coverage gain is claimed.
 
 On the repeated OPEN broader corpus, candidate09 produced **4/12 correct definitive unique facts**, **3/12 with every selected reference verified**, eight abstentions and no operational error. It admitted 13/13 eligible occurrences and delivered 16/16 terminals. The mixed BD07 repeat abstained and adds zero unique facts. An initial guard halt and reviewed artifact-only continuation preserved batch 1 and continued only unstarted batches 2–4.
 

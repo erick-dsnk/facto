@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "deterministic-exa-response-cleanup-integration",
+  "recordedAt": "2026-11-14T06:54:32.311010+00:00",
+  "codeCommit": "d5dcde2ba0e45f370ddda862a9a30ad6e9ada40b",
+  "cleanupFixCommit": "339077d5adadf28f92fb801eb2749982e9a089f8",
+  "firstApplicabilityArchiveCommit": "d15266ae45bf4a2105da9897adcba69995546ce6",
+  "rootGate": {
+    "repository": "/workspace/junction-2026",
+    "head": "d5dcde2ba0e45f370ddda862a9a30ad6e9ada40b",
+    "startedAt": "2026-11-14T06:51:51.427681+00:00",
+    "completedAt": "2026-11-14T06:52:20.824905+00:00",
+    "exitCode": 0,
+    "headUnchanged": true,
+    "treeClean": true,
+    "logSHA256": "b9b91f970820e9981f3a57107dd13f65d854cd7d9bac4f4fcc125a64746d9003",
+    "testSummary": [
+      "Test Files  29 passed (29)",
+      "Tests  580 passed (580)"
+    ]
+  },
+  "sourceQualityGate": {
+    "repository": "/workspace/stack-17",
+    "head": "40ea0678805fcf2b50ff2fc4d2ca5db73770cbe7",
+    "startedAt": "2026-11-14T06:51:51.405455+00:00",
+    "completedAt": "2026-11-14T06:52:02.872083+00:00",
+    "exitCode": 0,
+    "headUnchanged": true,
+    "treeClean": true,
+    "logSHA256": "974a7b6b6b3966b718c36b39ed25e4c7ef6c38b6a6c59468f13f3d94f552889b",
+    "testSummary": [
+      "Test Files  14 passed (14)",
+      "Tests  341 passed (341)"
+    ]
+  },
+  "runtimeGate": {
+    "repository": "/workspace/stack-20",
+    "head": "95b34a1fb89e52b9c1d67cda0b750c5249a99d29",
+    "startedAt": "2026-11-14T06:51:51.420593+00:00",
+    "completedAt": "2026-11-14T06:52:11.651777+00:00",
+    "exitCode": 0,
+    "headUnchanged": true,
+    "treeClean": true,
+    "logSHA256": "03fafe4df0383d32868ef8943976ca2b9cd434966b47ba5a80399a4e7e39b483",
+    "testSummary": [
+      "Test Files  25 passed (25)",
+      "Tests  533 passed (533)"
+    ]
+  },
+  "evaluation": {
+    "exitCode": 0,
+    "exitCodeReceipt": "Observed actual exec session93912 completion exit0.",
+    "counts": {
+      "selected": 36,
+      "passed": 36,
+      "failed": 0,
+      "notRun": 0,
+      "heldoutReserved": 12
+    },
+    "logSHA256": "50c3f4411db540c47f429b2154ced4db1ff44003aa4f9af85cc0edfb777263bf",
+    "presentation": {
+      "passed": 21,
+      "total": 21
+    }
+  },
+  "nativeReproduction": "Oversized Exa Content-Length followed by a peer reset rejected cleanup and masked malformed_exa_response as exa_unavailable; known error now survives best-effort cleanup.",
+  "injectedReproductions": "Pending/rejected stream cleanup cases are separately identified as injected transports; ordinary native auth/stream cancellation controls passed.",
+  "newRegressionTests": 16,
+  "integratedProjectionTests": 20,
+  "mergedClientSHA256": "4176b72e4a7458dd32716ca46fa47eb791ba270f871ab4558dc0a5eff34a43c2",
+  "mergedParityReviewSHA256": "633e584652e384ea8ab1eb47247d8f97bedb0ad629bf25fb36af5ec2202bb3b4",
+  "firstApplicabilityStudy": {
+    "declaredSemanticCases": 42,
+    "originalSemanticCases": 34,
+    "identityCases": 8,
+    "offlineBindingControls": 2,
+    "actualJevCalls": 84,
+    "actualExaCalls": 0,
+    "positivePassesAt85": "0/18",
+    "rawExactDeclared": "27/42",
+    "rawExactAsked": "27/37",
+    "guardExcluded": 5,
+    "typedGrants": 0,
+    "policyDefinitives": 0,
+    "reportSHA256": "5e39c5fbdab55e902d82b91e2cc5e7385af03a1f7e1c7c08e3ba4c76737cf153",
+    "interfaceLimitation": "Added07questions omitted explicit own target/descriptor paths; vendor documents hidden question IDs and independent evaluation. Historical whole-wire sufficiency inference corrected in separate addendum, original results preserved; no causal attribution."
+  },
+  "limitations": [
+    "No new live factual coverage credit from response cleanup or deterministic tests.",
+    "Frozen09 remains4/12correct definitive and3/12fully selected-source-verified; all historic freezes/cohorts remain distinct.",
+    "First84 study is experimental and unpromoted; no source authority or current-version capability activated.",
+    "Protected contracts/iOS/ASR/original heldout paths unchanged."
+  ]
+}
