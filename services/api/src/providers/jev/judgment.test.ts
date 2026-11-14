@@ -96,3 +96,93 @@ describe('ordinary reference judgment boundary', () => {
     expect(decideVerdict(result).verdict).toBe('insufficient_evidence');
   });
 });
+
+describe('fact-check port judgment request', () => {
+  const at = Date.parse('2026-11-14T10:00:00Z');
+  const dated: ProviderContext = { signal: new AbortController().signal, consume: vi.fn(), now: () => at };
+  const framed = (overrides: Partial<AcceptedClaim>): AcceptedClaim => ({ ...claim, ...overrides });
+  const factCheck: Evidence = { ...retained[1], id: 'fact-check', url: 'https://factcheck.example/alara', origin: 'fact_check', rating: 'contradicted', excerpt: 'Rated “False” by Example Check. Claim checked: the observatory opened in 1908.' };
+
+  it('shows Jev the subject, the check date and each passage\'s origin, never the captured text', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request));
+    const originalText = `Earlier private words. ${checkedText}`;
+    await createJudge({ ask })(framed({ originalText, sourceSpan: { start: 23, end: 23 + Array.from(checkedText).length }, subject: 'Alara Observatory' }), [retained[0], { ...retained[1], origin: 'wikipedia' }], dated);
+    const state = ask.mock.calls[0][0].state as Record<string, unknown> & { evidence: { origin: string }[] };
+    expect(state['the claim is about']).toBe('Alara Observatory');
+    expect(state.as_of).toBe('2026-11-14');
+    expect(state.evidence.map(source => source.origin)).toEqual(['web', 'wikipedia']);
+    expect(JSON.stringify(state)).not.toContain('Earlier private words');
+    expect(ask.mock.calls[0][0].questions.verdict.instructions).toContain('only says who or what the claim refers to');
+  });
+
+  it('uses the reference verdict wording, asks one stance per passage and drops the per-passage context questions', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request));
+    await createJudge({ ask })(claim, retained, dated);
+    const { questions } = ask.mock.calls[0][0];
+    const verdict = questions.verdict;
+    if (verdict.type !== 'choice') throw new Error('unexpected_question_type');
+    expect(verdict.instructions).toContain('Sources that call it a myth or misconception count as evidence that it is false');
+    expect(verdict.criteria.contradicted).toContain('myths and misconceptions that sources debunk');
+    expect(questions.e0_stance.instructions).toContain(`Read only evidence reference-a: “${retained[0].excerpt}”`);
+    expect(Object.keys(questions).some(name => name.endsWith('_context_reason') || name.endsWith('_context_established'))).toBe(false);
+    expect(questions.basis).toBeUndefined();
+  });
+
+  it('quotes at most 600 code points of a passage and keeps its quotes from closing the instruction', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request));
+    await createJudge({ ask })(claim, [{ ...retained[0], excerpt: `He said “stop”. ${'🦉'.repeat(700)}` }], dated);
+    const instructions = ask.mock.calls[0][0].questions.e0_stance.instructions;
+    expect(instructions).toContain('He said "stop".');
+    expect(Array.from(instructions.slice(instructions.indexOf('“') + 1, instructions.indexOf('”')))).toHaveLength(600);
+  });
+
+  it('judges an attributed claim on whether the source said it, settled by one report', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request));
+    await createJudge({ ask })(framed({ route: 'recent_event', attribution: { source: 'Example Times', mode: 'reported' } }), retained, dated);
+    const { questions } = ask.mock.calls[0][0];
+    expect(questions.verdict.instructions).toContain('The claim reports what Example Times reported');
+    expect(questions.verdict.instructions).toContain('One news report of the statement, or Example Times\'s own site, settles it.');
+    expect(questions.verdict.instructions).not.toContain('A speaker reporting a claim');
+    expect(questions.e0_stance.instructions).toContain('text reporting that Example Times said it supports the claim');
+  });
+
+  it('adds the future rider and asks what a future verdict rests on', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request, { basis: 'estimates', verdict: 'contradicted' }));
+    const result = await createJudge({ ask })(framed({ future: true }), retained, dated);
+    const { questions } = ask.mock.calls[0][0];
+    expect(questions.verdict.instructions).toContain('A figure far outside credible estimates is contradicted');
+    expect(questions.verdict.instructions).toContain('Decide from the evidence what counts as far off');
+    expect(questions.e0_stance.instructions).toContain('a credible estimate, forecast or official plan far from it contradicts it');
+    expect(Object.keys((questions.basis as { criteria: Record<string, string> }).criteria)).toEqual(['announcement', 'estimates', 'neither']);
+    expect(result.basis).toBe('estimates');
+    const neither = await createJudge({ ask: async request => scripted(request, { basis: 'neither' }) })(framed({ future: true }), retained, dated);
+    expect(neither.basis).toBeNull();
+    const missing = createJudge({ ask: async request => { const answers = scripted(request); delete answers.basis; return answers; } });
+    await expect(missing(framed({ future: true }), retained, dated)).rejects.toThrow('malformed_provider');
+  });
+
+  it('tells Jev an unconfirmed rumour is insufficient evidence', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request));
+    await createJudge({ ask })(framed({ rumour: true }), retained, dated);
+    expect(ask.mock.calls[0][0].questions.verdict.instructions).toContain('If nothing credible confirms or denies it, choose insufficient_evidence.');
+  });
+
+  it('fixes a rated fact check\'s stance instead of asking Jev', async () => {
+    const ask = vi.fn(async (request: JevRequest) => scripted(request));
+    const result = await createJudge({ ask })(claim, [retained[0], factCheck, { ...factCheck, id: 'rated-misleading', url: 'https://factcheck.example/other', rating: 'misleading' }], dated);
+    const { questions } = ask.mock.calls[0][0];
+    expect(questions.e0_stance).toBeDefined();
+    expect(questions.e1_stance).toBeUndefined();
+    expect(questions.e2_stance).toBeUndefined();
+    expect(result.evidence.map(source => [source.stance, source.stanceProbability])).toEqual([['supports', 1], ['contradicts', 1], ['unrelated', 1]]);
+    // A stance carried in from an earlier pass is ignored: the rating decides.
+    const rejudged = await createJudge({ ask })(claim, [{ ...factCheck, stance: 'unrelated', stanceProbability: 0 }], dated);
+    expect(rejudged.evidence[0]).toMatchObject({ stance: 'contradicts', stanceProbability: 1 });
+  });
+
+  it('marks contradicting passages as the defect for the original rubric when Jev names one', async () => {
+    const result = await createJudge({ ask: async request => scripted(request, { misleading_reason: 'exaggeration', e1_stance: 'contradicts' }) })(claim, retained, dated);
+    expect(result.misleadingReason).toBe('exaggeration');
+    expect(result.misleadingEvidenceIds).toEqual(['reference-b']);
+  });
+});

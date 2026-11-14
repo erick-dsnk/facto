@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PipelineError, type EventEnvelope, type ProviderKind, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, type EventEnvelope, type EvidenceSources, type ProviderKind, type TextInput } from '../../../../packages/contracts/src/index.js';
 import { createJevClient } from '../../src/providers/jev/client.js';
 import { AbortableExa } from '../../src/providers/exa/client.js';
 import { AttemptBudget } from '../../src/runtime/budget.js';
+import { ClaimCache } from '../../src/runtime/claim-cache.js';
 import { RetryableProviderError, withProviderRetry } from '../../src/runtime/provider-retry.js';
 import { fixtureAdapters } from '../../src/runtime/fixtures.js';
 import { PipelineRuntime } from '../../src/runtime/pipeline.js';
@@ -137,5 +138,46 @@ describe('absolute request deadlines without a fired timeout timer', () => {
     expect(after.acceptedAt).toBe(before.acceptedAt); expect(after.budget).toBe(before.budget); expect(after.budget.jev).toBe(1); expect(classify).toHaveBeenCalledTimes(1);
     expect(p.events.filter(event => event.requestId === 'waiting' && event.type === 'pipeline.error').map(event => event.payload)).toMatchObject([{ reasonCode: 'timeout' }]);
     expect(p.events.filter(event => event.type === 'claim.result')).toHaveLength(0);
+  });
+});
+
+describe('evidence-sources deadlines', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it.each<ProviderKind>(['factcheck', 'wikipedia', 'wikidata', 'weather'])('rejects expired %s consumption without charging', kind => {
+    const p = provider(); p.expire();
+    expect(p.context.canConsume(kind, 'claim')).toBe(false);
+    expect(() => p.context.consume(kind, 'claim')).toThrow('timeout');
+    expect(p.budget.used(kind, 'claim')).toBe(0); expect(p.budget.sources.size).toBe(0);
+  });
+
+  function sourced(lateStage: 'free' | 'paid') {
+    let clock = NOW;
+    const now = () => clock, session = new Session(now), events: EventEnvelope[] = [], fixture = fixtureAdapters(), cache = new ClaimCache(undefined, undefined, now);
+    session.listeners.add(event => events.push(event));
+    const record = { id: 'late', url: 'https://late.example/record', title: 'Late record', publisher: null, publishedAt: null, retrievedAt: new Date(NOW).toISOString(),
+      contentBasis: 'highlight' as const, excerpt: 'Record late.', sourceGroup: 'late.example', echoGroup: null, sourceRole: 'unknown' as const,
+      directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' as const, stanceProbability: null, origin: 'wikipedia' as const };
+    // Signal-ignoring sources that answer only after the request deadline.
+    const sources: EvidenceSources = {
+      gatherFree: async () => { if (lateStage === 'free') clock = NOW + 10_000; return { evidence: lateStage === 'free' ? [record] : [], answered: { fact_check: null, wikipedia: true, wikidata: null, weather: null, calculation: true } }; },
+      searchPaid: async (query, _request, context) => { context.consume('search', query.claimId); clock = NOW + 10_000; return { evidence: [record], categories: ['web'] }; },
+      rank: (free, paid) => [...free, ...paid].slice(0, 6),
+      traits: () => ({ site: 'late.example', trusted: true }),
+    };
+    const judge = vi.spyOn(fixture, 'judge');
+    const runtime = new PipelineRuntime({ ...fixture, sources, cache }, now, () => clock - NOW);
+    const body: TextInput = { schemaVersion: 1, requestId: 'req', sessionId: session.id, sessionEpoch: session.epoch, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.',
+      language: 'en', capturedAt: new Date(NOW).toISOString(), capture: { source: 'typed_fixture', segmentId: 'seg', confidence: 1 }, context: [], userInitiated: true };
+    return { session, events, runtime, body, cache, judge };
+  }
+
+  it.each(['free', 'paid'] as const)('rejects a late %s-source answer with one timeout, no judgment and nothing cached', async stage => {
+    vi.useFakeTimers(); const s = sourced(stage);
+    s.runtime.submit(s.session, s.body); await flushMicrotasks();
+    expect(s.events.filter(event => event.type === 'claim.result')).toHaveLength(0);
+    expect(s.events.filter(event => event.type === 'pipeline.error').map(event => event.payload)).toMatchObject([{ reasonCode: 'timeout' }]);
+    expect(s.judge).not.toHaveBeenCalled(); expect(s.cache.size).toBe(0);
+    await vi.advanceTimersByTimeAsync(10_000); expect(s.events.filter(event => event.type === 'pipeline.error')).toHaveLength(1);
   });
 });
