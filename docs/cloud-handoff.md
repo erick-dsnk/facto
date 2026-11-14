@@ -1,5 +1,10 @@
 # Cloud handoff: fact-checking backend
 
+## Ordinary-reference continuation
+
+The `codex/46-ordinary-reference-coverage` continuation adds a deliberately less restrictive ordinary-reference evidence path, self-contained citation selection and nonblocking cleanup. Frozen source `7f029154970d62f9f8024fb9849bbd8a56daf8ec` passes **684 tests, 36 development scenarios and 21 presentation fixtures**. A fresh first-run OPEN cohort stopped at its fixed request-byte cap: **4/8 declared facts correct definitive, 3/8 with all selected references content-verified**, one local stop, three facts and all four controls unexecuted. The declared usefulness target failed; no readiness or causal improvement claim follows. The prior complete 4/12 factual cohort remains a separate historical result. See [the implementation and live report](ordinary-reference-coverage.md) and its [durable evidence](../fixtures/evaluation/live/ordinary-reference-coverage-01/README.md). This run and all bundled historical authorizations are consumed; never resume or rerun them.
+
+
 For a new cloud box, start with the [portable continuation instructions](fresh-cloud-continuation.md); no old `/workspace` files are assumed to persist. Continue from the current remote state; fetch before changing anything. Preserve local edits. Do not merge PRs or close issues. The backend is substantially hardened, but its measured factual coverage is insufficient for a readiness claim.
 
 ## Repository and review stack

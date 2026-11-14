@@ -1,5 +1,10 @@
 # Fact-checking pipeline evaluation
 
+## Ordinary-reference continuation
+
+The `codex/46-ordinary-reference-coverage` continuation adds a deliberately less restrictive ordinary-reference evidence path, self-contained citation selection and nonblocking cleanup. Frozen source `7f029154970d62f9f8024fb9849bbd8a56daf8ec` passes **684 tests, 36 development scenarios and 21 presentation fixtures**. A fresh first-run OPEN cohort stopped at its fixed request-byte cap: **4/8 declared facts correct definitive, 3/8 with all selected references content-verified**, one local stop, three facts and all four controls unexecuted. The declared usefulness target failed; no readiness or causal improvement claim follows. The prior complete 4/12 factual cohort remains a separate historical result. See [the implementation and live report](ordinary-reference-coverage.md) and its [durable evidence](../fixtures/evaluation/live/ordinary-reference-coverage-01/README.md). This run and all bundled historical authorizations are consumed; never resume or rerun them.
+
+
 ## Current evidence and scope
 
 Current integration passes lint/typecheck and **621 tests across 30 files**. The reviewed Exa envelope guard now rejects explicit failed response metadata before normalization can discard it; its independent regression and saved-success parity evidence is in `fixtures/retrieval/exa-envelope-guard-01/`. It includes later evidence-retention, absolute-deadline, exact-claim cache/notification and selector-metadata changes outside the completed candidate09 freeze; those changes have no new live success credit here. The latest completed broader public cohort is clean freeze `9a5e80d88bd1d93e4a1c194d23bc1a59662af135`, source SHA-256 `9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad`. That freeze passed 525 tests, 36/36 development scenarios and 21/21 presentation fixtures.
