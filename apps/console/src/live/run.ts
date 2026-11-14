@@ -5,7 +5,7 @@ import { dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import WebSocket from 'ws';
 import { MODEL_VERSION, POLICY_VERSION, type ClaimResult, type EventEnvelope } from '../../../../packages/contracts/src/index.js';
-import { eventEnvelopeSchema } from '../../../../packages/contracts/src/wire.js';
+import { eventEnvelopeSchema, presentationSchema } from '../../../../packages/contracts/src/wire.js';
 import { deterministicIssue } from '../../../../services/api/src/input/claims/spans.js';
 import { buildServer } from '../../../../services/api/src/transport/server.js';
 import { CampaignBudget, DEVELOPMENT_LIMITS, HarnessStop, type LiveLimits } from './budget.js';
@@ -43,7 +43,7 @@ type CaseReport = {
   usage: { measuredInputTokens: number; unknownInputTokenReservations: number; requestBytes: number; knownCostUSD: number | null; attemptsWithUnknownCost: number };
 };
 
-function sanitizeEvent(event: EventEnvelope, sample: LiveCase, receivedMs: number): WireObservation {
+export function sanitizeEvent(event: EventEnvelope, sample: LiveCase, receivedMs: number): WireObservation {
   const payload = event.payload as Record<string, unknown>;
   const record: WireObservation = { type: event.type, eventSeq: event.eventSeq, revision: event.revision, claimId: event.claimId, receivedMs };
   for (const key of ['reasonCode', 'admissionAction', 'waitExpiresAt'] as const) if (typeof payload[key] === 'string') record[key] = payload[key] as string;
@@ -52,6 +52,10 @@ function sanitizeEvent(event: EventEnvelope, sample: LiveCase, receivedMs: numbe
     if (!sample.allowedPublic.includes(result.checkedText)) throw new HarnessStop('result_span_not_public');
     Object.assign(record, { verdict: result.verdict, checkedPublicText: result.checkedText, cached: result.cached,
       selectedEvidenceIds: result.selectedEvidenceIds, evidence: result.evidence, presentation: result.presentation, durationMs: result.durationMs });
+  } else if (typeof payload.presentation === 'object' && payload.presentation !== null && !Array.isArray(payload.presentation)) {
+    const presentation = payload.presentation as Record<string, unknown>;
+    const parsed = presentationSchema.safeParse({ action: presentation.action, reasonCode: presentation.reasonCode });
+    if (parsed.success) record.presentation = parsed.data;
   }
   return record;
 }

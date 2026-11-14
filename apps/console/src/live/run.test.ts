@@ -3,7 +3,7 @@ import type { EventEnvelope } from '../../../../packages/contracts/src/index.js'
 import type { JevQuestion } from '../../../../services/api/src/providers/jev/client.js';
 import { buildAlternateQuery } from '../../../../services/api/src/evidence/normalize.js';
 import { DEVELOPMENT_LIMITS } from './budget.js';
-import { DEVELOPMENT_CASES, runLiveCampaign, terminalEvent, type LiveCase } from './run.js';
+import { DEVELOPMENT_CASES, runLiveCampaign, sanitizeEvent, terminalEvent, type LiveCase } from './run.js';
 
 const publicCase = DEVELOPMENT_CASES[0];
 const keys = { jev: 'PRIVATE_KEY_MARKER_JEV', exa: 'PRIVATE_KEY_MARKER_EXA' };
@@ -117,8 +117,19 @@ describe('bounded authenticated live campaign with injected provider HTTP', () =
     expect(report.completed).toBe(true);
     expect(report.cases[0].terminalType).toBe('claim.skipped');
     expect(report.cases[0].admission?.reasonCode).toBe('private_or_personal');
+    expect(report.cases[0].events.at(-1)?.presentation).toEqual({ action: 'respond', reasonCode: 'private_or_personal' });
     expect(report.totals.calls).toEqual({ jev: 1, search: 0, contents: 0 });
     expect(JSON.stringify(report)).not.toContain('SYNTHETIC_PRIVATE_MARKER');
+  });
+
+  it('retains manual clarification feedback delivered through HTTP and WS without fabricating interim presentation', async () => {
+    const providerFetch = syntheticProvider();
+    const report = await runLiveCampaign({ keys, cases: [{ label: 'clarify', text: 'The population is', allowedPublic: [], final: false }], providerFetch });
+    expect(report.completed).toBe(true);
+    expect(providerFetch).not.toHaveBeenCalled();
+    expect(report.cases[0].terminalType).toBe('claim.needs_confirmation');
+    expect(report.cases[0].events.at(-1)?.presentation).toEqual({ action: 'respond', reasonCode: 'interim_capture' });
+    expect(report.cases[0].events.find(event => event.type === 'claim.detected')).not.toHaveProperty('presentation');
   });
 
   it('observes cancellation via correlated check.cancelled and preserves unknown in-flight usage', async () => {
@@ -143,6 +154,21 @@ describe('bounded authenticated live campaign with injected provider HTTP', () =
     expect(report.cases[0].events.at(-1)?.reasonCode).toBe('wait_expired');
     expect(report.cases[0].durationMs).toBeGreaterThanOrEqual(7_900);
   }, 12_000);
+});
+
+describe('non-result presentation sanitization', () => {
+  const event = (presentation?: unknown): EventEnvelope => ({ schemaVersion: 1, eventId: 'event', eventSeq: 1,
+    sessionId: 'session', sessionEpoch: 1, type: 'claim.skipped', serverAt: new Date().toISOString(), payload: { presentation } });
+
+  it('projects only the validated action and reason code from non-result presentation', () => {
+    const observation = sanitizeEvent(event({ action: 'respond', reasonCode: 'private_or_personal', privateExtra: 'PRIVATE_EXTRA_MARKER' }), publicCase, 12);
+    expect(observation.presentation).toEqual({ action: 'respond', reasonCode: 'private_or_personal' });
+    expect(JSON.stringify(observation)).not.toContain('PRIVATE_EXTRA_MARKER');
+  });
+
+  it.each([undefined, null, [], 7, { action: 'invented', reasonCode: 'reason' }, { action: 'respond', reasonCode: '' }, { action: 'respond' }])('omits absent or invalid presentation rather than fabricating fields (%j)', presentation => {
+    expect(sanitizeEvent(event(presentation), publicCase, 12)).not.toHaveProperty('presentation');
+  });
 });
 
 describe('terminal receipt correlation', () => {
