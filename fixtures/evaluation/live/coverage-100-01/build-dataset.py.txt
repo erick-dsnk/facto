@@ -1,0 +1,247 @@
+#!/usr/bin/env python3
+"""Assemble authored OPEN cases and inspected receipts without any network access."""
+import collections
+import csv
+import hashlib
+import json
+import pathlib
+import re
+import subprocess
+
+DIRECTORY = pathlib.Path(__file__).resolve().parent
+REPOSITORY = pathlib.Path('/workspace/junction-2026-current')
+SEED = 'junction-coverage-100-01-2026-11-14-v1'
+BASE_COMMIT = 'b21809493aa7a6e3b337391f996a74b2e2f220a0'
+
+
+def sha(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def read(name):
+    return json.loads((DIRECTORY / name).read_bytes())
+
+
+def encoded(value):
+    return (json.dumps(value, indent=2, ensure_ascii=False) + '\n').encode()
+
+
+def normalize_style(value):
+    value = value.get('style') if isinstance(value, dict) else value
+    return {'first_person_assertion': 'first_person_public',
+            'public_assertion_i_think': 'first_person_public'}.get(value, value)
+
+
+def first(value, *keys):
+    return next((value[key] for key in keys if value.get(key) is not None), None)
+
+
+def bounded_quote(reference, public_claim):
+    """Select a contiguous <=75-word window from the author's inspected excerpts.
+
+    This selects presentation material, not truth labels. Labels and scope notes
+    remain those prospectively authored and independently reviewed in each part.
+    """
+    material = first(reference, 'exactExtractedMaterial', 'supportingTextWindows',
+                     'substantivePassages', 'matchedTextWindows')
+    passages = [material] if isinstance(material, str) else material
+    if not passages:
+        raise ValueError('Missing inspected material')
+    correct = first(reference, 'correctWorldFact', 'correctRelation',
+                    'contraryValueForFalse', 'materialScope', 'exactScopeNotes') or ''
+    ignored = set('the a an and or of in to is was were are on by for with from at as it its this that not'.split())
+    target = [x.lower() for x in re.findall(r'[A-Za-z]+|\d+', str(correct) + ' ' + public_claim)
+              if x.lower() not in ignored]
+    windows = []
+    for passage in passages:
+        words = passage.split()
+        for start in range(max(1, len(words) - 74)):
+            quote = ' '.join(words[start:start + 75])
+            present = set(x.lower() for x in re.findall(r'[A-Za-z]+|\d+', quote))
+            score = sum((3 if token.isdigit() else 1) for token in set(target) & present)
+            # Prefer substantive relation words over navigation/related questions.
+            score -= quote.count('?') * 2
+            windows.append((score, -len(windows), quote))
+    quote = max(windows)[2]
+    assert 0 < len(quote.split()) <= 75
+    return quote
+
+
+parts = [(name, read(name)) for name in ['part-a.json', 'part-b.json', 'part-c.json', 'part-d.json']]
+controls = read('controls.json')
+cases, metadata, references = [], {}, []
+domain_counts = collections.defaultdict(collections.Counter)
+for name, part in parts:
+    assert len(part['cases']) == 20
+    raw_refs = {first(ref, 'label', 'caseId'): ref for ref in part['truthReferences']}
+    part_counts = collections.Counter()
+    for case in part['cases']:
+        assert len(case['expected']['claims']) == 1
+        gold = case['expected']['claims'][0]
+        label, domain = case['label'], gold['domain']
+        polarity = 'true' if gold['verdict'] == 'supported' else 'false'
+        assert gold['verdict'] in ['supported', 'contradicted']
+        style = normalize_style(part['styles'][label])
+        assert style in ['standalone', 'mixed_private_public', 'first_person_public']
+        reference = raw_refs[label]
+        reference_gold = first(reference, 'expectedVerdict', 'truthLabel')
+        assert reference_gold == gold['verdict'], label
+        body_hash = first(reference, 'responseBodySHA256', 'bodySha256')
+        timestamp = first(reference, 'inspectedAt', 'observedAt')
+        status = first(reference, 'httpStatus', 'status')
+        assert body_hash and len(body_hash) == 64 and timestamp and status == 200, label
+        assert all(text in case['text'] for text in case['allowedPublic'])
+        assert gold['acceptedTexts'] == case['allowedPublic']
+        if style == 'mixed_private_public':
+            assert len(case['allowedPublic']) == 1 and case['text'] not in case['allowedPublic']
+        if style == 'first_person_public':
+            assert case['text'].startswith('I think ') and case['text'] in case['allowedPublic']
+            assert case['text'][8:] in case['allowedPublic']
+        public = min(case['allowedPublic'], key=len)
+        quote = bounded_quote(reference, public)
+        references.append({'label': label, 'expectedVerdict': gold['verdict'],
+                           'worldTruth': polarity == 'true', 'url': reference['url'],
+                           'finalURL': first(reference, 'finalURL', 'url'),
+                           'inspectedAt': timestamp, 'httpStatus': status,
+                           'responseBodySHA256': body_hash,
+                           'responseBytes': first(reference, 'responseBytes', 'bodyBytes'),
+                           'quote': quote, 'quoteWords': len(quote.split()),
+                           'quoteSHA256': sha(quote.encode()),
+                           'scopeNotes': first(reference, 'materialScope', 'exactScopeNotes'),
+                           'correctRelation': first(reference, 'correctWorldFact', 'correctRelation', 'contraryValueForFalse')
+                               or first(reference, 'materialScope', 'exactScopeNotes'),
+                           'inspectionMethod': first(reference, 'inspectionMethod', 'method'),
+                           'sourcePart': name, 'sourceReferenceSHA256': sha(encoded(reference)),
+                           'selectionNote': 'Bounded contiguous normalized text from the author-inspected source excerpts; truth/scope labels are not inferred by the assembler.',
+                           'runtimeReferenceInjected': False,
+                           'underlyingOriginIndependentlyAuthenticated': False})
+        metadata[label] = {'style': style, 'domain': domain, 'polarity': polarity,
+                           'syntheticAuthored': True, 'sourcePart': name,
+                           'independentInput': True, 'containsRealParticipantData': False}
+        cases.append(case)
+        part_counts[polarity] += 1
+        part_counts[style] += 1
+        domain_counts[domain][polarity] += 1
+    assert part_counts == {'true': 10, 'false': 10, 'standalone': 14,
+                           'mixed_private_public': 3, 'first_person_public': 3}, name
+
+assert len(controls) == 20
+for case in controls:
+    assert not case['allowedPublic'] and not case['expected']['claims']
+    assert case['expected']['admissionAction'] in ['skip', 'needs_confirmation']
+    assert case['expected']['presentationActions'] == ['respond']
+    cases.append(case)
+    metadata[case['label']] = {'style': 'control', 'domain': 'control', 'polarity': None,
+                             'syntheticAuthored': True, 'sourcePart': 'controls.json',
+                             'independentInput': True, 'containsRealParticipantData': False}
+
+assert len(cases) == len(metadata) == len({case['text'] for case in cases}) == 100
+assert len(domain_counts) == 8 and all(count == {'true': 5, 'false': 5} for count in domain_counts.values())
+styles = collections.Counter(item['style'] for item in metadata.values())
+assert styles == {'standalone': 56, 'mixed_private_public': 12, 'first_person_public': 12, 'control': 20}
+control_actions = collections.Counter(case['expected']['admissionAction'] for case in controls)
+assert control_actions == {'skip': 16, 'needs_confirmation': 4}
+
+# Hash sorting is a portable, deterministic seeded permutation independent of
+# Python's random implementation. This seed is fixed before any live output.
+cases.sort(key=lambda case: (sha((SEED + '\0' + case['label']).encode()), case['label']))
+labels = [case['label'] for case in cases]
+source_files = ['part-a.json', 'part-b.json', 'part-c.json', 'part-d.json', 'controls.json',
+                'research-a.md', 'research-b.md', 'research-c.md', 'research-d.md']
+pins = {name: sha((DIRECTORY / name).read_bytes()) for name in source_files}
+
+node = """globalThis.fetch=async()=>{throw Error('dataset_build_network_forbidden')};
+const{GLOBAL_LIMITS,CASE_LIMITS}=await import('/workspace/task-evidence/coverage-100-01/execute.mts');
+console.log(JSON.stringify({limits:GLOBAL_LIMITS,perCaseLimits:CASE_LIMITS}));"""
+limits = json.loads(subprocess.check_output(['node', '--import', 'tsx', '--input-type=module', '-e', node], cwd=REPOSITORY))
+counts = {'inputs': 100, 'facts': 80, 'true': 40, 'false': 40, 'controls': 20,
+          'styles': dict(styles), 'domains': {name: dict(count) for name, count in sorted(domain_counts.items())},
+          'controlActions': dict(control_actions)}
+dataset = {'schemaVersion': 1, 'kind': 'synthetic_authored_researched_open_dataset',
+           'name': 'coverage-100-01', 'preparationDate': '2026-11-14',
+           'preparedAgainstCommit': BASE_COMMIT, 'assemblerSHA256': sha(pathlib.Path(__file__).read_bytes()),
+           'sourceFilesSHA256': pins, 'counts': counts,
+           'order': {'algorithm': 'ascending SHA256(seed + NUL + label), then label',
+                     'seed': SEED, 'labels': labels, 'chosenBeforeProviderObservation': True},
+           'cases': cases, 'metadataByLabel': metadata, 'truthReferences': references,
+           'provenance': ['All inputs are authored synthetic development material, not scraped participant conversations or real user disclosures.',
+                          'The 24 conversational facts are independent synthetic turns, not a real multi-turn conversation or validated conversation benchmark.',
+                          'Raw synthetic input is intentionally shareable in this reusable dataset; runtime reports continue to omit private-capable original input.',
+                          'Truth labels were researched through bounded public direct GETs, with individual timestamps/body hashes. Agent inspection, not human review.',
+                          'No sealed/private/held-out historical body is included. Old completed studies are not resumed, pooled or rescored.'],
+           'limitations': ['OPEN purposive development cohort; no baseline arm, causal comparison, blind accuracy or readiness claim.',
+                           'Ground-truth reference content does not preapprove a runtime source, grant official-host authority or authenticate independent origins.',
+                           'Quotation selection is mechanical presentation of previously inspected excerpts, pending final independent dataset review. Whole fetched pages are omitted.']}
+(DIRECTORY / 'dataset.json').write_bytes(encoded(dataset))
+ref_by_label = {ref['label']: ref for ref in references}
+with (DIRECTORY / 'dataset.csv').open('w', newline='') as file:
+    fields = ['label', 'text', 'domain', 'style', 'polarity', 'expected_verdict', 'admission_action',
+              'presentation_actions_json', 'allowed_public_json', 'accepted_texts_json',
+              'source_url', 'source_inspected_at', 'source_body_sha256', 'research_note', 'source_quote']
+    writer = csv.DictWriter(file, fieldnames=fields)
+    writer.writeheader()
+    for case in cases:
+        label = case['label']; info = metadata[label]; ref = ref_by_label.get(label, {})
+        gold = case['expected']['claims']
+        writer.writerow({'label': label, 'text': case['text'], 'domain': info['domain'], 'style': info['style'],
+                         'polarity': info['polarity'] or 'control',
+                         'expected_verdict': gold[0]['verdict'] if gold else '',
+                         'admission_action': case['expected']['admissionAction'],
+                         'presentation_actions_json': json.dumps(case['expected']['presentationActions']),
+                         'allowed_public_json': json.dumps(case['allowedPublic'], ensure_ascii=False),
+                         'accepted_texts_json': json.dumps(gold[0]['acceptedTexts'] if gold else [], ensure_ascii=False),
+                         'source_url': ref.get('url', ''), 'source_inspected_at': ref.get('inspectedAt', ''),
+                         'source_body_sha256': ref.get('responseBodySHA256', ''),
+                         'research_note': ref.get('scopeNotes') or 'Independently authored synthetic control; no world-truth factual verdict expected.',
+                         'source_quote': ref.get('quote', '')})
+
+plan = {'schemaVersion': 1, 'kind': 'prospective_open_100_input_campaign', 'name': 'coverage-100-01',
+        'status': 'assembled_pending_final_independent_dataset_and_freeze_review',
+        'preparedAgainstCommit': BASE_COMMIT, 'cases': cases, 'styles': {k: v['style'] for k, v in metadata.items()},
+        'counts': counts, 'limits': limits['limits'], 'perCaseLimits': limits['perCaseLimits'],
+        'datasetSHA256': sha((DIRECTORY / 'dataset.json').read_bytes()),
+        'datasetCSVSHA256': sha((DIRECTORY / 'dataset.csv').read_bytes()), 'sourceFilesSHA256': pins,
+        'assemblerSHA256': sha(pathlib.Path(__file__).read_bytes()),
+        'budgetConstantsSourceSHA256': sha((DIRECTORY / 'execute.mts').read_bytes()),
+        'order': dataset['order'],
+        'execution': {'executor': 'root only, after exact source/plan/dataset/executor/preflight freeze and independent review',
+                      'maximumExecutions': 1, 'resume': False, 'rerun': False,
+                      'sessions': 'Exactly one fresh isolated cold authenticated HTTP/WebSocket session per input; no context/cache reuse between inputs.',
+                      'perInputProviderDeadlineMs': 10000,
+                      'providerRetries': 'Existing runtime only, within3Jev/2search/3contents attempts and the unchanged10-second deadline. Every attempt is charged.',
+                      'continueOrdinaryFailures': 'Record wrong labels, abstentions and ordinary operational failures and continue unstarted cases when safe. No replacement input or denominator removal.',
+                      'stopConditions': ['Actual unsafe private-query exposure or result-span exposure halts. Guarded unapproved admission/query/span failures are recorded as failures and continue with isolated unstarted cases when safe.', 'Provider authentication failure',
+                                         'Global/per-case hard budget or unknown completed usage', 'Source/plan/dataset freeze mismatch',
+                                         'Durable checkpoint/accounting/cancellation failure'],
+                      'queries': 'Exact admitted public allowlist span, or existing balanced_evidence alternate built only from that same span. No ground-truth URL injection or answer-directed rewrite.',
+                      'controls': 'Empty public allowlists: zero retrieval and no factual verdict, even though authored synthetic inputs are shareable.',
+                      'environment': 'NODE_USE_ENV_PROXY=1 for actual Node requests; keys only in environment, never printed/published.'},
+        'prospectiveMetrics': {
+            'denominators': 'All80declared facts40true/40false;20controls separate. No-result/errors/unrun remain in declared coverage; all styles and eight10-fact domains retain their denominators.',
+            'rawAndSourceCoverage': ['Correct definitive/all80', 'Wrong definitive/all80 and among definitive', 'Abstentions/noResult/notObserved/errors separately',
+                                     'All-original-selected-citations content-verified correct/all80', 'Definitive cases with>=1verifiedselected reference separately; never substitute for fullselected credit'],
+            'binaryTruthConfusion': 'Knowntrue/knownfalse rows; predicted supported/contradicted/misleading/insufficient_evidence/no_result/not_observed columns; abstentions never correct true negatives.',
+            'falseAlarm': 'Knowntrue predicted contradicted OR misleading. Report count, declared40, completed valid checks including explicit abstentions, and definitive-only denominators separately.',
+            'falseSupport': 'Knownfalse predicted supported. Report count, declared40, completed valid checks including explicit abstentions, and definitive-only denominators separately.',
+            'errorDenominatorCaveat': 'Invalid/duplicate/no-result/unobserved observations are never observed negatives. Show their counts; do not claim a low completed-case rate establishes declared-cohort success.',
+            'controlConfusion': 'Expected skip/needs_confirmation versus actual action, provider error or missing. Report false public admission/20, actual retrieval attempts/20, manual response and factual verdicts separately.',
+            'styleAndDomain': 'Report all coverage/confusion/admission/error rates by eight domains, three factual styles, true/false polarity and conversational combined; no pooling historical cohorts.',
+            'admission': 'Exact public-span precision/recall, misses, false admissions and unsafe blocked attempts. First-person full/bare accepted variants match one expected proposition only.',
+            'latency': 'All80factual cold per-input duration including abstentions/errors/timeouts; median and nearest-rankP95. Controls20 and wholecampaign wall separate; report any unrun denominator.',
+            'providerAccounting': 'Actual dispatched Jev/search/contents attempts, retries, requestbytes, measured usage, pending/unknown reservations, known partial cost and unknown-cost attempts. Response-byte aggregate stays unmeasured unless actually captured.',
+            'citationReview': 'Independent agent direct inspection of every originally selected reference: exact ID/URL/excerpt hash, relation/value/scope, access failures, retained proof and provenance/dependence. No unselected substitution or hostshortcut.',
+            'wilson95': {'z': 1.959963984540054, 'method': 'Wilson score interval for k/n: center=(k/n+z²/(2n))/(1+z²/n); half=z*sqrt((k/n)*(1-k/n)/n+z²/(4n²))/(1+z²/n). Returnnull for n=0.',
+                         'applyTo': ['Falsealarm completed valid and definitive-only rates', 'Falsesupport completed valid and definitive-only rates',
+                                     'Correctdefinitive/all80 and allselectedverifiedcorrect/all80', 'Falsecontroladmission/20'],
+                         'interpretation': 'Mathematical binomial intervals are descriptive under an IID Bernoulli assumption not established by this purposive correlated synthetic cohort. They are not population confidence guarantees.'}},
+        'criteria': {'rawCorrectDefinitiveTarget': {'minimum': 64, 'denominator': 80},
+                     'fullySelectedContentVerifiedTarget': {'minimum': 64, 'denominator': 80},
+                     'wrongDefinitiveTarget': 0, 'privacyControlExpected': 20,
+                     'allInputTerminalTarget': 100,
+                     'interpretation': 'Development targets only; every adverse result/failure is preserved. No target or zero-error observation certifies readiness.'},
+        'privacy': 'Every input is authored synthetic fiction, explicitly shareable as a reusable dataset. No actual private participant data. Public retrieval remains exact-safe-span only; runtime reports omit private-capable originals.',
+        'scope': 'New OPEN prospective campaign. No historical authorization reuse, old study rerun/resumption, baseline causal comparison or blind evaluation claim.'}
+(DIRECTORY / 'plan.json').write_bytes(encoded(plan))
+print(json.dumps({'assembled': counts, 'datasetSHA256': plan['datasetSHA256'],
+                  'datasetCSVSHA256': plan['datasetCSVSHA256'],
+                  'planSHA256': sha((DIRECTORY / 'plan.json').read_bytes()), 'providerCalls': 0}))

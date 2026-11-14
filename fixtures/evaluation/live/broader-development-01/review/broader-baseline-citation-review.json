@@ -1,0 +1,90 @@
+[
+  {
+    "caseLabel": "BD07",
+    "expectedClaimId": "BD07",
+    "evidenceId": "ev-9f6b071f258ff2a1591d",
+    "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+    "excerptSHA256": "956d3fb944fbd171588f0e2413338f2cab33002bd2ecbbee03dd54dee2715ec4",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:05.471128+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to the exact selected URL returned HTTP 200 substantive National Museum of American History page, by Paul F. Johnston, NMAH, dated 13 August 2014. The selected opening-for-business passage and collection caption match after whitespace/HTML normalization and directly establish commercial opening in 1914. Retrospective museum history with identified maritime collection provenance; this verification concerns commercial opening, not a claim that no earlier test/transit occurred. No original 1914 log was inspected."
+  },
+  {
+    "caseLabel": "BD07",
+    "expectedClaimId": "BD07",
+    "evidenceId": "ev-f72fcf7616e02e44a3fd",
+    "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+    "excerptSHA256": "d3b4039511f69a967dd080b5991753ac39d6d0c05901b42e0a1f9d451190dfcb",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:09.372469+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to the exact selected Panama Canal Authority URL returned HTTP 200 substantive operator history. Both selected highlight passages match normalized body text, with the heading 15 August 1914 and opening-to-the-world/SS Ancon paragraph directly establishing the checked opening year. Publisher footer identifies the canal authority. Retrospective operator record; promotional environmental/transit statistics in the excerpt are outside this audit. Response X-Cache HIT: 1; fresh URL access does not certify uncached origin state."
+  },
+  {
+    "caseLabel": "BD09",
+    "expectedClaimId": "BD09",
+    "evidenceId": "ev-d13ed099d4e84ec8c01d",
+    "url": "https://www.unesco.org/en/legal-affairs/constitution",
+    "excerptSHA256": "ac47c71b3443d338a788eeceab6bd1eb4b1edd92246e401a01bb30eeb974ff38",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:06.909065+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET returned HTTP 200 substantive UNESCO legal-affairs Constitution text, last updated 30 January 2026. Its heading explicitly states Adopted in London on 16 November 1945; the selected Article XV acceptance/signature provisions and final London dateline are also present. The highlighted serialization uses ellipses/Markdown and spaced footnote numerals 36/37, so it is not a byte-identical contiguous HTML quote. The tested adoption relation is explicit and scope-matched. Response Age 3426 indicates caching; entry into force remains a distinct event."
+  },
+  {
+    "caseLabel": "BD09",
+    "expectedClaimId": "BD09",
+    "evidenceId": "ev-6016ba9631faf63f9073",
+    "url": "https://treaties.un.org/Pages/showDetails.aspx?clang=_en&objid=08000002801651f0",
+    "excerptSHA256": "73494d5b6a29726fa03d2a0c82b2b6a645df7d2eaabb75e89cf41f8ee36912e4",
+    "status": "unsupported",
+    "reviewedAt": "2026-11-14T04:19:05.202072+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET returned HTTP 200 authentic UN Treaty Collection registration 52 for the named Constitution. Selected table fields faithfully report Places/dates of conclusion: London 16/11/1945 and EIF: 4 November 1946, with UK depositary and UNTS 4 (p.275) provenance. This is accurate corroborative date/place metadata, but it does not explicitly identify adoption as the event; conclusion/signature/entry-into-force are not interchangeable. Therefore this selected record alone does not substantiate the exact adoption proposition. No different source or linked instrument was substituted."
+  },
+  {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-6a6fe886686c4d654057",
+    "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+    "excerptSHA256": "b681e556c772beaaff5e0536f2f53c50982b8fb713e2cb119674f9d93c247a93",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:05.217388+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET returned HTTP 200 substantive FederalRegister.gov Smithsonian agency profile. The entire selected paragraph matches normalized page text and explicitly says created by an act of Congress on 10 August 1846, citing 20 U.S.C. 41 et seq.; this directly addresses and contradicts the claimed British-charter mechanism while preserving the correct year. This is an agency-description page, not the 1846 act itself. Site legal notice labels its Web 2.0 edition an unofficial informational resource; no official statutory scan was substituted or inspected."
+  },
+  {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-0731d2680f6821d2a03e",
+    "url": "https://www.si.edu/about/history",
+    "excerptSHA256": "68732a5bf1c1114a3f9595079d3cfc1e8f3c2f26a70f4b1ba6ceee8576c12033",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:05.083947+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET returned HTTP 200 substantive Smithsonian Our History page. Both selected prose segments occur after whitespace/HTML normalization and explicitly identify an act signed by President Polk on 10 August 1846. The page distinguishes the British donor and 1836 bequest acceptance from 1846 institutional establishment, directly resolving the claimed British-charter mechanism. Primary institutional retrospective, not the original act; shares the underlying legislative event with the Federal Register account, so these are not two independent legal origins."
+  },
+  {
+    "caseLabel": "BDC04",
+    "expectedClaimId": "BD07",
+    "evidenceId": "ev-9f6b071f258ff2a1591d",
+    "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+    "excerptSHA256": "956d3fb944fbd171588f0e2413338f2cab33002bd2ecbbee03dd54dee2715ec4",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:05.471128+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to the exact selected URL returned HTTP 200 substantive National Museum of American History page, by Paul F. Johnston, NMAH, dated 13 August 2014. The selected opening-for-business passage and collection caption match after whitespace/HTML normalization and directly establish commercial opening in 1914. Retrospective museum history with identified maritime collection provenance; this verification concerns commercial opening, not a claim that no earlier test/transit occurred. No original 1914 log was inspected."
+  },
+  {
+    "caseLabel": "BDC04",
+    "expectedClaimId": "BD07",
+    "evidenceId": "ev-f72fcf7616e02e44a3fd",
+    "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+    "excerptSHA256": "d3b4039511f69a967dd080b5991753ac39d6d0c05901b42e0a1f9d451190dfcb",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:09.372469+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to the exact selected Panama Canal Authority URL returned HTTP 200 substantive operator history. Both selected highlight passages match normalized body text, with the heading 15 August 1914 and opening-to-the-world/SS Ancon paragraph directly establishing the checked opening year. Publisher footer identifies the canal authority. Retrospective operator record; promotional environmental/transit statistics in the excerpt are outside this audit. Response X-Cache HIT: 1; fresh URL access does not certify uncached origin state."
+  }
+]

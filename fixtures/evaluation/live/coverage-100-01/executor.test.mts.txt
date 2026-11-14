@@ -1,0 +1,87 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,mkdir,readFile,writeFile,rm} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {pathToFileURL} from 'node:url';
+import {campaignCore,ledger,globalStop,validatePlan,GLOBAL_LIMITS,CASE_LIMITS} from './execute.mts';
+let networkCalls=0;
+globalThis.fetch=async()=>{networkCalls++;throw new Error('offline_network_forbidden');};
+const cases=Array.from({length:100},(_,i)=>{const text=i<80?`The synthetic public structure ${i} opened in 1812.`:`SYNTHETIC_PRIVATE_CONTROL_MARKER ${i}`;return{label:`N${i}`,text,allowedPublic:i<80?[text]:[],expected:{claims:i<80?[{id:`N${i}-fact`,acceptedTexts:[text],verdict:i%2?'contradicted':'supported',domain:'synthetic'}]:[],admissionAction:i<80?'check':'skip',presentationActions:['respond']}};});
+const plan=()=>({name:'offline_fresh_100',limits:structuredClone(GLOBAL_LIMITS),perCaseLimits:structuredClone(CASE_LIMITS),cases:structuredClone(cases)});
+function attempt(kind='jev',dispatched=false){return{kind,ordinal:1,dispatched,requestBytes:1000,startedMs:0,durationMs:null,inputTokens:null,unknownInputTokenReservation:kind==='jev'?128000:0,status:null,outcome:'pending',costUSD:null};}
+function caseReport(sample:any,attempts:any[],code?:string,wrong=false){const isFact=sample.expected.claims.length===1;return{label:sample.label,status:code?.startsWith('harness_')?'local_stop':'observed',terminalReceived:true,terminalType:code?'pipeline.error':isFact?'claim.result':'claim.skipped',admittedPublic:isFact?sample.allowedPublic:[],rejectedAdmissionCount:0,admission:{action:isFact?'check':'skip'},attempts,localStops:code?.startsWith('harness_')?[code]:[],events:[code?{type:'pipeline.error',reasonCode:code,presentation:{action:'respond',reasonCode:code}}:isFact?{type:'claim.result',claimId:'synthetic-claim',checkedPublicText:sample.text,verdict:wrong?'supported':sample.expected.claims[0].verdict,cached:false,selectedEvidenceIds:[],evidence:[],presentation:{action:'respond',reasonCode:'manual'}}:{type:'claim.skipped',presentation:{action:'respond',reasonCode:'skip'}}]};}
+function runnerFactory(config:{code?:string;wrong?:boolean;unknown?:boolean;overrun?:number;lateThrow?:boolean;actualExposure?:boolean;controlOnlyCode?:boolean}={},state={calls:0,wire:0}){
+ return Object.assign(async(options:any)=>{
+  state.calls++;assert.equal(options.cases.length,1);assert.ok(options.limits.wallMs<=60000);const sample=options.cases[0],attempts:any[]=[];
+  const dispatch=async(kind='jev')=>{const a=attempt(kind);if(kind==='search')a.query=config.actualExposure?'SYNTHETIC_PRIVATE_CONTROL_MARKER':sample.text;attempts.push(a);
+   try{await options.onProgress({phase:'dispatch_reserved',label:sample.label,attempts,localStops:[],totals:ledger(attempts)});}catch{attempts.pop();return false;}
+   a.dispatched=true;state.wire++;a.status=200;a.durationMs=1;a.outcome='response';a.inputTokens=kind==='jev'?(config.unknown?null:config.overrun??17):null;a.unknownInputTokenReservation=kind==='jev'&&config.unknown?128000:0;
+   await options.onProgress({phase:'attempt_finished',label:sample.label,attempts,localStops:[],totals:ledger(attempts)});return true;
+  };
+  let code=config.controlOnlyCode&&sample.expected.claims.length?undefined:config.code;if(!await dispatch())code='harness_checkpoint_failure';
+  if(!code&&sample.expected.claims.length&&!config.unknown){await dispatch('search');await dispatch();}
+  if(config.actualExposure&&!sample.expected.claims.length)await dispatch('search');
+  const report=caseReport(sample,attempts,code,config.wrong);await options.onCase(report);
+  if(config.lateThrow)throw new Error('synthetic_unknown_details');
+  return{completed:!code?.startsWith('harness_'),transportFailure:null,counts:{providerErrors:code?1:0},totals:ledger(attempts),cases:[report],predeclaredCases:[]};
+ },{state});
+}
+async function run(config:any={},options:any={}){const snapshots:any[]=[];const runner=runnerFactory(config);const p=plan();if(options.limits)p.limits={...p.limits,...options.limits};const report=await campaignCore({plan:p,cases:p.cases,metadata:{campaignName:'offline'},keys:{jev:'synthetic',exa:'synthetic'},runner:runner as any,persist:async value=>{snapshots.push(structuredClone(value));await options.persist?.(value);},clock:options.clock});return{report,runner,snapshots};}
+
+test('full100fresh inputs complete; global exact accounting and denominators survive case sessions',async()=>{
+ const {report,runner,snapshots}=await run();assert.equal(runner.state.calls,100);assert.equal(report.completed,true);assert.equal(report.counts.declared,100);assert.equal(report.counts.terminalReceipts,100);assert.equal(report.evaluation.factual.expected,80);assert.equal(report.totals.calls.jev,180);assert.equal(report.totals.calls.search,80);assert.equal(report.totals.attempts,260);assert.equal(report.totals.measuredInputTokens,3060);assert.equal(report.totals.requestBytes,260000);assert.equal(report.totals.unknownInputTokenReservations,0);assert.equal(report.totals.attemptsWithUnknownCost,260);assert.equal(report.totals.knownCostUSD,null);
+ assert.ok(snapshots.some(s=>s.phase==='attempt_checkpoint'&&s.active.phase==='dispatch_reserved'&&s.accountingIncludingReservations.pendingDispatchReservations===1));assert.ok(!JSON.stringify(report).includes('SYNTHETIC_PRIVATE_CONTROL_MARKER'));for(const snapshot of snapshots.filter(s=>s.phase==='case_execution_checkpoint')){assert.equal(snapshot.accountingIncludingReservations.requestBytes,snapshot.totals.requestBytes);assert.equal(snapshot.accountingIncludingReservations.chargedInputTokens,snapshot.totals.chargedInputTokens);assert.deepEqual(snapshot.accountingIncludingReservations.calls,snapshot.totals.calls);}
+});
+test('wrong definitive answers are recorded while all100continue',async()=>{const{report,runner}=await run({wrong:true});assert.equal(runner.state.calls,100);assert.equal(report.completed,true);assert.equal(report.evaluation.factual.wrongDefinitive,40);});
+test('ordinary provider errors with knownusage continue all100',async()=>{const{report,runner}=await run({code:'exa_unavailable'});assert.equal(runner.state.calls,100);assert.equal(report.counts.providerErrors,100);assert.equal(report.completed,true);assert.equal(report.evaluation.factual.noResult,80);});
+test('guarded unsafe spans remain privacy failures andcontinue other independentinputs without querydispatch',async()=>{const{report,runner}=await run({code:'harness_admitted_span_not_public'});assert.equal(runner.state.calls,100);assert.equal(report.counts.guardedPrivacyFailures,100);assert.equal(report.counts.actualPrivacyExposures,0);assert.equal(report.totals.calls.search,0);assert.equal(report.completed,true);});
+test('twentyguardedcontrolmisses preserve80factualsearches andcomplete100',async()=>{const{report,runner}=await run({code:'harness_admitted_span_not_public',controlOnlyCode:true});assert.equal(runner.state.calls,100);assert.equal(report.counts.guardedPrivacyFailures,20);assert.equal(report.totals.calls.search,80);assert.equal(report.completed,true);});
+test('unsafeactualqueryexposure haltsinstead of continuing asguardedmiss',async()=>{const{report,runner}=await run({actualExposure:true});assert.equal(runner.state.calls,1);assert.equal(report.haltReason,'unsafe_actual_exposure');assert.equal(report.counts.actualPrivacyExposures,1);});
+test('authentication failure stops after preserved originalcase',async()=>{const{report,runner,snapshots}=await run({code:'jev_authentication'});assert.equal(runner.state.calls,1);assert.equal(report.haltReason,'provider_authentication_failed');assert.equal(report.completed,false);assert.ok(snapshots.some(s=>s.phase==='case_checkpoint'));});
+test('completed unknownJevusage is charged andhaltsnextcase',async()=>{const{report,runner}=await run({unknown:true});assert.equal(runner.state.calls,1);assert.equal(report.haltReason,'unknown_input_usage');assert.equal(report.totals.unknownInputTokenReservations,128000);assert.equal(report.totals.measuredInputTokens,0);});
+test('pre-dispatch globalcallcap includes currentreservation andnever resets betweeninputs',async()=>{const{report,runner}=await run({code:'exa_unavailable'},{limits:{calls:{jev:1,search:160,contents:240}}});assert.equal(report.haltReason,'global_jev_call_limit');assert.equal(runner.state.wire,1);assert.equal(report.totals.calls.jev,1);assert.equal(report.totals.pendingDispatchReservations,0);});
+test('globaltokenusageoverrun preserved asactualcharges andhaltsfutureinput',async()=>{const{report,runner}=await run({overrun:16000001,code:'exa_unavailable'});assert.equal(runner.state.calls,1);assert.equal(report.haltReason,'global_input_token_limit');assert.equal(report.totals.measuredInputTokens,16000001);});
+test('globalwall expiry duringdurablependingcheckpoint blockswire beforedispatch',async()=>{let now=0;const{report,runner}=await run({}, {clock:()=>now,persist:(v:any)=>{if(v.phase==='attempt_checkpoint'&&v.active.phase==='dispatch_reserved')now=1800001;}});assert.equal(runner.state.wire,0);assert.equal(report.haltReason,'global_wall_limit');assert.equal(report.totals.attempts,0);});
+test('persistencefailure beforedispatch propagates andpreserveslastdurablecheckpoint',async()=>{const snapshots:any[]=[];const runner=runnerFactory();await assert.rejects(campaignCore({plan:plan(),cases:cases as any,metadata:{},keys:{jev:'synthetic',exa:'synthetic'},runner:runner as any,persist:async(value:any)=>{if(value.phase==='attempt_checkpoint')throw new Error('synthetic_private_disk_message');snapshots.push(structuredClone(value));}}),/persistence_failure/);assert.equal(runner.state.wire,0);assert.equal(snapshots.at(-1).phase,'reserved_before_dispatch');});
+test('unexpectedendpoint isfatal instead of swallowed asprivacyguard',async()=>{const{report,runner}=await run({code:'harness_unexpected_provider_endpoint'});assert.equal(runner.state.calls,1);assert.equal(report.haltReason,'unexpected_provider_endpoint');});
+test('lateexecutor failure preservespaidattemptcheckpoint',async()=>{const{report,runner}=await run({lateThrow:true,code:'exa_unavailable'});assert.equal(runner.state.calls,1);assert.equal(report.haltReason,'executor_case_failure');assert.equal(report.completed,false);assert.equal(report.totals.attempts,1);assert.equal(report.totals.measuredInputTokens,17);});
+test('all resource limits independently guard pendingreservation',()=>{const a=attempt();assert.equal(globalStop([a],{...GLOBAL_LIMITS,requestBytes:999},0,true),'global_request_byte_limit');assert.equal(globalStop([a],{...GLOBAL_LIMITS,totalRequestBytes:999},0,true),'global_total_byte_limit');assert.equal(globalStop([a],{...GLOBAL_LIMITS,inputTokens:127999},0,true),'global_input_token_limit');assert.equal(globalStop([a],{...GLOBAL_LIMITS,calls:{jev:0,search:160,contents:240}},0,true),'global_jev_call_limit');});
+test('plan validates100unique80balancedfacts20nonpubliccontrols andexactboundlimits',()=>{assert.equal(validatePlan(plan()).length,100);for(const edit of [(p:any)=>p.cases.pop(),(p:any)=>p.cases[99].label=p.cases[0].label,(p:any)=>p.cases[99].allowedPublic=[p.cases[99].text],(p:any)=>p.cases[0].expected.claims[0].verdict='contradicted',(p:any)=>p.limits.calls.jev++]){const p=plan();edit(p);assert.throws(()=>validatePlan(p));}});
+test.after(()=>assert.equal(networkCalls,0));
+
+test('realCLI freeze rejectssource/plan/executor/preflight drift andexclusive runpath refusesrerun beforeproviderdispatch',async()=>{
+ const sandbox=await mkdtemp('/tmp/coverage100-executor-test-');
+ const savedEnv={JEV_API_KEY:process.env.JEV_API_KEY,EXA_API_KEY:process.env.EXA_API_KEY,NODE_USE_ENV_PROXY:process.env.NODE_USE_ENV_PROXY};
+ try{
+  const root=`${sandbox}/repo`,directory=`${sandbox}/campaign`;await mkdir(root);await mkdir(directory);
+  const git=(...args:string[])=>execFileSync('git',args,{cwd:root,stdio:['ignore','pipe','pipe']}).toString();
+  git('init','-q');git('config','user.name','Offline Validator');git('config','user.email','offline@example.invalid');
+  await writeFile(`${root}/package.json`,'{"private":true}\n');git('add','package.json');git('commit','-qm','Offline synthetic source');
+  const source=(await readFile(new URL('./execute.mts',import.meta.url),'utf8')).replace("const root='/workspace/junction-2026-current';",`const root=${JSON.stringify(root)};`).replace("const directory='/workspace/task-evidence/coverage-100-01';",`const directory=${JSON.stringify(directory)};`);
+  const path=`${sandbox}/executor.mts`;await writeFile(path,source);const module=await import(pathToFileURL(path).href);
+  const hash=(value:string)=>createHash('sha256').update(value).digest('hex');
+  const fixturePlan:any=plan(),sourceNames=['part-a.json','part-b.json','part-c.json','part-d.json','controls.json','research-a.md','research-b.md','research-c.md','research-d.md'];
+  fixturePlan.sourceFilesSHA256={};
+  for(const name of sourceNames){const bytes=`offline synthetic ${name}\n`;await writeFile(`${directory}/${name}`,bytes);fixturePlan.sourceFilesSHA256[name]=hash(bytes);}
+  const builder='# offline synthetic assembler\n';await writeFile(`${directory}/build-dataset.py`,builder);
+  fixturePlan.assemblerSHA256=hash(builder);fixturePlan.budgetConstantsSourceSHA256=hash(source);fixturePlan.counts={inputs:100,facts:80,controls:20};fixturePlan.order={labels:fixturePlan.cases.map((c:any)=>c.label)};
+  const dataset=JSON.stringify({cases:fixturePlan.cases,sourceFilesSHA256:fixturePlan.sourceFilesSHA256,assemblerSHA256:fixturePlan.assemblerSHA256,counts:fixturePlan.counts,order:fixturePlan.order}),csv='label,synthetic\n';
+  await writeFile(`${directory}/dataset.json`,dataset);await writeFile(`${directory}/dataset.csv`,csv);fixturePlan.datasetSHA256=hash(dataset);fixturePlan.datasetCSVSHA256=hash(csv);
+  const planBytes=JSON.stringify(fixturePlan),preflightSource='// offline synthetic preflight\n',preflight=JSON.stringify({networkCalls:0,preflightSourceSHA256:hash(preflightSource)})+'\n';await writeFile(`${directory}/preflight.mts`,preflightSource);
+  await writeFile(`${directory}/plan.json`,planBytes);await writeFile(`${directory}/preflight.json`,preflight);
+  const freeze={...await module.sourceSnapshot(),planSHA256:hash(planBytes),executorSHA256:hash(source),preflightSHA256:hash(preflight)};
+  const writeFreeze=()=>writeFile(`${directory}/freeze.json`,JSON.stringify(freeze));await writeFreeze();
+  assert.equal((await module.verifyFreeze()).cases.length,100);
+  for(const key of ['commit','sourceSHA256','planSHA256','executorSHA256','preflightSHA256']as const){const saved=freeze[key];freeze[key]='0'.repeat(saved.length);await writeFreeze();await assert.rejects(module.verifyFreeze(),/freeze_mismatch/);freeze[key]=saved;await writeFreeze();}
+  await writeFile(`${root}/untracked-drift`,'synthetic');await assert.rejects(module.verifyFreeze(),/freeze_mismatch/);await rm(`${root}/untracked-drift`);
+  await writeFile(`${directory}/plan.json`,planBytes+' ');await assert.rejects(module.verifyFreeze(),/freeze_mismatch/);await writeFile(`${directory}/plan.json`,planBytes);
+  await writeFile(`${directory}/preflight.json`,preflight+' ');await assert.rejects(module.verifyFreeze(),/freeze_mismatch/);await writeFile(`${directory}/preflight.json`,preflight);
+  await writeFile(path,source+'\n// offline drift');await assert.rejects(module.verifyFreeze(),/freeze_mismatch/);await writeFile(path,source);
+  for(const name of ['dataset.json','dataset.csv','build-dataset.py',...sourceNames]){const original=await readFile(`${directory}/${name}`);await writeFile(`${directory}/${name}`,Buffer.concat([original,Buffer.from(' drift')]));await assert.rejects(module.verifyFreeze(),/prepared_material_freeze_mismatch/);await writeFile(`${directory}/${name}`,original);}
+  await mkdir(`${directory}/run`);await writeFile(`${directory}/run/sentinel`,'original first-run artifact');
+  process.env.JEV_API_KEY='synthetic-test-key';process.env.EXA_API_KEY='synthetic-test-key';process.env.NODE_USE_ENV_PROXY='1';
+  await assert.rejects(module.execute(true),(error:any)=>error.code==='EEXIST');
+  assert.equal(await readFile(`${directory}/run/sentinel`,'utf8'),'original first-run artifact');assert.equal(networkCalls,0);
+ }finally{for(const[key,value]of Object.entries(savedEnv)){if(value===undefined)delete process.env[key];else process.env[key]=value;}await rm(sandbox,{recursive:true,force:true});}
+});

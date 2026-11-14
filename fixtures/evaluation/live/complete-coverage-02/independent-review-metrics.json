@@ -1,0 +1,103 @@
+{
+  "kind": "independent_ongoing_factual_error_metrics_review",
+  "decision": "PASS reporting implementation and saved-observation recomputation",
+  "testedBaseCommit": "4f507f84d9f7f8881af62d9a9ae5a82aa0099ceb",
+  "testedSourceSHA256": {
+    "apps/console/src/live/metrics.ts": "5beeff008b89a4b4cc697ff3cb53d8735c23c7a287c8bfd6e67f20b98f726fb1",
+    "apps/console/src/live/metrics.test.ts": "3e96f48497bf74eba68169e972055e10681556e5ad337e993603e126b41fe1f2"
+  },
+  "scope": "Reporting-only evaluator change; original live implementation/source freeze unchanged, no new provider run",
+  "fullGate": {
+    "lint": "pass",
+    "typecheck": "pass",
+    "tests": 689,
+    "testFiles": 34,
+    "vitestDurationMs": 18090
+  },
+  "development": {
+    "passed": 36,
+    "selected": 36,
+    "notRun": 0
+  },
+  "presentation": {
+    "passed": 21,
+    "total": 21
+  },
+  "protectedDiffPaths": [],
+  "firstReportSHA256": "a227f9a968e32031e39d2a14eb570045435152753a7e122199879bb3777331d6",
+  "evaluatedMetricsSHA256": "d0299cc72bd4ca4d9eaa6af8e4db12397bffa0ac90c7c97ec1924eff50cc9c0c",
+  "artifactsSHA256": {
+    "independent-review-metrics-check.log": "964f68f44b5e1c2062933d02b4582b658d16a86c2ec86114fd9176a8f2ddf81c",
+    "independent-review-metrics-development.json": "3f02aba184e20f0d1c1118d34422f586de35bd02e0e1d1cbe5c35e6cf1095150",
+    "evaluated-metrics.json": "d0299cc72bd4ca4d9eaa6af8e4db12397bffa0ac90c7c97ec1924eff50cc9c0c"
+  },
+  "rates": {
+    "unit": "One expected proposition matched to exactly one valid factual result; completed checks include abstentions, definitive-only checks exclude them.",
+    "trueGold": {
+      "declared": 12,
+      "completed": 12,
+      "definitive": 11,
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "falseGold": {
+      "declared": 12,
+      "completed": 12,
+      "definitive": 9,
+      "abstained": 3,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "falseAlarm": {
+      "definition": "Expected supported (true), predicted contradicted or misleading.",
+      "count": 0,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 12,
+        "rate": 0
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 11,
+        "rate": 0
+      }
+    },
+    "falseSupport": {
+      "definition": "Expected contradicted (false), predicted supported.",
+      "count": 0,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 12,
+        "rate": 0
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 9,
+        "rate": 0
+      }
+    },
+    "excludedGoldMisleading": {
+      "declared": 0,
+      "completed": 0,
+      "definitive": 0,
+      "abstained": 0,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "limitations": [
+      "Gold misleading is not interpreted as a binary truth label; unlabeled cases are excluded.",
+      "No-result, duplicate-result, malformed-verdict and not-observed outcomes are excluded from both observed denominators, never counted as true negatives.",
+      "Abstentions remain visible and in completed-check denominators; lower error rates with more abstention do not establish useful coverage.",
+      "These empirical finite-cohort rates do not estimate population accuracy or certify source verification."
+    ]
+  },
+  "reviewFindings": [
+    "False alarm explicitly means true-gold predicted contradicted/misleading; false support means false-gold predicted supported.",
+    "Both completed-check denominators including visible abstentions and definitive-only denominators are reported.",
+    "Missing/invalid/duplicate/not-observed outcomes never count as definitive true negatives; binary misleading gold and unlabeled examples excluded and surfaced separately.",
+    "Saved32input recomputation matches independently checked11correcttrue/1trueabstention,9correctfalse/3falseabstentions.",
+    "Original first-run report unchanged; post-run metrics wrapper includes hash/source provenance."
+  ],
+  "reviewProviderCalls": 0
+}

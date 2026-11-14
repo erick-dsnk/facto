@@ -1,0 +1,14 @@
+// Explicit read-only analysis. Prints JSON; never rewrites source artifacts.
+import { readFileSync, readdirSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { analyze, hash, type InputPlan, type InputReport } from './analysis.ts';
+const [planPath, reportPath, ...extra] = process.argv.slice(2);
+if (!planPath || !reportPath || extra.length) throw new Error('usage: run.ts frozen-plan.json report.json');
+const planBytes = readFileSync(planPath, 'utf8'), reportBytes = readFileSync(reportPath, 'utf8');
+const paths = readdirSync(dirname(reportPath)).filter(name => /^observed-[a-zA-Z0-9_-]+\.json$/.test(name)).sort().map(name => join(dirname(reportPath), name));
+const observed = paths.map(path => ({ path: resolve(path), bytes: readFileSync(path, 'utf8') }));
+const result = analyze(JSON.parse(planBytes) as InputPlan, JSON.parse(reportBytes) as InputReport, observed.map(o => JSON.parse(o.bytes)));
+process.stdout.write(JSON.stringify({ ...result, inputArtifacts: {
+  plan: { path: resolve(planPath), fileSHA256: hash(planBytes) }, report: { path: resolve(reportPath), fileSHA256: hash(reportBytes) },
+  observedAttempts: observed.map(o => ({ path: o.path, fileSHA256: hash(o.bytes) })),
+} }, null, 2) + '\n');

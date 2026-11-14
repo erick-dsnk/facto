@@ -1,0 +1,56 @@
+{
+  "kind": "scope48_pre_execution_readiness",
+  "createdAt": "2026-11-14T05:50:35.754124+00:00",
+  "planCanonicalSHA256": "ad0842adae30a8dd51abe03df7cfe938b31b2fbe94caf0cafe57012e827dea07",
+  "planFileSHA256": "d4914f6590f098de3a24939686ed4c95df858b1b5cf20a0e4d814e63f26f13a1",
+  "independentReviewPath": "/workspace/task-evidence/scope48-independent-plan-review.json",
+  "independentReviewSHA256": "2c572d44650082594152742159f33faf7e9abc6a37f850a74c35c5da59732179",
+  "callsDeclared": 48,
+  "prospectiveLabels": 36,
+  "targetPositive": 7,
+  "targetNegative": 5,
+  "allSourcePositive": 19,
+  "allSourceNegative": 17,
+  "payloadByStratum": {
+    "prospective": {
+      "calls": 24,
+      "bytes": 547316,
+      "largestRequestBytes": 24095
+    },
+    "existing_safety_diagnostic": {
+      "calls": 24,
+      "bytes": 1214678,
+      "largestRequestBytes": 62207
+    }
+  },
+  "plannedTotalRequestBytes": 1761994,
+  "limits": {
+    "maxAttempts": 48,
+    "maxInputTokens": 640000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 3145728,
+    "wallMs": 120000
+  },
+  "stratumLimits": {
+    "maxAttempts": 24,
+    "maxInputTokens": 320000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 1572864
+  },
+  "scope16LiveRerun": "DEFERRED",
+  "pooledAccuracy": false,
+  "offlineGuardsPassed": 21,
+  "independentWallReproductionsPassed": 2,
+  "allInputHashesVerified": true,
+  "runnerCandidateHashesVerified": {
+    "runner": true,
+    "candidate": true
+  },
+  "productionChanged": false,
+  "projectProviderCallsPerformed": 0,
+  "networkCallsPerformed": 0,
+  "executionAuthorizedByThisArtifact": false,
+  "dispatchOwner": "root"
+}

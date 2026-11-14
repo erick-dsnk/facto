@@ -1,0 +1,22 @@
+{
+  "kind": "independent_typed_applicability_v3_delta_review",
+  "reviewedAt": "2026-11-14T06:03:47.888864+00:00",
+  "verdict": "unwired_identity_token_mechanics_accepted_resource_blockers_closed_by_independent_runtime_review",
+  "manifestSHA256": "58821949482ebfe0e2eedafa51f4982dac9ec088ec9ef985c43d576e39fc9790",
+  "checks": [
+    "All12manifest files/5dependencies verified; allv1/v2manifest files remain unchanged.",
+    "Question and identity contract byte-identical tov2; no label-driven semantic or threshold revision.",
+    "Reviewed adapter/runtime-owner/transport delta: a linked local transport abort signal closes expired/stale lease without touching replacement owner/controller; actual shared AttemptBudget/reservation remains captured.",
+    "Returned underlying reader is owned/canceled without awaiting hanging cleanup; stale headers discard originalbody; native request receives actual local abort.",
+    "Full request/identity/source/question seal and private exact-context SemanticEligibility boundary remain unchanged; no core authority bridge, temporal authorization or final verdict.",
+    "Runtime reviewer independently passed4 original external reproductions and34author tests; review-03.json SHA c2dfe0f37a318ed9625c98f2d66dfd104b6f51009beb600238b8ad6e297d2028. No duplicate runtime tests by this reviewer."
+  ],
+  "remainingStudyRequirements": [
+    "Final full-pool plan must enforce unique current canonicalURLs; same-body c03/c05/c07 cannot be extra retained IDs.",
+    "Keep applicability36 and identity8 denominators/uncertainty strata separate; deterministicpreflight failures are not learned semantic successes.",
+    "Current-marker conservative false rejections and no current-version proof remain; no model gain predicted.",
+    "Any future calls require exact frozen inputs/wrapper/budgets and root authorization; no production activation/readiness from this mechanical review."
+  ],
+  "providerCalls": 0,
+  "productionFilesModified": 0
+}

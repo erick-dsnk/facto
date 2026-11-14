@@ -1,0 +1,47 @@
+{
+  "kind": "independent_single_contents_locator_runner_initial_review",
+  "createdAt": "2026-11-14T07:50:02.867987+00:00",
+  "decision": "HOLD_narrow_root_status_envelope_consistency",
+  "freeze": {
+    "manifestSHA256": "84312c33d2993076bf3b13a34d04293fb41fe4b7a5fa7c64a1fd0a2984f49478",
+    "runnerSHA256": "2c84d11024b1c246e9e3ca1b9e8dfd3c2b304e4db917e40bdbf88dc232b5cdb4",
+    "planSHA256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+    "allManifestFiles": 182,
+    "sourceReviewPins": 13,
+    "sourceCommit": "04ac297523291b1aa289761d5ba3bed98610536f",
+    "sourceClean": true
+  },
+  "independentTests": 21,
+  "passing": 20,
+  "failing": 1,
+  "parentInjectedHTTPInvocations": 17,
+  "crashChildInjectedHTTPInvocations": 1,
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "new24InputsOrLabelsRead": false,
+  "liveOutputAssignedOrReserved": false,
+  "knownFinding": {
+    "case": "root_status_error",
+    "syntheticBody": "Normal same-target success results/status row with extra top-level status:error",
+    "observed": "Returned1material envelope and1link hint; raw body/cost known",
+    "expected": "Fail closed with no decoded material or link hints",
+    "boundary": "Contradictory synthetic SDK envelope contract; not a documented native Exa production failure or authority escalation.",
+    "evidenceReportSHA256": "a28a8bcd7ef58c06cb9a85263674aa60a6fe3971e169b026ae9a06b2231583db",
+    "minimalCorrection": "Absent or exact typed success root-status only, consistent with result-level and acquisition-witness validation."
+  },
+  "passedBoundaries": [
+    "actual SDK serialization exact176bytes/pinnedSHA/POST/headers/redirect/signal",
+    "prepared checkpoint+requestbytes durable before mock dispatch",
+    "actual subprocess crash after preparation yields0..1 possibleattempts and nullcost; no output replay",
+    "429 actualSDK retry denied after one charged boundary",
+    "response262144 exactaccepted/262145counted+cancelled+notstored",
+    "rejected cancellation remainsunknown despite SDKsecondarycleanup",
+    "ignored-signal late transport cancelled without retroactive durable settlement",
+    "pendingcancel at original deadline no extra window",
+    "beforetransport storagefailure proves0actualattempts",
+    "terminalstoragefailure throws storage_failure and earliercheckpoint retains EOF/attempt/cost",
+    "pre-source-pin mismatch no reservation; post-pin drift retains actual accounting and suppresses material",
+    "no liveapproval means nooutput/noHTTP"
+  ],
+  "scope": "All runtime exercises use injected transport and reviewer-owned fresh output directories; no provider calls, production edits, archive mutations or new24 reads."
+}

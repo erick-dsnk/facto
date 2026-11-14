@@ -976,3 +976,49 @@ This plan is based on the supplied PRD, official documentation and the team’s 
 8. Public HTTPS/WSS endpoint, session access control and backup hotspot.
 
 These are implementation checks and configurable assumptions, not reasons to delay the independent backend and fixture work.
+
+### J0 decisions record (14 November 2026)
+
+Recorded by A for [#10](https://github.com/erick-dsnk/junction-2026/issues/10). B confirms by approving the PR that adds this section; anything B changes here wins. Device results live in `docs/device-capabilities.md`.
+
+**Time.** Final submission is **Sunday 15 November 2026, 10:00 EET** per the preliminary event schedule; confirm on the platform. Hacking began Friday 19:30 EET, so the 24-elapsed-hour plan in §13 fits inside the remaining window with a margin for sleep and filming.
+
+**People and ownership.**
+
+| Role | GitHub | Owns |
+|---|---|---|
+| A: iOS and input | Davidtzuke | `apps/ios/**`, `docs/device-capabilities.md`, `docs/demo.md`, `services/api/src/input/asr/**`, `fixtures/capture/**` |
+| B: checking service | erick-dsnk | `packages/contracts/**` (shared-file owner), `services/api/src/**` except `input/asr`, `apps/console/**`, root JS config, `docs/evaluation.md`, `docs/deck-outline.md` |
+| Third teammate | Cipriamn | Video, demo filming and review duty |
+
+Review follows the repository type cycle in `AGENTS.md`: Cipriamn reviews A's PRs, A reviews B's PRs, B reviews Cipriamn's. A schema change goes through B and updates the TypeScript validator, Swift DTO and golden fixture in one PR.
+
+**iOS project.** `apps/ios/` holds the working DAT app (XcodeGen `project.yml`, app "Glasses Lab"), added in [PR #29](https://github.com/erick-dsnk/junction-2026/pull/29). Bundle ID `com.davidvasilescu.junction.glasseslab`, team `97JCVP9322`, automatic signing. DAT SDK: `https://github.com/facebook/meta-wearables-dat-ios` pinned to exact `1.0.1`. The legacy `facebook` URL resolves, so it stays. Devices: iPhone 17 Pro on iOS 26.6 and Ray-Ban Meta Gen 2 on firmware 129; Meta Ray-Ban Display only as a shared loaner.
+
+**Display preview path.** MockDeviceKit's in-app Display preview on the physical iPhone. The Chrome bridge is documented for the iOS Simulator only, so it is used for screenshots, never as hardware evidence.
+
+**Frozen contract: `packages/contracts` version 1** as proposed in [PR #28](https://github.com/erick-dsnk/junction-2026/pull/28).
+
+- Text input: `schemaVersion`, `requestId`, `sessionId`, `sessionEpoch`, `revision`, `mode`, `text`, `language`, `capturedAt`, `capture { source, segmentId, confidence }`, `context`, `userInitiated`.
+- `capture.source` values: `glasses_hfp`, `glasses_stream_audio`, `glasses_camera`, `phone_mic`, `phone_camera`, `typed_fixture`, `recorded_fixture`. The app sets the true source; fixtures are never labelled as live glasses input.
+- Golden fixtures both sides decode: `text-unicode.json`, `result-manual-supported.json`, `result-manual-insufficient.json`, `result-automatic-silent.json`, `events.json`, `event-waiting.json`.
+- Spans: half-open Unicode code-point offsets into unnormalised `originalText`; Swift slices `unicodeScalars`. The Unicode fixture's `{start: 23, end: 55}` must round-trip in Swift and TypeScript.
+- Cancellation: `POST …/checks/{requestId}/cancel` is idempotent and suppresses late results. Stop increments `sessionEpoch`, cancels jobs and discards audio. Events from an old epoch or revision are ignored. No replay across a disconnected epoch; resuming capture needs an explicit user action.
+- Admission (`wait/skip/check`), verdict and presentation (`silent/notify/respond`) stay separate. The app may suppress `notify` but never promotes `silent`. Explicit requests always get an outcome or error.
+
+**Audio adapter boundary.** The app sends `audio.start` (`encoding: pcm_s16le`, `sampleRateHz: 16000`, `channels: 1`, `streamGeneration`, `source`) and waits for `audio.ready`. Each binary frame carries a 13-byte header: version uint8, generation uint32 BE, sequence uint32 BE, capture offset ms uint32 BE. PCM16 LE follows, 20–200 ms per frame. The app converts whatever the glasses deliver with `AVAudioConverter`; the delivered format is recorded in `docs/device-capabilities.md`. A gap or generation change resets partial transcripts. ASR provider: Deepgram Nova-3 proposed; credentials still open (decision 5).
+
+**90-minute capture decision.**
+
+- Look and check uses the glasses camera with on-phone Vision OCR. The DAT camera stream is proven on our glasses; a full-resolution photo is preferred for reading text once photo capture is confirmed.
+- Listen and check tries DAT stream audio first (`glasses_stream_audio`). If no buffers arrive or a consenting non-wearer is inaudible, the fallback is HFP wearer dictation (`glasses_hfp`) plus OCR, stated plainly in the demo. `phone_mic` stays a labelled fallback.
+- A records the result in `docs/device-capabilities.md` and posts it on [#11](https://github.com/erick-dsnk/junction-2026/issues/11).
+
+**Integration checkpoints.** Clock times assume implementation started Saturday 01:30 EET, when this plan merged.
+
+| Checkpoint | Target | Done when |
+|---|---|---|
+| Hour 4 | Saturday ~05:30 | Typed or OCR text reaches the backend and a sourced `claim.result` comes back on the stream |
+| Hour 7 | Saturday ~08:30 | A real glasses capture (J1, [#21](https://github.com/erick-dsnk/junction-2026/issues/21)) produces a sourced result on the phone |
+
+Still open: ASR credentials and retention (5), public HTTPS/WSS endpoint and backup hotspot (8), dataset labels and thresholds (7), and the real MRBD display actions (4).

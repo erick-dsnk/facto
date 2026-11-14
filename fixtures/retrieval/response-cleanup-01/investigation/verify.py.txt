@@ -1,0 +1,22 @@
+import hashlib
+import json
+from pathlib import Path
+
+base = Path(__file__).parent
+manifest = json.loads((base / "MANIFEST.json").read_text())
+for name, expected in manifest["files"].items():
+    assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
+data = json.loads((base / "observations.json").read_text())
+rows = data["rows"]
+assert data["connectionCount"] == 12 and len(rows) == 21
+native = [row for row in rows if row["group"] == "native-http"]
+assert len(native) == 11 and all(row["closedPromptly"] and row["charges"] == 1 for row in native)
+failure = [row for row in rows if row["group"] == "native-http-with-delivery-barrier"]
+assert len(failure) == 1 and failure[0]["result"]["code"] == "exa_unavailable"
+assert failure[0]["expectedPrimary"] == "malformed_exa_response" and failure[0]["actualLocalCalls"] == failure[0]["charges"] == 1
+pending = [row for row in rows if row["group"] == "injected-stream"]
+assert len(pending) == 7
+assert all(not row["settledBeforeDeadline"] and not row["settledAfterAbortBeforeCleanup"] and row["stageResult"]["code"] == row["rawResultAfterCleanup"]["code"] == "timeout" and row["charges"] == 1 for row in pending)
+late = [row for row in rows if row["group"] == "injected-signal-ignoring-transport"]
+assert len(late) == 2 and all(row["cancelCalls"] == 0 and row["result"]["code"] == "cancelled" and row["charges"] == 1 for row in late)
+print("Verified immutable source pins and all 21 observations; no network calls.")

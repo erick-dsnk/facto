@@ -1,0 +1,191 @@
+{
+  "kind": "independent100first_result_and_complete_metrics_review",
+  "status": "PASS raw arithmetic/WilsonCI/domain/style/accounting; citationaggregatepending",
+  "reportSHA256": "e6cefc9877f271a231b4fd1834df0a9d6609a6dc7b03bed7846667b555a1111d",
+  "analysisSHA256": "a3b081f98b96f6bbfee00de1c4c31f59376737ebfaccb381753a51c18f6a8f98",
+  "factual": {
+    "declared": 80,
+    "correctDefinitive": 69,
+    "wrongDefinitive": 0,
+    "abstained": 10,
+    "noResult": 1,
+    "unrun": 0,
+    "knownTrue": {
+      "declared": 40,
+      "supported": 36,
+      "abstained": 3,
+      "noResult": 1
+    },
+    "knownFalse": {
+      "declared": 40,
+      "contradicted": 33,
+      "abstained": 7,
+      "noResult": 0
+    }
+  },
+  "controls": {
+    "declared": 20,
+    "exactActionMatches": 18,
+    "zeroRetrievalInputs": 20,
+    "falseAdmissions": 0,
+    "factualVerdicts": 0,
+    "allManualResponses": 20
+  },
+  "admission": {
+    "truePositives": 79,
+    "falsePositives": 0,
+    "falseNegatives": 1,
+    "precision": 1,
+    "recall": 0.9875,
+    "f1": 0.9937106918238994,
+    "actionMatches": 97,
+    "actionDenominator": 100,
+    "mismatches": [
+      {
+        "label": "AD12",
+        "expected": "check",
+        "observed": "needs_confirmation"
+      },
+      {
+        "label": "CTRL19",
+        "expected": "skip",
+        "observed": "needs_confirmation"
+      },
+      {
+        "label": "CTRL20",
+        "expected": "skip",
+        "observed": "needs_confirmation"
+      }
+    ]
+  },
+  "manualResponses": 100,
+  "factualErrorRates": {
+    "unit": "One expected proposition matched to exactly one valid factual result; completed checks include abstentions, definitive-only checks exclude them.",
+    "trueGold": {
+      "declared": 40,
+      "completed": 39,
+      "definitive": 36,
+      "abstained": 3,
+      "noResult": 1,
+      "notObserved": 0
+    },
+    "falseGold": {
+      "declared": 40,
+      "completed": 40,
+      "definitive": 33,
+      "abstained": 7,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "falseAlarm": {
+      "definition": "Expected supported (true), predicted contradicted or misleading.",
+      "count": 0,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 39,
+        "rate": 0
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 36,
+        "rate": 0
+      }
+    },
+    "falseSupport": {
+      "definition": "Expected contradicted (false), predicted supported.",
+      "count": 0,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 40,
+        "rate": 0
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 33,
+        "rate": 0
+      }
+    },
+    "excludedGoldMisleading": {
+      "declared": 0,
+      "completed": 0,
+      "definitive": 0,
+      "abstained": 0,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "limitations": [
+      "Gold misleading is not interpreted as a binary truth label; unlabeled cases are excluded.",
+      "No-result, duplicate-result, malformed-verdict and not-observed outcomes are excluded from both observed denominators, never counted as true negatives.",
+      "Abstentions remain visible and in completed-check denominators; lower error rates with more abstention do not establish useful coverage.",
+      "These empirical finite-cohort rates do not estimate population accuracy or certify source verification."
+    ]
+  },
+  "wilson95Recomputed": {
+    "falseAlarmCompleted0of39": [
+      0,
+      0.08966685370757138
+    ],
+    "falseSupportCompleted0of40": [
+      0,
+      0.08762160119728661
+    ],
+    "falseAlarmDefinitive0of36": [
+      0,
+      0.09641862859446364
+    ],
+    "falseSupportDefinitive0of33": [
+      0,
+      0.10426999754245203
+    ],
+    "correct69of80": [
+      0.770328999330134,
+      0.9214528567566088
+    ],
+    "controlFalseAdmission0of20": [
+      0,
+      0.16112515805281932
+    ]
+  },
+  "domainStyleChecks": {
+    "domains": 8,
+    "factualStyles": 3,
+    "combinedConversationFacts": 24,
+    "allStrataCountsAndWilsonIntervalsMatch": true,
+    "intervalsIndependentlyChecked": 98
+  },
+  "accounting": {
+    "calls": {
+      "jev": 194,
+      "search": 94,
+      "contents": 80
+    },
+    "attempts": 368,
+    "inputTokens": 1376217,
+    "requestBytes": 5898368,
+    "knownPartialCostUSD": 0.818,
+    "unknownCostAttempts": 194,
+    "unknownInputTokenReservations": 0,
+    "campaignElapsedMs": 246922,
+    "maximumActualRequestBytes": 67801,
+    "responseBytesAggregate": null
+  },
+  "factualLatency": {
+    "n": 80,
+    "medianMs": 2255.5,
+    "p95Ms": 6407,
+    "p95Method": "nearest rank ceil(.95*N)",
+    "maximumMs": 7906,
+    "includes": "all80factual inputs including10abstentions and1clarification"
+  },
+  "citations": {
+    "status": "independentaggregatepending",
+    "doNotInferVerifiedCreditFromCorrectLabels": true
+  },
+  "reviewerProviderCalls": 0,
+  "reviewerPublicGETs": 0,
+  "limitations": [
+    "Purposive OPEN authored inputs/isolatedsyntheticturns; no blind/population/causal/readiness claim.",
+    "Binomial intervals are descriptive under assumptions not established by this correlated cohort.",
+    "Abstentions/clarification remain separate failures against definitivecoverage; no-result excludedcompletedFPRdenominator, never TN."
+  ]
+}

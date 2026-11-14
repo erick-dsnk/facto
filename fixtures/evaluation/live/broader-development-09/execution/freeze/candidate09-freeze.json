@@ -1,0 +1,84 @@
+{
+  "kind": "open_development_candidate_freeze",
+  "status": "ready_for_open_development",
+  "createdAt": "2026-11-14T05:08:29.954368+00:00",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "sourcePath": "/workspace/live-frozen-09",
+  "sourceTreeClean": true,
+  "checkedExecutableCodeMatchesFreeze": true,
+  "targetFailureFixReady": true,
+  "richerContainedHighlightFixReady": true,
+  "streamLifecycleFixReady": true,
+  "check": {
+    "tests": 525,
+    "files": 25,
+    "logSHA256": "d5287bea213ec4e033bc3f9986316a452b909fb8e2918711ded4d756ea7cf726"
+  },
+  "evaluate": {
+    "counts": {
+      "selected": 36,
+      "passed": 36,
+      "failed": 0,
+      "notRun": 0,
+      "heldoutReserved": 12
+    },
+    "presentation": {
+      "passed": 21,
+      "total": 21
+    },
+    "logSHA256": "0218f143934ce183f1e6bcca5efdd4148f3ce4fc3cc03a591043d6bd2676fe29"
+  },
+  "freshInstallLogSHA256": "df8e75cced302b86ea99d002c2a422a42f1b154116c42a118781e66d9e4dd387",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8",
+  "manifestSHA256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+  "batchLimits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "sourceScope": {
+    "trackedFiles": 70,
+    "pathPrefixes": [
+      "apps/console",
+      "services/api",
+      "packages/contracts",
+      "package.json",
+      "package-lock.json"
+    ],
+    "method": "Lexically sorted tracked paths; SHA256 over each UTF-8 path + NUL + exact file bytes + NUL."
+  },
+  "preservation": {
+    "protectedPaths": [
+      "packages/contracts",
+      "apps/ios",
+      "services/api/src/input/asr"
+    ],
+    "protectedPathsUnchangedAgainst": "7aadd07ba0b2ef1cd06fc2ebc957fb20b683cfb9",
+    "heldoutSHA256": "53b4c6a55ece0eeaa824035110513795a66ddb1427e9b7ec7206871a8fa855bb",
+    "heldoutHashMatchesFrozen08": true,
+    "heldoutBodyDecodedOrEvaluated": false
+  },
+  "providerCalls": 0,
+  "executionAuthorized": false,
+  "changes": [
+    "Validated per-target extraction recovery preserves indexed passages when optional acquisition fails.",
+    "Exact shorter contained highlights cannot overwrite richer acquired page context.",
+    "Concurrent authenticated streams have one owner and slow-consumer closure aborts work immediately.",
+    "Sanitized per-URL contents status diagnostics are available without provider raw text."
+  ],
+  "limitations": [
+    "Repeated OPEN development on existing corpus; no blind accuracy or component-causal improvement claim.",
+    "This source readiness freeze is not authorization to dispatch providers.",
+    "Original heldout and prior sealed evaluations remain untouched.",
+    "Source availability diagnostics are separate from factual support and independently verified citation coverage.",
+    "All unknown provider billing costs remain unknown."
+  ]
+}

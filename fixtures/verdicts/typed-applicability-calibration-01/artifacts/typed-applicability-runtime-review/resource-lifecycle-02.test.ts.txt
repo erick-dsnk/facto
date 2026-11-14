@@ -1,0 +1,29 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { Session, type RequestRecord } from '../../stack-20/services/api/src/runtime/session.js';
+import { AttemptBudget } from '../../stack-20/services/api/src/runtime/budget.js';
+import type { AcceptedClaim, Evidence } from '../../stack-20/packages/contracts/src/index.js';
+import { loadInstalledManifest, resolveReceipt } from '../record-capability-prototype-02/src/manifest.js';
+import { loadSnapshot, snapshotState } from '../record-capability-prototype-02/src/snapshot.js';
+import { captureSelectionMaterial, inspectMaterial } from '../capability-selection-seam-01/material.js';
+import { captureDispatchOwner } from '../typed-applicability-adapter-02/runtime-owner.js';
+import { createApplicabilityAdapter } from '../typed-applicability-adapter-02/adapter.js';
+async function setup(fetcher:typeof fetch, remainingMs=10000){
+ const manifest=await loadInstalledManifest('/workspace/task-evidence/record-capability-prototype-02/installed','7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4');const receipt=resolveReceipt(manifest,'RA03').receipt;const artifact=await loadSnapshot(manifest,receipt.proofId);const unit=receipt.units[0]!;const excerpt=snapshotState(artifact,manifest).text.slice(unit.start,unit.end);const text='The 2021 Pulitzer Prize in Fiction winner was The Night Watchman by Louise Erdrich.';
+ const source:Evidence={id:'target',url:receipt.canonicalURL,title:'Award record',publisher:null,publishedAt:null,retrievedAt:'2026-11-14T10:00:00Z',contentBasis:'page_text',excerpt,sourceGroup:'pulitzer.org',echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated',stanceProbability:null};const material=captureSelectionMaterial({existing:[source],incoming:[],checkedText:text});const now=()=>Date.parse('2026-11-14T10:00:00Z');const session=new Session(now);const record:RequestRecord={input:{schemaVersion:1,sessionId:session.id,sessionEpoch:1,requestId:'req',revision:1,text,context:[],mode:'typed',language:'en',capturedAt:new Date(now()).toISOString(),capture:{source:'typed_fixture',segmentId:'seg',confidence:1},userInitiated:true},fingerprint:'synthetic',budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:now()-10000+remainingMs,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map()};session.requests.set('req',record);
+ const claim:AcceptedClaim={id:'req-claim-0',originalText:text,checkedText:text,sourceSpan:{start:0,end:Array.from(text).length},admission:{assertionStatus:'asserted',admissionAction:'check',hasPracticalConsequence:null,matchedSelectedTopic:null,reasonCode:'offline'}};const dispatchOwner=captureDispatchOwner(material,{session,record,claimSlot:0,admittedClaim:claim,reservedJev:0,readMaterialGeneration:()=>inspectMaterial(material).materialGeneration,readInstallGeneration:()=> 'installation1'});const execute=()=>createApplicabilityAdapter({manifest,dispatchOwner,bindings:[{receiptAlias:'RA03',artifact,evidenceId:'target'}],apiKey:'offline-only',fetch:fetcher})(claim);return{session,record,execute};
+}
+
+test('absolute-deadline rejection aborts the actual original HTTP signal before late release',async()=>{
+ let announce!:()=>void, release!:(r:Response)=>void;const started=new Promise<void>(r=>announce=r),transport=new Promise<Response>(r=>release=r);let signal:AbortSignal|undefined;
+ const s=await setup(async(_url,init)=>{signal=init?.signal as AbortSignal;announce();return transport},20);
+ const rejected=assert.rejects(s.execute(),/timeout/);await started;await rejected;
+ const abortedBeforeRelease=signal?.aborted;release(Response.json({}));await new Promise(r=>setTimeout(r,10));
+ console.log(JSON.stringify({abortedBeforeRelease,attempts:s.record.budget.jev}));assert.equal(abortedBeforeRelease,true);
+});
+test('owner rejection after headers closes the response body without touching replacement budget',async()=>{
+ let cancelled=0;let response!:Response;let s:Awaited<ReturnType<typeof setup>>;
+ s=await setup(async()=>{s.record.budget=new AttemptBudget();response=new Response(new ReadableStream({cancel(){cancelled++}}));return response});
+ const originalBudget=s.record.budget;await assert.rejects(s.execute());const cancelledBeforeCleanup=cancelled;await response.body?.cancel();
+ console.log(JSON.stringify({cancelledBeforeCleanup,oldAttempts:originalBudget.jev,newAttempts:s.record.budget.jev}));assert.equal(cancelledBeforeCleanup,1);assert.equal(s.record.budget.jev,0);
+});

@@ -1,0 +1,84 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import * as old from './baseline-normalize.js';
+import * as next from './candidate-normalize.js';
+
+globalThis.fetch = (()=>{throw new Error('network_forbidden_in_saved_response_replay');}) as typeof fetch;
+const root=path.dirname(fileURLToPath(import.meta.url));
+const hash=(value:string|Uint8Array)=>createHash('sha256').update(value).digest('hex');
+const canonical=(value:any):string=>value===null||typeof value!=='object'?JSON.stringify(value):Array.isArray(value)?'['+value.map(canonical).join(',')+']':'{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+canonical(value[k])).join(',')+'}';
+const pins=JSON.parse(await readFile(root+'/source-pins.json','utf8'));
+const savedPins=new Map<string,{sha256:string;bytes:number}>();
+for(const pin of pins.captureManifests) {
+  const bytes=await readFile(pin.path);assert.equal(hash(bytes),pin.sha256);
+  const manifest=JSON.parse(bytes.toString('utf8'));
+  for(const entry of manifest.files) savedPins.set(path.isAbsolute(entry.path)?entry.path:path.join(path.dirname(pin.path),entry.path),entry);
+}
+const inputs=[];
+for(let attempt=1;attempt<=9;attempt++) {
+  const stem='/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-'+String(attempt).padStart(2,'0');
+  inputs.push({id:'acquisition-'+String(attempt).padStart(2,'0'),requestPath:stem+'-request.json',responsePath:stem+'-response.json'});
+}
+inputs.push({id:'locator-01',requestPath:'/workspace/task-evidence/locator-material-availability-01/request.json',responsePath:'/workspace/task-evidence/locator-material-availability-01/response.json'});
+async function readCaptured(file:string) {
+  const pin=savedPins.get(file);assert.ok(pin,'capture file missing from frozen manifest:'+file);
+  const bytes=await readFile(file);assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256);
+  return {decoded:JSON.parse(bytes.toString('utf8')),sha256:pin.sha256,bytes:pin.bytes};
+}
+function run(parser:typeof old,response:unknown,requestedURLs:string[]|null) {
+  try {
+    const value=requestedURLs ? parser.parseExaContentsResponse(response,requestedURLs) : {pages:parser.parseExaResponse(response),pageFailures:[]};
+    return {kind:'parsed' as const,pages:value.pages,pageFailures:value.pageFailures};
+  } catch(error) {
+    const e=error as {name?:string;code?:string;retryable?:boolean};
+    return {kind:'error' as const,name:e.name??null,code:e.code??null,retryable:e.retryable??null};
+  }
+}
+function pageSummary(page:any) {
+  return {url:page.url,title:page.title??null,publishedDate:page.publishedDate??null,publisher:page.publisher??null,
+    textPresent:typeof page.text==='string',textCodepoints:typeof page.text==='string'?Array.from(page.text).length:0,
+    textSHA256:typeof page.text==='string'?hash(page.text):null,
+    highlightCount:Array.isArray(page.highlights)?page.highlights.length:0,
+    highlightSHA256:Array.isArray(page.highlights)?page.highlights.map((h:string)=>hash(h)):[],
+    entireNormalizedPageSHA256:hash(canonical(page))};
+}
+function summary(result:ReturnType<typeof run>) {
+  return result.kind==='parsed'?{kind:result.kind,pages:result.pages.map(pageSummary),pageFailures:result.pageFailures,
+    entireNormalizedResultSHA256:hash(canonical(result))}:result;
+}
+const rows=[];
+for(const input of inputs) {
+  const request=await readCaptured(input.requestPath),response=await readCaptured(input.responsePath);
+  const urls=Array.isArray(request.decoded.urls)?request.decoded.urls:null;
+  const baseline=run(old,response.decoded,urls),candidate=run(next,response.decoded,urls);
+  const equal=canonical(baseline)===canonical(candidate);
+  rows.push({...input,requestSHA256:request.sha256,responseSHA256:response.sha256,responseBytes:response.bytes,
+    operation:urls?'contents':'search',requestedURLs:urls,
+    savedEnvelope:{status:response.decoded.status??null,errorPresent:response.decoded.error!=null,tagPresent:response.decoded.tag!=null,
+      resultCount:Array.isArray(response.decoded.results)?response.decoded.results.length:null,
+      statuses:(response.decoded.statuses??[]).map((s:any)=>({id:s.id??null,status:s.status??null,error:s.error??null,tag:s.tag??null}))},
+    exactNormalizedOutputsEqual:equal,baseline:summary(baseline),candidate:summary(candidate)});
+}
+const candidateStillPinned=hash(await readFile(pins.candidateWorkspace+'/'+pins.candidatePath))===pins.candidateSHA256;
+assert.ok(candidateStillPinned,'candidate changed during replay');
+for(const pin of pins.sharedContractPins)assert.equal(hash(await readFile(pins.candidateWorkspace+'/'+pin.path)),pin.sha256);
+const report={schemaVersion:1,kind:'offline_saved_public_sdk_response_parser_compatibility',baselineCommit:pins.baselineCommit,
+  baselineNormalizeSHA256:pins.baselineSHA256,candidateNormalizeSHA256:pins.candidateSHA256,
+  declaredResponses:10,actualReplayedResponses:rows.length,searchResponses:rows.filter(r=>r.operation==='search').length,
+  contentsResponses:rows.filter(r=>r.operation==='contents').length,
+  equalResponses:rows.filter(r=>r.exactNormalizedOutputsEqual).length,
+  regressions:rows.filter(r=>!r.exactNormalizedOutputsEqual).map(r=>r.id),
+  successfulPages:rows.reduce((n,r)=>n+(r.candidate.kind==='parsed'?r.candidate.pages.length:0),0),
+  documentedTargetFailures:rows.reduce((n,r)=>n+(r.candidate.kind==='parsed'?r.candidate.pageFailures.length:0),0),
+  operationalErrors:rows.filter(r=>r.candidate.kind==='error').map(r=>({id:r.id,error:r.candidate})),
+  candidateUnchangedDuringReplay:candidateStillPinned,rows,
+  providerCalls:0,networkRequests:0,privateOrSealedBodiesRead:0,factualCoverageClaimed:false,sourceAuthenticityClaimed:false,
+  limitations:['Only ten previously captured public SDK responses; not a distributional guarantee or malformed-envelope safety proof.',
+    'Parser equality compares complete normalized objects, including exact retained text/highlights and target failure classification; report stores body hashes rather than reprinting passages.',
+    'This is offline compatibility replay, not live acquisition, full backend evaluation, freshness, receipt eligibility or factual coverage.']};
+await writeFile(root+'/report.json',JSON.stringify(report,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({declaredResponses:report.declaredResponses,equalResponses:report.equalResponses,successfulPages:report.successfulPages,documentedTargetFailures:report.documentedTargetFailures,operationalErrors:report.operationalErrors,regressions:report.regressions,candidateSHA256:report.candidateNormalizeSHA256},null,2));
+assert.equal(report.regressions.length,0,'saved response compatibility regression');

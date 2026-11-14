@@ -1,0 +1,81 @@
+{
+  "kind": "independent_isolated_restore_adversarial_probes",
+  "manifestSHA256": "a065c49bcd6a07328685c41daf4c1514de227274b8f26a49051e2e4a80daf157",
+  "restoreSHA256": "a65fa37f25be8904b92e93c5ec04b3ebeb5bf32f662b8287d02c5a1807485dce",
+  "cases": [
+    {
+      "name": "isolated-package-only",
+      "passed": true,
+      "stdout": "{\"verifiedFiles\": 1120, \"verifiedRawBytes\": 18865046, \"mode\": \"verify-package\", \"network\": false, \"codeExecutedFromArchive\": false, \"liveCallsAuthorized\": false}"
+    },
+    {
+      "name": "exact-extract-and-verify",
+      "passed": true,
+      "files": 1120
+    },
+    {
+      "name": "identical-existing-bytes",
+      "passed": true
+    },
+    {
+      "name": "missing-blob",
+      "passed": true,
+      "refusal": "REFUSED: [Errno 2] No such file or directory: '/tmp/fresh-cloud-independent-iqm6ii7w/pkg-missing-blob/blobs/b630f8a0c827c689790da469b7b2a0b00a391a95efe0f3289fc6f08717aade13.gz'"
+    },
+    {
+      "name": "corrupt-blob",
+      "passed": true,
+      "refusal": "REFUSED: package hash mismatch: blobs/b630f8a0c827c689790da469b7b2a0b00a391a95efe0f3289fc6f08717aade13.gz"
+    },
+    {
+      "name": "package-symlink",
+      "passed": true,
+      "refusal": "REFUSED: symlink forbidden: /tmp/fresh-cloud-independent-iqm6ii7w/pkg-package-symlink/blobs/b630f8a0c827c689790da469b7b2a0b00a391a95efe0f3289fc6f08717aade13.gz"
+    },
+    {
+      "name": "package-hardlink",
+      "passed": true,
+      "refusal": "REFUSED: nonregular/hardlink forbidden"
+    },
+    {
+      "name": "existing-conflict",
+      "passed": true,
+      "refusal": "REFUSED: existing destination conflict: workspace/task-evidence/acquisition-record-witness-seam-02/envelope.ts"
+    },
+    {
+      "name": "destination-symlink-ancestor",
+      "passed": true,
+      "refusal": "REFUSED: symlink forbidden: /tmp/fresh-cloud-independent-iqm6ii7w/dst-destination-symlink-ancestor/workspace"
+    },
+    {
+      "name": "destination-hardlink",
+      "passed": true,
+      "refusal": "REFUSED: nonregular/hardlink forbidden"
+    },
+    {
+      "name": "traversal",
+      "passed": true,
+      "refusal": "REFUSED: path traversal"
+    },
+    {
+      "name": "absolute",
+      "passed": true,
+      "refusal": "REFUSED: path traversal"
+    },
+    {
+      "name": "backslash",
+      "passed": true,
+      "refusal": "REFUSED: bad path"
+    },
+    {
+      "name": "envpath",
+      "passed": true,
+      "refusal": "REFUSED: forbidden restore path"
+    }
+  ],
+  "originalWorkspaceReadAllowed": false,
+  "networkOrSubprocessInsideRestorerAllowed": false,
+  "newProviderCalls": 0,
+  "keyReads": 0,
+  "sourceEdits": 0
+}

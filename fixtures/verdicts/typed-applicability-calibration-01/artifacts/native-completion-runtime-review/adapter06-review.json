@@ -1,0 +1,49 @@
+{
+  "decision": "APPROVED_no_remaining_P1_in_reviewed_runtime_scope",
+  "scope": "unwired adapter06 actual-dispatch/native graph completion, shared budget, ownership, cancellation, deadline and immutable returned context",
+  "adapter06ManifestSHA256": "99cd08e960ebe2e1318fa85428819ebe2bb88fcc1fe57a62596259492cf652c3",
+  "allPredecessorManifestFilesVerifiedUnchanged": {
+    "01": "1fcb009bed2d31d277eba742bb37f988cdb5e8d534bc783c0684a7bd40927cbc",
+    "02": "c89c8379679d2c8c087a0b36b83d05409aa5970827d2adb460db7b133a1436ce",
+    "03": "58821949482ebfe0e2eedafa51f4982dac9ec088ec9ef985c43d576e39fc9790",
+    "04": "17df0e9b6d3f523db9958e03bfc979dda1d78adc0db822f94e181961eaaf72f8",
+    "05": "724348388680d5991ad1baaa66a8aef87c6a37b287a28d307a869e0efff3f490",
+    "06": "99cd08e960ebe2e1318fa85428819ebe2bb88fcc1fe57a62596259492cf652c3"
+  },
+  "adapter06DependencyPinsVerified": true,
+  "independentTests": {
+    "historicalFailureReplaysPassed": 6,
+    "adapterAndVersionUnitTestsPassed": 72,
+    "pureSeam02TestsPreviouslyPassed": 31,
+    "pureSeam02OracleComparisonsPreviouslyPassed": 151
+  },
+  "fixedFindings": [
+    "cancelled ignored-signal transport settles before late release",
+    "replaced budget cannot charge captured or new ledger",
+    "timeout aborts locally owned transport",
+    "owner failure after headers closes exact Response body without unbounded cleanup",
+    "postresponse serialization at exact deadline cannot return completed handle even with uncertain/no bound rows",
+    "returned context deeply frozen and independent canonical digest captured; altered clone with refreshed valid inputSHA rejected by both verifiers"
+  ],
+  "bindingReview": [
+    "ActualAsk mint/consume functions are module-private and reachable only after real owned judge and validated named answers",
+    "actual request, validated answers and judgment privately copied/frozen and hashed",
+    "original pending handle/raw generation remains unchanged; native completion uses actual stored same-dispatch Judgment with exact retained material/order parity",
+    "pure helper output, serialized token and foreign material/owner never count as actual-dispatch proof",
+    "one charged attempt, no retry, unchanged shared reservation; charged failure never refunded",
+    "private consumed ActualAsk needed by completed and eligibility verifiers",
+    "returned public judgment is a detached mutable diagnostic, not the private assessment source",
+    "owner/budget/controller/clock/deadline/install rechecked around completion and use; final pipeline guard remains required for future production commit"
+  ],
+  "artifactNote": "First six-replay TAP labelled the mutable altered CLONE as returnedContextFrozen=false. The actual returned object was already frozen and its mutation assertion passed. Preserved first script/log and separately reran the alias case with corrected diagnostics: returnedContextFrozen=true, alteredCloneFrozen=false; both altered-context verifiers=false. No behavior/source change.",
+  "supersession": "This fixes the material alias finding that superseded the earlier03 runtime approval; previous approval/failure artifacts remain unchanged as chronology.",
+  "limitations": [
+    "no production capability/cache/authority activation",
+    "no semantic accuracy or historical-version-rule approval inferred from runtime review; designated independent reviewer owns semantic gate",
+    "actual provider execution not performed; all transports injected offline",
+    "future production integration must preserve existing policy/citation/conflict/risk/presentation and final current/deadline/commit gates"
+  ],
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "productionEditsByReviewer": 0
+}

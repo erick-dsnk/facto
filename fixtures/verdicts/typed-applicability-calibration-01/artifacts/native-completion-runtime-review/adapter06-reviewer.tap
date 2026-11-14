@@ -1,0 +1,443 @@
+TAP version 13
+# Subtest: same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability
+ok 1 - same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability
+  ---
+  duration_ms: 163.813705
+  type: 'test'
+  ...
+# Subtest: clipped entire-unit binding fails before ask but unchanged baseline still executes once
+ok 2 - clipped entire-unit binding fails before ask but unchanged baseline still executes once
+  ---
+  duration_ms: 165.252882
+  type: 'test'
+  ...
+# Subtest: fails closed on not_covered 0.99
+ok 3 - fails closed on not_covered 0.99
+  ---
+  duration_ms: 74.598026
+  type: 'test'
+  ...
+# Subtest: fails closed on uncertain 0.99
+ok 4 - fails closed on uncertain 0.99
+  ---
+  duration_ms: 43.726141
+  type: 'test'
+  ...
+# Subtest: fails closed on covered 0.84
+ok 5 - fails closed on covered 0.84
+  ---
+  duration_ms: 43.109523
+  type: 'test'
+  ...
+# Subtest: public/current wording cannot acquire freshness by covered answer
+ok 6 - public/current wording cannot acquire freshness by covered answer
+  ---
+  duration_ms: 50.053729
+  type: 'test'
+  ...
+# Subtest: post-await advance invalidates response
+ok 7 - post-await advance invalidates response
+  ---
+  duration_ms: 57.880685
+  type: 'test'
+  ...
+# Subtest: post-await cancel invalidates response
+ok 8 - post-await cancel invalidates response
+  ---
+  duration_ms: 45.212338
+  type: 'test'
+  ...
+# Subtest: post-await replaceMaterial invalidates response
+ok 9 - post-await replaceMaterial invalidates response
+  ---
+  duration_ms: 50.489996
+  type: 'test'
+  ...
+# Subtest: post-await replaceInstall invalidates response
+ok 10 - post-await replaceInstall invalidates response
+  ---
+  duration_ms: 35.677001
+  type: 'test'
+  ...
+# Subtest: retirement invalidates a previously issued semantic token
+ok 11 - retirement invalidates a previously issued semantic token
+  ---
+  duration_ms: 44.55529
+  type: 'test'
+  ...
+# Subtest: same-ID companion and assessment changes do not validate token
+ok 12 - same-ID companion and assessment changes do not validate token
+  ---
+  duration_ms: 68.152682
+  type: 'test'
+  ...
+# Subtest: nonordinary risk never gains semantic eligibility even with covered answer
+ok 13 - nonordinary risk never gains semantic eligibility even with covered answer
+  ---
+  duration_ms: 54.567336
+  type: 'test'
+  ...
+# Subtest: prototype width mismatch preserves exact baseline title and disables optional route
+ok 14 - prototype width mismatch preserves exact baseline title and disables optional route
+  ---
+  duration_ms: 52.220141
+  type: 'test'
+  ...
+# REQUEST_BYTES {"baseline":63434,"augmentation":0,"actual":63434}
+# Subtest: maximal legal companion material preflights actual serialization without dropping any source
+ok 15 - maximal legal companion material preflights actual serialization without dropping any source
+  ---
+  duration_ms: 63.120435
+  type: 'test'
+  ...
+# Subtest: over-limit augmentation preserves baseline byte for byte and sends no optional item
+ok 16 - over-limit augmentation preserves baseline byte for byte and sends no optional item
+  ---
+  duration_ms: 46.008322
+  type: 'test'
+  ...
+# Subtest: shared inherited exhausted allowance prevents any HTTP attempt
+ok 17 - shared inherited exhausted allowance prevents any HTTP attempt
+  ---
+  duration_ms: 58.486648
+  type: 'test'
+  ...
+# Subtest: actual response token accounting charges the same request budget
+ok 18 - actual response token accounting charges the same request budget
+  ---
+  duration_ms: 34.908834
+  type: 'test'
+  ...
+# Subtest: explicit second-claim reservation cannot be stolen by optional question
+ok 19 - explicit second-claim reservation cannot be stolen by optional question
+  ---
+  duration_ms: 23.566496
+  type: 'test'
+  ...
+# Subtest: stale owner is rechecked on every consume, not just factory creation
+ok 20 - stale owner is rechecked on every consume, not just factory creation
+  ---
+  duration_ms: 23.825136
+  type: 'test'
+  ...
+# Subtest: transient HTTP failure is terminal with one actual attempt and no hidden allowance
+ok 21 - transient HTTP failure is terminal with one actual attempt and no hidden allowance
+  ---
+  duration_ms: 23.208276
+  type: 'test'
+  ...
+# Subtest: forged or serialized dispatch-owner handle is rejected before ask
+ok 22 - forged or serialized dispatch-owner handle is rejected before ask
+  ---
+  duration_ms: 25.106023
+  type: 'test'
+  ...
+# Subtest: hung transport settles on Session.cancel before release; late result creates no answer/usage/commit
+ok 23 - hung transport settles on Session.cancel before release; late result creates no answer/usage/commit
+  ---
+  duration_ms: 44.717654
+  type: 'test'
+  ...
+# Subtest: hung transport settles at inherited absolute deadline even if injected transport ignores signal
+ok 24 - hung transport settles at inherited absolute deadline even if injected transport ignores signal
+  ---
+  duration_ms: 51.5423
+  type: 'test'
+  ...
+# Subtest: captured budget replacement fails before any dispatch
+ok 25 - captured budget replacement fails before any dispatch
+  ---
+  duration_ms: 27.621072
+  type: 'test'
+  ...
+# Subtest: captured controller replacement fails before any dispatch
+ok 26 - captured controller replacement fails before any dispatch
+  ---
+  duration_ms: 33.045539
+  type: 'test'
+  ...
+# Subtest: captured clock replacement fails before any dispatch
+ok 27 - captured clock replacement fails before any dispatch
+  ---
+  duration_ms: 27.875634
+  type: 'test'
+  ...
+# Subtest: captured acceptedAt replacement fails before any dispatch
+ok 28 - captured acceptedAt replacement fails before any dispatch
+  ---
+  duration_ms: 29.248502
+  type: 'test'
+  ...
+# Subtest: budget replaced during hung transport cannot receive usage or validate old response
+ok 29 - budget replaced during hung transport cannot receive usage or validate old response
+  ---
+  duration_ms: 24.333581
+  type: 'test'
+  ...
+# Subtest: deadline aborts actual local transport signal without aborting pinned request controller
+ok 30 - deadline aborts actual local transport signal without aborting pinned request controller
+  ---
+  duration_ms: 38.236946
+  type: 'test'
+  ...
+# Subtest: deadline during ignored-signal body read cancels owned underlying reader and settles
+ok 31 - deadline during ignored-signal body read cancels owned underlying reader and settles
+  ---
+  duration_ms: 30.227606
+  type: 'test'
+  ...
+# Subtest: postheaders owner failure cancels exact returned body; reject cleanup cannot mask or delay failure
+ok 32 - postheaders owner failure cancels exact returned body; reject cleanup cannot mask or delay failure
+  ---
+  duration_ms: 19.776579
+  type: 'test'
+  ...
+# Subtest: postheaders owner failure cancels exact returned body; hang cleanup cannot mask or delay failure
+ok 33 - postheaders owner failure cancels exact returned body; hang cleanup cannot mask or delay failure
+  ---
+  duration_ms: 31.134631
+  type: 'test'
+  ...
+# Subtest: owner failure aborts local transport but never a replacement controller
+ok 34 - owner failure aborts local transport but never a replacement controller
+  ---
+  duration_ms: 22.32148
+  type: 'test'
+  ...
+# Subtest: declared semantic anchor is serialized as interpretation context while runtime clock remains separate
+ok 35 - declared semantic anchor is serialized as interpretation context while runtime clock remains separate
+  ---
+  duration_ms: 33.530148
+  type: 'test'
+  ...
+# Subtest: pending1-source inventory completes native graph only after one actual validated ask
+ok 36 - pending1-source inventory completes native graph only after one actual validated ask
+  ---
+  duration_ms: 28.43105
+  type: 'test'
+  ...
+# Subtest: pending6-source inventory completes native graph only after one actual validated ask
+ok 37 - pending6-source inventory completes native graph only after one actual validated ask
+  ---
+  duration_ms: 36.327771
+  type: 'test'
+  ...
+# Subtest: pure caller-derived native graph supplies no actual execution proof
+ok 38 - pure caller-derived native graph supplies no actual execution proof
+  ---
+  duration_ms: 27.552006
+  type: 'test'
+  ...
+# Subtest: completed proof rejects foreign material/owner even with equal source text
+ok 39 - completed proof rejects foreign material/owner even with equal source text
+  ---
+  duration_ms: 51.338454
+  type: 'test'
+  ...
+# Subtest: same adapter response is completed once and cannot repeat its ask
+ok 40 - same adapter response is completed once and cannot repeat its ask
+  ---
+  duration_ms: 33.545742
+  type: 'test'
+  ...
+# Subtest: fresh actual origin answers alter native graph seal without changing preask raw generation
+ok 41 - fresh actual origin answers alter native graph seal without changing preask raw generation
+  ---
+  duration_ms: 53.813401
+  type: 'test'
+  ...
+# Subtest: deadline equality before completion rejects actual response
+ok 42 - deadline equality before completion rejects actual response
+  ---
+  duration_ms: 29.299327
+  type: 'test'
+  ...
+# Subtest: completed proof cannot be refreshed with altered assessment or source content
+ok 43 - completed proof cannot be refreshed with altered assessment or source content
+  ---
+  duration_ms: 30.752817
+  type: 'test'
+  ...
+# Subtest: completed response context stores immutable actual answers and judgment privately
+ok 44 - completed response context stores immutable actual answers and judgment privately
+  ---
+  duration_ms: 40.431268
+  type: 'test'
+  ...
+# Subtest: expiry during context serialization cannot mint or return completion (uncertain)
+ok 45 - expiry during context serialization cannot mint or return completion (uncertain)
+  ---
+  duration_ms: 32.126594
+  type: 'test'
+  ...
+# Subtest: expiry during context serialization cannot mint or return completion (no_bound_rows)
+ok 46 - expiry during context serialization cannot mint or return completion (no_bound_rows)
+  ---
+  duration_ms: 27.405818
+  type: 'test'
+  ...
+# Subtest: returned assessment context is deeply frozen; refreshed-hash altered material cannot change private token binding
+ok 47 - returned assessment context is deeply frozen; refreshed-hash altered material cannot change private token binding
+  ---
+  duration_ms: 38.28988
+  type: 'test'
+  ...
+# Subtest: historical version exception is bound to actual installed private receipt before asking
+ok 48 - historical version exception is bound to actual installed private receipt before asking
+  ---
+  duration_ms: 29.192217
+  type: 'test'
+  ...
+# Subtest: actual receipt denies unmatched/additional version demand: current to 20 October 2026
+ok 49 - actual receipt denies unmatched/additional version demand: current to 20 October 2026
+  ---
+  duration_ms: 35.085753
+  type: 'test'
+  ...
+# Subtest: actual receipt denies unmatched/additional version demand: current to 19 October 2026 now
+ok 50 - actual receipt denies unmatched/additional version demand: current to 19 October 2026 now
+  ---
+  duration_ms: 26.239233
+  type: 'test'
+  ...
+# Subtest: matching version date cannot bypass entire-unit clipping or semantic wrong-relation uncertainty
+ok 51 - matching version date cannot bypass entire-unit clipping or semantic wrong-relation uncertainty
+  ---
+  duration_ms: 50.143521
+  type: 'test'
+  ...
+# Subtest: bounded historical reference consolidation current to 29 February 2028 can ask without asserting force
+ok 52 - bounded historical reference consolidation current to 29 February 2028 can ask without asserting force
+  ---
+  duration_ms: 3.043142
+  type: 'test'
+  ...
+# Subtest: bounded historical reference version current to 2028-02-29 can ask without asserting force
+ok 53 - bounded historical reference version current to 2028-02-29 can ask without asserting force
+  ---
+  duration_ms: 0.833265
+  type: 'test'
+  ...
+# Subtest: bounded historical reference edition current to 29 february 2028 can ask without asserting force
+ok 54 - bounded historical reference edition current to 29 february 2028 can ask without asserting force
+  ---
+  duration_ms: 0.237437
+  type: 'test'
+  ...
+# Subtest: bounded historical reference snapshot current to 2028-02-29 can ask without asserting force
+ok 55 - bounded historical reference snapshot current to 2028-02-29 can ask without asserting force
+  ---
+  duration_ms: 0.155565
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: This is the current law.
+ok 56 - current/ambiguous/mismatched guard denies: This is the current law.
+  ---
+  duration_ms: 0.208124
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: The latest version records 7.
+ok 57 - current/ambiguous/mismatched guard denies: The latest version records 7.
+  ---
+  duration_ms: 0.129495
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: Under this document today, 7 is recorded.
+ok 58 - current/ambiguous/mismatched guard denies: Under this document today, 7 is recorded.
+  ---
+  duration_ms: 0.112669
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: The document is current to 29 February 2028.
+ok 59 - current/ambiguous/mismatched guard denies: The document is current to 29 February 2028.
+  ---
+  duration_ms: 0.115814
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: In the consolidation current to 28 February 2028, section 7 records 7.
+ok 60 - current/ambiguous/mismatched guard denies: In the consolidation current to 28 February 2028, section 7 records 7.
+  ---
+  duration_ms: 0.193431
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: In the consolidation current to 29 February 2027, section 7 records 7.
+ok 61 - current/ambiguous/mismatched guard denies: In the consolidation current to 29 February 2027, section 7 records 7.
+  ---
+  duration_ms: 0.223427
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: In the consolidation current to 2028-02-30, section 7 records 7.
+ok 62 - current/ambiguous/mismatched guard denies: In the consolidation current to 2028-02-30, section 7 records 7.
+  ---
+  duration_ms: 0.151528
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: In the consolidation current to 02/29/2028, section 7 records 7.
+ok 63 - current/ambiguous/mismatched guard denies: In the consolidation current to 02/29/2028, section 7 records 7.
+  ---
+  duration_ms: 0.113962
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: In the consolidation current to 29 February 2028, section 7 now records 7.
+ok 64 - current/ambiguous/mismatched guard denies: In the consolidation current to 29 February 2028, section 7 now records 7.
+  ---
+  duration_ms: 0.142335
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: In the consolidation current to 29 February 2028, the latest record says 7.
+ok 65 - current/ambiguous/mismatched guard denies: In the consolidation current to 29 February 2028, the latest record says 7.
+  ---
+  duration_ms: 0.30525
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: The consolidation current to 29 February 2028 is in force.
+ok 66 - current/ambiguous/mismatched guard denies: The consolidation current to 29 February 2028 is in force.
+  ---
+  duration_ms: 0.152539
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: The version current to 2028-02-29 remains binding.
+ok 67 - current/ambiguous/mismatched guard denies: The version current to 2028-02-29 remains binding.
+  ---
+  duration_ms: 0.130126
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: The snapshot current to 2028-02-29 has legal effect.
+ok 68 - current/ambiguous/mismatched guard denies: The snapshot current to 2028-02-29 has legal effect.
+  ---
+  duration_ms: 0.116064
+  type: 'test'
+  ...
+# Subtest: current/ambiguous/mismatched guard denies: The consolidation current to 29 February 2028 and edition current to 2028-02-29 both record 7.
+ok 69 - current/ambiguous/mismatched guard denies: The consolidation current to 29 February 2028 and edition current to 2028-02-29 both record 7.
+  ---
+  duration_ms: 0.106771
+  type: 'test'
+  ...
+# Subtest: matching date elsewhere in trusted version cannot substitute exact current-to marker
+ok 70 - matching date elsewhere in trusted version cannot substitute exact current-to marker
+  ---
+  duration_ms: 0.358269
+  type: 'test'
+  ...
+# Subtest: no-current wording keeps ordinary applicability independent of claimed value/truth
+ok 71 - no-current wording keeps ordinary applicability independent of claimed value/truth
+  ---
+  duration_ms: 1.088279
+  type: 'test'
+  ...
+# Subtest: trusted identity negation or malformed additional current segment cannot authenticate a version modifier
+ok 72 - trusted identity negation or malformed additional current segment cannot authenticate a version modifier
+  ---
+  duration_ms: 0.234453
+  type: 'test'
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2845.114006

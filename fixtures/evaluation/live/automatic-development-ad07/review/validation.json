@@ -1,0 +1,86 @@
+{
+  "kind": "strict_metrics_review_validation",
+  "providerCalls": 0,
+  "newFactualAccuracyDenominator": 0,
+  "metrics": {
+    "labeledCases": 1,
+    "unlabeledCases": 0,
+    "admission": {
+      "unit": "final admitted exact proposition, matched once per expected claim; unsafe attempts counted without retaining their text",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "unobservedExpected": 0,
+      "precision": 1,
+      "recall": 1
+    },
+    "factual": {
+      "expected": 1,
+      "correctDefinitive": 1,
+      "wrongDefinitive": 0,
+      "abstained": 0,
+      "noResult": 0,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 1,
+      "coldCorrect": 1,
+      "cachedResults": 0,
+      "definitiveCoverage": 1,
+      "sourceVerifiedCoverage": 1
+    },
+    "byDomain": {
+      "history": {
+        "expected": 1,
+        "correctDefinitive": 1,
+        "wrongDefinitive": 0,
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0,
+        "sourceVerifiedCorrect": 1,
+        "coldCorrect": 1,
+        "cachedResults": 0,
+        "definitiveCoverage": 1,
+        "sourceVerifiedCoverage": 1
+      }
+    },
+    "byExpectedVerdict": {
+      "supported": {
+        "expected": 1,
+        "correctDefinitive": 1,
+        "wrongDefinitive": 0,
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0,
+        "sourceVerifiedCorrect": 1,
+        "coldCorrect": 1,
+        "cachedResults": 0,
+        "definitiveCoverage": 1,
+        "sourceVerifiedCoverage": 1
+      }
+    },
+    "actions": {
+      "admissionActionChecks": 1,
+      "admissionActionMatches": 1,
+      "presentationChecks": 1,
+      "presentationMatches": 1
+    },
+    "claimOutcomes": [
+      {
+        "caseLabel": "AD07-supported-silence-followup",
+        "expectedClaimId": "BD07",
+        "domain": "history",
+        "expectedVerdict": "supported",
+        "verdict": "supported",
+        "result": "correct",
+        "cached": false,
+        "sourceVerification": "verified",
+        "selectedReferences": 2
+      }
+    ],
+    "limitations": [
+      "Admission metrics score final admitted propositions, not every overlapping internal candidate or model probability.",
+      "Not-observed expected claims remain misses in declared-cohort recall and coverage; report unobservedExpected separately.",
+      "Correct verdicts receive no source-verified coverage credit until every selected retained reference has explicit external review.",
+      "Cache results and duplicate public propositions require separate cohort accounting; they are not independent cold factual samples."
+    ]
+  }
+}

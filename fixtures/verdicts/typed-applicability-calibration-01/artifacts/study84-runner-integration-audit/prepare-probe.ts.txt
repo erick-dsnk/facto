@@ -1,0 +1,13 @@
+// Read-only preparation probe. Network is deliberately unavailable.
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+const runner = '/workspace/task-evidence/typed-applicability-calibration-01/runner.ts';
+const sha = () => createHash('sha256').update(readFileSync(runner)).digest('hex');
+let networkAttempts = 0;
+globalThis.fetch = async () => { networkAttempts++; throw new Error('audit_network_forbidden'); };
+const before = sha();
+const { preparePlan } = await import(runner);
+let outcome: unknown;
+try { const plan = preparePlan(); outcome = { prepared: true, calls: plan.guard.calls.length }; }
+catch (error) { outcome = { prepared: false, error: error instanceof Error ? error.message : 'unknown' }; }
+console.log(JSON.stringify({ runnerSHA256Before: before, runnerSHA256After: sha(), sourceStable: before === sha(), networkAttempts, outcome }, null, 2));

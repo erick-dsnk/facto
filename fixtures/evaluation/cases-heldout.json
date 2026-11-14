@@ -1,0 +1,316 @@
+{
+  "cases": [
+    {
+      "id": "E10",
+      "category": "personal",
+      "split": "heldout",
+      "text": "I slept poorly last night.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "skip",
+        "presentation": "silent",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "personal_experience",
+        "selfContained": 1,
+        "privateData": 1,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "standard"
+    },
+    {
+      "id": "E11",
+      "category": "personal",
+      "split": "heldout",
+      "text": "This painting will become famous next year.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "skip",
+        "presentation": "silent",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "prediction",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "standard"
+    },
+    {
+      "id": "E12",
+      "category": "personal",
+      "split": "heldout",
+      "text": "My sister bought a blue bicycle.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "skip",
+        "presentation": "silent",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "personal_experience",
+        "selfContained": 1,
+        "privateData": 1,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "standard"
+    },
+    {
+      "id": "E22",
+      "category": "public",
+      "split": "heldout",
+      "text": "Mount Everest is the tallest mountain above sea level.",
+      "intent": "manual",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "check",
+        "presentation": "respond",
+        "verdict": "supported"
+      },
+      "modelFixture": {
+        "kind": "public_fact",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "support",
+      "scenario": "standard"
+    },
+    {
+      "id": "E23",
+      "category": "public",
+      "split": "heldout",
+      "text": "The Eiffel Tower opened in 1889.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "check",
+        "presentation": "silent",
+        "verdict": "supported"
+      },
+      "modelFixture": {
+        "kind": "public_fact",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "support",
+      "scenario": "standard"
+    },
+    {
+      "id": "E24",
+      "category": "public",
+      "split": "heldout",
+      "text": "The event is open to all ages.",
+      "intent": "manual",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "check",
+        "presentation": "respond",
+        "verdict": "misleading"
+      },
+      "modelFixture": {
+        "kind": "public_fact",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "omitted_condition",
+      "scenario": "standard"
+    },
+    {
+      "id": "E31",
+      "category": "mixed",
+      "split": "heldout",
+      "text": "My doctor said it reduces the risk by half.",
+      "intent": "manual",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "skip",
+        "presentation": "respond",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "incomplete_or_unclear",
+        "selfContained": 0.1,
+        "privateData": 1,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "standard"
+    },
+    {
+      "id": "E32",
+      "category": "mixed",
+      "split": "heldout",
+      "text": "The rate rose to 10% last year.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "wait",
+        "presentation": "silent",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "incomplete_or_unclear",
+        "selfContained": 0.1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "standard"
+    },
+    {
+      "id": "E39",
+      "category": "capture",
+      "split": "heldout",
+      "text": "Antibiotics cannot cure viruses.",
+      "intent": "manual",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "check",
+        "presentation": "respond",
+        "verdict": "supported"
+      },
+      "modelFixture": {
+        "kind": "public_fact",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "support",
+      "scenario": "final_negation"
+    },
+    {
+      "id": "E40",
+      "category": "capture",
+      "split": "heldout",
+      "text": "Helsinki is the capital of Finland.",
+      "intent": "manual",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "check",
+        "presentation": "respond",
+        "verdict": "supported"
+      },
+      "modelFixture": {
+        "kind": "public_fact",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "support",
+      "scenario": "repeat"
+    },
+    {
+      "id": "E47",
+      "category": "service",
+      "split": "heldout",
+      "text": "Glasses disconnected during a check.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "skip",
+        "presentation": "silent",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "incomplete_or_unclear",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "hardware_disconnect"
+    },
+    {
+      "id": "E48",
+      "category": "service",
+      "split": "heldout",
+      "text": "The app speaks its own result.",
+      "intent": "automatic",
+      "capture": {
+        "mode": "typed",
+        "confidence": 1,
+        "final": true
+      },
+      "expected": {
+        "admission": "skip",
+        "presentation": "silent",
+        "verdict": null
+      },
+      "modelFixture": {
+        "kind": "incomplete_or_unclear",
+        "selfContained": 1,
+        "privateData": 0,
+        "assertionStatus": "asserted",
+        "hasPracticalConsequence": null
+      },
+      "evidenceFixture": "none",
+      "scenario": "hardware_tts_feedback"
+    }
+  ]
+}

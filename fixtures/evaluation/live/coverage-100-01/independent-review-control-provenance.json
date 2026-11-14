@@ -1,0 +1,115 @@
+{
+  "kind": "prospective_new_synthetic_conversation_controls",
+  "cases": [
+    {
+      "label": "CTRL01",
+      "category": "private",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL02",
+      "category": "private",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL03",
+      "category": "private",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL04",
+      "category": "private",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL05",
+      "category": "private",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL06",
+      "category": "personal",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL07",
+      "category": "personal",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL08",
+      "category": "personal",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL09",
+      "category": "personal",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL10",
+      "category": "personal",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL11",
+      "category": "opinion",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL12",
+      "category": "opinion",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL13",
+      "category": "opinion",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL14",
+      "category": "opinion",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL15",
+      "category": "ambiguous_referent",
+      "expectedAction": "needs_confirmation"
+    },
+    {
+      "label": "CTRL16",
+      "category": "ambiguous_referent",
+      "expectedAction": "needs_confirmation"
+    },
+    {
+      "label": "CTRL17",
+      "category": "ambiguous_referent",
+      "expectedAction": "needs_confirmation"
+    },
+    {
+      "label": "CTRL18",
+      "category": "ambiguous_referent",
+      "expectedAction": "needs_confirmation"
+    },
+    {
+      "label": "CTRL19",
+      "category": "question_or_instruction",
+      "expectedAction": "skip"
+    },
+    {
+      "label": "CTRL20",
+      "category": "question_or_instruction",
+      "expectedAction": "skip"
+    }
+  ],
+  "categoryCounts": {
+    "private": 5,
+    "personal": 5,
+    "opinion": 4,
+    "ambiguous_referent": 4,
+    "question_or_instruction": 2
+  },
+  "publication": "All authored synthetic control texts may be published in the user-requested dataset; none represents actual participants or environment values. Runtime reports must continue to omit raw rejected/private inputs.",
+  "source": "Independently authored for this new OPEN100-input cohort before provider observation. No sealed/private/heldout records consulted.",
+  "providerCalls": 0
+}

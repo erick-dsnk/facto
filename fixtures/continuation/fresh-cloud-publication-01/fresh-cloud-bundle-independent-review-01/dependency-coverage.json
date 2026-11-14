@@ -1,0 +1,23 @@
+{
+  "kind": "bundle_dependency_coverage",
+  "bundleManifestSHA256": "c0af5eae08ef135e00df823eb98ba406d2bfe6d31b0408ecc8ff1d4e623f5479",
+  "sourcePins": 1115,
+  "pinGroups": {
+    "separatelyRestoredNpm": 1028,
+    "separatelyRestoredGit": 13,
+    "taskEvidence": 74
+  },
+  "missingOrUnclassifiedRequiredSourcePins": [],
+  "literalImportReview": "Draft491 task-evidence files had0missing literal imports;27root/stack20imports require Git/npm mappings.",
+  "compatibilityPaths": [
+    "/workspace/junction-2026@04ac297523291b1aa289761d5ba3bed98610536f",
+    "/workspace/stack-20@9f4090d609eac0101f4fb1bdcef0908be2cbc7ee"
+  ],
+  "remainingPrerequisites": [
+    "Git/npm availability is declared external, not tested by fresh downloads under no-network review.",
+    "Publication coordinator must replace PUBLICATION_COMMIT placeholder in final user handoff and publish actual package commit.",
+    "Final canonical capture state/data addition to be verified against final freeze."
+  ],
+  "newProviderCalls": 0,
+  "newNetworkCalls": 0
+}

@@ -1,0 +1,123 @@
+[
+  {
+    "caseLabel": "BD03",
+    "expectedClaimId": "BD03",
+    "evidenceId": "ev-fdcab82cba190710f6f1",
+    "url": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+    "excerptSHA256": "673b21adeb8b18f5de5db8336bd79c178e406a0bc44209413642cf5839c25f5d",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:33:33.261511+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh GET to exact selected URL returned HTTP 200 seven-page PDF. Country field, title and geographical-location paragraphs explicitly associate the named mountain/park with Tanzania. Selected extraction repeats some headings and truncates the next section, but tested relation is retained. Mirror-hosted compilation dates June 1987, updated through May 2011; metadata does not supply a named author. References explicitly say principal source was original World Heritage nomination. It shares that origin with selected UNESCO/IUCN document, so not independent merely by domain. Conflicting height numbers are outside the country claim."
+  },
+  {
+    "caseLabel": "BD03",
+    "expectedClaimId": "BD03",
+    "evidenceId": "ev-fc10664bbaa8225ad8ac",
+    "url": "https://whc.unesco.org/document/153391",
+    "excerptSHA256": "191349d9f0276dfe58381221edfe8a9707065883cff393b4fd4ca86bb163fae7",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:33:33.261511+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh GET to exact UNESCO URL returned HTTP 200 scanned PDF. Page 1 visually inspected: World Heritage Nomination\u2014IUCN Summary; 403 Kilimanjaro National Park (Tanzania); prepared April 1987 from Tanzania nomination. Location paragraph explicitly identifies Mount Kilimanjaro near Moshi/Kenyan border. Selected OCR has glyph/table-heading errors, but named mountain-country association is clear in original image. Later evaluation states original nomination was sketchy/inaccurate and IUCN prepared new dossier. Shared nomination/IUCN provenance with CPAG compilation, not independent domains. CF-Cache-Status HIT; fresh request is not uncached-origin proof."
+  },
+  {
+    "caseLabel": "BD08",
+    "expectedClaimId": "BD08",
+    "evidenceId": "ev-6280e6fe9e9d162a80e3",
+    "url": "http://isoh.org/wp-content/uploads/2015/03/265.pdf",
+    "excerptSHA256": "f7c1cee3f7e4f8a8dddb05760bb62a9aa3b28e66cf529c5b72498450b0a712ed",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh exact selected HTTP URL returned HTTP 200 complete PDF Belgium and the Olympic Games in Athens 1896, by Willy Schoevaerts, hosted by International Society of Olympic Historians. It explicitly distinguishes Coubertin\u2019s initial Paris 1900 proposal from 1894 Congress decision Athens 1896/Paris 1900 and states Games held Athens 6\u201315 April 1896. Historical secondary article with attribution, not an 1896 official event ledger. Multi-column PDF extraction interleaves some text; the tested first-modern host/year relation is explicit and scope-matched."
+  },
+  {
+    "caseLabel": "BD08",
+    "expectedClaimId": "BD08",
+    "evidenceId": "ev-b0521ce99264614043b9",
+    "url": "https://www.olympics.com/en/news/this-week-olympic-sports-history-april-1-7-athens-1896-first-modern-games",
+    "excerptSHA256": "110e67e5f56134a857f8b899fc60385d63f3fe14d1d1f359ec156855cdd1fbd2",
+    "status": "inaccessible",
+    "reviewedAt": "2026-11-14T05:17:40.061042+00:00",
+    "reviewer": "independent_agent",
+    "note": "One separately authorized fresh GET to this exact selected Olympics.com URL at candidate09 audit time returned HTTP503 and an85-byte upstream-connect/reset error body, with zero redirects and0.179451s elapsed. No substantive article was accessible, so status remains inaccessible. Earlier candidate08 failed-access proof and original candidate09 review stay immutable; this is a new dated observation, not relabeled old access. No retries, alternate URL or source substitution. Other selected sources do not fill this full-selected-set gap."
+  },
+  {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-6a6fe886686c4d654057",
+    "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+    "excerptSHA256": "b681e556c772beaaff5e0536f2f53c50982b8fb713e2cb119674f9d93c247a93",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:19:05.217388+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior baseline review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh GET returned HTTP 200 substantive FederalRegister.gov Smithsonian agency profile. The entire selected paragraph matches normalized page text and explicitly says created by an act of Congress on 10 August 1846, citing 20 U.S.C. 41 et seq.; this directly addresses and contradicts the claimed British-charter mechanism while preserving the correct year. This is an agency-description page, not the 1846 act itself. Site legal notice labels its Web 2.0 edition an unofficial informational resource; no official statutory scan was substituted or inspected."
+  },
+  {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-0731d2680f6821d2a03e",
+    "url": "https://www.si.edu/about/history",
+    "excerptSHA256": "554c2f626a1a58fd2b0249b80507e445788433f3dd39037d77ee241d14e80d58",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh exact-URL GET returned HTTP 200 Smithsonian Our History. Candidate\u2019s expanded excerpt was checked afresh; opening passage explicitly identifies US Senate act signed by Polk 10 August 1846 and distinguishes 1836 bequest acceptance from 1846 establishment. This directly addresses claimed British royal-charter mechanism. Later speculation about donor motives is attributed speculation, not establishment proof. Institutional retrospective; overlaps same-publisher factsheet and same underlying legislation, not an independent legal origin."
+  },
+  {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-9ba7133657edfc20c794",
+    "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+    "excerptSHA256": "4713e30bff6c89cf11a86ef051600e20e3f3443806e56e2c6ccc651396bc0d1d",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh exact-URL GET returned HTTP 200 Smithsonian Brief History factsheet, current body identifier SI-120-2026. Selected passages occur and explicitly give Act of Congress signed by Polk 10 August 1846 after donor/bequest history. Directly contradicts British-charter mechanism while preserving British donor distinction. Same-publisher institutional history and overlapping prose with Our History count as one institutional family, not extra independent corroboration. No original 1846 act inspected."
+  },
+  {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-eb0bdcebbd68c35e5e3a",
+    "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+    "excerptSHA256": "56617513f2810dcab0311251e9dbed706c1c9db996f915562e24387cca1a3eba",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh exact-URL GET returned HTTP 200 US House History, Art & Archives Smithsonian Institution Established entry dated 29 April 1846. It explicitly records House passage and Polk signature 10 August 1846; selected body matches after whitespace/HTML normalization. Source is maintained by Office of Historian/Office of Art & Archives and recounts own legislative proceedings. Correct distinction: 29 April is House-passage date, 10 August enactment; not a British charter. Different publisher, shared underlying congressional event, not a separate enacting instrument."
+  },
+  {
+    "caseLabel": "BD12",
+    "expectedClaimId": "BD12",
+    "evidenceId": "ev-452ef8a8d24d7ead2666",
+    "url": "https://whc.unesco.org/document/162429",
+    "excerptSHA256": "3c0567df581628f52adc2195c30f6bf1e4b6b5a6353ba29e635bfd1ce437e1fd",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T05:15:38.129983+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to exact selected UNESCO URL returned HTTP 200 complete 621627-byte PDF Australian National Periodic Report 2002 Section II, Report on the State of Conservation of Great Barrier Reef. Page 2 explicitly names the property, Australia and more than 2,000 km off the east coast; GBRMPA is responsible for preparation. Retained excerpt matches after PDF whitespace/OCR normalization; no coordinate-only inference. Report cites original World Heritage nomination, so selected UNESCO/IUCN nomination document shares provenance. CF-Cache-Status HIT/age 2363 retained: fresh request is not uncached-origin proof."
+  },
+  {
+    "caseLabel": "BD12",
+    "expectedClaimId": "BD12",
+    "evidenceId": "ev-0b9cf7ed303720fd46fa",
+    "url": "https://whc.unesco.org/document/152856",
+    "excerptSHA256": "eb80742eacc1ead9c591295c3b8b3290db323c6e8d82ed59bf43c557bce1ce01",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Exact selected URL and excerpt SHA match prior candidate08 review; same public proposition/scope. Prior reviewedAt retained. No fresh candidate09 origin access claimed. Fresh exact UNESCO document URL returned HTTP 200 complete scanned IUCN Technical Review for World Heritage nomination 154, Great Barrier Reef. Location explicitly says East coast of Australia and background northeast continental shelf; nomination by Government of Australia and documentation/consultations are identified. Selected OCR has coordinate/glyph errors, but relevant named reef/coast relation matches original PDF text. Linked World Heritage nomination origin overlaps periodic report; no independent evidence count inferred from two document URLs."
+  },
+  {
+    "caseLabel": "BD12",
+    "expectedClaimId": "BD12",
+    "evidenceId": "ev-1c70e710e2db867cc790",
+    "url": "https://www.marineregions.org/gazetteer.php?id=7579&p=details",
+    "excerptSHA256": "92a7fffa6d0f71ffe249dd0fa824900c65b26fc299b9e96b3b24d42e0f278065",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T05:15:38.129983+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to exact Marine Regions selected URL returned HTTP 200 substantive MRGID 7579 Great Barrier Reef gazetteer entry. It explicitly states named from coral bordering the Northeastern coast of Australia; thus the coast relation is textual, beyond coordinate inference. Name source is IHO-IOC GEBCO Gazetteer, with ACUF adoption and last-edited 2016-04-23 recorded. Status proposed standard and partially overlapping Australia/Papua New Guinea EEZ relations remain; none changes the ordinary tested west-versus-east claim. This is a derived gazetteer record, not an independent survey merely by its domain."
+  }
+]

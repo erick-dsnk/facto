@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "note": "Native node:test source is byte-identical but renamed so repository Vitest does not discover archived execution-provenance tests. Original author hash manifests retain original names; apply this mapping when checking those provenance records. Outer package integrity manifests use actual packaged names.",
+  "byteIdenticalRenames": {
+    "run-cohort.test.mts": {
+      "packageName": "run-cohort.check.mts",
+      "sha256": "95c5fcd9d8a3ab37c7950c9e9ed9cf5866335deb6107adc90abe55eb7dcfb2a5"
+    },
+    "SHA256SUMS": {
+      "packageName": "original-SHA256SUMS",
+      "sha256": "d930cee47a0085205a3f808e48d1fa203a7948df2d982e7417aae713009e4d0d"
+    }
+  }
+}
