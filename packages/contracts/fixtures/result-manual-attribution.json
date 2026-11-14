@@ -1,0 +1,55 @@
+{
+  "verdict": "supported",
+  "reasonCode": "qualifying_evidence",
+  "selectedEvidenceIds": [
+    "fixture-report"
+  ],
+  "summary": "Supported by the sources I found.",
+  "originalText": "According to the Example Times, the Riverside Bridge reopened on Monday.",
+  "checkedText": "According to the Example Times, the Riverside Bridge reopened on Monday.",
+  "sourceSpan": {
+    "start": 0,
+    "end": 72
+  },
+  "evidence": [
+    {
+      "id": "fixture-report",
+      "url": "https://www.example.com/city/riverside-bridge-reopens",
+      "title": "Riverside Bridge reopens (contract fixture)",
+      "publisher": "Example Times",
+      "publishedAt": "2026-11-10T08:30:00Z",
+      "retrievedAt": "2026-11-14T10:00:01Z",
+      "contentBasis": "highlight",
+      "excerpt": "The Riverside Bridge reopened to traffic on Monday morning, the city said.",
+      "sourceGroup": "example.com",
+      "echoGroup": null,
+      "sourceRole": "primary",
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "stance": "supports",
+      "stanceProbability": 0.94,
+      "origin": "news"
+    }
+  ],
+  "checkedAt": "2026-11-14T10:00:02Z",
+  "expiresAt": "2026-11-14T10:01:02Z",
+  "durationMs": 2600,
+  "cached": false,
+  "policyVersion": "glasses-p0.2",
+  "modelVersion": "fixture",
+  "presentation": {
+    "action": "respond",
+    "reasonCode": "explicit_request"
+  },
+  "attribution": {
+    "label": "reported",
+    "source": "Example Times",
+    "mode": "reported"
+  },
+  "route": "recent_event",
+  "subject": null,
+  "usage": {
+    "jevCalls": 3,
+    "exaSearches": 1
+  }
+}

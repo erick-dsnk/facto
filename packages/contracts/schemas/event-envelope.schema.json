@@ -74,5 +74,5 @@
     "payload"
   ],
   "additionalProperties": false,
-  "description": "Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR."
+  "description": "Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. claim.checking, claim.skipped and claim.needs_confirmation carry admissionAction and reasonCode, and optionally presentation, kind (skipped/needs_confirmation only), summary, route, subject and usage. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR."
 }

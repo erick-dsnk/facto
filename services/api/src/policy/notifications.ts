@@ -1,6 +1,6 @@
-import type { AdmissionMetadata, Preferences, Presentation, PresentationState, VerdictDecision } from '../../../../packages/contracts/src/index.js';
+import type { AdmissionMetadata, Preferences, Presentation, PresentationState, ResultDecision } from '../../../../packages/contracts/src/index.js';
 
-export type PresentationResult = Pick<VerdictDecision, 'verdict'> & { admission?: AdmissionMetadata };
+export type PresentationResult = Pick<ResultDecision, 'verdict'> & { admission?: AdmissionMetadata };
 const silent = (reasonCode: string): Presentation => ({ action: 'silent', reasonCode });
 
 const normalizedPhrase = (value: string) => value.normalize('NFKC').toLowerCase().replace(/\s+/gu, ' ').trim();
