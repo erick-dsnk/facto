@@ -612,6 +612,19 @@ extension CameraModel: LiveCamera {
     guard isStreaming else { throw LiveStreamError.streamFailed(lastError) }
   }
 
+  /// Ends the stream and the device session after a wake-phrase session, so the glasses are
+  /// idle (camera and LED off) while the app waits for the phrase again. This is never used
+  /// for a photo: a photo is always taken from a running stream.
+  func stopLiveStream() async {
+    guard session != nil else { return }
+    endSession()
+    for _ in 0..<50 where session != nil {
+      try? await Task.sleep(for: .milliseconds(100))
+    }
+    // Let the glasses settle before the hands-free microphone is opened again.
+    try? await Task.sleep(for: .milliseconds(500))
+  }
+
   /// Starts the device session when needed and waits up to 10 s for it.
   func ensureSessionStarted() async -> Bool {
     if session == nil { startSession() }
