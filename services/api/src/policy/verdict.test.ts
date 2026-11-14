@@ -47,6 +47,16 @@ describe('conservative deterministic verdict', () => {
     const sources = [passage('a', { echoGroup: 'copy' }), passage('b', { url: 'https://example.net/a', echoGroup: 'copy', excerpt: 'Separate words' }), passage('c', { url: 'https://news.example.net/b', excerpt: 'Different words' })];
     expect(independentSourceCount(sources)).toBe(1);
   });
+  it('does not treat blank publisher metadata as a disclosed shared publisher', () => {
+    const judgment = reading();
+    judgment.evidence[0].publisher = '';
+    judgment.evidence[1].publisher = '   ';
+    expect(independentSourceCount(judgment.evidence)).toBe(2);
+    expect(decideVerdict(judgment).verdict).toBe('supported');
+    judgment.evidence[0].publisher = ' Shared Publisher ';
+    judgment.evidence[1].publisher = 'shared publisher';
+    expect(independentSourceCount(judgment.evidence)).toBe(1);
+  });
   it('does not grant authority based on company self-publication or primary role', () => {
     const judgment = reading();
     judgment.evidence = [passage('a', { url: 'https://company.example/product', sourceRole: 'primary' })];
