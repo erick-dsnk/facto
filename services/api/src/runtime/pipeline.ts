@@ -4,7 +4,7 @@ import type { RuntimeAdapters } from './adapters.js';
 import { retainAlternateEvidence } from './alternate-evidence.js';
 import { decideVerdict } from '../policy/verdict.js';
 import { decidePresentation, matchSelectedTopic } from '../policy/notifications.js';
-import { AttemptBudget, abortable } from './budget.js';
+import { AttemptBudget, abortable, assertWithinDeadline } from './budget.js';
 import { fingerprint, type RequestRecord, type Session } from './session.js';
 import { claimResultSchema } from '../../../../packages/contracts/src/wire.js';
 
@@ -86,7 +86,15 @@ export class PipelineRuntime {
     const stageMs = { admission: 0, retrieval: 0, judgment: 0 };
     const timed = async <T>(stage: keyof typeof stageMs, call: () => Promise<T>): Promise<T> => {
       const start = this.monotonic();
-      try { return await abortable(call(), ctx.signal); } finally { stageMs[stage] += this.monotonic() - start; }
+      try {
+        assertWithinDeadline(ctx);
+        const result = await abortable(call(), ctx.signal);
+        assertWithinDeadline(ctx);
+        return result;
+      } catch (error) {
+        assertWithinDeadline(ctx);
+        throw error;
+      } finally { stageMs[stage] += this.monotonic() - start; }
     };
     let currentClaimId: string | undefined;
     const stopIfStale = () => {
@@ -96,6 +104,7 @@ export class PipelineRuntime {
     };
     try {
       if (!session.current(record)) return;
+      assertWithinDeadline(ctx);
       if (!input.userInitiated && this.now() - Date.parse(input.capturedAt) > 15_000) {
         session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input);
         record.state = 'done'; return;
@@ -137,6 +146,7 @@ export class PipelineRuntime {
         const notificationKey = normalizedClaim;
         const stored = session.cache.get(key);
         let result: ClaimResult;
+        let freshResult: ClaimResult | undefined;
         if (stored && stored.expiresAt > this.now()) {
           result = { ...stored.result, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, cached: true, durationMs: this.monotonic() - started };
         } else {
@@ -177,8 +187,7 @@ export class PipelineRuntime {
             checkedAt: new Date(this.now()).toISOString(), expiresAt: new Date(Math.min(this.now() + 60_000, session.expiresAt)).toISOString(), durationMs: this.monotonic() - started,
             cached: false, policyVersion: POLICY_VERSION, modelVersion: this.modelVersion, presentation: { action: 'silent', reasonCode: 'pending' } };
           result = claimResultSchema.parse(result);
-          session.cache.set(key, { result, expiresAt: Date.parse(result.expiresAt) });
-          if (session.cache.size > 64) session.cache.delete(session.cache.keys().next().value!);
+          freshResult = result;
         }
         session.notifications = session.notifications.filter(t => this.now() - t < 60_000);
         for (const [k, expires] of session.recentClaims) if (expires <= this.now()) session.recentClaims.delete(k);
@@ -190,13 +199,23 @@ export class PipelineRuntime {
           duplicate: !input.userInitiated && session.recentClaims.has(notificationKey), notificationCount: session.notifications.length
         }, session.preferences) };
         if (!session.current(record)) return;
+        assertWithinDeadline(ctx);
+        if (freshResult) {
+          session.cache.set(key, { result: freshResult, expiresAt: Date.parse(freshResult.expiresAt) });
+          if (session.cache.size > 64) session.cache.delete(session.cache.keys().next().value!);
+        }
         if (result.presentation.action === 'notify') { session.notifications.push(this.now()); session.recentClaims.set(notificationKey, this.now() + 60_000); }
         record.results.set(claim.id, result); session.emit('claim.result', result, input, claim.id);
       }
       record.state = 'done';
     } catch (error) {
-      if (session.current(record)) this.error(session, record, error instanceof PipelineError ? error.code : 'provider_unavailable', currentClaimId);
+      let failure = error;
+      if (session.current(record)) {
+        try { assertWithinDeadline(ctx); } catch (currentError) { failure = currentError; }
+        this.error(session, record, failure instanceof PipelineError ? failure.code : 'provider_unavailable', currentClaimId);
+      }
       if (record.state !== 'cancelled') record.state = 'done';
+      if (failure instanceof PipelineError && failure.code === 'timeout') record.controller.abort(failure);
     } finally {
       if (record.state !== 'waiting') clearTimeout(record.timer);
       this.metrics.push({ durationMs: this.monotonic() - started, stageMs, state: record.state, jevAttempts: record.budget.jev,
