@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import WebSocket from 'ws';
 import { buildServer, type ServerOptions } from '../../src/transport/server.js';
 import { fixtureAdapters } from '../../src/runtime/fixtures.js';
-import { type EventEnvelope, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { PROVIDER_LIMITS, type EventEnvelope, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
 import { claimResultSchema, eventEnvelopeSchema } from '../../../../packages/contracts/src/wire.js';
 import { type AsrAdapter, type AsrTranscript } from '../../src/transport/audio.js';
 import { DebugFeed } from '../../src/runtime/debug-feed.js';
@@ -227,6 +227,7 @@ describe('session HTTP and WebSocket boundary', () => {
     const record = server.store.sessions.get(session.sessionId)!.requests.get(resultEvent.requestId!)!;
     expect(record.input).toMatchObject({ mode: 'audio', capture: { source: 'recorded_fixture', final: true }, userInitiated: false });
     expect(record.input.capture.segmentId).toMatch(/^segment-[a-f0-9]{24}$/);
+    expect(record.input.capture).not.toHaveProperty('lowConfidenceWords');
     publish(transcript); await new Promise<void>(done => setImmediate(done));
     expect(events.filter(event => event.type === 'claim.result')).toHaveLength(1);
     expect(record.budget.jev).toBe(2);
@@ -276,6 +277,40 @@ describe('session HTTP and WebSocket boundary', () => {
     const second = Buffer.alloc(3213); second.writeUInt8(1, 0); second.writeUInt32BE(2, 1); socket.send(second);
     await vi.waitFor(() => { final('s6', 'Paris is in France.', 0); expect(inputFor('s6')).toBeDefined(); });
     expect(inputFor('s6')!.context).toEqual([]);
+  });
+
+  it('carries low-confidence words from the ASR transcript into the check, and a change to them is a new revision', async () => {
+    let publish!: (event: AsrTranscript) => void;
+    const adapters = fixtureAdapters(); const classify = vi.fn(adapters.classify);
+    const asr: AsrAdapter = { start: async (_config, onTranscript) => { publish = onTranscript; return { write: async () => {}, stop: async () => {} }; } };
+    const server = await setup({ asr, adapters: { ...adapters, classify } }); const session = await join(server); const { socket, events } = await stream(server, session);
+    socket.send(JSON.stringify({ type: 'audio.start', sessionEpoch: 1, streamGeneration: 1, encoding: 'pcm_s16le', sampleRateHz: 16000, channels: 1, source: 'recorded_fixture' }));
+    await eventOf(events, 'audio.ready');
+    const bytes = Buffer.alloc(3213); bytes.writeUInt8(1, 0); bytes.writeUInt32BE(1, 1); socket.send(bytes);
+    const words = [{ text: 'on', confidence: 0.42 }, { text: 'Tropical', confidence: 0.38 }];
+    const heard: AsrTranscript = { text: 'You heard that on Tropical IPO for $2,500,000,000,000?', final: true, segmentId: 'g1-4', confidence: 0.71, captureOffsetMs: 0, lowConfidenceWords: words };
+    const state = server.store.sessions.get(session.sessionId)!;
+    const record = () => [...state.requests.values()].find(entry => entry.input.capture.segmentId === 'g1-4');
+    await vi.waitFor(() => { if (!record()) publish(heard); expect(record()).toBeDefined(); });
+    expect(record()!.input.capture).toEqual({ source: 'recorded_fixture', segmentId: 'g1-4', confidence: 0.71, final: true, lowConfidenceWords: words });
+    await vi.waitFor(() => expect(classify).toHaveBeenCalledWith(expect.objectContaining({ capture: expect.objectContaining({ lowConfidenceWords: words }) }), expect.anything()));
+    publish(heard); await new Promise<void>(done => setImmediate(done));
+    expect(record()!.input.revision).toBe(1);
+    publish({ ...heard, lowConfidenceWords: [words[1]] });
+    await vi.waitFor(() => expect(record()!.input.revision).toBe(2));
+    expect(record()!.input.capture.lowConfidenceWords).toEqual([words[1]]);
+    publish({ ...heard, lowConfidenceWords: [] });
+    await vi.waitFor(() => expect(record()!.input.revision).toBe(3));
+    expect(record()!.input.capture).not.toHaveProperty('lowConfidenceWords');
+    const transcriptEvents = events.filter(event => event.type === 'transcript.final');
+    expect(transcriptEvents.length).toBeGreaterThan(0);
+    expect(transcriptEvents.every(event => !('lowConfidenceWords' in (event.payload as object)))).toBe(true);
+  });
+
+  it('reports the provider limits from the shared contract in the session budgets', async () => {
+    const server = await setup();
+    const response = await server.app.inject({ method: 'POST', url: '/v1/sessions', payload: { joinCode } });
+    expect(response.json().budgets).toEqual({ deadlineMs: 10_000, running: 2, queued: 3, jev: PROVIDER_LIMITS.jev, searchesPerClaim: PROVIDER_LIMITS.search });
   });
 
   it('re-checks a corrected trigger, asks for one photo per segment and per 2 s, and keeps listening past 128 sentences', async () => {
