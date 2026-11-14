@@ -88,6 +88,20 @@ describe('typed joint judgment adapter', () => {
     expect(result.sourceAssessments[retained[0].id].contentBasis).toBe('original_record');
     expect(result.evidence[0].sourceRole).toBe('unknown');
   });
+  it('bounds untrusted title context and never lets a title replace substantive excerpt evidence', async () => {
+    const title = `Official documented records ${'🦉'.repeat(320)}`;
+    const retained = [{ ...evidence[0], title, excerpt: 'Lightning definitely strikes the same place repeatedly. No underlying record is identified.' }];
+    const ask = vi.fn(async (request: JevRequest) => ({
+      ...answer(request),
+      e0_content_basis: { choice: 'bare_assertion', probabilities: { original_record: 0, attributable_research: 0, substantive_secondary: 0, bare_assertion: 1, attributed: 0, promotional: 0, unclear: 0 } },
+    }));
+    const result = await createJudge({ ask })(claim, retained, context);
+    const state = ask.mock.calls[0][0].state as { evidence: { title: string; excerpt: string }[] };
+    expect(state.evidence[0].title).toBe(Array.from(title).slice(0, 300).join(''));
+    expect(Array.from(state.evidence[0].title)).toHaveLength(300);
+    expect(state.evidence[0].excerpt).toBe(retained[0].excerpt);
+    expect(decideVerdict(result).verdict).toBe('insufficient_evidence');
+  });
   it.each([[.84, 'insufficient_evidence'], [.85, 'contradicted']] as const)('keeps the scope threshold for contrary evidence at %s', async (scope, expected) => {
     const client: JevClient = { ask: async request => ({ ...answer(request), e0_scope: { noul: scope } }) };
     const result = await createJudge(client)(claim, evidence, context);
