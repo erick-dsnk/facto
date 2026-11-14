@@ -51,9 +51,9 @@ const LEADING_FILLER = '(?:hey|ok|okay|um|uh|so|please|alright)';
 const TRAILING_FILLER = '(?:please|now|for me|one|photo|picture|image|sign)';
 // Optional app name before the command ("Facto, check this", "Hey Facto, is this true?"); "hey" comes from LEADING_FILLER.
 // Deepgram writes the name as "Facto", "Facto." or "Fact o", which normalize to "facto" and "fact o".
-// "Fakto" is accepted too: it is not an English word and the rest of the sentence must still be a trigger phrase,
-// so it only catches a misheard name in front of a real command and adds no new false triggers.
-export const VOICE_WAKE_WORDS = ['facto', 'fact o', 'fakto'];
+// "Factor" and "Fakto" are accepted too, as likely mishearings (issue #44). The rest of the sentence must still be a
+// trigger phrase, so they only count in front of a real command and add no new false triggers.
+export const VOICE_WAKE_WORDS = ['facto', 'fact o', 'factor', 'fakto'];
 const triggerPattern = new RegExp(`^(?:${LEADING_FILLER} )*(?:(?:${VOICE_WAKE_WORDS.join('|')}) (?:${LEADING_FILLER} )*)?`
   + `(?:${VOICE_TRIGGER_PHRASES.join('|')})(?: ${TRAILING_FILLER})*$`);
 
