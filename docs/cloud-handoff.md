@@ -1,36 +1,55 @@
-# Cloud handoff: fact-checking pipeline
+# Cloud handoff: fact-checking backend
 
-Copy the prompt below into the next cloud session. It captures the current code and evidence state; it does not claim the pipeline is finished.
+Continue from the current remote state; fetch before changing anything. Preserve local edits. Do not merge PRs or close issues. The backend is substantially hardened, but its measured factual coverage is insufficient for a readiness claim.
 
-```text
-Continue the Junction 2026 fact-checking pipeline to make fact-checking sturdy and reliable. Work only on the backend fact-checking path. The user explicitly deferred glasses/iOS integration and deployment. Do not merge PRs or close issues. The human reviewer/integrator merges after acceptance.
+## Repository and review stack
 
 Repository: https://github.com/erick-dsnk/junction-2026
-The shared contracts PR #28 was merged; the app owner can use packages/contracts from main. Read AGENTS.md, docs/plan.md, apps/console/README.md, packages/contracts/README.md, docs/evaluation.md, fixtures/evaluation/README.md, current assigned GitHub issues, and the live draft PR stack before acting. Treat those repo documents and the current checkout as authoritative; refresh GitHub PR/branch state first.
 
-Branch dependency stack (keep each issue in its own PR):
-codex/16-retrieval-stack → codex/17-source-quality-stack → codex/15-classification-stack → codex/24-runtime-evaluation-stack → codex/20-runtime-stack.
-The frozen integration baseline is ecda5dafe6254d80d2c173adea4fe9435ce46e68. The local final stack at `cedf29cd7f615e44e8d7b6be7e596620ffc21304` on `codex/20-runtime-stack` passed a fresh npm ci, npm run check (291/291 tests), and npm run evaluate (36/36 development scenarios; 21/21 shared presentation fixtures). Latest injected runtime scenarios were E33 139 ms and E43 10,018 ms. The evaluator did not persist a refreshed development-results.json in that final run; do not treat the tracked older JSON timings as those latest numbers. Refresh exact branch, PR and CI state on GitHub before making changes.
+1. #31 / #16 / `codex/16-retrieval-stack`
+2. #32 / #17 / `codex/17-source-quality-stack`
+3. #33 / #15 / `codex/15-classification-stack`
+4. #34 / #24 / `codex/24-runtime-evaluation-stack`
+5. #35 / #20 / `codex/20-runtime-stack`
+6. #36 / #24 / `codex/24-live-evaluation-stack`
 
-Freeze the app contract while this work proceeds: do not edit packages/contracts, apps/ios/, or services/api/src/input/asr/. Preserve the existing module boundaries and provider injection. Do not restore the legacy “official site means supported” shortcut. Use only exact admitted public checkedText for search; never include rejected personal context in provider queries.
+The sixth draft follows #35 because the live evaluator depends on its retry and alternate-retrieval interfaces. The latest branch includes all changes; later merges preserve issue-specific dependencies without force-pushing. Review owner is water / erick-dsnk; intended reviewer is grass / Davidtzuke. No review notification was requested. PR #28 was already merged.
 
-Evidence already recorded:
-- Deterministic development evaluation: 36/36 passed (34 scripted policy cases plus 2 real local authenticated HTTP/WebSocket scenarios using injected providers); 291 tests, lint and typecheck pass. This proves control flow, not provider accuracy.
-- Direct live adapters (older implementation commit 394ae9c44b000f8e98da353a53d4cebfe1405d7c): 3 Jev admissions, 2 judgments and 2 Exa searches succeeded; one personal input skipped without Exa, a mixed Fuji proposition conservatively abstained, and Sydney Opera House opening in 1973 returned supported with a retained citation. One Sydney citation was opened by the agent and its historical opening-year passage matched; human demo citation review is still pending. One invalid-key Jev request and one invalid-key Exa request each produced a sanitized nonretryable HTTP 401 error. Jev usage was 14,933 input tokens. This bypassed authenticated service orchestration and is not a current end-to-end accuracy claim.
-- Earlier live classification and judgment-wire probes are transcript-only history: 40 admission requests / 87,883 input tokens across four runs, including a 16-case experiment that failed and a later targeted 4-case replay that passed; and a 55-question/six-source judgment request reporting 8,482 tokens. Their raw temporary reports are gone, so counts are not independently revalidated in this checkout. The failed classification experiment remains a failure.
-- A later authenticated HTTP/WebSocket provider campaign was interrupted and is not a pass. Its temporary runner/report are missing. Transcript-only observations: L1 Sydney claim ended insufficient_evidence / insufficient_independent_evidence with six retained sources and one direct-and-scope source assessment; L2 lightning maxim returned needs_confirmation / incomplete_or_unclear before retrieval, with exact gate answer unavailable; L3 personal anecdote skipped without Exa; L4 mixed private rent/public Oslo returned HTTP 202 and only the public Oslo query was sent, but the runner stopped before terminal WebSocket delivery. L5, L6 and cache-repeat were not sent. There was no completed citation-path review. Recorded usage: 7 Jev attempts (one aborted request has unknown usage), 27,025 measured input tokens plus a 5,293-token reservation for the unknown request, 3 Exa searches and 0 content fetches; all observed completed provider responses returned HTTP 200. Cost, per-case usage, query log, final event sequence and end-to-end latency are unknown. The runner incorrectly compared request bytes against a token ceiling; its poller stopped on an internal done signal instead of a correlated terminal WebSocket receipt. Treat the attempt as incomplete, not a production result.
-- The old 12-case held-out split is byte-for-byte unchanged and unrun, canonical JSON SHA-256 16f927c84ed3703356280f02241b4354d35ef6337288d3495ef08b7969aa37bb. A prior accidental search may have exposed held-out text; blindness is not certified. No fresh sealed set is available in this checkout or temporary storage. Do not open or use the old held-out bodies for tuning. Create and independently review a new sealed set only after implementation and thresholds freeze, then use a separate blind executor. Do not put its bodies in the default development corpus or expose them in PRs/logs.
+Read `AGENTS.md`, `docs/plan.md`, `apps/console/README.md`, `packages/contracts/README.md`, `docs/evaluation.md`, `docs/live-campaign-2026-11-14.md`, `docs/blind-evaluation-2026-11-14.md`, current issues and PRs before acting. The existing shared app/API schemas, `packages/contracts/`, `apps/ios/` and `services/api/src/input/asr/` are frozen. Glasses, native decoding, actual ASR, deployment and device measurements remain deferred.
 
-Current durable status and remaining work are in docs/evaluation.md and docs/live-smoke-2026-11-14.md. Temporary /tmp reports and runners do not transfer to cloud. Do not present historical transcript-only numbers as freshly reproduced evidence.
+## Frozen implementation and validation
 
-Next actions:
-1. Inspect the actual current checkout, git status, stack PRs, issue acceptance criteria and CI. Preserve local work and keep the five issue PRs separate. Do not add Closes #... until the exact issue acceptance criteria are genuinely met.
-2. Make no new code changes until you understand the existing stack. Review reliability boundaries and address any newly observed fact-checking bugs within issue-owned files. Keep all changes in the backend fact-check path.
-3. Rebuild a portable authenticated HTTP/WebSocket live harness. Enforce separate actual-token, request-byte, provider-call and wall-clock budgets; record per-case actual usage and costs if returned; keep private inputs synthetic and verify exact outbound queries. Require the correlated WebSocket terminal receipt and classify harness safety stops separately from provider failures. Store only sanitized aggregate evidence. Re-run L1/L2 and a small predeclared set of safe public/private cases after the runner is correct. Do not reuse or assume remaining budgets from the lost run.
-4. Inspect each definitive cited page against the exact proposition, scope, and independent-source grouping; report citations that cannot be independently opened. Abstentions are not automatic successes.
-5. With implementation and thresholds frozen, commission a new independent sealed set and reviewer, then execute a separately budgeted blind run. Keep case bodies hidden from implementers and preserve the original held-out caveat.
-6. Run npm ci and npm run check on each final PR head, plus npm run evaluate and the live-evidence protocol as appropriate. Record exact commit SHA and actual output. Update docs/evaluation.md, fixture documentation, and PR descriptions from durable evidence only.
-7. Follow the repo review cycle (fire reviewed by water/erick-dsnk, water by grass/Davidtzuke, grass by fire). Leave PRs as drafts until acceptance criteria and required review are satisfied. Do not merge or close issues.
+Executable code was frozen at `b66fa5dcbc1e4a58665bc110cb0ab1b6dccf950f`; the campaign's source snapshot SHA-256 is `71f6fb9504e9045763f081b885fdf63fbcccfc8b138f845953b1575b5b2072e3`. Subsequent commits propagate the same fact-checking code and add documentation/artifacts. A post-evaluation harness-only change preserves validated action/reason fields on future non-result events; it changes no runtime behavior and does not enrich or rerun the frozen evidence. Check the exact remote head rather than assuming this is the final documentation commit.
 
-Environment: use Node 22.12+ or Node 24 LTS. Run npm ci, npm run check, and npm run evaluate from the repo root. Fixture mode works without provider keys. The ignored .env configured in the user's main local worktree is not available to cloud sessions. If live provider checks are authorized and necessary, configure JEV_API_KEY and EXA_API_KEY through the cloud secret manager; never ask the user to paste secrets, print them, commit them, or copy a local .env. Use .env.example for non-secret settings such as DEMO_JOIN_CODE, DEMO_JOIN_EXPIRES_AT and PIPELINE_MODE.
-```
+- Fresh installs succeeded. The frozen combined gate passed lint, typecheck and **341 tests**; the subsequent harness-reporting gate passed **350 tests**.
+- Development evaluator: **36/36** (34 scripted + 2 authenticated local HTTP/WebSocket scenarios with injected providers); presentation fixtures **21/21**. The refreshed JSON is committed.
+- Final five predecessor branch gates passed **185 / 261 / 283 / 283 / 321** tests respectively. Their exact commits and counts are in `fixtures/evaluation/live/final-stack-validation.json`.
+- The durable live runner is `apps/console/src/live/run.ts`; preview with `npm run evaluate:live -- --plan`. Its original 20 offline harness checks cover separate budgets, actual attempts, unknown usage, retries, content fetches, local stops, correlated terminals, cancellation, waiting/expiry, cache counters and authentication. Nine later checks cover non-result presentation projection and terminal feedback.
+- The original 12 reserved bodies remain byte-for-byte unchanged and unrun. Their earlier possible-exposure caveat remains; do not use them for blind accuracy claims or tuning.
+
+## Current live evidence
+
+The final development replay completed 8/8 authenticated requests, with 16 Jev calls, 9 searches, 12 content fetches and 113,843 measured Jev input tokens. It returned correct definitive results for **2/5 unique eligible public claims**, with three abstentions; the cache repeat is excluded from that denominator. Known Exa cost was $0.075; Jev cost remains unknown. The personal case never searched, the mixed case exported only the exact public span, the repeat was cached without a new search, and incomplete capture expired after approximately eight seconds without a verdict.
+
+The earlier connection failure and two zero-coverage campaigns are preserved, not replaced. A Node direct-fetch connection failure left one attempt's usage unknown; its 24,000-token allowance is an uncertainty reservation, not measured usage. Real separate invalid-key probes each produced one HTTP 401 from the target provider and the sanitized terminal authentication error, without retry.
+
+Independent agent citation review attempted all eight development citation URLs: seven opened with matching relevant passages; one Queen Elizabeth memorial page returned 403 and remains unverified. NASA/JPL URLs share one family; NMA references an Opera House history project, so distinct published narratives are not proven independent primary records. Human demo citation sign-off is still outstanding.
+
+The newly authored independent 10-case set was reviewed, sealed and executed **once** against the frozen code. It produced 10/10 terminal receipts and **2/8 correct definitive factual outcomes**, five abstentions and one missing verdict. Conditional definitive precision was 2/2, admission 8/10, and no forbidden-private query was observed in 12 searches. This small purposive sample exposes a substantial coverage/admission gap; it is not a population accuracy estimate or readiness pass. The full first-run report, journal and case bodies remain sealed outside the PR; public aggregates, methodology and hashes are committed. Do not inspect or tune against the sealed case bodies. No code was changed in response to them.
+
+## Next backend work
+
+1. Verify current repository/CI state and the evidence records. Keep actual provider evidence separate from scripted tests; do not describe transport completion as factual success.
+2. Improve source acquisition and admission on independently authored **development** cases without consulting sealed bodies. Seek inspectable underlying records and attributable evidence, not simply more agreeing websites. Do not add source/domain exceptions or lower thresholds to force examples through. Official status alone never establishes truth.
+3. Preserve exact admitted public text, private-query isolation, Unicode spans, source-family/copy grouping, risk-sensitive corroboration, authenticated terminal delivery and all budget/cancellation gates.
+4. Evaluate precision and useful coverage together. Missing priority stays silent; selected topics are explicit normalized literal matches in admitted text, not inferred categories.
+5. Freeze future changed code and commission a new independent set before another blind run. Retain this first run's failures and denominators. The existing sealed set must not be rerun as fresh blind evidence.
+6. Keep each issue's changes and dependencies reviewable, run appropriate branch gates, record exact tested commits, update PR descriptions and retain all drafts until acceptance is supported. No merges or issue closures without fulfilled criteria and the human reviewer.
+
+## Environment
+
+Use Node 24 LTS (or supported Node 22.12+ for ordinary local use). Read provider secrets from the cloud environment, never chat or committed files. `JEV_API_KEY`, `EXA_API_KEY`, `ELEVENLABS_API_KEY` and `DEEPGRAM_API_KEY` were present; only Jev and Exa belong to this work scope.
+
+This cloud requires its configured outbound proxy. On Node 24 run live commands with `NODE_USE_ENV_PROXY=1`. The harness generates a temporary local join code and future expiry itself; it does not need a committed `.env`. For interactive server setup use `.env.example` and a future `DEMO_JOIN_EXPIRES_AT`.
+
+Each live run requires a new writable output path and its own explicitly bounded budget. The token threshold cannot retroactively cap a request: a completed unknown Jev usage blocks further dispatch, and returned usage exceeding a reservation is charged and stops the run. Partial costs stay partial. Never print keys or proxy credentials.

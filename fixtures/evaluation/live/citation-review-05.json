@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_selected_citation_review",
+  "reviewedAt": "2026-11-14T02:56:01.319233+00:00",
+  "input": "/workspace/task-evidence/live-development-05.json",
+  "inputSHA256": "133b61f7eaec3f83a33a5b49e602327799106a91effb6489936c05e2c9e855ba",
+  "scope": {
+    "cases": [
+      "L1-opera",
+      "L6-existential"
+    ],
+    "uniqueSelectedUrlsAttempted": 8,
+    "articlePagesOpened": 7,
+    "blockedArticlePages": 1,
+    "L5": "Cached duplicate of L1: same three selected IDs and URLs; no new unique citations or independent corroboration.",
+    "review05FreshRequests": 2,
+    "inspectionReuse": "All eight URLs attempted in review04; six access findings reused, two URLs freshly reopened successfully for excerpt deltas."
+  },
+  "sources": [
+    {
+      "case": "L1-opera",
+      "evidenceId": "ev-a38cbdd50b89785e9ddf",
+      "url": "https://www.nma.gov.au/defining-moments/resources/sydney-opera-house",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "nma.gov.au",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://www.nma.gov.au/defining-moments/resources/sydney-opera-house",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": false
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "Finally, the Sydney Opera House was opened by Queen Elizabeth II on 20 October 1973.",
+      "relevance": "Direct statement of the specific building and opening year; both highlighted passages occur in the retrieved page.",
+      "scope": "Historical opening of the Sydney Opera House, Sydney, Australia, 20 October 1973; no population-scope issue.",
+      "sourceFamily": "National Museum of Australia",
+      "originAssessment": "Museum-authored historical narrative, with a collection plaque commemorating 20 October 1973. References include books and The Opera House Project (ABC/Sydney Opera House); therefore some underlying-source overlap with the official Opera House account is possible. Distinct publisher and narrative; do not claim fully independent provenance.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json"
+    },
+    {
+      "case": "L1-opera",
+      "evidenceId": "ev-98bba1d289c45e2bce3a",
+      "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "sydneyoperahouse.com",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": false
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "Australian culture reached a remarkable milestone on 20 October 1973",
+      "relevance": "Opening paragraph connects that date to the official opening; highlighted opening and September first-production passages occur in the page.",
+      "scope": "Official opening in Sydney in October 1973; explicitly distinguishes first Opera Hall production on 28 September 1973 and a 1960 performance to workers. Those distinctions do not change the claimed opening year.",
+      "sourceFamily": "Sydney Opera House",
+      "originAssessment": "Institutional first-party retrospective of its own opening and performances. Distinct institutional publisher from NMA, but NMA cites an Opera House/ABC history project and both may use common public records.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json"
+    },
+    {
+      "case": "L1-opera",
+      "evidenceId": "ev-c6ef4b33746b6e519887",
+      "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "queenelizabeth.com",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 403,
+        "finalUrl": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+        "curlExit": 0,
+        "openedArticle": false,
+        "status": "could_not_open_article",
+        "review05Reopened": false
+      },
+      "assessment": "unverified_access_blocked",
+      "passageCorrespondence": "not verified; actual response is error page",
+      "briefExactQuote": null,
+      "relevance": "Could not inspect source text: HTTP 403 CloudFront error rather than article. Supplied highlight appears relevant on its face but is not confirmed by this review.",
+      "scope": "Time/place/scope cannot be independently verified from the blocked page.",
+      "sourceFamily": "Queen Elizabeth Digital Memorial (claimed by supplied title; page inaccessible)",
+      "originAssessment": "Do not count as independently verified corroboration; neither article attribution nor syndication could be inspected.",
+      "incorrectContext": "cannot assess blocked source",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json"
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-caf1e0a1533ac3783477",
+      "url": "https://ssd.jpl.nasa.gov/planets/def.html",
+      "suppliedContentBasis": "page_text",
+      "sourceGroupSupplied": "nasa.gov",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://ssd.jpl.nasa.gov/planets/def.html",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": false
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "Using this new definition, there are eight planets in the solar system",
+      "relevance": "Exact count and eight names occur in the retrieved page; supplied page_text corresponds to the article, credited to Donald K. Yeomans and Paul W. Chodas, October 2006.",
+      "scope": "Solar System planets under the August 2006 IAU definition, excluding dwarf planets. Historical explanatory article still served by JPL; use with the other currently retrieved classification explanations, not as proof of an unrestricted timeless count.",
+      "sourceFamily": "NASA / JPL Solar System Dynamics",
+      "originAssessment": "Same NASA/JPL family as /planets/; those two URLs are not independent corroborators and have closely overlapping wording. Explains the underlying IAU resolution.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json"
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-1a695a106a22850b30b3",
+      "url": "https://astro4edu.org/bigideas/bigidea7/",
+      "suppliedContentBasis": "page_text",
+      "sourceGroupSupplied": "astro4edu.org",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://astro4edu.org/bigideas/bigidea7/",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": false
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "There are eight planets in the Solar System",
+      "relevance": "Section 7.3 gives the exact proposition and enumerates the eight planets; supplied page_text corresponds to the retrieved section.",
+      "scope": "Explicitly according to the 2006 IAU resolution; excludes dwarf planets. Same Solar System and planet population as the ordinary classification claim.",
+      "sourceFamily": "IAU Office of Astronomy for Education",
+      "originAssessment": "Page identifies Big Ideas in Astronomy as an IAU Office of Astronomy for Education project. Distinct publisher from JPL, but the underlying classification originates from the same IAU resolution; not an independent empirical discovery.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json"
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-de510503319a759fc462",
+      "url": "https://ssd.jpl.nasa.gov/planets/",
+      "suppliedContentBasis": "page_text",
+      "sourceGroupSupplied": "nasa.gov",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://ssd.jpl.nasa.gov/planets/",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": false
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "Using this new definition, there are eight planets in the solar system",
+      "relevance": "Exact count and eight names occur in the retrieved page; supplied page_text corresponds, including the note that Pluto remains on the JPL ephemeris for historical reasons.",
+      "scope": "Solar System classification following the 2006 definition. Keeping Pluto in an ephemeris does not reclassify it as one of the eight.",
+      "sourceFamily": "NASA / JPL Solar System Dynamics",
+      "originAssessment": "Same site, institution, and substantially shared lead wording as def.html; count once with that page, not as a second family.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json"
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-533b3489b31330136bde",
+      "url": "https://www.timeanddate.com/astronomy/planets/planet",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "timeanddate.com",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://www.timeanddate.com/astronomy/planets/planet",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": true
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "There are eight planets.",
+      "relevance": "Exact statement under How Many Planets in Our Solar System? followed by the eight names; highlighted passages correspond to the actual HTML, including the introductory text in the article header.",
+      "scope": "Solar System and current IAU classification; page separately discusses changing definitions, Pluto, and hypothetical Planet Nine, explicitly describing the latter as a hypothesis. Supports the ordinary recognized-planet count, not proof that no undiscovered planet exists.",
+      "sourceFamily": "Time and Date AS",
+      "originAssessment": "Separately authored explanatory article with byline Graham Jones and Time and Date AS copyright; no full-article republication attribution observed. NASA image credits are image attribution, not evidence that the article is syndicated from NASA. Shares the IAU definitional basis.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json",
+      "deltaReview": {
+        "evidenceId": "ev-533b3489b31330136bde",
+        "change": "Why Is Pluto Not a Planet? heading omitted; final truncation extends from Accor to According to the IAU, a planet is a.",
+        "inspection": "Reopened same URL via curl with inherited proxy environment, HTTP 200; extended fragment matches actual page and introduces the same IAU criteria already discussed. Heading omission does not alter the proposition or context.",
+        "scopeImpact": "none identified",
+        "briefExactQuote": "There are eight planets in the solar system."
+      }
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-af7c05813e2333997b30",
+      "url": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "skyandtelescope.org",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review05Reopened": true
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "There are eight planets in the solar system",
+      "relevance": "Exact proposition and eight names in article opening; supplied highlights correspond to actual article paragraphs.",
+      "scope": "Solar System planets under the IAU definition; explains why Pluto is a dwarf planet. Article dated July 15, 2021; no conflicting scope or contrary count observed in the relevant article.",
+      "sourceFamily": "Sky & Telescope",
+      "originAssessment": "Byline Maria Temming, July 15, 2021. Separately authored educational article, no full-article republication attribution observed. NASA credit adjacent to an illustration does not make the article a NASA syndication. Same underlying IAU definition as other planet sources.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReusedFrom": "/workspace/task-evidence/citation-review-04.json",
+      "deltaReview": {
+        "evidenceId": "ev-af7c05813e2333997b30",
+        "change": "Adds paragraph describing Pluto atmosphere, surface features, moons, and New Horizons in July 2015.",
+        "inspection": "Reopened same URL via curl with inherited proxy environment, HTTP 200; added paragraph matches actual page. It explicitly calls Pluto a dwarf planet twice, though it also uses loose wording one of the most surprising solar system planets. The preceding passage says it is no longer considered a planet and opening enumerates eight.",
+        "scopeImpact": "No reversal of eight recognized planets under IAU definition. Do not treat the loose phrase as a formal reclassification.",
+        "briefExactQuote": "Pluto is the most complex dwarf planet we know"
+      }
+    }
+  ],
+  "caseFindings": [
+    {
+      "case": "L1-opera",
+      "proposition": "The Sydney Opera House opened in 1973.",
+      "finding": "Two accessible substantive institutional accounts directly state or describe the 1973 opening. The third selected article is blocked, not confirmed. No incorrect context identified in the two accessible passages.",
+      "sourceFamilies": [
+        "National Museum of Australia",
+        "Sydney Opera House"
+      ],
+      "independenceQualification": "Distinct institutions and separately composed narratives, but NMA cites the ABC/Sydney Opera House history project among other references. Some shared historical provenance is visible; do not characterize the sources as wholly independent primary records. NMA also describes its commemorative opening plaque."
+    },
+    {
+      "case": "L6-existential",
+      "proposition": "There are eight planets in the Solar System.",
+      "finding": "All five selected URLs opened and substantively agree on eight under the IAU classification. No incorrect context identified for that ordinary classification claim. NASA/JPL contributes one family despite two URLs.",
+      "sourceFamilies": [
+        "NASA / JPL Solar System Dynamics",
+        "IAU Office of Astronomy for Education",
+        "Time and Date AS",
+        "Sky & Telescope"
+      ],
+      "independenceQualification": "At least two distinct substantive editorial families (e.g., NASA/JPL and separately authored Timeanddate or Sky & Telescope) agree; no article-level syndication observed. All rely on the same underlying IAU classification, not independent measurements proving an exact cosmic census.",
+      "scopeQualification": "Recognized Solar System planets under the IAU definition, excluding dwarf planets; not a proof that an undiscovered additional planet cannot exist."
+    }
+  ],
+  "limits": [
+    "Review applies only to selected citations and these exact propositions.",
+    "HTTP success and a matching passage do not establish broad source accuracy.",
+    "The 403 source remains unverified, not disproved.",
+    "No provider-key paid calls, implementation edits, actual-report changes, or independent-evaluation reads were used.",
+    "Unchanged source access was not freshly retested in review05; the same-day review04 access and passage inspection is explicitly reused. In particular, Queen Elizabeth Memorial remains unverified from the recorded 403, not a newly retried 403."
+  ],
+  "inputMetadata": {
+    "commit": "b66fa5dcbc1e4a58665bc110cb0ab1b6dccf950f",
+    "dirty": false,
+    "sourceSHA256": "71f6fb9504e9045763f081b885fdf63fbcccfc8b138f845953b1575b5b2072e3"
+  },
+  "reusedReview": {
+    "path": "/workspace/task-evidence/citation-review-04.json",
+    "sha256": "8eda0ef5f7d7f5eaf817e88a34ff6a24d12a0e439e888d134149547a21750437",
+    "reviewedAt": "2026-11-14T02:52:47.486535+00:00",
+    "basis": "Same-day source inspection reused for unchanged selected IDs/URLs/excerpts and all source grouping/provenance findings. Two excerpt deltas independently reopened and inspected.",
+    "markdownPath": "/workspace/task-evidence/citation-review-04.md",
+    "markdownSHA256": "0eb9a551329f6394af5dffbf7da7bc6de17bc7049550c4e006d00fa6d873b704"
+  },
+  "comparison": {
+    "selectedIdsUnchanged": true,
+    "selectedUrlsUnchanged": true,
+    "selectedCases": [
+      {
+        "case": "L1-opera",
+        "verdict": "supported",
+        "checkedPublicText": "The Sydney Opera House opened in 1973.",
+        "cached": false,
+        "selectedEvidenceIds": [
+          "ev-a38cbdd50b89785e9ddf",
+          "ev-98bba1d289c45e2bce3a",
+          "ev-c6ef4b33746b6e519887"
+        ]
+      },
+      {
+        "case": "L5-cache-repeat",
+        "verdict": "supported",
+        "checkedPublicText": "The Sydney Opera House opened in 1973.",
+        "cached": true,
+        "selectedEvidenceIds": [
+          "ev-a38cbdd50b89785e9ddf",
+          "ev-98bba1d289c45e2bce3a",
+          "ev-c6ef4b33746b6e519887"
+        ]
+      },
+      {
+        "case": "L6-existential",
+        "verdict": "supported",
+        "checkedPublicText": "There are eight planets in the Solar System.",
+        "cached": false,
+        "selectedEvidenceIds": [
+          "ev-caf1e0a1533ac3783477",
+          "ev-1a695a106a22850b30b3",
+          "ev-de510503319a759fc462",
+          "ev-533b3489b31330136bde",
+          "ev-af7c05813e2333997b30"
+        ]
+      }
+    ],
+    "newUniqueUrls": [],
+    "excerptChanges": [
+      {
+        "evidenceId": "ev-533b3489b31330136bde",
+        "url": "https://www.timeanddate.com/astronomy/planets/planet",
+        "changedFields": [
+          "excerpt"
+        ],
+        "oldExcerptSHA256": "cf7e633a9bab6de29f6d55d46ae4b7b41c817dbd5777fdb34935b91028fab1f7",
+        "newExcerptSHA256": "c5daae4f014c4eab1326350b59b3f11f8cd99db11f09d637cba8559455e53cd8"
+      },
+      {
+        "evidenceId": "ev-af7c05813e2333997b30",
+        "url": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+        "changedFields": [
+          "excerpt"
+        ],
+        "oldExcerptSHA256": "e70810324f2991c3caab8fbbe48fbb27dbec0b06bc9b7744e40bffe63acb0618",
+        "newExcerptSHA256": "e96c176a52c240f5340bb0665d34d95c69f841e67e9ea39ec095e4b451b2344a"
+      }
+    ],
+    "deltaInspection": [
+      {
+        "evidenceId": "ev-533b3489b31330136bde",
+        "change": "Why Is Pluto Not a Planet? heading omitted; final truncation extends from Accor to According to the IAU, a planet is a.",
+        "inspection": "Reopened same URL via curl with inherited proxy environment, HTTP 200; extended fragment matches actual page and introduces the same IAU criteria already discussed. Heading omission does not alter the proposition or context.",
+        "scopeImpact": "none identified",
+        "briefExactQuote": "There are eight planets in the solar system."
+      },
+      {
+        "evidenceId": "ev-af7c05813e2333997b30",
+        "change": "Adds paragraph describing Pluto atmosphere, surface features, moons, and New Horizons in July 2015.",
+        "inspection": "Reopened same URL via curl with inherited proxy environment, HTTP 200; added paragraph matches actual page. It explicitly calls Pluto a dwarf planet twice, though it also uses loose wording one of the most surprising solar system planets. The preceding passage says it is no longer considered a planet and opening enumerates eight.",
+        "scopeImpact": "No reversal of eight recognized planets under IAU definition. Do not treat the loose phrase as a formal reclassification.",
+        "briefExactQuote": "Pluto is the most complex dwarf planet we know"
+      }
+    ]
+  }
+}
