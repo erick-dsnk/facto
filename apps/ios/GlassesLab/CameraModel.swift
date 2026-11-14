@@ -427,6 +427,8 @@ final class CameraModel {
   }
 
   private func clearStream() {
+    // A pending photo can't arrive once the stream is gone; fail it so the UI doesn't hang.
+    if isCapturingPhoto { failPhoto("The stream stopped during the photo.") }
     streamTokens.clear()
     camera = nil
     streamState = .stopped
