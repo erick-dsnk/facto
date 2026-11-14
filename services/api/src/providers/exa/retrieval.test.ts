@@ -41,6 +41,30 @@ describe('Exa retrieval boundary', () => {
     expect(fake.search).toHaveBeenCalledTimes(1);
   });
 
+  it('enriches complete subject-matching highlights only on the policy-approved alternate pass', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: [
+        { url: 'https://unrelated.org/garden', highlights: ['A report on gardening, seasonal planting, soil and greenhouse conditions for the community.'] },
+        ...Array.from({ length: 4 }, (_, i) => ({ url: `https://source${i}.org/history`, highlights: [excerpt] })),
+      ] })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: `${excerpt} Archive record A-17 documents the inauguration.` }] })),
+    };
+    const { context } = setup(fake);
+    await createRetriever({ clientFactory: () => fake })(claim, context);
+    expect(fake.getContents).not.toHaveBeenCalled();
+    const enriched = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.getContents.mock.calls.map(call => call[0][0])).toEqual(['https://source0.org/history', 'https://source1.org/history', 'https://source2.org/history']);
+    expect(enriched.filter(source => source.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('does not let alternate enrichment exceed the shared contents allowance', async () => {
+    const { fake, context } = setup();
+    const exhausted = { ...context, canConsume: () => false };
+    const result = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, exhausted);
+    expect(fake.getContents).not.toHaveBeenCalled();
+    expect(result[0].contentBasis).toBe('highlight');
+  });
+
   it('rejects non-admitted or rewritten text before a provider call', async () => {
     const { retrieve, fake, context } = setup();
     await expect(retrieve({ ...claim, checkedText: 'Different claim.' }, context)).rejects.toThrow('claim_not_admitted');

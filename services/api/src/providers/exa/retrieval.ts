@@ -30,7 +30,7 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       const url = normalizeUrl(page.url);
       if (!url || seen.has(url)) return false;
       seen.add(url);
-      if (!needsPageText(page, claim.checkedText)) return false;
+      if (!needsPageText(page, claim.checkedText, options.queryStrategy === 'balanced_evidence')) return false;
       const domain = getDomain(new URL(url).hostname, { allowPrivateDomains: true })!;
       // At most two pages from one domain can survive the retention cap;
       // preserve the bounded contents allowance for another publisher instead.
