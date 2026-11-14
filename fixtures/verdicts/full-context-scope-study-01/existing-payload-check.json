@@ -1,0 +1,205 @@
+{
+  "kind": "offline_existing_full_context_request_capture",
+  "providerCalls": 0,
+  "sourceSnapshot": "/workspace/live-frozen-08",
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "calls": 24,
+  "totalRequestBytes": 1214678,
+  "largestRequestBytes": 62207,
+  "allBaselineRequestsMatchComparison24": true,
+  "allOtherQuestionsAndStateGuardedByPairedRunner": true,
+  "rows": [
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "arm": "baseline",
+      "bytes": 58205,
+      "bodyHash": "339abb4c4e4cd74cbe230d9e3e0321fd753803c2fac030969ae37716f5de65f1",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "arm": "scope_candidate",
+      "bytes": 62207,
+      "bodyHash": "732c505bfd1299c29cf1cb8ab14d77b8aafc9460c34552c03d658d5204c7d7b6",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "arm": "baseline",
+      "bytes": 58205,
+      "bodyHash": "45cc35d48582e6b3ea2b1c612879a92d066df0483ab96f7007237d0c5a1e6c20",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "arm": "scope_candidate",
+      "bytes": 62207,
+      "bodyHash": "3758bfc735570ea780366d5ebe651ecf938f4e69f15f0fab949405bb5b25e0f2",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "arm": "baseline",
+      "bytes": 36668,
+      "bodyHash": "9cc14196df60e80de521bb079b855982aa89860c8378e86d9add417514036df8",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "arm": "scope_candidate",
+      "bytes": 39336,
+      "bodyHash": "149c1eb52eedb7c7989dde1cc53d4f37de1cf588c3d05b6720eba09a6fc8ec71",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "arm": "baseline",
+      "bytes": 36668,
+      "bodyHash": "ccf4660e05f2295fb9f0b46107387a3706d4d508589bb35b698d986c402641b7",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "arm": "scope_candidate",
+      "bytes": 39336,
+      "bodyHash": "37b95720ea1d0b758c1e73fbdaddc336edf54b71ffd497513acf105dc9c003ec",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "arm": "baseline",
+      "bytes": 49081,
+      "bodyHash": "41532d53e67c8e5f8fd97f86c0623632eea97cc597a1417ae67752422a41147b",
+      "sourceCount": 5
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "arm": "scope_candidate",
+      "bytes": 52416,
+      "bodyHash": "58e3dc79a8dd70b018acd3d097b2e065ab0939c17107b3fd8e69987b8782096c",
+      "sourceCount": 5
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "arm": "baseline",
+      "bytes": 49081,
+      "bodyHash": "bef3fb0efc0c380cb4eb3ad2d8eec1b5a29e173cc04251ed9aeef94281bbc430",
+      "sourceCount": 5
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "arm": "scope_candidate",
+      "bytes": 52416,
+      "bodyHash": "28938f36181fef13a0b51155b599eeb4a27b29274ed18649f93e515db5563bb1",
+      "sourceCount": 5
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "arm": "baseline",
+      "bytes": 56408,
+      "bodyHash": "4e7a44dcbad17010918b1ced650a2c1f2446fb7f16d402c42ee65710a19ae720",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "arm": "scope_candidate",
+      "bytes": 60410,
+      "bodyHash": "b9f24789b5cf498a0015ace45310a5467da8f3174cde4e19237657e8e499eac6",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "arm": "baseline",
+      "bytes": 56408,
+      "bodyHash": "07703b1ce6bae4168a48ef8fe26d1452e447fad7516441ee8c93de2926c33c8f",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "arm": "scope_candidate",
+      "bytes": 60410,
+      "bodyHash": "94eca1f444d052c990054d3c1e10065361d66ba7814d8785c9412ee62d977efc",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "arm": "baseline",
+      "bytes": 36512,
+      "bodyHash": "1fda934c7f6e51ebca67eb77805d4703f1f052d038724b1293a55ecc47819f15",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "arm": "scope_candidate",
+      "bytes": 39180,
+      "bodyHash": "b63326e7bb54100527af296cb887978bd097a5d69cf8a39ab47beef4f06c0832",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "arm": "baseline",
+      "bytes": 36512,
+      "bodyHash": "1754aff9669681bc49e07258ee55b9976811326ec01d0084fef177f97414cf04",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "arm": "scope_candidate",
+      "bytes": 39180,
+      "bodyHash": "9a1ba78c73a4e6be950f202cf5d3db962f0526ce802b80fe8bef422688cf55bc",
+      "sourceCount": 4
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "arm": "baseline",
+      "bytes": 56457,
+      "bodyHash": "971dcb5cca3bc55e64539481e0aa58b21402411db986498c4aa5291876f31997",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "arm": "scope_candidate",
+      "bytes": 60459,
+      "bodyHash": "04b481338e2518a19c25374df1dc23cda7caaaddaadb99ccfb45e386fa98badc",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "arm": "baseline",
+      "bytes": 56457,
+      "bodyHash": "fd6058df6d467fd9fd043c74de9d061f5d0d020a981511b0232d070150d2673d",
+      "sourceCount": 6
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "arm": "scope_candidate",
+      "bytes": 60459,
+      "bodyHash": "9915f671a733c85b16825910578b47fefff1bb60be376ed685f5b20239f0b29f",
+      "sourceCount": 6
+    }
+  ]
+}
