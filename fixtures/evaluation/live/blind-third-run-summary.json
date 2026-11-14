@@ -1,0 +1,269 @@
+{
+  "schema": "independent-blind-first-run-assessment-v1",
+  "metadata": {
+    "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+    "dirty": false,
+    "sourceSHA256": "e6f36587593f39415f161a64a02f0946f4758b9a90b5c2c0ac40399adfb8de85",
+    "sourceHashScope": "tracked apps/console, services/api, packages/contracts, package manifest and lockfile",
+    "blindSetSHA256": "253737d7dad174ba16bc01908e0e7cb1dea4cedf9b1c5b99fb039b07c9267cf0",
+    "blindInputsSHA256": "fe12b5e047b7a265c7fbeaca50ec110e7a7d087869ff001bd5c7c6108979b308",
+    "runnerSHA256": "8aa7016dc00bf5fdaa6577332754cb3152d0032a5ec060e2c2e45995533fc465",
+    "role": "independent_blind_third_campaign_first_run",
+    "noImplementationTuningDuringRun": true,
+    "priorFirstRunPreserved": true
+  },
+  "counts": {
+    "declared": 10,
+    "observed": 10,
+    "terminalReceipts": 10,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 1
+  },
+  "completed": true,
+  "truth": {
+    "eligible": 8,
+    "observedEligible": 8,
+    "correctDefinitive": 2,
+    "wrongDefinitive": 0,
+    "abstentions": 5,
+    "noVerdict": 1,
+    "notRun": 0,
+    "supportedExpected": 4,
+    "contradictedExpected": 4,
+    "definitivePrecision": 1,
+    "definitiveCoverage": 2,
+    "correctDefinitiveFractionOfEligible": 0.25
+  },
+  "admission": {
+    "declared": 10,
+    "observed": 10,
+    "correct": 10,
+    "incorrect": 0,
+    "notRun": 0,
+    "exactPublicSpanPass": 10,
+    "exactPublicSpanFail": 0
+  },
+  "actionConfusion": {
+    "check -> check": 8,
+    "skip -> skip": 1,
+    "needs_confirmation -> needs_confirmation": 1
+  },
+  "privacy": {
+    "observedSearchCalls": 14,
+    "forbiddenPrivateQueryViolations": 0,
+    "unexpectedControlRetrievals": 0,
+    "harnessPrivacyBoundaryStops": 0,
+    "note": "Harness rejects unapproved queries before dispatch; a boundary stop is counted separately from actual exposure."
+  },
+  "limitations": [
+    "Small purposive nonrepresentative sample; no production accuracy estimate.",
+    "Abstention, missing verdict and unrun case are separate; none is a factual pass.",
+    "Definitive precision is conditional on a definitive output; coverage denominator is all eight eligible claims.",
+    "Citation selection and provider source assessments are observations, not independent citation relevance validation.",
+    "Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.",
+    "24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.",
+    "A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.",
+    "Known costs are partial when any attempt has unknown cost. No prices are invented.",
+    "No held-out bodies, raw private text, provider prompts, session credentials or keys are retained. Native/iOS/ASR paths are untested.",
+    "Independent fresh-set construction preceded this source freeze. The evaluator knows earlier public aggregate outcomes and high-level fix descriptions; no new implementation diffs/docs were read.",
+    "One timeout has no factual verdict. Seven factual result events do not mean eight factual judgments completed.",
+    "The sole run is preserved, including one operational pipeline error and the distinct post-execution wrapper publication failure."
+  ],
+  "totals": {
+    "attempts": 56,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 23,
+      "search": 14,
+      "contents": 19
+    },
+    "requestBytes": 701025,
+    "measuredInputTokens": 171172,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 171172,
+    "knownCostUSD": 0.11600000000000005,
+    "attemptsWithUnknownCost": 24,
+    "elapsedMs": 42794
+  },
+  "firstRunPreserved": true,
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "versions": {
+    "modelVersion": "jev-latest",
+    "policyVersion": "glasses-p0.1"
+  },
+  "checkpointIntegrity": {
+    "records": 125,
+    "sequenceContinuous": true,
+    "phaseCounts": {
+      "reserved_before_dispatch": 1,
+      "dispatch_reserved": 56,
+      "attempt_finished": 56,
+      "case_completed": 10,
+      "first_execution_complete": 1,
+      "runner_failed_preserve_all_prior_checkpoints": 1
+    }
+  },
+  "presentation": {
+    "factualRequired": 8,
+    "correct": 7,
+    "incorrectOrMissing": 1,
+    "controlTerminalPass": 2,
+    "controlTerminalFail": 0,
+    "factualResultDenominator": 7,
+    "factualRespondResults": 7,
+    "serviceStatusResponds": 1,
+    "nonResultTerminalEvents": 2,
+    "nonResultPresentationsAvailable": 2,
+    "nonResultPresentationActions": {
+      "silent": 0,
+      "respond": 2,
+      "notify": 0
+    },
+    "terminalFeedbackReceived": 10,
+    "requestDenominator": 10
+  },
+  "citations": {
+    "definitiveResults": 2,
+    "selectedReferences": 6,
+    "missingSelectedRecords": 0,
+    "definitiveWithoutCitation": 0,
+    "uniqueSelectedURLCount": 6,
+    "sourceInspectionStatus": "independent_post_run_review_completed",
+    "independentReview": {
+      "definitiveResultsReviewed": 2,
+      "selectedReferencesReviewed": 6,
+      "uniqueSelectedURLsAttempted": 6,
+      "http200Responses": 6,
+      "substantiveAccessibleReferences": 5,
+      "applicationErrorPages": 1,
+      "storedExcerptsRelevant": 6,
+      "actualContentVerifiedRelevant": 5,
+      "actualContentVerdictSupportingReferences": 5,
+      "unverifiableReferences": 1,
+      "verifiedQualityAssessments": 5,
+      "unverifiableQualityAssessments": 1,
+      "verifiedSubstantiveSecondary": 4,
+      "verifiedAuthoritativeOriginalRecords": 1,
+      "definitiveResultsWithAtLeastOneVerifiedVerdictSupportingSource": 2,
+      "definitiveResultsWithEverySelectedReferenceVerified": 1,
+      "materialOpposingEvidenceFound": 0,
+      "pageFreshnessCaveats": 1,
+      "replacements": 0,
+      "pipelineReruns": 0,
+      "providerKeyCalls": 0,
+      "deliberateUserSourceOpeningsEstablished": 0
+    },
+    "independentReviewMethod": "Manual reasoning over actual public HTTPS GET page text/PDF text and stored checked proposition/verdict; no model-as-judge pipeline invocation or scoring rerun. All six exact selected URLs attempted without substitution.",
+    "independentReviewLimitations": [
+      "One HTTP-200 application error page prevents source-content and source-quality verification for that selected reference.",
+      "One secondary source has a stale unrelated future-date statement; historical claim is directly supported.",
+      "Single post-run retrieval records current access, not page accessibility at runner retrieval time.",
+      "Source relevance and direct statement do not imply original authoritative provenance; four sources are secondary explanations.",
+      "Reviewer retrieval is not evidence that a user deliberately opened any citation.",
+      "No broad search for unselected opposing evidence; no replacement of failed citations."
+    ],
+    "reviewerOpeningIsDeliberateUserSourceOpening": false
+  },
+  "latency": {
+    "allInputs": {
+      "n": 10,
+      "p50Ms": 3817,
+      "p95Ms": 10038,
+      "minMs": 114,
+      "maxMs": 10038
+    },
+    "eligibleFactualInputs": {
+      "n": 8,
+      "p50Ms": 5098,
+      "p95Ms": 10038,
+      "minMs": 1649,
+      "maxMs": 10038
+    },
+    "wallElapsedMs": 42794,
+    "firstExecutionOfFreshSet": true,
+    "warmReplayPerformed": false,
+    "cachedResultCount": 0,
+    "resultEventDenominator": 7,
+    "definition": "Case receipt-to-terminal duration, including service timeout; quantiles use nearest rank. Controls and factual inputs have separate denominators."
+  },
+  "costObservation": {
+    "knownCostUSD": 0.11600000000000005,
+    "attemptsWithUnknownCost": 24,
+    "costIsPartial": true,
+    "note": "Known provider-reported charges only; unknown cost is not zero. Aborted contents cost remains unknown."
+  },
+  "operationalErrors": {
+    "pipelineErrorCount": 1,
+    "records": [
+      {
+        "sanitizedCode": "timeout",
+        "terminalReceived": true,
+        "terminalType": "pipeline.error",
+        "httpStatus": 202,
+        "durationMs": 10038,
+        "dispatchedAttempts": {
+          "jev": 2,
+          "search": 2,
+          "contents": 2
+        },
+        "outcomes": {
+          "response": 5,
+          "aborted": 1
+        },
+        "abortedAttemptKinds": [
+          "contents"
+        ],
+        "inputTokens": 9698,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 40273,
+        "knownCostUSD": 0.015,
+        "attemptsWithUnknownCost": 3,
+        "rerunOrRecoveryDispatches": 0,
+        "retryObservation": "No whole-case retry or aborted-contents retry observed; attempt receipts do not separately classify planned refinement calls versus retries.",
+        "denominatorEffect": "Retained among all eight eligible facts as one no-verdict, not an abstention or factual pass."
+      }
+    ]
+  },
+  "publicationRecovery": {
+    "wrapperExitedNonzeroAfterFullHarnessCompletion": true,
+    "originalExecutedRunnerPreserved": true,
+    "observedPublicationFailure": "EEXIST",
+    "reason": "Prepared public directory already existed; original wrapper used nonrecursive mkdir.",
+    "originalCheckpointFailurePreserved": true,
+    "recoveryMethod": "Separate artifact-only post-processing; no implementation import, provider call, source change or harness rerun.",
+    "harnessCompleted": true,
+    "postprocessorSHA256": "584f9f89594127c28558fa1ea8fe3261a471f3bf75b34c42856f32788fda4485"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 240000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 30,
+      "search": 16,
+      "contents": 24
+    },
+    "wallMs": 180000
+  },
+  "publicDisclosure": "Aggregate-only. Bodies, labels, queries and identifying source URLs stay private. Third campaign remains separate; no pooling, replacement or causal comparison with either earlier campaign.",
+  "artifactHashes": {
+    "sealedBundle": "253737d7dad174ba16bc01908e0e7cb1dea4cedf9b1c5b99fb039b07c9267cf0",
+    "sealedInputs": "fe12b5e047b7a265c7fbeaca50ec110e7a7d087869ff001bd5c7c6108979b308",
+    "sealManifest": "db770f80eb117edfe2a82cdbe26e63702b12bff575a63a52ef5e4b63f2906192",
+    "frozenConfig": "f31d201762746e442ef20695d5395503ed337048239674670ac0d73ceb770e2d",
+    "executedRunner": "8aa7016dc00bf5fdaa6577332754cb3152d0032a5ec060e2c2e45995533fc465",
+    "runLock": "604e4fc68294e9481662b5fe9c1a96f96403446016b5887020b79b5126c86488",
+    "fullSavedReport": "c6bd59a7cdc8e064e29e4400411dcaea187ee5e2296eaea8c3d3228bfd26a196",
+    "savedAssessment": "0a01682f05bd4341926e29e0fb338184293f2ce732ae3b0eab7045566444adbf",
+    "journal": "238564f87b8f0aa416ad26241ed78d93723a9a93ef1e624141e21b57a211e24b",
+    "checkpoint": "309879be99e58ca466400c1d5a941a40857efb34e9c83007782becf047d7389b",
+    "citationReview": "5738472faeb9579440e17697b233ac517841cbaefc549d3ba4dd9f7d17bc39b5",
+    "citationFetches": "b6dd653e33dd98cdd1eda2070139b3b91047b4340938a1fd99c505f10683d0c7"
+  }
+}
