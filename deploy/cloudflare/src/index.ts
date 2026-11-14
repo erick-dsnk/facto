@@ -18,6 +18,7 @@ interface Env {
   EXA_API_KEY?: string;
   DEEPGRAM_API_KEY?: string;
   DEMO_JOIN_CODE?: string;
+  DEBUG_FEED_KEY?: string;
   DEMO_JOIN_EXPIRES_AT?: string;
   ALLOWED_ORIGINS?: string;
 }
@@ -38,6 +39,7 @@ const PASSTHROUGH = [
   "EXA_API_KEY",
   "DEEPGRAM_API_KEY",
   "DEMO_JOIN_CODE",
+  "DEBUG_FEED_KEY",
   "DEMO_JOIN_EXPIRES_AT",
   "ALLOWED_ORIGINS",
 ] as const;

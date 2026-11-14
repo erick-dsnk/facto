@@ -15,6 +15,11 @@ export class DebugFeed {
     if (this.entries.length > this.max) this.entries.splice(0, this.entries.length - this.max);
   }
 
+  /** Drops everything recorded for a session, called when the session is deleted or expires. */
+  purgeSession(sessionId: string) {
+    this.entries = this.entries.filter(entry => entry.sessionId !== sessionId);
+  }
+
   /** Entries with a sequence number above `seq`, oldest first. */
   after(seq: number): DebugEntry[] {
     return this.entries.filter(entry => entry.seq > seq);
