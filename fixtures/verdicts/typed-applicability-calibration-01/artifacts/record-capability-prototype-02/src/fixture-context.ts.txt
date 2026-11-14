@@ -1,0 +1,29 @@
+/** Offline fixture construction only. No production runtime adapter or assessment model exists here. */
+import { contextInputDigest, type Context, type Evidence, type JsonObject, type RetainedRecord } from './types.js';
+export function fixtureRecord(evidence: Evidence, metadata: JsonObject = {}): RetainedRecord {
+    return { ...evidence, title: null, publisher: null, publishedAt: null, retrievedAt: null, textBasis: 'offline_fixture', metadata };
+}
+export function refreshFixtureAssessment(context: Context): Context {
+    context.assessment.inputSHA256 = contextInputDigest(context);
+    return context;
+}
+export function fixtureContext(exactText: string, records: RetainedRecord[], credibleConflictPresent = false): Context {
+    const context: Context = {
+        claim: { exactText, revision: 'offline-claim-v1' }, risk: 'ordinary', credibleConflictPresent,
+        retainedEvidenceIds: records.map(r => r.id), retainedRecords: structuredClone(records),
+        retainedNodeKeys: records.map(r => r.id + '@retained-v1'),
+        originNodes: records.map(r => ({ key: r.id + '@retained-v1', revision: 'retained-v1', record: structuredClone(r), state: {} })),
+        originLinks: [], originGraphState: { method: 'offline_fixture_inventory', completeDeclaredInventory: true },
+        assessment: { id: 'offline-assessment-' + records[0]!.id, revision: 'fixture-v1', inputSHA256: '0'.repeat(64), state: { kind: 'synthetic_context_binding_control', modelExecuted: false, finalVerdictEvaluated: false } }
+    };
+    return refreshFixtureAssessment(context);
+}
+/** A changed fixture assessment hash does not attest that a real model was rerun. */
+export function replaceFixtureTarget(context: Context, evidence: Evidence): Context {
+    const next = structuredClone(context), index = next.retainedEvidenceIds.indexOf(evidence.id);
+    if (index < 0)
+        throw new Error('fixture target absent');
+    next.retainedRecords[index] = { ...next.retainedRecords[index]!, ...evidence };
+    next.originNodes.find(n => n.key === next.retainedNodeKeys[index])!.record = structuredClone(next.retainedRecords[index]!);
+    return refreshFixtureAssessment(next);
+}

@@ -1,0 +1,38 @@
+{
+  "status": "approval_held_resource_cleanup_followup",
+  "adapter02ManifestSHA256": "c89c8379679d2c8c087a0b36b83d05409aa5970827d2adb460db7b133a1436ce",
+  "adapter01ManifestSHA256": "1fcb009bed2d31d277eba742bb37f988cdb5e8d534bc783c0684a7bd40927cbc",
+  "predecessorAllFilesUnchanged": true,
+  "adapter02AllManifestFilesAndDependenciesVerified": true,
+  "independentTests": {
+    "adapter01OriginalFailures": 2,
+    "sameProbesAgainst02Passed": 2,
+    "adapter02AuthorSuiteRerunPassed": 29,
+    "newResourceProbesAgainst02Failed": 2
+  },
+  "closed": [
+    "cancelled signal-ignoring transport no longer delays adapter rejection until transport release",
+    "replacement request budget blocks before dispatch; zero attempts charged",
+    "budget/controller/signal/clock/acceptedAt identity guards and generation checks prevent stale response use",
+    "charged attempt remains charged after cancellation; stale later release cannot publish assessment/token/cache result"
+  ],
+  "openFindings": [
+    {
+      "kind": "timeout_transport_resource_not_cancelled",
+      "observed": "actual fetch signal aborted=false after adapter rejects timeout",
+      "impact": "standalone experiment has no outer pipeline timer; real fetch can continue beyond returned timeout",
+      "expected": "abort locally owned transport using original pinned lifetime; never replacement or new request controller"
+    },
+    {
+      "kind": "owner_failure_after_headers_leaves_body_open",
+      "observed": "Response.body.cancel callback0 when wrapper throws stale/replaced owner after fetch returns",
+      "impact": "reader/body remains unused; native stream may continue acquisition",
+      "expected": "cancel rejected Response body without waiting unboundedly or masking the original ownership failure"
+    }
+  ],
+  "scope": "unwired adapter only; no production defect claimed from these two findings",
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "productionEdits": 0,
+  "questionSemantics": "independent final reviewer owns semantics; this review focuses runtime ownership and resources"
+}

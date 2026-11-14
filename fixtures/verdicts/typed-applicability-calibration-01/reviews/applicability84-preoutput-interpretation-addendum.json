@@ -1,0 +1,18 @@
+{
+  "kind": "preoutput_interpretation_addendum",
+  "createdAt": "2026-11-14T06:30:08.779251+00:00",
+  "planCanonicalSHA256": "6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0",
+  "reason": "Root identified possible question/rubric distinction between an absent operative premise meaning not_covered versus unresolved/uncertain. Preserve all frozen labels/question.",
+  "rawTernary": [
+    "Report exact frozen-label accuracy and full covered/not_covered/uncertain confusion matrix, retaining unasked/missing separately.",
+    "A not_covered versus uncertain disagreement is a non-grant class disagreement, not equivalent to an unsafe covered result."
+  ],
+  "binaryAndTyped": [
+    "Report chosen covered at probability>=.85 separately from exact ternary.",
+    "Any thresholded covered on expected not_covered or uncertain is unsafe acceptance, even if later risk blocks actual private eligibility.",
+    "Report actual private eligibility grants separately; no core capability, authority, temporal permission, independence or factual verdict follows."
+  ],
+  "unaskedMissing": "Five deterministic guard exclusions and any failures remain full declared denominators; no raw model label is imputed.",
+  "noChanges": "No packet labels, question wording, threshold or model-output-dependent relabeling.",
+  "actualProviderCallsByReviewer": 0
+}

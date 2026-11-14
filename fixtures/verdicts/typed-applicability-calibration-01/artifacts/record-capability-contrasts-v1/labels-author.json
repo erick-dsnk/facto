@@ -1,0 +1,1055 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Prospective independent author applicability labels; not stance/truth labels.",
+  "authoredAt": "2026-11-14T05:33:42.952760+00:00",
+  "inputSHA256": "0bc7d8258e871997f8f37f157670810abb5481118b2284dd5ebe418dcd2b0c0b",
+  "labels": [
+    {
+      "id": "AC-T01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "On Census Day, 21 March 2021",
+      "supportingSpanCodepoints": {
+        "start": 875,
+        "end": 903
+      },
+      "rationale": "The named historical release, estimate, geography and population match. Reference date is the field whose asserted value is compared; it is not a request for another day's population.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit historical release; date as compared field",
+      "materialRoleRationale": "21 March 2021 is the compared reference_date value.",
+      "contrastGroup": "reference-date-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "46f37fdab06e0d7f958771b770401bbe11fd23edd13c11f640d30a5d778e3949",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-T02",
+      "expectedApplicability": "covered",
+      "supportingSpan": "On Census Day, 21 March 2021",
+      "supportingSpanCodepoints": {
+        "start": 875,
+        "end": 903
+      },
+      "rationale": "Same record and field as T01. The deliberately different asserted reference-date value remains addressable by the record; agreement belongs to stance, not capability.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit historical release; date as compared field",
+      "materialRoleRationale": "22 March 2021 is the compared reference_date value, not a new estimation date.",
+      "contrastGroup": "reference-date-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "4d1c713854dbab839737d93d4d985a017e8e28a794f4e749e270ed983843104b",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-T03",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "On Census Day, 21 March 2021",
+      "supportingSpanCodepoints": {
+        "start": 875,
+        "end": 903
+      },
+      "rationale": "Here on 22 March specifies the population measurement period being requested. The record estimates Census Day 21 March; it does not report the next day's population. This is a material reporting-date change.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit historical release; different measurement reference date",
+      "materialRoleRationale": "22 March 2021 modifies the population time, whereas 59,597,300 is the compared measure.",
+      "contrastGroup": "reference-date-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "2ff1363587070ea7620afe86dd1b0e981e8071a60577807e0d81378fcc8a784e",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-T04",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The Night Watchman , by Louise Erdrich (Harper)",
+      "supportingSpanCodepoints": {
+        "start": 192,
+        "end": 239
+      },
+      "rationale": "The award edition, category and winning-work relation match. A different asserted work is a compared value, not another edition or referent.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit award edition 2021",
+      "materialRoleRationale": "Love Medicine is a deliberately different winning_work value.",
+      "contrastGroup": "award-edition-vs-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "12f51b4be667103ae3221bd4a012cc880029d7aef5207372be63bc99ff3ae3ba",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-T05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "The year identifies a different award edition. One 2021 record cannot inherit competence for a 2020 entry even when a familiar work appears in the statement.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit different award edition 2020",
+      "materialRoleRationale": "2020 identifies the requested edition; it is not a compared date field of the 2021 entry.",
+      "contrastGroup": "award-edition-vs-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "437797d1528e074bdbf4f81a80c033b603503be1874d5daacf25594134a9acec",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-T06",
+      "expectedApplicability": "uncertain",
+      "supportingSpan": "Release date: 28 June 2022",
+      "supportingSpanCodepoints": {
+        "start": 281,
+        "end": 307
+      },
+      "rationale": "In 2021 can modify reported or the population reference time. The exact sentence does not identify the pinned first rounded release or disambiguate those temporal roles. Do not supply the missing reading from world knowledge.",
+      "ambiguity": "In2021 can modify reported or the population reference time. The exact sentence does not identify the pinned first rounded release or disambiguate those temporal roles. Do not supply the missing reading from world knowledge.",
+      "excludeFromPrimary": true,
+      "temporalReading": "ambiguous reporting-event year versus reference year",
+      "materialRoleRationale": "No forced assignment of in 2021 as event date or reference period.",
+      "contrastGroup": "ambiguous-temporal-attachment",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_while_meaning_unresolved",
+      "preserveConflictVeto": true,
+      "claimSHA256": "83a316acc270250c5eb31cff130e4e72ba57041da978c54cf1605710cb02ef3a",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_unresolved_meaning"
+    },
+    {
+      "id": "AC-O01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "This is the bounded outcome field in the identified edition. No ordinal over earlier prizes or the author's career is asserted.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit award edition 2021",
+      "materialRoleRationale": "Winning-work field only; no first-ever inference.",
+      "contrastGroup": "award-ordinal",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "b1529e6963733c5ed17d36fef5306e20591eadf99051426ec076262abdfc2e1b",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-O02",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "First-ever requires a complete earlier category history or an explicit ordinal field. This isolated winning-entry unit supplies neither.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit2021 edition plus all-prior editions ordinal",
+      "materialRoleRationale": "First-ever is a material historical-universe expansion, not an alternate work value.",
+      "contrastGroup": "award-ordinal",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "2a180143a8bb8aa0f2cec6262797b6eaa34d20087cab8ef673b456908425f69f",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-O03",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The Night Watchman , by Louise Erdrich (Harper)",
+      "supportingSpanCodepoints": {
+        "start": 192,
+        "end": 239
+      },
+      "rationale": "An author-career ordinal requires earlier award history. A single 2021 winner entry cannot establish first or refute second by receipt alone.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "career-wide ordinal; no complete temporal universe",
+      "materialRoleRationale": "First refers to recipient history, not ordering within this entry.",
+      "contrastGroup": "award-ordinal",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "0b6af2600d190e6d0f80955444ff0715fc3cff448b8e1aea91f343a1e6f2bd30",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-O04",
+      "expectedApplicability": "uncertain",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "Came first could mean the winning outcome, display order, publication chronology or an earlier-award ordinal. The record heading must not choose that interpretation for the claim.",
+      "ambiguity": "Came first could mean the winning outcome, display order, publication chronology or an earlier-award ordinal. The record heading must not choose that interpretation for the claim.",
+      "excludeFromPrimary": true,
+      "temporalReading": "ordinal meaning unresolved",
+      "materialRoleRationale": "Unresolved first relation; return unavailable while meaning is unresolved.",
+      "contrastGroup": "award-ordinal",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_while_meaning_unresolved",
+      "preserveConflictVeto": true,
+      "claimSHA256": "1743cc3581ff1f61740f254f53a860db02676cdbb391f8b3cf6fe6a55b2d2c22",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_unresolved_meaning"
+    },
+    {
+      "id": "AC-N01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document.",
+      "supportingSpanCodepoints": {
+        "start": 831,
+        "end": 953
+      },
+      "rationale": "The negation asks about the same interpretation rule and capitalization field in the pinned NEW text. Negation is not itself a scope failure.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit immutable May 2017 version",
+      "materialRoleRationale": "Negated special_meaning value for uncapitalized words.",
+      "contrastGroup": "capitalization-polarity",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "42f6d1f0537b5f4fad35b2883ce44d3a98dfe92a4d14f2c55abb8b3b8de13ebf",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 953
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-N02",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The words have the meanings specified herein only when they are in\n      all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 737,
+        "end": 823
+      },
+      "rationale": "The asserted denial of the capitalization restriction still addresses that exact rule/condition field in the pinned version. Capability must not depend on agreeing with the rule.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit immutable May 2017 version",
+      "materialRoleRationale": "Negates the capitalization_condition value; same IETF keyword interpretation relation.",
+      "contrastGroup": "capitalization-polarity",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "d3f79bb344735998956ea13b07b293e810bd8da19b95c9ac52ffb7112e9e29e0",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 953
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-N03",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The Night Watchman , by Louise Erdrich (Harper)",
+      "supportingSpanCodepoints": {
+        "start": 192,
+        "end": 239
+      },
+      "rationale": "Negative assertion about the same edition/category/outcome fields remains within record competence. It does not require a different award history.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit award edition 2021",
+      "materialRoleRationale": "Negated listed_winning_work relation value.",
+      "contrastGroup": "award-polarity",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "58ce0f6a7f7ffdb1c9cadeadbb9abc3f4215951fe410852d0b2f28124733a51a",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-N04",
+      "expectedApplicability": "covered",
+      "supportingSpan": "the size of the usual resident population in England and Wales was 59,597,300",
+      "supportingSpanCodepoints": {
+        "start": 905,
+        "end": 982
+      },
+      "rationale": "Negated numerical agreement leaves release, population, geography, reference date and rounded-estimate definition unchanged.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit historical release and reference date",
+      "materialRoleRationale": "59,597,300 is a negated compared estimate value.",
+      "contrastGroup": "population-polarity",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "e3d2c3487a594ae6604efd3225d20f0f43e1aaf7e27074e55cbdeb1034914dcc",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-N05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 299,
+        "end": 409
+      },
+      "rationale": "A normative keyword interpretation is not evidence of any software's implementation compliance. Negation does not bridge that relation change.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "version pinned; implementation relation outside competence",
+      "materialRoleRationale": "Noncompliance concerns software behavior, not the documented definition.",
+      "contrastGroup": "capitalization-polarity",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "2d98e2e8fdad3ab3a0a2c234237cca1e7406f86f6fe07dd7670da6201e0f0d7f",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 953
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-N06",
+      "expectedApplicability": "uncertain",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "That has no resolved proposition in the exact admitted sentence. The nearby award passage cannot manufacture its antecedent.",
+      "ambiguity": "That has no resolved proposition in the exact admitted sentence. The nearby award passage cannot manufacture its antecedent.",
+      "excludeFromPrimary": true,
+      "temporalReading": "edition pinned but negated referent unresolved",
+      "materialRoleRationale": "No comparison target can be bound without an antecedent.",
+      "contrastGroup": "unresolved-negation",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_while_meaning_unresolved",
+      "preserveConflictVeto": true,
+      "claimSHA256": "7f1ea69541375f7a3f709911d3541ee7ef13adb41265e72a521f6908219ab1ee",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_unresolved_meaning"
+    },
+    {
+      "id": "AC-X01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "When July 1 is a Sunday, July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 224,
+        "end": 274
+      },
+      "rationale": "The pinned section, jurisdiction and Sunday condition are explicit, and the retained record includes the operative exception.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit pinned consolidation",
+      "materialRoleRationale": "July 2 is the compared observed-day value within the Sunday branch.",
+      "contrastGroup": "holiday-exception-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "ad80773db30b9b479decb6a9b64cf992435ba8271c15644410166a0c65f709ea",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-X02",
+      "expectedApplicability": "covered",
+      "supportingSpan": "When July 1 is a Sunday, July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 224,
+        "end": 274
+      },
+      "rationale": "Same operative condition and relation as X01. Different observed-day value does not change capability; ordinary stance must resolve its disagreement.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit pinned consolidation",
+      "materialRoleRationale": "July 3 is a deliberately different observed-day value, not a new condition.",
+      "contrastGroup": "holiday-exception-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "6be4280586944b9a5b7e097e817490c71a90653379f1e63c43539099fc07102d",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-X03",
+      "expectedApplicability": "covered",
+      "supportingSpan": "July 1, not being a Sunday, is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 43,
+        "end": 89
+      },
+      "rationale": "The non-Sunday branch and geographic scope are explicit. Both conditional branches remain available in the full retained unit.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit pinned consolidation",
+      "materialRoleRationale": "Condition is non-Sunday; holiday-name/day fields are within the record.",
+      "contrastGroup": "holiday-exception-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "041741b3464927dbc21bf951460140047d95e98c7cc9619518b185ad61f09ce3",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-X04",
+      "expectedApplicability": "covered",
+      "supportingSpan": "Marginal note: When July 1 is a Sunday (2) When July 1 is a Sunday",
+      "supportingSpanCodepoints": {
+        "start": 181,
+        "end": 247
+      },
+      "rationale": "This asks whether the pinned rule has an exception, a permitted exception field. Denying the exception's existence is an addressable compared assertion, not a request about another condition or jurisdiction.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit pinned consolidation",
+      "materialRoleRationale": "Exception existence/polarity is the compared property of the same full rule.",
+      "contrastGroup": "holiday-exception-value",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "97316b2d7ff767bcff1a20a4443ce8bfd8bd175cf36a9c84028913eb5b419f07",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-X05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "shall be kept and observed as such throughout Canada",
+      "supportingSpanCodepoints": {
+        "start": 94,
+        "end": 146
+      },
+      "rationale": "A statutory holiday designation does not establish universal employment compensation/leave entitlement. The added employment population and legal relation are outside this bounded section's capability.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "version pinned; employment-entitlement relation added",
+      "materialRoleRationale": "Paid leave is a distinct entitlement, not another name/day value.",
+      "contrastGroup": "holiday-relation-expansion",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "dd0504076c27eca4420181bc9d4847df901c02b89c5669b7c05853433c7d6ee3",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-X06",
+      "expectedApplicability": "uncertain",
+      "supportingSpan": "When July 1 is a Sunday, July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 224,
+        "end": 274
+      },
+      "rationale": "That exception and the next day lack explicit antecedents. The section text cannot choose an operative branch and date referent for this incomplete relation.",
+      "ambiguity": "That exception and the next day lack explicit antecedents. The section text cannot choose an operative branch and date referent for this incomplete relation.",
+      "excludeFromPrimary": true,
+      "temporalReading": "version pinned; condition/day antecedents unresolved",
+      "materialRoleRationale": "No forced Sunday/July 1 referent from supplied source context.",
+      "contrastGroup": "unresolved-exception",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_while_meaning_unresolved",
+      "preserveConflictVeto": true,
+      "claimSHA256": "be07a47bb796a751cc909daddf9dd62a5eca605ee60315dd81b304f6c7153810",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_unresolved_meaning"
+    },
+    {
+      "id": "AC-D01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The words have the meanings specified herein only when they are in\n      all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 737,
+        "end": 823
+      },
+      "rationale": "Simple present defines describes an explicitly pinned immutable version; it is not automatically a claim about the latest/current standard.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit immutable May 2017; grammatical present",
+      "materialRoleRationale": "May2017/version text is explicit; no current-version proof requested.",
+      "contrastGroup": "historical-vs-current",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "f9de7dfa888069c49b34d631301495e4359f4074fbf8e3b571f0beb1cb8f851f",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 953
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-D02",
+      "expectedApplicability": "covered",
+      "supportingSpan": "When July 1 is a Sunday, July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 224,
+        "end": 274
+      },
+      "rationale": "The word current occurs inside the explicit historical consolidation identifier. It does not turn that pinned record into a claim about law at the prospective asOf date.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit dated consolidation; current-to is version label",
+      "materialRoleRationale": "Current-to 19 October 2026 is record version metadata, not now.",
+      "contrastGroup": "historical-vs-current",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "c48415c869edf219682299730ceb636bcd491a42529f21c1b23b57a58ebb153b",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-D03",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "When July 1 is a Sunday, July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 224,
+        "end": 274
+      },
+      "rationale": "Today resolves to the prospective asOf date, but the supplied receipt is snapshot-only with no independently reviewed effective/recheck proof for current law. Matching words cannot supply freshness.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "current at 2026-11-14; current-version proof absent",
+      "materialRoleRationale": "Current-law assertion requires more than a pinned consolidation snapshot.",
+      "contrastGroup": "historical-vs-current",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "a5f20138b09c1621a8a0cf63f302cd5b698f14972d958a27b5b64a525e51efb5",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_current_scope_then_missing_current_version_proof"
+    },
+    {
+      "id": "AC-D04",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This is not the latest release.",
+      "supportingSpanCodepoints": {
+        "start": 198,
+        "end": 229
+      },
+      "rationale": "The saved first rounded release explicitly is not latest. The receipt neither identifies nor verifies the latest estimate, even if the asserted number coincides.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "latest/current release request",
+      "materialRoleRationale": "Latest is material version selection, not a compared numerical value.",
+      "contrastGroup": "historical-vs-current",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "7ac5cc42cb21ada760bf299e3cdcb42346f0f7cf327001107c22296373682806",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_current_scope_then_missing_current_version_proof"
+    },
+    {
+      "id": "AC-D05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "On Census Day, 21 March 2021",
+      "supportingSpanCodepoints": {
+        "start": 875,
+        "end": 903
+      },
+      "rationale": "Now requests population at the prospective asOf date. The historical 2021 reference-date estimate is not a current population measure.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "now 2026-11-14 versus reference 2021-03-21",
+      "materialRoleRationale": "Current reference date materially differs; number agreement is irrelevant.",
+      "contrastGroup": "historical-vs-current",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "1a7c9c4d406fb742e2b416e95c0c370b0df8438c239a5440e0e04403402540ba",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_current_scope_then_missing_current_version_proof"
+    },
+    {
+      "id": "AC-D06",
+      "expectedApplicability": "uncertain",
+      "supportingSpan": "Release date: 28 June 2022",
+      "supportingSpanCodepoints": {
+        "start": 281,
+        "end": 307
+      },
+      "rationale": "Now reports may be discourse emphasis on a pinned historical report or an assertion of its current revised content/accessibility. The snapshot route should not silently choose between those readings.",
+      "ambiguity": "Now reports may be discourse emphasis on a pinned historical report or an assertion of its current revised content/accessibility. The snapshot route should not silently choose between those readings.",
+      "excludeFromPrimary": true,
+      "temporalReading": "explicit historical record plus ambiguous now modifier",
+      "materialRoleRationale": "No forced fresh-access or current-version interpretation; unresolved meaning stays unavailable.",
+      "contrastGroup": "historical-vs-current",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_while_meaning_unresolved",
+      "preserveConflictVeto": true,
+      "claimSHA256": "0f3f4f2f292b0b4056d6df3505311f56de42715b562d065bbc89c8809a4dd424",
+      "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 1115
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1952,
+        "end": 3067
+      },
+      "gatingLayer": "semantic_unresolved_meaning"
+    },
+    {
+      "id": "AC-V01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.",
+      "supportingSpanCodepoints": {
+        "start": 299,
+        "end": 409
+      },
+      "rationale": "Defines is the documented normative interpretation relation, with the explicit version and capitalization context preserved.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "explicit immutable May 2017 version",
+      "materialRoleRationale": "Definition relation only.",
+      "contrastGroup": "definition-vs-effect",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "source_qualification_only_if_all_separate_trust_and_policy_gates_pass",
+      "preserveConflictVeto": true,
+      "claimSHA256": "70bf2485707203a2de26e2efcd58cb539aeaa21339237f10d50b5de169424215",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 953
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-V02",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF\n   documents",
+      "supportingSpanCodepoints": {
+        "start": 299,
+        "end": 373
+      },
+      "rationale": "Normative interpretation does not prove empirical implementation conformance. Program behavior is not a permitted field or record relation.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "version pinned; empirical compliance relation",
+      "materialRoleRationale": "Proves conformance substitutes an implementation-effect relation.",
+      "contrastGroup": "definition-vs-effect",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "eb45c4ccb7b058f9555b5cc7f25747f464f1cb98b0bfc08a36e98eda33338fbf",
+      "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 953
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 3793,
+        "end": 4746
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-V03",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "is a legal holiday and shall be kept and observed as such throughout Canada",
+      "supportingSpanCodepoints": {
+        "start": 71,
+        "end": 146
+      },
+      "rationale": "Designating an observed legal holiday is not evidence of attendance or causal social effect. No statistical effect record is supplied.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "version pinned; empirical causal effect",
+      "materialRoleRationale": "Increased attendance is outside statutory-holiday-rule competence.",
+      "contrastGroup": "legal-rule-vs-effect",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "abc43e3c13432caf386a8c309b3a74efa1299da1fe53f49a3beb9d89c44dbe5d",
+      "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1551
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-V04",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "The award edition and outcome do not establish a book's first-publication date. This is a different event relation, not a wrong value of the winning-work field.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "award edition versus publication event",
+      "materialRoleRationale": "First published refers to a different event and requires publication history.",
+      "contrastGroup": "award-vs-publication",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "af12564ee0be8686e5db94e4d8632ca6675625ac2d704f766b0bb8a859456453",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-V05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "The retained award entry records winner/category/edition, not the announcement event or its date. An announcement-day claim cannot borrow the outcome-field receipt.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "temporalReading": "edition pinned; separate announcement event/day",
+      "materialRoleRationale": "1 January 2021 is a value of an unrecorded announcement-date relation, not award edition.",
+      "contrastGroup": "award-vs-announcement",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_relation_or_material_scope",
+      "preserveConflictVeto": true,
+      "claimSHA256": "4f9efd135aba9921dc2d46d44c4350385abe37687e6f920e452b340dc41d1847",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_relation_and_material_scope"
+    },
+    {
+      "id": "AC-V06",
+      "expectedApplicability": "uncertain",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 41
+      },
+      "rationale": "Made could mean written, published, awarded or another event. The award heading does not settle the verb's intended relation.",
+      "ambiguity": "Made could mean written, published, awarded or another event. The award heading does not settle the verb's intended relation.",
+      "excludeFromPrimary": true,
+      "temporalReading": "edition named; event verb unresolved",
+      "materialRoleRationale": "No source-driven completion of made as awarded.",
+      "contrastGroup": "unresolved-event-verb",
+      "expectedDeterministicBinding": "eligible_for_semantic_question_subject_to_independent_receipt_validation",
+      "expectedCapabilityIssuance": "unavailable_while_meaning_unresolved",
+      "preserveConflictVeto": true,
+      "claimSHA256": "cc027ed7201e4dfacd920fdac965c1c35a19b64a6b51bfc6ac66d446890930e4",
+      "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 239
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 724,
+        "end": 963
+      },
+      "gatingLayer": "semantic_unresolved_meaning"
+    },
+    {
+      "id": "AC-B01",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "July 1, not being a Sunday",
+      "supportingSpanCodepoints": {
+        "start": 43,
+        "end": 69
+      },
+      "rationale": "The authentic retained excerpt is only subsection 2(1), so it lacks the operative Sunday exception needed for this claim. Archived nearby text cannot repair the retained passage.",
+      "ambiguity": null,
+      "excludeFromPrimary": true,
+      "temporalReading": "explicit pinned consolidation",
+      "materialRoleRationale": "Deterministic passage/material-span precondition fails; do not ask the learned adapter.",
+      "contrastGroup": "binding-exception-clips",
+      "expectedDeterministicBinding": "unavailable_missing_material_span",
+      "expectedCapabilityIssuance": "never_issued_from_this_clipped_passage",
+      "preserveConflictVeto": true,
+      "claimSHA256": "ad80773db30b9b479decb6a9b64cf992435ba8271c15644410166a0c65f709ea",
+      "excerptSHA256": "40178af147eaf4d9c2023809b575936ce8a58819cd0c11bfbed07bc7e8101533",
+      "excerptInRecordUnitCodepoints": {
+        "start": 0,
+        "end": 180
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1167,
+        "end": 1347
+      },
+      "gatingLayer": "deterministic_material_span_binding"
+    },
+    {
+      "id": "AC-B02",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "July 2 is a legal holiday",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 25
+      },
+      "rationale": "The authentic retained substring starts after the Sunday condition. The day and holiday appear, but the material conditional association is absent from the excerpt itself.",
+      "ambiguity": null,
+      "excludeFromPrimary": true,
+      "temporalReading": "explicit pinned consolidation",
+      "materialRoleRationale": "Deterministic condition-containment precondition fails; canonical body identity alone is insufficient.",
+      "contrastGroup": "binding-exception-clips",
+      "expectedDeterministicBinding": "unavailable_missing_material_span",
+      "expectedCapabilityIssuance": "never_issued_from_this_clipped_passage",
+      "preserveConflictVeto": true,
+      "claimSHA256": "ad80773db30b9b479decb6a9b64cf992435ba8271c15644410166a0c65f709ea",
+      "excerptSHA256": "5112a40429fb63c2ed2db129087f55428f950d64a39de0ffae82752fe7237a05",
+      "excerptInRecordUnitCodepoints": {
+        "start": 249,
+        "end": 384
+      },
+      "excerptInExtractionCodepoints": {
+        "start": 1416,
+        "end": 1551
+      },
+      "gatingLayer": "deterministic_material_span_binding"
+    }
+  ],
+  "labelFreezeStatus": "frozen_author_labels_before_any_candidate_execution",
+  "truthVerdictsAssigned": false,
+  "directScopeOrStanceLabelsAssigned": false
+}
