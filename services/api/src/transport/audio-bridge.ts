@@ -7,6 +7,8 @@ import { AudioFrameValidator, type AsrAdapter, type AsrStream, type AsrTranscrip
 type Generation = {
   config: AudioStart; controller: AbortController; stream?: AsrStream;
   ready: boolean; pendingMs: number; tail: Promise<void>; startedAt: number; frameEndMs: number;
+  /** Wall time and audio offset of the first frame: sentence times are counted from here. */
+  firstFrameAt?: number; firstFrameOffsetMs?: number;
 };
 const transcriptSchema = z.object({
   text: z.string().refine(text => Array.from(text).length <= 800), final: z.boolean(),
@@ -83,6 +85,10 @@ export class AudioBridge {
       frame = this.validator.accept(bytes);
       if (generation.pendingMs + frame.durationMs > 2000) throw new PipelineError('audio_backlog');
       generation.frameEndMs = frame.captureOffsetMs + frame.durationMs;
+      if (generation.firstFrameAt === undefined) {
+        generation.firstFrameAt = this.session.now();
+        generation.firstFrameOffsetMs = frame.captureOffsetMs;
+      }
     } catch (error) {
       await this.stop('frame_rejected').catch(() => undefined);
       throw error;
@@ -109,7 +115,13 @@ export class AudioBridge {
     // Low-confidence words go to the checker only; transcript events keep their documented payload.
     const { lowConfidenceWords: _lowConfidenceWords, ...shown } = event;
     this.session.emit(event.final ? 'transcript.final' : 'transcript.partial', { ...shown, speaker: event.speaker ?? null, streamGeneration: generation.config.streamGeneration, source: generation.config.source });
-    if (event.final && this.current(generation)) await this.onFinalTranscript(event, generation.config, generation.startedAt + event.captureOffsetMs);
+    // Count from when audio actually started arriving, not from audio.ready: glasses can start
+    // sending audio many seconds after the stream is ready (their camera link comes up first),
+    // and startedAt + offset then stamped every sentence that far in the past, so the runtime
+    // threw them all away as stale (> 15 s). A transcript that itself arrives late keeps its
+    // real capture time.
+    const capturedAt = (generation.firstFrameAt ?? generation.startedAt) + event.captureOffsetMs - (generation.firstFrameOffsetMs ?? 0);
+    if (event.final && this.current(generation)) await this.onFinalTranscript(event, generation.config, capturedAt);
   }
 
   async stop(reason = 'stopped'): Promise<void> {
