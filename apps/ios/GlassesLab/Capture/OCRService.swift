@@ -87,14 +87,14 @@ final class OCRService: TextRecognizing {
     if let index = ScreenDetector.chooseScreen(quads: quads, lineBoxes: confident),
        let crop = ScreenDetector.crop(image, orientation: orientation, quad: quads[index]),
        let lines = try? recognizeLines(in: crop, orientation: .up) {
-      var result = Self.assemble(lines, minimumConfidence: minimumLineConfidence)
+      var result = Self.assemble(lines, minimumConfidence: minimumLineConfidence, aspect: Self.aspect(of: crop, orientation: .up))
       if !result.isEmpty {
         result.source = .screen
         result.candidateCount = quads.count
         return result
       }
     }
-    var result = Self.assemble(wholeLines, minimumConfidence: minimumLineConfidence)
+    var result = Self.assemble(wholeLines, minimumConfidence: minimumLineConfidence, aspect: Self.aspect(of: image, orientation: orientation))
     result.candidateCount = quads.count
     return result
   }
@@ -138,7 +138,9 @@ final class OCRService: TextRecognizing {
   /// height), or share a row across a small gap. Lines run top to bottom inside a block;
   /// blocks run top to bottom, then left to right. Same-row lines are joined with a space
   /// only across a small gap; everything else is separated by a newline.
-  static func assemble(_ lines: [OCRLine], minimumConfidence: Float) -> OCRResult {
+  /// `aspect` is the upright pixel width over height. Vision boxes are normalised per axis, so
+  /// horizontal distances are scaled by it to be comparable with line heights.
+  static func assemble(_ lines: [OCRLine], minimumConfidence: Float, aspect: CGFloat = 1) -> OCRResult {
     var kept: [OCRLine] = []
     var dropped = 0
     for line in lines {
@@ -153,7 +155,7 @@ final class OCRService: TextRecognizing {
       return OCRResult(text: "", meanConfidence: 0, lineCount: 0, droppedLineCount: dropped)
     }
 
-    let text = orderedBlocks(kept).map(blockText).joined(separator: "\n")
+    let text = orderedBlocks(kept, aspect: aspect).map { blockText($0, aspect: aspect) }.joined(separator: "\n")
     let mean = kept.reduce(0.0) { $0 + Double($1.confidence) } / Double(kept.count)
     return OCRResult(text: text, meanConfidence: mean, lineCount: kept.count, droppedLineCount: dropped)
   }
@@ -164,19 +166,24 @@ final class OCRService: TextRecognizing {
   static let blockLineGap: CGFloat = 1.5
 
   /// Whether two lines belong to the same block.
-  static func sameBlock(_ a: CGRect, _ b: CGRect) -> Bool {
+  static func sameBlock(_ a: CGRect, _ b: CGRect, aspect: CGFloat = 1) -> Bool {
     let height = max(a.height, b.height)
-    let horizontalOverlap = min(a.maxX, b.maxX) - max(a.minX, b.minX)
+    let horizontalOverlap = (min(a.maxX, b.maxX) - max(a.minX, b.minX)) * aspect
     let verticalOverlap = min(a.maxY, b.maxY) - max(a.minY, b.minY)
     if verticalOverlap > min(a.height, b.height) / 2 {
       return -horizontalOverlap <= height * sameRowGap
     }
     guard -verticalOverlap <= height * blockLineGap else { return false }
-    return abs(a.minX - b.minX) <= height || horizontalOverlap >= max(a.width, b.width) * 0.5
+    return abs(a.minX - b.minX) * aspect <= height || horizontalOverlap >= max(a.width, b.width) * aspect * 0.5
   }
 
-  /// Groups lines into blocks and orders them: blocks top to bottom then left to right.
-  static func orderedBlocks(_ lines: [OCRLine]) -> [[OCRLine]] {
+  /// Blocks at least this share of the text's overall width are full-width (a title or banner).
+  static let fullWidthShare: CGFloat = 0.6
+
+  /// Groups lines into blocks and orders them. Blocks that overlap horizontally form a column;
+  /// a column is read top to bottom, columns left to right. Full-width blocks (titles) split
+  /// the page into bands that are read top to bottom.
+  static func orderedBlocks(_ lines: [OCRLine], aspect: CGFloat = 1) -> [[OCRLine]] {
     var parent = Array(lines.indices)
     func root(_ i: Int) -> Int {
       var i = i
@@ -184,37 +191,66 @@ final class OCRService: TextRecognizing {
       return i
     }
     for i in lines.indices {
-      for j in lines.indices where j > i && sameBlock(lines[i].boundingBox, lines[j].boundingBox) {
+      for j in lines.indices where j > i && sameBlock(lines[i].boundingBox, lines[j].boundingBox, aspect: aspect) {
         parent[root(j)] = root(i)
       }
     }
     var groups: [Int: [OCRLine]] = [:]
     for i in lines.indices { groups[root(i), default: []].append(lines[i]) }
-    struct Block { var lines: [OCRLine]; var box: CGRect; var lineHeight: CGFloat }
     // Vision's y axis points up, so a higher maxY is nearer the top of the image.
-    let blocks = groups.values.map { group -> Block in
-      let box = group.map(\.boundingBox).reduce(CGRect.null) { $0.union($1) }
-      let heights = group.map(\.boundingBox.height).sorted()
-      return Block(lines: group, box: box, lineHeight: heights[heights.count / 2])
+    let blocks = groups.values.map { group -> (lines: [OCRLine], box: CGRect) in
+      (group, group.map(\.boundingBox).reduce(CGRect.null) { $0.union($1) })
     }.sorted { $0.box.maxY > $1.box.maxY }
-    var ordered: [Block] = []
-    var index = 0
-    while index < blocks.count {
-      // Blocks whose tops are within about a line of each other sit side by side: left first.
-      let anchor = blocks[index]
-      var band = [anchor]
-      index += 1
-      while index < blocks.count, anchor.box.maxY - blocks[index].box.maxY <= anchor.lineHeight * 1.5 {
-        band.append(blocks[index])
-        index += 1
-      }
-      ordered += band.sorted { $0.box.minX < $1.box.minX }
+    let total = blocks.map(\.box).reduce(CGRect.null) { $0.union($1) }
+    let isFullWidth = { (box: CGRect) in blocks.count > 1 && box.width >= total.width * fullWidthShare }
+
+    var ordered: [[OCRLine]] = []
+    var band: [(lines: [OCRLine], box: CGRect)] = []
+    func flushBand() {
+      ordered += columns(of: band).flatMap { $0 }
+      band = []
     }
-    return ordered.map(\.lines)
+    for block in blocks {
+      if isFullWidth(block.box) {
+        flushBand()
+        ordered.append(block.lines)
+      } else {
+        band.append(block)
+      }
+    }
+    flushBand()
+    return ordered
+  }
+
+  /// Clusters blocks (already top to bottom) into columns by horizontal overlap; columns come
+  /// back left to right, each holding its blocks top to bottom.
+  private static func columns(of blocks: [(lines: [OCRLine], box: CGRect)]) -> [[[OCRLine]]] {
+    var parent = Array(blocks.indices)
+    func root(_ i: Int) -> Int {
+      var i = i
+      while parent[i] != i { parent[i] = parent[parent[i]]; i = parent[i] }
+      return i
+    }
+    for i in blocks.indices {
+      for j in blocks.indices where j > i {
+        let overlap = min(blocks[i].box.maxX, blocks[j].box.maxX) - max(blocks[i].box.minX, blocks[j].box.minX)
+        if overlap > min(blocks[i].box.width, blocks[j].box.width) * 0.25 { parent[root(j)] = root(i) }
+      }
+    }
+    var grouped: [Int: [Int]] = [:]
+    for i in blocks.indices { grouped[root(i), default: []].append(i) }
+    return grouped.values
+      .map { $0.sorted() }  // indices follow top-to-bottom order
+      .sorted { lhs, rhs in
+        let l = lhs.map { blocks[$0].box.minX }.min() ?? 0
+        let r = rhs.map { blocks[$0].box.minX }.min() ?? 0
+        return l < r
+      }
+      .map { $0.map { blocks[$0].lines } }
   }
 
   /// Text of one block: rows top to bottom, same-row lines left to right.
-  private static func blockText(_ block: [OCRLine]) -> String {
+  private static func blockText(_ block: [OCRLine], aspect: CGFloat) -> String {
     let byTop = block.sorted { $0.boundingBox.midY > $1.boundingBox.midY }
     var rows: [[OCRLine]] = []
     for line in byTop {
@@ -232,7 +268,7 @@ final class OCRService: TextRecognizing {
       var text = current.text
       for next in sorted.dropFirst() {
         let gap = next.boundingBox.minX - current.boundingBox.maxX
-        if gap <= max(current.boundingBox.height, next.boundingBox.height) * sameRowGap {
+        if gap * aspect <= max(current.boundingBox.height, next.boundingBox.height) * sameRowGap {
           text += " " + next.text
         } else {
           out.append(text)
@@ -243,6 +279,16 @@ final class OCRService: TextRecognizing {
       out.append(text)
     }
     return out.joined(separator: "\n")
+  }
+
+  /// Upright pixel width over height, accounting for EXIF orientations that swap the axes.
+  static func aspect(of image: CGImage, orientation: CGImagePropertyOrientation) -> CGFloat {
+    guard image.width > 0, image.height > 0 else { return 1 }
+    let w = CGFloat(image.width), h = CGFloat(image.height)
+    switch orientation {
+    case .left, .right, .leftMirrored, .rightMirrored: return h / w
+    default: return w / h
+    }
   }
 
   private static func orientation(of source: CGImageSource) -> CGImagePropertyOrientation {
