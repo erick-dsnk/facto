@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "productionWired": false,
+  "projectProviderCalls": 0,
+  "networkCalls": 0,
+  "offlineTests": 78,
+  "typecheck": "passed",
+  "questionFrozenBeforeProspectiveCorpusRead": true,
+  "files": {
+    "README.md": "60e7b24da0642ce04530ce5e83f6a0c7ddc1c916617a7399823f0c94ae38f9c4",
+    "adapter.test.ts": "2b8e1883b94b451241a2a04e04ac4b9149cde7b80cfcbb26d36144e3c499f6c2",
+    "adapter.ts": "62c85a09461168ed1caa3cdbac7b6276230aed22f01801d3e1baf282c0acfb9f",
+    "full-context-byte-preflight.json": "706566167538ec6ab174f91e7d4444113891b6e8ee25a8e5f5053ffa90cfc54f",
+    "identity-contract.json": "4582df7c4e2393882dceabb7c718d9cc3ca2d5dff02afb59391e8858f0d134bf",
+    "offline-tests.log": "48f250c966fd1e9032a1d74baeae603c4519edb3bf7bfb39b11442ce683e6ae7",
+    "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+    "preflight.ts": "116af5962ce0bac44a11a4fa35e3737217c7a6a3f6f8d7e3c5e7d0bb136dc733",
+    "question.ts": "e980f87308bdc932bf6323344a77247cc54e90cbc90a9e9565b615811b9377b3",
+    "runtime-owner.ts": "845b66da332a4949e2b1a7f173459f26bc64ab3d92a03a88636dfe74c390bcfb",
+    "transport.ts": "24a67d3d8ab5fef682d01d5dc93e988103b9e7c248c1c8d3203b839a9ee56da8",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "version-reference.test.ts": "f41e4d668d949c6b62ba6deb30253bc5c9edd9f5823ae3d21c413472faaeef16",
+    "version-reference.ts": "5931a6d60af23736a282d2fe5d91fca9b08398e2c8e7892f64ce1a09f0eb6e6b"
+  },
+  "dependencies": {
+    "/workspace/task-evidence/record-capability-prototype-02/manifest.json": "9d3f255bdc9ef81253f5b487e4359fff11dab0eeb661780e32f28ec5659b8630",
+    "/workspace/stack-20/services/api/src/providers/jev/client.ts": "de12cdeb0c20075cc9798036904ddd7535b3ad15c8fc982c51ece1ecf5904efc",
+    "/workspace/stack-20/services/api/src/providers/jev/judgment.ts": "8a531805d0d4ea1e78f4d3294905b99da286bd47fa6b7e500e87d898aa88dbdb",
+    "/workspace/stack-20/services/api/src/runtime/budget.ts": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b",
+    "/workspace/task-evidence/capability-selection-seam-02/material.ts": "b3acaefd0717bd7cbcaf0d99061dd326fb7e2ed62f46a44a0309a9c5982bc980",
+    "/workspace/task-evidence/capability-selection-seam-02/manifest.json": "f1e267762bd52ef3509f1f7fed25567e43a725785a7d15198676a458e19c1e80"
+  },
+  "version": 7,
+  "predecessorManifestSHA256": "99cd08e960ebe2e1318fa85428819ebe2bb88fcc1fe57a62596259492cf652c3",
+  "predecessorUnchanged": true,
+  "external01ReproTestSHA256": "ad875d46bf54f31584fa1c4325c56a0f6e24bbb3f3be48fd3997edcd258712a3",
+  "external01BeforeLogSHA256": "43f6e7c33737febc6d0f1b38d69825c49a1b86111c24c00868529c93c0d52bed",
+  "external02ResourceReproSHA256": "7d9b0e3fdf44e690152f5690b3da078d99b082afa642d93994e2b1160df72dc7",
+  "external02BeforeLogSHA256": "a9f7613be6fe1b488932bc5ec70cbf441749173a53abae42f9f3d2f2e0de30b7",
+  "external05BoundaryProbeSHA256": "767b6efed0017a115c70f2aae363e0d56d4607e5f56a20c9bfe9d543ed4e3683",
+  "external05ContextAliasProbeSHA256": "e6f3e8e021945d44ee65d06292a1f39e16622fda060b3e5d5b3ab01010eed25e"
+}

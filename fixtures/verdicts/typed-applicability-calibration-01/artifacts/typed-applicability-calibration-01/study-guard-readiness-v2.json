@@ -1,0 +1,39 @@
+{
+  "kind": "study_guard_v2_checkpoint_cleanup_readiness_pending_review",
+  "createdAt": "2026-11-14T06:15:03.190343+00:00",
+  "testsPassed": 36,
+  "independentCleanupReprosPassed": 2,
+  "strictTypecheckExitCode": 0,
+  "actualProviderCalls": 0,
+  "executionAuthorized": false,
+  "independentReviewComplete": false,
+  "v1SnapshotManifestSHA256": "72f475a12ae758b28a9df2ca30ac2a42cea6617eae2affca4a7cffbaea080e96",
+  "v1AllFilesUnchanged": true,
+  "reviewerOriginalOrderingRepro": {
+    "before.tap": "8b0883234c323e8a14267c04ab6f0dc40369b826797b250eb0ef3f246533b54d",
+    "repro.test.ts": "31f655989784a59500547b46153974d7e03b0ea24c41926cf80c19f10edcbb1b",
+    "study-guard.before.ts": "98b1ad0b76a0c6cca9605e57d468bfaf034d95fc7f461f346aa437ce6b1a621d"
+  },
+  "files": {
+    "study-guard.ts": {
+      "sha256": "bea4ec95ab4c2d66546282fa01207e189fc51bb0334ba0251a0683d3645d51a0",
+      "bytes": 22814
+    },
+    "study-guard.test.ts": {
+      "sha256": "6b006e1941a04e873cb8e612df050c0618f2b757f44b6763ba48a790568a6d41",
+      "bytes": 25430
+    },
+    "study-guard-tests-v2.tap": {
+      "sha256": "789604be3cc109c7f08f50508d3d1f7024bc7ee46ff2be38a78ced4a9f284ccc",
+      "bytes": 3485
+    },
+    "study-guard-checkpoint-repro-after.tap": {
+      "sha256": "9cc180f5b9de95ff864f02a171906c7142c069fa12f8097d32c9700b2a92f32e",
+      "bytes": 635
+    },
+    "study-guard-contract.md": {
+      "sha256": "aba269753b7c6564af6df213006ace212ac6687de53e51ec0b2440aa8f53e2c6",
+      "bytes": 5569
+    }
+  }
+}

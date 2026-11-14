@@ -1,0 +1,38 @@
+{
+  "kind": "independent_unwired_record_capability_v2_review",
+  "reviewedAt": "2026-11-14T05:29:38.622858+00:00",
+  "verdict": "context_material_binding_blocker_closed_for_unwired_prototype",
+  "moduleSHA256": {
+    "src/applicability.ts": "901e78b34894e1f9d962db6d32375d398dc3daf2b73bd8a23f3b7428f997ffee",
+    "src/bind.ts": "3fb74cc1ec343de11796bea75f20d6d018d3471f693881e7bf5ee95f935a56e9",
+    "src/evaluate.ts": "e6c3fbcc03f6ccc60d11f987a7ca67b47ab76e84a5f973de29853eed1184271b",
+    "src/files.ts": "5e0da54b39d96550435a1fd76f92fa58a0114a7482b73aa2a6508e20e6896487",
+    "src/fixture-context.ts": "11436ca241f306e8ce60f5cc18f18bb0fd79c7bdcf475f2dd72f6cdcd21b3f2a",
+    "src/install.ts": "763e97efb1ccf23b96e4837706228baecbbb803d23e36dee3b1d782b32021aa5",
+    "src/manifest.ts": "d5fcf8bcf0829ee1d35d6a7ac87246b6b739fe9db386d16ff6a44516547934b1",
+    "src/shadow.ts": "81ab04e02f7fd2c5612c375e6afdb4c0012c5205c178503a0c4b4d4906713f27",
+    "src/snapshot.ts": "8f7e4f0e15b3289e919a5204ae5637c95598391f81e8cd68e41ff7877ba46c66",
+    "src/types.ts": "bb4f27979d9442c7a15f5f8c217bd1f06621bbb12941086865910d13fdbbbc09"
+  },
+  "fullContextTestSHA256": "975654aca1bdebca625d2ddc174af7492ce2c4d0ac6c87e916e09d16a2e05490",
+  "shadowReportSHA256": "07c74ea8d5d3084024739022d4d3fd11f8a87e541daf84a12fafb00386311dc6",
+  "checks": [
+    "Reviewed actual v1-to-v2 context/evaluate changes and full-context tests; separately reran only25 full-context tests to avoid rewriting shadow results:25/25 pass.",
+    "Canonical context binds exact claim/revision, six retained full material records, selected version mapping, up to12 complete raw version/bridge records, links/state, risk/conflict, assessment identity/revision/actual bounded state.",
+    "Parsed records/graph/input digest are self-consistent; stale assessment digest rejects; recomputed caller digest still cannot preserve an old token after material change.",
+    "Same-ID excerpt/URL/title/publisher/publication/retrieval/basis/provenance changes, prior versions/omitted bridges, graph and assessment-only changes and new claim revisions invalidate old tokens.",
+    "Input parsing copies bounded strict JSON, rejects accessors/sparse arrays/prototypes/cycles/lossy values, and enforces depth/node/string/object/context byte bounds before canonical token storage.",
+    "Target evidence must equal supplied retained target material; post-issuance caller mutation cannot mutate immutable audit identity.",
+    "All original v1 source/test/report review pins verified unchanged.",
+    "Saved22-unit shadow still10applicable/12unavailable and explicitly synthetic context/assessment fixtures, no real model or final verdict."
+  ],
+  "remainingIntegrationRequirements": [
+    "Trusted runtime must supply complete actual material/raw graph/assessment state; hashing cannot prove that omitted evidence never existed or a model actually reran.",
+    "No raw-English applicability adapter or current-version authentication is implemented; fixed frozen frames remain prototype-only.",
+    "Independent issuer competence review, exact dated snapshot proofs, existing risk/substance/directness/scope/stance/conflict/verdict gates and full citation audit remain mandatory.",
+    "No production activation, backend readiness or factual coverage follows from22 deterministic structured-frame matches."
+  ],
+  "providerCalls": 0,
+  "productionFilesModified": 0,
+  "savedShadowRerun": false
+}

@@ -1,0 +1,32 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { execFileSync, spawnSync } from 'node:child_process';
+const root = '/workspace/task-evidence/capability-selection-seam-01';
+const hash = x => createHash('sha256').update(x).digest('hex');
+const paths = ['material.ts', 'material.test.ts', 'tsconfig.json', 'package.json'].map(p => `${root}/${p}`);
+for (const p of ['services/api/src/runtime/alternate-evidence.ts', 'services/api/src/runtime/session.ts', 'services/api/src/runtime/budget.ts',
+ 'services/api/src/evidence/normalize.ts', 'services/api/src/policy/sources.ts', 'services/api/src/policy/assessment.ts',
+ 'packages/contracts/src/index.ts', 'package-lock.json']) paths.push(`/workspace/stack-20/${p}`);
+paths.push('/workspace/task-evidence/record-capability-prototype-02/src/types.ts');
+for (let b = 1; b <= 4; b++) paths.push(`/workspace/task-evidence/broader-candidate09-${String(b).padStart(2, '0')}.json`);
+const before = await Promise.all(paths.map(async path => { const b = await readFile(path); return { path, bytes: b.byteLength, sha256: hash(b) }; }));
+const headBefore = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: '/workspace/stack-20', encoding: 'utf8' }).trim();
+const runs = [];
+for (const [name, binary, args, log] of [
+ ['typecheck', '/workspace/stack-20/node_modules/.bin/tsc', ['-p', `${root}/tsconfig.json`], 'typecheck.log'],
+ ['tests', '/workspace/stack-20/node_modules/.bin/tsx', ['--test', '--test-reporter=tap', `${root}/material.test.ts`], 'tests.tap']]) {
+ const start = performance.now();
+ const result = spawnSync(binary, args, { encoding: 'utf8', timeout: 60000, maxBuffer: 1024 * 1024 });
+ await writeFile(`${root}/${log}`, (result.stdout ?? '') + (result.stderr ?? ''));
+ runs.push({ name, exitCode: result.status, error: result.error?.name ?? null, elapsedMs: performance.now() - start, log });
+}
+for (const f of before) if (hash(await readFile(f.path)) !== f.sha256) throw Error('input_changed_during_check');
+const tap = await readFile(`${root}/tests.tap`, 'utf8');
+if (!/^# pass 23$/m.test(tap) || !/^# fail 0$/m.test(tap) || runs.some(r => r.exitCode !== 0)) throw Error('offline_gate_failed');
+const result = { kind: 'unwired_material_seam_offline_validation', providerCalls: 0, modelCalls: 0,
+ productionSourceChanges: 0, sourceBytesStableAcrossChecks: true, headBefore,
+ headAfter: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: '/workspace/stack-20', encoding: 'utf8' }).trim(),
+ sourcePins: before, runs, testsPassed: 23, savedPublicAlternatePools: 11,
+ limitations: ['Not a production integration or complete backend gate.', 'No capability, source trust, factual verdict, assessment freshness proof or provider dispatch is produced.'] };
+await writeFile(`${root}/validation.json`, JSON.stringify(result, null, 2) + '\n');
+console.log(JSON.stringify({ testsPassed: result.testsPassed, runs: runs.map(r => ({ name: r.name, exitCode: r.exitCode })), sourceBytesStableAcrossChecks: true }));

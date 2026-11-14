@@ -1,0 +1,14 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { createStudyGuard } from '../typed-applicability-calibration-01/study-guard.ts';
+const body=JSON.stringify({model:'offline-only',state:{},questions:{}});const bytes=Buffer.byteLength(body);const hash=createHash('sha256').update(body).digest('hex');
+for(const phase of ['request_started','response_headers'] as const)test(`checkpoint failure at ${phase} cancels the returned original body`,async()=>{
+ let canceled=0;const response=new Response(new ReadableStream({pull:()=>new Promise(()=>{}),cancel:()=>{canceled++;}}),{status:200});
+ const block={maxCalls:1,maxInputTokens:10000,pendingReserve:1000,maxTotalRequestBytes:1000,maxTotalResponseBytes:8000};
+ const guard=createStudyGuard({calls:[{callId:'only',blockId:'one',requestSHA256:hash,requestBytes:bytes}],blocks:[{blockId:'one',limits:block}],limits:{...block,maxRequestBytes:1000,maxResponseBytesPerCall:4000,wallMs:1000}},{fetch:async()=>response,onCheckpoint:e=>{if(e.type===phase)throw Error('synthetic storage failure');}});
+ const result=await guard.run('only',async lease=>{const r=await lease.fetch('https://api.typesafe.ai/v1/systemone',{method:'POST',body});return await r.text();});
+ await new Promise(resolve=>setImmediate(resolve));
+ console.log(JSON.stringify({phase,status:result.status,primary:guard.snapshot().primaryFailure,canceled,providerCalls:0}));
+ assert.equal(result.status,'failed');assert.equal(canceled,1,'Original response body must be canceled even if checkpoint throws before reader ownership');
+});

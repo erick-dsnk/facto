@@ -1,0 +1,607 @@
+{
+  "kind": "independent_applicability84_first_result_review",
+  "createdAt": "2026-11-14T06:33:42.230010+00:00",
+  "reportSHA256": "5e39c5fbdab55e902d82b91e2cc5e7385af03a1f7e1c7c08e3ba4c76737cf153",
+  "planCanonicalSHA256": "6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0",
+  "actualProviderCallsByReviewer": 0,
+  "completion": {
+    "rows": 84,
+    "candidateItemsAsked": 37,
+    "guardExcludedRetained": 5,
+    "allPolicyAbstentions": 84,
+    "newDefinitives": 0,
+    "selectedSourceExpansions": 0,
+    "selectedCitationAuditsRequired": 0
+  },
+  "frozenLabelConfusionByCohort": {
+    "original36": {
+      "covered": {
+        "covered": 10,
+        "not_covered": 3,
+        "uncertain": 2,
+        "unasked": 0
+      },
+      "not_covered": {
+        "covered": 0,
+        "not_covered": 10,
+        "uncertain": 0,
+        "unasked": 3
+      },
+      "uncertain": {
+        "covered": 3,
+        "not_covered": 1,
+        "uncertain": 1,
+        "unasked": 1
+      }
+    },
+    "identity8": {
+      "covered": {
+        "covered": 2,
+        "not_covered": 1,
+        "uncertain": 0,
+        "unasked": 0
+      },
+      "not_covered": {
+        "covered": 0,
+        "not_covered": 4,
+        "uncertain": 0,
+        "unasked": 1
+      },
+      "uncertain": {
+        "covered": 0,
+        "not_covered": 0,
+        "uncertain": 0,
+        "unasked": 0
+      }
+    }
+  },
+  "rawExact": {
+    "total": 27,
+    "declared": 42,
+    "observed": 37,
+    "original": {
+      "exact": 21,
+      "declared": 34,
+      "observed": 30
+    },
+    "identity": {
+      "exact": 6,
+      "declared": 8,
+      "observed": 7
+    }
+  },
+  "binaryAt85": {
+    "positiveAccepted": 0,
+    "positiveDeclared": 18,
+    "negativeAccepted": 0,
+    "negativeDeclared": 18,
+    "uncertainAccepted": 0,
+    "uncertainDeclared": 6,
+    "maxExpectedPositiveCoveredProbability": 0.81
+  },
+  "actualPrivateGrants": [],
+  "thresholdedUnsafeAcceptances": [],
+  "subthresholdUncertainCoveredChoices": [
+    {
+      "id": "AC-X06",
+      "coveredProbability": 0.41
+    },
+    {
+      "id": "AC-T06",
+      "coveredProbability": 0.73
+    },
+    {
+      "id": "AC-O04",
+      "coveredProbability": 0.56
+    }
+  ],
+  "guardMisses": [
+    {
+      "id": "AC-D06",
+      "expected": "uncertain",
+      "reasons": [
+        {
+          "evidenceId": "AC-D06-evidence",
+          "reason": "Error: current_version_proof_unavailable"
+        }
+      ]
+    },
+    {
+      "id": "AC-D03",
+      "expected": "not_covered",
+      "reasons": [
+        {
+          "evidenceId": "AC-D03-evidence",
+          "reason": "Error: current_version_proof_unavailable"
+        }
+      ]
+    },
+    {
+      "id": "AC-D05",
+      "expected": "not_covered",
+      "reasons": [
+        {
+          "evidenceId": "AC-D05-evidence",
+          "reason": "Error: current_version_proof_unavailable"
+        }
+      ]
+    },
+    {
+      "id": "AC-D04",
+      "expected": "not_covered",
+      "reasons": [
+        {
+          "evidenceId": "AC-D04-evidence",
+          "reason": "Error: current_version_proof_unavailable"
+        }
+      ]
+    },
+    {
+      "id": "DI06",
+      "expected": "not_covered",
+      "reasons": [
+        {
+          "evidenceId": "DI06-evidence",
+          "reason": "Error: current_version_proof_unavailable"
+        }
+      ]
+    }
+  ],
+  "expectedPositiveAnswers": [
+    {
+      "id": "AC-T02",
+      "choice": "not_covered",
+      "coveredProbability": 0.22
+    },
+    {
+      "id": "AC-N04",
+      "choice": "covered",
+      "coveredProbability": 0.48
+    },
+    {
+      "id": "AC-X03",
+      "choice": "covered",
+      "coveredProbability": 0.45
+    },
+    {
+      "id": "AC-T04",
+      "choice": "covered",
+      "coveredProbability": 0.56
+    },
+    {
+      "id": "AC-X02",
+      "choice": "not_covered",
+      "coveredProbability": 0.12
+    },
+    {
+      "id": "AC-V01",
+      "choice": "uncertain",
+      "coveredProbability": 0.27
+    },
+    {
+      "id": "AC-O01",
+      "choice": "not_covered",
+      "coveredProbability": 0.32
+    },
+    {
+      "id": "AC-N01",
+      "choice": "covered",
+      "coveredProbability": 0.62
+    },
+    {
+      "id": "AC-X04",
+      "choice": "covered",
+      "coveredProbability": 0.42
+    },
+    {
+      "id": "AC-X01",
+      "choice": "covered",
+      "coveredProbability": 0.59
+    },
+    {
+      "id": "AC-T01",
+      "choice": "covered",
+      "coveredProbability": 0.75
+    },
+    {
+      "id": "AC-D01",
+      "choice": "uncertain",
+      "coveredProbability": 0.36
+    },
+    {
+      "id": "AC-N02",
+      "choice": "covered",
+      "coveredProbability": 0.68
+    },
+    {
+      "id": "AC-D02",
+      "choice": "covered",
+      "coveredProbability": 0.41
+    },
+    {
+      "id": "AC-N03",
+      "choice": "covered",
+      "coveredProbability": 0.81
+    },
+    {
+      "id": "DI03",
+      "choice": "covered",
+      "coveredProbability": 0.79
+    },
+    {
+      "id": "DI02",
+      "choice": "not_covered",
+      "coveredProbability": 0.43
+    },
+    {
+      "id": "DI01",
+      "choice": "covered",
+      "coveredProbability": 0.48
+    }
+  ],
+  "policyReasonChanges": [
+    {
+      "id": "AC-T06",
+      "baseline": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidate": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "below_threshold",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "newDefinitive": false,
+      "expandedSelected": []
+    },
+    {
+      "id": "AC-D01",
+      "baseline": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "below_threshold",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidate": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "newDefinitive": false,
+      "expandedSelected": []
+    },
+    {
+      "id": "DI01",
+      "baseline": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "below_threshold",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidate": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "newDefinitive": false,
+      "expandedSelected": []
+    }
+  ],
+  "pairedSourceRows": 220,
+  "sourceGateChanges": {
+    "matchesTimePlaceAndPopulation": 3,
+    "substantiveAt85": 2,
+    "directlyAddressesClaim": 1,
+    "stance": 2
+  },
+  "rawBaseQuestionAnswerChanges": {
+    "verdict": 41,
+    "selected_evidence": 25,
+    "misleading_reason": 41,
+    "claim_risk": 33,
+    "stance": 55,
+    "relevant": 81,
+    "scope": 102,
+    "context_reason": 145,
+    "context_established": 168,
+    "content_basis": 216,
+    "e1_origin": 40,
+    "e2_origin": 79,
+    "e3_origin": 110,
+    "e4_origin": 154,
+    "e5_origin": 48
+  },
+  "rawBaseQuestionChoiceFlips": {
+    "context_reason": 5,
+    "e4_origin": 9,
+    "verdict": 2,
+    "e2_origin": 8,
+    "misleading_reason": 5,
+    "content_basis": 13,
+    "e3_origin": 3,
+    "e5_origin": 5,
+    "stance": 2,
+    "e1_origin": 1
+  },
+  "wireReferenceAudit": {
+    "askedRecordsChecked": 37,
+    "explicitMappingExists": true,
+    "conclusion": "The added source=eN reference resolves through the same actual request questions.selected_evidence.criteria[eN] textual actual-ID map, reinforced by eN baseline question instructions naming that ID. No reliance solely on undocumented array position is necessary. A direct actual evidenceId would be clearer, but no absent wire mapping or causal explanation of0/18 is established.",
+    "rows": [
+      {
+        "callId": "AC-T02:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-T02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-X06:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-X06-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-N04:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "AC-N04-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "AC-T05:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "AC-T05-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "AC-X03:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-X03-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-T06:applicability",
+        "questionId": "a3_applicability",
+        "sourceAlias": "e3",
+        "actualEvidenceId": "AC-T06-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e3"
+      },
+      {
+        "callId": "AC-V05:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "AC-V05-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "AC-T04:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "AC-T04-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "AC-X02:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-X02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-V01:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "AC-V01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "AC-T03:applicability",
+        "questionId": "a3_applicability",
+        "sourceAlias": "e3",
+        "actualEvidenceId": "AC-T03-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e3"
+      },
+      {
+        "callId": "AC-O01:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "AC-O01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "AC-N01:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-N01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-X04:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-X04-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-N06:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-N06-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-N05:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "AC-N05-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "AC-X01:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "AC-X01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "AC-V03:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "AC-V03-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "AC-O03:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-O03-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-X05:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-X05-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-T01:applicability",
+        "questionId": "a3_applicability",
+        "sourceAlias": "e3",
+        "actualEvidenceId": "AC-T01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e3"
+      },
+      {
+        "callId": "AC-D01:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-D01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-O02:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-O02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-V06:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-V06-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-N02:applicability",
+        "questionId": "a3_applicability",
+        "sourceAlias": "e3",
+        "actualEvidenceId": "AC-N02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e3"
+      },
+      {
+        "callId": "AC-D02:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "AC-D02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "AC-V02:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "AC-V02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "AC-N03:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "AC-N03-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      },
+      {
+        "callId": "AC-O04:applicability",
+        "questionId": "a3_applicability",
+        "sourceAlias": "e3",
+        "actualEvidenceId": "AC-O04-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e3"
+      },
+      {
+        "callId": "AC-V04:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "AC-V04-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "DI08:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "DI08-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "DI05:applicability",
+        "questionId": "a1_applicability",
+        "sourceAlias": "e1",
+        "actualEvidenceId": "DI05-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e1"
+      },
+      {
+        "callId": "DI04:applicability",
+        "questionId": "a0_applicability",
+        "sourceAlias": "e0",
+        "actualEvidenceId": "DI04-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e0"
+      },
+      {
+        "callId": "DI03:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "DI03-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "DI02:applicability",
+        "questionId": "a3_applicability",
+        "sourceAlias": "e3",
+        "actualEvidenceId": "DI02-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e3"
+      },
+      {
+        "callId": "DI01:applicability",
+        "questionId": "a2_applicability",
+        "sourceAlias": "e2",
+        "actualEvidenceId": "DI01-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e2"
+      },
+      {
+        "callId": "DI07:applicability",
+        "questionId": "a4_applicability",
+        "sourceAlias": "e4",
+        "actualEvidenceId": "DI07-evidence",
+        "explicitAliasPath": "questions.selected_evidence.criteria.e4"
+      }
+    ]
+  },
+  "verdict": "no_promotion_no_coverage_gain",
+  "interpretation": [
+    "Zero unsafe thresholded grants on this dependent OPEN set is not calibrated precision or readiness:0actualgrants means no issued-grant precision estimate.",
+    "The gate admits0/18 positive controls. Raw covered choices12/18 do not satisfy unchanged.85threshold; no lower threshold or retrospective relabeling justified.",
+    "Three uncertain controls chosecovered belowthreshold; preserve as raw semantic disagreement and margin concern, not issued safety grants.",
+    "Five guard-excluded items stay in37/42 asked and full label denominators; fourexpectednegative and oneuncertain are deterministic exclusions, not learned correct answers.",
+    "All84full policies abstain, so no newly selected passage/whole-qualifier/lineage audit exists and no source opening is needed here.",
+    "All original companion/full-judge output changes remain in immutable report; no causal attribution to a particular wording or source-reference field from this one paired run.",
+    "Frozen question and all labels remain unchanged. Runtime ledger audit is separate and owned by runtime_evaluation."
+  ]
+}

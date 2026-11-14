@@ -1,0 +1,148 @@
+import { createHash } from 'node:crypto';
+export const LIMITS = Object.freeze({ fileBytes: 2097152, totalArtifactBytes: 12582912, receipts: 8, proofs: 24, frames: 64, units: 8, evidence: 6, excerptCodepoints: 2000 });
+export class ValidationError extends Error {
+    constructor(public readonly code: string) { super(code); }
+}
+export const fail = (code: string): never => { throw new ValidationError(code); };
+export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex');
+export function object(value: unknown, keys: readonly string[]): Record<string, unknown> {
+    if (!value || typeof value !== 'object' || Array.isArray(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value)))
+        return fail('invalid_object');
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    if (Reflect.ownKeys(value).some(key => typeof key !== 'string' || !keys.includes(key)) || Object.values(descriptors).some(d => !('value' in d)))
+        return fail('unknown_field_or_accessor');
+    if (keys.some(key => !Object.hasOwn(value, key)))
+        return fail('missing_field');
+    return value as Record<string, unknown>;
+}
+export function string(value: unknown, max = 4096): string { if (typeof value !== 'string' || !value.length || value.length > max)
+    return fail('invalid_string'); return value; }
+export function hash(value: unknown): string { const v = string(value, 64); if (!/^[a-f0-9]{64}$/.test(v))
+    return fail('invalid_digest'); return v; }
+export function integer(value: unknown, max = 10000000): number { if (!Number.isSafeInteger(value) || (value as number) < 0 || (value as number) > max)
+    return fail('invalid_integer'); return value as number; }
+export function bool(value: unknown): boolean { if (typeof value !== 'boolean')
+    return fail('invalid_boolean'); return value; }
+export function array<T>(value: unknown, max: number, parse: (item: unknown) => T, min = 0): T[] { if (!Array.isArray(value) || value.length < min || value.length > max)
+    return fail('invalid_array'); return value.map(parse); }
+export function unique<T>(values: T[]): T[] { if (new Set(values).size !== values.length)
+    return fail('duplicate_identifier'); return values; }
+export function oneOf<T extends string>(value: unknown, allowed: readonly T[]): T { if (typeof value !== 'string' || !allowed.includes(value as T))
+    return fail('invalid_enum'); return value as T; }
+export function url(value: unknown): string { const v = string(value); let parsed: URL; try {
+    parsed = new URL(v);
+}
+catch {
+    return fail('invalid_url');
+} if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password || parsed.hash || parsed.href !== v)
+    return fail('invalid_url'); return v; }
+export function time(value: unknown): string { const v = string(value, 40); if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,6})?(?:Z|[+-]\d\d:\d\d)$/.test(v) || !Number.isFinite(Date.parse(v)))
+    return fail('invalid_time'); return v; }
+export function stringMap(value: unknown): Record<string, string> { if (!value || typeof value !== 'object' || Array.isArray(value))
+    return fail('invalid_scope'); const keys = Object.keys(value); if (keys.length > 12 || keys.some(k => !/^[a-z][a-zA-Z0-9]{0,31}$/.test(k) || ['constructor', 'prototype'].includes(k)))
+    return fail('invalid_scope'); const checked = object(value, keys); return Object.fromEntries(Object.entries(checked).map(([k, v]) => [k, string(v, 512)])); }
+export function deepFreeze<T>(value: T): T { if (value && typeof value === 'object') {
+    Object.values(value).forEach(deepFreeze);
+    Object.freeze(value);
+} return value; }
+export function canonical(value: unknown): string { if (value === null || typeof value !== 'object')
+    return JSON.stringify(value); if (Array.isArray(value))
+    return '[' + value.map(canonical).join(',') + ']'; return '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + canonical((value as Record<string, unknown>)[k])).join(',') + '}'; }
+export interface Proof {
+    id: string;
+    requestedURL: string;
+    finalURL: string;
+    redirects: string[];
+    acquiredAt: string;
+    httpStatus: 200;
+    complete: true;
+    rawBodySHA256: string;
+    extractionSHA256: string;
+}
+export interface MaterialSpan {
+    role: string;
+    start: number;
+    end: number;
+}
+export interface Unit {
+    locator: string;
+    start: number;
+    end: number;
+    contentSHA256: string;
+    materialSpans: MaterialSpan[];
+}
+export interface Receipt {
+    schemaVersion: 1;
+    sourceReceiptSHA256: string;
+    issuerId: string;
+    issuerProofIds: string[];
+    canonicalDocumentId: string;
+    canonicalURL: string;
+    versionId: string;
+    documentClass: string;
+    relation: string;
+    scope: Record<string, string>;
+    proofId: string;
+    rawBodySHA256: string;
+    extractionSHA256: string;
+    units: Unit[];
+    originFamily: string;
+    temporalMode: 'immutable_version' | 'historical_release';
+    materialSpanPolicy: 'entire_reviewed_unit_required';
+    limitations: string[];
+}
+export interface Frame {
+    id: string;
+    exactText: string;
+    exactTextSHA256: string;
+    relation: string;
+    materialContext: Record<string, string>;
+    timeMeaning: 'explicit_version' | 'explicit_historical' | 'current' | 'unresolved';
+}
+export interface InstalledData {
+    schemaVersion: 1;
+    corpusManifestSHA256: string;
+    productionAuthorized: false;
+    receipts: {
+        alias: string;
+        sha256: string;
+    }[];
+    proofs: Proof[];
+    frames: Frame[];
+    revokedReceipts: string[];
+}
+export interface Evidence {
+    id: string;
+    url: string;
+    excerpt: string;
+}
+export interface Context {
+    risk: 'ordinary' | 'health_safety' | 'disputed' | 'unknown';
+    credibleConflictPresent: boolean;
+    retainedEvidenceIds: string[];
+    originLinks: {
+        left: string;
+        right: string;
+        relationship: 'common_origin' | 'unclear';
+    }[];
+}
+export function parseProof(value: unknown): Proof { const v = object(value, ['id', 'requestedURL', 'finalURL', 'redirects', 'acquiredAt', 'httpStatus', 'complete', 'rawBodySHA256', 'extractionSHA256']); if (v.httpStatus !== 200 || v.complete !== true)
+    return fail('incomplete_proof'); return { id: string(v.id, 64), requestedURL: url(v.requestedURL), finalURL: url(v.finalURL), redirects: array(v.redirects, 3, url), acquiredAt: time(v.acquiredAt), httpStatus: 200, complete: true, rawBodySHA256: hash(v.rawBodySHA256), extractionSHA256: hash(v.extractionSHA256) }; }
+export function parseFrame(value: unknown): Frame { const v = object(value, ['id', 'exactText', 'exactTextSHA256', 'relation', 'materialContext', 'timeMeaning']); const exactText = string(v.exactText, 4000), exactTextSHA256 = hash(v.exactTextSHA256); if (digest(exactText) !== exactTextSHA256)
+    return fail('claim_hash_mismatch'); return { id: string(v.id, 64), exactText, exactTextSHA256, relation: string(v.relation, 100), materialContext: stringMap(v.materialContext), timeMeaning: oneOf(v.timeMeaning, ['explicit_version', 'explicit_historical', 'current', 'unresolved']) }; }
+export function parseReceipt(value: unknown): Receipt {
+    const v = object(value, ['schemaVersion', 'sourceReceiptSHA256', 'issuerId', 'issuerProofIds', 'canonicalDocumentId', 'canonicalURL', 'versionId', 'documentClass', 'relation', 'scope', 'proofId', 'rawBodySHA256', 'extractionSHA256', 'units', 'originFamily', 'temporalMode', 'materialSpanPolicy', 'limitations']);
+    if (v.schemaVersion !== 1 || v.materialSpanPolicy !== 'entire_reviewed_unit_required')
+        return fail('invalid_receipt_schema');
+    const units = array(v.units, LIMITS.units, item => { const u = object(item, ['locator', 'start', 'end', 'contentSHA256', 'materialSpans']); const start = integer(u.start), end = integer(u.end); if (end <= start)
+        return fail('invalid_span'); const materialSpans = array(u.materialSpans, 16, item => { const s = object(item, ['role', 'start', 'end']); const a = integer(s.start), z = integer(s.end); if (z <= a || z > end - start)
+        return fail('invalid_material_span'); return { role: string(s.role, 64), start: a, end: z }; }, 1); return { locator: string(u.locator, 256), start, end, contentSHA256: hash(u.contentSHA256), materialSpans }; }, 1);
+    return { schemaVersion: 1, sourceReceiptSHA256: hash(v.sourceReceiptSHA256), issuerId: string(v.issuerId, 128), issuerProofIds: unique(array(v.issuerProofIds, 8, x => string(x, 64), 1)), canonicalDocumentId: string(v.canonicalDocumentId, 256), canonicalURL: url(v.canonicalURL), versionId: string(v.versionId, 512), documentClass: oneOf(v.documentClass, ['normative_definition', 'operative_legal_text', 'award_register', 'official_statistical_report']), relation: string(v.relation, 100), scope: stringMap(v.scope), proofId: string(v.proofId, 64), rawBodySHA256: hash(v.rawBodySHA256), extractionSHA256: hash(v.extractionSHA256), units, originFamily: string(v.originFamily, 256), temporalMode: oneOf(v.temporalMode, ['immutable_version', 'historical_release']), materialSpanPolicy: 'entire_reviewed_unit_required', limitations: array(v.limitations, 12, x => string(x, 2000)) };
+}
+export function parseInstalledData(value: unknown): InstalledData { const v = object(value, ['schemaVersion', 'corpusManifestSHA256', 'productionAuthorized', 'receipts', 'proofs', 'frames', 'revokedReceipts']); if (v.schemaVersion !== 1 || v.productionAuthorized !== false)
+    return fail('invalid_install_schema'); const receipts = array(v.receipts, LIMITS.receipts, item => { const r = object(item, ['alias', 'sha256']); return { alias: string(r.alias, 64), sha256: hash(r.sha256) }; }, 1), proofs = array(v.proofs, LIMITS.proofs, parseProof, 1), frames = array(v.frames, LIMITS.frames, parseFrame, 1); unique(receipts.map(r => r.alias)); unique(receipts.map(r => r.sha256)); unique(proofs.map(p => p.id)); unique(frames.map(f => f.id)); const revokedReceipts = unique(array(v.revokedReceipts, LIMITS.receipts, hash)); if (revokedReceipts.some(d => !receipts.some(r => r.sha256 === d)))
+    return fail('unknown_revocation'); return { schemaVersion: 1, corpusManifestSHA256: hash(v.corpusManifestSHA256), productionAuthorized: false, receipts, proofs, frames, revokedReceipts }; }
+export function parseEvidence(value: unknown): Evidence { const v = object(value, ['id', 'url', 'excerpt']); const excerpt = string(v.excerpt, 8000); if (Array.from(excerpt).length > LIMITS.excerptCodepoints)
+    return fail('excerpt_too_long'); return { id: string(v.id, 128), url: url(v.url), excerpt }; }
+export function parseContext(value: unknown): Context { const v = object(value, ['risk', 'credibleConflictPresent', 'retainedEvidenceIds', 'originLinks']); const retainedEvidenceIds = unique(array(v.retainedEvidenceIds, LIMITS.evidence, x => string(x, 128), 1)); const originLinks = array(v.originLinks, 15, item => { const p = object(item, ['left', 'right', 'relationship']); const left = string(p.left, 128), right = string(p.right, 128); if (left === right || ![left, right].every(id => retainedEvidenceIds.includes(id)))
+    return fail('invalid_origin_link'); return { left, right, relationship: oneOf(p.relationship, ['common_origin', 'unclear']) }; }); return { risk: oneOf(v.risk, ['ordinary', 'health_safety', 'disputed', 'unknown']), credibleConflictPresent: bool(v.credibleConflictPresent), retainedEvidenceIds, originLinks }; }

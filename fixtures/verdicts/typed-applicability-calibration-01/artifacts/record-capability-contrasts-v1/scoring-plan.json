@@ -1,0 +1,63 @@
+{
+  "kind": "prospective_applicability_contrast_scoring_plan",
+  "createdAt": "2026-11-14T05:36:14.589513+00:00",
+  "declaredUnits": 36,
+  "semanticUnits": 34,
+  "primaryDecidedSemanticUnits": 28,
+  "primarySemanticCovered": 15,
+  "primarySemanticNotCovered": 13,
+  "uncertainSemanticUnits": 6,
+  "deterministicBindingControls": 2,
+  "underlyingRecordFamilies": 4,
+  "factualCoverageCredit": 0,
+  "invariancePairs": [
+    [
+      "AC-T01",
+      "AC-T02"
+    ],
+    [
+      "AC-T04",
+      "AC-O01"
+    ],
+    [
+      "AC-O01",
+      "AC-N03"
+    ],
+    [
+      "AC-N01",
+      "AC-N02"
+    ],
+    [
+      "AC-X01",
+      "AC-X02"
+    ]
+  ],
+  "mustRemainUnavailable": [
+    "AC-T06",
+    "AC-O04",
+    "AC-N06",
+    "AC-X06",
+    "AC-D06",
+    "AC-V06",
+    "AC-B01",
+    "AC-B02"
+  ],
+  "strata": {
+    "temporal": 6,
+    "exception": 6,
+    "deictic_date": 6,
+    "negation": 6,
+    "relation_verb": 6,
+    "clipped_exception": 2,
+    "ordinal": 4
+  },
+  "scoringRules": [
+    "Score primary binary semantic classification only on28decidedsemanticunits; retain6uncertain/2bindingcontrols separately and all36 in declaredsafety/availability reporting.",
+    "A covered output on a labelednotcovered semantic unit is a false capability; a covered output on an unresolved unit is an unsafe ambiguity grant, not a binary false-positive estimate.",
+    "Bindingcontrols must be unavailable before learnedquestion; no credit as modelsemantic success.",
+    "Report all parsed/confidence/uncertain/errors and actualquestion counts; never guess missing usage or proof.",
+    "Labels are not truth, stance, directness, contentbasis or finalverdict eligibility.",
+    "No release acceptance threshold or activation permission is established."
+  ],
+  "executionPerformed": false
+}

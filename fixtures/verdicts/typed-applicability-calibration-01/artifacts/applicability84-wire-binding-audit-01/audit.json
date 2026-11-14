@@ -1,0 +1,805 @@
+{
+  "kind": "offline_actual_wire_alias_binding_audit",
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "requestCount": 84,
+  "askedApplicabilityItems": 37,
+  "unresolvedOrNonunique": 0,
+  "mechanicalMismatch": 0,
+  "reportSHA256": "5e39c5fbdab55e902d82b91e2cc5e7385af03a1f7e1c7c08e3ba4c76737cf153",
+  "checks": [
+    {
+      "callId": "AC-T02:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-T02-evidence",
+      "explicitCriterion": "Retained evidence AC-T02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-X06:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-X06-evidence",
+      "explicitCriterion": "Retained evidence AC-X06-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-N04:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "AC-N04-evidence",
+      "explicitCriterion": "Retained evidence AC-N04-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-T05:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "AC-T05-evidence",
+      "explicitCriterion": "Retained evidence AC-T05-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-X03:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-X03-evidence",
+      "explicitCriterion": "Retained evidence AC-X03-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-T06:applicability",
+      "question": "a3_applicability",
+      "sourceAlias": "e3",
+      "actualEvidenceID": "AC-T06-evidence",
+      "explicitCriterion": "Retained evidence AC-T06-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-V05:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "AC-V05-evidence",
+      "explicitCriterion": "Retained evidence AC-V05-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-T04:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "AC-T04-evidence",
+      "explicitCriterion": "Retained evidence AC-T04-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-X02:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-X02-evidence",
+      "explicitCriterion": "Retained evidence AC-X02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-V01:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "AC-V01-evidence",
+      "explicitCriterion": "Retained evidence AC-V01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-T03:applicability",
+      "question": "a3_applicability",
+      "sourceAlias": "e3",
+      "actualEvidenceID": "AC-T03-evidence",
+      "explicitCriterion": "Retained evidence AC-T03-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-O01:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "AC-O01-evidence",
+      "explicitCriterion": "Retained evidence AC-O01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-N01:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-N01-evidence",
+      "explicitCriterion": "Retained evidence AC-N01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-X04:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-X04-evidence",
+      "explicitCriterion": "Retained evidence AC-X04-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-N06:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-N06-evidence",
+      "explicitCriterion": "Retained evidence AC-N06-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-N05:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "AC-N05-evidence",
+      "explicitCriterion": "Retained evidence AC-N05-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-X01:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "AC-X01-evidence",
+      "explicitCriterion": "Retained evidence AC-X01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-V03:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "AC-V03-evidence",
+      "explicitCriterion": "Retained evidence AC-V03-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-O03:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-O03-evidence",
+      "explicitCriterion": "Retained evidence AC-O03-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-X05:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-X05-evidence",
+      "explicitCriterion": "Retained evidence AC-X05-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-T01:applicability",
+      "question": "a3_applicability",
+      "sourceAlias": "e3",
+      "actualEvidenceID": "AC-T01-evidence",
+      "explicitCriterion": "Retained evidence AC-T01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-D01:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-D01-evidence",
+      "explicitCriterion": "Retained evidence AC-D01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-O02:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-O02-evidence",
+      "explicitCriterion": "Retained evidence AC-O02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-V06:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-V06-evidence",
+      "explicitCriterion": "Retained evidence AC-V06-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-N02:applicability",
+      "question": "a3_applicability",
+      "sourceAlias": "e3",
+      "actualEvidenceID": "AC-N02-evidence",
+      "explicitCriterion": "Retained evidence AC-N02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-D02:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "AC-D02-evidence",
+      "explicitCriterion": "Retained evidence AC-D02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-V02:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "AC-V02-evidence",
+      "explicitCriterion": "Retained evidence AC-V02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-N03:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "AC-N03-evidence",
+      "explicitCriterion": "Retained evidence AC-N03-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-O04:applicability",
+      "question": "a3_applicability",
+      "sourceAlias": "e3",
+      "actualEvidenceID": "AC-O04-evidence",
+      "explicitCriterion": "Retained evidence AC-O04-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "AC-V04:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "AC-V04-evidence",
+      "explicitCriterion": "Retained evidence AC-V04-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI08:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "DI08-evidence",
+      "explicitCriterion": "Retained evidence DI08-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI05:applicability",
+      "question": "a1_applicability",
+      "sourceAlias": "e1",
+      "actualEvidenceID": "DI05-evidence",
+      "explicitCriterion": "Retained evidence DI05-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI04:applicability",
+      "question": "a0_applicability",
+      "sourceAlias": "e0",
+      "actualEvidenceID": "DI04-evidence",
+      "explicitCriterion": "Retained evidence DI04-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI03:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "DI03-evidence",
+      "explicitCriterion": "Retained evidence DI03-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI02:applicability",
+      "question": "a3_applicability",
+      "sourceAlias": "e3",
+      "actualEvidenceID": "DI02-evidence",
+      "explicitCriterion": "Retained evidence DI02-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI01:applicability",
+      "question": "a2_applicability",
+      "sourceAlias": "e2",
+      "actualEvidenceID": "DI01-evidence",
+      "explicitCriterion": "Retained evidence DI01-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    },
+    {
+      "callId": "DI07:applicability",
+      "question": "a4_applicability",
+      "sourceAlias": "e4",
+      "actualEvidenceID": "DI07-evidence",
+      "explicitCriterion": "Retained evidence DI07-evidence",
+      "existingNamedSourceInstructionsAgree": true,
+      "actualServerBoundReceiptSourceAgrees": true,
+      "resolutionCount": 1
+    }
+  ],
+  "allRequestHashChecks": [
+    {
+      "callId": "AC-T02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X06:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X06:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D06:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D06:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T05:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T05:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T06:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T06:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V05:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V05:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N06:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N06:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N05:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N05:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X05:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-X05:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-T01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D05:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D05:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V06:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V06:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-D02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-N03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-O04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "AC-V04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI08:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI08:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI05:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI05:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI04:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI04:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI06:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI06:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI03:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI03:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI02:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI02:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI01:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI01:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI07:applicability",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    },
+    {
+      "callId": "DI07:baseline_anchor",
+      "exactActualRequestHashMatchesFrozen": true,
+      "uniqueEvidenceIDs": true
+    }
+  ],
+  "conclusion": "The complete actual dispatched request defines every eN alias uniquely in selected_evidence.criteria, agreeing with baseline named-source instructions, ordered evidence and private receipt map. The generic added question relies on cross-question alias resolution; direct ID would be clearer, but no missing/undefined wire map or causal explanation for0/18is demonstrated. Provider internal attention/locality is not inferred from this offline request audit. No new wording trial or rerun is justified by this lead."
+}
