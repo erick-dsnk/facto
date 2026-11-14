@@ -1,0 +1,57 @@
+{
+  "kind": "independent_single_contents_locator_runner_final_review",
+  "createdAt": "2026-11-14T07:53:03.347247+00:00",
+  "decision": "APPROVED_bounded_runner_for_separate_root_execution_authorization",
+  "approvedPins": {
+    "runnerSHA256": "13f8d681fc58c75a6f5a86610581277e371404acd575075860f2983ddf9c37f8",
+    "manifestSHA256": "8845f622affef00a097b6868e5e0a7cd73a8b4d1c2fa67a1aae6c8f2a397195b",
+    "planSHA256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+    "sourcePinsSHA256": "04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+    "currentFilesVerified": 212,
+    "originalFilesVerified": 182,
+    "planAndSourcePinsByteIdentical": true
+  },
+  "supersedesHoldReviewSHA256": "3107267a3048f3b457e5b8b4de565b91d6dd6164e36b733745a8c776dd53eac5",
+  "soleCodeDelta": "One check after actual SDK response: top-level status may be absent or exact typed string success; any other value is response_contract_invalid.",
+  "unchanged": "Plan/request176bytes/bodySHA/limits/sourcecommit/sourcepins/transport/budget/cleanup/storage/recovery behavior byte-identical to initially reviewed runner01.",
+  "independentValidation": {
+    "initialTests": 21,
+    "initialPassing": 20,
+    "initialFailing": 1,
+    "initialInjectedHTTP": 18,
+    "correctedTests": 7,
+    "correctedPassing": 7,
+    "correctedInjectedHTTP": 6,
+    "actualLocalSubprocessCrash": true,
+    "providerCalls": 0,
+    "networkCalls": 0,
+    "new24InputsOrLabelsRead": false,
+    "productionEdits": 0,
+    "sourceFreezeEdits": 0,
+    "liveOutputAssignedOrReserved": false
+  },
+  "verified": [
+    "Actual AbortableExa+SDK serialize one exact176byte contents body, fixed headers/signal/redirect; durable request/checkpoint precedes injected fetch.",
+    "No native429 retry, search, link-follow or originGET; one actual charged boundary and known/missing cost distinguished.",
+    "Prepared-only subprocess crash preserves possible dispatch0..1 and nulltotalcost/unknownupper1; initial report is not no-dispatch proof; existingroot refuses replay.",
+    "Exact262144response accepted/stored;262145observed bytes cancelled without false complete storage.",
+    "Rejected/pending cancellation remains stickyunknown; late ignored-signal injected transport cleanup does not mutate durable result or invent settlement.",
+    "Originaldeadline late-fetch equality suppresses material and aborts captured signal.",
+    "Beforetransport storagefailure proves no actualHTTP; terminal storagefailure throws storage_failure while earliercheckpoint retains observedEOF/charge/cost.",
+    "Pre-sourcepin mismatch reservesnooutput; postdispatch sourcepin drift remains local and preserves observedbody/cost while suppressing material.",
+    "Known403/unknownstatus/typedstatusarray/success+error/rooterror/resulterror/duplicatestatus suppress material; correctedtop-levelerror/array/number/null also suppress.",
+    "Absentrootstatus/exactsuccess valid controls preserve only rawSDK material, noidentity/factual/witness/currentorigin credit.",
+    "No liveapproval yields nooutput/noHTTP."
+  ],
+  "limits": [
+    "This review authorizes no live request. Root must separately bind exactrunner/plan/authorization/freshoutput for one call.",
+    "Mock costs and rawSDK fields do not prove live pricing, provider billing, origin freshness, canonicalalias, recordidentity, semantic applicability or factual coverage.",
+    "Ignored-signal and cleanup-rejection cases are injected transport controls, not claims of native Exa defects.",
+    "Author25-test gate and strictTS pinned; reviewer reran only focused changed boundary rather than repeating unchanged runtime suites."
+  ],
+  "logs": {
+    "initialSHA256": "c27b546e7dbda2419189543305fdb65f1e5d0b764368637060b83e399eeb29ee",
+    "correctedSHA256": "abaa0ba4310f0a549ef77d7256a1d88f26df3d5abefc74d0ff472aa285dc0bd8",
+    "crashProcessSHA256": "ab066e7a9c670e6a3cb4913c4d7100cf70269a0f067ce928e210304331ec4563"
+  }
+}
