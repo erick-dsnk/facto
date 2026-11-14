@@ -50,6 +50,17 @@ describe('Exa retrieval boundary', () => {
     expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(3);
   });
 
+  it('does not spend the third contents request on a page beyond the retained domain cap', async () => {
+    const urls = ['https://museum.org/one', 'https://museum.org/two', 'https://museum.org/three', 'https://archive.org/record'];
+    const fake = {
+      search: vi.fn(async () => ({ results: urls.map(url => ({ url, highlights: ['1889'] })) })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: excerpt }] })),
+    };
+    const { retrieve, context } = setup(fake);
+    await retrieve(claim, context);
+    expect(fake.getContents.mock.calls.map(call => call[0][0])).toEqual([urls[0], urls[1], urls[3]]);
+  });
+
   it('fetches long highlights that omit dates, negation, attribution or qualifications', async () => {
     const cases = [
       { claim: 'The Eiffel Tower opened in 1889.', highlight: 'A detailed history describes when the Eiffel Tower opened and the public ceremony held at the site.' },
