@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "role": "independent_second_annotation",
+  "annotator": "final_stack_review",
+  "createdAt": "2026-11-14T04:32:55.325215+00:00",
+  "inputSHA256": "4ec47319abe59ba4c310b65a7c62a9e8b77125850178ebbfc9c9d96fc406837b",
+  "rubricSHA256": "f9dca501fa99caa02331f2452a4ef012e93396a92c401f42816d0556aa4aa43f",
+  "firstLabelsViewed": false,
+  "candidatePromptViewed": false,
+  "candidateImplementationViewed": false,
+  "providerOutputsViewed": false,
+  "keyedCalls": 0,
+  "method": "Manual independent scope reasoning from minimal shuffled proposition/title/URL/excerpt packet and rubric only. No source reopens or adjacent unretained text used.",
+  "annotations": [
+    {
+      "id": "SC11",
+      "expectedScope": true,
+      "supportingSubstring": "The adult human skeleton is composed of 206 bones.",
+      "supportingSpan": {
+        "start": 0,
+        "end": 50,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Same adult-human population and skeletal bone-count relation.208 versus206 is the output value being tested. The general adult reference is compatible with the proposition's typical-adult framing.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC08",
+      "expectedScope": false,
+      "supportingSubstring": "superseded by the international foot definition",
+      "supportingSpan": {
+        "start": 127,
+        "end": 174,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The claim asks about the1900 U.S.survey-foot definition. Retained text addresses post2023 replacement by the international foot; it supplies no1900 survey-foot value.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC13",
+      "expectedScope": true,
+      "supportingSubstring": "| Boiling point @ 1 atm | 111.7 | K | -161.5 | C |",
+      "supportingSpan": {
+        "start": 885,
+        "end": 935,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Same named substance, boiling-point relation,pressure1atmosphere and Celsius unit. The claimed-150 value may differ while scope matches.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC07",
+      "expectedScope": true,
+      "supportingSubstring": "Beginning on January 1, 2023",
+      "supportingSpan": {
+        "start": 0,
+        "end": 28,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The passage explicitly gives the post2023 context and international-foot definition of0.3048meter. Claiming0.3049 tests that value; it does not change the unit or relevant context.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC14",
+      "expectedScope": false,
+      "supportingSubstring": "Boiling point @ 1 atm",
+      "supportingSpan": {
+        "start": 887,
+        "end": 908,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The claim fixes pressure at10atmospheres while the table explicitly gives1atmosphere. Identical temperature numeral does not remove the material condition mismatch.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC03",
+      "expectedScope": true,
+      "supportingSubstring": "Population, 2021 — Canada",
+      "supportingSpan": {
+        "start": 0,
+        "end": 25,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Same country,2021 census and counted population relation;40million versus36991981 is the value being tested, not a different observation period.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC12",
+      "expectedScope": false,
+      "supportingSubstring": "The adult human skeleton",
+      "supportingSpan": {
+        "start": 0,
+        "end": 24,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The claim restricts the population to newborn humans; the evidence explicitly concerns adults. Reusing206 does not bridge the age-population difference.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC15",
+      "expectedScope": true,
+      "supportingSubstring": "The length of the canal is 193.30 Km.",
+      "supportingSpan": {
+        "start": 220,
+        "end": 257,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Same named canal and length relation with compatible kilometer unit.200 versus193.30 is the numerical value being tested, not another dimension.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC05",
+      "expectedScope": true,
+      "supportingSubstring": "The highest peak in the Andes, Aconcagua",
+      "supportingSpan": {
+        "start": 371,
+        "end": 411,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The passage explicitly places the Andes inSouthAmerica and identifies Aconcagua as an Andes peak. This retained geographic linkage addresses the same mountain's continent;Europe is the claimed location value to test, not a reason to reject scope.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC16",
+      "expectedScope": false,
+      "supportingSubstring": "The length of the canal is 193.30 Km.",
+      "supportingSpan": {
+        "start": 220,
+        "end": 257,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The retained193.30 describes length in kilometers; the claim concerns annual revenue in millions ofU.S.dollars. Entity and numeral overlap do not match factual relation or units.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC09",
+      "expectedScope": true,
+      "supportingSubstring": "mammals known as monotremes, which are distinguished from all other mammals because they lay eggs",
+      "supportingSpan": {
+        "start": 123,
+        "end": 220,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The universal claim covers all mammals. Explicit egg-laying members of that population are a scope-matched counterexample; a limited observation need not represent every mammal to refute the universal.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC04",
+      "expectedScope": false,
+      "supportingSubstring": "2021 Census of population",
+      "supportingSpan": {
+        "start": 40,
+        "end": 65,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The claimed census observation period is2016, while the retained count is explicitly2021. Matching population numeral does not transfer it to another census.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC06",
+      "expectedScope": false,
+      "supportingSubstring": "Aconcagua, stands at 6,962 meters (22,841 feet) and straddles the Argentina-Chile border",
+      "supportingSpan": {
+        "start": 402,
+        "end": 490,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The retained border relation concerns Aconcagua, while the claim concerns MontBlanc. Shared border wording cannot establish or refute that relation for a different mountain.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC01",
+      "expectedScope": true,
+      "supportingSubstring": "Frankenstein was first published anonymously in 1818",
+      "supportingSpan": {
+        "start": 270,
+        "end": 322,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The target relation is the novel's first publication. The retained account explicitly identifies that first event in1818; the differing1831 value is tested, not an edition restriction. Frontmatter for a later edition must not replace the explicit first-publication statement.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC10",
+      "expectedScope": false,
+      "supportingSubstring": "mammals known as monotremes",
+      "supportingSpan": {
+        "start": 123,
+        "end": 150,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The retained population is platypus/echidna mammals; the claim concerns all birds. Shared egg-laying relation alone is not a population match.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "SC02",
+      "expectedScope": false,
+      "supportingSubstring": "first published anonymously in 1818",
+      "supportingSpan": {
+        "start": 17,
+        "end": 52,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "The claim concerns publication of the third edition; the only retained statement concerns the first edition. Neither title nor the shared novel name supplies the missing third-edition date.",
+      "ambiguityFlag": false
+    }
+  ],
+  "limitations": [
+    "Scope compatibility is separate from factual agreement, substantive basis, credibility, independence and final verdict.",
+    "Numbers/dates/locations can be the value under test, whereas observation periods, editions, age populations, conditions and factual relations restrict applicability.",
+    "The mammal universal has an explicit in-population counterexample; this does not imply that a limited observation proves an unrestricted universal.",
+    "The Aconcagua continent link is retained explicitly throughSouthAmerica/Andes membership; no external country-to-continent mapping was supplied."
+  ]
+}
