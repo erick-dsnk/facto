@@ -1,0 +1,26 @@
+// Structural sizing only: existing OPEN full contexts, no claimed receipt binding.
+import {readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {createJudge} from '/workspace/stack-20/services/api/src/providers/jev/judgment.js';
+import {MODEL_VERSION,type AcceptedClaim} from '/workspace/stack-20/packages/contracts/src/index.js';
+import {APPLICABILITY_INSTRUCTIONS,APPLICABILITY_CRITERIA} from './question.js';
+const path='/workspace/task-evidence/judgment-context-diagnostic-01/contexts.json';
+const raw=await readFile(path), data=JSON.parse(raw.toString());const results=[];
+for(const entry of data.contexts){
+ let request:any;const stop=new Error('captured_not_dispatched');
+ const claim:AcceptedClaim={id:'preflight-claim-0',originalText:entry.proposition,checkedText:entry.proposition,sourceSpan:{start:0,end:Array.from(entry.proposition).length},admission:{assertionStatus:'asserted',hasPracticalConsequence:null,matchedSelectedTopic:null,admissionAction:'check',reasonCode:'open-byte-preflight'}};
+ try {await createJudge({ask:async r=>{request=r;throw stop;}})(claim,entry.records,{signal:new AbortController().signal,now:Date.now,consume:()=>{throw Error('must_not_consume')}});}catch(e){if(e!==stop)throw e;}
+ const size=(r:any)=>Buffer.byteLength(JSON.stringify({model:MODEL_VERSION,...r}));
+ const sizes=[];
+ for(let count=1;count<=entry.records.length;count++){
+  const next=structuredClone(request);next.state.record_applicability=[];
+  for(let i=0;i<count;i++){const key=`a${i}_applicability`;next.questions[key]={type:'choice',instructions:APPLICABILITY_INSTRUCTIONS,criteria:{...APPLICABILITY_CRITERIA}};
+   // Real trusted receipt descriptor shape, used solely to estimate bytes. No
+   // target is asserted to possess this receipt; this script cannot dispatch.
+   next.state.record_applicability.push({question:key,source:`e${i}`,relation:'reported_population_estimate',scopeDimensions:['document','geography','measure','population','precision','referenceDate','version'],snapshotOnly:true});}
+  sizes.push({items:count,bytes:size(next),fits:size(next)<=65536});
+ }
+ results.push({caseId:entry.caseId,sources:entry.records.length,baselineBytes:size(request),sizingOnly:sizes});
+}
+await writeFile(new URL('./full-context-byte-preflight.json',import.meta.url),JSON.stringify({networkCalls:0,providerCalls:0,sourceContextSHA256:createHash('sha256').update(raw).digest('hex'),notReceiptApplicabilityProof:true,results},null,2)+'\n');
+console.log(JSON.stringify(results.map(r=>({caseId:r.caseId,sources:r.sources,baseline:r.baselineBytes,maxFittingItems:r.sizingOnly.filter(s=>s.fits).length}))));

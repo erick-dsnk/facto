@@ -4,9 +4,14 @@ import { retryAfterDelay, RetryableProviderError, withProviderRetry } from '../.
 
 const MAX_RESPONSE_BYTES = 256 * 1024;
 
+/** Cleanup must not replace or delay an already established provider error. */
+function discardBody(body: ReadableStream<Uint8Array> | ReadableStreamDefaultReader<Uint8Array> | null): void {
+  void body?.cancel().catch(() => undefined);
+}
+
 async function boundedJson(response: Response): Promise<unknown> {
   if (Number(response.headers.get('content-length')) > MAX_RESPONSE_BYTES || !response.body) {
-    await response.body?.cancel();
+    discardBody(response.body);
     throw new PipelineError('malformed_exa_response');
   }
   const reader = response.body.getReader();
@@ -21,7 +26,7 @@ async function boundedJson(response: Response): Promise<unknown> {
       chunks.push(value);
     }
   } catch (error) {
-    await reader.cancel().catch(() => undefined);
+    discardBody(reader);
     if (error instanceof PipelineError) throw error;
     throw new RetryableProviderError('exa_unavailable');
   } finally { reader.releaseLock(); }
@@ -64,7 +69,7 @@ export class AbortableExa extends Exa {
       });
       if (response.ok) return response;
       const retryAfter = retryAfterDelay(response.headers.get('retry-after'), this.providerContext?.now() ?? Date.now());
-      await response.body?.cancel().catch(() => undefined);
+      discardBody(response.body);
       if (response.status === 401 || response.status === 403) throw new PipelineError('exa_authentication_failed');
       if (response.status === 429) throw new RetryableProviderError('exa_rate_limited', retryAfter);
       if (response.status >= 500) throw new RetryableProviderError('exa_unavailable', retryAfter);

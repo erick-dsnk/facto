@@ -1,0 +1,20 @@
+✔ separate34/8 denominators are fixed even with no outcomes (4.673413ms)
+✔ missing result, deterministic noitem, raw uncertain and missing answer stay distinct (2.669163ms)
+✔ thresholded raw coverage and risk-gated eligibility remain separate (3.50323ms)
+✔ unsafe uncertain grants remain counted despite primary-exclusion flag (5.543474ms)
+✔ paired numerical/source/policy/risk spillovers and exact citation units are preserved (4.954937ms)
+✔ floating representation noise does not create a change but raw values remain (1.436144ms)
+✔ changed source material cannot masquerade as an unchanged paired pool (1.018395ms)
+✔ duplicate or uncompleted result rows are rejected rather than counted twice (3.107048ms)
+✔ guard-completed call with no durable semantic row remains missing (0.936712ms)
+✔ full84 synthetic rows retain separate cohorts without any factual credit (4.062623ms)
+✔ exact ternary confusion preserves non-grant disagreement without labelling it unsafe coverage (2.027796ms)
+✔ failed post-answer attempts remain unscored while their raw observations stay available (1.878822ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 375.943979

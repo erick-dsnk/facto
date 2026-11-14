@@ -1,0 +1,81 @@
+{
+  "kind": "root_exact_once_bounded_study_authorization",
+  "createdAt": "2026-11-14T06:31:08.090Z",
+  "planPath": "/workspace/task-evidence/typed-applicability-calibration-01/applicability42-plan.json",
+  "planCanonicalSHA256": "6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0",
+  "planFileSHA256": "66a4d7122469d999cc95928be4567aba56a62e9a75fa5e9a593a2b43923b5880",
+  "runnerSHA256": "bb2877fc891db57b58346cccabd5744c2fe423ad5b387bf898d177d576790b0c",
+  "reviews": [
+    {
+      "path": "/workspace/task-evidence/applicability84-final-independent-plan-review.json",
+      "sha256": "8bf12c86cc3040b7feea4768a04c2cb694dac0fa8cc81402a6a86db27281ab71"
+    },
+    {
+      "path": "/workspace/task-evidence/study84-runtime-integration-review/review.json",
+      "sha256": "3147c4d97c59573597b53d65ff421495ac1fd9f85b737c04a877ac0bc85c73ec"
+    },
+    {
+      "path": "/workspace/task-evidence/applicability84-preoutput-interpretation-addendum.json",
+      "sha256": "79c2547e211a64c62042f99c5839cc8d69fa5ac72810efaac20ca8226d13874f"
+    }
+  ],
+  "sourcePinsVerified": 44,
+  "soleOutput": "/workspace/task-evidence/typed-applicability-calibration-01/live-first-run",
+  "authorizedExecutor": "assessment_coverage",
+  "limits": {
+    "maxCalls": 84,
+    "maxInputTokens": 1280000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 6291456,
+    "maxResponseBytesPerCall": 128000,
+    "maxTotalResponseBytes": 2097152,
+    "wallMs": 120000
+  },
+  "blocks": [
+    {
+      "blockId": "block1",
+      "limits": {
+        "maxCalls": 22,
+        "maxInputTokens": 320000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 930722,
+        "maxTotalResponseBytes": 524288
+      }
+    },
+    {
+      "blockId": "block2",
+      "limits": {
+        "maxCalls": 22,
+        "maxInputTokens": 320000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 997472,
+        "maxTotalResponseBytes": 524288
+      }
+    },
+    {
+      "blockId": "block3",
+      "limits": {
+        "maxCalls": 20,
+        "maxInputTokens": 320000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 903786,
+        "maxTotalResponseBytes": 524288
+      }
+    },
+    {
+      "blockId": "block4",
+      "limits": {
+        "maxCalls": 20,
+        "maxInputTokens": 320000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 926828,
+        "maxTotalResponseBytes": 524288
+      }
+    }
+  ],
+  "maxJevActualAttempts": 84,
+  "maxExaActualAttempts": 0,
+  "execution": "Execute once using frozen runner; preserve all failures, missing rows, reservations, unknown usage and first-run outputs; no rerun, resume, retries, borrowing, replacement or automatic promotion.",
+  "interpretation": "OPEN semantic development only. Separate34original and8identity cases plus2offline binding controls. Any thresholded covered negative/uncertain is a safety finding. Non-grant ternary disagreement separate. No authority, currentproof, factualcoverage, backendreadiness or productionactivation credit."
+}

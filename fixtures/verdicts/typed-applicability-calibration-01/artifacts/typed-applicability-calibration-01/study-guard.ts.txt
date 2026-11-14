@@ -1,0 +1,414 @@
+/** Offline-authored study guard. No execution authority and no production imports.
+ * The runner freezes the complete 84-call inventory; this reusable guard also
+ * accepts smaller inventories for deterministic offline tests. */
+import { createHash } from 'node:crypto';
+
+export interface BlockLimits {
+  maxCalls: number;
+  maxInputTokens: number;
+  pendingReserve: number;
+  maxTotalRequestBytes: number;
+  maxTotalResponseBytes: number;
+}
+export interface CampaignLimits extends BlockLimits {
+  maxRequestBytes: number;
+  maxResponseBytesPerCall: number;
+  wallMs: number;
+}
+export interface StudyCall {
+  callId: string;
+  blockId: string;
+  requestSHA256: string;
+  requestBytes: number;
+  denominatorClass?: string;
+}
+export interface StudyGuardPlan {
+  calls: StudyCall[];
+  blocks: { blockId: string; limits: BlockLimits }[];
+  limits: CampaignLimits;
+}
+export interface Failure {
+  kind: 'local_guard' | 'provider' | 'deadline' | 'accounting' | 'cancelled';
+  code: string;
+  callId: string | null;
+  blockId: string | null;
+}
+export interface Counters {
+  reservedCalls: number;
+  actualStartedJev: number;
+  actualStartedExa: 0;
+  requestBytes: number;
+  responseBytes: number;
+  measuredInputTokens: number;
+  usageKnownCalls: number;
+  usageUnknownCalls: number;
+}
+export interface CallTerminal {
+  callId: string;
+  blockId: string;
+  status: 'completed' | 'failed';
+  actualStartedJev: number;
+  requestBytes: number;
+  responseBytes: number;
+  measuredInputTokens: number | null;
+  unknownUsage: boolean;
+  failure: Failure | null;
+}
+export interface StudyGuardSnapshot {
+  status: 'not_started' | 'running' | 'completed' | 'stopped';
+  startedAt: number | null;
+  elapsedMs: number;
+  primaryFailure: Failure | null;
+  unknownUsage: boolean;
+  inFlightCallId: string | null;
+  pendingInputTokenReserve: number;
+  totals: Counters;
+  perBlock: Record<string, Counters>;
+  declaredCallIds: string[];
+  completedCallIds: string[];
+  failedCallIds: string[];
+  missingCallIds: string[];
+  declaredByClass: Record<string, number>;
+  completedByClass: Record<string, number>;
+  missingByClass: Record<string, number>;
+  completeAccuracyClaimPermitted: boolean;
+  terminals: CallTerminal[];
+}
+export interface GuardCheckpoint {
+  type: 'call_reserved' | 'request_prepared' | 'request_started' | 'response_headers' | 'usage_observed' | 'call_terminal' | 'stopped';
+  callId: string | null;
+  statusCode?: number;
+  requestSHA256?: string;
+  requestBytes?: number;
+  snapshot: StudyGuardSnapshot;
+}
+export interface StudyLease {
+  readonly signal: AbortSignal;
+  readonly fetch: typeof globalThis.fetch;
+  attachAbortController(controller: AbortController): void;
+  assertOpen(): void;
+}
+export type GuardRunResult<T> =
+  | { status: 'completed'; value: T; terminal: CallTerminal }
+  | { status: 'failed'; terminal: CallTerminal };
+export interface StudyGuard {
+  run<T>(callId: string, work: (lease: StudyLease) => Promise<T>): Promise<GuardRunResult<T>>;
+  snapshot(): StudyGuardSnapshot;
+  close(): StudyGuardSnapshot;
+}
+export class StudyGuardError extends Error {
+  constructor(readonly failure: Failure) { super(failure.code); }
+}
+
+const endpoint = 'https://api.typesafe.ai/v1/systemone';
+const hash = (s: string) => createHash('sha256').update(s).digest('hex');
+const counters = (): Counters => ({ reservedCalls: 0, actualStartedJev: 0, actualStartedExa: 0,
+  requestBytes: 0, responseBytes: 0, measuredInputTokens: 0, usageKnownCalls: 0, usageUnknownCalls: 0 });
+const copy = <T>(v: T): T => structuredClone(v);
+function detached(work: () => Promise<unknown> | void): void {
+  try { void Promise.resolve(work()).catch(() => undefined); } catch { /* cleanup cannot block finalization */ }
+}
+function positive(v: number, name: string, allowZero = false): void {
+  if (!Number.isSafeInteger(v) || v < (allowZero ? 0 : 1)) throw new Error(`invalid_${name}`);
+}
+function validatePlan(p: StudyGuardPlan): void {
+  if (!p || !Array.isArray(p.calls) || !Array.isArray(p.blocks)) throw new Error('invalid_plan');
+  const limits = p.limits;
+  const blockKeys = ['maxCalls', 'maxInputTokens', 'pendingReserve', 'maxTotalRequestBytes', 'maxTotalResponseBytes'] as const;
+  for (const name of [...blockKeys, 'maxRequestBytes', 'maxResponseBytesPerCall', 'wallMs'] as const) positive(limits?.[name], name);
+  if (p.calls.length < 1 || p.calls.length > 84 || limits.maxCalls !== p.calls.length
+    || p.blocks.length < 1 || p.blocks.length > 4 || limits.maxRequestBytes > 65536
+    || limits.maxResponseBytesPerCall > 128000 || limits.wallMs > 120000) throw new Error('plan_ceiling');
+  if (new Set(p.calls.map(c => c.callId)).size !== p.calls.length
+    || new Set(p.blocks.map(b => b.blockId)).size !== p.blocks.length) throw new Error('duplicate_inventory');
+  for (const b of p.blocks) {
+    for (const name of blockKeys) positive(b.limits?.[name], name);
+    const calls = p.calls.filter(c => c.blockId === b.blockId);
+    if (typeof b.blockId !== 'string' || !b.blockId || b.blockId.length > 100 || calls.length !== b.limits.maxCalls || calls.length > 22
+      || b.limits.pendingReserve > b.limits.maxInputTokens
+      || calls.reduce((sum, c) => sum + c.requestBytes, 0) > b.limits.maxTotalRequestBytes) throw new Error('block_inventory_or_limits');
+  }
+  const blockOrder = p.calls.map(c => c.blockId).filter((v, i, a) => i === 0 || v !== a[i - 1]);
+  if (JSON.stringify(blockOrder) !== JSON.stringify(p.blocks.map(b => b.blockId))) throw new Error('noncontiguous_block_inventory');
+  for (const c of p.calls) {
+    positive(c.requestBytes, 'requestBytes');
+    if (typeof c.callId !== 'string' || !c.callId || c.callId.length > 200 || !p.blocks.some(b => b.blockId === c.blockId)
+      || typeof c.requestSHA256 !== 'string' || !/^[0-9a-f]{64}$/.test(c.requestSHA256)
+      || c.requestBytes > limits.maxRequestBytes || (c.denominatorClass !== undefined
+        && (typeof c.denominatorClass !== 'string' || !c.denominatorClass || c.denominatorClass.length > 100))) throw new Error('invalid_call');
+  }
+  if (limits.pendingReserve > limits.maxInputTokens
+    || p.calls.reduce((sum, c) => sum + c.requestBytes, 0) > limits.maxTotalRequestBytes) throw new Error('campaign_inventory_or_limits');
+}
+
+/** options.fetch must be supplied explicitly. Merely constructing the guard
+ * never performs HTTP; only the exact predeclared transport body can dispatch. */
+export function createStudyGuard(input: StudyGuardPlan, options: {
+  fetch: typeof globalThis.fetch;
+  now?: () => number;
+  onCheckpoint: (event: GuardCheckpoint) => void;
+  setTimer?: (callback: () => void, ms: number) => unknown;
+  clearTimer?: (timer: unknown) => void;
+}): StudyGuard {
+  const plan = copy(input); validatePlan(plan);
+  if (typeof options.onCheckpoint !== 'function') throw new Error('checkpoint_observer_required');
+  const now = options.now ?? Date.now;
+  const setTimer = options.setTimer ?? ((fn, ms) => setTimeout(fn, ms));
+  const clearTimer = options.clearTimer ?? (timer => clearTimeout(timer as ReturnType<typeof setTimeout>));
+  const totals = counters();
+  const perBlock = Object.fromEntries(plan.blocks.map(b => [b.blockId, counters()]));
+  const terminals: CallTerminal[] = [];
+  let startedAt: number | null = null, endedAt: number | null = null;
+  let timer: unknown, nextIndex = 0;
+  let status: StudyGuardSnapshot['status'] = 'not_started';
+  let primaryFailure: Failure | null = null;
+  type Active = {
+    call: StudyCall; controller: AbortController; attached: Set<AbortController>; detachOwnerListeners: (() => void)[];
+    open: boolean; dispatches: number; requestBytes: number; responseBytes: number;
+    usage?: number; reader?: ReadableStreamDefaultReader<Uint8Array>;
+    streamCancelled: boolean; failure: Failure | null;
+  };
+  let active: Active | null = null;
+  const failure = (kind: Failure['kind'], code: string, a: Active | null = active): Failure =>
+    ({ kind, code, callId: a?.call.callId ?? null, blockId: a?.call.blockId ?? null });
+  const elapsed = () => startedAt === null ? 0 : Math.max(0, (endedAt ?? now()) - startedAt);
+  function snapshot(): StudyGuardSnapshot {
+    const complete = new Set(terminals.filter(t => t.status === 'completed').map(t => t.callId));
+    const declaredByClass: Record<string, number> = Object.create(null), completedByClass: Record<string, number> = Object.create(null), missingByClass: Record<string, number> = Object.create(null);
+    for (const c of plan.calls) {
+      const name = c.denominatorClass ?? 'unclassified';
+      declaredByClass[name] = (declaredByClass[name] ?? 0) + 1;
+      completedByClass[name] ??= 0; missingByClass[name] ??= 0;
+      if (complete.has(c.callId)) completedByClass[name]++; else missingByClass[name]++;
+    }
+    return copy({ status, startedAt, elapsedMs: elapsed(), primaryFailure,
+      unknownUsage: totals.usageUnknownCalls > 0, totals, perBlock,
+      inFlightCallId: active?.open ? active.call.callId : null,
+      pendingInputTokenReserve: active?.open && active.usage === undefined ? plan.limits.pendingReserve : 0,
+      declaredCallIds: plan.calls.map(c => c.callId), completedCallIds: [...complete],
+      failedCallIds: terminals.filter(t => t.status === 'failed').map(t => t.callId),
+      missingCallIds: plan.calls.filter(c => !complete.has(c.callId)).map(c => c.callId),
+      declaredByClass, completedByClass, missingByClass,
+      completeAccuracyClaimPermitted: status === 'completed' && complete.size === plan.calls.length,
+      terminals });
+  }
+  function abortActive(a: Active, reason: unknown): void {
+    a.open = false;
+    for (const detach of a.detachOwnerListeners.splice(0)) detach();
+    if (!a.controller.signal.aborted) a.controller.abort(reason);
+    for (const controller of a.attached) if (!controller.signal.aborted) controller.abort(reason);
+    if (a.reader) detached(() => a.reader!.cancel(reason));
+  }
+  function stop(f: Failure): StudyGuardError {
+    primaryFailure ??= f;
+    status = 'stopped'; endedAt ??= now();
+    if (timer !== undefined) clearTimer(timer);
+    const error = new StudyGuardError(primaryFailure);
+    if (active) { active.failure ??= f; abortActive(active, error); }
+    return error;
+  }
+  function emit(type: GuardCheckpoint['type'], a: Active | null = active, statusCode?: number): void {
+    try {
+      const returned: unknown = options.onCheckpoint({ type, callId: a?.call.callId ?? null, ...(statusCode === undefined ? {} : { statusCode }),
+      ...((type === 'request_prepared' || type === 'request_started') && a
+        ? { requestSHA256: a.call.requestSHA256, requestBytes: a.call.requestBytes } : {}), snapshot: snapshot() });
+      // The observer contract is synchronous durable storage. A thenable must
+      // not be silently treated as completed storage before HTTP dispatch.
+      if (returned && (typeof returned === 'object' || typeof returned === 'function') && 'then' in returned) {
+        detached(() => Promise.resolve(returned));
+        throw new Error('checkpoint_must_be_synchronous');
+      }
+    }
+    catch { throw stop(failure('local_guard', 'checkpoint_failed', a)); }
+  }
+  function assertOpen(a: Active): void {
+    if (!a.open || active !== a || status !== 'running') throw new StudyGuardError(a.failure ?? primaryFailure ?? failure('local_guard', 'attempt_closed', a));
+    if (startedAt === null || now() - startedAt >= plan.limits.wallMs) throw stop(failure('deadline', 'absolute_wall_deadline', a));
+    if (a.controller.signal.aborted) throw stop(failure('cancelled', 'attempt_aborted', a));
+  }
+  function check(a: Active, condition: unknown, code: string): asserts condition {
+    if (!condition) throw stop(failure('local_guard', code, a));
+  }
+  function add(a: Active, key: keyof Counters, amount: number): void {
+    totals[key] += amount;
+    perBlock[a.call.blockId]![key] += amount;
+  }
+  function observeUsage(a: Active, body: string): void {
+    assertOpen(a);
+    let decoded: unknown;
+    try { decoded = JSON.parse(body); } catch { return; }
+    if (!decoded || typeof decoded !== 'object' || !('usage' in decoded)) return;
+    const usage = decoded.usage;
+    if (!usage || typeof usage !== 'object' || !('input_tokens' in usage)) return;
+    const inputTokens = usage.input_tokens;
+    if (typeof inputTokens !== 'number' || !Number.isSafeInteger(inputTokens) || inputTokens < 0) return;
+    check(a, a.usage === undefined, 'duplicate_usage');
+    a.usage = inputTokens;
+    add(a, 'measuredInputTokens', inputTokens);
+    add(a, 'usageKnownCalls', 1);
+    emit('usage_observed', a);
+    const b = plan.blocks.find(b => b.blockId === a.call.blockId)!.limits;
+    check(a, totals.measuredInputTokens <= plan.limits.maxInputTokens && perBlock[a.call.blockId]!.measuredInputTokens <= b.maxInputTokens, 'measured_input_token_cap');
+  }
+  function wrappedFetch(a: Active): typeof globalThis.fetch {
+    return async (url, init) => {
+      assertOpen(a);
+      check(a, a.dispatches === 0, 'retry_or_second_dispatch');
+      check(a, String(url) === endpoint && init?.method === 'POST', 'request_endpoint_or_method');
+      check(a, typeof init.body === 'string' && hash(init.body) === a.call.requestSHA256, 'request_body_hash_mismatch');
+      const bytes = Buffer.byteLength(init.body);
+      check(a, bytes === a.call.requestBytes && bytes <= plan.limits.maxRequestBytes, 'request_byte_cap');
+      const b = plan.blocks.find(b => b.blockId === a.call.blockId)!.limits;
+      check(a, totals.requestBytes + bytes <= plan.limits.maxTotalRequestBytes
+        && perBlock[a.call.blockId]!.requestBytes + bytes <= b.maxTotalRequestBytes, 'request_total_byte_cap');
+      const signal = init.signal ? AbortSignal.any([a.controller.signal, init.signal]) : a.controller.signal;
+      // Snapshot all wire-relevant values before invoking observer code. A
+      // caller-owned URL, init or header object cannot change the audited body
+      // or destination between its durable checkpoint and actual dispatch.
+      const actualInit: RequestInit = { ...init, method: 'POST', body: init.body,
+        headers: new Headers(init.headers), signal, redirect: 'error' };
+      check(a, !signal.aborted, 'transport_already_aborted');
+      // A durable pre-dispatch checkpoint must finish successfully before the
+      // transport is invoked. It records the intent, never an actual attempt.
+      emit('request_prepared', a);
+      assertOpen(a);
+      check(a, !signal.aborted, 'transport_already_aborted');
+      a.dispatches++; a.requestBytes += bytes;
+      add(a, 'actualStartedJev', 1); add(a, 'requestBytes', bytes);
+      // Dispatch and count are adjacent. A checkpoint failure after dispatch is
+      // still one actual attempt, and aborts the attached runtime controller.
+      let pending: Promise<Response>;
+      try { pending = Promise.resolve(options.fetch(endpoint, actualInit)); }
+      catch (error) { pending = Promise.reject(error); }
+      void pending.catch(() => undefined);
+      try { emit('request_started', a); }
+      catch (error) {
+        // The already dispatched transport can ignore abort and resolve later.
+        // No reader is owned yet, so cancel its original body when it arrives.
+        detached(() => pending.then(response => { if (response.body) detached(() => response.body!.cancel(error)); }));
+        throw error;
+      }
+      const response = await pending;
+      let readerCandidate: ReadableStreamDefaultReader<Uint8Array> | undefined;
+      try {
+        assertOpen(a);
+        emit('response_headers', a, response.status);
+        assertOpen(a);
+        readerCandidate = response.body?.getReader(); a.reader = readerCandidate;
+      }
+      catch (error) { if (response.body) detached(() => response.body!.cancel(error)); throw error; }
+      const reader = readerCandidate;
+      const decoder = new TextDecoder(); let body = '', ended = false;
+      const stream = reader ? new ReadableStream<Uint8Array>({
+        async pull(controller) {
+          try {
+            assertOpen(a);
+            const chunk = await reader.read();
+            if (a.streamCancelled) return;
+            if (!a.open) throw new StudyGuardError(a.failure ?? primaryFailure ?? failure('local_guard', 'attempt_closed', a));
+            if (!chunk.done) {
+              a.responseBytes += chunk.value.byteLength;
+              add(a, 'responseBytes', chunk.value.byteLength);
+            }
+            assertOpen(a);
+            check(a, a.responseBytes <= plan.limits.maxResponseBytesPerCall
+              && totals.responseBytes <= plan.limits.maxTotalResponseBytes
+              && perBlock[a.call.blockId]!.responseBytes <= b.maxTotalResponseBytes, 'response_byte_cap');
+            if (chunk.done) {
+              if (!ended) { ended = true; body += decoder.decode(); observeUsage(a, body); }
+              body = ''; controller.close();
+            } else { body += decoder.decode(chunk.value, { stream: true }); controller.enqueue(chunk.value); }
+          } catch (error) {
+            body = '';
+            detached(() => reader.cancel(error));
+            if (a.streamCancelled) return;
+            throw error;
+          }
+        },
+        cancel(reason) { a.streamCancelled = true; body = ''; detached(() => reader.cancel(reason)); },
+      }) : null;
+      return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers });
+    };
+  }
+  function terminalize(a: Active, succeeded: boolean, error?: unknown): CallTerminal {
+    if (!succeeded && !primaryFailure) {
+      const code = error && typeof error === 'object' && 'code' in error && typeof error.code === 'string'
+        && /^[a-z][a-z0-9_]{0,79}$/.test(error.code) ? error.code : 'provider_error';
+      stop(failure('provider', code, a));
+    }
+    if (succeeded && a.dispatches !== 1) stop(failure('local_guard', 'missing_actual_dispatch', a));
+    if (a.dispatches && a.usage === undefined) {
+      add(a, 'usageUnknownCalls', 1);
+      if (!primaryFailure) stop(failure('accounting', 'unknown_usage', a));
+    }
+    const good = succeeded && !primaryFailure;
+    const terminal: CallTerminal = {
+      callId: a.call.callId, blockId: a.call.blockId, status: good ? 'completed' : 'failed',
+      actualStartedJev: a.dispatches, requestBytes: a.requestBytes, responseBytes: a.responseBytes,
+      measuredInputTokens: a.usage ?? null, unknownUsage: a.dispatches > 0 && a.usage === undefined,
+      failure: good ? null : a.failure ?? primaryFailure,
+    };
+    a.open = false;
+    for (const detach of a.detachOwnerListeners.splice(0)) detach();
+    if (!good) abortActive(a, new StudyGuardError(terminal.failure!));
+    terminals.push(terminal); active = null; nextIndex++;
+    if (good && nextIndex === plan.calls.length) {
+      status = 'completed'; endedAt = now(); if (timer !== undefined) clearTimer(timer);
+    }
+    try { emit('call_terminal', a); } catch { /* failure already captured; terminal result below reflects stop */ }
+    if (primaryFailure && good) { terminal.status = 'failed'; terminal.failure = primaryFailure; abortActive(a, new StudyGuardError(primaryFailure)); }
+    return copy(terminal);
+  }
+  async function run<T>(callId: string, work: (lease: StudyLease) => Promise<T>): Promise<GuardRunResult<T>> {
+    if (status === 'stopped' || status === 'completed') throw new StudyGuardError(primaryFailure ?? failure('local_guard', 'study_already_completed', null));
+    if (active || plan.calls[nextIndex]?.callId !== callId) throw stop(failure('local_guard', 'call_order_or_concurrency', active));
+    if (startedAt === null) {
+      startedAt = now(); status = 'running';
+      timer = setTimer(() => { if (status === 'running') stop(failure('deadline', 'absolute_wall_deadline')); }, plan.limits.wallMs);
+      if (status !== 'running') throw new StudyGuardError(primaryFailure ?? failure('deadline', 'absolute_wall_deadline'));
+    }
+    const call = plan.calls[nextIndex]!, block = plan.blocks.find(b => b.blockId === call.blockId)!.limits;
+    const bt = perBlock[call.blockId]!;
+    if (elapsed() >= plan.limits.wallMs) throw stop(failure('deadline', 'absolute_wall_deadline'));
+    if (totals.reservedCalls >= plan.limits.maxCalls || bt.reservedCalls >= block.maxCalls
+      || totals.measuredInputTokens + plan.limits.pendingReserve > plan.limits.maxInputTokens
+      || bt.measuredInputTokens + block.pendingReserve > block.maxInputTokens
+      || totals.requestBytes + call.requestBytes > plan.limits.maxTotalRequestBytes
+      || bt.requestBytes + call.requestBytes > block.maxTotalRequestBytes) throw stop(failure('local_guard', 'pre_dispatch_budget_reserve'));
+    const a: Active = { call, controller: new AbortController(), attached: new Set(), detachOwnerListeners: [], open: true,
+      dispatches: 0, requestBytes: 0, responseBytes: 0, streamCancelled: false, failure: null };
+    active = a; add(a, 'reservedCalls', 1);
+    const lease: StudyLease = Object.freeze({ signal: a.controller.signal, fetch: wrappedFetch(a),
+      attachAbortController(controller: AbortController) {
+        assertOpen(a); check(a, controller instanceof AbortController && !controller.signal.aborted, 'invalid_runtime_controller');
+        if (a.attached.has(controller)) return;
+        a.attached.add(controller);
+        const onAbort = () => { if (a.open) stop(failure('cancelled', 'runtime_owner_aborted', a)); };
+        controller.signal.addEventListener('abort', onAbort, { once: true });
+        a.detachOwnerListeners.push(() => controller.signal.removeEventListener('abort', onAbort));
+      }, assertOpen: () => assertOpen(a) });
+    let removeAbort: () => void = () => undefined;
+    try {
+      emit('call_reserved', a);
+      const aborted = new Promise<never>((_resolve, reject) => {
+        const onAbort = () => reject(a.controller.signal.reason ?? new StudyGuardError(failure('cancelled', 'attempt_aborted', a)));
+        a.controller.signal.addEventListener('abort', onAbort, { once: true });
+        removeAbort = () => a.controller.signal.removeEventListener('abort', onAbort);
+        if (a.controller.signal.aborted) onAbort();
+      });
+      const operation = Promise.resolve().then(() => { assertOpen(a); return work(lease); });
+      const value = await Promise.race([operation, aborted]);
+      assertOpen(a);
+      const terminal = terminalize(a, true);
+      return terminal.status === 'completed' ? { status: 'completed', value, terminal } : { status: 'failed', terminal };
+    } catch (error) { return { status: 'failed', terminal: terminalize(a, false, error) }; }
+    finally { removeAbort(); }
+  }
+  return Object.freeze({ run, snapshot, close() {
+    if (status !== 'completed' && status !== 'stopped') {
+      stop(failure('cancelled', 'study_closed'));
+      try { emit('stopped'); } catch { /* primary failure remains unchanged */ }
+    }
+    return snapshot();
+  } });
+}

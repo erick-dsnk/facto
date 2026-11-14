@@ -1,0 +1,38 @@
+✔ same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability (114.744364ms)
+✔ clipped entire-unit binding fails before ask but unchanged baseline still executes once (102.619718ms)
+✔ fails closed on not_covered 0.99 (128.354883ms)
+✔ fails closed on uncertain 0.99 (39.275227ms)
+✔ fails closed on covered 0.84 (42.402945ms)
+✔ public/current wording cannot acquire freshness by covered answer (37.030983ms)
+✔ post-await advance invalidates response (57.254354ms)
+✔ post-await cancel invalidates response (41.164216ms)
+✔ post-await replaceMaterial invalidates response (103.991261ms)
+✔ post-await replaceInstall invalidates response (87.748357ms)
+✔ retirement invalidates a previously issued semantic token (133.36835ms)
+✔ same-ID companion and assessment changes do not validate token (55.34199ms)
+✔ nonordinary risk never gains semantic eligibility even with covered answer (71.985312ms)
+✔ prototype width mismatch preserves exact baseline title and disables optional route (72.032383ms)
+REQUEST_BYTES {"baseline":63394,"augmentation":0,"actual":63394}
+✔ maximal legal companion material preflights actual serialization without dropping any source (75.90106ms)
+✔ over-limit augmentation preserves baseline byte for byte and sends no optional item (44.481059ms)
+✔ shared inherited exhausted allowance prevents any HTTP attempt (34.934601ms)
+✔ actual response token accounting charges the same request budget (132.637684ms)
+✔ explicit second-claim reservation cannot be stolen by optional question (53.689528ms)
+✔ stale owner is rechecked on every consume, not just factory creation (63.950725ms)
+✔ transient HTTP failure is terminal with one actual attempt and no hidden allowance (45.764335ms)
+✔ forged or serialized dispatch-owner handle is rejected before ask (43.198886ms)
+✔ hung transport settles on Session.cancel before release; late result creates no answer/usage/commit (65.861558ms)
+✔ hung transport settles at inherited absolute deadline even if injected transport ignores signal (71.724299ms)
+✔ captured budget replacement fails before any dispatch (41.97482ms)
+✔ captured controller replacement fails before any dispatch (42.415615ms)
+✔ captured clock replacement fails before any dispatch (34.759536ms)
+✔ captured acceptedAt replacement fails before any dispatch (44.547921ms)
+✔ budget replaced during hung transport cannot receive usage or validate old response (35.807022ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2445.732971
