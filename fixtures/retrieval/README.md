@@ -25,6 +25,11 @@ The deterministic relevance check only selects passages and limits content
 requests; it does not judge truth. Initial retrieval searches the exact admitted
 claim with five results. An explicitly configured balanced alternate uses eight
 results and a descriptive record query containing the verbatim admitted claim.
+The alternate adds no quotation marks around that text: quoted phrases can act
+as Exa exact-phrase restrictions and favor pages that repeat a false assertion.
+Quotes belonging to the admitted text, Unicode, backslashes and line breaks
+remain unchanged. Ordinary JSON transport escaping is separate from search
+syntax. The objective remains neutral; no value or qualifier is rewritten.
 Both use the supported neutral `objective` and query-directed highlights with a
 4,000-character requested limit. Content enrichment requests 12,000 characters
 of text and 4,000 characters of query-directed highlights together. Existing and
@@ -72,3 +77,6 @@ credentials and a separately recorded live evaluation.
 The authorized public acquisition-only diagnostic and independent artifact review
 are recorded in [public-acquisition-01-resumed](public-acquisition-01-resumed/README.md).
 This record contains no Jev judgments and makes no factual-accuracy claim.
+It records the earlier system-quoted alternate variant at the source hashes in
+its plans/replays. It does not validate live retrieval for the later unquoted
+alternate variant, which has only deterministic verification so far.
