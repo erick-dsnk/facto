@@ -52,7 +52,7 @@ export function createJudge(client: JevClient): (...args: Parameters<PipelineAda
       const prefix = `e${index}`;
       questions[`${prefix}_stance`] = { type: 'choice', instructions: `For retained evidence ${source.id}, judge its stance on the checked proposition itself, not whether someone said it. A citation title or authority alone proves nothing.`, criteria: { supports: 'The passage supports the proposition.', contradicts: 'The passage contradicts it.', unrelated: 'Neither, ambiguous, or mere attribution/advertising.' } };
       questions[`${prefix}_relevant`] = { type: 'noul', instructions: `Does retained evidence ${source.id} directly establish or contradict the actual proposition, not just discuss the topic or repeat an attributed claim?` };
-      questions[`${prefix}_scope`] = { type: 'noul', instructions: `Does retained evidence ${source.id} match all material time, place, subject and population qualifications of the proposition without guessing?` };
+      questions[`${prefix}_scope`] = { type: 'noul', instructions: `Does retained evidence ${source.id} address the same referent, factual relation and material time, place and population circumstances as the proposition without guessing? Assess scope separately from agreement: a different asserted value, location or date can directly refute the claim and is not itself a scope mismatch. For example, evidence naming a different capital of the same country addresses the same relation; evidence about another country, period or population does not.` };
       questions[`${prefix}_context_reason`] = { type: 'choice', instructions: `For retained evidence ${source.id} alone, which specific context defect does the exact passage establish? Select none for a related topic or unsupported inference.`, criteria: reasons };
       questions[`${prefix}_context_established`] = { type: 'noul', instructions: `Does retained evidence ${source.id} explicitly establish the specific missing condition, changed date or exaggerated quantity, with matching scope?` };
       questions[`${prefix}_content_basis`] = { type: 'choice', instructions: `Assess only the substantive evidential basis disclosed in retained evidence ${source.id} for this proposition. This is a content assessment, NOT verified publisher reliability. Never grant provenance from prestige, sourceRole, domain or confident prose. A company announcement can establish its announcement; advertising does not establish product effectiveness.`, criteria: contentBases };
@@ -84,7 +84,13 @@ export function createJudge(client: JevClient): (...args: Parameters<PipelineAda
     evidence.forEach((source, index) => {
       const basisAnswer = required(answers, `e${index}_content_basis`);
       const basis = choice(basisAnswer, Object.keys(contentBases)) as SourceAssessment['contentBasis'];
-      sourceAssessments[source.id] = { contentBasis: basis, confidence: selectedConfidence(basisAnswer, basis) };
+      // These choice classes are mutually exclusive wire alternatives. Policy
+      // accepts any of the three substantive classes, so confidence means mass
+      // on that accepted set, not certainty about one fine-grained class. Raw
+      // named class probabilities remain available to provider diagnostics.
+      const substantiveProbability = ['original_record', 'attributable_research', 'substantive_secondary']
+        .reduce((sum, category) => sum + basisAnswer.probabilities![category], 0);
+      sourceAssessments[source.id] = { contentBasis: basis, confidence: Math.min(1, substantiveProbability) };
       evidence.slice(index + 1).forEach((other, offset) => {
         const originAnswer = required(answers, `e${index}_e${index + offset + 1}_origin`);
         const relationship = choice(originAnswer, Object.keys(origins)) as OriginAssessment['relationship'];
