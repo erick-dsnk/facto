@@ -13,10 +13,15 @@ export type AudioFrame = {
   streamGeneration: number; sequence: number; captureOffsetMs: number;
   pcm: Uint8Array; durationMs: number;
 };
-export type AsrTranscript = { text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number };
+/** `speaker` is the provider's 0-based diarization index for the sentence, or null/absent when unknown. */
+export type AsrTranscript = { text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number; speaker?: number | null };
 /** The input owner supplies this adapter. Transport never stores audio or chooses a microphone. */
 export interface AsrAdapter {
-  start(config: AudioStart, onTranscript: (event: AsrTranscript) => void, signal: AbortSignal): Promise<AsrStream>;
+  /**
+   * `onFailure` reports a provider failure after the stream opened (socket closed or errored), so listening stops at once
+   * instead of on the next frame write, which never comes while the phone sends no audio. Call it at most once, with a code only.
+   */
+  start(config: AudioStart, onTranscript: (event: AsrTranscript) => void, signal: AbortSignal, onFailure?: (reasonCode: string) => void): Promise<AsrStream>;
 }
 export interface AsrStream { write(frame: AudioFrame): Promise<void>; stop(): Promise<void>; }
 

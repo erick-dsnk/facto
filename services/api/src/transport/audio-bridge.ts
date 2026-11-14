@@ -11,7 +11,8 @@ type Generation = {
 const transcriptSchema = z.object({
   text: z.string().refine(text => Array.from(text).length <= 800), final: z.boolean(),
   segmentId: z.string().min(1).max(256),
-  confidence: z.number().min(0).max(1).nullable(), captureOffsetMs: z.number().int().min(0).max(0xffffffff)
+  confidence: z.number().min(0).max(1).nullable(), captureOffsetMs: z.number().int().min(0).max(0xffffffff),
+  speaker: z.number().int().min(0).max(1000).nullable().optional()
 }).strict();
 
 /** Transport-owned lifetime/backpressure; the input owner implements AsrAdapter. */
@@ -51,7 +52,13 @@ export class AudioBridge {
           await this.stop('invalid_transcript').catch(() => undefined);
           this.session.emit('pipeline.error', { reasonCode: 'invalid_asr_transcript', message: 'Audio transcription could not be completed.' });
         });
-      }, generation.controller.signal);
+      }, generation.controller.signal, reasonCode => {
+        // A failure while opening rejects start() instead; after audio.ready, stop listening visibly right away.
+        if (!generation.ready || !this.current(generation)) return;
+        void this.stop('asr_failed').catch(() => undefined).then(() => {
+          this.session.emit('pipeline.error', { reasonCode: /^[a-z_]{1,64}$/.test(reasonCode) ? reasonCode : 'asr_unavailable', message: 'Audio transcription could not be completed.' });
+        });
+      });
       // An adapter may ignore abort while opening. Close its late resource as soon as it exists.
       void opening.then(stream => { if (!this.current(generation)) return this.closeStream(stream); }).catch(() => undefined);
       const stream = await abortable(opening, generation.controller.signal);
@@ -98,7 +105,7 @@ export class AudioBridge {
     const event = transcriptSchema.parse(input);
     if (event.captureOffsetMs > generation.frameEndMs) throw new PipelineError('invalid_asr_capture_time');
     if (!event.text.trim()) return;
-    this.session.emit(event.final ? 'transcript.final' : 'transcript.partial', { ...event, streamGeneration: generation.config.streamGeneration, source: generation.config.source });
+    this.session.emit(event.final ? 'transcript.final' : 'transcript.partial', { ...event, speaker: event.speaker ?? null, streamGeneration: generation.config.streamGeneration, source: generation.config.source });
     if (event.final && this.current(generation)) await this.onFinalTranscript(event, generation.config, generation.startedAt + event.captureOffsetMs);
   }
 

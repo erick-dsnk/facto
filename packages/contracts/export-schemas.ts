@@ -18,7 +18,7 @@ input.description = 'Version 1 text input. Lengths and spans use Unicode code po
 const result = z.toJSONSchema(claimResultSchema);
 result.description = 'Version 1 result. Additional semantic invariants: checkedText equals the code-point sourceSpan of originalText; selectedEvidenceIds exist in unique retained evidence; definitive verdicts have a citation; expiry >= checkedAt. Validated by wire.ts.';
 const envelope = z.toJSONSchema(eventEnvelopeSchema);
-envelope.description = 'Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt.';
+envelope.description = 'Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR.';
 for (const [name, schema] of Object.entries({ 'text-input': input, 'claim-result': result, 'event-envelope': envelope })) {
   await writeFile(`${directory}/${name}.schema.json`, `${JSON.stringify(schema, null, 2)}\n`);
 }
