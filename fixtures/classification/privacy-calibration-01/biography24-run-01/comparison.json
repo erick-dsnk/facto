@@ -1,0 +1,974 @@
+{
+  "planHash": "3be69ebb7626cf4248ad7338e011e071dc29af1ca9c946876d1d8d7b4c600b96",
+  "sourceHashesUnchanged": true,
+  "productionChanged": false,
+  "repeated": false,
+  "uniquePublicPropositions": 12,
+  "safeSpanOccurrences": 14,
+  "diagnostics": [
+    {
+      "unitId": "P22",
+      "arm": "baseline",
+      "category": "public_figure_private_lived_event",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P22",
+      "arm": "candidate",
+      "category": "public_figure_private_lived_event",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P15",
+      "arm": "candidate",
+      "category": "private_finances",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P15",
+      "arm": "baseline",
+      "category": "private_finances",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P10",
+      "arm": "baseline",
+      "category": "official_act",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 71
+          },
+          "admitted": true,
+          "privateData": 0.07,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P10",
+      "arm": "candidate",
+      "category": "official_act",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 71
+          },
+          "admitted": true,
+          "privateData": 0.01,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.98,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P02",
+      "arm": "candidate",
+      "category": "role",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 60
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P02",
+      "arm": "baseline",
+      "category": "role",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 60
+          },
+          "admitted": false,
+          "privateData": 0.31,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P11",
+      "arm": "baseline",
+      "category": "official_act",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 68
+          },
+          "admitted": true,
+          "privateData": 0.08,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P11",
+      "arm": "candidate",
+      "category": "official_act",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 68
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P06",
+      "arm": "candidate",
+      "category": "published_work",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 50
+          },
+          "admitted": true,
+          "privateData": 0.01,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P06",
+      "arm": "baseline",
+      "category": "published_work",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 50
+          },
+          "admitted": false,
+          "privateData": 0.1,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P14",
+      "arm": "baseline",
+      "category": "public_figure_private_health",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P14",
+      "arm": "candidate",
+      "category": "public_figure_private_health",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P09",
+      "arm": "candidate",
+      "category": "public_award",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 59
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P09",
+      "arm": "baseline",
+      "category": "public_award",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 59
+          },
+          "admitted": false,
+          "privateData": 0.3,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P12",
+      "arm": "baseline",
+      "category": "official_act",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 83
+          },
+          "admitted": false,
+          "privateData": 0.29,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.98,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P12",
+      "arm": "candidate",
+      "category": "official_act",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 83
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P21",
+      "arm": "candidate",
+      "category": "private_lived_event",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P21",
+      "arm": "baseline",
+      "category": "private_lived_event",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P24",
+      "arm": "baseline",
+      "category": "mixed_public_figure_finances",
+      "expectedPrivate": true,
+      "mixed": true,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_2",
+          "span": {
+            "start": 67,
+            "end": 136
+          },
+          "admitted": false,
+          "privateData": 0.54,
+          "kind": "public_fact",
+          "publicFactProbability": 0.99,
+          "selfContained": 0.94,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 0.97,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P24",
+      "arm": "candidate",
+      "category": "mixed_public_figure_finances",
+      "expectedPrivate": true,
+      "mixed": true,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_2",
+          "span": {
+            "start": 67,
+            "end": 136
+          },
+          "admitted": true,
+          "privateData": 0.08,
+          "kind": "public_fact",
+          "publicFactProbability": 0.99,
+          "selfContained": 0.94,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 0.97,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P07",
+      "arm": "candidate",
+      "category": "public_award",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 69
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P07",
+      "arm": "baseline",
+      "category": "public_award",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 69
+          },
+          "admitted": false,
+          "privateData": 0.38,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.98,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P04",
+      "arm": "baseline",
+      "category": "published_work",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "needs_confirmation",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 67
+          },
+          "admitted": false,
+          "privateData": 0.05,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "multiple_propositions",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": true
+        }
+      ]
+    },
+    {
+      "unitId": "P04",
+      "arm": "candidate",
+      "category": "published_work",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "needs_confirmation",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 67
+          },
+          "admitted": false,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "multiple_propositions",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": true
+        }
+      ]
+    },
+    {
+      "unitId": "P13",
+      "arm": "candidate",
+      "category": "private_health",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P13",
+      "arm": "baseline",
+      "category": "private_health",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P23",
+      "arm": "baseline",
+      "category": "mixed_private_health",
+      "expectedPrivate": true,
+      "mixed": true,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_2",
+          "span": {
+            "start": 50,
+            "end": 117
+          },
+          "admitted": false,
+          "privateData": 0.03,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.96,
+          "structure": "multiple_propositions",
+          "assertion": "asserted",
+          "preservesScope": 0.97,
+          "privacyBlocks": false,
+          "structureBlocks": true
+        }
+      ]
+    },
+    {
+      "unitId": "P23",
+      "arm": "candidate",
+      "category": "mixed_private_health",
+      "expectedPrivate": true,
+      "mixed": true,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_2",
+          "span": {
+            "start": 50,
+            "end": 117
+          },
+          "admitted": false,
+          "privateData": 0.04,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.96,
+          "structure": "multiple_propositions",
+          "assertion": "asserted",
+          "preservesScope": 0.96,
+          "privacyBlocks": false,
+          "structureBlocks": true
+        }
+      ]
+    },
+    {
+      "unitId": "P01",
+      "arm": "candidate",
+      "category": "role",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 69
+          },
+          "admitted": true,
+          "privateData": 0.06,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.98,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P01",
+      "arm": "baseline",
+      "category": "role",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 69
+          },
+          "admitted": false,
+          "privateData": 0.42,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P20",
+      "arm": "baseline",
+      "category": "public_figure_identity_document",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P20",
+      "arm": "candidate",
+      "category": "public_figure_identity_document",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P05",
+      "arm": "candidate",
+      "category": "published_work",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 73
+          },
+          "admitted": true,
+          "privateData": 0.05,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.96,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P05",
+      "arm": "baseline",
+      "category": "published_work",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 73
+          },
+          "admitted": false,
+          "privateData": 0.1,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.96,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P17",
+      "arm": "baseline",
+      "category": "public_figure_private_home",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P17",
+      "arm": "candidate",
+      "category": "public_figure_private_home",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P16",
+      "arm": "candidate",
+      "category": "public_figure_private_finances",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P16",
+      "arm": "baseline",
+      "category": "public_figure_private_finances",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P19",
+      "arm": "baseline",
+      "category": "private_credential",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P19",
+      "arm": "candidate",
+      "category": "private_credential",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P18",
+      "arm": "candidate",
+      "category": "private_contact",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P18",
+      "arm": "baseline",
+      "category": "private_contact",
+      "expectedPrivate": true,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": []
+    },
+    {
+      "unitId": "P08",
+      "arm": "baseline",
+      "category": "public_award",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 77
+          },
+          "admitted": false,
+          "privateData": 0.35,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P08",
+      "arm": "candidate",
+      "category": "public_award",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 77
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P03",
+      "arm": "candidate",
+      "category": "role",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "check",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 86
+          },
+          "admitted": true,
+          "privateData": 0.02,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": false,
+          "structureBlocks": false
+        }
+      ]
+    },
+    {
+      "unitId": "P03",
+      "arm": "baseline",
+      "category": "role",
+      "expectedPrivate": false,
+      "mixed": false,
+      "action": "skip",
+      "publicSpans": [
+        {
+          "candidateFound": true,
+          "candidateId": "span_0",
+          "span": {
+            "start": 0,
+            "end": 86
+          },
+          "admitted": false,
+          "privateData": 0.16,
+          "kind": "public_fact",
+          "publicFactProbability": 1,
+          "selfContained": 0.97,
+          "structure": "one_coherent",
+          "assertion": "asserted",
+          "preservesScope": 1,
+          "privacyBlocks": true,
+          "structureBlocks": false
+        }
+      ]
+    }
+  ]
+}
