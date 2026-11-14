@@ -8,6 +8,7 @@ import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
 import { audioStartSchema, type AsrAdapter } from './audio.js';
 import { AudioBridge } from './audio-bridge.js';
+import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
 
 export type ServerOptions = {
   adapters: PipelineAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
@@ -19,6 +20,8 @@ export async function buildServer(options: ServerOptions) {
   const store = new SessionStore(now);
   const runtime = new PipelineRuntime(options.adapters, now, undefined, options.mode === 'fixture' ? 'fixture' : 'jev-latest');
   const audioBridges = new Map<string, AudioBridge>();
+  // One stream per session. A newer authenticated connection replaces a stale one (half-open after a network blip).
+  const connections = new Map<string, () => void>();
   const app = Fastify({ logger: false, bodyLimit: 16_384, ...(options.tls ? { https: options.tls } : {}) });
   await app.register(websocket, { options: { maxPayload: 16_384, handleProtocols: protocols => protocols.has('actually-v1') ? 'actually-v1' : false } });
   const allowedOrigins = new Set(options.allowedOrigins ?? ['http://localhost:3000', 'http://127.0.0.1:3000']);
@@ -81,14 +84,17 @@ export async function buildServer(options: ServerOptions) {
     preValidation: async request => {
       const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(s => s.trim());
       const token = bearer(request.headers.authorization) ?? protocols.find(p => p.startsWith('bearer.'))?.slice(7);
-      const session = store.authenticate(paramsSchema.parse(request.params).sessionId, token);
-      if (session.listeners.size) throw new PipelineError('stream_already_connected');
+      store.authenticate(paramsSchema.parse(request.params).sessionId, token);
     }
   }, (socket, request) => {
     const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(s => s.trim());
     const token = bearer(request.headers.authorization) ?? protocols.find(p => p.startsWith('bearer.'))?.slice(7);
     const session = store.authenticate(paramsSchema.parse(request.params).sessionId, token);
-    const transcripts = new Map<string, { hash: string; revision: number; capturedAt: string }>();
+    connections.get(session.id)?.();
+    const transcripts = new Map<string, { hash: string; revision: number; capturedAt: string; context: string[] }>();
+    const triggered = new Set<string>();
+    const recent = new TranscriptContext();
+    const forget = () => { transcripts.clear(); triggered.clear(); };
     const fail = (error: unknown) => {
       if (error instanceof PipelineError && error.code === 'audio_cancelled') return;
       if (!session.active || !store.sessions.has(session.id)) return;
@@ -100,30 +106,50 @@ export async function buildServer(options: ServerOptions) {
         const requestId = `asr-${config.sessionEpoch}-${config.streamGeneration}-${segmentHash}`;
         const hash = createHash('sha256').update(JSON.stringify([event.text, event.confidence])).digest('hex');
         const previous = transcripts.get(requestId);
-        if (!previous && transcripts.size >= 128) throw new PipelineError('request_capacity');
-        const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(capturedAt).toISOString() };
+        if (triggered.has(requestId)) return;
+        if (!previous && transcripts.size + triggered.size >= 128) throw new PipelineError('request_capacity');
+        if (isVoiceTrigger(event.text)) {
+          // A spoken "check this" asks the app for a photo. The command itself is never fact-checked.
+          triggered.add(requestId);
+          if (previous) { transcripts.delete(requestId); session.cancel(requestId); }
+          session.emit('capture.request', { reasonCode: 'voice_trigger' });
+          return;
+        }
+        const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(capturedAt).toISOString(),
+          context: previous?.context ?? recent.contextFor(requestId, capturedAt) };
         const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(event.segmentId) ? event.segmentId : `segment-${segmentHash}`;
         const input = textInputSchema.parse({ schemaVersion: 1, requestId, sessionId: session.id, sessionEpoch: config.sessionEpoch, revision: record.revision,
           mode: 'audio', text: event.text, language: 'en', capturedAt: record.capturedAt,
-          capture: { source: config.source, segmentId, confidence: event.confidence, final: true }, context: [], userInitiated: false });
+          capture: { source: config.source, segmentId, confidence: event.confidence, final: true }, context: record.context, userInitiated: false });
+        // Context reflects the conversation, including sentences the runtime later declines to check.
+        recent.record(requestId, event.text, event.speaker ?? null, Date.parse(record.capturedAt));
         runtime.submit(session, input); transcripts.set(requestId, record);
       } catch (error) { fail(error); }
     }) : undefined;
     if (bridge) audioBridges.set(session.id, bridge);
     const send: Session['listeners'] extends Set<infer T> ? T : never = event => {
-      if (event.type === 'session.ended') { transcripts.clear(); void bridge?.stop().catch(() => undefined); }
+      if (event.type === 'session.ended') { forget(); recent.clear(); void bridge?.stop().catch(() => undefined); }
       if (socket.readyState !== 1) return;
       if (socket.bufferedAmount > 65_536) { socket.close(1008, 'Slow consumer'); return; }
       socket.send(JSON.stringify(event));
       if (event.type === 'session.ended' && ['deleted', 'expired'].includes((event.payload as { reasonCode: string }).reasonCode)) socket.close(1000);
     };
     session.listeners.add(send);
-    const disconnect = () => {
-      const stopping = bridge?.stop(); transcripts.clear(); session.pause('disconnected'); void stopping?.catch(() => undefined);
+    let closed = false;
+    const disconnect = (reason = 'disconnected') => {
+      if (closed) return;
+      closed = true;
+      const stopping = bridge?.stop(); forget(); recent.clear(); session.pause(reason); void stopping?.catch(() => undefined);
+      session.listeners.delete(send);
+      if (audioBridges.get(session.id) === bridge) audioBridges.delete(session.id);
+      if (connections.get(session.id) === replace) connections.delete(session.id);
     };
-    socket.on('error', disconnect);
-    socket.on('close', () => { session.listeners.delete(send); disconnect(); if (audioBridges.get(session.id) === bridge) audioBridges.delete(session.id); });
+    const replace = () => { disconnect('replaced'); socket.close(4000, 'Replaced by a newer connection'); };
+    connections.set(session.id, replace);
+    socket.on('error', () => disconnect());
+    socket.on('close', () => { session.listeners.delete(send); disconnect(); });
     socket.on('message', async (data, binary) => {
+      if (closed) return;
       try {
         store.authenticate(session.id, token);
         if (binary) {
@@ -136,7 +162,7 @@ export async function buildServer(options: ServerOptions) {
         }).passthrough().parse(JSON.parse(data.toString()));
         if (control.sessionEpoch !== session.epoch) throw new PipelineError('old_epoch');
         switch (control.type) {
-          case 'session.pause': { const stopping = bridge?.stop(); transcripts.clear(); session.pause(); await stopping; break; }
+          case 'session.pause': { const stopping = bridge?.stop(); forget(); recent.clear(); session.pause(); await stopping; break; }
           case 'session.resume': session.active = true; ready(); break;
           case 'session.preferences': if (!control.preferences) throw new PipelineError('invalid_request'); session.preferences = control.preferences; break;
           case 'claim.cancel': if (!control.requestId) throw new PipelineError('invalid_request'); session.cancel(control.requestId); break;
@@ -147,8 +173,8 @@ export async function buildServer(options: ServerOptions) {
             session.emit('claim.result', { ...result, presentation: { action: session.preferences.muted ? 'silent' : 'respond', reasonCode: 'intentional_repeat' } }, record.input, control.claimId); break;
           }
           case 'audio.start': { const config = audioStartSchema.parse(control); if (!bridge) throw new PipelineError('asr_unavailable'); await bridge.start(config); break; }
-          case 'audio.stop': transcripts.clear(); if (bridge) await bridge.stop(); else session.emit('audio.stopped', { reasonCode: 'stopped' }); break;
-          case 'playback.started': transcripts.clear(); await bridge?.playback(true); break;
+          case 'audio.stop': forget(); recent.clear(); if (bridge) await bridge.stop(); else session.emit('audio.stopped', { reasonCode: 'stopped' }); break;
+          case 'playback.started': forget(); await bridge?.playback(true); break;
           case 'playback.ended': await bridge?.playback(false); break;
           default: throw new PipelineError('unknown_control');
         }

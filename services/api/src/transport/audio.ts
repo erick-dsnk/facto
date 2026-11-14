@@ -13,7 +13,8 @@ export type AudioFrame = {
   streamGeneration: number; sequence: number; captureOffsetMs: number;
   pcm: Uint8Array; durationMs: number;
 };
-export type AsrTranscript = { text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number };
+/** `speaker` is the provider's 0-based diarization index for the sentence, or null/absent when unknown. */
+export type AsrTranscript = { text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number; speaker?: number | null };
 /** The input owner supplies this adapter. Transport never stores audio or chooses a microphone. */
 export interface AsrAdapter {
   start(config: AudioStart, onTranscript: (event: AsrTranscript) => void, signal: AbortSignal): Promise<AsrStream>;

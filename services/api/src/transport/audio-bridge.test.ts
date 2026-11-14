@@ -42,6 +42,21 @@ describe('injectable audio bridge', () => {
     await ready.bridge.stop();
   });
 
+  it('accepts an optional diarization speaker and includes it in transcript events', async () => {
+    const state = setup(); await state.bridge.start(config); await state.bridge.accept(frame());
+    state.publish({ ...transcript, final: false, speaker: 1 }); state.publish({ ...transcript, speaker: 1 });
+    await vi.waitFor(() => expect(state.final).toHaveBeenCalledWith(expect.objectContaining({ speaker: 1 }), config, expect.any(Number)));
+    state.publish({ ...transcript, segmentId: 'segment-2' });
+    await vi.waitFor(() => expect(state.final).toHaveBeenCalledTimes(2));
+    const payloads = state.events.filter(event => event.type.startsWith('transcript.')).map(event => (event.payload as { speaker: unknown }).speaker);
+    expect(payloads).toEqual([1, 1, null]);
+    await state.bridge.stop();
+    const invalid = setup(); await invalid.bridge.start(config); await invalid.bridge.accept(frame());
+    invalid.publish({ ...transcript, speaker: -1 });
+    await vi.waitFor(() => expect(invalid.events.some(event => event.type === 'pipeline.error')).toBe(true));
+    expect(invalid.final).not.toHaveBeenCalled();
+  });
+
   it('caps queued audio to two seconds and aborts a blocked adapter on overflow', async () => {
     const blocked = deferred<void>(); const stopped = vi.fn(async () => {}); const write = vi.fn(() => blocked.promise);
     const state = setup({ start: async () => ({ write, stop: stopped }) }); await state.bridge.start(config);
