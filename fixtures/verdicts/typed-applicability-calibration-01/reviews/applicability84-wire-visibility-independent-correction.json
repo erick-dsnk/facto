@@ -1,0 +1,41 @@
+{
+  "kind": "independent_wire_visibility_review_correction",
+  "createdAt": "2026-11-14T06:43:10.898991+00:00",
+  "vendorDocumentationReceiptSHA256": "960fe23ff87914fc12b03c451c4c17087d3d287a5146d39f571e90731b375e97",
+  "sources": [
+    {
+      "url": "https://docs.typesafe.ai/primitives.md",
+      "boundedExcerpt": "Question IDs are for your code. They are not sent to the model. Write the complete question in `instructions`, even when the ID seems self-explanatory."
+    },
+    {
+      "url": "https://docs.typesafe.ai/concepts/state.md",
+      "boundedExcerpt": "All questions see the same state and are evaluated independently."
+    }
+  ],
+  "reviewerMethod": "Read saved bounded public vendor excerpts/provenance, then compared them with exact frozen07 serialized bodies and question instructions. No additional documentation/provider/source fetches.",
+  "correction": "The earlier audit correctly found whole-wire eN alias consistency, but incorrectly treated another question's criteria/instructions as sufficient model-visible binding for this separately evaluated generic question. Under the vendor contract that sufficiency inference is withdrawn.",
+  "finding": {
+    "scope": "Experimental generic added applicability item in adapters01\u201307 only; baseline source questions explicitly name actual retained evidence IDs.",
+    "details": [
+      "The added instructions say this bound retained record/use mapped excerpt but name neither the actual evidence ID nor a dot/index state path.",
+      "state.record_applicability.question stores the codequestionID and source stores eN; the state.evidence entries expose actual AC/DI/receipt IDs, not eN aliases.",
+      "The eN-to-actualID map exists only in selected_evidence criteria/other question instructions. Those are not documented visible to this independent question. Hidden aNquestionID cannot choose its own mapping row.",
+      "A model may infer the intended record from array order/recordidentity/context, but that does not satisfy explicit per-question target/identity-path binding."
+    ]
+  },
+  "supersededInferenceIn": [
+    "/workspace/task-evidence/applicability84-independent-first-result-review.json:wireReferenceAudit.conclusion",
+    "/workspace/task-evidence/applicability84-final-independent-plan-review.json:complete model-visible binding implications",
+    "Earlier reviewer messages claiming no missing mapping based solely on the whole request"
+  ],
+  "notSuperseded": [
+    "All original artifacts,84actualrequests/answers/accounting,37asked/5excluded, frozenlabels and raw0/18positive/27of42assignedtargetmatches remain unchanged.",
+    "Context integrity,resource/deadline and exact server-side receipt/material/body seals remain separately reviewed; no claim they establish the missing model-visible reference.",
+    "No promotion,authority/core bridge,currentproof,independence or useful factual coverage is supported by first run."
+  ],
+  "causality": "Documentation demonstrates an interface-contract omission, not that it caused0/18. The first run evaluates the actual07implementation; it does not isolate efficacy of a correctly explicitly bound generic applicability question.",
+  "boundedNextStep": "An offline-only revision may render the actual target evidence ID/index and authenticated identity descriptor path into each complete question instructions, retaining all factual semantics/criteria/thresholds/labels/companions. Preserve07/results and independently freeze/test any new body before separately authorized calls. No retrospective relabeling, efficacy assertion or threshold relaxation.",
+  "archiveRequirement": "Append this correction and limited public documentation receipt to the archive; retain original positive/negative reviews unchanged and label their model-visible binding inference superseded. No full vendor documentation copies needed.",
+  "actualProviderCallsByReviewer": 0,
+  "actualNewPublicSourceRequestsByReviewer": 0
+}

@@ -1,0 +1,32 @@
+// PROVISIONAL template capture only. In-memory transport, zero provider calls.
+import {writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import type {AcceptedClaim} from '/workspace/stack-20/packages/contracts/src/index.js';
+import {Session,type RequestRecord} from '/workspace/stack-20/services/api/src/runtime/session.js';
+import {AttemptBudget} from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import {loadInstalledManifest,resolveReceipt} from '../record-capability-prototype-02/src/manifest.js';
+import {loadSnapshot} from '../record-capability-prototype-02/src/snapshot.js';
+import {captureSelectionMaterial,inspectMaterial} from '../capability-selection-seam-02/material.js';
+import {captureDispatchOwner} from '../typed-applicability-adapter-06/runtime-owner.js';
+import {createApplicabilityAdapter} from '../typed-applicability-adapter-06/adapter.js';
+import {loadContexts} from './contexts.js';
+const loaded=await loadContexts();const manifest=await loadInstalledManifest('/workspace/task-evidence/record-capability-prototype-02/installed','7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4');
+const calls=[];
+for(const context of loaded.contexts){
+ const unit=context.unit, session=new Session(Date.now),time=session.now();
+ const claim:AcceptedClaim={id:`${unit.id}-claim-0`,originalText:unit.exactClaimText,checkedText:unit.exactClaimText,sourceSpan:{start:0,end:Array.from(unit.exactClaimText).length},admission:{assertionStatus:'asserted',hasPracticalConsequence:null,matchedSelectedTopic:null,admissionAction:'check',reasonCode:'public-open-calibration'}};
+ const record:RequestRecord={input:{schemaVersion:1,sessionId:session.id,sessionEpoch:session.epoch,requestId:unit.id,revision:1,text:unit.exactClaimText,context:[],mode:'typed',language:'en',capturedAt:new Date(time).toISOString(),capture:{source:'typed_fixture',segmentId:'open-calibration',confidence:1},userInitiated:true},budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:time,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map(),fingerprint:'open-calibration'};session.requests.set(unit.id,record);
+ const material=captureSelectionMaterial({existing:context.records,incoming:[],checkedText:unit.exactClaimText}),generation=inspectMaterial(material).materialGeneration;
+ const artifact=await loadSnapshot(manifest,resolveReceipt(manifest,unit.receiptAlias).receipt.proofId);
+ for(const arm of context.arms){
+  let body='';const fetcher:typeof fetch=async(_url,init)=>{body=String(init?.body);const questions=JSON.parse(body).questions;
+   const answers=Object.fromEntries(Object.entries(questions).map(([key,value])=>{const q=value as any;if(q.type==='noul')return[key,{noul:.5}];const keys=Object.keys(q.criteria);const choice=key==='claim_risk'?'unknown':key==='selected_evidence'?'none':key==='verdict'?'insufficient_evidence':key.endsWith('_applicability')?'uncertain':keys[keys.length-1]!;return[key,{choice,probabilities:Object.fromEntries(keys.map(k=>[k,k===choice?.99:.01/(keys.length-1)]))}];}));
+   return new Response(JSON.stringify({answers,usage:{input_tokens:0}}),{status:200});};
+  const owner=captureDispatchOwner(material,{session,record,claimSlot:0,admittedClaim:claim,readMaterialGeneration:()=>generation,readInstallGeneration:()=> 'study-installed-v1',reservedJev:0});
+  const result=await createApplicabilityAdapter({manifest,dispatchOwner:owner,semanticAsOf:unit.asOf,bindings:arm==='applicability'?[{receiptAlias:unit.receiptAlias,artifact,evidenceId:unit.evidence.id}]:[],apiKey:'CAPTURE_ONLY',fetch:fetcher})(claim);
+  calls.push({callId:`${unit.id}:${arm}`,unitId:unit.id,cohort:context.cohort,blockId:context.blockId,arm,requestSHA256:createHash('sha256').update(body).digest('hex'),requestBytes:Buffer.byteLength(body),questionCount:Object.keys(JSON.parse(body).questions).length,addedQuestions:result.dispatch.questionMap.map(q=>q.questionId),preflightUnavailable:result.unavailable.filter(u=>u.reason!=='applicability_not_established'&&u.reason!=='risk_requires_existing_stronger_route'),body});
+ }
+}
+await writeFile(new URL('./contexts.06.json',import.meta.url),JSON.stringify({productionWired:false,networkCalls:0,providerCalls:0,sourceHashes:loaded.hashes,contexts:loaded.contexts,bindingControls:loaded.binding},null,2)+'\n');
+await writeFile(new URL('./requests.06.json',import.meta.url),JSON.stringify({provisional:false,adapter:'06-native-completion-version-reference' ,networkCalls:0,providerCalls:0,calls},null,2)+'\n');
+console.log(JSON.stringify({calls:calls.length,totalBytes:calls.reduce((s,c)=>s+c.requestBytes,0),maxBytes:Math.max(...calls.map(c=>c.requestBytes)),augmentedAsked:calls.filter(c=>c.arm==='applicability'&&c.addedQuestions.length).length,preflightUnavailable:calls.filter(c=>c.arm==='applicability'&&!c.addedQuestions.length).map(c=>c.unitId),blocks:['block1','block2','block3','block4'].map(blockId=>({blockId,calls:calls.filter(c=>c.blockId===blockId).length,bytes:calls.filter(c=>c.blockId===blockId).reduce((s,c)=>s+c.requestBytes,0)}))}));

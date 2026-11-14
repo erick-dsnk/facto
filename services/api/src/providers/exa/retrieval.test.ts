@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
+import { PipelineError, type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
+import { AttemptBudget } from '../../runtime/budget.js';
+import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE } from '../../evidence/normalize.js';
 
 const checkedText = 'The Eiffel Tower opened in 1889.';
 const originalText = `My salary is private. ${checkedText}`;
@@ -22,11 +24,48 @@ describe('Exa retrieval boundary', () => {
   it('queries only the exact admitted span with neutral auto search', async () => {
     const { retrieve, fake, calls, context } = setup();
     const result = await retrieve(claim, context);
-    expect(fake.search).toHaveBeenCalledWith(checkedText, { type: 'auto', numResults: 5, contents: { highlights: true } });
+    expect(fake.search).toHaveBeenCalledWith(checkedText, { type: 'auto', numResults: 5, objective: RETRIEVAL_OBJECTIVE, contents: { highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 } } });
     expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
     expect(fake.getContents).not.toHaveBeenCalled();
     expect(calls).toEqual(['search']);
     expect(result[0].excerpt).toBe(excerpt);
+  });
+
+  it('uses only the exact public span in the alternate query and keeps span validation', async () => {
+    const { fake, context } = setup();
+    const retrieve = createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' });
+    await retrieve(claim, context);
+    expect(fake.search).toHaveBeenCalledWith(buildAlternateQuery(checkedText, 'balanced_evidence'), {
+      type: 'auto', numResults: 8, objective: RETRIEVAL_OBJECTIVE,
+      contents: { highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 } },
+    });
+    expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
+    await expect(retrieve({ ...claim, checkedText: 'Rewritten.' }, context)).rejects.toThrow('claim_not_admitted');
+    expect(fake.search).toHaveBeenCalledTimes(1);
+  });
+
+  it('enriches complete subject-matching highlights only on the policy-approved alternate pass', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: [
+        { url: 'https://unrelated.org/garden', highlights: ['A report on gardening, seasonal planting, soil and greenhouse conditions for the community.'] },
+        ...Array.from({ length: 4 }, (_, i) => ({ url: `https://source${i}.org/history`, highlights: [excerpt] })),
+      ] })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: `${excerpt} Archive record A-17 documents the inauguration.` }] })),
+    };
+    const { context } = setup(fake);
+    await createRetriever({ clientFactory: () => fake })(claim, context);
+    expect(fake.getContents).not.toHaveBeenCalled();
+    const enriched = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.getContents.mock.calls.map(call => call[0][0])).toEqual(['https://source0.org/history', 'https://source1.org/history', 'https://source2.org/history']);
+    expect(enriched.filter(source => source.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('does not let alternate enrichment exceed the shared contents allowance', async () => {
+    const { fake, context } = setup();
+    const exhausted = { ...context, canConsume: () => false };
+    const result = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, exhausted);
+    expect(fake.getContents).not.toHaveBeenCalled();
+    expect(result[0].contentBasis).toBe('highlight');
   });
 
   it('rejects non-admitted or rewritten text before a provider call', async () => {
@@ -47,6 +86,191 @@ describe('Exa retrieval boundary', () => {
     expect(fake.getContents.mock.calls[0][0]).toEqual(['https://source0.org/fact']);
     expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
     expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('keeps search and fetched evidence when a contents retry spends the shared budget before the next candidate', async () => {
+    const urls = ['https://source0.org/fact', 'https://source1.org/fact', 'https://source2.org/fact'];
+    let contentRequests = 0;
+    const fetcher = vi.fn<typeof fetch>(async (_input, init) => {
+      const endpoint = new URL(String(_input)).pathname;
+      if (endpoint === '/search') return new Response(JSON.stringify({ results: urls.map(url => ({ url, highlights: ['1889'] })) }));
+      contentRequests++;
+      if (contentRequests === 1) return new Response('temporary upstream error', { status: 503, headers: { 'retry-after': '0' } });
+      const body = JSON.parse(String(init?.body)) as { urls: string[] };
+      return new Response(JSON.stringify({ results: [{ url: body.urls[0], text: excerpt }] }));
+    });
+    const controller = new AbortController();
+    const now = () => Date.parse('2026-11-14T10:00:00Z');
+    const budget = new AttemptBudget();
+    const context = budget.context(controller.signal, now, now() + 10_000);
+    const retrieve = createRetriever({ apiKey: 'test-key', fetch: fetcher });
+
+    const result = await retrieve(claim, context);
+
+    expect(contentRequests).toBe(3); // failed attempt, its retry, then one more page
+    expect(fetcher).toHaveBeenCalledTimes(4); // search plus exactly the shared three contents attempts
+    expect(budget.contents.get(claim.id)).toBe(3);
+    expect(result).toHaveLength(3); // includes the untouched initial highlight for candidate three
+    expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(2);
+    expect(result.some(item => item.url === urls[2] && item.excerpt === '1889')).toBe(true);
+  });
+
+  it('does not spend the third contents request on a page beyond the retained domain cap', async () => {
+    const urls = ['https://museum.org/one', 'https://museum.org/two', 'https://museum.org/three', 'https://archive.org/record'];
+    const fake = {
+      search: vi.fn(async () => ({ results: urls.map(url => ({ url, highlights: ['1889'] })) })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: excerpt }] })),
+    };
+    const { retrieve, context } = setup(fake);
+    await retrieve(claim, context);
+    expect(fake.getContents.mock.calls.map(call => call[0][0])).toEqual([urls[0], urls[1], urls[3]]);
+  });
+
+  it('fetches long highlights that omit dates, negation, attribution or qualifications', async () => {
+    const cases = [
+      { claim: 'The Eiffel Tower opened in 1889.', highlight: 'A detailed history describes when the Eiffel Tower opened and the public ceremony held at the site.' },
+      { claim: 'The Eiffel Tower did not open in 1889.', highlight: 'A detailed history says the Eiffel Tower opened in 1889 after construction was completed.' },
+      { claim: 'According to researchers, the bridge opened in 1924.', highlight: 'A detailed account describes the bridge opening in 1924 and the people who attended.' },
+      { claim: 'The bridge opened only after the river was drained.', highlight: 'A detailed account describes the bridge opening after extensive work at the river site.' },
+    ];
+    for (const [index, item] of cases.entries()) {
+      const accepted: AcceptedClaim = { ...claim, checkedText: item.claim, originalText: item.claim, sourceSpan: { start: 0, end: Array.from(item.claim).length } };
+      const fake = {
+        search: vi.fn(async () => ({ results: [{ url: `https://source${index}.org/fact`, highlights: [item.highlight] }] })),
+        getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: `${item.highlight} Primary records state: ${item.claim} Full page context explains the relevant date, qualification, attribution and scope.` }] })),
+      };
+      const { retrieve, context } = setup(fake);
+      const evidence = await retrieve(accepted, context);
+      expect(fake.getContents, item.claim).toHaveBeenCalledTimes(1);
+      expect(evidence[0].contentBasis).toBe('page_text');
+      expect(evidence[0].excerpt).toContain(item.claim);
+    }
+  });
+
+  it('does not spend bounded page-text requests on clearly unrelated pages', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: [
+        { url: 'https://unrelated.org/story', highlights: ['A long report on local gardening, seasonal planting and soil conditions at the community greenhouse.'] },
+        { url: 'https://relevant.org/history', highlights: ['A long report on the Eiffel Tower opening and visitors to the famous Paris landmark.'] },
+      ] })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: excerpt }] })),
+    };
+    const { retrieve, context } = setup(fake);
+    const result = await retrieve(claim, context);
+    expect(fake.getContents).toHaveBeenCalledTimes(1);
+    expect(fake.getContents.mock.calls[0][0]).toEqual(['https://relevant.org/history']);
+    const unrelated = result.find(item => item.url.includes('unrelated'))!;
+    expect(unrelated).toMatchObject({ directlyAddressesClaim: false, stance: 'unrelated' });
+  });
+
+  it('builds a neutral alternate query from the admitted claim while preserving every qualifier', () => {
+    const admitted = 'According to the 2024 report, the bridge did not open before May.';
+    const query = buildAlternateQuery(admitted, 'balanced_evidence');
+    expect(query).toContain(admitted);
+    expect(query).not.toContain(JSON.stringify(admitted));
+    expect(RETRIEVAL_OBJECTIVE).toContain('supports, challenges, or qualifies');
+    expect(query).not.toContain('private salary');
+    expect(() => buildAlternateQuery(' ', 'balanced_evidence')).toThrow('claim_not_admitted');
+  });
+
+  it('uses broader bounded alternate retrieval without changing the checked proposition or sharing private context', async () => {
+    const { fake, context, calls } = setup();
+    await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.search).toHaveBeenCalledWith(buildAlternateQuery(checkedText, 'balanced_evidence'), {
+      type: 'auto', numResults: 8, objective: RETRIEVAL_OBJECTIVE,
+      contents: { highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 } },
+    });
+    expect(fake.getContents).toHaveBeenCalledWith(['https://tower.org/history'], {
+      text: { maxCharacters: 12000 }, highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 },
+      livecrawl: 'preferred', livecrawlTimeout: 1500,
+    });
+    expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
+    expect(JSON.stringify(vi.mocked(fake.getContents).mock.calls)).not.toContain('salary');
+    expect(calls).toEqual(['search', 'contents']);
+  });
+
+  it('retains a query-directed content highlight when a bounded page prefix is incidental', async () => {
+    const record = 'Archive record R-62: the Eiffel Tower opened in 1889; catalogued by the museum on 14 November 2026.';
+    const { fake, context } = setup({
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0],
+        text: 'Tower cafe: opening hours, tickets and restaurant bookings.', highlights: [record] }] })),
+    });
+    const evidence = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(evidence[0].excerpt).toBe(record);
+    expect(evidence[0].contentBasis).toBe('highlight');
+    expect(evidence[0].sourceRole).toBe('unknown');
+  });
+
+  it('shares the three content attempts across initial and alternate retrieval', async () => {
+    let contents = 0;
+    const { fake, context } = setup({
+      search: vi.fn(async () => ({ results: Array.from({ length: 8 }, (_, i) => ({ url: `https://source${i}.org/record`, highlights: ['Eiffel Tower'] })) })),
+    });
+    const sharedContext = { ...context, canConsume: () => contents < 3,
+      consume: (kind: ProviderKind) => { if (kind === 'contents') { if (contents >= 3) throw new Error('contents_budget_exhausted'); contents++; } } };
+    await createRetriever({ clientFactory: () => fake })(claim, sharedContext);
+    await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, sharedContext);
+    expect(fake.getContents).toHaveBeenCalledTimes(3);
+    expect(fake.search).toHaveBeenCalledTimes(2);
+  });
+
+  it('retains explicitly indexed evidence after a target failure and enriches other pages within three charged attempts', async () => {
+    const urls = Array.from({ length: 5 }, (_, i) => `https://source${i}.org/history`);
+    const fake = {
+      search: vi.fn(async () => ({ results: urls.map(url => ({ url, highlights: [excerpt] })) })),
+      getContents: vi.fn(async ([url]: string[]) => url === urls[0]
+        ? { results: [{ url, text: 'The failed extraction must never become page-text evidence.' }], statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 403 } }] }
+        : { results: [{ url, text: `${excerpt} Full archival context.` }], statuses: [{ id: url, status: 'success', source: 'cached' }] }),
+    };
+    const { calls, context } = setup(fake);
+    const result = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.getContents.mock.calls.map(([urls]) => urls[0])).toEqual(urls.slice(0, 3));
+    expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
+    expect(result.find(item => item.url === urls[0])).toMatchObject({ excerpt, contentBasis: 'highlight', sourceRole: 'unknown',
+      directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+    expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(2);
+  });
+
+  it('keeps zero surviving evidence after recognized page failures operational', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: Array.from({ length: 5 }, (_, i) => ({ url: `https://source${i}.org/record`, title: 'Eiffel Tower history' })) })),
+      getContents: vi.fn(async ([url]: string[]) => ({ results: [], statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 404 } }] })),
+    };
+    const { retrieve, context, calls } = setup(fake);
+    await expect(retrieve(claim, context)).rejects.toThrow('exa_content_failed');
+    expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
+  });
+
+  it('does not turn overall search failures or unknown content failures into optional fallback', async () => {
+    const search = setup({ search: vi.fn(async () => ({ results: [], statuses: [{ id: 'https://source.org/record', status: 'error', error: { tag: 'CRAWL_NOT_FOUND' } }] })) });
+    await expect(search.retrieve(claim, search.context)).rejects.toThrow('exa_content_failed');
+    expect(search.fake.getContents).not.toHaveBeenCalled();
+    const contents = setup({ getContents: vi.fn(async ([url]: string[]) => ({ results: [], statuses: [{ id: url, status: 'error', error: { tag: 'SERVICE_OVERLOADED' } }] })) });
+    await expect(createRetriever({ clientFactory: () => contents.fake, queryStrategy: 'balanced_evidence' })(claim, contents.context)).rejects.toThrow('exa_content_failed');
+    const thrown = setup({ getContents: vi.fn(async () => { throw new PipelineError('exa_unavailable', true); }) });
+    await expect(createRetriever({ clientFactory: () => thrown.fake, queryStrategy: 'balanced_evidence' })(claim, thrown.context)).rejects.toThrow('exa_unavailable');
+  });
+
+  it.each([[401, 'exa_authentication_failed'], [429, 'exa_rate_limited'], [503, 'exa_unavailable']] as const)('preserves actual HTTP %s contents failures as operational errors', async (status, code) => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async url => String(url).endsWith('/search')
+      ? new Response(JSON.stringify({ results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }))
+      : new Response('Provider unavailable', { status }));
+    await expect(createRetriever({ apiKey: 'test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow(code);
+    // Runtime transport retries transient provider failures once; target-page
+    // fallback must neither absorb that error nor hide the extra paid attempt.
+    expect(fetcher).toHaveBeenCalledTimes(status === 401 ? 2 : 3);
+    expect(calls).toEqual(status === 401 ? ['search', 'contents'] : ['search', 'contents', 'contents']);
+  });
+
+  it('propagates request cancellation even when a provider returns a recognized target timeout', async () => {
+    const { controller, context, calls, fake } = setup();
+    fake.getContents = vi.fn(async ([url]: string[]) => {
+      controller.abort(new Error('request_deadline'));
+      return { results: [], statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_TIMEOUT' } }] };
+    });
+    await expect(createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow('request_deadline');
+    expect(calls).toEqual(['search', 'contents']);
   });
 
   it('distinguishes successful empty retrieval from malformed provider responses', async () => {
@@ -108,5 +332,42 @@ describe('official SDK abortable transport', () => {
     const promise = new AbortableExa('key', controller.signal, fetcher).search(checkedText);
     controller.abort(new Error('stopped'));
     await expect(promise).rejects.toThrow('stopped');
+  });
+});
+
+describe('production SDK operational envelope admission', () => {
+  it.each([
+    { error: 'upstream failed' }, { tag: 'SERVICE_OVERLOADED' }, { status: 'error' },
+    { status: 'success', error: { tag: 'failure' } },
+  ])('rejects HTTP200 search failure metadata without contents calls: %j', async metadata => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ ...metadata,
+      results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }), { status: 200 }));
+    await expect(createRetriever({ apiKey: 'offline-test-key', fetch: fetcher })(claim, context)).rejects.toThrow('exa_content_failed');
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(calls).toEqual(['search']);
+  });
+  it.each(['root', 'result', 'status_entry'] as const)('rejects %s failure metadata through actual SDK contents serialization', async location => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async (input) => new Response(JSON.stringify(String(input).endsWith('/search')
+      ? { results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }
+      : { ...(location === 'root' ? { status: 'error' } : {}),
+        results: [{ url: 'https://tower.org/history', text: `${excerpt} Full archival context.`, ...(location === 'result' ? { status: 'success', error: { tag: 'failure' } } : {}) }],
+        ...(location === 'status_entry' ? { statuses: [{ id: 'https://tower.org/history', status: 'success', error: { tag: 'failure' } }] } : {}) }), { status: 200 }));
+    await expect(createRetriever({ apiKey: 'offline-test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow(/exa_content_failed|malformed_exa_response/);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(calls).toEqual(['search', 'contents']);
+  });
+  it('retains separately indexed search highlights when the actual SDK returns a known failed contents target with accompanying error text', async () => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async input => new Response(JSON.stringify(String(input).endsWith('/search')
+      ? { status: 'success', future: { providerExtension: true }, results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }
+      : { status: 'success', results: [{ url: 'https://tower.org/history', status: 'error', error: 'target denied', text: 'Failed target text must not be admitted.' }],
+        statuses: [{ id: 'https://tower.org/history', status: 'error', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 403 } }] }), { status: 200 }));
+    const result = await createRetriever({ apiKey: 'offline-test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({ excerpt, contentBasis: 'highlight', directlyAddressesClaim: false, stance: 'unrelated' });
+    expect(calls).toEqual(['search', 'contents']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
   });
 });

@@ -1,0 +1,22 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { captureRequest, hash, LIMITS, STRATUM_LIMITS, type Context, type Arm, type Condition } from './runner.ts';
+const contexts = (JSON.parse(readFileSync('/workspace/task-evidence/judgment-context-diagnostic-01/contexts.json', 'utf8')).contexts as Context[]).map(c => ({ ...c, stratum: 'existing_safety_diagnostic' as const }));
+const predecessor = JSON.parse(readFileSync('/workspace/task-evidence/full-context-basis-comparison-01/comparison24-plan.json', 'utf8'));
+const rows = [];
+for (const context of contexts)
+    for (const condition of ['original_full', 'reversed_full'] as Condition[])
+        for (const arm of ['baseline', 'scope_candidate'] as Arm[]) {
+            const request = await captureRequest(context, condition, arm), body = JSON.stringify({ model: 'jev-latest', state: request.state, questions: request.questions });
+            const row = { caseId: context.caseId, condition, arm, bytes: Buffer.byteLength(body), bodyHash: hash(body), sourceCount: context.records.length };
+            if (row.bytes > LIMITS.maxRequestBytes)
+                throw Error('actual captured request exceeds cap');
+            if (arm === 'baseline' && !predecessor.calls.some((c: any) => c.caseId === context.caseId && c.condition === condition && c.arm === 'baseline' && c.bodyHash === row.bodyHash))
+                throw Error('baseline does not match predecessor');
+            rows.push(row);
+        }
+const bytes = rows.reduce((n, r) => n + r.bytes, 0);
+if (bytes > STRATUM_LIMITS.maxTotalRequestBytes)
+    throw Error('stratum byte cap');
+const report = { kind: 'offline_existing_full_context_request_capture', providerCalls: 0, sourceSnapshot: '/workspace/live-frozen-08', sourceCommit: 'aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c', calls: rows.length, totalRequestBytes: bytes, largestRequestBytes: Math.max(...rows.map(r => r.bytes)), allBaselineRequestsMatchComparison24: true, allOtherQuestionsAndStateGuardedByPairedRunner: true, rows };
+writeFileSync('/workspace/task-evidence/full-context-scope-study-01/existing-payload-check.json', JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
+console.log(JSON.stringify({ providerCalls: 0, calls: rows.length, totalRequestBytes: bytes, largestRequestBytes: report.largestRequestBytes }));

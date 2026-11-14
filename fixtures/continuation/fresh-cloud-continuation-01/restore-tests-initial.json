@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "case": "package only, original workspace denied",
+      "passed": true
+    },
+    {
+      "case": "empty root extraction, original workspace/network/process denied",
+      "passed": true
+    },
+    {
+      "case": "exact restored verification",
+      "passed": true
+    },
+    {
+      "case": "idempotent identical files",
+      "passed": true
+    },
+    {
+      "case": "existing changed destination refused",
+      "passed": true
+    },
+    {
+      "case": "destination ancestor symlink refused",
+      "passed": true
+    },
+    {
+      "case": "missing blob refused without original fallback",
+      "passed": true
+    },
+    {
+      "case": "corrupt blob refused",
+      "passed": true
+    },
+    {
+      "case": "traversal refused even with matching package metadata",
+      "passed": true
+    }
+  ],
+  "count": 9,
+  "originalWorkspaceReadsInChildren": 0,
+  "providerCalls": 0,
+  "archivedModulesExecuted": 0
+}

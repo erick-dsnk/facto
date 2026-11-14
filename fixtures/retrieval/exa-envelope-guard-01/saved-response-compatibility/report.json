@@ -1,0 +1,1127 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline_saved_public_sdk_response_parser_compatibility",
+  "baselineCommit": "04ac297523291b1aa289761d5ba3bed98610536f",
+  "baselineNormalizeSHA256": "e7f9e5663a07011107bb44d912b1d28175e2b60e1427c81820ae5d7a129d7ae9",
+  "candidateNormalizeSHA256": "8878761660f3313896e084138bcac62974d78a50d30b7f6a3bcbc4bb8a00d451",
+  "declaredResponses": 10,
+  "actualReplayedResponses": 10,
+  "searchResponses": 4,
+  "contentsResponses": 6,
+  "equalResponses": 10,
+  "regressions": [],
+  "successfulPages": 26,
+  "documentedTargetFailures": 0,
+  "operationalErrors": [],
+  "candidateUnchangedDuringReplay": true,
+  "rows": [
+    {
+      "id": "acquisition-01",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-01-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-01-response.json",
+      "requestSHA256": "a4d5a47e64be2052c69677b6879aaff5d62221395e8f184c5b2a4d3c4bc6d7f1",
+      "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+      "responseBytes": 22304,
+      "operation": "search",
+      "requestedURLs": null,
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 5,
+        "statuses": []
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc8174/",
+            "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+            "publishedDate": "2017-05-18T01:59:04.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "57e55a0b27ab25e0a6893c51a811dbe0e5677879c73577b937cd22058b19b27e"
+            ],
+            "entireNormalizedPageSHA256": "bdfe8ba636a0ff13391ade521fe48695c9c0e268ae547f017d49e31900eac8f7"
+          },
+          {
+            "url": "https://www.rfc-editor.org/info/rfc2119/",
+            "title": "RFC 2119: Key words for use in RFCs to Indicate Requirement Levels | RFC Editor",
+            "publishedDate": "1997-03-01T05:38:24.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "0b9904567ad31d8eb2f0e2de41250cba6273a2c494596a74cb416a7e0200062a"
+            ],
+            "entireNormalizedPageSHA256": "fabdc05ff5babb73336a3bf5d4caee685a673262f4bb415585c2a517d3c3bdc1"
+          },
+          {
+            "url": "https://www.rfc-editor.org/info/bcp14/",
+            "title": "BCP 14 subseries contains 2 RFCs | RFC Editor",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "a27d5150c5b414d99fea781de21389523fe354f7c94ae1f5784b71697d6f99d5"
+            ],
+            "entireNormalizedPageSHA256": "a4d3754bdef543124fc8657da7bce64a52b95dc6ad997fa6b452549815f9cc6b"
+          },
+          {
+            "url": "https://www.oasis-open.org/policies-guidelines/keyword-guidelines-for-oasis-specifications-and-standards/",
+            "title": "Keyword Guidelines for OASIS Specifications and Standards - OASIS Open",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "de5ba7fb8dd46e2e9ca96b940f82cfe9923b13c9e3bd6d706b197f9eb31b0016"
+            ],
+            "entireNormalizedPageSHA256": "d60b5e68d1b2b635bdd50f09bf93b49a64babaa59ef556305652c7a486fa50a3"
+          },
+          {
+            "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+            "title": "IESG Statement on Clarifying the Use of BCP 14 Key Words",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "2949184dae2c05d8e94842479351d8376097d1b8f0e8717ff534f4a0978b0e1e"
+            ],
+            "entireNormalizedPageSHA256": "18660cdc0f478f74da0196636ea3cdffefcf08390b051678e5cc226c9df5f8cc"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "3cbe299cb680044debf3dd2cb7a1419d914516693e8a20789aed04fae41c2774"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc8174/",
+            "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+            "publishedDate": "2017-05-18T01:59:04.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "57e55a0b27ab25e0a6893c51a811dbe0e5677879c73577b937cd22058b19b27e"
+            ],
+            "entireNormalizedPageSHA256": "bdfe8ba636a0ff13391ade521fe48695c9c0e268ae547f017d49e31900eac8f7"
+          },
+          {
+            "url": "https://www.rfc-editor.org/info/rfc2119/",
+            "title": "RFC 2119: Key words for use in RFCs to Indicate Requirement Levels | RFC Editor",
+            "publishedDate": "1997-03-01T05:38:24.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "0b9904567ad31d8eb2f0e2de41250cba6273a2c494596a74cb416a7e0200062a"
+            ],
+            "entireNormalizedPageSHA256": "fabdc05ff5babb73336a3bf5d4caee685a673262f4bb415585c2a517d3c3bdc1"
+          },
+          {
+            "url": "https://www.rfc-editor.org/info/bcp14/",
+            "title": "BCP 14 subseries contains 2 RFCs | RFC Editor",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "a27d5150c5b414d99fea781de21389523fe354f7c94ae1f5784b71697d6f99d5"
+            ],
+            "entireNormalizedPageSHA256": "a4d3754bdef543124fc8657da7bce64a52b95dc6ad997fa6b452549815f9cc6b"
+          },
+          {
+            "url": "https://www.oasis-open.org/policies-guidelines/keyword-guidelines-for-oasis-specifications-and-standards/",
+            "title": "Keyword Guidelines for OASIS Specifications and Standards - OASIS Open",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "de5ba7fb8dd46e2e9ca96b940f82cfe9923b13c9e3bd6d706b197f9eb31b0016"
+            ],
+            "entireNormalizedPageSHA256": "d60b5e68d1b2b635bdd50f09bf93b49a64babaa59ef556305652c7a486fa50a3"
+          },
+          {
+            "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+            "title": "IESG Statement on Clarifying the Use of BCP 14 Key Words",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "2949184dae2c05d8e94842479351d8376097d1b8f0e8717ff534f4a0978b0e1e"
+            ],
+            "entireNormalizedPageSHA256": "18660cdc0f478f74da0196636ea3cdffefcf08390b051678e5cc226c9df5f8cc"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "3cbe299cb680044debf3dd2cb7a1419d914516693e8a20789aed04fae41c2774"
+      }
+    },
+    {
+      "id": "acquisition-02",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-02-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-02-response.json",
+      "requestSHA256": "c2d9b77b87cd88403ecc6fbea2d3d15c3aba13886a47948255dbfa573fb969b4",
+      "responseSHA256": "215e1539e1157ab7f4a0eae785ba0b2f3497d722c1630eae49e5554b0e303370",
+      "responseBytes": 11210,
+      "operation": "contents",
+      "requestedURLs": [
+        "https://www.rfc-editor.org/info/rfc8174/"
+      ],
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 1,
+        "statuses": [
+          {
+            "id": "https://www.rfc-editor.org/info/rfc8174/",
+            "status": "success",
+            "error": null,
+            "tag": null
+          }
+        ]
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc8174/",
+            "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+            "publishedDate": "2017-05-18T01:59:04.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 6210,
+            "textSHA256": "de72d84fd17fdac5a09821fdc7c7aeae06f2928cb8607a1b0d51560d32c03495",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "6a0f2bdd3f4f727c05bc259e10598786c02c37d6c477ba80b9255e6ce2325ead"
+            ],
+            "entireNormalizedPageSHA256": "d57fe6cdae1fcf6ff6cd34b8478eb54ec4dff33a3ae91557a329bfcdc1ef7341"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "ec6b715738fb5076fbf786e2353e512cb5bca950fb7a348079ee615877b580e2"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc8174/",
+            "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+            "publishedDate": "2017-05-18T01:59:04.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 6210,
+            "textSHA256": "de72d84fd17fdac5a09821fdc7c7aeae06f2928cb8607a1b0d51560d32c03495",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "6a0f2bdd3f4f727c05bc259e10598786c02c37d6c477ba80b9255e6ce2325ead"
+            ],
+            "entireNormalizedPageSHA256": "d57fe6cdae1fcf6ff6cd34b8478eb54ec4dff33a3ae91557a329bfcdc1ef7341"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "ec6b715738fb5076fbf786e2353e512cb5bca950fb7a348079ee615877b580e2"
+      }
+    },
+    {
+      "id": "acquisition-03",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-03-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-03-response.json",
+      "requestSHA256": "7c1e611f96dfa076f8ebafba507e069ccda66285640eef1bc593079c191c8f35",
+      "responseSHA256": "a363e4306a660180d342426d0ec930a40003ca1aa5baec72d46b0b1e2f162e7c",
+      "responseBytes": 9781,
+      "operation": "contents",
+      "requestedURLs": [
+        "https://www.rfc-editor.org/info/rfc2119/"
+      ],
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 1,
+        "statuses": [
+          {
+            "id": "https://www.rfc-editor.org/info/rfc2119/",
+            "status": "success",
+            "error": null,
+            "tag": null
+          }
+        ]
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc2119/",
+            "title": "RFC 2119: Key words for use in RFCs to Indicate Requirement Levels | RFC Editor",
+            "publishedDate": "1997-03-01T05:38:24.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 4892,
+            "textSHA256": "e0f50ac4dd7dec9f03beb403ae4bec102a7c6b5f18f6c90b1c46c368e1401d6a",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "8ec105ef6729e7e345cfa4fb6a3b1325b06869a8c9e5463cff1fca5324cced49"
+            ],
+            "entireNormalizedPageSHA256": "0596bd619cb23f4d8c5cdfa156d0876a14485fe6dc8f8190ad2779a631df0290"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "a9b22ccb3254158f869afe1ef65704a0ca5203fa533d7f4c74366ae6a30a2dbc"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc2119/",
+            "title": "RFC 2119: Key words for use in RFCs to Indicate Requirement Levels | RFC Editor",
+            "publishedDate": "1997-03-01T05:38:24.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 4892,
+            "textSHA256": "e0f50ac4dd7dec9f03beb403ae4bec102a7c6b5f18f6c90b1c46c368e1401d6a",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "8ec105ef6729e7e345cfa4fb6a3b1325b06869a8c9e5463cff1fca5324cced49"
+            ],
+            "entireNormalizedPageSHA256": "0596bd619cb23f4d8c5cdfa156d0876a14485fe6dc8f8190ad2779a631df0290"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "a9b22ccb3254158f869afe1ef65704a0ca5203fa533d7f4c74366ae6a30a2dbc"
+      }
+    },
+    {
+      "id": "acquisition-04",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-04-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-04-response.json",
+      "requestSHA256": "396d15aa43e7fe67e346a3ddfe8721dce6a65a0456dd7f98f18b562717fe4281",
+      "responseSHA256": "a18ae8eb75a29c36329a80d123dd5e018534dae0f43904c456d2180bf26cc6a4",
+      "responseBytes": 10372,
+      "operation": "contents",
+      "requestedURLs": [
+        "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/"
+      ],
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 1,
+        "statuses": [
+          {
+            "id": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+            "status": "success",
+            "error": null,
+            "tag": null
+          }
+        ]
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+            "title": "IESG Statement on Clarifying the Use of BCP 14 Key Words",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 5512,
+            "textSHA256": "8e84b04b469c307c8fcb11bff63ae133a4e29597be1a7f2cd8c5a47a7e9db1e6",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "30164dc8d024cd546984ef3f8b6c7034d46e21f2608d3111847218c1cf1479a4"
+            ],
+            "entireNormalizedPageSHA256": "69bc7c313b7852e227738b2e0eece36f9474f89d9b5869a114b67465435f5cf4"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "854cc4e09fe80298240176044dca2b8886e64cd77d04d8fb547081e09b16155f"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+            "title": "IESG Statement on Clarifying the Use of BCP 14 Key Words",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 5512,
+            "textSHA256": "8e84b04b469c307c8fcb11bff63ae133a4e29597be1a7f2cd8c5a47a7e9db1e6",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "30164dc8d024cd546984ef3f8b6c7034d46e21f2608d3111847218c1cf1479a4"
+            ],
+            "entireNormalizedPageSHA256": "69bc7c313b7852e227738b2e0eece36f9474f89d9b5869a114b67465435f5cf4"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "854cc4e09fe80298240176044dca2b8886e64cd77d04d8fb547081e09b16155f"
+      }
+    },
+    {
+      "id": "acquisition-05",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-05-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-05-response.json",
+      "requestSHA256": "adff2cea031d603e7e7ce86b290f4b72be037fadf2905e5a6db00fcae4f15077",
+      "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+      "responseBytes": 15507,
+      "operation": "search",
+      "requestedURLs": null,
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 5,
+        "statuses": []
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/section-2.html",
+            "title": "Holidays Act",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "4ecf80ad81be8789ef9c67d4144874a20ab4d1c35cc2fa4dfd262caeb589d82f"
+            ],
+            "entireNormalizedPageSHA256": "fec501bd3b62b8054170c2f0d0d0e0d86e937f44edba326972bf06439a789c56"
+          },
+          {
+            "url": "https://ehlaw.ca/july-1st-a-sunday-holidays-act-bumps-canada-day-to-july-2nd/",
+            "title": "July 1st a Sunday? Holidays Act “Bumps” Canada Day to July 2nd - Emond Harnden",
+            "publishedDate": "2018-06-26T13:38:45.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "9930dcf44f75268b8daf46a8161fbcc7d3639724e3a682230bfe9de6b8c04b19"
+            ],
+            "entireNormalizedPageSHA256": "38bf10638cdaa16845f4a7b7c28cc82b81a5ecf243f8ae5751c827b9ac3eacc5"
+          },
+          {
+            "url": "https://gowlingwlg.com/en/insights-resources/articles/2018/canada-day-and-the-holidays-act",
+            "title": "Canada day and the Holidays Act",
+            "publishedDate": "2018-06-27T00:00:00.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "b730e9f1f8507b1a77a7f725d2a2e5013ff0b886276ae8da3400f9204faf34b0"
+            ],
+            "entireNormalizedPageSHA256": "28092a7dd9fcfed4b89e85f7befe2a20a259326ca6e9666985c097e363a1ae30"
+          },
+          {
+            "url": "https://www.canlii.org/en/ca/laws/stat/rsc-1985-c-h-5/latest/rsc-1985-c-h-5.html",
+            "title": "Holidays Act, RSC 1985, c H-5",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "d4a0be43287415e38175014b44d2cbe1c882c4f7c942199d395315b1b2d4b9dd"
+            ],
+            "entireNormalizedPageSHA256": "0e53d336494d62e9e3d9311427cb2261d14f6462c4dfe1488abcdf059b5d5cdb"
+          },
+          {
+            "url": "https://www.ottawaemploymentlaw.com/2018/07/holidays-on-sunday.html",
+            "title": "Holidays on Sunday - Labour Pains",
+            "publishedDate": "2018-07-03T00:00:00.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "35dbfd132cfbd9b3c98916730004955649551c9be544ad5d4308f802205e96de"
+            ],
+            "entireNormalizedPageSHA256": "99851e675d2a05808642e8fd5ae92ac761fb5b76c181260de428d83ab4c4b273"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "64417e6449e7b89e3ff3600361a4b86930cf4f16a1e890f228327b51afe46c21"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/section-2.html",
+            "title": "Holidays Act",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "4ecf80ad81be8789ef9c67d4144874a20ab4d1c35cc2fa4dfd262caeb589d82f"
+            ],
+            "entireNormalizedPageSHA256": "fec501bd3b62b8054170c2f0d0d0e0d86e937f44edba326972bf06439a789c56"
+          },
+          {
+            "url": "https://ehlaw.ca/july-1st-a-sunday-holidays-act-bumps-canada-day-to-july-2nd/",
+            "title": "July 1st a Sunday? Holidays Act “Bumps” Canada Day to July 2nd - Emond Harnden",
+            "publishedDate": "2018-06-26T13:38:45.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "9930dcf44f75268b8daf46a8161fbcc7d3639724e3a682230bfe9de6b8c04b19"
+            ],
+            "entireNormalizedPageSHA256": "38bf10638cdaa16845f4a7b7c28cc82b81a5ecf243f8ae5751c827b9ac3eacc5"
+          },
+          {
+            "url": "https://gowlingwlg.com/en/insights-resources/articles/2018/canada-day-and-the-holidays-act",
+            "title": "Canada day and the Holidays Act",
+            "publishedDate": "2018-06-27T00:00:00.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "b730e9f1f8507b1a77a7f725d2a2e5013ff0b886276ae8da3400f9204faf34b0"
+            ],
+            "entireNormalizedPageSHA256": "28092a7dd9fcfed4b89e85f7befe2a20a259326ca6e9666985c097e363a1ae30"
+          },
+          {
+            "url": "https://www.canlii.org/en/ca/laws/stat/rsc-1985-c-h-5/latest/rsc-1985-c-h-5.html",
+            "title": "Holidays Act, RSC 1985, c H-5",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "d4a0be43287415e38175014b44d2cbe1c882c4f7c942199d395315b1b2d4b9dd"
+            ],
+            "entireNormalizedPageSHA256": "0e53d336494d62e9e3d9311427cb2261d14f6462c4dfe1488abcdf059b5d5cdb"
+          },
+          {
+            "url": "https://www.ottawaemploymentlaw.com/2018/07/holidays-on-sunday.html",
+            "title": "Holidays on Sunday - Labour Pains",
+            "publishedDate": "2018-07-03T00:00:00.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "35dbfd132cfbd9b3c98916730004955649551c9be544ad5d4308f802205e96de"
+            ],
+            "entireNormalizedPageSHA256": "99851e675d2a05808642e8fd5ae92ac761fb5b76c181260de428d83ab4c4b273"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "64417e6449e7b89e3ff3600361a4b86930cf4f16a1e890f228327b51afe46c21"
+      }
+    },
+    {
+      "id": "acquisition-06",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-06-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-06-response.json",
+      "requestSHA256": "3469b7af84000d526801c04d5411fe49476844c5b2cc19bab9a1e043aca02928",
+      "responseSHA256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e",
+      "responseBytes": 14106,
+      "operation": "search",
+      "requestedURLs": null,
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 5,
+        "statuses": []
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.pulitzer.org/prize-winners-by-category/219",
+            "title": "Fiction",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "4f19422a0cb263458f3a2109ee0282b2e833047eb832e9412b3e3f71a60a1158"
+            ],
+            "entireNormalizedPageSHA256": "2381a0b9ac8c211fd988bb2789bfd9abb214964d05641634bfcfa8d26e655111"
+          },
+          {
+            "url": "https://www.pulitzer.org/winners/louise-erdrich",
+            "title": "Louise Erdrich | The Pulitzer Prizes",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "02d2dea482da0fbbff22d9de702a3f5fc3aae38f0f404eb3c78ced0493009419"
+            ],
+            "entireNormalizedPageSHA256": "54b5bc6fb2a3e8dd773470a76f93d29c7feeb7540090c63bd08a375c4a3a7c38"
+          },
+          {
+            "url": "https://www.pulitzer.org/prize-winners-by-year/2021",
+            "title": "2021 Prize Winners and Finalists | The Pulitzer Prizes",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "49c6215df7ff7a7798f5f72b004636a545bb1af9694c48e888e3d74dcffbf12d"
+            ],
+            "entireNormalizedPageSHA256": "ab07740d0903037b71700dec0d9833b19b54f111e2d5a2ea3f42502e557d447c"
+          },
+          {
+            "url": "https://news.columbia.edu/index%2Ephp/pulitzer-prizes-2021",
+            "title": "2021 Pulitzer Prize Winners | Columbia News",
+            "publishedDate": "2021-06-11T00:00:00.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "a796e6abcf6638501528649886db1e9e6ac087225fd11e3aa9df4b96503f0486"
+            ],
+            "entireNormalizedPageSHA256": "a2b57e781bc182a75fc2e1269a16c5524171261b1b2a6f824a948231efcfcebd"
+          },
+          {
+            "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+            "title": "Pulitzer Prizes: A Guide to the Winning Books and Finalists",
+            "publishedDate": "2021-06-11T18:37:44.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "5a4f56504a85abfe3f81ba57943ba997d7918b74a96010c51a4b5d978288b920"
+            ],
+            "entireNormalizedPageSHA256": "6409af8da7fd31410bc80c8beb630c53b84902455777229f1e1347a7887d7069"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "2b3b4ab00f7a12abcc1f5b311409bfe361306817279c629d764473bea5b72da1"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.pulitzer.org/prize-winners-by-category/219",
+            "title": "Fiction",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "4f19422a0cb263458f3a2109ee0282b2e833047eb832e9412b3e3f71a60a1158"
+            ],
+            "entireNormalizedPageSHA256": "2381a0b9ac8c211fd988bb2789bfd9abb214964d05641634bfcfa8d26e655111"
+          },
+          {
+            "url": "https://www.pulitzer.org/winners/louise-erdrich",
+            "title": "Louise Erdrich | The Pulitzer Prizes",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "02d2dea482da0fbbff22d9de702a3f5fc3aae38f0f404eb3c78ced0493009419"
+            ],
+            "entireNormalizedPageSHA256": "54b5bc6fb2a3e8dd773470a76f93d29c7feeb7540090c63bd08a375c4a3a7c38"
+          },
+          {
+            "url": "https://www.pulitzer.org/prize-winners-by-year/2021",
+            "title": "2021 Prize Winners and Finalists | The Pulitzer Prizes",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "49c6215df7ff7a7798f5f72b004636a545bb1af9694c48e888e3d74dcffbf12d"
+            ],
+            "entireNormalizedPageSHA256": "ab07740d0903037b71700dec0d9833b19b54f111e2d5a2ea3f42502e557d447c"
+          },
+          {
+            "url": "https://news.columbia.edu/index%2Ephp/pulitzer-prizes-2021",
+            "title": "2021 Pulitzer Prize Winners | Columbia News",
+            "publishedDate": "2021-06-11T00:00:00.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "a796e6abcf6638501528649886db1e9e6ac087225fd11e3aa9df4b96503f0486"
+            ],
+            "entireNormalizedPageSHA256": "a2b57e781bc182a75fc2e1269a16c5524171261b1b2a6f824a948231efcfcebd"
+          },
+          {
+            "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+            "title": "Pulitzer Prizes: A Guide to the Winning Books and Finalists",
+            "publishedDate": "2021-06-11T18:37:44.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "5a4f56504a85abfe3f81ba57943ba997d7918b74a96010c51a4b5d978288b920"
+            ],
+            "entireNormalizedPageSHA256": "6409af8da7fd31410bc80c8beb630c53b84902455777229f1e1347a7887d7069"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "2b3b4ab00f7a12abcc1f5b311409bfe361306817279c629d764473bea5b72da1"
+      }
+    },
+    {
+      "id": "acquisition-07",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-07-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-07-response.json",
+      "requestSHA256": "f28924ea1d35c8a67cf336cbab135ccdde167a2b8023f898ab6c14bb63e3474d",
+      "responseSHA256": "e82b3032932e6313e2692b048af14381a9084aa97b50f447cd7c90efd02a5436",
+      "responseBytes": 2969,
+      "operation": "contents",
+      "requestedURLs": [
+        "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur"
+      ],
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 1,
+        "statuses": [
+          {
+            "id": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+            "status": "success",
+            "error": null,
+            "tag": null
+          }
+        ]
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+            "title": "Pulitzer Prizes: A Guide to the Winning Books and Finalists",
+            "publishedDate": "2021-06-11T18:37:44.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 1000,
+            "textSHA256": "0b2ed59d4560c94c9dc99dc48ba555e84eeb8330c29c3b9f3d1906246cb1127d",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "9e74bb7f5701a63d94ff0a55f9a8961bc48787fe0e3136397429acdd6ec457cc"
+            ],
+            "entireNormalizedPageSHA256": "ba0e3a955529e570dddb3a15deba289415aa35d28cc3a378e8ca644f2c459a0f"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "dfd9b60ce4d4fc7db9d01df0c103df3d5990f7768626d2a91bb8a0a85c7e37fb"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+            "title": "Pulitzer Prizes: A Guide to the Winning Books and Finalists",
+            "publishedDate": "2021-06-11T18:37:44.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 1000,
+            "textSHA256": "0b2ed59d4560c94c9dc99dc48ba555e84eeb8330c29c3b9f3d1906246cb1127d",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "9e74bb7f5701a63d94ff0a55f9a8961bc48787fe0e3136397429acdd6ec457cc"
+            ],
+            "entireNormalizedPageSHA256": "ba0e3a955529e570dddb3a15deba289415aa35d28cc3a378e8ca644f2c459a0f"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "dfd9b60ce4d4fc7db9d01df0c103df3d5990f7768626d2a91bb8a0a85c7e37fb"
+      }
+    },
+    {
+      "id": "acquisition-08",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-08-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-08-response.json",
+      "requestSHA256": "6785c754e9ad570db8bed3e17eb2d23fda4261c5334b69cf80ff8c46c56c2647",
+      "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+      "responseBytes": 22538,
+      "operation": "search",
+      "requestedURLs": null,
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 5,
+        "statuses": []
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.ons.gov.uk/releases/initialfindingsfromthe2021censusinenglandandwales",
+            "title": "First results from Census 2021 in England and Wales\n      - Office for National Statistics",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "8b18b4e60611fe5e102062e4c007c2c6638084c0c04f8c3a1ab6124244297c70"
+            ],
+            "entireNormalizedPageSHA256": "a65fb5145a054b8b9b8f6c2ea445d85f926add2d0dad222d350070d5c7dae85f"
+          },
+          {
+            "url": "https://www.gov.uk/government/publications/census-2021-first-results-england-and-wales/population-and-household-estimates-england-and-wales-census-2021",
+            "title": "Population and household estimates, England and Wales: Census 2021 - GOV.UK",
+            "publishedDate": "2022-06-28T12:21:40.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "3ab09670c56143acfc7a7ae4d973f6201696da013ef62a155cf4a2f8d5028276"
+            ],
+            "entireNormalizedPageSHA256": "1c881d8aa325ea46220059ef450a8e5cbc45d221000fdac5518a98b6a53968a7"
+          },
+          {
+            "url": "https://www.data.gov.uk/dataset/ada77bff-b6d8-4702-a990-8630c3674465/2021-census-first-release1",
+            "title": "2021 census first release - National Data Library",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "b08a0c075492fa45dfbabc624b4da14b882113307f55cecad8f1c970507e1381"
+            ],
+            "entireNormalizedPageSHA256": "ecba2a74e2a44dd791b9a6ca1cb84b37fe9afbaccbac8b8fe4c4f61df67b8bba"
+          },
+          {
+            "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+            "title": "Population and household estimates, England and Wales",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "77feb417741e44d18cefdf9f66ddc1ba478c09d6b1f65a17063a44eb8bf7e7d4"
+            ],
+            "entireNormalizedPageSHA256": "65fef97d28d418942ae6703dad4f8ccaf7930a2d5f576153bd8c561fb98744f5"
+          },
+          {
+            "url": "https://www.ons.gov.uk/news/news/firstcensus2021resultsshowcontinuedpopulationgrowthinwales",
+            "title": "First Census 2021 results show continued population growth in Wales - Office for National Statistics",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "bc4f6a428017dd054071c287c9e220f1f42f7ee3c9a772a4707127ade5a9e7a0"
+            ],
+            "entireNormalizedPageSHA256": "abcf1c31b759983f72d9b2ddeb5822b529fdbe707cb3f0dcd2a80a5f3d89724e"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "c308e0aaaa2799d39f3c030cfc8f62d2fdfabcf71e4f5b8f109eee46296a9769"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.ons.gov.uk/releases/initialfindingsfromthe2021censusinenglandandwales",
+            "title": "First results from Census 2021 in England and Wales\n      - Office for National Statistics",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "8b18b4e60611fe5e102062e4c007c2c6638084c0c04f8c3a1ab6124244297c70"
+            ],
+            "entireNormalizedPageSHA256": "a65fb5145a054b8b9b8f6c2ea445d85f926add2d0dad222d350070d5c7dae85f"
+          },
+          {
+            "url": "https://www.gov.uk/government/publications/census-2021-first-results-england-and-wales/population-and-household-estimates-england-and-wales-census-2021",
+            "title": "Population and household estimates, England and Wales: Census 2021 - GOV.UK",
+            "publishedDate": "2022-06-28T12:21:40.000Z",
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "3ab09670c56143acfc7a7ae4d973f6201696da013ef62a155cf4a2f8d5028276"
+            ],
+            "entireNormalizedPageSHA256": "1c881d8aa325ea46220059ef450a8e5cbc45d221000fdac5518a98b6a53968a7"
+          },
+          {
+            "url": "https://www.data.gov.uk/dataset/ada77bff-b6d8-4702-a990-8630c3674465/2021-census-first-release1",
+            "title": "2021 census first release - National Data Library",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "b08a0c075492fa45dfbabc624b4da14b882113307f55cecad8f1c970507e1381"
+            ],
+            "entireNormalizedPageSHA256": "ecba2a74e2a44dd791b9a6ca1cb84b37fe9afbaccbac8b8fe4c4f61df67b8bba"
+          },
+          {
+            "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+            "title": "Population and household estimates, England and Wales",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "77feb417741e44d18cefdf9f66ddc1ba478c09d6b1f65a17063a44eb8bf7e7d4"
+            ],
+            "entireNormalizedPageSHA256": "65fef97d28d418942ae6703dad4f8ccaf7930a2d5f576153bd8c561fb98744f5"
+          },
+          {
+            "url": "https://www.ons.gov.uk/news/news/firstcensus2021resultsshowcontinuedpopulationgrowthinwales",
+            "title": "First Census 2021 results show continued population growth in Wales - Office for National Statistics",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": false,
+            "textCodepoints": 0,
+            "textSHA256": null,
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "bc4f6a428017dd054071c287c9e220f1f42f7ee3c9a772a4707127ade5a9e7a0"
+            ],
+            "entireNormalizedPageSHA256": "abcf1c31b759983f72d9b2ddeb5822b529fdbe707cb3f0dcd2a80a5f3d89724e"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "c308e0aaaa2799d39f3c030cfc8f62d2fdfabcf71e4f5b8f109eee46296a9769"
+      }
+    },
+    {
+      "id": "acquisition-09",
+      "requestPath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-09-request.json",
+      "responsePath": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-09-response.json",
+      "requestSHA256": "36ea37e361374e2c9f19fab610c736f773422268841397583aef5d7a45dde12f",
+      "responseSHA256": "591078d4496c8a342941fb7e1939bf0a832f3525f5c9e368d64b6b30372dc889",
+      "responseBytes": 12966,
+      "operation": "contents",
+      "requestedURLs": [
+        "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf"
+      ],
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 1,
+        "statuses": [
+          {
+            "id": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+            "status": "success",
+            "error": null,
+            "tag": null
+          }
+        ]
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+            "title": "Population and household estimates, England and Wales",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 7834,
+            "textSHA256": "ac4c80d9356fe3b75fe894897cf9285daa026fc515f12f56749e78b361028aae",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "4364da6a0c7ea4f7d6941c2d8c1893117715feab05993829ae32803db74854c5"
+            ],
+            "entireNormalizedPageSHA256": "9641d134cfc875ba031089efbbb5ad18472b6b31b6263e2dfa52e18e31ca747f"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "c8ce67f8ef3ec6953b1551173b0f11f0e8e6c69af9ec190b6d8bae7464b3b5e7"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+            "title": "Population and household estimates, England and Wales",
+            "publishedDate": null,
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 7834,
+            "textSHA256": "ac4c80d9356fe3b75fe894897cf9285daa026fc515f12f56749e78b361028aae",
+            "highlightCount": 1,
+            "highlightSHA256": [
+              "4364da6a0c7ea4f7d6941c2d8c1893117715feab05993829ae32803db74854c5"
+            ],
+            "entireNormalizedPageSHA256": "9641d134cfc875ba031089efbbb5ad18472b6b31b6263e2dfa52e18e31ca747f"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "c8ce67f8ef3ec6953b1551173b0f11f0e8e6c69af9ec190b6d8bae7464b3b5e7"
+      }
+    },
+    {
+      "id": "locator-01",
+      "requestPath": "/workspace/task-evidence/locator-material-availability-01/request.json",
+      "responsePath": "/workspace/task-evidence/locator-material-availability-01/response.json",
+      "requestSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "responseSHA256": "645e813500a4f3bc6af2f78e8b9bed7586f852fa63aa2bbe244ce71e3369e551",
+      "responseBytes": 7441,
+      "operation": "contents",
+      "requestedURLs": [
+        "https://www.rfc-editor.org/info/rfc8174/"
+      ],
+      "savedEnvelope": {
+        "status": null,
+        "errorPresent": false,
+        "tagPresent": false,
+        "resultCount": 1,
+        "statuses": [
+          {
+            "id": "https://www.rfc-editor.org/info/rfc8174/",
+            "status": "success",
+            "error": null,
+            "tag": null
+          }
+        ]
+      },
+      "exactNormalizedOutputsEqual": true,
+      "baseline": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc8174/",
+            "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+            "publishedDate": "2017-05-18T01:59:04.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 6649,
+            "textSHA256": "c5ce3d9b15ac70e3c9ecc421c2f8ecbffcf67dfed5aa0d1b197ac0dda757f523",
+            "highlightCount": 0,
+            "highlightSHA256": [],
+            "entireNormalizedPageSHA256": "44d3d409ac0f366a8c3968c8336c1251583ee61858a09e34c6e616c5af0c02a5"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "7ca4f3fd25080e46e5a86dd115bad3308f422ffb5ae3498c53815649fe6f7cd0"
+      },
+      "candidate": {
+        "kind": "parsed",
+        "pages": [
+          {
+            "url": "https://www.rfc-editor.org/info/rfc8174/",
+            "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+            "publishedDate": "2017-05-18T01:59:04.000Z",
+            "publisher": null,
+            "textPresent": true,
+            "textCodepoints": 6649,
+            "textSHA256": "c5ce3d9b15ac70e3c9ecc421c2f8ecbffcf67dfed5aa0d1b197ac0dda757f523",
+            "highlightCount": 0,
+            "highlightSHA256": [],
+            "entireNormalizedPageSHA256": "44d3d409ac0f366a8c3968c8336c1251583ee61858a09e34c6e616c5af0c02a5"
+          }
+        ],
+        "pageFailures": [],
+        "entireNormalizedResultSHA256": "7ca4f3fd25080e46e5a86dd115bad3308f422ffb5ae3498c53815649fe6f7cd0"
+      }
+    }
+  ],
+  "providerCalls": 0,
+  "networkRequests": 0,
+  "privateOrSealedBodiesRead": 0,
+  "factualCoverageClaimed": false,
+  "sourceAuthenticityClaimed": false,
+  "limitations": [
+    "Only ten previously captured public SDK responses; not a distributional guarantee or malformed-envelope safety proof.",
+    "Parser equality compares complete normalized objects, including exact retained text/highlights and target failure classification; report stores body hashes rather than reprinting passages.",
+    "This is offline compatibility replay, not live acquisition, full backend evaluation, freshness, receipt eligibility or factual coverage."
+  ]
+}

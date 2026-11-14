@@ -1,0 +1,1388 @@
+{
+  "planHash": "cbea9a2b36cce0be4e1cd87f7c7061e706b357eac6df99dd17d358b313bbb23f",
+  "singlePass": true,
+  "productionChanged": false,
+  "sourceHashesUnchangedAfterRun": true,
+  "pairedRows": [
+    {
+      "id": "CB01",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "stratum": "actual_conclusion_title_only",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.04
+      },
+      "candidate": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.08
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB02",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "stratum": "actual_heading_without_operative_contents",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.18000000000000002
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.21000000000000002
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB03",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "stratum": "catalogue_record_fields",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "supports",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.92
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB04",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "stratum": "formal_enactment_date",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "contradicts",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB05",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "stratum": "synthetic_attribution_without_basis",
+      "expectedBasis": "non_substantive",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "attributed",
+        "confidence": 0
+      },
+      "candidate": {
+        "contentBasis": "attributed",
+        "confidence": 0.01
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB06",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "stratum": "experimental_null_finding",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "contradicts",
+      "baseline": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.94
+      },
+      "candidate": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB07",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "stratum": "actual_heading_without_operative_contents",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.1
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.09000000000000001
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB08",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "stratum": "actual_research_sounding_assertion_without_evidence",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.05
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB09",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "stratum": "actual_research_citation_only",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.02
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB10",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "stratum": "metadata_overclaim_with_record_title_only",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.26
+      },
+      "candidate": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.31000000000000005
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB11",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "stratum": "metadata_overclaim_with_identifier_only",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.13
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.060000000000000005
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB12",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "stratum": "experimental_preference_finding",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "supports",
+      "baseline": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.9400000000000001
+      },
+      "candidate": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.9500000000000001
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB13",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "stratum": "synthetic_research_sounding_promotion",
+      "expectedBasis": "non_substantive",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "promotional",
+        "confidence": 0.01
+      },
+      "candidate": {
+        "contentBasis": "promotional",
+        "confidence": 0.04
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB14",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "stratum": "catalogue_record_fields",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "contradicts",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.87
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.9700000000000001
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB15",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "stratum": "award_register_heading_and_contents",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "supports",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.91
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.9600000000000001
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB16",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "stratum": "actual_body_heading_without_record",
+      "expectedBasis": "insufficient",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB17",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "stratum": "experimental_null_finding",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "supports",
+      "baseline": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.9199999999999999
+      },
+      "candidate": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.9299999999999999
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB18",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "stratum": "formal_enactment_date",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "supports",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 1
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 1
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB19",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "stratum": "synthetic_promotion_with_factual_assertion",
+      "expectedBasis": "non_substantive",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "attributed",
+        "confidence": 0.02
+      },
+      "candidate": {
+        "contentBasis": "attributed",
+        "confidence": 0.03
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB20",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "stratum": "award_register_heading_and_contents",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "contradicts",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.8999999999999999
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB21",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "stratum": "experimental_preference_finding",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "contradicts",
+      "baseline": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.91
+      },
+      "candidate": {
+        "contentBasis": "attributable_research",
+        "confidence": 0.96
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB22",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "stratum": "legal_operative_rule",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "supports",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "CB23",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "stratum": "synthetic_attributed_award_assertion",
+      "expectedBasis": "non_substantive",
+      "stanceDiagnostic": "not_assessed",
+      "baseline": {
+        "contentBasis": "attributed",
+        "confidence": 0
+      },
+      "candidate": {
+        "contentBasis": "attributed",
+        "confidence": 0.02
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "CB24",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "stratum": "legal_operative_rule",
+      "expectedBasis": "substantive",
+      "stanceDiagnostic": "contradicts",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.87
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    }
+  ],
+  "familyMetrics": [
+    {
+      "sourceFamily": "CBF01",
+      "partition": "development",
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      },
+      "candidate": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      }
+    },
+    {
+      "sourceFamily": "CBF02",
+      "partition": "validation",
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      },
+      "candidate": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      }
+    },
+    {
+      "sourceFamily": "CBF03",
+      "partition": "development",
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      },
+      "candidate": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      }
+    },
+    {
+      "sourceFamily": "CBF04",
+      "partition": "validation",
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      },
+      "candidate": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      }
+    },
+    {
+      "sourceFamily": "CBF05",
+      "partition": "development",
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      },
+      "candidate": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      }
+    },
+    {
+      "sourceFamily": "CBF06",
+      "partition": "validation",
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      },
+      "candidate": {
+        "positivePass": 2,
+        "positiveCount": 2,
+        "negativeFalseAccept": 0,
+        "negativeCount": 2
+      }
+    }
+  ],
+  "positiveStancePairs": [
+    {
+      "sourceFamily": "CBF01",
+      "ids": [
+        "CB22",
+        "CB24"
+      ],
+      "identicalExcerptSha256": "744b2df8f97edfd5d0d3e1e58b2f9c5aa9b303b0ce1e7df49a4267cfb87af84b",
+      "stanceLabels": {
+        "CB22": "supports",
+        "CB24": "contradicts"
+      },
+      "baseline": {
+        "scores": {
+          "CB22": 0.96,
+          "CB24": 0.87
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.08999999999999997
+      },
+      "candidate": {
+        "scores": {
+          "CB22": 0.98,
+          "CB24": 0.97
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.010000000000000009
+      }
+    },
+    {
+      "sourceFamily": "CBF02",
+      "ids": [
+        "CB04",
+        "CB18"
+      ],
+      "identicalExcerptSha256": "cf0ad7bc7f85861df2dcb080f871e7149d8bdfcd8b13bbd7a4652e516783a119",
+      "stanceLabels": {
+        "CB04": "contradicts",
+        "CB18": "supports"
+      },
+      "baseline": {
+        "scores": {
+          "CB04": 0.97,
+          "CB18": 1
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.030000000000000027
+      },
+      "candidate": {
+        "scores": {
+          "CB04": 0.98,
+          "CB18": 1
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.020000000000000018
+      }
+    },
+    {
+      "sourceFamily": "CBF03",
+      "ids": [
+        "CB03",
+        "CB14"
+      ],
+      "identicalExcerptSha256": "e7645db905c7601c8243e14794e1b097f04cd69ba82c7e9f5891666df4aba0f0",
+      "stanceLabels": {
+        "CB03": "supports",
+        "CB14": "contradicts"
+      },
+      "baseline": {
+        "scores": {
+          "CB03": 0.92,
+          "CB14": 0.87
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.050000000000000044
+      },
+      "candidate": {
+        "scores": {
+          "CB03": 0.98,
+          "CB14": 0.9700000000000001
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.009999999999999898
+      }
+    },
+    {
+      "sourceFamily": "CBF04",
+      "ids": [
+        "CB15",
+        "CB20"
+      ],
+      "identicalExcerptSha256": "9856cc0438ff7620e0efa1fcfd4b1b37ce63c543cce5fb74ae0c53f9319f25b5",
+      "stanceLabels": {
+        "CB15": "supports",
+        "CB20": "contradicts"
+      },
+      "baseline": {
+        "scores": {
+          "CB15": 0.91,
+          "CB20": 0.8999999999999999
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.01000000000000012
+      },
+      "candidate": {
+        "scores": {
+          "CB15": 0.9600000000000001,
+          "CB20": 0.97
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.009999999999999898
+      }
+    },
+    {
+      "sourceFamily": "CBF05",
+      "ids": [
+        "CB06",
+        "CB17"
+      ],
+      "identicalExcerptSha256": "e11584d710c82f97afd1cb1c605210ef446a3c1912a3d21366818220cb2837d8",
+      "stanceLabels": {
+        "CB06": "contradicts",
+        "CB17": "supports"
+      },
+      "baseline": {
+        "scores": {
+          "CB06": 0.94,
+          "CB17": 0.9199999999999999
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.020000000000000018
+      },
+      "candidate": {
+        "scores": {
+          "CB06": 0.98,
+          "CB17": 0.9299999999999999
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.050000000000000044
+      }
+    },
+    {
+      "sourceFamily": "CBF06",
+      "ids": [
+        "CB12",
+        "CB21"
+      ],
+      "identicalExcerptSha256": "712bf69f3b938e35c9d2a757e25397927e3ea79a9e5126f39b899a7305af7cf6",
+      "stanceLabels": {
+        "CB12": "supports",
+        "CB21": "contradicts"
+      },
+      "baseline": {
+        "scores": {
+          "CB12": 0.9400000000000001,
+          "CB21": 0.91
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.030000000000000027
+      },
+      "candidate": {
+        "scores": {
+          "CB12": 0.9500000000000001,
+          "CB21": 0.96
+        },
+        "bothPass": true,
+        "absoluteConfidenceGap": 0.009999999999999898
+      }
+    }
+  ],
+  "spilloverCounts": {
+    "stanceProbabilityChanges": 14,
+    "scopeProbabilityChanges": 17,
+    "riskConfidenceChanges": 12,
+    "policyDecisionChanges": 2,
+    "relevanceChanges": 1,
+    "scopeChanges": 1
+  },
+  "spilloverDetails": [
+    {
+      "id": "CB01",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.74,
+          "candidate": 0.77,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.47,
+          "candidate": 0.49,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB02",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.76,
+          "candidate": 0.74,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.75,
+          "candidate": 0.77,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.96
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB03",
+      "changes": {
+        "scopeProbability": {
+          "baseline": 0.98,
+          "candidate": 0.97,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 1
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB04",
+      "changes": {
+        "scopeProbability": {
+          "baseline": 0.72,
+          "candidate": 0.68,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB05",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.94,
+          "candidate": 0.95,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.77,
+          "candidate": 0.8,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB06",
+      "changes": {
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.98
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB07",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.83,
+          "candidate": 0.85,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.52,
+          "candidate": 0.48,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.83
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.86
+          },
+          "levelChanges": false,
+          "gateCrossing": true
+        }
+      }
+    },
+    {
+      "id": "CB08",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.69,
+          "candidate": 0.64,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB09",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.72,
+          "candidate": 0.74,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.9
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.89
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB10",
+      "changes": {
+        "policyDecision": {
+          "baseline": {
+            "verdict": "insufficient_evidence",
+            "reasonCode": "below_threshold",
+            "selectedEvidenceIds": [],
+            "summary": "I couldn\u2019t verify that."
+          },
+          "candidate": {
+            "verdict": "insufficient_evidence",
+            "reasonCode": "insufficient_independent_evidence",
+            "selectedEvidenceIds": [],
+            "summary": "I couldn\u2019t verify that."
+          }
+        },
+        "stanceProbability": {
+          "baseline": 0.94,
+          "candidate": 0.95,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.94,
+          "candidate": 0.95,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.95
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.96
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB11",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.55,
+          "candidate": 0.54,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.79,
+          "candidate": 0.78,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.95
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.96
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB13",
+      "changes": {
+        "relevance": {
+          "baseline": false,
+          "candidate": true
+        },
+        "stanceProbability": {
+          "baseline": 0.42,
+          "candidate": 0.47,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.69,
+          "candidate": 0.72,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.56
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.58
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB15",
+      "changes": {
+        "scopeProbability": {
+          "baseline": 0.98,
+          "candidate": 0.97,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB16",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.62,
+          "candidate": 0.68,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.64,
+          "candidate": 0.66,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.96
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB17",
+      "changes": {
+        "scopeProbability": {
+          "baseline": 0.95,
+          "candidate": 0.96,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.98
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB18",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.99,
+          "candidate": 1,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.95,
+          "candidate": 0.96,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB19",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.89,
+          "candidate": 0.88,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB20",
+      "changes": {
+        "scope": {
+          "baseline": true,
+          "candidate": false
+        },
+        "policyDecision": {
+          "baseline": {
+            "verdict": "insufficient_evidence",
+            "reasonCode": "insufficient_independent_evidence",
+            "selectedEvidenceIds": [],
+            "summary": "I couldn\u2019t verify that."
+          },
+          "candidate": {
+            "verdict": "insufficient_evidence",
+            "reasonCode": "no_direct_evidence",
+            "selectedEvidenceIds": [],
+            "summary": "I couldn\u2019t verify that."
+          }
+        },
+        "stanceProbability": {
+          "baseline": 0.98,
+          "candidate": 1,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.85,
+          "candidate": 0.77,
+          "gateCrossing": true
+        }
+      }
+    },
+    {
+      "id": "CB21",
+      "changes": {
+        "scopeProbability": {
+          "baseline": 0.77,
+          "candidate": 0.76,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB22",
+      "changes": {
+        "scopeProbability": {
+          "baseline": 0.9,
+          "candidate": 0.92,
+          "gateCrossing": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.98
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB23",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.66,
+          "candidate": 0.68,
+          "gateCrossing": false
+        },
+        "scopeProbability": {
+          "baseline": 0.91,
+          "candidate": 0.89,
+          "gateCrossing": false
+        }
+      }
+    },
+    {
+      "id": "CB24",
+      "changes": {
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.98
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "levelChanges": false,
+          "gateCrossing": false
+        }
+      }
+    }
+  ],
+  "qualityPassChanges": 0,
+  "qualityClassChanges": 1,
+  "nonqualityGateCrossings": [
+    [
+      "CB07",
+      "claimRisk"
+    ],
+    [
+      "CB20",
+      "scopeProbability"
+    ]
+  ],
+  "recommendation": "Retain baseline: no fixed-threshold coverage gain; no promotion or tuning based only on confidence margins.",
+  "modelVerdictProbabilityChanges": [
+    {
+      "id": "CB01",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.58,
+      "candidate": 0.59,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB02",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.7,
+      "candidate": 0.65,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB05",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.59,
+      "candidate": 0.55,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB07",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.94,
+      "candidate": 0.95,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB08",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.91,
+      "candidate": 0.89,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB09",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.86,
+      "candidate": 0.87,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB10",
+      "modelLabel": "supported",
+      "baseline": 0.83,
+      "candidate": 0.85,
+      "threshold": 0.85,
+      "gateCrossing": true
+    },
+    {
+      "id": "CB11",
+      "modelLabel": "supported",
+      "baseline": 0.49,
+      "candidate": 0.54,
+      "threshold": 0.85,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB13",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.58,
+      "candidate": 0.52,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB16",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.84,
+      "candidate": 0.83,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB17",
+      "modelLabel": "supported",
+      "baseline": 0.99,
+      "candidate": 1,
+      "threshold": 0.85,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB18",
+      "modelLabel": "supported",
+      "baseline": 0.95,
+      "candidate": 0.98,
+      "threshold": 0.85,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB19",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.67,
+      "candidate": 0.63,
+      "threshold": null,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB23",
+      "modelLabel": "insufficient_evidence",
+      "baseline": 0.76,
+      "candidate": 0.7,
+      "threshold": null,
+      "gateCrossing": false
+    }
+  ],
+  "relevanceProbabilityChanges": [
+    {
+      "id": "CB01",
+      "baseline": 0.63,
+      "candidate": 0.6,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB02",
+      "baseline": 0.79,
+      "candidate": 0.83,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB03",
+      "baseline": 0.97,
+      "candidate": 0.98,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB05",
+      "baseline": 0.34,
+      "candidate": 0.33,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB06",
+      "baseline": 0.96,
+      "candidate": 0.95,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB07",
+      "baseline": 0.21,
+      "candidate": 0.2,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB08",
+      "baseline": 0.56,
+      "candidate": 0.57,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB09",
+      "baseline": 0.43,
+      "candidate": 0.37,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB11",
+      "baseline": 0.72,
+      "candidate": 0.68,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB13",
+      "baseline": 0.79,
+      "candidate": 0.85,
+      "gateCrossing": true
+    },
+    {
+      "id": "CB16",
+      "baseline": 0.48,
+      "candidate": 0.45,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB19",
+      "baseline": 0.75,
+      "candidate": 0.77,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB20",
+      "baseline": 0.92,
+      "candidate": 0.93,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB21",
+      "baseline": 0.93,
+      "candidate": 0.94,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB23",
+      "baseline": 0.11,
+      "candidate": 0.12,
+      "gateCrossing": false
+    },
+    {
+      "id": "CB24",
+      "baseline": 0.94,
+      "candidate": 0.95,
+      "gateCrossing": false
+    }
+  ]
+}

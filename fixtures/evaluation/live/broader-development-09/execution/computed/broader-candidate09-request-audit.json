@@ -1,0 +1,960 @@
+{
+  "kind": "candidate09_request_and_receipt_audit",
+  "createdAt": "2026-11-14T05:15:15.004Z",
+  "provenance": [
+    {
+      "batch": 1,
+      "reportPath": "/workspace/task-evidence/broader-candidate09-01.json",
+      "reportSHA256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-01.json.journal.jsonl",
+      "journalSHA256": "9b545966724133d475a33b1bf336fa0eee45f424cadeb7b913ddb288ebc7da17"
+    },
+    {
+      "batch": 2,
+      "reportPath": "/workspace/task-evidence/broader-candidate09-02.json",
+      "reportSHA256": "c41785a39098a7485cd13e865e52f663ab6539cc3fcfff6d8f90dabdde1bef42",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-02.json.journal.jsonl",
+      "journalSHA256": "4a3babfca3b2b1bdbb8f644c4e9e4803552a012dc967b5286da0df0fc47829ff"
+    },
+    {
+      "batch": 3,
+      "reportPath": "/workspace/task-evidence/broader-candidate09-03.json",
+      "reportSHA256": "28152cdc24eba9c605304b94bb3deb0caf99fa57681387844790f941753c7f26",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-03.json.journal.jsonl",
+      "journalSHA256": "c48dbf0b5710af0bffaba66a1f55468c2211bd6abc63c85e96ac9afebf196ad7"
+    },
+    {
+      "batch": 4,
+      "reportPath": "/workspace/task-evidence/broader-candidate09-04.json",
+      "reportSHA256": "ef3b4c3e3e4a5dd23abc4ec9fc16d8d7b14f087bc3bcb5f6a6facec7d6a5fc89",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-04.json.journal.jsonl",
+      "journalSHA256": "a632c1b4249359e9bc986a72474efaf951574fcb0e0b17ab0c62136b4e6de1c8"
+    }
+  ],
+  "actualAttempts": 102,
+  "journalRows": 204,
+  "phaseAndFinalTotalReconciliation": "passed",
+  "negativeAuthProbes": [
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401
+  ],
+  "allNegativeAuthProbes401": true,
+  "privacy": {
+    "admittedExactPublicOccurrences": 13,
+    "unsafeAdmissions": 0,
+    "actualUnapprovedRetrievalQueries": 0,
+    "allSearchObjectiveAndHighlightDigestsMatchPublicHelpers": true,
+    "allContentsTargetsAreSingleNormalizedPublicURLs": true,
+    "controlsWithoutPublicSpansMadeNoExaRequests": true,
+    "reportAndJournalScanFoundNoOriginalInputOrActualCredential": true
+  },
+  "cases": [
+    {
+      "label": "BD01",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://images.nationalarchives.gov.uk/asset/73008/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://images.nationalarchives.gov.uk/asset/73008/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.londonmuseum.org.uk/collections/v/object-486143/holograph-letter-about-the-great-fire-of-london/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.londonmuseum.org.uk/collections/v/object-486143/holograph-letter-about-the-great-fire-of-london/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.londonmuseum.org.uk/collections/v/object-486256/a-true-and-faithfull-account-of-the-several-informations-exhibited-to-the-honourable-committee-appointed-by-the-parliament/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.londonmuseum.org.uk/collections/v/object-486256/a-true-and-faithfull-account-of-the-several-informations-exhibited-to-the-honourable-committee-appointed-by-the-parliament/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD02",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://www.nationalarchives.gov.uk/education/teaching-resources/magna-carta-1214-1225/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.nationalarchives.gov.uk/education/teaching-resources/magna-carta-1214-1225/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.nationalarchives.gov.uk/explore-the-collection/explore-by-time-period/medieval/magna-carta/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.nationalarchives.gov.uk/explore-the-collection/explore-by-time-period/medieval/magna-carta/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.aph.gov.au/Visit_Parliament/Art/Collections/History_of_the_Magna_Carta"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.aph.gov.au/Visit_Parliament/Art/Collections/History_of_the_Magna_Carta",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD03",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://whc.unesco.org/document/153391"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://whc.unesco.org/document/153391",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://archive.org/details/derkilimandjaro00meye"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://archive.org/details/derkilimandjaro00meye",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BDC01",
+      "admittedExactPublic": 0,
+      "rejectedAdmissionCount": 0,
+      "searches": 0,
+      "contents": 0,
+      "contentsDiagnostics": []
+    },
+    {
+      "label": "BD04",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://whc.unesco.org/document/164347"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://whc.unesco.org/document/164347",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://whc.unesco.org/document/163201"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://whc.unesco.org/document/163201",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://discovery.ucl.ac.uk/id/eprint/10110452/1/ecrc_report_1_Mackay%20etal._1993_Lake%20Baikal_OCR.pdf"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://discovery.ucl.ac.uk/id/eprint/10110452/1/ecrc_report_1_Mackay%20etal._1993_Lake%20Baikal_OCR.pdf",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD05",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://www.bipm.org/en/si-base-units/second"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.bipm.org/en/si-base-units/second",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.bipm.org/en/measurement-units/si-defining-constants"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.bipm.org/en/measurement-units/si-defining-constants",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.nist.gov/si-redefinition/definitions-si-base-units"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.nist.gov/si-redefinition/definitions-si-base-units",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD06",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://pubchem.ncbi.nlm.nih.gov/element/Gold"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://pubchem.ncbi.nlm.nih.gov/element/Gold",
+                "status": "error",
+                "malformedFields": [],
+                "errorTag": "SOURCE_NOT_AVAILABLE",
+                "targetHttpStatus": 403
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440575"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440575",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://periodic-table.rsc.org/element/79/gold"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://periodic-table.rsc.org/element/79/gold",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BDC02",
+      "admittedExactPublic": 0,
+      "rejectedAdmissionCount": 0,
+      "searches": 0,
+      "contents": 0,
+      "contentsDiagnostics": []
+    },
+    {
+      "label": "BD07",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://history.state.gov/historicaldocuments/frus1914/d17"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://history.state.gov/historicaldocuments/frus1914/d17",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://history.house.gov/HouseRecord/Detail/25769816229?current_search_qs=%3Fsubject%3DCommerce%26PreviousSearch%3D%26CurrentPage%3D1%26SortOrder%3DTitle"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://history.house.gov/HouseRecord/Detail/25769816229?current_search_qs=%3Fsubject%3DCommerce%26PreviousSearch%3D%26CurrentPage%3D1%26SortOrder%3DTitle",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.usni.org/magazines/proceedings/1955/march/isthmian-canal-policy-evaluation"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.usni.org/magazines/proceedings/1955/march/isthmian-canal-policy-evaluation",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD08",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://library.olympics.com/Default/basicfilesdownload.ashx?itemGuid=2ECE9BE9-EA5F-4F0F-97DF-84C75B6BC60A"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://library.olympics.com/Default/basicfilesdownload.ashx?itemGuid=2ECE9BE9-EA5F-4F0F-97DF-84C75B6BC60A",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://stillmed.olympic.org/Documents/Reports/Official%20Past%20Games%20Reports/Summer/1896/ENG/1896-RO-S-Athens_II.pdf"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://stillmed.olympic.org/Documents/Reports/Official%20Past%20Games%20Reports/Summer/1896/ENG/1896-RO-S-Athens_II.pdf",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://digital.la84.org/digital/collection/p17103coll8/id/6168/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://digital.la84.org/digital/collection/p17103coll8/id/6168/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD09",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://treaties.un.org/Pages/showDetails.aspx?clang=_en&objid=08000002801651f0"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://treaties.un.org/Pages/showDetails.aspx?clang=_en&objid=08000002801651f0",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://unesdoc.unesco.org/ark:/48223/pf0000179478"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://unesdoc.unesco.org/ark:/48223/pf0000179478",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.gov.uk/government/publications/constitution-of-the-united-nations-educational-scientific-and-cultural-organization-unesco-london-16111945"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.gov.uk/government/publications/constitution-of-the-united-nations-educational-scientific-and-cultural-organization-unesco-london-16111945",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BDC03",
+      "admittedExactPublic": 0,
+      "rejectedAdmissionCount": 0,
+      "searches": 0,
+      "contents": 0,
+      "contentsDiagnostics": []
+    },
+    {
+      "label": "BD10",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 1,
+      "contents": 0,
+      "contentsDiagnostics": []
+    },
+    {
+      "label": "BD11",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://www.nobelprize.org/prizes/physics/1901/summary/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.nobelprize.org/prizes/physics/1901/summary/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.kva.se/en/prize-laureate/wilhelm-conrad-rontgen-2/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.kva.se/en/prize-laureate/wilhelm-conrad-rontgen-2/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.nobelprize.org/prizes/physics/1901/rontgen/facts/"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.nobelprize.org/prizes/physics/1901/rontgen/facts/",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BD12",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://doi.org/10.1038/126206a0"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://doi.org/10.1038/126206a0",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://whc.unesco.org/document/152856"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://whc.unesco.org/document/152856",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://elibrary.gbrmpa.gov.au/server/api/core/bitstreams/dc2d2f8a-2bd6-47de-bf03-0f27c0c323a4/content"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://elibrary.gbrmpa.gov.au/server/api/core/bitstreams/dc2d2f8a-2bd6-47de-bf03-0f27c0c323a4/content",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "BDC04",
+      "admittedExactPublic": 1,
+      "rejectedAdmissionCount": 0,
+      "searches": 2,
+      "contents": 3,
+      "contentsDiagnostics": [
+        {
+          "urls": [
+            "https://history.state.gov/historicaldocuments/frus1914/d17"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://history.state.gov/historicaldocuments/frus1914/d17",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://history.house.gov/HouseRecord/Detail/25769816229?current_search_qs=%3Fsubject%3DCommerce%26PreviousSearch%3D%26CurrentPage%3D1%26SortOrder%3DTitle"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://history.house.gov/HouseRecord/Detail/25769816229?current_search_qs=%3Fsubject%3DCommerce%26PreviousSearch%3D%26CurrentPage%3D1%26SortOrder%3DTitle",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        },
+        {
+          "urls": [
+            "https://www.usni.org/magazines/proceedings/1955/march/isthmian-canal-policy-evaluation"
+          ],
+          "outerHTTP": 200,
+          "diagnostics": {
+            "statusList": "present",
+            "records": [
+              {
+                "requestedURL": "https://www.usni.org/magazines/proceedings/1955/march/isthmian-canal-policy-evaluation",
+                "status": "success",
+                "malformedFields": [],
+                "source": "cached"
+              }
+            ],
+            "malformedStatusCount": 0,
+            "unmatchedStatusCount": 0,
+            "duplicateStatusCount": 0,
+            "omittedStatusCount": 0
+          }
+        }
+      ]
+    }
+  ]
+}

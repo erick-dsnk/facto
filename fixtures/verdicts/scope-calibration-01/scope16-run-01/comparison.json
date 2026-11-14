@@ -1,0 +1,563 @@
+{
+  "planHash": "7673eba2cca0b6d2014c195074e9ecdd5055ce5d29a71f646cf061a72391d2c2",
+  "singlePass": true,
+  "productionChanged": false,
+  "sourceHashesUnchangedAfterRun": true,
+  "sourceFamilies": 8,
+  "rawPairedScopeScores": [
+    {
+      "id": "SC01",
+      "stratum": "first_event_vs_edition",
+      "expectedScope": true,
+      "baseline": 0.88,
+      "candidate": 0.9,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC02",
+      "stratum": "different_edition",
+      "expectedScope": false,
+      "baseline": 0.16,
+      "candidate": 0.04,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC03",
+      "stratum": "same_census_different_value",
+      "expectedScope": true,
+      "baseline": 0.96,
+      "candidate": 0.96,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC04",
+      "stratum": "different_census_period",
+      "expectedScope": false,
+      "baseline": 0.1,
+      "candidate": 0.03,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC05",
+      "stratum": "country_continent_relation",
+      "expectedScope": true,
+      "baseline": 0.91,
+      "candidate": 0.91,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC06",
+      "stratum": "different_geographic_entity",
+      "expectedScope": false,
+      "baseline": 0.21,
+      "candidate": 0.08,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC07",
+      "stratum": "formal_definition_different_value",
+      "expectedScope": true,
+      "baseline": 0.85,
+      "candidate": 0.89,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC08",
+      "stratum": "different_historical_standard",
+      "expectedScope": false,
+      "baseline": 0.18,
+      "candidate": 0.06,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC09",
+      "stratum": "universal_counterexample",
+      "expectedScope": true,
+      "baseline": 0.93,
+      "candidate": 0.95,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC10",
+      "stratum": "different_taxonomic_population",
+      "expectedScope": false,
+      "baseline": 0.06,
+      "candidate": 0.09,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC11",
+      "stratum": "same_age_population_different_count",
+      "expectedScope": true,
+      "baseline": 0.9,
+      "candidate": 0.93,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC12",
+      "stratum": "different_age_population",
+      "expectedScope": false,
+      "baseline": 0.08,
+      "candidate": 0.04,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC13",
+      "stratum": "same_pressure_different_value",
+      "expectedScope": true,
+      "baseline": 0.9,
+      "candidate": 0.95,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC14",
+      "stratum": "different_pressure_condition",
+      "expectedScope": false,
+      "baseline": 0.14,
+      "candidate": 0.05,
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "id": "SC15",
+      "stratum": "same_dimension_different_value",
+      "expectedScope": true,
+      "baseline": 0.91,
+      "candidate": 0.96,
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "id": "SC16",
+      "stratum": "different_relation_same_entity",
+      "expectedScope": false,
+      "baseline": 0.12,
+      "candidate": 0.04,
+      "baselinePass": false,
+      "candidatePass": false
+    }
+  ],
+  "spilloverCounts": {
+    "stanceChoiceChanges": 0,
+    "riskLevelChanges": 0,
+    "qualityClassChanges": 0,
+    "stanceProbabilityChanges": 8,
+    "riskConfidenceChanges": 10,
+    "qualityConfidenceChanges": 13,
+    "relevanceFlagChanges": 0,
+    "modelLabelChanges": 0,
+    "policyDecisionChanges": 0
+  },
+  "spilloverDetails": [
+    {
+      "id": "SC01",
+      "changes": {
+        "quality": {
+          "baseline": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.81
+          },
+          "candidate": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.8
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC02",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.95,
+          "candidate": 0.96,
+          "crossesDirectnessThreshold": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.94
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.93
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "unclear",
+            "confidence": 0.06
+          },
+          "candidate": {
+            "contentBasis": "unclear",
+            "confidence": 0.07
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC03",
+      "changes": {
+        "quality": {
+          "baseline": {
+            "contentBasis": "original_record",
+            "confidence": 0.97
+          },
+          "candidate": {
+            "contentBasis": "original_record",
+            "confidence": 0.98
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC04",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.9,
+          "candidate": 0.89,
+          "crossesDirectnessThreshold": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.98
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC05",
+      "changes": {
+        "quality": {
+          "baseline": {
+            "contentBasis": "original_record",
+            "confidence": 0.6599999999999999
+          },
+          "candidate": {
+            "contentBasis": "original_record",
+            "confidence": 0.63
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC06",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.57,
+          "candidate": 0.6,
+          "crossesDirectnessThreshold": false
+        }
+      }
+    },
+    {
+      "id": "SC07",
+      "changes": {
+        "quality": {
+          "baseline": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.71
+          },
+          "candidate": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.72
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC08",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.53,
+          "candidate": 0.49,
+          "crossesDirectnessThreshold": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.89
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.9
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.16
+          },
+          "candidate": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.15
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC09",
+      "changes": {
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.7000000000000001
+          },
+          "candidate": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.73
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC10",
+      "changes": {
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.9
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.92
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.31
+          },
+          "candidate": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.29
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC11",
+      "changes": {
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.96
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.94
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.09
+          },
+          "candidate": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.08
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC12",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.6,
+          "candidate": 0.51,
+          "crossesDirectnessThreshold": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.95
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.97
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.03
+          },
+          "candidate": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.04
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC13",
+      "changes": {
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 1
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.72
+          },
+          "candidate": {
+            "contentBasis": "substantive_secondary",
+            "confidence": 0.73
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC14",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.81,
+          "candidate": 0.85,
+          "crossesDirectnessThreshold": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.96
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.94
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.19
+          },
+          "candidate": {
+            "contentBasis": "bare_assertion",
+            "confidence": 0.22
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC15",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.91,
+          "candidate": 0.93,
+          "crossesDirectnessThreshold": false
+        },
+        "quality": {
+          "baseline": {
+            "contentBasis": "original_record",
+            "confidence": 0.64
+          },
+          "candidate": {
+            "contentBasis": "original_record",
+            "confidence": 0.6
+          },
+          "classChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    },
+    {
+      "id": "SC16",
+      "changes": {
+        "stanceProbability": {
+          "baseline": 0.87,
+          "candidate": 0.86,
+          "crossesDirectnessThreshold": false
+        },
+        "claimRisk": {
+          "baseline": {
+            "level": "ordinary",
+            "confidence": 0.86
+          },
+          "candidate": {
+            "level": "ordinary",
+            "confidence": 0.85
+          },
+          "levelChanges": false,
+          "confidenceGateChanges": false
+        }
+      }
+    }
+  ],
+  "recommendation": "No coverage gain in the fixed-threshold cohort; preserve experiment without promotion or threshold tuning."
+}

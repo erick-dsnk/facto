@@ -1,0 +1,320 @@
+{
+  "kind": "record_acquisition_checkpoint",
+  "mode": "offline",
+  "completed": false,
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+  "collectorSHA256": "6c726a8a53b30413522010cde6f6d84ff41290b8e1ce5f7820f09d7d8908ccc9",
+  "limits": {
+    "declaredFamilies": 4,
+    "jevActualAttempts": 0,
+    "searchActualAttemptsTotal": 4,
+    "searchActualAttemptsPerFamily": 1,
+    "contentsActualAttemptsTotal": 12,
+    "contentsActualAttemptsPerFamily": 3,
+    "deadlineMsPerFamily": 10000,
+    "serialFamilies": true,
+    "maximumSumOfFamilyNetworkWindowsMs": 40000,
+    "requestBytesPerActualAttempt": 65536,
+    "requestBytesTotal": 1048576,
+    "responseBytesPerActualAttempt": 262144,
+    "responseBytesTotal": 4194304,
+    "searchRetries": 0,
+    "contentsRetries": "Existing at-most-one retry only within the original3actualcontents slots and inherited deadline; no extra slots or laterfamily borrowing."
+  },
+  "totals": {
+    "httpBoundaryAttempts": 6,
+    "networkCalls": 0,
+    "jevCalls": 0,
+    "search": 4,
+    "contents": 2,
+    "consumedAllowances": {
+      "search": 4,
+      "contents": 2,
+      "jev": 0
+    },
+    "requestBytes": 4873,
+    "responseBytes": 5071,
+    "pendingDispatchReservations": 0,
+    "knownPartialCostUSD": 0.034999999999999996,
+    "attemptsWithUnknownCost": 2,
+    "totalCostUSD": null
+  },
+  "fatal": null,
+  "cases": [
+    {
+      "id": "AQ01",
+      "familyAlias": "RA01",
+      "publicQuery": "RFC 8174 BCP 14 requirement keyword interpretation",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-da7cdd37ce1ee399a783",
+          "url": "https://unregistered.example.net/record",
+          "title": "RFC 8174 BCP 14 requirement keyword interpretation",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:33:23.442Z",
+          "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document.",
+          "contentBasis": "highlight",
+          "sourceGroup": "example.net",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:33:23.431Z",
+      "completedAt": "2026-11-14T06:33:23.443Z",
+      "elapsedMs": 12,
+      "allowances": {
+        "search": 1,
+        "contents": 1
+      }
+    },
+    {
+      "id": "AQ02",
+      "familyAlias": "RA02",
+      "publicQuery": "Canada Holidays Act section 2 Canada Day Sunday",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-cc8099a7d24661a0b0c8",
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "title": "Canada Holidays Act section 2 Canada Day Sunday",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:33:23.462Z",
+          "excerpt": "Canada Day Marginal note: Canada Day 2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". Marginal note: When July 1 is a Sunday (2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". R.S., c. H-7, s. 2",
+          "contentBasis": "highlight",
+          "sourceGroup": "justice.gc.ca",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:33:23.456Z",
+      "completedAt": "2026-11-14T06:33:23.463Z",
+      "elapsedMs": 7,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    },
+    {
+      "id": "AQ03",
+      "familyAlias": "RA03",
+      "publicQuery": "2021 Pulitzer Prize Fiction winner record",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-5d3676cd31a09dface5f",
+          "url": "https://www.pulitzer.org/winners/louise-erdrich",
+          "title": "2021 Pulitzer Prize Fiction winner record",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:33:23.481Z",
+          "excerpt": "The 2021 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Night Watchman , by Louise Erdrich (Harper)",
+          "contentBasis": "highlight",
+          "sourceGroup": "pulitzer.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:33:23.475Z",
+      "completedAt": "2026-11-14T06:33:23.481Z",
+      "elapsedMs": 6,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    },
+    {
+      "id": "AQ04",
+      "familyAlias": "RA04",
+      "publicQuery": "ONS Census 2021 England and Wales population first release",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-f1b385df5ba0587f58f4",
+          "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "title": "ONS Census 2021 England and Wales population first release",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:33:23.506Z",
+          "excerpt": "Population and household estimates, England and Wales: Census 2021 Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. This is not the latest release. View latest release Contact: Email Michael Roskams Release date: 28 June 2022 Next release: To be announced Table of contents Main points Population growth of England and Wales between 2011 and 2021 Population sizes and changes for regions and local authorities Age and sex of the population Population and land area Number of households Future publications Population and household estimates, England and Wales: data Glossary Measuring the data Strengths and limitations Related links Print this Statistical bulletin Download as PDF View all data used in this Statistical bulletin 1. Main points This page is also available in Welsh (Cymraeg). On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300 (56,489,800 in England and 3,107,500 in Wales); this was the largest population ever recorded through a census in England and Wales.",
+          "contentBasis": "highlight",
+          "sourceGroup": "ons.gov.uk",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:33:23.495Z",
+      "completedAt": "2026-11-14T06:33:23.508Z",
+      "elapsedMs": 13,
+      "allowances": {
+        "search": 1,
+        "contents": 1
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "id": "attempt-01",
+      "familyId": "AQ01",
+      "kind": "search",
+      "requestBytes": 950,
+      "requestSHA256": "a4d5a47e64be2052c69677b6879aaff5d62221395e8f184c5b2a4d3c4bc6d7f1",
+      "requestFile": "sdk-responses/attempt-01-request.json",
+      "reservedAt": "2026-11-14T06:33:23.432Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 1113,
+      "storedResponseBytes": 1113,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": null,
+      "dispatchedAt": "2026-11-14T06:33:23.433Z",
+      "responseSHA256": "f9377ff3e184c87606a9db7e06262c522309a5162a6f17133f916f9477a6e5fd",
+      "responseFile": "sdk-responses/attempt-01-response.json",
+      "costReturned": null,
+      "settledAt": "2026-11-14T06:33:23.435Z"
+    },
+    {
+      "id": "attempt-02",
+      "familyId": "AQ01",
+      "kind": "contents",
+      "requestBytes": 475,
+      "requestSHA256": "335859d00ade2ae4b38d297cee236dcc9786e904ebfc44bbc3ccd6d8cde91c51",
+      "requestFile": "sdk-responses/attempt-02-request.json",
+      "reservedAt": "2026-11-14T06:33:23.437Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 14,
+      "storedResponseBytes": 14,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": null,
+      "dispatchedAt": "2026-11-14T06:33:23.439Z",
+      "responseSHA256": "5021e624e752b001ce3e3846e8f158ed4aeb93a4c9a72fdb35a0c5b14a0eea84",
+      "responseFile": "sdk-responses/attempt-02-response.json",
+      "costReturned": null,
+      "settledAt": "2026-11-14T06:33:23.440Z"
+    },
+    {
+      "id": "attempt-03",
+      "familyId": "AQ02",
+      "kind": "search",
+      "requestBytes": 944,
+      "requestSHA256": "adff2cea031d603e7e7ce86b290f4b72be037fadf2905e5a6db00fcae4f15077",
+      "requestFile": "sdk-responses/attempt-03-request.json",
+      "reservedAt": "2026-11-14T06:33:23.458Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 575,
+      "storedResponseBytes": 575,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.01,
+      "dispatchedAt": "2026-11-14T06:33:23.459Z",
+      "responseSHA256": "5ebd7f16f3fe51d68851412b24f00276255c92204fa15ec9da502a8a8defbfed",
+      "responseFile": "sdk-responses/attempt-03-response.json",
+      "costReturned": {
+        "total": 0.01
+      },
+      "settledAt": "2026-11-14T06:33:23.460Z"
+    },
+    {
+      "id": "attempt-04",
+      "familyId": "AQ03",
+      "kind": "search",
+      "requestBytes": 932,
+      "requestSHA256": "3469b7af84000d526801c04d5411fe49476844c5b2cc19bab9a1e043aca02928",
+      "requestFile": "sdk-responses/attempt-04-request.json",
+      "reservedAt": "2026-11-14T06:33:23.476Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 409,
+      "storedResponseBytes": 409,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.01,
+      "dispatchedAt": "2026-11-14T06:33:23.478Z",
+      "responseSHA256": "03b3facbdcf833827435297adbe3a138e2f5463a1353f4958f7b6b6d865521d1",
+      "responseFile": "sdk-responses/attempt-04-response.json",
+      "costReturned": {
+        "total": 0.01
+      },
+      "settledAt": "2026-11-14T06:33:23.479Z"
+    },
+    {
+      "id": "attempt-05",
+      "familyId": "AQ04",
+      "kind": "search",
+      "requestBytes": 966,
+      "requestSHA256": "6785c754e9ad570db8bed3e17eb2d23fda4261c5334b69cf80ff8c46c56c2647",
+      "requestFile": "sdk-responses/attempt-05-request.json",
+      "reservedAt": "2026-11-14T06:33:23.496Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 1417,
+      "storedResponseBytes": 1417,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.01,
+      "dispatchedAt": "2026-11-14T06:33:23.497Z",
+      "responseSHA256": "36f40fd9d2a3100f3b37a3190bc1bdbc7f8adf2bdc6637dd4eaef0ba2eeadae8",
+      "responseFile": "sdk-responses/attempt-05-response.json",
+      "costReturned": {
+        "total": 0.01
+      },
+      "settledAt": "2026-11-14T06:33:23.498Z"
+    },
+    {
+      "id": "attempt-06",
+      "familyId": "AQ04",
+      "kind": "contents",
+      "requestBytes": 606,
+      "requestSHA256": "c671a8d8e952377da22a730e54d44cca68dc4fa420603c2b52cfbda69fccb37a",
+      "requestFile": "sdk-responses/attempt-06-request.json",
+      "reservedAt": "2026-11-14T06:33:23.502Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 1543,
+      "storedResponseBytes": 1543,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.005,
+      "dispatchedAt": "2026-11-14T06:33:23.503Z",
+      "responseSHA256": "0c485ef4f0c2c40590a210bb10717ba9cdcdf0b9336cf30bf369b6a6283eda02",
+      "responseFile": "sdk-responses/attempt-06-response.json",
+      "costReturned": 0.005,
+      "sourceStatuses": [
+        {
+          "id": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "status": "success"
+        }
+      ],
+      "settledAt": "2026-11-14T06:33:23.505Z"
+    }
+  ]
+}

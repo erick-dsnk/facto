@@ -1,0 +1,60 @@
+"""Offline integrity checks for an agent-written exact-selected-citation audit.
+
+This checks binding/accounting, never semantic truth or independence itself.
+"""
+import hashlib
+import json
+import sys
+
+
+def digest(value):
+    return hashlib.sha256(value.encode('utf-8')).hexdigest()
+
+
+def check_audit(cases, inspections):
+    expected = {}
+    for case in cases:
+        if case['verdict'] not in ('supported', 'contradicted', 'misleading'):
+            continue
+        assert case['selectedEvidence'], 'definitive_without_citations'
+        for source in case['selectedEvidence']:
+            key = (case['caseId'], source['id'])
+            assert key not in expected, 'duplicate_selected_id'
+            expected[key] = source
+    observed = {}
+    for inspection in inspections:
+        key = (inspection['caseId'], inspection['evidenceId'])
+        assert key in expected, 'unselected_substitution'
+        assert key not in observed, 'duplicate_inspection'
+        source = expected[key]
+        assert inspection['url'] == source['url'], 'citation_url_mismatch'
+        assert inspection['excerptSha256'] == digest(source['excerpt']), 'citation_excerpt_mismatch'
+        assert inspection['inspectionMethod'] == 'agent', 'method_mislabel'
+        assert inspection['observedAt'] and inspection['provenanceNotes'], 'missing_method_or_provenance'
+        assert inspection['accessStatus'] in ('accessible', 'inaccessible', 'error_page', 'partial'), 'invalid_access_status'
+        if inspection['accessStatus'] == 'accessible':
+            assert inspection['pageSha256'], 'missing_page_binding'
+        verified = (inspection['accessStatus'] == 'accessible'
+                    and inspection['exactScopeVerified'] is True
+                    and inspection['substantiveVerified'] is True)
+        # Provenance limitations are disclosed separately. A selected passage
+        # can be content-verified without independently proving its origins.
+        observed[key] = verified
+    result = []
+    for case in cases:
+        keys = [key for key in expected if key[0] == case['caseId']]
+        if keys:
+            result.append({'caseId': case['caseId'], 'selected': len(keys),
+                           'inspected': sum(key in observed for key in keys),
+                           'verified': sum(observed.get(key, False) for key in keys),
+                           'allSelectedContentVerified': all(observed.get(key, False) for key in keys)})
+    return {'cases': result, 'selectedOccurrences': len(expected), 'inspectedOccurrences': len(observed),
+            'verifiedOccurrences': sum(observed.values()), 'missingOccurrences': len(expected) - len(observed),
+            'fullyVerifiedCases': sum(case['allSelectedContentVerified'] for case in result),
+            'semanticAssessmentMechanized': False, 'independenceProvenByThisCheck': False}
+
+
+if __name__ == '__main__':
+    with open(sys.argv[1], encoding='utf-8') as handle:
+        data = json.load(handle)
+    print(json.dumps(check_audit(data['cases'], data['inspections']), indent=2))

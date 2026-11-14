@@ -1,0 +1,189 @@
+{
+  "kind": "offline_request_size_and_budget_preflight",
+  "networkCalls": 0,
+  "preflightSourceSHA256": "50f7b3f9e5009804ad4dd7e98465b4b2c6e8e88e87cb0ee5405c6be5ea13b91f",
+  "sourcePins": {
+    "services/api/src/providers/jev/judgment.ts": "b730bf4a54778a0f64fbfc81b1baa19a2e391f9e096d8e317d6a5b10191bc7f3",
+    "services/api/src/providers/jev/classification.ts": "b785bf71765ce79abd7e01e83914b31c91cfca88f6f84e8df385628c153f1128",
+    "services/api/src/input/claims/spans.ts": "34c08bbb2db3550e37efb54c0f2945910a3188be5feed8b761e45fa0eb1c0b0a",
+    "packages/contracts/src/index.ts": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32",
+    "packages/contracts/src/wire.ts": "024ab8b2e899b4d705ee1b1b40ca89e549e0caa5dde9b498a7f1ad7c0c31aafd",
+    "package-lock.json": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32"
+  },
+  "planCoverage": null,
+  "observations": [
+    {
+      "kind": "actual_six_source_judgment",
+      "variant": "ascii",
+      "requestBytes": 94576,
+      "questions": 55,
+      "excerptCodePointsPerSource": 2000,
+      "titleCodePointsPerSource": 300,
+      "urlCharactersPerSource": 4096,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "actual_max_four_candidate_classification",
+      "variant": "ascii",
+      "requestBytes": 35171,
+      "questions": 31,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "contextEntries": 2,
+      "candidates": 4,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "hypothetical_eight_candidate_upper_envelope",
+      "variant": "ascii",
+      "requestBytes": 72673,
+      "questions": 63,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "contextEntries": 2,
+      "candidates": 8,
+      "notCurrentProduction": true
+    },
+    {
+      "kind": "actual_six_source_judgment",
+      "variant": "astralUnicode",
+      "requestBytes": 138361,
+      "questions": 55,
+      "excerptCodePointsPerSource": 2000,
+      "titleCodePointsPerSource": 300,
+      "urlCharactersPerSource": 4096,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "actual_max_four_candidate_classification",
+      "variant": "astralUnicode",
+      "requestBytes": 44441,
+      "questions": 31,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "contextEntries": 2,
+      "candidates": 4,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "hypothetical_eight_candidate_upper_envelope",
+      "variant": "astralUnicode",
+      "requestBytes": 94741,
+      "questions": 63,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "contextEntries": 2,
+      "candidates": 8,
+      "notCurrentProduction": true
+    },
+    {
+      "kind": "actual_six_source_judgment",
+      "variant": "jsonEscapedControl",
+      "requestBytes": 167551,
+      "questions": 55,
+      "excerptCodePointsPerSource": 2000,
+      "titleCodePointsPerSource": 300,
+      "urlCharactersPerSource": 4096,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "actual_max_four_candidate_classification",
+      "variant": "jsonEscapedControl",
+      "requestBytes": 50621,
+      "questions": 31,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "contextEntries": 2,
+      "candidates": 4,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "hypothetical_eight_candidate_upper_envelope",
+      "variant": "jsonEscapedControl",
+      "requestBytes": 109453,
+      "questions": 63,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "contextEntries": 2,
+      "candidates": 8,
+      "notCurrentProduction": true
+    },
+    {
+      "kind": "actual_six_source_judgment_expanded_urls",
+      "variant": "jsonEscapedControl",
+      "requestBytes": 363583,
+      "questions": 55,
+      "rawURLCodeUnitsPerSource": 4096,
+      "normalizedURLCharactersPerSource": 36768,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "actual_mixed_or_first_person_classification",
+      "variant": "mixed_context",
+      "requestBytes": 24296,
+      "questions": 20,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "fieldsPreserved": true
+    },
+    {
+      "kind": "actual_mixed_or_first_person_classification",
+      "variant": "first_person_public",
+      "requestBytes": 9206,
+      "questions": 6,
+      "inputCodePoints": 800,
+      "contextCodePoints": 1200,
+      "fieldsPreserved": true
+    }
+  ],
+  "maximumMeasuredRequestBytes": 363583,
+  "proposedLimits": {
+    "requestBytes": 524288,
+    "totalRequestBytes": 536870912,
+    "inputTokens": 16000000,
+    "unknownInputTokensPerAttempt": 128000,
+    "calls": {
+      "jev": 300,
+      "search": 160,
+      "contents": 240
+    },
+    "wallMs": 1800000
+  },
+  "perCaseLimits": {
+    "requestBytes": 524288,
+    "totalRequestBytes": 8388608,
+    "inputTokens": 500000,
+    "unknownInputTokensPerAttempt": 128000,
+    "calls": {
+      "jev": 3,
+      "search": 2,
+      "contents": 3
+    },
+    "wallMs": 60000
+  },
+  "actualMaxExpandedPayloadCovered": true,
+  "capExceedsMeasured4096NormalizedURLPayloads": true,
+  "upstreamNormalizedURLExpansion": {
+    "rawURLCodeUnits": 4096,
+    "normalizedURLCharacters": 36632,
+    "sixSourceEstimateForDisplayedExamplePrefixBytes": 362767,
+    "actualNormalizedURLCharactersPerSource": 36768,
+    "actualSixSourceRequestBytes": 363583,
+    "exceedsProposedCap": false
+  },
+  "perInputAllowances": {
+    "inputs": 100,
+    "jev": 3,
+    "search": 2,
+    "contents": 3,
+    "freshSessionPerInput": true,
+    "productionVerificationDeadlineMs": 10000
+  },
+  "caveats": [
+    "Actual generator has four candidates, not eight. Eight-candidate envelope is synthetic upper-bound stress only.",
+    "128000 token reservation is a declared uncertainty allowance, not a tokenizer or hard upper bound. Actual usage remains charged; completed unknown usage halts future dispatch.",
+    "Request cap is a local guard; no source, excerpt, context or title truncation was added.",
+    "Production-normalized evidence IDs are23characters; custom adapter evidence IDs are unbounded in shared contract so no universal bound for arbitrary injected adapters is claimed.",
+    "Current normalized URLs can expand beyond raw4096character bound; see expansion diagnostic."
+  ]
+}

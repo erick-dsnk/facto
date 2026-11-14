@@ -1,1296 +1,245 @@
 {
   "schemaVersion": 1,
-  "frozenAt": "2026-11-14",
-  "purpose": "Deterministic control-flow scenarios; synthetic model/evidence fixtures are not factual accuracy measurements.",
-  "heldoutPolicy": "Reserved before policy tuning; excluded from default runs. Do not tune thresholds using held-out outcomes.",
   "cases": [
     {
       "id": "E01",
       "category": "personal",
-      "split": "development",
-      "text": "I felt tired after lunch.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E02",
       "category": "personal",
-      "split": "development",
-      "text": "I had a headache after coffee.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E03",
       "category": "personal",
-      "split": "development",
-      "text": "I love Helsinki.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "opinion",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E04",
       "category": "personal",
-      "split": "development",
-      "text": "I visited Paris in 2023.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E05",
       "category": "personal",
-      "split": "development",
-      "text": "Antibiotics made me feel better.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E06",
       "category": "personal",
-      "split": "development",
-      "text": "My salary is 4000 euros.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E07",
       "category": "personal",
-      "split": "development",
-      "text": "Please open the window.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "question_or_instruction",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E08",
       "category": "personal",
-      "split": "development",
-      "text": "Will it rain next year?",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "question_or_instruction",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E09",
       "category": "personal",
-      "split": "development",
-      "text": "Helsinki is the most beautiful city.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "opinion",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E10",
       "category": "personal",
-      "split": "heldout",
-      "text": "I slept poorly last night.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E11",
       "category": "personal",
-      "split": "heldout",
-      "text": "This painting will become famous next year.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "prediction",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E12",
       "category": "personal",
-      "split": "heldout",
-      "text": "My sister bought a blue bicycle.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "personal_experience",
-        "selfContained": 1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E13",
       "category": "public",
-      "split": "development",
-      "text": "Helsinki is the capital of Finland.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E14",
       "category": "public",
-      "split": "development",
-      "text": "Helsinki is the capital of Finland.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E15",
       "category": "public",
-      "split": "development",
-      "text": "I think Helsinki is the capital of Norway.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E16",
       "category": "public",
-      "split": "development",
-      "text": "Lightning never strikes the same place twice.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "notify",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": 0.95
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E17",
       "category": "public",
-      "split": "development",
-      "text": "Lightning never strikes the same place twice.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": 0.2
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E18",
       "category": "public",
-      "split": "development",
-      "text": "The proposed all-climate invention works in every climate.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "insufficient_evidence"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E19",
       "category": "public",
-      "split": "development",
-      "text": "The proposed all-climate invention works in every climate.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "insufficient_evidence"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E20",
       "category": "public",
-      "split": "development",
-      "text": "The device works in every temperature range.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "insufficient_evidence"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "conflict",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E21",
       "category": "public",
-      "split": "development",
-      "text": "The advertised battery accessory doubles battery life.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "insufficient_evidence"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "echo",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E22",
       "category": "public",
-      "split": "heldout",
-      "text": "Mount Everest is the tallest mountain above sea level.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E23",
       "category": "public",
-      "split": "heldout",
-      "text": "The Eiffel Tower opened in 1889.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E24",
       "category": "public",
-      "split": "heldout",
-      "text": "The event is open to all ages.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "misleading"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "omitted_condition",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E25",
       "category": "mixed",
-      "split": "development",
-      "text": "I felt sick yesterday. Antibiotics cure viruses.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "insufficient_evidence",
-        "checkedTexts": [
-          "Antibiotics cure viruses."
-        ]
-      },
-      "modelFixture": {
-        "kind": "mixed",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard",
-      "candidateModelFixtures": {
-        "I felt sick yesterday.": {
-          "kind": "personal_experience",
-          "selfContained": 1,
-          "privateData": 1,
-          "assertionStatus": "asserted",
-          "hasPracticalConsequence": null
-        },
-        "Antibiotics cure viruses.": {
-          "kind": "public_fact",
-          "selfContained": 1,
-          "privateData": 0,
-          "assertionStatus": "asserted",
-          "hasPracticalConsequence": null
-        }
-      }
+      "split": "development"
     },
     {
       "id": "E26",
       "category": "mixed",
-      "split": "development",
-      "text": "My salary is 4000 euros; Helsinki is the capital of Finland.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "supported",
-        "checkedTexts": [
-          "Helsinki is the capital of Finland."
-        ]
-      },
-      "modelFixture": {
-        "kind": "mixed",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "standard",
-      "candidateModelFixtures": {
-        "My salary is 4000 euros": {
-          "kind": "personal_experience",
-          "selfContained": 1,
-          "privateData": 1,
-          "assertionStatus": "asserted",
-          "hasPracticalConsequence": null
-        },
-        "Helsinki is the capital of Finland.": {
-          "kind": "public_fact",
-          "selfContained": 1,
-          "privateData": 0,
-          "assertionStatus": "asserted",
-          "hasPracticalConsequence": null
-        }
-      }
+      "split": "development"
     },
     {
       "id": "E27",
       "category": "mixed",
-      "split": "development",
-      "text": "Unemployment is 7%.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "needs_confirmation",
-        "presentation": "respond",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 0.1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E28",
       "category": "mixed",
-      "split": "development",
-      "text": "She is safe.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "wait",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 0.1,
-        "privateData": 0,
-        "assertionStatus": "unclear",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E29",
       "category": "mixed",
-      "split": "development",
-      "text": "The speaker said the Earth is flat.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "nonliteral_or_quoted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E30",
       "category": "mixed",
-      "split": "development",
-      "text": "If the Moon were made of cheese, mice could live there.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "nonliteral_or_quoted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "development"
     },
     {
       "id": "E31",
       "category": "mixed",
-      "split": "heldout",
-      "text": "My doctor said it reduces the risk by half.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "respond",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 0.1,
-        "privateData": 1,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E32",
       "category": "mixed",
-      "split": "heldout",
-      "text": "The rate rose to 10% last year.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "wait",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 0.1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "standard"
+      "split": "heldout"
     },
     {
       "id": "E33",
       "category": "capture",
-      "split": "development",
-      "text": "The rate was 70, sorry, 17 percent.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "needs_confirmation",
-        "presentation": "respond",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 0.1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "revision_correction"
+      "split": "development"
     },
     {
       "id": "E34",
       "category": "capture",
-      "split": "development",
-      "text": "Antibiotics can cure viruses.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": false
-      },
-      "expected": {
-        "admission": "wait",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "interim"
+      "split": "development"
     },
     {
       "id": "E35",
       "category": "capture",
-      "split": "development",
-      "text": "The dose is 10 milligrams.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 0.3,
-        "final": true
-      },
-      "expected": {
-        "admission": "needs_confirmation",
-        "presentation": "respond",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "ocr_low_confidence"
+      "split": "development"
     },
     {
       "id": "E36",
       "category": "capture",
-      "split": "development",
-      "text": "The population of",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "wait",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 0.1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "incomplete"
+      "split": "development"
     },
     {
       "id": "E37",
       "category": "capture",
-      "split": "development",
-      "text": "Caf\u00e9 \ud83d\ude00 opened in 2020.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "insufficient_evidence"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "unicode"
+      "split": "development"
     },
     {
       "id": "E38",
       "category": "capture",
-      "split": "development",
-      "text": "Lightning never strikes the same place twice.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": 0.95
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "duplicate"
+      "split": "development"
     },
     {
       "id": "E39",
       "category": "capture",
-      "split": "heldout",
-      "text": "Antibiotics cannot cure viruses.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "final_negation"
+      "split": "heldout"
     },
     {
       "id": "E40",
       "category": "capture",
-      "split": "heldout",
-      "text": "Helsinki is the capital of Finland.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "repeat"
+      "split": "heldout"
     },
     {
       "id": "E41",
       "category": "service",
-      "split": "development",
-      "text": "Helsinki is the capital of Finland.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "supported"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "support",
-      "scenario": "stop"
+      "split": "development"
     },
     {
       "id": "E42",
       "category": "service",
-      "split": "development",
-      "text": "Lightning never strikes the same place twice.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": 0.95
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "expired"
+      "split": "development"
     },
     {
       "id": "E43",
       "category": "service",
-      "split": "development",
-      "text": "Helsinki is the capital of Finland.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": null,
-        "errorCode": "timeout"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "provider_timeout"
+      "split": "development"
     },
     {
       "id": "E44",
       "category": "service",
-      "split": "development",
-      "text": "Helsinki is the capital of Finland.",
-      "intent": "manual",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "respond",
-        "verdict": null,
-        "errorCode": "malformed_provider"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "malformed_provider"
+      "split": "development"
     },
     {
       "id": "E45",
       "category": "service",
-      "split": "development",
-      "text": "Lightning never strikes the same place twice.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": 0.95
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "budget_exhausted"
+      "split": "development"
     },
     {
       "id": "E46",
       "category": "service",
-      "split": "development",
-      "text": "Lightning never strikes the same place twice.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "check",
-        "presentation": "silent",
-        "verdict": "contradicted"
-      },
-      "modelFixture": {
-        "kind": "public_fact",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": 0.95
-      },
-      "evidenceFixture": "contradict",
-      "scenario": "muted"
+      "split": "development"
     },
     {
       "id": "E47",
       "category": "service",
-      "split": "heldout",
-      "text": "Glasses disconnected during a check.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "hardware_disconnect"
+      "split": "heldout"
     },
     {
       "id": "E48",
       "category": "service",
-      "split": "heldout",
-      "text": "The app speaks its own result.",
-      "intent": "automatic",
-      "capture": {
-        "mode": "typed",
-        "confidence": 1.0,
-        "final": true
-      },
-      "expected": {
-        "admission": "skip",
-        "presentation": "silent",
-        "verdict": null
-      },
-      "modelFixture": {
-        "kind": "incomplete_or_unclear",
-        "selfContained": 1,
-        "privateData": 0,
-        "assertionStatus": "asserted",
-        "hasPracticalConsequence": null
-      },
-      "evidenceFixture": "none",
-      "scenario": "hardware_tts_feedback"
+      "split": "heldout"
     }
   ]
 }

@@ -1,4 +1,5 @@
 import { MODEL_VERSION, PipelineError, type ProviderContext } from '../../../../../packages/contracts/src/index.js';
+import { retryAfterDelay, RetryableProviderError, withProviderRetry } from '../../runtime/provider-retry.js';
 
 export type JevQuestion =
   | { type: 'choice'; instructions: string; criteria: Record<string, string> }
@@ -11,6 +12,11 @@ export interface JevClient {
 
 const object = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const probability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
+
+/** Cleanup must not delay or replace an already established provider failure. */
+function discardBody(body: ReadableStream<Uint8Array> | ReadableStreamDefaultReader<Uint8Array> | null | undefined): void {
+  try { void body?.cancel().catch(() => undefined); } catch { /* Best effort, including injected transports. */ }
+}
 
 /** Only return answers whose shape and fixed options match the actual request. */
 export function validateAnswers(value: unknown, questions: Record<string, JevQuestion>): Record<string, JevAnswer> {
@@ -36,6 +42,7 @@ export function validateAnswers(value: unknown, questions: Record<string, JevQue
     if (Object.keys(answer.probabilities).some(key => !Object.hasOwn(question.criteria, key))) throw new PipelineError('malformed_provider');
     const total = Object.values(probabilities).reduce((a, b) => a + b, 0);
     if (Math.abs(total - 1) > 0.02) throw new PipelineError('malformed_provider');
+    if (probabilities[answer.choice] < Math.max(...Object.values(probabilities))) throw new PipelineError('malformed_provider');
     validated[name] = { choice: answer.choice, probabilities };
   }
   return validated;
@@ -47,25 +54,28 @@ export function createJevClient(options: { apiKey: string; fetch?: typeof global
     async ask(request, context) {
       context.signal.throwIfAborted();
       if (!options.apiKey.trim()) throw new PipelineError('missing_jev_key');
-      context.consume('jev');
-      let response: Response;
-      try {
-        response = await fetcher('https://api.typesafe.ai/v1/systemone', {
-          method: 'POST', signal: context.signal,
-          headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions })
-        });
-      } catch {
+      return await withProviderRetry(context, 'jev', undefined, async () => {
+        let response: Response;
+        try {
+          response = await fetcher('https://api.typesafe.ai/v1/systemone', {
+            method: 'POST', signal: context.signal,
+            headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions })
+          });
+        } catch {
+          context.signal.throwIfAborted();
+          throw new RetryableProviderError('jev_unavailable');
+        }
         context.signal.throwIfAborted();
-        throw new PipelineError('jev_unavailable', true);
-      }
-      context.signal.throwIfAborted();
-      if (!response.ok) {
-        if (response.status === 401 || response.status === 403) throw new PipelineError('jev_authentication');
-        if (response.status === 429) throw new PipelineError('jev_rate_limited', true);
-        throw new PipelineError('jev_unavailable', response.status >= 500);
-      }
-      try {
+        if (!response.ok) {
+          const retryAfter = retryAfterDelay(response.headers.get('retry-after'), context.now());
+          discardBody(response.body);
+          context.signal.throwIfAborted();
+          if (response.status === 401 || response.status === 403) throw new PipelineError('jev_authentication');
+          if (response.status === 429) throw new RetryableProviderError('jev_rate_limited', retryAfter);
+          if (response.status >= 500) throw new RetryableProviderError('jev_unavailable', retryAfter);
+          throw new PipelineError('jev_unavailable');
+        }
         // The fixed answer schema is tiny. Reject unexpectedly large responses without retaining them.
         let body = '';
         let bytes = 0;
@@ -78,18 +88,23 @@ export function createJevClient(options: { apiKey: string; fetch?: typeof global
               if (chunk.done) break;
               bytes += chunk.value.byteLength;
               if (bytes > 128_000) {
-                await reader.cancel();
                 throw new PipelineError('malformed_provider');
               }
               context.signal.throwIfAborted();
               body += decoder.decode(chunk.value, { stream: true });
             }
             body += decoder.decode();
+          } catch (error) {
+            discardBody(reader);
+            context.signal.throwIfAborted();
+            if (error instanceof PipelineError) throw error;
+            throw new RetryableProviderError('jev_unavailable');
           } finally {
             reader.releaseLock();
           }
         }
-        const decoded: unknown = JSON.parse(body);
+        let decoded: unknown;
+        try { decoded = JSON.parse(body); } catch { throw new PipelineError('malformed_provider'); }
         if (object(decoded) && object(decoded.usage)) {
           const inputTokens = decoded.usage.input_tokens;
           if (typeof inputTokens === 'number' && Number.isSafeInteger(inputTokens) && inputTokens >= 0) {
@@ -99,11 +114,7 @@ export function createJevClient(options: { apiKey: string; fetch?: typeof global
         const answers = validateAnswers(decoded, request.questions);
         context.signal.throwIfAborted();
         return answers;
-      } catch (error) {
-        context.signal.throwIfAborted();
-        if (error instanceof PipelineError) throw error;
-        throw new PipelineError('malformed_provider');
-      }
+      });
     }
   };
 }

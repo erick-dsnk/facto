@@ -1,0 +1,73 @@
+// Offline probes of unwired integration boundaries. No adapter or production policy is implemented here.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { loadInstalledManifest, resolveReceipt, resolveFrozenFrame, retireInstalledManifest } from '../record-capability-prototype-02/src/manifest.js';
+import { loadSnapshot } from '../record-capability-prototype-02/src/snapshot.js';
+import { loadFrozenClaimFrame } from '../record-capability-prototype-02/src/applicability.js';
+import { evaluate, verifyCapability, type EvaluateInput } from '../record-capability-prototype-02/src/evaluate.js';
+import { fixtureContext, fixtureRecord, refreshFixtureAssessment } from '../record-capability-prototype-02/src/fixture-context.js';
+import { parseContext } from '../record-capability-prototype-02/src/types.js';
+import { INSTALL_ROOT } from '../record-capability-prototype-02/src/install.js';
+import { AttemptBudget, abortable } from '../../junction-2026/services/api/src/runtime/budget.js';
+import { Session, type RequestRecord } from '../../junction-2026/services/api/src/runtime/session.js';
+const manifestHash = (await readFile(INSTALL_ROOT + '/../installed-manifest.sha256','utf8')).trim();
+const manifest = await loadInstalledManifest(INSTALL_ROOT,manifestHash);
+const receipt = resolveReceipt(manifest,'RA02').receipt;
+const frameData = resolveFrozenFrame(manifest,'RC08');
+const artifact = await loadSnapshot(manifest,receipt.proofId);
+const frame = loadFrozenClaimFrame(manifest,'RC08',frameData.exactText);
+const excerpt = (await readFile(INSTALL_ROOT + '/artifacts/' + receipt.extractionSHA256,'utf8')).slice(receipt.units[0]!.start,receipt.units[0]!.end);
+function input(): EvaluateInput {
+ const evidence={id:'RC08',url:receipt.canonicalURL,excerpt};
+ return {manifest,artifact,receiptAlias:'RA02',frame,evidence,exactClaimText:frameData.exactText,context:fixtureContext(frameData.exactText,[fixtureRecord(evidence)]),now:'2026-11-15T00:00:00Z'};
+}
+function capability(i: EvaluateInput){const r=evaluate(i);assert.equal(r.kind,'capability');if(r.kind!=='capability')throw Error('not applicable');return r;}
+function verify(token:unknown,i:EvaluateInput){return verifyCapability(token,{manifest:i.manifest,evidence:i.evidence,frame:i.frame as typeof frame,exactClaimText:i.exactClaimText,context:i.context});}
+function lifecycle(){let clock=Date.parse('2026-11-15T00:00:00Z');const session=new Session(()=>clock);const record={input:{sessionId:session.id,sessionEpoch:session.epoch,requestId:'offline-request',revision:1,text:frameData.exactText,context:[]},budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:clock,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map()} as RequestRecord;session.requests.set(record.input.requestId,record);return {session,record,advance:(ms:number)=>{clock+=ms;}};}
+
+test('token validity is not request cancellation validity; actual Session.current rejects cancelled owner',()=>{
+ const i=input(),r=capability(i),{session,record}=lifecycle();assert.equal(session.current(record),true);session.cancel(record.input.requestId);
+ assert.equal(verify(r.token,i),true,'prototype intentionally has no cancellation input');assert.equal(session.current(record),false);
+});
+test('same snapshot survives pause/epoch change in primitive, but old runtime request is stale',()=>{
+ const i=input(),r=capability(i),{session,record}=lifecycle();session.pause();session.active=true;
+ assert.notEqual(session.epoch,record.input.sessionEpoch);assert.equal(verify(r.token,i),true);assert.equal(session.current(record),false);
+});
+test('same claim revision text cannot replace actual request-record ownership',()=>{
+ const i=input(),r=capability(i),{session,record}=lifecycle();const replacement={...record,input:{...record.input,revision:2},controller:new AbortController()};session.requests.set(record.input.requestId,replacement);
+ assert.equal(verify(r.token,i),true);assert.equal(session.current(record),false);assert.equal(session.current(replacement),true);
+});
+test('late asynchronous completion after cancellation cannot win abortable; token still needs lifecycle gate',async()=>{
+ const i=input(),r=capability(i),{session,record}=lifecycle();let complete!:(v:typeof r)=>void;const late=new Promise<typeof r>(resolve=>{complete=resolve});const bounded=abortable(late,record.controller.signal);
+ session.cancel(record.input.requestId);complete(r);await assert.rejects(bounded,/cancelled/);assert.equal(verify(r.token,i),true);assert.equal(session.current(record),false);
+});
+test('request deadline requires explicit gate if timer has not run; current and budget checks alone do not enforce it',()=>{
+ const {session,record,advance}=lifecycle();const ctx=record.budget.context(record.controller.signal,session.now,record.acceptedAt+10000);advance(10001);
+ assert.equal(session.current(record),true,'session lifetime is distinct from request deadline');assert.equal(ctx.canConsume('jev'),true);assert.equal(session.now()<(ctx.deadlineAt??0),false);
+ // No consume/dispatch is performed: a future adapter must reject at this boundary.
+ assert.equal(record.budget.jev,0);
+});
+test('revisions share one request allowance and reserved later-claim judgment cannot be spent on another applicability call',()=>{
+ const {record,session}=lifecycle();record.budget.consume('jev'); // admission
+ const first=record.budget.context(record.controller.signal,session.now,record.acceptedAt+10000,1);
+ first.consume('jev');assert.equal(record.budget.jev,2);assert.equal(first.canConsume('jev'),false);assert.throws(()=>first.consume('jev'),/jev_budget_exhausted/);
+ const revisionController=new AbortController();const later=record.budget.context(revisionController.signal,session.now,record.acceptedAt+10000);later.consume('jev');assert.equal(record.budget.jev,3);assert.equal(later.canConsume('jev'),false);assert.throws(()=>later.consume('jev'),/jev_budget_exhausted/);assert.equal(record.budget.jev,3);
+});
+test('cancelled request cannot consume fresh provider allowance',()=>{
+ const {record,session}=lifecycle();const ctx=record.budget.context(record.controller.signal,session.now);session.cancel(record.input.requestId);assert.throws(()=>ctx.consume('jev'),/cancelled/);assert.equal(record.budget.jev,0);
+});
+test('fresh input digest does not prove an actual assessment rerun; old output can be rebound by trusted caller',()=>{
+ const i=input(),first=capability(i),next=structuredClone(i.context);const oldState=JSON.stringify(next.assessment.state);next.originGraphState.rawRevision='offline-material-change';refreshFixtureAssessment(next);
+ assert.equal(verify(first.token,{...i,context:next}),false);const replacement=capability({...i,context:next});assert.equal(JSON.stringify(next.assessment.state),oldState);assert.equal(replacement.audit.assessmentId,first.audit.assessmentId);assert.notEqual(replacement.audit.contextSHA256,first.audit.contextSHA256);
+ assert.equal(replacement.audit.verdictAssigned,false,'accepted provenance binding is not a verdict or model-freshness attestation');
+});
+test('valid offline context can exceed live request byte cap; context bound is not a provider allowance',()=>{
+ const i=input();const large=Object.fromEntries(Array.from({length:6},(_,n)=>['k'+n,'x'.repeat(4000)]));i.context.retainedRecords[0]!.metadata=structuredClone(large);i.context.originNodes[0]!.record.metadata=structuredClone(large);i.context.assessment.state={...large,synthetic:true};refreshFixtureAssessment(i.context);
+ assert.doesNotThrow(()=>parseContext(i.context));assert.ok(Buffer.byteLength(JSON.stringify(i.context))>65536);assert.equal(capability(i).kind,'capability');
+});
+test('installation retirement invalidates token but does not itself evict an independent factual cache',async()=>{
+ const retired=await loadInstalledManifest(INSTALL_ROOT,manifestHash);const i=input();i.manifest=retired;i.artifact=await loadSnapshot(retired,receipt.proofId);i.frame=loadFrozenClaimFrame(retired,'RC08',frameData.exactText);const r=capability(i);const {session}=lifecycle();
+ const key='synthetic-existing-factual-cache';session.cache.set(key,{result:{synthetic:true} as never,expiresAt:session.now()+60000});retireInstalledManifest(retired);
+ assert.equal(verify(r.token,i),false);assert.equal(session.cache.has(key),true,'future integration must invalidate/revalidate derived caches explicitly');
+});

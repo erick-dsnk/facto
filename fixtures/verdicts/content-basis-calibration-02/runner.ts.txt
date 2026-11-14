@@ -1,0 +1,132 @@
+import { createHash } from 'node:crypto';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { MODEL_VERSION, type AcceptedClaim, type Evidence, type ProviderContext } from '/workspace/stack-17/packages/contracts/src/index.ts';
+import { createJudge } from '/workspace/stack-17/services/api/src/providers/jev/judgment.ts';
+import { createJevClient, type JevAnswer, type JevClient, type JevRequest } from '/workspace/stack-17/services/api/src/providers/jev/client.ts';
+import { decideVerdict } from '/workspace/stack-17/services/api/src/policy/verdict.ts';
+import { createContentBasisJudgmentExperiment } from './candidate.ts';
+
+export const LIMITS = Object.freeze({ maxAttempts: 48, maxUnits: 24, maxInputTokens: 200000, pendingReserve: 24000, maxRequestBytes: 65536, maxTotalRequestBytes: 1048576, wallMs: 120000 });
+export const hash = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');
+const check: (condition: unknown, message: string) => asserts condition = (condition, message) => { if (!condition) throw new Error(message); };
+const encode = (request: JevRequest): string => JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions });
+type Arm = 'baseline' | 'candidate';
+export type Unit = { id: string; proposition: string; title: string; url: string; excerpt: string; partition: string; sourceFamily: string; stratum?: string; category?: string };
+export type Label = { id: string; expectedBasis: 'substantive' | 'non_substantive' | 'insufficient'; supportingSpan: string; expectedStanceDiagnostic?: string; stanceDiagnostic?: string; excludeFromPrimary?: boolean };
+type Call = { unitId: string; arm: Arm; requestBytes: number; bodyHash: string; questionHashes: Record<string, string> };
+export type Plan = { schemaVersion: 1; preparedAt: string; model: string; assessmentThreshold: number; predeclaredMetrics: string[]; limits: typeof LIMITS; units: Array<{ id: string; partition: string; sourceFamily: string; stratum: string }>; labels: Label[]; inputHashes: Record<string, string>; sourceHashes: Record<string, string>; calls: Call[] };
+const sourceHashes = (): Record<string, string> => Object.fromEntries([
+  ...['packages/contracts/src/index.ts', 'services/api/src/providers/jev/judgment.ts', 'services/api/src/providers/jev/client.ts', 'services/api/src/policy/assessment.ts', 'services/api/src/policy/sources.ts', 'services/api/src/policy/verdict.ts'].map(path => [path, hash(readFileSync(`/workspace/stack-17/${path}`))]),
+  ['candidate.ts', hash(readFileSync(new URL('./candidate.ts', import.meta.url)))], ['runner.ts', hash(readFileSync(new URL('./runner.ts', import.meta.url)))],
+]);
+const modelNow = () => Date.parse('2026-11-14T12:00:00Z');
+const claim = (unit: Unit): AcceptedClaim => ({ id: unit.id, originalText: unit.proposition, checkedText: unit.proposition, sourceSpan: { start: 0, end: Array.from(unit.proposition).length }, admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_fact', hasPracticalConsequence: null, matchedSelectedTopic: null } });
+const evidence = (unit: Unit): Evidence[] => [{ id: `${unit.id}-evidence`, url: unit.url, title: unit.title, publisher: null, publishedAt: null, retrievedAt: new Date(modelNow()).toISOString(), excerpt: unit.excerpt, contentBasis: 'highlight', sourceGroup: new URL(unit.url).hostname, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null }];
+const judge = (arm: Arm, client: JevClient) => arm === 'baseline' ? createJudge(client) : createContentBasisJudgmentExperiment(client);
+
+export async function captureRequest(unit: Unit, arm: Arm): Promise<JevRequest> {
+  let captured: JevRequest | undefined;
+  const sentinel = new Error('offline capture');
+  try { await judge(arm, { ask: async request => { captured = request; throw sentinel; } })(claim(unit), evidence(unit), { signal: new AbortController().signal, consume: () => { throw new Error('offline capture must not consume'); }, now: modelNow }); }
+  catch (error) { if (error !== sentinel) throw error; }
+  check(captured, 'no full judge request captured'); return captured;
+}
+
+export async function buildPlan(units: Unit[], labels: Label[], inputHashes: Record<string, string>): Promise<Plan> {
+  check(units.length === LIMITS.maxUnits, 'predeclared24-unit cohort required');
+  check(new Set(units.map(unit => unit.id)).size === units.length && new Set(labels.map(label => label.id)).size === units.length && labels.length === units.length, 'one independent label per unit required');
+  check(labels.every(label => ['substantive', 'non_substantive', 'insufficient'].includes(label.expectedBasis)), 'invalid independent basis label');
+  const calls: Call[] = [];
+  for (const [index, unit] of units.entries()) {
+    const label = labels.find(value => value.id === unit.id);
+    check(label && label.supportingSpan.length > 0 && unit.excerpt.includes(label.supportingSpan), 'invalid independent label/span');
+    check(unit.partition && unit.sourceFamily && (unit.stratum ?? unit.category), 'missing unit metadata');
+    const baseline = await captureRequest(unit, 'baseline'), candidate = await captureRequest(unit, 'candidate');
+    check(JSON.stringify(baseline.state) === JSON.stringify(candidate.state), 'full judge state differs');
+    check(JSON.stringify(Object.keys(baseline.questions)) === JSON.stringify(Object.keys(candidate.questions)), 'question names differ');
+    for (const [name, question] of Object.entries(baseline.questions)) {
+      const next = candidate.questions[name];
+      if (!name.endsWith('_content_basis')) check(JSON.stringify(question) === JSON.stringify(next), 'nonbasis question changed');
+      else check(question.type === 'choice' && next.type === 'choice' && JSON.stringify(question.criteria) === JSON.stringify(next.criteria), 'seven content-basis criteria changed');
+    }
+    const arms: Array<[Arm, JevRequest]> = index % 2 ? [['candidate', candidate], ['baseline', baseline]] : [['baseline', baseline], ['candidate', candidate]];
+    for (const [arm, request] of arms) { const body = encode(request); check(Buffer.byteLength(body) <= LIMITS.maxRequestBytes, 'request byte cap'); calls.push({ unitId: unit.id, arm, requestBytes: Buffer.byteLength(body), bodyHash: hash(body), questionHashes: Object.fromEntries(Object.entries(request.questions).map(([name, question]) => [name, hash(JSON.stringify(question))])) }); }
+  }
+  check(calls.length <= LIMITS.maxAttempts && calls.reduce((sum, call) => sum + call.requestBytes, 0) <= LIMITS.maxTotalRequestBytes, 'campaign budget');
+  return { schemaVersion: 1, preparedAt: new Date().toISOString(), model: MODEL_VERSION, assessmentThreshold: .85, predeclaredMetrics: ['Positive content-basis recall and negative false accepts at unchanged .85 plus selected accepted class.', 'Same retained positive passage under independently labelled support/refutation propositions: paired pass/score invariance, not independent source counts.', 'Heading/citation-only, attribution and promotional hard-negative outcomes by predeclared category.', 'Full-judge stance/scope/risk/relevance/model-label/policy spillovers, separate from primary quality score.', 'All partial failures and predeclared exclusions remain visible; no factual-accuracy or population-calibration inference.'], limits: LIMITS, units: units.map(({ id, partition, sourceFamily, stratum, category }) => ({ id, partition, sourceFamily, stratum: (stratum ?? category)! })), labels, inputHashes, sourceHashes: sourceHashes(), calls };
+}
+
+type Observation = { unitId: string; arm: Arm; status: string; quality?: { contentBasis: string; confidence: number }; qualityPass?: boolean; answers?: Record<string, JevAnswer>; diagnostics?: Record<string, unknown> };
+export function metrics(plan: Plan, observations: Observation[]): unknown {
+  const partitions = [...new Set(plan.units.map(unit => unit.partition))];
+  return Object.fromEntries(partitions.map(partition => [partition, Object.fromEntries((['baseline', 'candidate'] as const).map(arm => {
+    const cohort = plan.units.filter(unit => unit.partition === partition && !plan.labels.find(label => label.id === unit.id)!.excludeFromPrimary);
+    const results = observations.filter(value => value.arm === arm && value.status === 'completed' && cohort.some(unit => unit.id === value.unitId));
+    const expected = (id: string): boolean => plan.labels.find(label => label.id === id)!.expectedBasis === 'substantive';
+    const excluded = observations.filter(value => value.arm === arm && value.status === 'completed' && plan.labels.find(label => label.id === value.unitId)!.excludeFromPrimary);
+    return [arm, { planned: cohort.length, observed: results.length, missingOrFailed: cohort.length - results.length, truePositive: results.filter(value => expected(value.unitId) && value.qualityPass).length, falseNegative: results.filter(value => expected(value.unitId) && !value.qualityPass).length, falsePositive: results.filter(value => !expected(value.unitId) && value.qualityPass).length, trueNegative: results.filter(value => !expected(value.unitId) && !value.qualityPass).length, decisions: results.map(value => ({ unitId: value.unitId, expectedBasis: plan.labels.find(label => label.id === value.unitId)!.expectedBasis, quality: value.quality, qualityPass: value.qualityPass })), excludedPredictions: excluded.map(value => ({ unitId: value.unitId, quality: value.quality, qualityPass: value.qualityPass })) }];
+  }))]));
+}
+
+export async function executePlan(plan: Plan, units: Unit[], output: string, options: { apiKey: string; fetch?: typeof fetch; now?: () => number }): Promise<unknown> {
+  check(plan.model === MODEL_VERSION && plan.assessmentThreshold === .85 && JSON.stringify(plan.limits) === JSON.stringify(LIMITS), 'model/threshold/budget changed');
+  check(JSON.stringify(plan.sourceHashes) === JSON.stringify(sourceHashes()), 'source/candidate changed after freeze');
+  check(JSON.stringify((await buildPlan(units, plan.labels, plan.inputHashes)).calls) === JSON.stringify(plan.calls), 'frozen request hashes changed');
+  mkdirSync(output, { recursive: false, mode: 0o700 });
+  const log = (event: unknown) => appendFileSync(`${output}/events.jsonl`, `${JSON.stringify(event)}\n`, { mode: 0o600, flush: true });
+  const now = options.now ?? Date.now, started = now(), controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(new Error('content-basis calibration wall deadline')), LIMITS.wallMs);
+  const totals = { consumedJev: 0, actualStartedJev: 0, actualStartedExa: 0, requestBytes: 0, responseBytes: 0, measuredInputTokens: 0, usageKnownCalls: 0, usageUnknownCalls: 0 };
+  const observations: Observation[] = []; let stopReason = 'completed';
+  log({ type: 'started', planHash: hash(JSON.stringify(plan)), limits: LIMITS });
+  try {
+    for (const [sequence, call] of plan.calls.entries()) {
+      if (controller.signal.aborted || now() - started >= LIMITS.wallMs) { stopReason = 'wall_budget'; break; }
+      if (totals.usageUnknownCalls) { stopReason = 'unknown_usage'; break; }
+      if (totals.consumedJev >= LIMITS.maxAttempts || totals.measuredInputTokens + LIMITS.pendingReserve > LIMITS.maxInputTokens || totals.requestBytes + call.requestBytes > LIMITS.maxTotalRequestBytes) { stopReason = 'budget_reserve'; break; }
+      if (JSON.stringify(plan.sourceHashes) !== JSON.stringify(sourceHashes())) { stopReason = 'source_freeze_changed'; break; }
+      const unit = units.find(value => value.id === call.unitId)!; let usage: number | undefined, namedAnswers: Record<string, JevAnswer> | undefined;
+      const callStarted = now();
+      const fetcher: typeof fetch = async (url, init) => {
+        check(String(url) === 'https://api.typesafe.ai/v1/systemone' && typeof init?.body === 'string' && hash(init.body) === call.bodyHash, 'actual request differs from freeze');
+        const requestBytes = Buffer.byteLength(init.body); check(requestBytes === call.requestBytes && requestBytes <= LIMITS.maxRequestBytes, 'actual request byte cap');
+        totals.actualStartedJev++; totals.requestBytes += requestBytes; log({ type: 'request_sent', sequence, unitId: unit.id, arm: call.arm, requestBytes, bodyHash: call.bodyHash });
+        const response = await (options.fetch ?? fetch)(url, init); log({ type: 'response_headers', sequence, status: response.status });
+        const reader = response.body?.getReader(); const stream = reader ? new ReadableStream<Uint8Array>({ async pull(target) { const chunk = await reader.read(); if (chunk.done) target.close(); else { totals.responseBytes += chunk.value.byteLength; target.enqueue(chunk.value); } }, async cancel(reason) { await reader.cancel(reason); } }) : null;
+        return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers });
+      };
+      const context: ProviderContext = { signal: controller.signal, now: modelNow, consume: provider => { check(provider === 'jev' && totals.consumedJev < LIMITS.maxAttempts, 'provider/attempt budget'); totals.consumedJev++; }, recordUsage: value => { check(typeof value.inputTokens === 'number' && Number.isSafeInteger(value.inputTokens) && value.inputTokens >= 0 && usage === undefined, 'invalid or duplicate usage'); usage = value.inputTokens; totals.measuredInputTokens += value.inputTokens; } };
+      const actual = createJevClient({ apiKey: options.apiKey, fetch: fetcher }); log({ type: 'attempt_started', sequence, unitId: unit.id, arm: call.arm });
+      try {
+        const judged = await judge(call.arm, { ask: async (request, ctx) => { check(hash(encode(request)) === call.bodyHash, 'full judge request freeze changed'); namedAnswers = await actual.ask(request, ctx); return namedAnswers; } })(claim(unit), evidence(unit), context);
+        const source = judged.evidence[0], quality = judged.sourceAssessments[source.id];
+        const qualityPass = ['original_record', 'attributable_research', 'substantive_secondary'].includes(quality.contentBasis) && quality.confidence >= .85;
+        const diagnostics = { stance: source.stance, stanceProbability: source.stanceProbability, relevance: source.directlyAddressesClaim, scope: source.matchesTimePlaceAndPopulation, scopeProbability: namedAnswers!.e0_scope.noul, claimRisk: judged.claimRisk, modelLabel: judged.label, verdictProbabilities: judged.probabilities, policyDecision: decideVerdict(judged) };
+        const observation = { unitId: unit.id, arm: call.arm, status: 'completed', quality, qualityPass, answers: namedAnswers, diagnostics };
+        observations.push(observation); log({ type: 'attempt_terminal', sequence, durationMs: now() - callStarted, inputTokens: usage ?? null, ...observation });
+      } catch (error) { const observation = { unitId: unit.id, arm: call.arm, status: 'failed' }; observations.push(observation); log({ type: 'attempt_terminal', sequence, ...observation, durationMs: now() - callStarted, inputTokens: usage ?? null, error: error instanceof Error ? error.message : String(error) }); stopReason = 'terminal_failure'; }
+      if (usage === undefined) { totals.usageUnknownCalls++; stopReason = 'unknown_usage'; } else totals.usageKnownCalls++;
+      if (totals.measuredInputTokens > LIMITS.maxInputTokens) stopReason = 'measured_token_budget';
+      if (stopReason !== 'completed') break;
+    }
+  } finally { clearTimeout(timeout); }
+  const report = { schemaVersion: 1, planHash: hash(JSON.stringify(plan)), stopReason, completedAllCalls: observations.length === plan.calls.length && stopReason === 'completed', durationMs: now() - started, totals, cost: { exaUsd: 0, jevUsd: null, reason: 'Jev pricing/output-token cost unavailable.' }, metricScope: 'Substantive content-basis only under unchanged selected-class and accepted-probability-mass .85; full-judge stance/scope/risk spillovers are separate diagnostics. Single-passage policy decisions are not factual-accuracy outcomes.', metrics: metrics(plan, observations), observations };
+  log({ type: 'finished', stopReason, totals }); writeFileSync(`${output}/report.json`, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx', mode: 0o600 }); return report;
+}
+
+async function main(): Promise<void> {
+  const [action, ...args] = process.argv.slice(2);
+  if (action === 'prepare') {
+    check(args.length === 4, 'prepare requires units labels adjudication new-plan paths'); const [unitsPath, labelsPath, adjudicationPath, planPath] = args;
+    const raw = Object.fromEntries([unitsPath, labelsPath, adjudicationPath].map(path => [resolve(path), readFileSync(path, 'utf8')])); const adjudication = JSON.parse(raw[resolve(adjudicationPath)]); check(adjudication.frozen === true && adjudication.independentReviewComplete === true, 'independent adjudication must be frozen');
+    const plan = { ...await buildPlan(JSON.parse(raw[resolve(unitsPath)]).units, JSON.parse(raw[resolve(labelsPath)]).labels, Object.fromEntries(Object.entries(raw).map(([path, body]) => [path, hash(body)]))), unitsPath: resolve(unitsPath) };
+    writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx', mode: 0o600 }); writeFileSync(`${planPath}.sha256`, `${hash(JSON.stringify(plan))}\n`, { flag: 'wx', mode: 0o600 }); process.stdout.write(`Prepared ${plan.calls.length} frozen full-judge calls; no provider calls.\n`);
+  } else if (action === 'execute') {
+    check(args.length === 2, 'execute requires frozen-plan/new-output-directory'); const [planPath, output] = args; const plan = JSON.parse(readFileSync(planPath, 'utf8')) as Plan & { unitsPath: string };
+    check(hash(JSON.stringify(plan)) === readFileSync(`${planPath}.sha256`, 'utf8').trim(), 'plan hash mismatch'); for (const [path, expected] of Object.entries(plan.inputHashes)) check(hash(readFileSync(path)) === expected, 'frozen input/labels changed'); check(process.env.JEV_API_KEY?.trim(), 'JEV_API_KEY required from environment');
+    const report = await executePlan(plan, JSON.parse(readFileSync(plan.unitsPath, 'utf8')).units, output, { apiKey: process.env.JEV_API_KEY! }) as { stopReason: string; completedAllCalls: boolean; totals: unknown }; process.stdout.write(`${JSON.stringify({ stopReason: report.stopReason, completedAllCalls: report.completedAllCalls, totals: report.totals, reportPath: `${output}/report.json` })}\n`);
+  } else throw new Error('Explicit prepare or execute required; no default provider action.');
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) main().catch(error => { process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`); process.exitCode = 1; });

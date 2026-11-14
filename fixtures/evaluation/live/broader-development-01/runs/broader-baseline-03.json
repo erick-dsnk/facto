@@ -1,0 +1,2659 @@
+{
+  "schemaVersion": 1,
+  "kind": "authenticated_http_websocket_live_development",
+  "startedAt": "2026-11-14T04:15:30.080Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.1",
+  "metadata": {
+    "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+    "dirty": false,
+    "sourceSHA256": "e6f36587593f39415f161a64a02f0946f4758b9a90b5c2c0ac40399adfb8de85"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "predeclaredCases": [
+    {
+      "label": "BD07",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "BD08",
+      "allowedPublic": [
+        "The first modern Olympic Games were held in Paris in 1896."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "BD09",
+      "allowedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "BDC03",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    }
+  ],
+  "counts": {
+    "declared": 4,
+    "observed": 4,
+    "terminalReceipts": 4,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "completed": true,
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "transportFailure": null,
+  "totals": {
+    "attempts": 14,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 8,
+      "search": 4,
+      "contents": 2
+    },
+    "requestBytes": 154312,
+    "measuredInputTokens": 38146,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 38146,
+    "knownCostUSD": 0.030000000000000002,
+    "attemptsWithUnknownCost": 8,
+    "elapsedMs": 7234
+  },
+  "cases": [
+    {
+      "label": "BD07",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 683,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 2,
+          "revision": 1,
+          "receivedMs": 14
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 3,
+          "revision": 1,
+          "claimId": "BD07-48e7304e-claim-0",
+          "receivedMs": 199,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 4,
+          "revision": 1,
+          "claimId": "BD07-48e7304e-claim-0",
+          "receivedMs": 682,
+          "reasonCode": "qualifying_evidence",
+          "verdict": "supported",
+          "checkedPublicText": "The Panama Canal opened to world trade in 1914.",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-9f6b071f258ff2a1591d",
+            "ev-f72fcf7616e02e44a3fd"
+          ],
+          "evidence": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "contentBasis": "highlight",
+              "excerpt": "Panama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n...\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "contentBasis": "highlight",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "contentBasis": "highlight",
+              "excerpt": "On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "contentBasis": "highlight",
+              "excerpt": "The Panama Canal, the American-built waterway across the Isthmus of Panama, connecting the Atlantic and Pacific oceans, is inaugurated with the passage of the U.S. vessel Ancon, a cargo and passenger ship.\n\n...\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "contentBasis": "highlight",
+              "excerpt": "Today, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\n...\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            }
+          ],
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "explicit_request"
+          },
+          "durationMs": 675.013157
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 1,
+          "dispatched": true,
+          "requestBytes": 5854,
+          "startedMs": 182.8261520000001,
+          "durationMs": 181,
+          "inputTokens": 1573,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.97
+            },
+            "span_0_private_data": {
+              "noul": 0.02
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.18
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 2,
+          "dispatched": true,
+          "requestBytes": 119,
+          "startedMs": 367.638588,
+          "durationMs": 299,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "The Panama Canal opened to world trade in 1914."
+        },
+        {
+          "kind": "jev",
+          "ordinal": 3,
+          "dispatched": true,
+          "requestBytes": 42435,
+          "startedMs": 675.7684350000001,
+          "durationMs": 167,
+          "inputTokens": 10394,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "supported",
+              "probabilities": {
+                "supported": 0.93,
+                "contradicted": 0,
+                "misleading": 0.04,
+                "insufficient_evidence": 0.03
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.93,
+                "e1": 0.02,
+                "e2": 0.02,
+                "e3": 0.02,
+                "e4": 0.01
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.91,
+                "omitted_condition": 0.08,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.99
+            },
+            "e0_scope": {
+              "noul": 0.97
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.99,
+                "omitted_condition": 0.01,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.63
+            },
+            "e0_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.36,
+                "attributable_research": 0,
+                "substantive_secondary": 0.35,
+                "bare_assertion": 0.28,
+                "attributed": 0,
+                "promotional": 0.01,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.96
+            },
+            "e1_scope": {
+              "noul": 0.95
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.92,
+                "omitted_condition": 0.03,
+                "outdated_fact": 0,
+                "exaggeration": 0.05
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.5
+            },
+            "e1_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.45,
+                "attributable_research": 0,
+                "substantive_secondary": 0.5,
+                "bare_assertion": 0.05,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.98,
+                "contradicts": 0.01,
+                "unrelated": 0.01
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.94
+            },
+            "e2_scope": {
+              "noul": 0.9
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.76,
+                "omitted_condition": 0.19,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.04
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.42
+            },
+            "e2_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.08,
+                "attributable_research": 0,
+                "substantive_secondary": 0.27,
+                "bare_assertion": 0.65,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e3_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.98,
+                "contradicts": 0,
+                "unrelated": 0.02
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.93
+            },
+            "e3_scope": {
+              "noul": 0.93
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.94,
+                "omitted_condition": 0.05,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.46
+            },
+            "e3_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.26,
+                "attributable_research": 0,
+                "substantive_secondary": 0.54,
+                "bare_assertion": 0.2,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e4_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.96
+            },
+            "e4_scope": {
+              "noul": 0.95
+            },
+            "e4_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.97,
+                "omitted_condition": 0.01,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.01
+              }
+            },
+            "e4_context_established": {
+              "noul": 0.42
+            },
+            "e4_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.49,
+                "attributable_research": 0,
+                "substantive_secondary": 0.4,
+                "bare_assertion": 0.11,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.12,
+                "unclear": 0.84
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.06,
+                "distinct_origins": 0.16,
+                "unclear": 0.78
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.13,
+                "unclear": 0.85
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.46,
+                "distinct_origins": 0.02,
+                "unclear": 0.52
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.09,
+                "distinct_origins": 0.13,
+                "unclear": 0.78
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.12,
+                "unclear": 0.84
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.09,
+                "distinct_origins": 0.15,
+                "unclear": 0.76
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.13,
+                "distinct_origins": 0.17,
+                "unclear": 0.7
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.1,
+                "distinct_origins": 0.11,
+                "unclear": 0.79
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.05,
+                "unclear": 0.93
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 192.612529,
+        "retrieval": 308.234685,
+        "judgment": 169.78351899999984
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "Panama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n...\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight",
+              "contentBasis": "highlight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "The Panama Canal, the American-built waterway across the Isthmus of Panama, connecting the Atlantic and Pacific oceans, is inaugurated with the passage of the U.S. vessel Ancon, a cargo and passenger ship.\n\n...\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.",
+              "contentBasis": "highlight",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "Today, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\n...\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "Panama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n...\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight",
+              "contentBasis": "highlight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "The Panama Canal, the American-built waterway across the Isthmus of Panama, connecting the Atlantic and Pacific oceans, is inaugurated with the passage of the U.S. vessel Ancon, a cargo and passenger ship.\n\n...\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.",
+              "contentBasis": "highlight",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:15:30.752Z",
+              "excerpt": "Today, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\n...\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-76fec2672b529967532e"
+          ],
+          "sourceAssessments": {
+            "ev-76fec2672b529967532e": {
+              "contentBasis": "original_record",
+              "confidence": 0.71
+            },
+            "ev-9f6b071f258ff2a1591d": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.95
+            },
+            "ev-77bf5dacc342631f57f0": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.35000000000000003
+            },
+            "ev-a38329850f933790097c": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.8
+            },
+            "ev-f72fcf7616e02e44a3fd": {
+              "contentBasis": "original_record",
+              "confidence": 0.89
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-9f6b071f258ff2a1591d"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.84
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.78
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.85
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.52
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.78
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.84
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.76
+            },
+            {
+              "evidenceIds": [
+                "ev-77bf5dacc342631f57f0",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.7
+            },
+            {
+              "evidenceIds": [
+                "ev-77bf5dacc342631f57f0",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.79
+            },
+            {
+              "evidenceIds": [
+                "ev-a38329850f933790097c",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.93
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "The Panama Canal opened to world trade in 1914.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 11967
+      },
+      "usage": {
+        "measuredInputTokens": 11967,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 48408,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      }
+    },
+    {
+      "label": "BD08",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 4574,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 5,
+          "revision": 1,
+          "receivedMs": 2
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 6,
+          "revision": 1,
+          "claimId": "BD08-e9b9d438-claim-0",
+          "receivedMs": 94,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 7,
+          "revision": 1,
+          "claimId": "BD08-e9b9d438-claim-0",
+          "receivedMs": 4574,
+          "reasonCode": "conflicting_sources",
+          "verdict": "insufficient_evidence",
+          "checkedPublicText": "The first modern Olympic Games were held in Paris in 1896.",
+          "cached": false,
+          "selectedEvidenceIds": [],
+          "evidence": [
+            {
+              "id": "ev-8ee3b22eaf2380d3f670",
+              "url": "https://stillmed.olympics.com/media/Document%20Library/OlympicOrg/Documents/Document-Set-Teachers-The-Main-Olympic-Topics/The-Modern-Olympic-Games.pdf",
+              "title": "The Modern Olympic Games",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "contentBasis": "highlight",
+              "excerpt": "sports practised on snow and ice, both indoors and outdoors.\n\n...\n\nHistory \nIt was Pierre de Coubertin of France who dreamt up this ambitious project, \nalthough others before him had tried in vain to revive these Games. Drawing \ninspiration from the ancient Olympic Games, he decided to create the modern \nOlympic Games. With this purpose, he founded the International Olympic \nCommittee (IOC) in 1894 in Paris. The new committee set itself the objective \nof organising the first Olympic Games of modern times. \nThe date of the first Games, 1896, marked the beginning of an extraordinary \nadventure that has now lasted for over a century!\n\n...\n\nGames Ele men ts of the pas t The roots of the Olympic Games are to be found in Ancient Greece [see sheet “The Olympic Games in Antiquity”], and the first modern Games, in 1896, featured many references to this legacy of Greek Antiquity: › The Games were held in Athens, in Greece, the country where the ancient Games were held. › Most of the competitions were held in the ancient stadium (the Panathinaiko Stadium), which had been restored for the occasion. › Most of the sports on the programme of the ancient Games were included in the first modern Games. › The organisers invented a race inspired by an event in antiquity: the marathon. \nGenerally speaking, the modern Games strive towards a more peaceful world. \nThe Olympic Truce calling for a halt to all conflicts recalls the concept of the truce \nobserved during the Ancient Games. \nSacred and respected throughout Ancient Greece, the Olympic Truce announced \nby messengers before the Games allowed spectators, athletes and officials \nto travel to and from Olympia in safety through the numerous battle zones. \nToday, the Olympic Truce is the subject of a United Nations resolution calling \nfor a halt to hostilities during the period of the Games and the search for means \nof peaceful resolution in areas of tension. The athletes who support this initiative \nare invited to sign a “Truce Wall” i",
+              "sourceGroup": "olympics.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-815f4e005d0598da79df",
+              "url": "https://trivianearme.net/trivia-questions/true-or-false/quiz",
+              "title": "True or False Trivia Quiz — Free Online Trivia Game",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:35.305Z",
+              "contentBasis": "page_text",
+              "excerpt": "ct or fiction: jellyfish get by without a brain. \n\n Show answer \n\n Answer: True \n\n Q23. Fact or fiction: astronomers reclassified Pluto as a dwarf planet in 2006. \n\n Q24. Fact or fiction: Olympus Mons, a volcano on Mars, is taller than Mount Everest. \n\n Q25. Fact or fiction: the RMS Titanic sank on its maiden voyage in April 1912. \n\n Q26. Fact or fiction: in baking tradition, a 'baker's dozen' means 13. \n\n Q27. Fact or fiction: honeybees perform a 'waggle dance' to tell hive-mates the direction and distance of food. \n\n Q28. Fact or fiction: the kiwi, a national symbol of New Zealand, is a flightless bird. \n\n Q29. Fact or fiction: ostriches bury their heads in the sand to avoid danger. \n\n Q30. Fact or fiction: the human tongue has separate zones that alone detect sweet, sour, salty and bitter tastes. \n\n Q31. Fact or fiction: the planet Mars has three moons. \n\n Q32. Fact or fiction: camels store water in their humps. \n\n Q33. Fact or fiction: in astronomy, a light-year is a unit of time. \n\n Q34. Fact or fiction: the first modern Olympic Games were held in Paris in 1896. \n\n Q35. Fact or fiction: Leonardo da Vinci's Mona Lisa hangs in Florence's Uffizi Gallery. \n\n Q36. Fact or fiction: the Caesar salad is named after the Roman leader Julius Caesar. \n\n Q37. Fact or fiction: owls can rotate their heads a full 360 degrees. \n\n Q38. Fact or fiction: Istanbul is the capital city of Turkey. \n\n Q39. Fact or fiction: medical studies have shown that cracking your knuckles causes arthritis. \n\n Q40. Fact or fiction: botanically, a banana is a berry but a strawberry is not. \n\n Q41. Fact or fiction: Cleopatra lived closer in time to the 1969 Moon landing than to the building of the Great Pyramid of Giza. \n\n Q42. Fact or fiction: a single day on Venus (one rotation) lasts longer than a Venusian year. \n\n Q43. Fact or fiction: the Eiffel Tower can grow up to about 15 centimetres taller in summer heat. \n\n Show answer \n\n Answer: True \n\n Q44. Fact or fiction: video-game giant Nintendo was f",
+              "sourceGroup": "trivianearme.net",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": 0.58
+            },
+            {
+              "id": "ev-73eb733014005b140ac0",
+              "url": "https://jeanelleweloise.pages.dev/pymqmv-the-2024-winter-olympics-vmikmd/",
+              "title": "The 2024 Winter Olympics: Get Ready for the Games in Paris! - Calendar 2024 Pdf",
+              "publisher": null,
+              "publishedAt": "2023-10-27T23:01:31.000Z",
+              "retrievedAt": "2026-11-14T04:15:35.305Z",
+              "contentBasis": "page_text",
+              "excerpt": "on: Global Excitement & Pride\n- Challenges: Security, Logistics, Climate\n- Countdown: 2 Years to Grandeur\n\nThe 2024 Winter Olympics in Paris promise to be a captivating fusion of athleticism, cultural heritage, and Parisian charm.\n\n### Host City: Paris, France\n\nThe City of Lights, renowned for its iconic landmarks, rich history, and vibrant culture, will take center stage as the host city for the 2024 Winter Olympics. Paris is a melting pot of art, fashion, gastronomy, and innovation, offering a unique backdrop for this global sporting event.\n\nThe choice of Paris as the host city was met with great enthusiasm, as it signifies the Olympic Games’ return to its roots. The first modern Olympic Games were held in Paris in 1896, and the city has since hosted the Summer Games twice, in 1900 and 1924. The 2024 Winter Olympics will mark the third time Paris has hosted the Olympic Games, making it a truly special occasion.\n\nParis is committed to hosting sustainable and inclusive Olympic Games, leaving a lasting legacy for future generations. The city is investing in renewable energy sources, sustainable transportation options, and accessible infrastructure to ensure a positive impact on the environment and the community.\n\nWith its rich history, stunning architecture, and passionate embrace of sports, Paris is poised to deliver an extraordinary Olympic experience that will captivate audiences worldwide.\n\nThe 2024 Winter Olympics in Paris promise to be a spectacular celebration of athleticism, cultural diversity, and Parisian charm. Get ready for an unforgettable journey as the world’s top athletes compete for glory in the heart of one of the world’s most beloved cities.\n\n### Dates: January 21 – February 11, 2024\n\nThe 2024 Winter Olympics will take place over a period of 22 days, starting on January 21, 2024, and concluding on February 11, 2024. This timeframe was chosen to ensure optimal weather conditions for the various winter sports and to minimize disruptions to the regula",
+              "sourceGroup": "jeanelleweloise.pages.dev",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-e8266b955498b17f9423",
+              "url": "https://www.guinnessworldrecords.com/world-records/first-modern-olympic-games",
+              "title": "First modern Olympic Games | Guinness World Records",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "contentBasis": "highlight",
+              "excerpt": "# First modern Olympic Games\n\nWho\n\n1896 Olympic Games held in Athens, Greece\n\nWhat\n\n First \n\nWhere\n\n Greece (Athens,) \n\nWhen\n\n 06 April 1896 \n\n Conceived by the French academic and sports enthusiast Pierre de Fredi, Baron de Coubertin (1863­-1937), the modern Olympic Games were inaugurated in Athens, Greece, the birthplace of Olympic sport, on 6 April 1896. The first-ever modern Games were a modest affair by today's standards, with just 241 participants representing 14 different countries and competing in 43 events.",
+              "sourceGroup": "guinnessworldrecords.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            }
+          ],
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "explicit_request"
+          },
+          "durationMs": 4572.045563000001
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 4,
+          "dispatched": true,
+          "requestBytes": 5876,
+          "startedMs": 854.6796680000001,
+          "durationMs": 90,
+          "inputTokens": 1577,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.97
+            },
+            "span_0_private_data": {
+              "noul": 0.02
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.1
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.97,
+                "multiple_propositions": 0.03,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 5,
+          "dispatched": true,
+          "requestBytes": 130,
+          "startedMs": 946.240347,
+          "durationMs": 1603,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "The first modern Olympic Games were held in Paris in 1896."
+        },
+        {
+          "kind": "jev",
+          "ordinal": 6,
+          "dispatched": true,
+          "requestBytes": 25615,
+          "startedMs": 2598.667492,
+          "durationMs": 121,
+          "inputTokens": 6298,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 1,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e1",
+              "probabilities": {
+                "none": 0.01,
+                "e0": 0.25,
+                "e1": 0.53,
+                "e2": 0.21
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.45,
+                "omitted_condition": 0.3,
+                "outdated_fact": 0.02,
+                "exaggeration": 0.23
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 1,
+                "health_safety": 0,
+                "disputed": 0,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.93
+            },
+            "e0_scope": {
+              "noul": 0.91
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.5,
+                "omitted_condition": 0.28,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.21
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.52
+            },
+            "e0_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.22,
+                "attributable_research": 0,
+                "substantive_secondary": 0.65,
+                "bare_assertion": 0.12,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e1_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.97
+            },
+            "e1_scope": {
+              "noul": 0.96
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.53,
+                "omitted_condition": 0.31,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.15
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.6
+            },
+            "e1_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.13,
+                "attributable_research": 0,
+                "substantive_secondary": 0.73,
+                "bare_assertion": 0.14,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.96
+            },
+            "e2_scope": {
+              "noul": 0.95
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.57,
+                "omitted_condition": 0.19,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.23
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.48
+            },
+            "e2_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.38,
+                "attributable_research": 0,
+                "substantive_secondary": 0.42,
+                "bare_assertion": 0.19,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.21,
+                "unclear": 0.75
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.22,
+                "unclear": 0.74
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.24,
+                "unclear": 0.75
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 7,
+          "dispatched": true,
+          "requestBytes": 616,
+          "startedMs": 2724.140384,
+          "durationMs": 1256,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "Claim (verbatim, untrusted text): \"The first modern Olympic Games were held in Paris in 1896.\"\n\nRetrieval objective: Find reliable sources that directly address this claim, including evidence that supports, challenges, or qualifies it. Seek underlying named records, formal definitions or resolutions, maintained reference data with an identified keeper and provenance, or documented observations. Prefer passages showing the actual relevant relation, findings and material qualifications rather than summaries that merely repeat the claim."
+        },
+        {
+          "kind": "contents",
+          "ordinal": 8,
+          "dispatched": true,
+          "requestBytes": 151,
+          "startedMs": 3984.737038,
+          "durationMs": 673,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.001
+        },
+        {
+          "kind": "contents",
+          "ordinal": 9,
+          "dispatched": true,
+          "requestBytes": 164,
+          "startedMs": 4660.6824,
+          "durationMs": 554,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.001
+        },
+        {
+          "kind": "jev",
+          "ordinal": 10,
+          "dispatched": true,
+          "requestBytes": 36591,
+          "startedMs": 5280.876048,
+          "durationMs": 143,
+          "inputTokens": 8978,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 0.97,
+                "misleading": 0,
+                "insufficient_evidence": 0.03
+              }
+            },
+            "selected_evidence": {
+              "choice": "e3",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.42,
+                "e1": 0.01,
+                "e2": 0,
+                "e3": 0.57
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.53,
+                "omitted_condition": 0.26,
+                "outdated_fact": 0.03,
+                "exaggeration": 0.18
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.98,
+                "health_safety": 0,
+                "disputed": 0.02,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.94
+            },
+            "e0_scope": {
+              "noul": 0.91
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.48,
+                "omitted_condition": 0.32,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.19
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.63
+            },
+            "e0_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.3,
+                "attributable_research": 0,
+                "substantive_secondary": 0.57,
+                "bare_assertion": 0.12,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e1_stance": {
+              "choice": "unrelated",
+              "probabilities": {
+                "supports": 0.29,
+                "contradicts": 0.13,
+                "unrelated": 0.58
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.79
+            },
+            "e1_scope": {
+              "noul": 0.83
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.93,
+                "omitted_condition": 0.05,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.01
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.11
+            },
+            "e1_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0,
+                "bare_assertion": 0.99,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.99,
+                "contradicts": 0.01,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.94
+            },
+            "e2_scope": {
+              "noul": 0.87
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.73,
+                "omitted_condition": 0.12,
+                "outdated_fact": 0.08,
+                "exaggeration": 0.07
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.29
+            },
+            "e2_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.01,
+                "bare_assertion": 0.92,
+                "attributed": 0,
+                "promotional": 0.07,
+                "unclear": 0
+              }
+            },
+            "e3_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.96
+            },
+            "e3_scope": {
+              "noul": 0.96
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.59,
+                "omitted_condition": 0.17,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.23
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.57
+            },
+            "e3_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.52,
+                "attributable_research": 0,
+                "substantive_secondary": 0.36,
+                "bare_assertion": 0.12,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.17,
+                "unclear": 0.83
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.07,
+                "unclear": 0.92
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.25,
+                "unclear": 0.73
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.07,
+                "unclear": 0.92
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.11,
+                "unclear": 0.89
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.16,
+                "unclear": 0.84
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 91.45235600000001,
+        "retrieval": 4195.651748,
+        "judgment": 269.92746299999953
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-8ee3b22eaf2380d3f670",
+              "url": "https://stillmed.olympics.com/media/Document%20Library/OlympicOrg/Documents/Document-Set-Teachers-The-Main-Olympic-Topics/The-Modern-Olympic-Games.pdf",
+              "title": "The Modern Olympic Games",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "sports practised on snow and ice, both indoors and outdoors.\n\n...\n\nHistory \nIt was Pierre de Coubertin of France who dreamt up this ambitious project, \nalthough others before him had tried in vain to revive these Games. Drawing \ninspiration from the ancient Olympic Games, he decided to create the modern \nOlympic Games. With this purpose, he founded the International Olympic \nCommittee (IOC) in 1894 in Paris. The new committee set itself the objective \nof organising the first Olympic Games of modern times. \nThe date of the first Games, 1896, marked the beginning of an extraordinary \nadventure that has now lasted for over a century!\n\n...\n\nGames Ele men ts of the pas t The roots of the Olympic Games are to be found in Ancient Greece [see sheet “The Olympic Games in Antiquity”], and the first modern Games, in 1896, featured many references to this legacy of Greek Antiquity: › The Games were held in Athens, in Greece, the country where the ancient Games were held. › Most of the competitions were held in the ancient stadium (the Panathinaiko Stadium), which had been restored for the occasion. › Most of the sports on the programme of the ancient Games were included in the first modern Games. › The organisers invented a race inspired by an event in antiquity: the marathon. \nGenerally speaking, the modern Games strive towards a more peaceful world. \nThe Olympic Truce calling for a halt to all conflicts recalls the concept of the truce \nobserved during the Ancient Games. \nSacred and respected throughout Ancient Greece, the Olympic Truce announced \nby messengers before the Games allowed spectators, athletes and officials \nto travel to and from Olympia in safety through the numerous battle zones. \nToday, the Olympic Truce is the subject of a United Nations resolution calling \nfor a halt to hostilities during the period of the Games and the search for means \nof peaceful resolution in areas of tension. The athletes who support this initiative \nare invited to sign a “Truce Wall” i",
+              "contentBasis": "highlight",
+              "sourceGroup": "olympics.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-ede9a96e11a398dc96b6",
+              "url": "https://www.olympics.com/en/news/top-reasons-why-the-athens-1896-olympics-were-important-for-modern-sport",
+              "title": "Athens 1896: Top reasons why these Olympics were important for modern sport",
+              "publisher": null,
+              "publishedAt": "2021-02-15T16:51:02.000Z",
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "The first modern Olympic Games took place in the Greek capital Athens in 1896, setting the stage for some firsts that are still relevant today.\n\nBy ZK Goh\n\nThe first modern Olympic Games took place in Athens in 1896 two years after Pierre Baron de Coubertin formed the International Olympic Committee in Paris.\n\nThere had already been local attempts to revive the Olympics in various countries, including Greece and Britain. De Coubertin had wanted the first Games to be in Paris, but in a nod to the Ancient Olympic Games, it was agreed that the Greek capital would play host, with Paris slated to host in 1900 alongside the Universal Exposition of that year.\n\nWith few similar modern-day competitions for the organisers to refer to, the Games of the I Olympiad were an impressive undertaking that saw over 200 athletes from 14 countries take part.\n\n...\n\nSwimming events continued to be held in the open water for at least three more Olympics – in the Seine at Paris 1900, an artificial lake in a park at St Louis 1904, and in Stockholm Harbour in 1912.",
+              "contentBasis": "highlight",
+              "sourceGroup": "olympics.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-e8266b955498b17f9423",
+              "url": "https://www.guinnessworldrecords.com/world-records/first-modern-olympic-games",
+              "title": "First modern Olympic Games | Guinness World Records",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "# First modern Olympic Games\n\nWho\n\n1896 Olympic Games held in Athens, Greece\n\nWhat\n\n First \n\nWhere\n\n Greece (Athens,) \n\nWhen\n\n 06 April 1896 \n\n Conceived by the French academic and sports enthusiast Pierre de Fredi, Baron de Coubertin (1863­-1937), the modern Olympic Games were inaugurated in Athens, Greece, the birthplace of Olympic sport, on 6 April 1896. The first-ever modern Games were a modest affair by today's standards, with just 241 participants representing 14 different countries and competing in 43 events.",
+              "contentBasis": "highlight",
+              "sourceGroup": "guinnessworldrecords.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-8ee3b22eaf2380d3f670",
+              "url": "https://stillmed.olympics.com/media/Document%20Library/OlympicOrg/Documents/Document-Set-Teachers-The-Main-Olympic-Topics/The-Modern-Olympic-Games.pdf",
+              "title": "The Modern Olympic Games",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "sports practised on snow and ice, both indoors and outdoors.\n\n...\n\nHistory \nIt was Pierre de Coubertin of France who dreamt up this ambitious project, \nalthough others before him had tried in vain to revive these Games. Drawing \ninspiration from the ancient Olympic Games, he decided to create the modern \nOlympic Games. With this purpose, he founded the International Olympic \nCommittee (IOC) in 1894 in Paris. The new committee set itself the objective \nof organising the first Olympic Games of modern times. \nThe date of the first Games, 1896, marked the beginning of an extraordinary \nadventure that has now lasted for over a century!\n\n...\n\nGames Ele men ts of the pas t The roots of the Olympic Games are to be found in Ancient Greece [see sheet “The Olympic Games in Antiquity”], and the first modern Games, in 1896, featured many references to this legacy of Greek Antiquity: › The Games were held in Athens, in Greece, the country where the ancient Games were held. › Most of the competitions were held in the ancient stadium (the Panathinaiko Stadium), which had been restored for the occasion. › Most of the sports on the programme of the ancient Games were included in the first modern Games. › The organisers invented a race inspired by an event in antiquity: the marathon. \nGenerally speaking, the modern Games strive towards a more peaceful world. \nThe Olympic Truce calling for a halt to all conflicts recalls the concept of the truce \nobserved during the Ancient Games. \nSacred and respected throughout Ancient Greece, the Olympic Truce announced \nby messengers before the Games allowed spectators, athletes and officials \nto travel to and from Olympia in safety through the numerous battle zones. \nToday, the Olympic Truce is the subject of a United Nations resolution calling \nfor a halt to hostilities during the period of the Games and the search for means \nof peaceful resolution in areas of tension. The athletes who support this initiative \nare invited to sign a “Truce Wall” i",
+              "contentBasis": "highlight",
+              "sourceGroup": "olympics.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-ede9a96e11a398dc96b6",
+              "url": "https://www.olympics.com/en/news/top-reasons-why-the-athens-1896-olympics-were-important-for-modern-sport",
+              "title": "Athens 1896: Top reasons why these Olympics were important for modern sport",
+              "publisher": null,
+              "publishedAt": "2021-02-15T16:51:02.000Z",
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "The first modern Olympic Games took place in the Greek capital Athens in 1896, setting the stage for some firsts that are still relevant today.\n\nBy ZK Goh\n\nThe first modern Olympic Games took place in Athens in 1896 two years after Pierre Baron de Coubertin formed the International Olympic Committee in Paris.\n\nThere had already been local attempts to revive the Olympics in various countries, including Greece and Britain. De Coubertin had wanted the first Games to be in Paris, but in a nod to the Ancient Olympic Games, it was agreed that the Greek capital would play host, with Paris slated to host in 1900 alongside the Universal Exposition of that year.\n\nWith few similar modern-day competitions for the organisers to refer to, the Games of the I Olympiad were an impressive undertaking that saw over 200 athletes from 14 countries take part.\n\n...\n\nSwimming events continued to be held in the open water for at least three more Olympics – in the Seine at Paris 1900, an artificial lake in a park at St Louis 1904, and in Stockholm Harbour in 1912.",
+              "contentBasis": "highlight",
+              "sourceGroup": "olympics.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-e8266b955498b17f9423",
+              "url": "https://www.guinnessworldrecords.com/world-records/first-modern-olympic-games",
+              "title": "First modern Olympic Games | Guinness World Records",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "# First modern Olympic Games\n\nWho\n\n1896 Olympic Games held in Athens, Greece\n\nWhat\n\n First \n\nWhere\n\n Greece (Athens,) \n\nWhen\n\n 06 April 1896 \n\n Conceived by the French academic and sports enthusiast Pierre de Fredi, Baron de Coubertin (1863­-1937), the modern Olympic Games were inaugurated in Athens, Greece, the birthplace of Olympic sport, on 6 April 1896. The first-ever modern Games were a modest affair by today's standards, with just 241 participants representing 14 different countries and competing in 43 events.",
+              "contentBasis": "highlight",
+              "sourceGroup": "guinnessworldrecords.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-ede9a96e11a398dc96b6"
+          ],
+          "sourceAssessments": {
+            "ev-8ee3b22eaf2380d3f670": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.87
+            },
+            "ev-ede9a96e11a398dc96b6": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.86
+            },
+            "ev-e8266b955498b17f9423": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.8
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 1
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-8ee3b22eaf2380d3f670",
+                "ev-ede9a96e11a398dc96b6"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.75
+            },
+            {
+              "evidenceIds": [
+                "ev-8ee3b22eaf2380d3f670",
+                "ev-e8266b955498b17f9423"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.74
+            },
+            {
+              "evidenceIds": [
+                "ev-ede9a96e11a398dc96b6",
+                "ev-e8266b955498b17f9423"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.75
+            }
+          ]
+        },
+        {
+          "stage": "alternate",
+          "records": [
+            {
+              "id": "ev-815f4e005d0598da79df",
+              "url": "https://trivianearme.net/trivia-questions/true-or-false/quiz",
+              "title": "True or False Trivia Quiz — Free Online Trivia Game",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:35.305Z",
+              "excerpt": "ct or fiction: jellyfish get by without a brain. \n\n Show answer \n\n Answer: True \n\n Q23. Fact or fiction: astronomers reclassified Pluto as a dwarf planet in 2006. \n\n Q24. Fact or fiction: Olympus Mons, a volcano on Mars, is taller than Mount Everest. \n\n Q25. Fact or fiction: the RMS Titanic sank on its maiden voyage in April 1912. \n\n Q26. Fact or fiction: in baking tradition, a 'baker's dozen' means 13. \n\n Q27. Fact or fiction: honeybees perform a 'waggle dance' to tell hive-mates the direction and distance of food. \n\n Q28. Fact or fiction: the kiwi, a national symbol of New Zealand, is a flightless bird. \n\n Q29. Fact or fiction: ostriches bury their heads in the sand to avoid danger. \n\n Q30. Fact or fiction: the human tongue has separate zones that alone detect sweet, sour, salty and bitter tastes. \n\n Q31. Fact or fiction: the planet Mars has three moons. \n\n Q32. Fact or fiction: camels store water in their humps. \n\n Q33. Fact or fiction: in astronomy, a light-year is a unit of time. \n\n Q34. Fact or fiction: the first modern Olympic Games were held in Paris in 1896. \n\n Q35. Fact or fiction: Leonardo da Vinci's Mona Lisa hangs in Florence's Uffizi Gallery. \n\n Q36. Fact or fiction: the Caesar salad is named after the Roman leader Julius Caesar. \n\n Q37. Fact or fiction: owls can rotate their heads a full 360 degrees. \n\n Q38. Fact or fiction: Istanbul is the capital city of Turkey. \n\n Q39. Fact or fiction: medical studies have shown that cracking your knuckles causes arthritis. \n\n Q40. Fact or fiction: botanically, a banana is a berry but a strawberry is not. \n\n Q41. Fact or fiction: Cleopatra lived closer in time to the 1969 Moon landing than to the building of the Great Pyramid of Giza. \n\n Q42. Fact or fiction: a single day on Venus (one rotation) lasts longer than a Venusian year. \n\n Q43. Fact or fiction: the Eiffel Tower can grow up to about 15 centimetres taller in summer heat. \n\n Show answer \n\n Answer: True \n\n Q44. Fact or fiction: video-game giant Nintendo was f",
+              "contentBasis": "page_text",
+              "sourceGroup": "trivianearme.net",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-73eb733014005b140ac0",
+              "url": "https://jeanelleweloise.pages.dev/pymqmv-the-2024-winter-olympics-vmikmd/",
+              "title": "The 2024 Winter Olympics: Get Ready for the Games in Paris! - Calendar 2024 Pdf",
+              "publisher": null,
+              "publishedAt": "2023-10-27T23:01:31.000Z",
+              "retrievedAt": "2026-11-14T04:15:35.305Z",
+              "excerpt": "on: Global Excitement & Pride\n- Challenges: Security, Logistics, Climate\n- Countdown: 2 Years to Grandeur\n\nThe 2024 Winter Olympics in Paris promise to be a captivating fusion of athleticism, cultural heritage, and Parisian charm.\n\n### Host City: Paris, France\n\nThe City of Lights, renowned for its iconic landmarks, rich history, and vibrant culture, will take center stage as the host city for the 2024 Winter Olympics. Paris is a melting pot of art, fashion, gastronomy, and innovation, offering a unique backdrop for this global sporting event.\n\nThe choice of Paris as the host city was met with great enthusiasm, as it signifies the Olympic Games’ return to its roots. The first modern Olympic Games were held in Paris in 1896, and the city has since hosted the Summer Games twice, in 1900 and 1924. The 2024 Winter Olympics will mark the third time Paris has hosted the Olympic Games, making it a truly special occasion.\n\nParis is committed to hosting sustainable and inclusive Olympic Games, leaving a lasting legacy for future generations. The city is investing in renewable energy sources, sustainable transportation options, and accessible infrastructure to ensure a positive impact on the environment and the community.\n\nWith its rich history, stunning architecture, and passionate embrace of sports, Paris is poised to deliver an extraordinary Olympic experience that will captivate audiences worldwide.\n\nThe 2024 Winter Olympics in Paris promise to be a spectacular celebration of athleticism, cultural diversity, and Parisian charm. Get ready for an unforgettable journey as the world’s top athletes compete for glory in the heart of one of the world’s most beloved cities.\n\n### Dates: January 21 – February 11, 2024\n\nThe 2024 Winter Olympics will take place over a period of 22 days, starting on January 21, 2024, and concluding on February 11, 2024. This timeframe was chosen to ensure optimal weather conditions for the various winter sports and to minimize disruptions to the regula",
+              "contentBasis": "page_text",
+              "sourceGroup": "jeanelleweloise.pages.dev",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-8ee3b22eaf2380d3f670",
+              "url": "https://stillmed.olympics.com/media/Document%20Library/OlympicOrg/Documents/Document-Set-Teachers-The-Main-Olympic-Topics/The-Modern-Olympic-Games.pdf",
+              "title": "The Modern Olympic Games",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "sports practised on snow and ice, both indoors and outdoors.\n\n...\n\nHistory \nIt was Pierre de Coubertin of France who dreamt up this ambitious project, \nalthough others before him had tried in vain to revive these Games. Drawing \ninspiration from the ancient Olympic Games, he decided to create the modern \nOlympic Games. With this purpose, he founded the International Olympic \nCommittee (IOC) in 1894 in Paris. The new committee set itself the objective \nof organising the first Olympic Games of modern times. \nThe date of the first Games, 1896, marked the beginning of an extraordinary \nadventure that has now lasted for over a century!\n\n...\n\nGames Ele men ts of the pas t The roots of the Olympic Games are to be found in Ancient Greece [see sheet “The Olympic Games in Antiquity”], and the first modern Games, in 1896, featured many references to this legacy of Greek Antiquity: › The Games were held in Athens, in Greece, the country where the ancient Games were held. › Most of the competitions were held in the ancient stadium (the Panathinaiko Stadium), which had been restored for the occasion. › Most of the sports on the programme of the ancient Games were included in the first modern Games. › The organisers invented a race inspired by an event in antiquity: the marathon. \nGenerally speaking, the modern Games strive towards a more peaceful world. \nThe Olympic Truce calling for a halt to all conflicts recalls the concept of the truce \nobserved during the Ancient Games. \nSacred and respected throughout Ancient Greece, the Olympic Truce announced \nby messengers before the Games allowed spectators, athletes and officials \nto travel to and from Olympia in safety through the numerous battle zones. \nToday, the Olympic Truce is the subject of a United Nations resolution calling \nfor a halt to hostilities during the period of the Games and the search for means \nof peaceful resolution in areas of tension. The athletes who support this initiative \nare invited to sign a “Truce Wall” i",
+              "contentBasis": "highlight",
+              "sourceGroup": "olympics.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-815f4e005d0598da79df",
+              "url": "https://trivianearme.net/trivia-questions/true-or-false/quiz",
+              "title": "True or False Trivia Quiz — Free Online Trivia Game",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:35.305Z",
+              "excerpt": "ct or fiction: jellyfish get by without a brain. \n\n Show answer \n\n Answer: True \n\n Q23. Fact or fiction: astronomers reclassified Pluto as a dwarf planet in 2006. \n\n Q24. Fact or fiction: Olympus Mons, a volcano on Mars, is taller than Mount Everest. \n\n Q25. Fact or fiction: the RMS Titanic sank on its maiden voyage in April 1912. \n\n Q26. Fact or fiction: in baking tradition, a 'baker's dozen' means 13. \n\n Q27. Fact or fiction: honeybees perform a 'waggle dance' to tell hive-mates the direction and distance of food. \n\n Q28. Fact or fiction: the kiwi, a national symbol of New Zealand, is a flightless bird. \n\n Q29. Fact or fiction: ostriches bury their heads in the sand to avoid danger. \n\n Q30. Fact or fiction: the human tongue has separate zones that alone detect sweet, sour, salty and bitter tastes. \n\n Q31. Fact or fiction: the planet Mars has three moons. \n\n Q32. Fact or fiction: camels store water in their humps. \n\n Q33. Fact or fiction: in astronomy, a light-year is a unit of time. \n\n Q34. Fact or fiction: the first modern Olympic Games were held in Paris in 1896. \n\n Q35. Fact or fiction: Leonardo da Vinci's Mona Lisa hangs in Florence's Uffizi Gallery. \n\n Q36. Fact or fiction: the Caesar salad is named after the Roman leader Julius Caesar. \n\n Q37. Fact or fiction: owls can rotate their heads a full 360 degrees. \n\n Q38. Fact or fiction: Istanbul is the capital city of Turkey. \n\n Q39. Fact or fiction: medical studies have shown that cracking your knuckles causes arthritis. \n\n Q40. Fact or fiction: botanically, a banana is a berry but a strawberry is not. \n\n Q41. Fact or fiction: Cleopatra lived closer in time to the 1969 Moon landing than to the building of the Great Pyramid of Giza. \n\n Q42. Fact or fiction: a single day on Venus (one rotation) lasts longer than a Venusian year. \n\n Q43. Fact or fiction: the Eiffel Tower can grow up to about 15 centimetres taller in summer heat. \n\n Show answer \n\n Answer: True \n\n Q44. Fact or fiction: video-game giant Nintendo was f",
+              "contentBasis": "page_text",
+              "sourceGroup": "trivianearme.net",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": 0.58
+            },
+            {
+              "id": "ev-73eb733014005b140ac0",
+              "url": "https://jeanelleweloise.pages.dev/pymqmv-the-2024-winter-olympics-vmikmd/",
+              "title": "The 2024 Winter Olympics: Get Ready for the Games in Paris! - Calendar 2024 Pdf",
+              "publisher": null,
+              "publishedAt": "2023-10-27T23:01:31.000Z",
+              "retrievedAt": "2026-11-14T04:15:35.305Z",
+              "excerpt": "on: Global Excitement & Pride\n- Challenges: Security, Logistics, Climate\n- Countdown: 2 Years to Grandeur\n\nThe 2024 Winter Olympics in Paris promise to be a captivating fusion of athleticism, cultural heritage, and Parisian charm.\n\n### Host City: Paris, France\n\nThe City of Lights, renowned for its iconic landmarks, rich history, and vibrant culture, will take center stage as the host city for the 2024 Winter Olympics. Paris is a melting pot of art, fashion, gastronomy, and innovation, offering a unique backdrop for this global sporting event.\n\nThe choice of Paris as the host city was met with great enthusiasm, as it signifies the Olympic Games’ return to its roots. The first modern Olympic Games were held in Paris in 1896, and the city has since hosted the Summer Games twice, in 1900 and 1924. The 2024 Winter Olympics will mark the third time Paris has hosted the Olympic Games, making it a truly special occasion.\n\nParis is committed to hosting sustainable and inclusive Olympic Games, leaving a lasting legacy for future generations. The city is investing in renewable energy sources, sustainable transportation options, and accessible infrastructure to ensure a positive impact on the environment and the community.\n\nWith its rich history, stunning architecture, and passionate embrace of sports, Paris is poised to deliver an extraordinary Olympic experience that will captivate audiences worldwide.\n\nThe 2024 Winter Olympics in Paris promise to be a spectacular celebration of athleticism, cultural diversity, and Parisian charm. Get ready for an unforgettable journey as the world’s top athletes compete for glory in the heart of one of the world’s most beloved cities.\n\n### Dates: January 21 – February 11, 2024\n\nThe 2024 Winter Olympics will take place over a period of 22 days, starting on January 21, 2024, and concluding on February 11, 2024. This timeframe was chosen to ensure optimal weather conditions for the various winter sports and to minimize disruptions to the regula",
+              "contentBasis": "page_text",
+              "sourceGroup": "jeanelleweloise.pages.dev",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-e8266b955498b17f9423",
+              "url": "https://www.guinnessworldrecords.com/world-records/first-modern-olympic-games",
+              "title": "First modern Olympic Games | Guinness World Records",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:32.635Z",
+              "excerpt": "# First modern Olympic Games\n\nWho\n\n1896 Olympic Games held in Athens, Greece\n\nWhat\n\n First \n\nWhere\n\n Greece (Athens,) \n\nWhen\n\n 06 April 1896 \n\n Conceived by the French academic and sports enthusiast Pierre de Fredi, Baron de Coubertin (1863­-1937), the modern Olympic Games were inaugurated in Athens, Greece, the birthplace of Olympic sport, on 6 April 1896. The first-ever modern Games were a modest affair by today's standards, with just 241 participants representing 14 different countries and competing in 43 events.",
+              "contentBasis": "highlight",
+              "sourceGroup": "guinnessworldrecords.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-e8266b955498b17f9423"
+          ],
+          "sourceAssessments": {
+            "ev-8ee3b22eaf2380d3f670": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.8699999999999999
+            },
+            "ev-815f4e005d0598da79df": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0
+            },
+            "ev-73eb733014005b140ac0": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.01
+            },
+            "ev-e8266b955498b17f9423": {
+              "contentBasis": "original_record",
+              "confidence": 0.88
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 0.98
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-8ee3b22eaf2380d3f670",
+                "ev-815f4e005d0598da79df"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.83
+            },
+            {
+              "evidenceIds": [
+                "ev-8ee3b22eaf2380d3f670",
+                "ev-73eb733014005b140ac0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.92
+            },
+            {
+              "evidenceIds": [
+                "ev-8ee3b22eaf2380d3f670",
+                "ev-e8266b955498b17f9423"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.73
+            },
+            {
+              "evidenceIds": [
+                "ev-815f4e005d0598da79df",
+                "ev-73eb733014005b140ac0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.92
+            },
+            {
+              "evidenceIds": [
+                "ev-815f4e005d0598da79df",
+                "ev-e8266b955498b17f9423"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.89
+            },
+            {
+              "evidenceIds": [
+                "ev-73eb733014005b140ac0",
+                "ev-e8266b955498b17f9423"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.84
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "The first modern Olympic Games were held in Paris in 1896."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "The first modern Olympic Games were held in Paris in 1896.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 2,
+        "inputTokens": 16853
+      },
+      "usage": {
+        "measuredInputTokens": 16853,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 69143,
+        "knownCostUSD": 0.016,
+        "attemptsWithUnknownCost": 3
+      }
+    },
+    {
+      "label": "BD09",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 1686,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 8,
+          "revision": 1,
+          "receivedMs": 2
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 9,
+          "revision": 1,
+          "claimId": "BD09-96803aa9-claim-0",
+          "receivedMs": 101,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 10,
+          "revision": 1,
+          "claimId": "BD09-96803aa9-claim-0",
+          "receivedMs": 1686,
+          "reasonCode": "qualifying_evidence",
+          "verdict": "supported",
+          "checkedPublicText": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "evidence": [
+            {
+              "id": "ev-d13ed099d4e84ec8c01d",
+              "url": "https://www.unesco.org/en/legal-affairs/constitution",
+              "title": "Constitution | UNESCO",
+              "publisher": null,
+              "publishedAt": "2026-01-30T13:31:16.000Z",
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "contentBasis": "highlight",
+              "excerpt": "## Constitution of the United Nations Educational, Scientific and Cultural Organization \n\nAdopted in London on 16 November 1945 and amended by the General Conference at its 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th, 12th, 15th, 17th, 19th, 20th, 21st, 24th, 25th, 26th, 27th, 28th, 29th, 31st and 40th sessions.\n\n...\n\n;\n\n...\n\n1. This Constitution shall be subject to acceptance. The instrument of acceptance shall be deposited with the Government of the United Kingdom. 2. This Constitution shall remain open for signature in the archives of the Government of the United Kingdom. Signature may take place either before or after the deposit of the instrument of acceptance. No acceptance shall be valid unless preceded or followed by signature. However, a state that has withdrawn from the Organization shall simply deposit a new instrument of acceptance in order to resume membership. 36 3. This Constitution shall come into force when it has been accepted by twenty of its signatories. Subsequent acceptances shall take effect immediately. 4. The Government of the United Kingdom will inform all Members of the United Nations and the Director-General of the receipt of all instruments of acceptance and of the date on which the Constitution comes into force in accordance with the preceding paragraph. 37 In faith whereof, the undersigned, duly authorized to that effect, have signed this Constitution in the English and French languages, both texts being equally authentic. Done in London the sixteenth day of November, one thousand nine hundred and forty-five, in a single copy, in the English and French languages, of which certified copies will be communicated by the Government of the United Kingdom to the Governments of all the Members of the United Nations.",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-bce49cf30cc448390d33",
+              "url": "https://www.unesco.org/en/articles/unesco-marks-its-74th-birthday",
+              "title": "UNESCO marks its 74th birthday | UNESCO",
+              "publisher": null,
+              "publishedAt": "2019-11-18T06:55:27.000Z",
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "contentBasis": "highlight",
+              "excerpt": "Today, November 16, the United Nations Educational, Scientific and Cultural Organization (UNESCO) marks its 74th birthday.\n\nThe Constitution was adopted in London on 16 November 1945 by representatives of 44 allied countries. This was the moment where UNESCO was created as the outcome of a series of meetings, the Conferences of Allied Ministers of Education (CAME), held in London from 1942 to 1945.",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-6016ba9631faf63f9073",
+              "url": "https://treaties.un.org/Pages/showDetails.aspx?clang=_en&objid=08000002801651f0",
+              "title": "UNTC",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "contentBasis": "highlight",
+              "excerpt": "UNTC \n\n| Registration Number | 52 |\n| --- | --- |\n| Title | Constitution of the United Nations Educational, Scientific and Cultural Organization |\n| Participant(s) | |\n| Submitter | Netherlands |\n| Places/dates of conclusion | Place Date London 16/11/1945 |\n| EIF information | 4 November 1946 |\n| Authentic texts | French English |\n| Attachments | |\n| ICJ information | |\n| Depositary | Government of the United Kingdom of Great Britain and Northern Ireland |\n| Registration Date | Netherlands 12 June 1947 |\n| Subject terms | United Nations Educational, Scientific and Cultural Organization (UNESCO) United Nations (UN) UNESCO Constitution Charters-Constitutions-Statutes |\n| Agreement type | Multilateral |\n| UNTS Volume Number | 4 (p.275) |\n| Publication format | Full |\n| Certificate Of Registration | |\n| Text document(s) | volume-4-I-52-English.pdf volume-4-I-52-French.pdf |\n| Volume In PDF | v4.pdf |\n| Map(s) | |\n| Corrigendum/Addendum/Note | |",
+              "sourceGroup": "un.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.94
+            }
+          ],
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "explicit_request"
+          },
+          "durationMs": 1684.2439169999998
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 11,
+          "dispatched": true,
+          "requestBytes": 5888,
+          "startedMs": 5431.003919,
+          "durationMs": 95,
+          "inputTokens": 1583,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.98
+            },
+            "span_0_private_data": {
+              "noul": 0.02
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.1
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.99,
+                "multiple_propositions": 0.01,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 12,
+          "dispatched": true,
+          "requestBytes": 136,
+          "startedMs": 5530.384703,
+          "durationMs": 1466,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "UNESCO's Constitution was adopted in London on 16 November 1945."
+        },
+        {
+          "kind": "jev",
+          "ordinal": 13,
+          "dispatched": true,
+          "requestBytes": 24929,
+          "startedMs": 7003.531966,
+          "durationMs": 109,
+          "inputTokens": 6188,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "supported",
+              "probabilities": {
+                "supported": 1,
+                "contradicted": 0,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.91,
+                "e1": 0.06,
+                "e2": 0.03
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.91,
+                "omitted_condition": 0.09,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 1,
+                "health_safety": 0,
+                "disputed": 0,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.99
+            },
+            "e0_scope": {
+              "noul": 0.98
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.95,
+                "omitted_condition": 0.05,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.6
+            },
+            "e0_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.82,
+                "attributable_research": 0,
+                "substantive_secondary": 0.11,
+                "bare_assertion": 0.07,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.98
+            },
+            "e1_scope": {
+              "noul": 0.98
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.9,
+                "omitted_condition": 0.04,
+                "outdated_fact": 0.05,
+                "exaggeration": 0.01
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.47
+            },
+            "e1_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.17,
+                "attributable_research": 0,
+                "substantive_secondary": 0.56,
+                "bare_assertion": 0.27,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.94,
+                "contradicts": 0.02,
+                "unrelated": 0.04
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.92
+            },
+            "e2_scope": {
+              "noul": 0.91
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.92,
+                "omitted_condition": 0.08,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.43
+            },
+            "e2_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.83,
+                "attributable_research": 0,
+                "substantive_secondary": 0.13,
+                "bare_assertion": 0.03,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.17,
+                "distinct_origins": 0.25,
+                "unclear": 0.58
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.17,
+                "distinct_origins": 0.59,
+                "unclear": 0.24
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.82,
+                "unclear": 0.17
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 99.16277700000046,
+        "retrieval": 1473.0335910000003,
+        "judgment": 111.27009699999962
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-d13ed099d4e84ec8c01d",
+              "url": "https://www.unesco.org/en/legal-affairs/constitution",
+              "title": "Constitution | UNESCO",
+              "publisher": null,
+              "publishedAt": "2026-01-30T13:31:16.000Z",
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "excerpt": "## Constitution of the United Nations Educational, Scientific and Cultural Organization \n\nAdopted in London on 16 November 1945 and amended by the General Conference at its 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th, 12th, 15th, 17th, 19th, 20th, 21st, 24th, 25th, 26th, 27th, 28th, 29th, 31st and 40th sessions.\n\n...\n\n;\n\n...\n\n1. This Constitution shall be subject to acceptance. The instrument of acceptance shall be deposited with the Government of the United Kingdom. 2. This Constitution shall remain open for signature in the archives of the Government of the United Kingdom. Signature may take place either before or after the deposit of the instrument of acceptance. No acceptance shall be valid unless preceded or followed by signature. However, a state that has withdrawn from the Organization shall simply deposit a new instrument of acceptance in order to resume membership. 36 3. This Constitution shall come into force when it has been accepted by twenty of its signatories. Subsequent acceptances shall take effect immediately. 4. The Government of the United Kingdom will inform all Members of the United Nations and the Director-General of the receipt of all instruments of acceptance and of the date on which the Constitution comes into force in accordance with the preceding paragraph. 37 In faith whereof, the undersigned, duly authorized to that effect, have signed this Constitution in the English and French languages, both texts being equally authentic. Done in London the sixteenth day of November, one thousand nine hundred and forty-five, in a single copy, in the English and French languages, of which certified copies will be communicated by the Government of the United Kingdom to the Governments of all the Members of the United Nations.",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-bce49cf30cc448390d33",
+              "url": "https://www.unesco.org/en/articles/unesco-marks-its-74th-birthday",
+              "title": "UNESCO marks its 74th birthday | UNESCO",
+              "publisher": null,
+              "publishedAt": "2019-11-18T06:55:27.000Z",
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "excerpt": "Today, November 16, the United Nations Educational, Scientific and Cultural Organization (UNESCO) marks its 74th birthday.\n\nThe Constitution was adopted in London on 16 November 1945 by representatives of 44 allied countries. This was the moment where UNESCO was created as the outcome of a series of meetings, the Conferences of Allied Ministers of Education (CAME), held in London from 1942 to 1945.",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-6016ba9631faf63f9073",
+              "url": "https://treaties.un.org/Pages/showDetails.aspx?clang=_en&objid=08000002801651f0",
+              "title": "UNTC",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "excerpt": "UNTC \n\n| Registration Number | 52 |\n| --- | --- |\n| Title | Constitution of the United Nations Educational, Scientific and Cultural Organization |\n| Participant(s) | |\n| Submitter | Netherlands |\n| Places/dates of conclusion | Place Date London 16/11/1945 |\n| EIF information | 4 November 1946 |\n| Authentic texts | French English |\n| Attachments | |\n| ICJ information | |\n| Depositary | Government of the United Kingdom of Great Britain and Northern Ireland |\n| Registration Date | Netherlands 12 June 1947 |\n| Subject terms | United Nations Educational, Scientific and Cultural Organization (UNESCO) United Nations (UN) UNESCO Constitution Charters-Constitutions-Statutes |\n| Agreement type | Multilateral |\n| UNTS Volume Number | 4 (p.275) |\n| Publication format | Full |\n| Certificate Of Registration | |\n| Text document(s) | volume-4-I-52-English.pdf volume-4-I-52-French.pdf |\n| Volume In PDF | v4.pdf |\n| Map(s) | |\n| Corrigendum/Addendum/Note | |",
+              "contentBasis": "highlight",
+              "sourceGroup": "un.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-d13ed099d4e84ec8c01d",
+              "url": "https://www.unesco.org/en/legal-affairs/constitution",
+              "title": "Constitution | UNESCO",
+              "publisher": null,
+              "publishedAt": "2026-01-30T13:31:16.000Z",
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "excerpt": "## Constitution of the United Nations Educational, Scientific and Cultural Organization \n\nAdopted in London on 16 November 1945 and amended by the General Conference at its 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th, 12th, 15th, 17th, 19th, 20th, 21st, 24th, 25th, 26th, 27th, 28th, 29th, 31st and 40th sessions.\n\n...\n\n;\n\n...\n\n1. This Constitution shall be subject to acceptance. The instrument of acceptance shall be deposited with the Government of the United Kingdom. 2. This Constitution shall remain open for signature in the archives of the Government of the United Kingdom. Signature may take place either before or after the deposit of the instrument of acceptance. No acceptance shall be valid unless preceded or followed by signature. However, a state that has withdrawn from the Organization shall simply deposit a new instrument of acceptance in order to resume membership. 36 3. This Constitution shall come into force when it has been accepted by twenty of its signatories. Subsequent acceptances shall take effect immediately. 4. The Government of the United Kingdom will inform all Members of the United Nations and the Director-General of the receipt of all instruments of acceptance and of the date on which the Constitution comes into force in accordance with the preceding paragraph. 37 In faith whereof, the undersigned, duly authorized to that effect, have signed this Constitution in the English and French languages, both texts being equally authentic. Done in London the sixteenth day of November, one thousand nine hundred and forty-five, in a single copy, in the English and French languages, of which certified copies will be communicated by the Government of the United Kingdom to the Governments of all the Members of the United Nations.",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-bce49cf30cc448390d33",
+              "url": "https://www.unesco.org/en/articles/unesco-marks-its-74th-birthday",
+              "title": "UNESCO marks its 74th birthday | UNESCO",
+              "publisher": null,
+              "publishedAt": "2019-11-18T06:55:27.000Z",
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "excerpt": "Today, November 16, the United Nations Educational, Scientific and Cultural Organization (UNESCO) marks its 74th birthday.\n\nThe Constitution was adopted in London on 16 November 1945 by representatives of 44 allied countries. This was the moment where UNESCO was created as the outcome of a series of meetings, the Conferences of Allied Ministers of Education (CAME), held in London from 1942 to 1945.",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-6016ba9631faf63f9073",
+              "url": "https://treaties.un.org/Pages/showDetails.aspx?clang=_en&objid=08000002801651f0",
+              "title": "UNTC",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:15:37.081Z",
+              "excerpt": "UNTC \n\n| Registration Number | 52 |\n| --- | --- |\n| Title | Constitution of the United Nations Educational, Scientific and Cultural Organization |\n| Participant(s) | |\n| Submitter | Netherlands |\n| Places/dates of conclusion | Place Date London 16/11/1945 |\n| EIF information | 4 November 1946 |\n| Authentic texts | French English |\n| Attachments | |\n| ICJ information | |\n| Depositary | Government of the United Kingdom of Great Britain and Northern Ireland |\n| Registration Date | Netherlands 12 June 1947 |\n| Subject terms | United Nations Educational, Scientific and Cultural Organization (UNESCO) United Nations (UN) UNESCO Constitution Charters-Constitutions-Statutes |\n| Agreement type | Multilateral |\n| UNTS Volume Number | 4 (p.275) |\n| Publication format | Full |\n| Certificate Of Registration | |\n| Text document(s) | volume-4-I-52-English.pdf volume-4-I-52-French.pdf |\n| Volume In PDF | v4.pdf |\n| Map(s) | |\n| Corrigendum/Addendum/Note | |",
+              "contentBasis": "highlight",
+              "sourceGroup": "un.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.94
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "sourceAssessments": {
+            "ev-d13ed099d4e84ec8c01d": {
+              "contentBasis": "original_record",
+              "confidence": 0.9299999999999999
+            },
+            "ev-bce49cf30cc448390d33": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.7300000000000001
+            },
+            "ev-6016ba9631faf63f9073": {
+              "contentBasis": "original_record",
+              "confidence": 0.96
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 1
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-d13ed099d4e84ec8c01d",
+                "ev-bce49cf30cc448390d33"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.58
+            },
+            {
+              "evidenceIds": [
+                "ev-d13ed099d4e84ec8c01d",
+                "ev-6016ba9631faf63f9073"
+              ],
+              "relationship": "distinct_origins",
+              "confidence": 0.59
+            },
+            {
+              "evidenceIds": [
+                "ev-bce49cf30cc448390d33",
+                "ev-6016ba9631faf63f9073"
+              ],
+              "relationship": "distinct_origins",
+              "confidence": 0.82
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 7771
+      },
+      "usage": {
+        "measuredInputTokens": 7771,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 30953,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      }
+    },
+    {
+      "label": "BDC03",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.needs_confirmation",
+      "durationMs": 107,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 11,
+          "revision": 1,
+          "receivedMs": 2
+        },
+        {
+          "type": "claim.needs_confirmation",
+          "eventSeq": 12,
+          "revision": 1,
+          "receivedMs": 107,
+          "reasonCode": "incomplete_or_unclear",
+          "admissionAction": "skip",
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "incomplete_or_unclear"
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "reasonCode": "incomplete_or_unclear",
+        "claims": 0
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 14,
+          "dispatched": true,
+          "requestBytes": 5808,
+          "startedMs": 7119.50485,
+          "durationMs": 103,
+          "inputTokens": 1555,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "incomplete_or_unclear",
+              "probabilities": {
+                "public_fact": 0.01,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0.99
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.05
+            },
+            "span_0_private_data": {
+              "noul": 0.02
+            },
+            "span_0_assertion_status": {
+              "choice": "unclear",
+              "probabilities": {
+                "asserted": 0.05,
+                "nonliteral_or_quoted": 0.06,
+                "unclear": 0.89
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.13
+            },
+            "span_0_claim_structure": {
+              "choice": "unclear",
+              "probabilities": {
+                "one_coherent": 0.43,
+                "multiple_propositions": 0.01,
+                "unclear": 0.56
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 105.43248399999993,
+        "retrieval": 0,
+        "judgment": 0
+      },
+      "evidence": [],
+      "admittedPublic": [],
+      "deterministicPublicIssues": [],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 1,
+        "searchConsumed": 0,
+        "contentsConsumed": 0,
+        "inputTokens": 1555
+      },
+      "usage": {
+        "measuredInputTokens": 1555,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 5808,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 1
+      }
+    }
+  ],
+  "limitations": [
+    "Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.",
+    "24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.",
+    "A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.",
+    "Known costs are partial when any attempt has unknown cost. No prices are invented.",
+    "No held-out bodies, raw private text, provider prompts, session credentials or keys are retained. Native/iOS/ASR paths are untested."
+  ],
+  "batchManifestSHA256": "8c42e6eaace67ce1fa5e01a90f007509ed961096a00ec77ede075c714cae16da",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8"
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "sequential_offline_envelope_restack_gates",
+  "createdAt": "2026-11-14T09:46:38.193629+00:00",
+  "order": [
+    "stack-24",
+    "stack-20"
+  ],
+  "command": "npm run check",
+  "invocationsPerWorktree": 1,
+  "providersAuthorized": false,
+  "sourceEditsAuthorized": false,
+  "worktrees": [
+    {
+      "worktree": "/workspace/stack-24",
+      "head": "d9882f12731e353ae2363eaaf32e452c15351b10",
+      "branch": "codex/24-runtime-evaluation-stack",
+      "status": ""
+    },
+    {
+      "worktree": "/workspace/stack-20",
+      "head": "03c1ed07b74b2c4f733ae9ce2ec7eb387f8f8ac5",
+      "branch": "codex/20-runtime-stack",
+      "status": ""
+    }
+  ]
+}

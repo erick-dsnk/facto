@@ -1,0 +1,305 @@
+{
+  "node": "v24.22.1",
+  "network": "localhost only; zero provider calls",
+  "connectionCount": 12,
+  "rows": [
+    {
+      "group": "native-http",
+      "provider": "jev",
+      "scenario": "401",
+      "result": {
+        "outcome": "error",
+        "code": "jev_authentication"
+      },
+      "charges": 1,
+      "elapsedMs": 28.206794999999943,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "jev",
+      "scenario": "403",
+      "result": {
+        "outcome": "error",
+        "code": "jev_authentication"
+      },
+      "charges": 1,
+      "elapsedMs": 3.317743000000064,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "jev",
+      "scenario": "oversize",
+      "result": {
+        "outcome": "error",
+        "code": "malformed_provider"
+      },
+      "charges": 1,
+      "elapsedMs": 8.183239999999955,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "jev",
+      "scenario": "before-headers",
+      "result": {
+        "outcome": "error",
+        "code": "cancelled"
+      },
+      "charges": 1,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "jev",
+      "scenario": "during-body",
+      "result": {
+        "outcome": "error",
+        "code": "cancelled"
+      },
+      "charges": 1,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "exa",
+      "scenario": "401",
+      "result": {
+        "outcome": "error",
+        "code": "exa_authentication_failed"
+      },
+      "charges": 1,
+      "elapsedMs": 5.275685999999951,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "exa",
+      "scenario": "403",
+      "result": {
+        "outcome": "error",
+        "code": "exa_authentication_failed"
+      },
+      "charges": 1,
+      "elapsedMs": 3.087515999999937,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "exa",
+      "scenario": "oversize",
+      "result": {
+        "outcome": "error",
+        "code": "malformed_exa_response"
+      },
+      "charges": 1,
+      "elapsedMs": 4.1508890000000065,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "exa",
+      "scenario": "declared",
+      "result": {
+        "outcome": "error",
+        "code": "malformed_exa_response"
+      },
+      "charges": 1,
+      "elapsedMs": 4.129767000000015,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "exa",
+      "scenario": "before-headers",
+      "result": {
+        "outcome": "error",
+        "code": "cancelled"
+      },
+      "charges": 1,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http",
+      "provider": "exa",
+      "scenario": "during-body",
+      "result": {
+        "outcome": "error",
+        "code": "cancelled"
+      },
+      "charges": 1,
+      "closedPromptly": true
+    },
+    {
+      "group": "native-http-with-delivery-barrier",
+      "provider": "exa",
+      "scenario": "known-oversized-content-length-and-peer-reset",
+      "result": {
+        "outcome": "error",
+        "code": "exa_unavailable"
+      },
+      "charges": 1,
+      "actualLocalCalls": 1,
+      "expectedPrimary": "malformed_exa_response"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "jev",
+      "scenario": "401",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "jev_authentication"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "jev",
+      "scenario": "403",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "jev_authentication"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "jev",
+      "scenario": "oversize",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "malformed_provider"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "exa",
+      "scenario": "401",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "exa_authentication_failed"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "exa",
+      "scenario": "403",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "exa_authentication_failed"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "exa",
+      "scenario": "oversize",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "malformed_exa_response"
+    },
+    {
+      "group": "injected-stream",
+      "provider": "exa",
+      "scenario": "declared",
+      "cancelCalls": 1,
+      "settledBeforeDeadline": false,
+      "settledAfterAbortBeforeCleanup": false,
+      "stageResult": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "rawResultAfterCleanup": {
+        "outcome": "error",
+        "code": "timeout"
+      },
+      "charges": 1,
+      "expectedPrimary": "malformed_exa_response"
+    },
+    {
+      "group": "injected-signal-ignoring-transport",
+      "provider": "jev",
+      "scenario": "response-after-cancel",
+      "beforeManualRelease": {
+        "cancelCalls": 0,
+        "readPulls": 1,
+        "bodyLocked": false
+      },
+      "result": {
+        "outcome": "error",
+        "code": "cancelled"
+      },
+      "charges": 1,
+      "cancelCalls": 0
+    },
+    {
+      "group": "injected-signal-ignoring-transport",
+      "provider": "exa",
+      "scenario": "response-after-cancel",
+      "beforeManualRelease": {
+        "cancelCalls": 0,
+        "readPulls": 2,
+        "bodyLocked": true
+      },
+      "result": {
+        "outcome": "error",
+        "code": "cancelled"
+      },
+      "charges": 1,
+      "cancelCalls": 0
+    }
+  ]
+}

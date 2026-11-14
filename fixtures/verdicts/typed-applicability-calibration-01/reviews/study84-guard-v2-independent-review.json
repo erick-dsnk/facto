@@ -1,0 +1,19 @@
+{
+  "kind": "independent_study_guard_v2_review",
+  "createdAt": "2026-11-14T06:18:42.196844+00:00",
+  "guardSHA256": "bea4ec95ab4c2d66546282fa01207e189fc51bb0334ba0251a0683d3645d51a0",
+  "verdict": "approved_module_only",
+  "actualProviderCalls": 0,
+  "independentlyReplayedTests": 38,
+  "checks": [
+    "Mandatory synchronous request_prepared checkpoint follows exact body validation and wire snapshot, before fetch invocation. Storage failure or returned thenable fails with zero actual calls.",
+    "Fresh absolute deadline and abort checks run after prepared checkpoint. Actual started count remains separate from logical reserved allowance.",
+    "Postdispatch checkpoint failure cancels eventual original response body; headers checkpoint failure cancels original body before reader ownership; cleanup detached and late accounting closed.",
+    "Both original independent cleanup regressions now pass; author36-test suite independently passes."
+  ],
+  "limits": [
+    "This is module review, not final84-call runner/plan or dispatch authorization.",
+    "Durability means the runner-supplied synchronous checkpoint actually persists before returning; review cannot guarantee underlying filesystem durability.",
+    "Old request_started ordering reproduction remains intentionally frozen against old source; new predispatch event is request_prepared."
+  ]
+}

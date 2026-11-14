@@ -1,0 +1,86 @@
+{
+  "annotator": "source_calibration AI agent",
+  "annotatedBeforeProviderOutput": true,
+  "labels": [
+    {
+      "id": "O01",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Exact repeated retained passage is one content family even across different synthetic hosts."
+    },
+    {
+      "id": "O02",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Exact repeated retained passage is one content family even across different synthetic hosts."
+    },
+    {
+      "id": "O03",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Both explicitly derive from the same named underlying register entry despite paraphrase."
+    },
+    {
+      "id": "O04",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Secondary summary explicitly identifies the same trial VG-01; not a second underlying observation."
+    },
+    {
+      "id": "O05",
+      "expectedOrigin": "distinct_origins",
+      "labelReason": "Two specific separately produced records identify different observers, methods and retained non-derivation context; content cues establish separate origins for this synthetic test."
+    },
+    {
+      "id": "O06",
+      "expectedOrigin": "distinct_origins",
+      "labelReason": "Explicit separate trials, populations, sites, periods and records support distinct underlying observations; this alone is not a health efficacy verdict."
+    },
+    {
+      "id": "O07",
+      "expectedOrigin": "unclear",
+      "labelReason": "Different publisher descriptions and wording contain no specific underlying record or positive independence evidence."
+    },
+    {
+      "id": "O08",
+      "expectedOrigin": "unclear",
+      "labelReason": "Different numbers and publisher genres cannot prove separate origins when underlying studies are unidentified."
+    },
+    {
+      "id": "O09",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Exact repeated retained passage is one content family even across different synthetic hosts."
+    },
+    {
+      "id": "O10",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Exact repeated retained passage is one content family even across different synthetic hosts."
+    },
+    {
+      "id": "O11",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Both explicitly derive from the same named underlying register entry despite paraphrase."
+    },
+    {
+      "id": "O12",
+      "expectedOrigin": "common_origin",
+      "labelReason": "Secondary summary explicitly identifies the same trial VG-01; not a second underlying observation."
+    },
+    {
+      "id": "O13",
+      "expectedOrigin": "distinct_origins",
+      "labelReason": "Two specific separately produced records identify different observers, methods and retained non-derivation context; content cues establish separate origins for this synthetic test."
+    },
+    {
+      "id": "O14",
+      "expectedOrigin": "distinct_origins",
+      "labelReason": "Explicit separate trials, populations, sites, periods and records support distinct underlying observations; this alone is not a health efficacy verdict."
+    },
+    {
+      "id": "O15",
+      "expectedOrigin": "unclear",
+      "labelReason": "Different publisher descriptions and wording contain no specific underlying record or positive independence evidence."
+    },
+    {
+      "id": "O16",
+      "expectedOrigin": "unclear",
+      "labelReason": "Different numbers and publisher genres cannot prove separate origins when underlying studies are unidentified."
+    }
+  ]
+}
