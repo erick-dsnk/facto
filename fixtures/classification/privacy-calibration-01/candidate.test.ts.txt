@@ -1,0 +1,85 @@
+import { strict as assert } from 'node:assert';
+import { test } from 'node:test';
+import type { ProviderContext, TextInput } from '/workspace/stack-15/packages/contracts/src/index.ts';
+import type { JevAnswer, JevClient, JevRequest } from '/workspace/stack-15/services/api/src/providers/jev/client.ts';
+import { createClassifier } from '/workspace/stack-15/services/api/src/providers/jev/classification.ts';
+import { createPrivacyClassificationExperiment, PRIVATE_DATA_QUESTION, substitutePrivacyQuestion } from './candidate.ts';
+
+const input = (text: string): TextInput => ({ schemaVersion: 1, requestId: 'offline-privacy', sessionId: 'offline-session', sessionEpoch: 1, revision: 1, mode: 'typed', text, language: 'en', capturedAt: '2026-11-14T12:00:00Z', capture: { source: 'typed_fixture', segmentId: 'offline', confidence: null }, context: [], userInitiated: false });
+const context = (): ProviderContext => ({ signal: new AbortController().signal, consume: () => { throw new Error('offline fixtures must not consume providers'); }, now: () => Date.parse('2026-11-14T12:00:00Z') });
+const fixture = (privateScore: number, capture?: (request: JevRequest) => void, selfContained = .99, structure = 'one_coherent'): JevClient => ({ ask: async request => {
+  capture?.(request);
+  return Object.fromEntries(Object.entries(request.questions).map(([name, question]): [string, JevAnswer] => {
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_private_data') ? privateScore : name.endsWith('_self_contained') ? selfContained : .99 }];
+    const choice = name.endsWith('_kind') ? 'public_fact' : name.endsWith('_assertion_status') ? 'asserted' : name.endsWith('_claim_structure') ? structure : 'name_or_title';
+    return [name, { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, key === choice ? 1 : 0])) }];
+  }));
+} });
+
+test('candidate substitutes only private_data, preserving exact full production request state and other questions', async () => {
+  const text = 'SYNTHETIC artist Asha Vale published the novel Blue Sky in 1984.';
+  let baseline: JevRequest | undefined;
+  let candidate: JevRequest | undefined;
+  await createClassifier(fixture(.01, request => { baseline = request; }))(input(text), context());
+  await createPrivacyClassificationExperiment(fixture(.01, request => { candidate = request; }))(input(text), context());
+  assert.ok(baseline && candidate);
+  assert.deepEqual(candidate.state, baseline.state);
+  assert.deepEqual(Object.keys(candidate.questions), Object.keys(baseline.questions));
+  for (const [name, question] of Object.entries(baseline.questions)) {
+    if (name.endsWith('_private_data')) {
+      assert.equal(candidate.questions[name].type, 'noul');
+      assert.ok(candidate.questions[name].instructions.endsWith(PRIVATE_DATA_QUESTION));
+      assert.ok(candidate.questions[name].instructions.startsWith('Assess ONLY candidates['));
+    } else assert.deepEqual(candidate.questions[name], question);
+  }
+});
+
+test('unchanged strict privacy boundary accepts .099 and vetoes .10', async () => {
+  const text = 'SYNTHETIC artist Asha Vale published the novel Blue Sky in 1984.';
+  const accepted = await createPrivacyClassificationExperiment(fixture(.099))(input(text), context());
+  assert.equal(accepted.action, 'check');
+  assert.equal(accepted.claims[0].checkedText, text);
+  const privateResult = await createPrivacyClassificationExperiment(fixture(.10))(input(text), context());
+  assert.equal(privateResult.action, 'skip');
+  assert.equal(privateResult.reasonCode, 'private_or_personal');
+  assert.equal(privateResult.claims.length, 0);
+});
+
+test('scripted sensitive public-figure details remain excluded even with confident public kind', async () => {
+  for (const text of [
+    'SYNTHETIC famous actor Asha Vale lives at home address 17 Imaginary Lane.',
+    'SYNTHETIC famous actor Asha Vale was diagnosed with a private medical condition.',
+    'SYNTHETIC famous actor Asha Vale has a personal bank-account balance of 1200 units.',
+    'SYNTHETIC famous actor Asha Vale privately told me about a frightening family argument.',
+  ]) {
+    const result = await createPrivacyClassificationExperiment(fixture(.99))(input(text), context());
+    assert.equal(result.action, 'skip');
+    assert.equal(result.reasonCode, 'private_or_personal');
+  }
+});
+
+test('deterministic private-data and coherence/completeness backstops survive generous semantic privacy scores', async () => {
+  assert.equal((await createPrivacyClassificationExperiment(fixture(.01))(input('My salary is €4,000.'), context())).reasonCode, 'private_or_personal');
+  const ordinary = input('SYNTHETIC artist Asha Vale published the novel Blue Sky in 1984.');
+  assert.equal((await createPrivacyClassificationExperiment(fixture(.01, undefined, .84))(ordinary, context())).claims.length, 0);
+  assert.equal((await createPrivacyClassificationExperiment(fixture(.01, undefined, .99, 'multiple_propositions'))(ordinary, context())).claims.length, 0);
+});
+
+test('private contained candidate still vetoes an allegedly safe enclosing whole span', async () => {
+  const text = 'I earn €4,000 and Asha Vale published Blue Sky in 1984.';
+  const base = fixture(.01);
+  const client: JevClient = { ask: async (request, ctx) => {
+    const answers = await base.ask(request, ctx);
+    const state = request.state as { candidates: Array<{ id: string; text: string }> };
+    for (const candidate of state.candidates) if (candidate.text === 'I earn €4,000') answers[`${candidate.id}_private_data`] = { noul: .99 };
+    return answers;
+  } };
+  const result = await createPrivacyClassificationExperiment(client)(input(text), context());
+  assert.equal(result.action, 'check');
+  assert.deepEqual(result.claims.map(claim => claim.checkedText), ['Asha Vale published Blue Sky in 1984.']);
+});
+
+test('template drift fails closed before a model call', () => {
+  assert.throws(() => substitutePrivacyQuestion({ state: {}, questions: { span_0_private_data: { type: 'noul', instructions: 'changed production wording' } } }), /template changed/);
+  assert.throws(() => substitutePrivacyQuestion({ state: {}, questions: {} }), /No production/);
+});
