@@ -1,0 +1,32 @@
+{
+  "kind": "independent_authentic_companion_source_review",
+  "reviewedAt": "2026-11-14T06:03:06.206943+00:00",
+  "verdict": "source_packet_provenance_accepted_full_pool_requires_unique_current_urls",
+  "manifestSHA256": {
+    "applicability-companion-pools-01": "29da6d2ee18213088bb02996198369ff92ecb1995d3ac983046cb5b03c3b7cc2",
+    "applicability-companion-pools-v1": "dc914818a696a94a32c303760b2435537ef81d6bbdefe17b8c40985113be56c7"
+  },
+  "checks": [
+    "All8 exact contiguous excerpts and16raw/extraction hashes independently verified against saved originals.",
+    "Both Unicode-codepoint and UTF16 offsets match; everyexcerpt<=2000codepoints; original access timestamps and publisher attribution preserved.",
+    "Manifest file bindings verified; no new network/provider calls or factual labels.",
+    "Same-body Canadian othersections, Pulitzer attributedpublishercopy and ONSglossary preserve common document lineage; priorRFC2119 explicitly related toRFC8174, not independent corroboration.",
+    "Publisher administration/remit pages confer no operative target receipt. Companion text cannot repair target applicability premises."
+  ],
+  "poolFidelityFinding": {
+    "ids": [
+      "record-c03",
+      "record-c05",
+      "record-c07"
+    ],
+    "issue": "Same canonicalURL as target. They cannot be separate current retained IDs alongside that target under production one-record-per-canonicalURL invariants.",
+    "resolutionRequiredBeforePlanFreeze": "Preserve original source packets; use uniqueURLcurrent pools and keep these as provenance/rawversion context only if represented faithfully. Do not fabricate an extra independent witness. Root and author acknowledged this before calls."
+  },
+  "limits": [
+    "Curator read adapter02 question but not prospective target bodies/labels; authorship overlap disclosed, this independent review covers saved source proof rather than assigning target labels.",
+    "Final assembled full pools/graph/wire state remain subject to separate plan review; source-packet approval is not dispatch approval."
+  ],
+  "manifestEntriesVerified": 6,
+  "providerCalls": 0,
+  "sourceFilesModified": 0
+}

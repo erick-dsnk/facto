@@ -1,0 +1,127 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { analyze, hash, type InputPlan, type InputReport, type Label, type Arm } from './analysis.ts';
+function fixture() {
+  const labels: Label[] = [
+    ...Array.from({ length: 34 }, (_, i): Label => ({ id: `O${i}`, cohort: 'original36', category: 'mock', sourceFamily: `family${i % 4}`, expected: i < 6 ? 'uncertain' : i % 2 ? 'not_covered' : 'covered', excludeFromPrimary: i < 6 })),
+    ...Array.from({ length: 8 }, (_, i): Label => ({ id: `I${i}`, cohort: 'identity8', category: 'mock', sourceFamily: `family${i % 4}`, expected: i < 3 ? 'covered' : 'not_covered' })),
+  ];
+  const plan: InputPlan = { denominatorLabels: labels, semanticIds: labels.map(l => l.id), bindingIds: ['AC-B01', 'AC-B02'], thresholds: { applicability: .85, allProductionGates: 'unchanged' },
+    guard: { calls: labels.flatMap(l => ['baseline_anchor', 'applicability'].map(arm => ({ callId: `${l.id}:${arm}`, blockId: 'mock' }))) } };
+  const row = (id: string, arm: Arm): any => {
+    const label = labels.find(l => l.id === id)!;
+    const evidence = ['target', 'companion'].map(s => ({ id: s, url: `https://synthetic.invalid/${s}`, title: 'Synthetic audit source', publisher: 'Synthetic', publishedAt: null, retrievedAt: '2026-01-01T00:00:00Z', contentBasis: 'page_text', excerpt: 'Synthetic complete record unit.', sourceGroup: 'synthetic.invalid', echoGroup: null, directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance: 'supports', stanceProbability: .98 }));
+    const answers: any = { claim_risk: { choice: 'ordinary', probabilities: { ordinary: .99, unknown: .01 } } };
+    evidence.forEach((_s, i) => { answers[`e${i}_scope`] = { noul: .9 }; answers[`e${i}_relevant`] = { noul: .9 }; answers[`e${i}_stance`] = { choice: 'supports', probabilities: { supports: .98, contradicts: .01, unrelated: .01 } }; answers[`e${i}_content_basis`] = { choice: 'original_record', probabilities: { original_record: .9, unclear: .1 } }; });
+    if (arm === 'applicability') answers.a0_applicability = { choice: label.expected, probabilities: { covered: label.expected === 'covered' ? .9 : .05, not_covered: label.expected === 'not_covered' ? .9 : .05, uncertain: label.expected === 'uncertain' ? .9 : .05 } };
+    return { callId: `${id}:${arm}`, unitId: id, arm, cohort: label.cohort, sourceFamily: label.sourceFamily, targetId: 'target',
+      dispatch: { questionMap: arm === 'applicability' ? [{ evidenceId: 'target', questionId: 'a0_applicability' }] : [] },
+      answers, unavailable: [], eligibility: [], nativeGraph: { links: [] },
+      judgment: { checkedText: 'Synthetic proposition only.', label: 'insufficient_evidence', evidence, selectedEvidenceIds: [],
+        sourceAssessments: Object.fromEntries(evidence.map(s => [s.id, { contentBasis: 'original_record', confidence: .9 }])),
+        claimRisk: { level: 'ordinary', confidence: .99 }, originAssessments: [] },
+      policy: { verdict: 'insufficient_evidence', reasonCode: 'mock', selectedEvidenceIds: [] } };
+  };
+  const report = (rows: any[]): InputReport => ({ planSHA256: hash(JSON.stringify(plan)), rows,
+    guard: { completedCallIds: rows.map(r => r.callId), totals: { actualStartedJev: rows.length, actualStartedExa: 0 } },
+    offlineBindingControls: [{ id: 'AC-B01', available: false }, { id: 'AC-B02', available: false }] });
+  return { labels, plan, row, report };
+}
+
+test('separate34/8 denominators are fixed even with no outcomes', () => {
+  const f = fixture(), a = analyze(f.plan, f.report([]));
+  assert.equal(a.cohorts.original34!.declaredSemanticUnits, 34); assert.equal(a.cohorts.identity8!.declaredSemanticUnits, 8);
+  assert.equal(a.cohorts.original34!.arms.applicability!.missingResults, 34);
+  assert.equal(a.cohorts.original34!.arms.baseline_anchor!.applicabilityMetrics, null);
+  assert.equal(a.cohorts.identity8!.arms.applicability!.applicabilityMetrics!.positiveDeclared, 3);
+  assert.equal(a.factualCoverageCredit, 0); assert.equal(a.offlineBindingControls.separateFromSemanticDenominators, true);
+});
+test('missing result, deterministic noitem, raw uncertain and missing answer stay distinct', () => {
+  const f = fixture(), noitem = f.row('I0', 'applicability'), uncertain = f.row('O0', 'applicability'), missingAnswer = f.row('I1', 'applicability');
+  noitem.dispatch.questionMap = []; noitem.answers = {}; noitem.unavailable = [{ reason: 'current_version_proof_unavailable' }];
+  delete missingAnswer.answers.a0_applicability;
+  const a = analyze(f.plan, f.report([noitem, uncertain, missingAnswer]));
+  const get = (id: string) => a.targetOutcomes.find(c => c.id === id && c.arm === 'applicability')!;
+  assert.equal(get('I0').state, 'no_item'); assert.equal(get('I0').rawAnswer, null);
+  assert.equal(get('O0').state, 'asked'); assert.equal(get('O0').rawAnswer.choice, 'uncertain');
+  assert.equal(get('I1').state, 'item_missing_answer'); assert.equal(get('I2').state, 'missing_result');
+  assert.equal(a.cohorts.original34!.arms.applicability!.applicabilityMetrics!.uncertainDeclared, 6);
+});
+test('thresholded raw coverage and risk-gated eligibility remain separate', () => {
+  const f = fixture(), r = f.row('I0', 'applicability');
+  r.answers.a0_applicability.probabilities.covered = .849999;
+  let a = analyze(f.plan, f.report([r]));
+  assert.equal(a.cohorts.identity8!.arms.applicability!.applicabilityMetrics!.positiveCoveredAt85, 0);
+  r.answers.a0_applicability.probabilities.covered = .85;
+  a = analyze(f.plan, f.report([r]));
+  assert.equal(a.cohorts.identity8!.arms.applicability!.applicabilityMetrics!.positiveCoveredAt85, 1);
+  assert.equal(a.cohorts.identity8!.arms.applicability!.applicabilityMetrics!.eligibilityIssued, 0);
+});
+test('unsafe uncertain grants remain counted despite primary-exclusion flag', () => {
+  const f = fixture(), r = f.row('O0', 'applicability');
+  r.answers.a0_applicability = { choice: 'covered', probabilities: { covered: .9, not_covered: .05, uncertain: .05 } }; r.eligibility = [{ evidenceId: 'target' }];
+  const a = analyze(f.plan, f.report([r]));
+  assert.equal(a.cohorts.original34!.arms.applicability!.applicabilityMetrics!.unsafeUncertainCoverageAt85, 1);
+  assert.equal(a.cohorts.original34!.arms.applicability!.applicabilityMetrics!.unsafeUncertainEligibility, 1);
+});
+test('paired numerical/source/policy/risk spillovers and exact citation units are preserved', () => {
+  const f = fixture(), b = f.row('I0', 'baseline_anchor'), c = f.row('I0', 'applicability');
+  b.policy = { verdict: 'supported', selectedEvidenceIds: ['target'] };
+  c.policy = { verdict: 'contradicted', selectedEvidenceIds: ['target', 'companion'] };
+  c.answers.e0_scope.noul = .8; c.judgment.evidence[0].matchesTimePlaceAndPopulation = false;
+  c.judgment.evidence[0].stance = 'contradicts'; c.judgment.evidence[0].stanceProbability = .97;
+  c.judgment.sourceAssessments.target = { contentBasis: 'unclear', confidence: .9 };
+  c.answers.claim_risk.probabilities.ordinary = .98; c.judgment.claimRisk.confidence = .98;
+  const a = analyze(f.plan, f.report([b, c])), pair = a.pairs.find(p => p.id === 'I0')!;
+  assert.equal(pair.paired, true); assert.equal(pair.sourcePairs![0]!.changed.scopeGate, true);
+  assert.equal(pair.sourcePairs![0]!.changed.qualityGate, true); assert.equal(pair.ordinaryPolicy!.candidateNewDefinitive, true);
+  assert.deepEqual(pair.ordinaryPolicy!.expandedSelected, ['companion']);
+  assert.ok(pair.changedSharedQuestions!.some(q => q.key === 'claim_risk'));
+  assert.equal(a.selectedCitationAuditInputs.length, 2);
+  assert.equal(a.selectedCitationAuditInputs[1]!.sources[0]!.excerptSHA256, hash('Synthetic complete record unit.'));
+});
+test('floating representation noise does not create a change but raw values remain', () => {
+  const f = fixture(), b = f.row('I0', 'baseline_anchor'), c = f.row('I0', 'applicability');
+  c.answers.e0_scope.noul = .9 + 1e-14;
+  const p = analyze(f.plan, f.report([b, c])).pairs.find(p => p.id === 'I0')!;
+  assert.equal(p.sourcePairs![0]!.changed.scopeProbability, false);
+  assert.equal(p.sourcePairs![0]!.candidate.scopeProbability, .9 + 1e-14);
+});
+test('changed source material cannot masquerade as an unchanged paired pool', () => {
+  const f = fixture(), b = f.row('I0', 'baseline_anchor'), c = f.row('I0', 'applicability');
+  c.judgment.evidence[0].excerpt = 'Different source text.';
+  assert.throws(() => analyze(f.plan, f.report([b, c])), /within_pair_material_or_order_changed/);
+});
+test('duplicate or uncompleted result rows are rejected rather than counted twice', () => {
+  const f = fixture(), r = f.row('I0', 'applicability'), report = f.report([r]);
+  report.rows.push(r); assert.throws(() => analyze(f.plan, report), /duplicate_or_unexpected_result_row/);
+  report.rows.pop(); report.guard.completedCallIds = []; assert.throws(() => analyze(f.plan, report), /row_not_completed_by_guard/);
+});
+test('guard-completed call with no durable semantic row remains missing', () => {
+  const f = fixture(), report = f.report([]); report.guard.completedCallIds = ['I0:applicability'];
+  const a = analyze(f.plan, report);
+  assert.deepEqual(a.missingDurableResults, ['I0:applicability']); assert.equal(a.cohorts.identity8!.arms.applicability!.missingResults, 8);
+});
+test('full84 synthetic rows retain separate cohorts without any factual credit', () => {
+  const f = fixture(), rows = f.labels.flatMap(l => [f.row(l.id, 'baseline_anchor'), f.row(l.id, 'applicability')]);
+  const a = analyze(f.plan, f.report(rows));
+  assert.equal(a.cohorts.original34!.completePairs, 34); assert.equal(a.cohorts.identity8!.completePairs, 8);
+  assert.equal(a.targetOutcomes.length, 84); assert.equal(a.authorityGranted, false); assert.equal(a.providerCalls, 0);
+});
+
+test('exact ternary confusion preserves non-grant disagreement without labelling it unsafe coverage', () => {
+  const f = fixture(), r = f.row('I3', 'applicability');
+  r.answers.a0_applicability = { choice: 'uncertain', probabilities: { covered: .05, not_covered: .05, uncertain: .9 } };
+  const m = analyze(f.plan, f.report([r])).cohorts.identity8!.arms.applicability!.applicabilityMetrics!;
+  assert.equal(m.rawConfusion3x3.not_covered!.uncertain, 1);
+  assert.equal(m.notCoveredUncertainDisagreements, 1); assert.equal(m.falseCoverageAt85, 0);
+  assert.equal(m.unsafeNegativeEligibility, 0); assert.equal(m.rawEnumExact, 0);
+});
+
+test('failed post-answer attempts remain unscored while their raw observations stay available', () => {
+  const f = fixture(), raw = { callId: 'I0:applicability', answers: { a0_applicability: { choice: 'covered' } } };
+  const a = analyze(f.plan, f.report([]), [raw]);
+  assert.equal(a.cohorts.identity8!.arms.applicability!.completedResults, 0);
+  assert.deepEqual(a.observedAttemptsWithoutCompletedResult[0]!.observed, raw);
+  assert.equal(a.observedAttemptsWithoutCompletedResult[0]!.includedInPrimaryScores, false);
+});

@@ -1,0 +1,48 @@
+{
+  "kind": "frozen_read_only_paired_analysis_helper",
+  "createdAt": "2026-11-14T06:32:41.107291+00:00",
+  "syntheticTestsPassed": 12,
+  "strictTypecheckPassed": true,
+  "providerCalls": 0,
+  "runnerMockTestsReplayed": 7,
+  "mockTransportCalls": 84,
+  "authorshipOverlap": [
+    "guard",
+    "companion_packet"
+  ],
+  "exposureDisclosure": "Code and tests completed before live-result summary. Manifest finalized after high-level summary arrived; no code/test/threshold changes based on live outcomes.",
+  "files": {
+    "README.md": {
+      "sha256": "d77a2a56e4dc230525648247f8843c2d7ea547a2e859b1e2b428542b2fc83e33",
+      "bytes": 2401
+    },
+    "analysis.test.ts": {
+      "sha256": "9301ad0eb464cb93913dcff1e0263c76972502629fd8023024fdac694cb9b575",
+      "bytes": 10882
+    },
+    "analysis.ts": {
+      "sha256": "832050a6481970484829d8dd61eb9770a79d7e0cb257398808e2fc17fb699880",
+      "bytes": 19682
+    },
+    "mock-validation.json": {
+      "sha256": "7752ef94d3b6e3152046f9bab1c05d0eff5bacd69c49f31e56cee267cc30ecbe",
+      "bytes": 1274
+    },
+    "offline-tests.tap": {
+      "sha256": "a736e2eba8e2ff9b060e58c3c7c28078cf46458393824434980a83f25e66aa75",
+      "bytes": 1231
+    },
+    "offline84-analysis.json": {
+      "sha256": "26612f4a7ffc23916f662d375476405f8ca26b29564363b1e2e224e60d8d967b",
+      "bytes": 2026801
+    },
+    "package.json": {
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+      "bytes": 33
+    },
+    "run.ts": {
+      "sha256": "6042bd56365b88e0ff7b54c370389d2dc4a1e9b41c29cfb4245bc9a3b4d26db4",
+      "bytes": 1246
+    }
+  }
+}

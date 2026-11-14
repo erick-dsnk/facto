@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "frozen": true,
+  "independentReviewComplete": true,
+  "createdAt": "2026-11-14T05:10:52.300965+00:00",
+  "firstLabelFreezeSHA256": "23d4d4981a5d74cad33f30e0ea9ed9cba8935cce70124a3e598703bfdd8e0374",
+  "secondLabelFreezeSHA256": "a32edab134132705ac14996dd76ee394a739dced231d8101c2eb99fb04757239",
+  "finalLabelsSHA256": "f80ea303c30587588a706a6a8a6129edfddf1a2b46cad4199ac0c7869ccc6a30",
+  "applicabilityAgreement": {
+    "agreed": 22,
+    "total": 22
+  },
+  "counts": {
+    "requests": 22,
+    "applicable": 10,
+    "inapplicable": 12,
+    "unresolved": 0,
+    "recordFamilies": 4,
+    "positiveOpposedValuePairs": 4,
+    "syntheticOrControlledContextUnits": 7
+  },
+  "comparison": [
+    {
+      "id": "RC01",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC02",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC03",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC04",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC05",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC06",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC07",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC08",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC09",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC10",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC11",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC12",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC13",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC14",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC15",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC16",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC17",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC18",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC19",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC20",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC21",
+      "firstApplicable": false,
+      "secondApplicable": false,
+      "applicabilityAgreement": true
+    },
+    {
+      "id": "RC22",
+      "firstApplicable": true,
+      "secondApplicable": true,
+      "applicabilityAgreement": true
+    }
+  ],
+  "fieldClarification": "The first annotation used mustPreserveConflictVeto as the explicit-conflict-control flag, whereas second annotations correctly apply the policy invariant to all requests. Final labels set mustPreserveConflictVeto=true for every unit and separately retain credibleConflictPresentInControl from the unchanged input. This is a schema-semantic clarification, not a capability-label change.",
+  "preservedLimitations": [
+    "Independent AI reviews, not human attestation or cryptographic issuer signatures.",
+    "Pulitzer same-publisher primary-custodian identity proof has no successful external Columbia crosscheck; reviewer accepted bounded record applicability while preserving assurance and independence limits.",
+    "All receipts are corpus proposals; no production trust activation or verdict cache.",
+    "Four source passages repeated with opposed values are four families, not eight independent facts.",
+    "No project provider execution or implementation read in this design task."
+  ]
+}

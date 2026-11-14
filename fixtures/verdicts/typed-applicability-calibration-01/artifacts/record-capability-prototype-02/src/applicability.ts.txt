@@ -1,0 +1,46 @@
+import { frameDigest, manifestIdentity, resolveFrozenFrame, type InstalledManifest } from './manifest.js';
+import { canonical, deepFreeze, digest, fail, string, time, type Frame, type Receipt } from './types.js';
+declare const frameBrand: unique symbol;
+export type FrozenClaimFrame = {
+    readonly [frameBrand]: true;
+};
+const frames = new WeakMap<object, {
+    manifest: InstalledManifest;
+    frame: Readonly<Frame>;
+    sha256: string;
+}>();
+/** The prototype uses independently frozen structured requests. It parses no raw English. */
+export function loadFrozenClaimFrame(manifest: InstalledManifest, frameId: string, exactText: string): FrozenClaimFrame {
+    manifestIdentity(manifest);
+    const frame = resolveFrozenFrame(manifest, frameId);
+    if (string(exactText, 4000) !== frame.exactText || digest(exactText) !== frame.exactTextSHA256)
+        return fail('claim_frame_mismatch');
+    const handle = Object.freeze(Object.create(null)) as FrozenClaimFrame;
+    frames.set(handle, deepFreeze({ manifest, frame, sha256: frameDigest(frame) }));
+    return handle;
+}
+export function frameState(handle: unknown, manifest: InstalledManifest) {
+    if (!handle || typeof handle !== 'object')
+        return fail('untrusted_claim_frame');
+    const s = frames.get(handle);
+    if (!s || s.manifest !== manifest)
+        return fail('untrusted_claim_frame');
+    manifestIdentity(manifest);
+    return s;
+}
+export function assertApplicable(receipt: Receipt, frame: Readonly<Frame>, now: string, acquiredAt: string): void {
+    time(now);
+    time(acquiredAt);
+    if (Date.parse(acquiredAt) > Date.parse(now))
+        return fail('proof_from_future');
+    if (frame.timeMeaning === 'current')
+        return fail('current_version_unverified');
+    if (frame.timeMeaning === 'unresolved')
+        return fail('unresolved_claim_time');
+    if (frame.relation !== receipt.relation)
+        return fail('relation_not_permitted');
+    if (canonical(frame.materialContext) !== canonical(receipt.scope))
+        return fail('material_scope_mismatch');
+    if (frame.materialContext.document !== receipt.canonicalDocumentId)
+        return fail('document_identity_mismatch');
+}

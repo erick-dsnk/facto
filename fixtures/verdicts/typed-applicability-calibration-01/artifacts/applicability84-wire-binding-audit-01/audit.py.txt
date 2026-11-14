@@ -1,0 +1,18 @@
+import pathlib,json,hashlib
+root=pathlib.Path('/workspace/task-evidence/typed-applicability-calibration-01')
+requests=json.loads((root/'requests.07.json').read_text())['calls']
+report_path=root/'live-first-run/report.json';report=json.loads(report_path.read_text());rows={r['callId']:r for r in report['rows']}
+checks=[];all_requests=[]
+for call in requests:
+ body=json.loads(call['body']);evidence=body['state']['evidence'];ids=[e['id'] for e in evidence]
+ assert len(ids)==len(set(ids));assert rows[call['callId']]['dispatch']['requestSHA256']==call['requestSHA256']==hashlib.sha256(call['body'].encode()).hexdigest()
+ all_requests.append({'callId':call['callId'],'exactActualRequestHashMatchesFrozen':True,'uniqueEvidenceIDs':True})
+ for item in body['state'].get('record_applicability',[]):
+  alias=item['source'];index=int(alias[1:]);actual=ids[index];criterion=body['questions']['selected_evidence']['criteria'][alias]
+  assert criterion=='Retained evidence '+actual
+  assert item['question']==f'a{index}_applicability' and item['question'] in body['questions']
+  assert all(actual in body['questions'][f'{alias}_{suffix}']['instructions'] for suffix in ['stance','relevant','scope','content_basis'])
+  local=rows[call['callId']]['dispatch']['questionMap'];match=[q for q in local if q['questionId']==item['question']];assert len(match)==1 and match[0]['evidenceId']==actual
+  checks.append({'callId':call['callId'],'question':item['question'],'sourceAlias':alias,'actualEvidenceID':actual,'explicitCriterion':criterion,'existingNamedSourceInstructionsAgree':True,'actualServerBoundReceiptSourceAgrees':True,'resolutionCount':1})
+result={'kind':'offline_actual_wire_alias_binding_audit','providerCalls':0,'networkCalls':0,'requestCount':len(all_requests),'askedApplicabilityItems':len(checks),'unresolvedOrNonunique':0,'mechanicalMismatch':0,'reportSHA256':hashlib.sha256(report_path.read_bytes()).hexdigest(),'checks':checks,'allRequestHashChecks':all_requests,'conclusion':'The complete actual dispatched request defines every eN alias uniquely in selected_evidence.criteria, agreeing with baseline named-source instructions, ordered evidence and private receipt map. The generic added question relies on cross-question alias resolution; direct ID would be clearer, but no missing/undefined wire map or causal explanation for0/18is demonstrated. Provider internal attention/locality is not inferred from this offline request audit. No new wording trial or rerun is justified by this lead.'}
+p=pathlib.Path(__file__).parent/'audit.json';p.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:result[k] for k in ['requestCount','askedApplicabilityItems','unresolvedOrNonunique','mechanicalMismatch']}));print('auditSHA256',hashlib.sha256(p.read_bytes()).hexdigest())

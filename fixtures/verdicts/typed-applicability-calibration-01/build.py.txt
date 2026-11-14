@@ -1,0 +1,53 @@
+import pathlib,json,hashlib,gzip,re,os,shutil
+base=pathlib.Path('/workspace/task-evidence');target=pathlib.Path('/workspace/stack-17/fixtures/verdicts/typed-applicability-calibration-01')
+assert not target.exists(),'archive destination must be fresh'
+target.mkdir(parents=True)
+folders=['record-capability-design','record-capability-prototype-01','record-capability-prototype-02','record-capability-second-labels','record-capability-retrieval-review','prototype02-runtime-boundary-review','record-capability-contrasts-runtime-review','record-capability-contrasts-v1','document-identity-contrasts-v1','applicability-companion-pools-01','applicability-companion-pools-v1','capability-selection-seam-01','capability-selection-seam-02','capability-selection-seam-runtime-review','typed-applicability-runtime-review','native-completion-runtime-review','exposed-object-alias-audit-01','two-phase-native-context-runtime-design','typed-applicability-calibration-01','study84-checkpoint-cleanup-repro','study84-checkpoint-order-repro','study84-runtime-integration-review','study84-runner-integration-audit','study84-live-ledger-audit','study84-live-analysis-01','study84-paired-analysis-01','applicability84-wire-binding-audit-01']+[f'typed-applicability-adapter-{n:02}'for n in range(1,8)]
+selected=[];excluded=[]
+def sha(b):return hashlib.sha256(b).hexdigest()
+for folder in folders:
+ p=base/folder
+ if not p.exists():continue
+ for src in sorted(p.rglob('*')):
+  if not src.is_file():continue
+  rel=src.relative_to(p)
+  skip='node_modules' in rel.parts or '__pycache__' in rel.parts
+  if folder in ['study84-runtime-integration-review','study84-runner-integration-audit'] and len(rel.parts)>1:
+   allowed=src.name in ['checkpoints.jsonl','failed-terminal.json','local-stop.json','run-start.json','offline-binding-controls.json'] or src.suffix in ['.tap','.log','.ts','.py','.md']
+   skip=skip or not allowed
+  if skip:
+   excluded.append({'originalPath':str(src),'originalSHA256':sha(src.read_bytes()),'bytes':src.stat().st_size,'reason':'offline mock output tree omitted; source, logs, checkpoints, review and exact hashes retained; not a live result'})
+  else:selected.append((src,pathlib.Path('artifacts')/folder/rel))
+patterns=['typed-applicability-*-review.json','typed-applicability-context-alias-review-addendum.json','applicability84-*.json','applicability-companions-independent-review.json','study84-guard-v2-independent-review.json','record-capability-contrasts-v1.*.json','document-identity-contrasts-v1.*.json','record-capability-readonly-review.md']
+for pattern in patterns:
+ for src in sorted(base.glob(pattern)):
+  if src.is_file():selected.append((src,pathlib.Path('reviews')/src.name))
+plan=json.loads((base/'typed-applicability-calibration-01/applicability42-plan.json').read_text())
+for name in plan['sourceHashes']:
+ src=pathlib.Path(name)
+ if not any(src==s for s,_ in selected):selected.append((src,pathlib.Path('source-freezes')/src.relative_to('/')))
+for name in ['/workspace/stack-20/package.json','/workspace/stack-20/services/api/package.json','/workspace/stack-20/packages/contracts/package.json']:
+ src=pathlib.Path(name)
+ if src.exists()and not any(src==s for s,_ in selected):selected.append((src,pathlib.Path('source-freezes')/src.relative_to('/')))
+rows=[];seen=set()
+for src,rel in selected:
+ if str(src)in seen:continue
+ seen.add(str(src));data=src.read_bytes()
+ if src.suffix in ['.ts','.mts','.cts','.py','.js','.mjs','.cjs','.sh']:rel=rel.with_name(rel.name+'.txt')
+ # Exact source bytes survive compression; no proof or script reformatting.
+ trailing=bool(re.search(rb'[ \t]+\r?$',data,re.M))
+ compressed=len(data)>=65536 or trailing or bool(re.search(rb'^ +\t',data,re.M))
+ if compressed:rel=rel.with_name(rel.name+'.gz');encoded=gzip.compress(data,compresslevel=9,mtime=0)
+ else:encoded=data
+ dest=target/rel;dest.parent.mkdir(parents=True,exist_ok=True);assert not dest.exists(),dest;dest.write_bytes(encoded)
+ rows.append({'originalPath':str(src),'archivedPath':str(rel),'encoding':'gzip'if compressed else'identity','originalSHA256':sha(data),'archivedSHA256':sha(encoded),'originalBytes':len(data),'archivedBytes':len(encoded)})
+# Secret-value equality scan never prints values. Offline dummy keys in test
+# sources are deliberate fixtures; actual environment values may never appear.
+secrets=[v.encode()for k,v in os.environ.items()if re.search(r'API_KEY|TOKEN|SECRET|PASSWORD|JOIN_CODE',k,re.I)and len(v)>=8]
+for row in rows:
+ src=pathlib.Path(row['originalPath']);data=src.read_bytes()
+ assert not any(v in data for v in secrets),f'environment secret detected in {src}'
+ assert not re.search(rb'\bsk-[A-Za-z0-9_-]{24,}\b',data),f'key-like token detected in {src}'
+(target/'original-path-map.json').write_text(json.dumps({'schemaVersion':1,'providerCallsDuringArchive':0,'files':rows,'excludedOfflineMockOutputs':excluded},indent=2)+'\n')
+(target/'existing-repository-references.json').write_text(json.dumps({'references':[{'path':'../full-context-basis-comparison-01','historicalCommit':'276c2b3','purpose':'Rejected earlier minimal content-basis comparison, adverse definitives and exact source audit; not duplicated.'},{'path':'../judgment-context-diagnostic-01','historicalCommit':'37f53e8','purpose':'Earlier original/reverse/isolated context diagnostic; no ID binding bug proved.'},{'path':'../source-calibration-01','purpose':'Rejected ternary source-quality candidate; kept unwired.'},{'path':'../full-context-scope-study-01','purpose':'Separate no-gain scope wording study; no shared labels or tuning credit.'}]},indent=2)+'\n')
+print(json.dumps({'files':len(rows),'excludedOfflineMockOutputs':len(excluded),'originalBytes':sum(r['originalBytes']for r in rows),'archivedBytes':sum(r['archivedBytes']for r in rows),'secretScan':'passed','destination':str(target)}))
