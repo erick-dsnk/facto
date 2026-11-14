@@ -1,0 +1,59 @@
+# trusted-domains.txt
+# Sources to prefer when ranking evidence.
+# Hand-written. Last reviewed: 2026-11-13.
+# Format: one domain per line, lowercase, no scheme, no "www.".
+# A trailing "  # query" marks the 8 domains to use for a site-restricted second search.
+
+# Reference works
+britannica.com  # query
+wikipedia.org  # query
+wikidata.org
+
+# Fact-checkers
+# IFCN signatories: politifact.com, factcheck.org (latest badges seen were issued early 2024).
+# EFCSN verified members: fullfact.org, factcheck.afp.com, leadstories.com, science.feedback.org, correctiv.org, maldita.es.
+# snopes.com: running since 1994; not confirmed as a current IFCN signatory.
+# science.feedback.org is the current home of Science Feedback; sciencefeedback.co redirects there.
+correctiv.org
+factcheck.afp.com  # query
+factcheck.org  # query
+fullfact.org  # query
+leadstories.com  # query
+maldita.es
+politifact.com  # query
+science.feedback.org
+snopes.com  # query
+
+# News agencies
+afp.com
+apnews.com
+reuters.com
+
+# Public health and science bodies
+cdc.gov
+ecdc.europa.eu
+nasa.gov
+nature.com
+nih.gov
+noaa.gov
+science.org
+who.int
+
+# Broadcasters and papers of record
+abc.net.au
+bbc.co.uk
+bbc.com
+cbc.ca
+dw.com
+elpais.com
+france24.com
+irishtimes.com
+lemonde.fr
+nhk.or.jp
+npr.org
+nytimes.com
+pbs.org
+spiegel.de
+tagesschau.de
+thehindu.com
+theguardian.com
