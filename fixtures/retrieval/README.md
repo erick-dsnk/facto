@@ -40,6 +40,28 @@ must share the existing two-search/three-content budget. An optional shared
 `canConsume` context stops optional enrichment when that budget is exhausted.
 Neither pass follows retrieved links or executes retrieved instructions.
 
+Optional enrichment distinguishes documented URL-level failures from provider
+failures. The contents-only parser validates `statuses` against the requested
+URL. It can retain the original indexed highlight and continue other planned
+pages for `CRAWL_NOT_FOUND`, `CRAWL_HTTP_4xx/5xx`, `CRAWL_TIMEOUT`,
+`CRAWL_LIVECRAWL_TIMEOUT`, `SOURCE_NOT_AVAILABLE`, or `UNSUPPORTED_URL`. It never
+uses returned text for that failed URL or promotes its source metadata. These
+attempts stay charged against the same three-content allowance.
+
+[Exa's documented status mapping](https://exa.ai/docs/admin/error-codes.md#content-fetch-status-tags)
+states that a successful HTTP-200 `/contents` response can contain per-target
+failures and that `error.httpStatusCode` describes the target page. Thus a
+target `CRAWL_HTTP_403` is separate from an actual Exa HTTP 403. Real transport,
+authentication, rate, request deadline, malformed data, unidentified/mismatched
+statuses, unknown crawl/provider tags, and top-level error envelopes remain
+operational errors. `/search` failure handling remains strict. If recognized
+page failures leave no retained evidence, retrieval remains operationally
+unfinished instead of returning successful empty evidence.
+
+This handling has deterministic fixtures only. The preserved freeze08 BD06
+HTTP-200 `exa_content_failed` report did not retain its raw Exa status/tag, so
+it cannot be classified retrospectively as one of these recognized failures.
+
 Excerpts remain one exact contiguous span of at most 2,000 Unicode code points.
 Selection anchors on local subject coverage, then compact subject span and
 source order. It does not rank anchors by agreement with the claim's numbers or
