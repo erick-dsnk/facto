@@ -51,7 +51,6 @@ export class PipelineRuntime {
     const record: RequestRecord = { input, fingerprint: hash, budget: previous?.budget ?? new AttemptBudget(), controller: new AbortController(), acceptedAt,
       acceptedMonotonic, state: 'queued', continuationCount: (previous?.continuationCount ?? 0) + (continuing ? 1 : 0), results: new Map() };
     session.requests.set(input.requestId, record);
-    if (!input.userInitiated) session.lastAutomaticAt = this.now();
     record.timer = setTimeout(() => {
       if (!session.current(record) || record.state === 'done' || record.state === 'cancelled') return;
       if (record.state === 'waiting') {
@@ -128,6 +127,8 @@ export class PipelineRuntime {
         record.state = 'done'; return;
       }
       if (admission.claims.length < 1 || admission.claims.length > 2) throw new PipelineError('malformed_admission');
+      // The automatic cooldown counts admitted claims (1 per 4 s), so filler or skipped sentences never block the next claim.
+      if (!input.userInitiated) session.lastAutomaticAt = this.now();
       // Case and whitespace can change an admitted proposition (MW/mW, quoted identifiers).
       const cacheKey = (text: string) => JSON.stringify([text, input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
       for (const [index, candidate] of admission.claims.entries()) {

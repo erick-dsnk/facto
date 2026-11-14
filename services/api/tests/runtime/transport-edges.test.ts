@@ -55,21 +55,22 @@ async function result(events: EventEnvelope[]) {
 }
 
 describe('WebSocket lifetime and intentional repeat boundaries', () => {
-  it('allows only one stream when authenticated upgrades start concurrently', async () => {
+  it('keeps exactly one stream when authenticated upgrades start concurrently: the newer replaces the older', async () => {
     const server = await setup();
-    const attempts = await Promise.allSettled([stream(server, server.credentials), stream(server, server.credentials)]);
-    const accepted = attempts.filter(attempt => attempt.status === 'fulfilled');
-    expect(accepted).toHaveLength(1);
-    expect(server.store.sessions.get(server.credentials.sessionId)!.listeners.size).toBe(1);
-    const rejected = attempts.find(attempt => attempt.status === 'rejected');
-    expect(rejected).toBeDefined();
-    expect(String(rejected?.status === 'rejected' ? rejected.reason : '')).toMatch(/400|409/);
-    await submit(server, server.credentials);
-    const winner = accepted[0];
-    if (winner.status !== 'fulfilled') throw new Error('No winning stream');
-    await result(winner.value.events);
-    expect(winner.value.events.filter(event => event.type === 'claim.result')).toHaveLength(1);
-    expect(server.store.sessions.get(server.credentials.sessionId)!.active).toBe(true);
+    const attempts = await Promise.all([stream(server, server.credentials), stream(server, server.credentials)]);
+    const state = server.store.sessions.get(server.credentials.sessionId)!;
+    await vi.waitFor(() => expect(attempts.filter(attempt => attempt.socket.readyState === 1)).toHaveLength(1), { timeout: 1500, interval: 10 });
+    expect(state.listeners.size).toBe(1);
+    const loser = attempts.find(attempt => attempt.socket.readyState !== 1)!;
+    expect(loser.events.find(event => event.type === 'session.ended')?.payload).toMatchObject({ reasonCode: 'replaced' });
+    // Replacement pauses the session; the surviving stream resumes explicitly and still gets its result.
+    const winner = attempts.find(attempt => attempt.socket.readyState === 1)!;
+    winner.socket.send(JSON.stringify({ type: 'session.resume', sessionEpoch: state.epoch }));
+    await vi.waitFor(() => expect(state.active).toBe(true), { timeout: 1500, interval: 10 });
+    await submit(server, { ...server.credentials, sessionEpoch: state.epoch });
+    await result(winner.events);
+    expect(winner.events.filter(event => event.type === 'claim.result')).toHaveLength(1);
+    expect(loser.events.some(event => event.type === 'claim.result')).toBe(false);
   });
 
   it('does not reserve ownership after an authenticated upgrade fails its handshake', async () => {
