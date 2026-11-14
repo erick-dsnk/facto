@@ -1,0 +1,104 @@
+import { strict as assert } from 'node:assert';
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import { buildPlan, captureRequest, executePlan, LIMITS, type Label, type Unit } from './runner.ts';
+
+const units: Unit[] = Array.from({ length: 24 }, (_, index) => ({ id: `offline-${index}`, text: index < 12 ? `SYNTHETIC Writer ${index} published Book ${index} in 1900.` : `SYNTHETIC Actor ${index} has a private medical diagnosis.`, partition: index % 2 ? 'validation' : 'development', category: index < 12 ? 'public_work' : 'private_health', sourceFamily: `family-${index}`, synthetic: true }));
+const labels: Label[] = units.map((unit, index) => ({ id: unit.id, expectedPrivate: index >= 12, expectedPublicSpans: index < 12 ? [unit.text] : [], privateSpans: index >= 12 ? [unit.text] : [] }));
+const plan = () => buildPlan(units, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'privacy-runner-test-')), 'run');
+const fakeFetch = (tokens?: number): typeof fetch => async (_url, init) => {
+  const request = JSON.parse(String(init!.body));
+  const answers = Object.fromEntries(Object.entries(request.questions).map(([name, value]) => {
+    const question = value as { type: string; criteria?: Record<string, string> };
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_private_data') ? request.state.originalText.includes('private medical') ? .99 : .01 : .99 }];
+    const choice = name.endsWith('_kind') ? 'public_fact' : name.endsWith('_assertion_status') ? 'asserted' : name.endsWith('_claim_structure') ? 'one_coherent' : 'name_or_title';
+    return [name, { choice, probabilities: Object.fromEntries(Object.keys(question.criteria!).map(key => [key, key === choice ? 1 : 0])) }];
+  }));
+  return new Response(JSON.stringify({ answers, ...(tokens === undefined ? {} : { usage: { input_tokens: tokens } }) }), { status: 200 });
+};
+
+test('full actual classifier capture preserves identical state and only privacy wording differs', async () => {
+  const baseline = await captureRequest(units[0], 'baseline');
+  const candidate = await captureRequest(units[0], 'candidate');
+  assert.deepEqual(candidate.state, baseline.state);
+  assert.ok(Object.keys(candidate.questions).some(name => name.endsWith('_claim_structure')));
+  for (const name of Object.keys(baseline.questions)) if (!name.endsWith('_private_data')) assert.deepEqual(candidate.questions[name], baseline.questions[name]);
+  const frozen = await plan();
+  assert.equal(frozen.calls.length, 48);
+  assert.ok(frozen.calls.every(call => call.requestBytes <= 65536));
+  assert.ok(!JSON.stringify(frozen).includes('instructions'));
+  assert.ok(frozen.units.every(unit => !('text' in unit)));
+});
+
+test('balanced cohort, unique spans and source-family partition boundaries fail closed offline', async () => {
+  await assert.rejects(buildPlan(units.slice(0, 23), labels.slice(0, 23), {}), /24-unit/);
+  await assert.rejects(buildPlan(units, labels.map((label, index) => index === 12 ? { ...label, expectedPrivate: false } : label), {}), /12private/);
+  await assert.rejects(buildPlan(units, labels.map((label, index) => index === 0 ? { ...label, expectedPublicSpans: ['invented'] } : label), {}), /exact retained span/);
+  await assert.rejects(buildPlan(units.map((unit, index) => index === 1 ? { ...unit, sourceFamily: units[0].sourceFamily } : unit), labels, {}), /family crosses/);
+});
+
+test('one direct-classifier pass accounts all actual attempts/tokens/bytes and both partition outcomes', async () => {
+  const frozen = await plan();
+  const directory = output();
+  const report = await executePlan(frozen, units, directory, { apiKey: 'offline-only', fetch: fakeFetch(100) }) as any;
+  assert.equal(report.completedAllCalls, true);
+  assert.equal(report.totals.consumedJev, 48);
+  assert.equal(report.totals.actualStartedJev, 48);
+  assert.equal(report.totals.actualStartedExa, 0);
+  assert.equal(report.totals.measuredInputTokens, 4800);
+  assert.equal(report.totals.usageUnknownCalls, 0);
+  assert.equal(report.totals.requestBytes, frozen.calls.reduce((sum, call) => sum + call.requestBytes, 0));
+  for (const partition of ['development', 'validation']) for (const arm of ['baseline', 'candidate']) {
+    assert.equal(report.metrics[partition][arm].publicExactAdmissions, 6);
+    assert.equal(report.metrics[partition][arm].privateLeakUnits, 0);
+  }
+  const saved = readFileSync(join(directory, 'report.json'), 'utf8');
+  assert.ok(!saved.includes('SYNTHETIC'));
+  assert.ok(!saved.includes('offline-only'));
+  assert.ok(!saved.includes('Authorization'));
+  assert.ok(!saved.includes('instructions'));
+  const events = readFileSync(join(directory, 'events.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(events.filter(event => event.type === 'attempt_terminal').length, 48);
+  await assert.rejects(executePlan(frozen, units, directory, { apiKey: 'offline-only', fetch: fakeFetch(100) }), /EEXIST/);
+});
+
+test('unknown usage stops immediately and preserves attempted named answers without retries', async () => {
+  const report = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch() }) as any;
+  assert.equal(report.stopReason, 'unknown_usage');
+  assert.equal(report.totals.actualStartedJev, 1);
+  assert.equal(report.totals.usageUnknownCalls, 1);
+  assert.equal(report.observations.length, 1);
+  assert.ok(report.observations[0].answers.span_0_private_data);
+});
+
+test('pending token reserve and wall deadline prohibit subsequent actual calls', async () => {
+  const reserve = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(LIMITS.maxInputTokens - LIMITS.pendingReserve + 1) }) as any;
+  assert.equal(reserve.stopReason, 'budget_reserve');
+  assert.equal(reserve.totals.actualStartedJev, 1);
+  let reads = 0;
+  const wall = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(100), now: () => reads++ ? LIMITS.wallMs + 1 : 0 }) as any;
+  assert.equal(wall.stopReason, 'wall_budget');
+  assert.equal(wall.totals.actualStartedJev, 0);
+});
+
+test('terminal HTTP failures stay durable and are never retried', async () => {
+  const directory = output();
+  const report = await executePlan(await plan(), units, directory, { apiKey: 'offline-only', fetch: async () => new Response('denied', { status: 401 }) }) as any;
+  assert.equal(report.totals.actualStartedJev, 1);
+  assert.equal(report.observations[0].status, 'failed');
+  assert.ok(readFileSync(join(directory, 'events.jsonl'), 'utf8').includes('attempt_terminal'));
+});
+
+test('tampered request/source freeze refuses any provider attempt', async () => {
+  const frozen = await plan();
+  frozen.calls[0].bodyHash = 'tampered';
+  let calls = 0;
+  await assert.rejects(executePlan(frozen, units, output(), { apiKey: 'offline-only', fetch: async () => { calls++; throw new Error(); } }), /request hashes/);
+  assert.equal(calls, 0);
+  const source = await plan();
+  source.sourceHashes['candidate.ts'] = 'tampered';
+  await assert.rejects(executePlan(source, units, output(), { apiKey: 'offline-only', fetch: fakeFetch(100) }), /changed after freeze/);
+});

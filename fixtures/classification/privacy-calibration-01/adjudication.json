@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "frozen": true,
+  "independentReviewComplete": true,
+  "createdAt": "2026-11-14T04:23:49.532896+00:00",
+  "candidatePromptViewed": false,
+  "candidateCodeViewed": false,
+  "providerOutputsViewed": false,
+  "projectKeyCalls": 0,
+  "reviewers": [
+    "source_calibration AI agent",
+    "final_stack_review AI agent"
+  ],
+  "agreements": 24,
+  "revisions": [],
+  "excludedIds": [],
+  "notes": [
+    "Privacy/category annotations agree for24/24 and exact mixed spans agree.",
+    "Public privacy category does not guarantee any other classifier gate (structure/completeness/assertion/confidence) or factual verdict; evaluate those independently.",
+    "P04/P23 include an authorship/publication relative clause, so an unchanged structure gate may conservatively abstain without a privacy error.",
+    "All12 public proof URLs returnedHTTP200. Private controls are wholly synthetic. No private external lookup was made.",
+    "No Rontgen/Nobel cases or private sealed bodies; cohort is open development only."
+  ]
+}
