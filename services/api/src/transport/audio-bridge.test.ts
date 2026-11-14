@@ -57,6 +57,20 @@ describe('injectable audio bridge', () => {
     expect(invalid.final).not.toHaveBeenCalled();
   });
 
+  it('stops listening at once when the adapter reports a provider failure after audio.ready', async () => {
+    let failure!: (reasonCode: string) => void;
+    const opening = vi.fn<AsrAdapter['start']>(async (_config, _onTranscript, _signal, onFailure) => { failure = onFailure!; return { write: async () => {}, stop: async () => {} }; });
+    const state = setup({ start: opening });
+    await state.bridge.start(config);
+    failure('asr_unavailable');
+    await vi.waitFor(() => expect(state.events.some(event => event.type === 'pipeline.error')).toBe(true));
+    expect(state.events.find(event => event.type === 'audio.stopped')?.payload).toMatchObject({ reasonCode: 'asr_failed', streamGeneration: 1 });
+    expect(state.events.find(event => event.type === 'pipeline.error')?.payload).toMatchObject({ reasonCode: 'asr_unavailable' });
+    await expect(state.bridge.accept(frame())).rejects.toThrow('audio_not_ready');
+    failure('asr_unavailable'); await new Promise<void>(done => setImmediate(done));
+    expect(state.events.filter(event => event.type === 'pipeline.error')).toHaveLength(1);
+  });
+
   it('caps queued audio to two seconds and aborts a blocked adapter on overflow', async () => {
     const blocked = deferred<void>(); const stopped = vi.fn(async () => {}); const write = vi.fn(() => blocked.promise);
     const state = setup({ start: async () => ({ write, stop: stopped }) }); await state.bridge.start(config);
