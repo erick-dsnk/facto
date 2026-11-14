@@ -1,4 +1,5 @@
 import { PipelineError, type ProviderContext, type ProviderKind } from '../../../../packages/contracts/src/index.js';
+import { assertWithinDeadline } from './budget.js';
 
 const FALLBACK_BACKOFF_MS = 100;
 
@@ -32,19 +33,22 @@ export async function withProviderRetry<T>(
   const runtimeContext = context as RuntimeProviderContext;
   let previousFailure: PipelineError | undefined;
   for (let attempt = 0; ; attempt++) {
+    assertWithinDeadline(runtimeContext);
     try {
       if (claimId === undefined) context.consume(kind);
       else context.consume(kind, claimId);
     } catch (error) {
       // A retry that cannot fit the shared allowance is simply unavailable; retain
       // the useful original provider failure instead of obscuring it with budget state.
-      if (previousFailure && error instanceof PipelineError) throw previousFailure;
+      if (previousFailure && error instanceof PipelineError && error.code === `${kind}_budget_exhausted`) throw previousFailure;
       throw error;
     }
     try {
-      return await operation();
+      const result = await operation();
+      assertWithinDeadline(runtimeContext);
+      return result;
     } catch (error) {
-      context.signal.throwIfAborted();
+      assertWithinDeadline(runtimeContext);
       if (!(error instanceof PipelineError) || !error.retryable || attempt >= 1) throw error;
       previousFailure = error;
       const delay = error instanceof RetryableProviderError && error.retryAfterMs !== undefined

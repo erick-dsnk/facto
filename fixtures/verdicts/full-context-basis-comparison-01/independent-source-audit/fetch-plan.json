@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "declaredAt": "2026-11-14T05:25:57.978204+00:00",
+  "purpose": "Independent exact selected-source and qualifier audit; no provider or production calls; no prompt promotion",
+  "inputBindings": {
+    "selected-citation-audit-inputs.json": {
+      "path": "/workspace/task-evidence/full-context-basis-comparison-01/comparison24-run-01/selected-citation-audit-inputs.json",
+      "sha256": "b7d43799e910c72ed393e3c6afd937d9ab27fad5e8d6b80d3a18fd1b9c8d1162"
+    },
+    "selected-citation-audit-bindings.json": {
+      "path": "/workspace/task-evidence/full-context-basis-comparison-01/comparison24-run-01/selected-citation-audit-bindings.json",
+      "sha256": "d21721f943319b55014d95e4202357707c874a653c8d6035f79acad8d2cec72d"
+    },
+    "report.json": {
+      "path": "/workspace/task-evidence/full-context-basis-comparison-01/comparison24-run-01/report.json",
+      "sha256": "7c5a09f026a281db34b49cf7aa8187c9bd9c4dafa02273361e694e0722d40d63"
+    }
+  },
+  "freshTargets": [
+    {
+      "caseId": "BD11",
+      "evidenceId": "ev-e31747a5310036c8ce8b",
+      "url": "https://www.nobelprize.org/prizes/physics/1901/ceremony-speech/",
+      "excerptSHA256": "05a68cd6f8d22694321626eb5f9a810130ecc99ca59c43e045e7ba00ae8f1a02"
+    },
+    {
+      "caseId": "BD11",
+      "evidenceId": "ev-1a8bf8bf3840cff4658d",
+      "url": "https://wilhelmconradroentgen.de/en/wilhelm-roentgen/",
+      "excerptSHA256": "90c18126b850d3f89675d9bdcdd21faebe3d5af801d335dd14bba670b9b4dfb4"
+    },
+    {
+      "caseId": "BD04",
+      "evidenceId": "ev-8d8e57597f36a9992ee5",
+      "url": "https://whc.unesco.org/document/164347",
+      "excerptSHA256": "99a8f53c6eb223e093bc517bcad1364d54328dbe57257f29d08ed565bd0f902e"
+    },
+    {
+      "caseId": "BD04",
+      "evidenceId": "ev-566051bb4c4b0e20f045",
+      "url": "https://wldb.ilec.or.jp/Display/html/3544",
+      "excerptSHA256": "4a0dec247e79aa24d5b80d02e181e474d33351d8e0bd48c61bb3999b5639cd62"
+    }
+  ],
+  "caps": {
+    "targetChains": 4,
+    "attemptsPerTarget": 1,
+    "maxRedirectsPerChain": 3,
+    "maxActualHttpRequestsIncludingRedirects": 16,
+    "timeoutSecondsPerTargetChain": 15,
+    "responseBodyBytesPerTarget": 1048576,
+    "totalResponseBodyBytes": 4194304,
+    "protocols": [
+      "https"
+    ],
+    "retries": 0
+  },
+  "reuse": "Seven prior08 exact URL/excerpt proofs; preserve original fetch and review timestamps; reverify body/text hashes. No refresh claim.",
+  "scoring": "Passage presence, proposition scope and source lineage judged separately. Country/coordinates not silently converted into an explicit continent; year+award not silently converted to first-Physics ordinal. Inaccessible or partial proof remains limited regardless of factual truth."
+}

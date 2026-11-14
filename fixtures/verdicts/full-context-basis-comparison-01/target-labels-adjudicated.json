@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "frozen": true,
+  "independentReviewComplete": true,
+  "adjudicatedAt": "2026-11-14T05:05:17.451371+00:00",
+  "inputSHA256": "65b461920fdc102c7250ffb783fa4e6363af3db519e4411f73a5a995168580fe",
+  "labels": [
+    {
+      "id": "T01",
+      "retainedId": "ev-eb0bdcebbd68c35e5e3a",
+      "expectedBasis": "substantive",
+      "contentBasis": "substantive_secondary",
+      "scopeDiagnostic": "matches",
+      "stanceDiagnostic": "contradicts",
+      "supportingSpan": "President James K. Polk signed the bill into law on August 10, 1846.",
+      "labelReason": "Retained historical account identifies the establishing bill, select committee, House vote and presidential enactment. These concrete documentary events contradict creation by a British royal charter; the donor's British origin is distinct from legal establishment.",
+      "qualifierCaveat": "No underlying statute text or authenticity chain is supplied by this excerpt; a House-hosted historical account is not automatically the legislative act itself.",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "firstAnnotation": {
+        "id": "T01",
+        "retainedId": "ev-eb0bdcebbd68c35e5e3a",
+        "expectedBasis": "substantive",
+        "contentBasis": "substantive_secondary",
+        "stanceDiagnostic": "contradicts",
+        "scopeDiagnostic": "matches",
+        "supportingSpan": "The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+        "labelReason": "Retained legislative process, named bill, House vote and presidential signature establish the US congressional instrument; British donor nationality is not British royal creation. Shared underlying act remains one origin.",
+        "ambiguity": false,
+        "excludeFromPrimary": false
+      },
+      "secondAnnotation": {
+        "id": "T01",
+        "retainedId": "ev-eb0bdcebbd68c35e5e3a",
+        "contentBasis": "substantive",
+        "basisTypeDiagnostic": "substantive_secondary",
+        "exactScope": true,
+        "stanceDiagnostic": "contradicts",
+        "supportingSpan": "President James K. Polk signed the bill into law on August 10, 1846.",
+        "supportingOffsets": {
+          "start": 1932,
+          "end": 2000,
+          "unit": "unicode_code_points"
+        },
+        "labelReason": "Retained historical account identifies the establishing bill, select committee, House vote and presidential enactment. These concrete documentary events contradict creation by a British royal charter; the donor's British origin is distinct from legal establishment.",
+        "qualifierCaveat": "No underlying statute text or authenticity chain is supplied by this excerpt; a House-hosted historical account is not automatically the legislative act itself.",
+        "ambiguityFlag": false,
+        "excludeFromPrimary": false
+      }
+    },
+    {
+      "id": "T02",
+      "retainedId": "ev-d13ed099d4e84ec8c01d",
+      "expectedBasis": "substantive",
+      "contentBasis": "original_record",
+      "scopeDiagnostic": "matches",
+      "stanceDiagnostic": "supports",
+      "supportingSpan": "Adopted in London on 16 November 1945",
+      "labelReason": "The retained constitution heading names its adoption place/date, identifies later amendments, and continues into actual constitutional preamble. The record content, rather than a title alone, directly addresses adoption.",
+      "qualifierCaveat": "Source authenticity/canonical version remains a separate check; do not substitute signed/conclusion/entry-into-force dates from other records.",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "firstAnnotation": {
+        "id": "T02",
+        "retainedId": "ev-d13ed099d4e84ec8c01d",
+        "expectedBasis": "substantive",
+        "contentBasis": "original_record",
+        "stanceDiagnostic": "supports",
+        "scopeDiagnostic": "matches",
+        "supportingSpan": "Adopted in London on 16 November 1945",
+        "labelReason": "The actual body heading, adoption statement, amendment list and constitutional preamble identify retained legal-instrument content. This is not a separate metadata title. Signed/concluded/registered elsewhere are different relations.",
+        "ambiguity": false,
+        "excludeFromPrimary": false
+      },
+      "secondAnnotation": {
+        "id": "T02",
+        "retainedId": "ev-d13ed099d4e84ec8c01d",
+        "contentBasis": "substantive",
+        "basisTypeDiagnostic": "original_record",
+        "exactScope": true,
+        "stanceDiagnostic": "supports",
+        "supportingSpan": "Adopted in London on 16 November 1945",
+        "supportingOffsets": {
+          "start": 90,
+          "end": 127,
+          "unit": "unicode_code_points"
+        },
+        "labelReason": "The retained constitution heading names its adoption place/date, identifies later amendments, and continues into actual constitutional preamble. The record content, rather than a title alone, directly addresses adoption.",
+        "qualifierCaveat": "Source authenticity/canonical version remains a separate check; do not substitute signed/conclusion/entry-into-force dates from other records.",
+        "ambiguityFlag": false,
+        "excludeFromPrimary": false
+      }
+    },
+    {
+      "id": "T03",
+      "retainedId": "ev-f00642f438bb08f87910",
+      "expectedBasis": "ambiguous",
+      "contentBasis": "ambiguous",
+      "scopeDiagnostic": "ambiguous",
+      "stanceDiagnostic": "partial_support",
+      "supportingSpan": "first ever awarded Nobel Prize in December 1901",
+      "labelReason": "The detailed professional chronology and historical account are substantive biographical content. It explicitly binds the person to Physics1901 and separately calls the reception the first ever awarded Nobel Prize; whether that broad ordinal is intended specifically as the first Physics award is not unambiguous.",
+      "qualifierCaveat": "Exclude from primary exact-scope/stance scoring: the ordinal refers broadly to Nobel Prize, not explicitly Physics, and cannot be repaired using outside award history or the hostname. Content-basis positivity does not certify the full checked proposition.",
+      "ambiguity": true,
+      "excludeFromPrimary": true,
+      "firstAnnotation": {
+        "id": "T03",
+        "retainedId": "ev-f00642f438bb08f87910",
+        "expectedBasis": "insufficient",
+        "contentBasis": "unclear",
+        "stanceDiagnostic": "supports",
+        "scopeDiagnostic": "matches",
+        "supportingSpan": "his reception of the first ever awarded Nobel Prize in December 1901",
+        "labelReason": "The archive chronology asserts the full ordinal, and names a keeper, but its concrete underlying first-award series basis is not retained. This is a genuine maintained-reference versus biographical-assertion boundary; do not force a positive or score it in primary metrics. The textual claim is supported, separate from qualification.",
+        "ambiguity": true,
+        "excludeFromPrimary": true
+      },
+      "secondAnnotation": {
+        "id": "T03",
+        "retainedId": "ev-f00642f438bb08f87910",
+        "contentBasis": "substantive",
+        "basisTypeDiagnostic": "substantive_secondary",
+        "exactScope": null,
+        "stanceDiagnostic": "partial_support",
+        "supportingSpan": "first ever awarded Nobel Prize in December 1901",
+        "supportingOffsets": {
+          "start": 936,
+          "end": 983,
+          "unit": "unicode_code_points"
+        },
+        "labelReason": "The detailed professional chronology and historical account are substantive biographical content. It explicitly binds the person to Physics1901 and separately calls the reception the first ever awarded Nobel Prize; whether that broad ordinal is intended specifically as the first Physics award is not unambiguous.",
+        "qualifierCaveat": "Exclude from primary exact-scope/stance scoring: the ordinal refers broadly to Nobel Prize, not explicitly Physics, and cannot be repaired using outside award history or the hostname. Content-basis positivity does not certify the full checked proposition.",
+        "ambiguityFlag": true,
+        "excludeFromPrimary": true
+      }
+    },
+    {
+      "id": "T04",
+      "retainedId": "ev-68dd14f72943d0b9f377",
+      "expectedBasis": "substantive",
+      "contentBasis": "original_record",
+      "scopeDiagnostic": "matches",
+      "stanceDiagnostic": "supports",
+      "supportingSpan": "the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom",
+      "labelReason": "The retained normative definition supplies the atom, transition, fixed numerical frequency, Hz unit and explicit defining relation. No separate empirical method is needed to state the contents of a formal definition.",
+      "qualifierCaveat": "This labels content, not verified issuer authority or independent corroboration. Inspect exact numerical value and all physical qualifiers; do not generalize beyond the defined SI relation.",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "firstAnnotation": {
+        "id": "T04",
+        "retainedId": "ev-68dd14f72943d0b9f377",
+        "expectedBasis": "substantive",
+        "contentBasis": "original_record",
+        "stanceDiagnostic": "supports",
+        "scopeDiagnostic": "matches",
+        "supportingSpan": "The second, symbol s, is the SI unit of time.",
+        "labelReason": "The passage identifies the SI second and explicitly defines its constant, transition and unit. Actual governing-definition content remains despite loss of heading/Brochure context. Prior score differences cannot identify a load-only cause because earlier excerpt differs.",
+        "ambiguity": false,
+        "excludeFromPrimary": false
+      },
+      "secondAnnotation": {
+        "id": "T04",
+        "retainedId": "ev-68dd14f72943d0b9f377",
+        "contentBasis": "substantive",
+        "basisTypeDiagnostic": "original_record",
+        "exactScope": true,
+        "stanceDiagnostic": "supports",
+        "supportingSpan": "the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom",
+        "supportingOffsets": {
+          "start": 128,
+          "end": 211,
+          "unit": "unicode_code_points"
+        },
+        "labelReason": "The retained normative definition supplies the atom, transition, fixed numerical frequency, Hz unit and explicit defining relation. No separate empirical method is needed to state the contents of a formal definition.",
+        "qualifierCaveat": "This labels content, not verified issuer authority or independent corroboration. Inspect exact numerical value and all physical qualifiers; do not generalize beyond the defined SI relation.",
+        "ambiguityFlag": false,
+        "excludeFromPrimary": false
+      }
+    },
+    {
+      "id": "T05",
+      "retainedId": "ev-c0111d21601a8a647c04",
+      "expectedBasis": "insufficient",
+      "contentBasis": "unclear",
+      "scopeDiagnostic": "not_established",
+      "stanceDiagnostic": "unclear",
+      "supportingSpan": "Hydrobiologia. Published: 1991-03-01. 52 citations.",
+      "labelReason": "Only paper title and bibliographic/author metrics are retained. They do not give study observations or an explicit geographic location for LakeBaikal. Shared Africa vocabulary in a comparison title is not direct location evidence.",
+      "qualifierCaveat": "Negative content control; neither support nor contradiction of the actual continent claim is established by citation prestige or by contrasting title nouns.",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "firstAnnotation": {
+        "id": "T05",
+        "retainedId": "ev-c0111d21601a8a647c04",
+        "expectedBasis": "insufficient",
+        "contentBasis": "unclear",
+        "stanceDiagnostic": "unclear",
+        "scopeDiagnostic": "unclear",
+        "supportingSpan": "Comparative aspects of adaptive radiation and speciation in Lake Baikal and the great rift lakes of Africa",
+        "labelReason": "Only a research title, journal date, citation count and author metadata are retained. A comparison title does not retain location record fields or research findings.",
+        "ambiguity": false,
+        "excludeFromPrimary": false
+      },
+      "secondAnnotation": {
+        "id": "T05",
+        "retainedId": "ev-c0111d21601a8a647c04",
+        "contentBasis": "insufficient",
+        "basisTypeDiagnostic": "unclear",
+        "exactScope": false,
+        "stanceDiagnostic": "unclear",
+        "supportingSpan": "Hydrobiologia. Published: 1991-03-01. 52 citations.",
+        "supportingOffsets": {
+          "start": 110,
+          "end": 161,
+          "unit": "unicode_code_points"
+        },
+        "labelReason": "Only paper title and bibliographic/author metrics are retained. They do not give study observations or an explicit geographic location for LakeBaikal. Shared Africa vocabulary in a comparison title is not direct location evidence.",
+        "qualifierCaveat": "Negative content control; neither support nor contradiction of the actual continent claim is established by citation prestige or by contrasting title nouns.",
+        "ambiguityFlag": false,
+        "excludeFromPrimary": false
+      }
+    },
+    {
+      "id": "T06",
+      "retainedId": "ev-fc10664bbaa8225ad8ac",
+      "expectedBasis": "substantive",
+      "contentBasis": "substantive_secondary",
+      "scopeDiagnostic": "matches",
+      "stanceDiagnostic": "supports",
+      "supportingSpan": "submitted | by Tanzania.",
+      "labelReason": "The retained named WorldHeritage/IUCN nomination summary identifies the Tanzanian submission, describes the park/forest reserve on MountKilimanjaro, and gives location/juridical and identification fields. The document-country heading is attached to actual relevant record contents.",
+      "qualifierCaveat": "OCR errors are retained. This supports the bounded country-location relation, not precise coordinates, border extent, every height/species number, issuer authenticity or source independence.",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "firstAnnotation": {
+        "id": "T06",
+        "retainedId": "ev-fc10664bbaa8225ad8ac",
+        "expectedBasis": "substantive",
+        "contentBasis": "substantive_secondary",
+        "stanceDiagnostic": "supports",
+        "scopeDiagnostic": "matches",
+        "supportingSpan": "The national park and forest reserve occupy the upper part of Mount",
+        "labelReason": "The in-body Tanzania nomination header, named preparer/date and LOCATION text bind the national-park/forest reserve to upper Mount Kilimanjaro. This supports the bounded country-location claim, not precise park/mountain boundary geometry. OCR is noisy; nomination/IUCN copies share origin.",
+        "ambiguity": false,
+        "excludeFromPrimary": false
+      },
+      "secondAnnotation": {
+        "id": "T06",
+        "retainedId": "ev-fc10664bbaa8225ad8ac",
+        "contentBasis": "substantive",
+        "basisTypeDiagnostic": "original_record",
+        "exactScope": true,
+        "stanceDiagnostic": "supports",
+        "supportingSpan": "submitted | by Tanzania.",
+        "supportingOffsets": {
+          "start": 243,
+          "end": 267,
+          "unit": "unicode_code_points"
+        },
+        "labelReason": "The retained named WorldHeritage/IUCN nomination summary identifies the Tanzanian submission, describes the park/forest reserve on MountKilimanjaro, and gives location/juridical and identification fields. The document-country heading is attached to actual relevant record contents.",
+        "qualifierCaveat": "OCR errors are retained. This supports the bounded country-location relation, not precise coordinates, border extent, every height/species number, issuer authenticity or source independence.",
+        "ambiguityFlag": false,
+        "excludeFromPrimary": false
+      }
+    }
+  ],
+  "notes": [
+    "Five primary target content-basis labels agree; T03 remains an explicitly unresolved boundary and is not forced into a scored binary class.",
+    "T03 first annotator considers retained ordinal basis insufficient; second finds the broader biography substantive but the Physics-specific ordinal ambiguous. Both views and complete rationales are preserved.",
+    "T06 original-record versus substantive-secondary genre is not counted as a binary disagreement; final diagnostic uses the first annotator's substantive-secondary description of a summary based on the nomination, without granting authority or independent origin.",
+    "T05 no retained location relation is established; this is not a counterclaim that the underlying source could never be relevant.",
+    "Each annotation was frozen before this comparison. File timestamps are preserved as observed; no claim is made that the later-created first-role file preceded the second-role timestamp.",
+    "These are OPEN diagnostic labels with disclosed prior public outcome exposure, not fresh blind evaluation ground truth."
+  ]
+}

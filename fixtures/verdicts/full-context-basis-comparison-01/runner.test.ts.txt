@@ -1,0 +1,83 @@
+import { strict as assert } from 'node:assert';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import type { Evidence } from '/workspace/live-frozen-08/packages/contracts/src/index.ts';
+import { buildPlan, captureRequest, executePlan, hash, LIMITS, recordsFor, CANDIDATE_SHA, type Context, type Label } from './runner.ts';
+
+const temp = mkdtempSync(join(tmpdir(), 'context-diagnostic-test-')), reportPath = join(temp, 'open-source.json');
+writeFileSync(reportPath, JSON.stringify({ purpose: 'synthetic offline report' }));
+const record = (index: number, id: string): Evidence => ({ id, url: `https://source-${index}.example/${id}`, title: `Synthetic record ${id}`, publisher: null, publishedAt: null, retrievedAt: '2026-11-14T00:00:00Z', excerpt: `SYNTHETIC named observation ${id} records exact value ${index} under identified period A.`, contentBasis: 'highlight', sourceGroup: `source-${index}.example`, echoGroup: null, sourceRole: 'unknown', stance: 'unrelated', stanceProbability: null, directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false });
+const contexts: Context[] = Array.from({ length: 6 }, (_, index) => {
+  const targetId = `test-${index}-target`, records = [record(index, targetId), record(index + 10, `test-${index}-other`), record(index + 20, `test-${index}-bridge`)];
+  if (index % 2) records.reverse();
+  return { caseId: `C${index}`, targetId, proposition: `SYNTHETIC proposition ${index}.`, records, reportPath, reportSha256: hash(readFileSync(reportPath)), evidenceStageIndex: 1, judgmentOrdinal: 0, staleJudgment: { sourceAssessments: Object.fromEntries(records.map(source => [source.id, { contentBasis: 'bare_assertion', confidence: .2 }])) } };
+});
+const labels: Label[] = contexts.map((context, index) => ({ id: `T${index}`, retainedId: context.targetId, expectedBasis: 'substantive', excludeFromPrimary: index === 2 }));
+const plan = () => buildPlan(contexts, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'context-run-')), 'run');
+const fakeFetch = (tokens?: number): typeof fetch => async (_url, init) => {
+  const request = JSON.parse(String(init!.body));
+  const answers = Object.fromEntries(Object.entries(request.questions).map(([name, value]) => {
+    const question = value as { type: string; criteria?: Record<string, string> };
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_context_established') ? 0 : .99 }];
+    const sourceIndex = /^e(\d+)_content_basis$/.exec(name)?.[1];
+    const choice = name === 'verdict' ? 'supported' : name === 'selected_evidence' ? 'e0' : name === 'claim_risk' ? 'ordinary' : name.endsWith('_stance') ? 'supports' : name.endsWith('_origin') ? 'distinct_origins' : sourceIndex !== undefined ? request.state.evidence[Number(sourceIndex)].id.endsWith('-target') ? 'original_record' : 'bare_assertion' : 'none';
+    let probabilities = Object.fromEntries(Object.keys(question.criteria!).map(key => [key, key === choice ? 1 : 0]));
+    if (sourceIndex !== undefined && choice === 'original_record') { const mass = question && (value as { instructions: string }).instructions.includes('separate metadata title field') ? .95 : .82; probabilities = { original_record: mass, attributable_research: 0, substantive_secondary: 0, bare_assertion: 1 - mass, attributed: 0, promotional: 0, unclear: 0 }; }
+    return [name, { choice, probabilities }];
+  }));
+  return new Response(JSON.stringify({ answers, ...(tokens === undefined ? {} : { usage: { input_tokens: tokens } }) }), { status: 200 });
+};
+
+test('exact frozen clarification changes only instructions; full state, seven criteria and other questions remain identical', async () => {
+  assert.equal(hash(readFileSync('/workspace/task-evidence/content-basis-calibration-02/candidate.ts')), CANDIDATE_SHA);
+  const baseline = await captureRequest(contexts[0], 'original_full', 'baseline'), candidate = await captureRequest(contexts[0], 'original_full', 'frozen_clarification');
+  assert.deepEqual(baseline.state, candidate.state); assert.deepEqual(Object.keys(baseline.questions), Object.keys(candidate.questions));
+  for (const [name, question] of Object.entries(baseline.questions)) {
+    const after = candidate.questions[name];
+    if (!name.endsWith('_content_basis')) assert.deepEqual(after, question);
+    else { assert.equal(question.type, 'choice'); assert.equal(after.type, 'choice'); if (question.type !== 'choice' || after.type !== 'choice') throw new Error(); assert.deepEqual(after.criteria, question.criteria); assert.equal(Object.keys(after.criteria).length, 7); }
+  }
+  assert.ok(!JSON.stringify(candidate.state).includes('questionKey'));
+});
+
+test('24 calls are interleaved and arm-balanced within original/reverse full contexts without dropping companions', async () => {
+  const frozen = await plan(); assert.equal(frozen.calls.length, 24);
+  for (const condition of ['original_full', 'reversed_full']) {
+    const pairs = Array.from({ length: 12 }, (_, index) => frozen.calls.slice(index * 2, index * 2 + 2)).filter(pair => pair[0].condition === condition);
+    assert.equal(pairs.length, 6); assert.equal(pairs.filter(pair => pair[0].arm === 'baseline').length, 3); assert.equal(pairs.filter(pair => pair[0].arm === 'frozen_clarification').length, 3);
+    for (const pair of pairs) { assert.equal(pair[0].caseId, pair[1].caseId); assert.deepEqual(pair[0].evidenceOrder, pair[1].evidenceOrder); assert.notEqual(pair[0].arm, pair[1].arm); }
+  }
+  for (const call of frozen.calls) assert.deepEqual([...call.evidenceOrder].sort(), contexts.find(context => context.caseId === call.caseId)!.records.map(record => record.id).sort());
+});
+
+test('full-context outputs record target gate effects and all sentinel/non-target outputs without claiming factual gain', async () => {
+  const frozen = await plan(), directory = output(); const report = await executePlan(frozen, contexts, directory, { apiKey: 'offline-only', fetch: fakeFetch(100) }) as any;
+  assert.equal(report.completedAllCalls, true); assert.equal(report.totals.actualStartedJev, 24); assert.equal(report.totals.consumedJev, 24); assert.equal(report.totals.actualStartedExa, 0); assert.equal(report.totals.measuredInputTokens, 2400);
+  assert.ok(report.observations.filter((row: any) => row.arm === 'baseline').every((row: any) => !row.targetQualityPass && row.targetQuality.confidence === .82));
+  assert.ok(report.observations.filter((row: any) => row.arm === 'frozen_clarification').every((row: any) => row.targetQualityPass && row.targetQuality.confidence === .95));
+  assert.equal(report.observations.filter((row: any) => row.targetId === labels[2].retainedId).length, 4);
+  assert.ok(report.observations.every((row: any) => Object.keys(row.assessments).length === 3 && row.selectedEvidenceIds[0] === row.evidenceOrder[0]));
+  const saved = readFileSync(join(directory, 'report.json'), 'utf8'); assert.ok(!saved.includes('offline-only')); assert.ok(!saved.includes('instructions')); assert.ok(!saved.includes('Authorization'));
+  await assert.rejects(executePlan(frozen, contexts, directory, { apiKey: 'offline-only', fetch: fakeFetch(100) }), /EEXIST/);
+});
+
+test('frozen retry-capable client sends only one actual request on429', async () => {
+  let calls = 0; const report = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: async () => { calls++; return new Response('limited', { status: 429 }); } }) as any;
+  assert.equal(calls, 1); assert.equal(report.totals.consumedJev, 1); assert.equal(report.observations[0].status, 'failed');
+});
+
+test('unknown usage, realistic reserve and wall deadline stop without repeats', async () => {
+  const unknown = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch() }) as any; assert.equal(unknown.stopReason, 'unknown_usage'); assert.equal(unknown.totals.actualStartedJev, 1);
+  const reserve = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch(LIMITS.maxInputTokens - LIMITS.pendingReserve + 1) }) as any; assert.equal(reserve.stopReason, 'budget_reserve'); assert.equal(reserve.totals.actualStartedJev, 1);
+  let reads = 0; const wall = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch(100), now: () => reads++ ? LIMITS.wallMs + 1 : 0 }) as any; assert.equal(wall.stopReason, 'wall_budget'); assert.equal(wall.totals.actualStartedJev, 0);
+});
+
+test('report/request/source drift fails before any actual fetch', async () => {
+  await assert.rejects(buildPlan(contexts.map((context, index) => index === 0 ? { ...context, reportSha256: 'bad' } : context), labels, {}), /report changed/);
+  const frozen = await plan(); frozen.calls[0].bodyHash = 'bad'; let calls = 0; await assert.rejects(executePlan(frozen, contexts, output(), { apiKey: 'offline-only', fetch: async () => { calls++; throw new Error(); } }), /request hashes/); assert.equal(calls, 0);
+  const source = await plan(); source.sourceHashes['comparison-runner.ts'] = 'bad'; await assert.rejects(executePlan(source, contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch(100) }), /source\/runner changed/);
+});
+
