@@ -33,6 +33,16 @@ struct SettingsView: View {
         .factoRowBackground()
 
         Section {
+          Toggle("Wake on “\(WakePhrase.spoken)”", isOn: $live.wakeWordEnabled)
+            .factoToggleTint()
+        } footer: {
+          SettingsFooter(
+            "The glasses stay off and nothing is sent until this phone hears “\(WakePhrase.spoken)”. Then Facto listens for a minute. Say “\(WakePhrase.spokenCommand)” to check what you’re looking at."
+          )
+        }
+        .factoRowBackground()
+
+        Section {
           Toggle("Demo quality", isOn: $live.demoQuality)
             .factoToggleTint()
             .disabled(camera.isStreaming)

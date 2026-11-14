@@ -21,7 +21,9 @@ private struct Sandbox {
   let suiteName = "DebugLogTests-\(UUID().uuidString)"
   var defaults: UserDefaults { UserDefaults(suiteName: suiteName)! }
 
-  func makeLog(clock: TestClock? = nil, suspended: Bool = false) -> DebugLog {
+  /// `enabled: true` stores the wearer's opt-in first; `nil` is a fresh install.
+  func makeLog(clock: TestClock? = nil, suspended: Bool = false, enabled: Bool? = true) -> DebugLog {
+    if let enabled { defaults.set(enabled, forKey: DebugLog.enabledKey) }
     let now: @Sendable () -> Date
     if let clock {
       now = { clock.now }
@@ -166,18 +168,35 @@ final class DebugLogTests: XCTestCase {
 
   // MARK: Toggle
 
-  func testOnByDefaultAndOffWritesNothingAndIsRemembered() throws {
-    let log = sandbox.makeLog()
-    XCTAssertTrue(log.isEnabled)
+  func testOffByDefaultWritesNothingAndSavesNoPhoto() throws {
+    let log = sandbox.makeLog(enabled: nil)
+    XCTAssertFalse(log.isEnabled)
+    XCTAssertNil(sandbox.defaults.object(forKey: DebugLog.enabledKey))
+    log.log("ignored")
+    XCTAssertNil(log.logPhoto(try makeJPEG(width: 2, height: 2), id: "ignored"))
+    log.logJSONText("ws.recv", "{}")
+    log.waitUntilWritten()
+    XCTAssertFalse(FileManager.default.fileExists(atPath: sandbox.directory.path))
+  }
+
+  func testTurningItOnStartsLoggingAndOffStopsItAndIsRemembered() throws {
+    let log = sandbox.makeLog(enabled: nil)
+    log.isEnabled = true
+    log.log("kept")
+    log.waitUntilWritten()
+    XCTAssertEqual(try sandbox.entries().count, 1)
+    XCTAssertEqual(sandbox.defaults.object(forKey: DebugLog.enabledKey) as? Bool, true)
+    XCTAssertTrue(sandbox.makeLog(enabled: nil).isEnabled)
+
     log.isEnabled = false
     log.log("ignored")
     XCTAssertNil(log.logPhoto(try makeJPEG(width: 2, height: 2), id: "ignored"))
     log.logJSONText("ws.recv", "{}")
     log.waitUntilWritten()
-
-    XCTAssertFalse(FileManager.default.fileExists(atPath: sandbox.directory.path))
+    XCTAssertEqual(try sandbox.entries().count, 1)
+    XCTAssertFalse(try sandbox.fileNames().contains { $0.hasSuffix(".jpg") })
     XCTAssertEqual(sandbox.defaults.object(forKey: DebugLog.enabledKey) as? Bool, false)
-    XCTAssertFalse(sandbox.makeLog().isEnabled)
+    XCTAssertFalse(sandbox.makeLog(enabled: nil).isEnabled)
   }
 
   func testSuspendedLogIgnoresTheToggle() {

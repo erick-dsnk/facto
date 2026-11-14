@@ -107,6 +107,9 @@ struct HomeView: View {
       if !live.pendingChecks.isEmpty {
         footnote(live.pendingChecks.count == 1 ? "Waiting for 1 result" : "Waiting for \(live.pendingChecks.count) results")
       }
+      if live.wakeWordEnabled {
+        footnote(live.wakeState.detail.map { "\(live.wakeState.title). \($0)" } ?? live.wakeState.title)
+      }
     }
   }
 
@@ -147,7 +150,7 @@ struct HomeView: View {
           .disabled(live.isMuted || live.history.latestDelivered == nil)
       }
       if live.history.entries.isEmpty {
-        Text("No checks yet. Say “Facto, can you check this?” or tap Check this.")
+        Text("No checks yet. Say “\(WakePhrase.spokenCommand)” or tap Check this.")
           .foregroundStyle(.factoTextSecondary)
           .frame(maxWidth: .infinity, alignment: .leading)
       } else {

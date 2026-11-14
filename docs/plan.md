@@ -458,12 +458,12 @@ Implement `decidePresentation(result, intent, sessionState, preferences)` separa
 | Situation | Presentation |
 |---|---|
 | Explicit scan/check request, any completed outcome | `respond`: supported, contradicted, misleading or insufficient evidence; operational errors and clarification also receive feedback. Never override mute/output preferences. |
-| Automatic claim with qualifying contradiction, practical consequence or an explicitly selected topic, healthy session and available interruption budget | `notify`: short neutral cue or compact card; details/source on request. |
-| Automatic supported, insufficient, low-priority or ambiguous result | `silent`: retain an inspectable current-session result; no truth implication from silence. |
+| Automatic asserted public claim with a qualifying contradiction and a healthy session | `notify`: short neutral cue or compact card; details/source on request. |
+| Automatic supported, insufficient, misleading or ambiguous result | `silent`: retain an inspectable current-session result; no truth implication from silence. |
 | Duplicate transport event/automatic re-alert, superseded result, closed/paused session, old epoch or expired result | Suppress delivery regardless of label or priority. An intentional Repeat/source-details action may render a current retained result; it is not a duplicate automatic alert. An expired result needs a new check. |
 | Provider/network failure | Distinct service health/error status; never a misinformation warning. |
 
-P0 automatic notifications require `contradicted`; a `misleading` result remains inspectable and is returned on request. Broader automatic context-correction alerts are deferred until tested. A proposed materiality cutoff is `hasPracticalConsequence >= 0.80`, or a matched topic explicitly enabled by the user. If that signal is absent/uncertain, stay silent automatically. This threshold is a local design choice, not a published FactNudger setting.
+P0 automatic notifications require `contradicted`; a `misleading` result remains inspectable and is returned on request. Broader automatic context-correction alerts are deferred until tested. Every admitted, asserted contradiction notifies, with no materiality cutoff and no per-session alert budget (changed on 14 Nov 2026 after device testing). `hasPracticalConsequence >= 0.80` and an enabled matched topic now only label the reason (`practical_contradiction`, `selected_topic_contradiction`); anything else is `automatic_contradiction`.
 
 Use existing cooldown, claim-ID/revision and deduplication state; don't add a second conversation store. A late correction retracts or marks the prior visible result superseded. If the session is still active and the prior claim was already spoken, give one brief non-verdict update (“That statement was corrected”) when output preferences allow; do not announce the new statement as true without a new check. Never deliver this update after stop. B7 owns presentation rules; B5 owns state/budgets; A4 renders the decision.
 

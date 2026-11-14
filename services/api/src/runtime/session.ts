@@ -52,7 +52,7 @@ export class Session {
 }
 export class SessionStore {
   sessions = new Map<string, Session>();
-  constructor(public now: () => number = Date.now) {}
+  constructor(public now: () => number = Date.now, private readonly onDelete?: (id: string) => void) {}
   create() {
     this.sweep();
     if (this.sessions.size >= 100) throw new PipelineError('session_capacity');
@@ -68,7 +68,7 @@ export class SessionStore {
     const session = this.sessions.get(id); if (!session) return;
     if (session.active) session.pause('deleted');
     else session.emit('session.ended', { reasonCode: 'deleted', active: false });
-    session.token = ''; session.requests.clear(); session.listeners.clear(); this.sessions.delete(id);
+    session.token = ''; session.requests.clear(); session.listeners.clear(); this.sessions.delete(id); this.onDelete?.(id);
   }
   sweep() { for (const [id, session] of this.sessions) if (session.expiresAt <= this.now()) this.delete(id); }
 }
