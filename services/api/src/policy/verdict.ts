@@ -17,6 +17,7 @@ export function decideVerdict(judgment: Judgment, registry: readonly ReviewedSou
   if (!labels.includes(judgment.label) || labels.some(label => !Number.isFinite(judgment.probabilities[label]) || judgment.probabilities[label] < 0 || judgment.probabilities[label] > 1)) {
     throw new PipelineError('malformed_provider');
   }
+  if (!Array.isArray(judgment.selectedEvidenceIds)) throw new PipelineError('malformed_provider');
   const retained = new Map(judgment.evidence.map(source => [source.id, source]));
   if (retained.size !== judgment.evidence.length || judgment.selectedEvidenceIds.some(id => !retained.has(id))
     || judgment.misleadingEvidenceIds?.some(id => !retained.has(id))) throw new PipelineError('invalid_citation');
@@ -40,7 +41,10 @@ export function decideVerdict(judgment: Judgment, registry: readonly ReviewedSou
   const qualified = qualifyingSourceSet(qualifying, judgment.checkedText, assessment, registry, judgment.evidence);
   if (!qualified.length) return abstain('insufficient_independent_evidence');
   const chosen = judgment.selectedEvidenceIds.filter(id => qualified.some(source => source.id === id));
-  if (!chosen.length) return abstain('no_agreeing_citation');
+  // An explicit provider choice of none remains an abstention. A valid retained
+  // preference is otherwise an ordering hint: only the fully qualified set may
+  // replace it, after every factual, context and risk-specific gate above passes.
+  if (!judgment.selectedEvidenceIds.length) return abstain('no_agreeing_citation');
   return {
     verdict: judgment.label,
     reasonCode: judgment.label === 'misleading' ? judgment.misleadingReason! : 'qualifying_evidence',
