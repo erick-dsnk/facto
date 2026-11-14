@@ -67,7 +67,7 @@ describe('ordinary descriptive reference corroboration', () => {
     value.evidence.pop();
     delete value.sourceAssessments['history-b'];
     value.originAssessments = [];
-    expect(decideVerdict(value, authority).reasonCode).toBe('insufficient_independent_evidence');
+    expect(decideVerdict(value, undefined, authority).reasonCode).toBe('insufficient_independent_evidence');
   });
 
   it.each(['common_origin', 'same_domain', 'same_publisher', 'echo', 'copy', 'bridge'] as const)('does not count dependent references twice (%s)', kind => {
@@ -105,7 +105,7 @@ describe('ordinary descriptive reference corroboration', () => {
     if (risk === 'uncertain_ordinary') value.claimRisk.confidence = .84;
     else if (risk === 'lexical_health') value.checkedText = 'The observatory prevents disease.';
     else value.claimRisk.level = risk;
-    expect(decideVerdict(value, authority).reasonCode).toBe('insufficient_independent_evidence');
+    expect(decideVerdict(value, undefined, authority).reasonCode).toBe('insufficient_independent_evidence');
   });
 
   it('preserves the old expert-plus-substantive-corroborator route', () => {
@@ -114,7 +114,7 @@ describe('ordinary descriptive reference corroboration', () => {
     value.originAssessments[0].relationship = 'distinct_origins';
     value.sourceAssessments['archive-a'].contentBasis = 'original_record';
     value.sourceAssessments['history-b'].contentBasis = 'substantive_secondary';
-    expect(decideVerdict(value, authority).verdict).toBe('supported');
+    expect(decideVerdict(value, undefined, authority).verdict).toBe('supported');
   });
 
   it.each(['scope', 'relevance', 'stance', 'quality', 'verdict', 'no_citation', 'conflict'] as const)('preserves the existing %s gate', gate => {
