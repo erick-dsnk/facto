@@ -24,6 +24,52 @@ export function parseExaResponse(value: unknown): RetrievedPage[] {
   return parsed.data.results;
 }
 
+const contentsStatusSchema = z.object({
+  id: z.string().min(1).max(4096), status: z.enum(['success', 'error']), source: z.string().max(100).optional(),
+  error: z.object({ tag: z.string().max(200).optional(), httpStatusCode: z.number().int().min(100).max(599).nullable().optional() }).nullable().optional(),
+});
+const contentsResponseSchema = z.object({
+  results: responseSchema.shape.results, statuses: z.array(contentsStatusSchema).max(100).optional(),
+  error: z.unknown().optional(), tag: z.unknown().optional(),
+});
+export type ExaPageFailure = { url: string; tag: string; targetHttpStatus: number | null };
+
+/** Only documented target-page failures are optional enrichment failures.
+ * https://exa.ai/docs/admin/error-codes.md#content-fetch-status-tags specifies
+ * that HTTP-200 /contents statuses describe each requested URL, and that their
+ * httpStatusCode is the target's status, not the Exa response status. Unknown
+ * crawl/provider tags remain operational failures; /search stays strict. */
+export function parseExaContentsResponse(value: unknown, requestedURLs: string[]): { pages: RetrievedPage[]; pageFailures: ExaPageFailure[] } {
+  const parsed = contentsResponseSchema.safeParse(value);
+  if (!parsed.success) throw new PipelineError('malformed_exa_response');
+  if (parsed.data.error != null || parsed.data.tag != null) throw new PipelineError('exa_content_failed', true);
+  const requested = new Set(requestedURLs.map(normalizeUrl));
+  if (!requested.size || requested.has(null)) throw new PipelineError('malformed_exa_response');
+  const seen = new Set<string>();
+  const pageFailures: ExaPageFailure[] = [];
+  for (const status of parsed.data.statuses ?? []) {
+    const url = normalizeUrl(status.id);
+    if (!url || !requested.has(url) || seen.has(url)) throw new PipelineError('malformed_exa_response');
+    seen.add(url);
+    if (status.status === 'success') {
+      if (status.error != null) throw new PipelineError('malformed_exa_response');
+      continue;
+    }
+    const tag = status.error?.tag;
+    const targetHttpStatus = status.error?.httpStatusCode ?? null;
+    const httpTag = tag?.match(/^CRAWL_HTTP_([45]\d\d)$/);
+    const known = tag !== undefined && (['CRAWL_NOT_FOUND', 'CRAWL_TIMEOUT', 'CRAWL_LIVECRAWL_TIMEOUT',
+      'SOURCE_NOT_AVAILABLE', 'UNSUPPORTED_URL'].includes(tag) || Boolean(httpTag));
+    if (!known) throw new PipelineError('exa_content_failed', true);
+    if (httpTag && targetHttpStatus !== null && Number(httpTag[1]) !== targetHttpStatus) throw new PipelineError('malformed_exa_response');
+    pageFailures.push({ url, tag: tag!, targetHttpStatus });
+  }
+  const failed = new Set(pageFailures.map(failure => failure.url));
+  // A failed URL must never acquire page text even if an inconsistent response
+  // also includes a result for it. Its original search evidence stays unchanged.
+  return { pages: parsed.data.results.filter(page => !failed.has(normalizeUrl(page.url)!)), pageFailures };
+}
+
 export function normalizeUrl(value: string): string | null {
   try {
     const url = new URL(value);
