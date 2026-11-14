@@ -17,6 +17,12 @@ function assessment(claim: AcceptedClaim, evidence: Evidence[], label: Judgment[
     selectedEvidenceIds: evidence.map(source => source.id), misleadingReason: null,
     sourceAssessments: Object.fromEntries(evidence.map(source => [source.id, { contentBasis: 'original_record', confidence: .99 }])), claimRisk: { level: 'ordinary', confidence: .99 }, originAssessments: [] };
 }
+function retentionRecord(id: string, overrides: Partial<Evidence> = {}): Evidence {
+  return { id, url: `https://${id}.example/record`, title: 'Synthetic archive', publisher: null, publishedAt: null,
+    retrievedAt: new Date(Date.now()).toISOString(), contentBasis: 'highlight', excerpt: `Synthetic archive ${id} stores charter.`,
+    sourceGroup: `${id}.example`, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false,
+    stance: 'unrelated', stanceProbability: null, ...overrides };
+}
 function setup() {
   const fixture = fixtureAdapters();
   const adapters: RuntimeAdapters = { ...fixture, retrieve: vi.fn(async (claim, ctx) => (await fixture.retrieve(claim, ctx)).slice(0, 1)),
@@ -86,6 +92,80 @@ describe('bounded alternate retrieval and fresh judgment', () => {
     expect(adapters.judge).toHaveBeenCalledTimes(1);
     expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence' });
     expect(runtime.metrics[0].jevAttempts).toBe(2);
+  });
+
+  it('does not spend another judgment on an incoming duplicate with only a new retrieval timestamp', async () => {
+    const { adapters, session, events, runtime } = setup();
+    adapters.retrieveAlternate = async (claim, ctx) => {
+      ctx.consume('search', claim.id);
+      const records = await fixtureAdapters().retrieve(claim, { ...ctx, consume: () => undefined });
+      return records.slice(0, 1).map(record => ({ ...record, retrievedAt: new Date(Date.now() + 1_000).toISOString() }));
+    };
+    runtime.submit(session, body(session)); await flush();
+    expect(adapters.judge).toHaveBeenCalledTimes(1);
+    expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence' });
+    expect(runtime.metrics[0]).toMatchObject({ jevAttempts: 2, searchAttempts: 2 });
+  });
+
+  it.each([false, true])('retains a prior direct weak-basis conflict but lets fresh scope determine its veto (%s)', async freshScope => {
+    const { adapters, session, events, runtime } = setup();
+    const old = [retentionRecord('support'), retentionRecord('contrary')];
+    const incoming = [retentionRecord('corroborator', { excerpt: 'Separate national directory maintains the civic seat and an independent location register.' })];
+    adapters.retrieve = async (claim, ctx) => { ctx.consume('search', claim.id); return old; };
+    adapters.retrieveAlternate = async (claim, ctx) => { ctx.consume('search', claim.id); return incoming; };
+    let calls = 0;
+    adapters.judge = vi.fn<RuntimeAdapters['judge']>(async (claim, evidence, ctx) => {
+      ctx.consume('jev'); calls++;
+      if (calls === 2) expect(evidence.every(record => record.stance === 'unrelated' && record.stanceProbability === 0
+        && !record.directlyAddressesClaim && !record.matchesTimePlaceAndPopulation && record.sourceRole === 'unknown')).toBe(true);
+      const result = assessment(claim, evidence);
+      const contrary = result.evidence.find(record => record.id === 'contrary')!;
+      contrary.stance = calls === 1 || freshScope ? 'contradicts' : 'unrelated';
+      contrary.directlyAddressesClaim = calls === 1 || freshScope;
+      contrary.matchesTimePlaceAndPopulation = calls === 1 || freshScope;
+      contrary.stanceProbability = calls === 1 || freshScope ? .99 : 0;
+      result.sourceAssessments.contrary = { contentBasis: 'bare_assertion', confidence: .99 };
+      result.selectedEvidenceIds = result.evidence.filter(record => record.id !== 'contrary').map(record => record.id);
+      return result;
+    });
+    runtime.submit(session, body(session)); await flush();
+    expect(adapters.judge).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(adapters.judge).mock.calls[1][1].map(record => record.id)).toContain('contrary');
+    expect(events.at(-1)?.payload).toMatchObject(freshScope ? { verdict: 'insufficient_evidence', reasonCode: 'conflicting_sources' } : { verdict: 'supported' });
+    expect(session.cache.size).toBe(1);
+    expect(runtime.metrics[0]).toMatchObject({ jevAttempts: 3, searchAttempts: 2 });
+  });
+
+  it('rejudges a changed publisher even when the same URL retains exactly the same quoted text', async () => {
+    const { adapters, session, runtime } = setup();
+    const original = retentionRecord('archive');
+    adapters.retrieve = async (claim, ctx) => { ctx.consume('search', claim.id); return [original]; };
+    adapters.retrieveAlternate = async (claim, ctx) => { ctx.consume('search', claim.id); return [{ ...original, publisher: 'Revised publisher attribution' }]; };
+    runtime.submit(session, body(session)); await flush();
+    expect(adapters.judge).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(adapters.judge).mock.calls[1][1][0]).toMatchObject({ publisher: 'Revised publisher attribution', stance: 'unrelated', directlyAddressesClaim: false });
+  });
+
+  it('keeps the initial conflict abstention rather than removing its model-assessed dependence bridge', async () => {
+    const { adapters, session, events, runtime } = setup();
+    const original = [retentionRecord('support'), retentionRecord('bridge'), retentionRecord('contrary')];
+    adapters.retrieve = async (claim, ctx) => { ctx.consume('search', claim.id); return original; };
+    adapters.retrieveAlternate = async (claim, ctx) => { ctx.consume('search', claim.id); return Array.from({ length: 4 }, (_, index) => retentionRecord(`new-${index}`)); };
+    adapters.judge = vi.fn<RuntimeAdapters['judge']>(async (claim, evidence, ctx) => {
+      ctx.consume('jev');
+      const result = assessment(claim, evidence);
+      result.evidence[1].directlyAddressesClaim = false;
+      result.evidence[2].stance = 'contradicts';
+      result.originAssessments = [
+        { evidenceIds: ['support', 'bridge'], relationship: 'common_origin', confidence: .99 },
+        { evidenceIds: ['bridge', 'contrary'], relationship: 'common_origin', confidence: .99 },
+      ];
+      return result;
+    });
+    runtime.submit(session, body(session)); await flush();
+    expect(adapters.judge).toHaveBeenCalledTimes(1);
+    expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence', reasonCode: 'conflicting_sources', evidence: original.map(record => expect.objectContaining({ id: record.id })) });
+    expect(runtime.metrics[0]).toMatchObject({ jevAttempts: 2, searchAttempts: 2 });
   });
 
   it('preserves high-risk source-quality abstention after a second pass', async () => {
