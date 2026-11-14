@@ -1,0 +1,68 @@
+name: GlassesLab
+options:
+  bundleIdPrefix: com.davidvasilescu.junction
+  deploymentTarget:
+    iOS: "17.2"
+  createIntermediateGroups: true
+
+packages:
+  MWDAT:
+    url: https://github.com/facebook/meta-wearables-dat-ios
+    exactVersion: 1.0.1
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: 97JCVP9322
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+    # Developer Mode skips attestation when MetaAppID is 0, so no credentials are needed yet.
+    META_APP_ID: "0"
+    CLIENT_TOKEN: ""
+
+targets:
+  GlassesLab:
+    type: application
+    platform: iOS
+    sources:
+      - GlassesLab
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.davidvasilescu.junction.glasseslab
+        CODE_SIGN_ENTITLEMENTS: GlassesLab/GlassesLab.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+    dependencies:
+      - package: MWDAT
+        product: MWDATCore
+      - package: MWDAT
+        product: MWDATCamera
+      - package: MWDAT
+        product: MWDATDisplay
+      - package: MWDAT
+        product: MWDATMockDevice
+    info:
+      path: GlassesLab/Info.plist
+      properties:
+        CFBundleDisplayName: Glasses Lab
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        CFBundleURLTypes:
+          - CFBundleTypeRole: Editor
+            CFBundleURLName: $(PRODUCT_BUNDLE_IDENTIFIER)
+            CFBundleURLSchemes: [glasseslab]
+        MWDAT:
+          AppLinkURLScheme: "glasseslab://"
+          MetaAppID: $(META_APP_ID)
+          ClientToken: $(CLIENT_TOKEN)
+          TeamID: $(DEVELOPMENT_TEAM)
+        # No External Accessory keys on purpose: with them the SDK streams over
+        # Bluetooth Classic (low bitrate). Without them it streams over the glasses'
+        # Wi-Fi link (720x1280 @ 30 fps). Meta: github.com/meta/meta-wearables-dat-ios/issues/376
+        UIBackgroundModes:
+          - processing
+          - bluetooth-central
+          - bluetooth-peripheral
+        NSBluetoothAlwaysUsageDescription: Needed to connect to Meta AI glasses.
+        NSLocalNetworkUsageDescription: This lets your phone find and connect to your glasses over Wi-Fi.
+        NSBonjourServices: [_bonjour._tcp]
+        NSCameraUsageDescription: The simulated glasses use the phone camera as their video feed.
+        NSMicrophoneUsageDescription: Listens through the glasses microphone only while you run an audio check.
