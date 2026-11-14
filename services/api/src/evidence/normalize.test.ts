@@ -346,6 +346,7 @@ describe('evidence normalization', () => {
       [{ id: url, status: 'pending' }],
       [{ id: url, status: 'success', error }],
       [{ id: url, status: 'error', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 503 } }],
+      [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 503 } }],
       [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: '404' } }],
     ];
     for (const status of statuses) expect(() => parseExaContentsResponse({ results: [], statuses: status }, [url])).toThrow('malformed_exa_response');
