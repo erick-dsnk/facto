@@ -1,0 +1,7 @@
+// Structural model-interface binding only; core semantics remain byte-identical.
+import {APPLICABILITY_INSTRUCTIONS} from './question.js';
+export function boundApplicabilityInstructions(input:{evidenceIndex:number;descriptorIndex:number;evidenceId:string}):string{
+ const {evidenceIndex,descriptorIndex,evidenceId}=input;
+ if(![evidenceIndex,descriptorIndex].every(n=>Number.isSafeInteger(n)&&n>=0&&n<6)||typeof evidenceId!=='string'||!evidenceId||evidenceId.length>128)throw Error('invalid_model_visible_binding');
+ return `For this item, use \`evidence[${evidenceIndex}]\` (retained id ${JSON.stringify(evidenceId)}) as the target excerpt and \`record_applicability[${descriptorIndex}]\` as its bound record descriptor. The descriptor \`evidenceId\` must equal \`evidence[${evidenceIndex}].id\` and that exact retained id. Evaluate only this target/descriptor pair; do not use another record or another descriptor for this item.\n${APPLICABILITY_INSTRUCTIONS}`;
+}

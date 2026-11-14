@@ -1,0 +1,59 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+import {Session,type RequestRecord} from '/workspace/stack-20/services/api/src/runtime/session.js';
+import {AttemptBudget} from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import type {AcceptedClaim,Evidence} from '/workspace/stack-20/packages/contracts/src/index.js';
+import {loadInstalledManifest,resolveReceipt} from '../record-capability-prototype-02/src/manifest.js';
+import {loadSnapshot,snapshotState} from '../record-capability-prototype-02/src/snapshot.js';
+import {captureSelectionMaterial,inspectMaterial} from '../capability-selection-seam-02/material.js';
+import {createApplicabilityAdapter as adapter07} from '../typed-applicability-adapter-07/adapter.js';
+import {captureDispatchOwner as owner07} from '../typed-applicability-adapter-07/runtime-owner.js';
+import {createApplicabilityAdapter as adapter08} from './adapter.js';import {captureDispatchOwner as owner08} from './runtime-owner.js';
+import {APPLICABILITY_INSTRUCTIONS,APPLICABILITY_CRITERIA} from './question.js';import{boundApplicabilityInstructions}from'./binding-instructions.js';
+const domain=createRequire('/workspace/stack-20/package.json')('tldts').getDomain;
+async function capture(version:7|8,sourceOrder:string[],bindingOrder:string[]){
+ const manifest=await loadInstalledManifest('/workspace/task-evidence/record-capability-prototype-02/installed','7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4');
+ const artifacts=new Map();const records:Evidence[]=[];
+ for(const alias of sourceOrder){const receipt=resolveReceipt(manifest,alias).receipt,artifact=await loadSnapshot(manifest,receipt.proofId);artifacts.set(alias,artifact);const text=snapshotState(artifact,manifest).text,u=receipt.units[0]!;
+  records.push({id:`source-${alias}`,url:receipt.canonicalURL,title:'Saved record passage',publisher:null,publishedAt:null,retrievedAt:'2026-11-14T10:00:00Z',contentBasis:'page_text',excerpt:text.slice(u.start,u.end),sourceGroup:domain(new URL(receipt.canonicalURL).hostname,{allowPrivateDomains:true}),echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated',stanceProbability:null});}
+ const text='The 2021 Pulitzer Prize in Fiction winner was The Night Watchman.';
+ const material=captureSelectionMaterial({existing:records,incoming:[],checkedText:text}),generation=inspectMaterial(material).materialGeneration;
+ const session=new Session(Date.now),time=session.now();const record:RequestRecord={input:{schemaVersion:1,sessionId:session.id,sessionEpoch:session.epoch,requestId:'binding-test',revision:1,text,context:[],mode:'typed',language:'en',capturedAt:new Date(time).toISOString(),capture:{source:'typed_fixture',segmentId:'test',confidence:1},userInitiated:true},budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:time,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map(),fingerprint:'offline'};session.requests.set('binding-test',record);
+ const claim:AcceptedClaim={id:'binding-test-claim-0',originalText:text,checkedText:text,sourceSpan:{start:0,end:Array.from(text).length},admission:{assertionStatus:'asserted',hasPracticalConsequence:null,matchedSelectedTopic:null,admissionAction:'check',reasonCode:'offline-structural'}};
+ const owner=(version===7?owner07:owner08)(material,{session,record,admittedClaim:claim,claimSlot:0,readMaterialGeneration:()=>generation,readInstallGeneration:()=> 'test-install',reservedJev:0});
+ let request:any;const fetcher:typeof fetch=async(_url,init)=>{request=JSON.parse(String(init?.body));const answers=Object.fromEntries(Object.entries(request.questions).map(([key,value])=>{const q=value as any;if(q.type==='noul')return[key,{noul:.99}];const keys=Object.keys(q.criteria),choice=key==='claim_risk'?'ordinary':key==='verdict'?'insufficient_evidence':key==='selected_evidence'?'none':key.endsWith('_applicability')?'uncertain':key.endsWith('_content_basis')?'original_record':keys[keys.length-1]!;return[key,{choice,probabilities:Object.fromEntries(keys.map(k=>[k,k===choice?.99:.01/(keys.length-1)]))}];}));return new Response(JSON.stringify({answers,usage:{input_tokens:0}}),{status:200});};
+ await(version===7?adapter07:adapter08)({manifest,dispatchOwner:owner,semanticAsOf:'2026-11-14T06:00:00Z',bindings:bindingOrder.map(alias=>({receiptAlias:alias,artifact:artifacts.get(alias),evidenceId:`source-${alias}`})),apiKey:'OFFLINE_BINDING_ONLY',fetch:fetcher})(claim);
+ return request;
+}
+// Vendor contract: no hidden question ID or any other question is available.
+const visible=(request:any,q:any)=>({state:request.state,instructions:q.instructions,criteria:q.criteria});
+function resolveVisible(payload:any){
+ const source=payload.instructions.match(/use `evidence\[(\d+)\]` \(retained id ("(?:\\.|[^"\\])*")\)/);
+ const descriptor=payload.instructions.match(/and `record_applicability\[(\d+)\]` as its bound record descriptor/);
+ assert.ok(source&&descriptor,'own instructions must identify both paths without hidden question ID');
+ const record=payload.state.evidence[Number(source[1])],entry=payload.state.record_applicability[Number(descriptor[1])];
+ assert.ok(record&&entry);assert.equal(record.id,JSON.parse(source[2]));assert.equal(entry.evidenceId,record.id);
+ return{record,entry,evidenceIndex:Number(source[1]),descriptorIndex:Number(descriptor[1])};
+}
+test('07 distinct intended targets produce identical documented per-question payloads;08 makes them distinct',async()=>{
+ const old=await capture(7,['RA03','RA01'],['RA01','RA03']),fresh=await capture(8,['RA03','RA01'],['RA01','RA03']);
+ const oldItems=Object.values(old.questions).filter((q:any)=>JSON.stringify(q.criteria)===JSON.stringify(APPLICABILITY_CRITERIA));
+ const newItems=Object.values(fresh.questions).filter((q:any)=>JSON.stringify(q.criteria)===JSON.stringify(APPLICABILITY_CRITERIA));assert.equal(oldItems.length,2);assert.equal(newItems.length,2);
+ assert.deepEqual(visible(old,oldItems[0]),visible(old,oldItems[1]));assert.notDeepEqual(visible(fresh,newItems[0]),visible(fresh,newItems[1]));
+ const resolved=newItems.map(q=>resolveVisible(visible(fresh,q)));assert.deepEqual(resolved.map(r=>r.record.id),['source-RA01','source-RA03']);
+ assert.deepEqual(resolved.map(r=>[r.evidenceIndex,r.descriptorIndex]),[[1,0],[0,1]]);
+ for(const q of newItems as any[]){assert.ok(q.instructions.endsWith(APPLICABILITY_INSTRUCTIONS));assert.deepEqual(q.criteria,APPLICABILITY_CRITERIA);}
+ const oldBase=Object.fromEntries(Object.entries(old.questions).filter(([,q]:any)=>JSON.stringify(q.criteria)!==JSON.stringify(APPLICABILITY_CRITERIA)));
+ const newBase=Object.fromEntries(Object.entries(fresh.questions).filter(([,q]:any)=>JSON.stringify(q.criteria)!==JSON.stringify(APPLICABILITY_CRITERIA)));
+ assert.deepEqual(newBase,oldBase);assert.deepEqual(fresh.state.evidence,old.state.evidence);assert.equal(fresh.state.semantic_as_of,old.state.semantic_as_of);
+});
+for(const order of [['RA01','RA03'],['RA03','RA01']])test(`standalone resolver survives source reorder ${order.join(',')} with independent binding order`,async()=>{
+ const req=await capture(8,order,['RA03','RA01']);const items=Object.values(req.questions).filter((q:any)=>JSON.stringify(q.criteria)===JSON.stringify(APPLICABILITY_CRITERIA));
+ assert.deepEqual(items.map(q=>resolveVisible(visible(req,q)).record.id),['source-RA03','source-RA01']);
+});
+test('binding-order subset resolves descriptor0 to the actual nonzero source index',async()=>{
+ const req=await capture(8,['RA01','RA03'],['RA03']);const q=Object.values(req.questions).find((q:any)=>JSON.stringify(q.criteria)===JSON.stringify(APPLICABILITY_CRITERIA));
+ const target=resolveVisible(visible(req,q));assert.equal(target.evidenceIndex,1);assert.equal(target.descriptorIndex,0);assert.equal(target.record.id,'source-RA03');
+});
+test('invalid or out-of-bounds explicit path cannot be rendered',()=>{
+ for(const[evidenceIndex,descriptorIndex]of [[-1,0],[0,6],[6,0],[.5,0]])assert.throws(()=>boundApplicabilityInstructions({evidenceIndex,descriptorIndex,evidenceId:'id'}),/invalid_model_visible_binding/);
+});
