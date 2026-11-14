@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
-import { buildAlternateQuery } from '../../evidence/normalize.js';
+import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE } from '../../evidence/normalize.js';
 
 const checkedText = 'The Eiffel Tower opened in 1889.';
 const originalText = `My salary is private. ${checkedText}`;
@@ -23,7 +23,7 @@ describe('Exa retrieval boundary', () => {
   it('queries only the exact admitted span with neutral auto search', async () => {
     const { retrieve, fake, calls, context } = setup();
     const result = await retrieve(claim, context);
-    expect(fake.search).toHaveBeenCalledWith(checkedText, { type: 'auto', numResults: 5, contents: { highlights: true } });
+    expect(fake.search).toHaveBeenCalledWith(checkedText, { type: 'auto', numResults: 5, objective: RETRIEVAL_OBJECTIVE, contents: { highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 } } });
     expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
     expect(fake.getContents).not.toHaveBeenCalled();
     expect(calls).toEqual(['search']);
@@ -102,9 +102,50 @@ describe('Exa retrieval boundary', () => {
     const admitted = 'According to the 2024 report, the bridge did not open before May.';
     const query = buildAlternateQuery(admitted, 'balanced_evidence');
     expect(query).toContain(JSON.stringify(admitted));
-    expect(query).toContain('supports, challenges, or qualifies');
+    expect(RETRIEVAL_OBJECTIVE).toContain('supports, challenges, or qualifies');
     expect(query).not.toContain('private salary');
     expect(() => buildAlternateQuery(' ', 'balanced_evidence')).toThrow('claim_not_admitted');
+  });
+
+  it('uses broader bounded alternate retrieval without changing the checked proposition or sharing private context', async () => {
+    const { fake, context, calls } = setup();
+    await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.search).toHaveBeenCalledWith(buildAlternateQuery(checkedText, 'balanced_evidence'), {
+      type: 'auto', numResults: 8, objective: RETRIEVAL_OBJECTIVE,
+      contents: { highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 } },
+    });
+    expect(fake.getContents).toHaveBeenCalledWith(['https://tower.org/history'], {
+      text: { maxCharacters: 12000 }, highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 },
+      livecrawl: 'preferred', livecrawlTimeout: 1500,
+    });
+    expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
+    expect(JSON.stringify(vi.mocked(fake.getContents).mock.calls)).not.toContain('salary');
+    expect(calls).toEqual(['search', 'contents']);
+  });
+
+  it('retains a query-directed content highlight when a bounded page prefix is incidental', async () => {
+    const record = 'Archive record R-62: the Eiffel Tower opened in 1889; catalogued by the museum on 14 November 2026.';
+    const { fake, context } = setup({
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0],
+        text: 'Tower cafe: opening hours, tickets and restaurant bookings.', highlights: [record] }] })),
+    });
+    const evidence = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(evidence[0].excerpt).toBe(record);
+    expect(evidence[0].contentBasis).toBe('highlight');
+    expect(evidence[0].sourceRole).toBe('unknown');
+  });
+
+  it('shares the three content attempts across initial and alternate retrieval', async () => {
+    let contents = 0;
+    const { fake, context } = setup({
+      search: vi.fn(async () => ({ results: Array.from({ length: 8 }, (_, i) => ({ url: `https://source${i}.org/record`, highlights: ['Eiffel Tower'] })) })),
+    });
+    const sharedContext = { ...context, canConsume: () => contents < 3,
+      consume: (kind: ProviderKind) => { if (kind === 'contents') { if (contents >= 3) throw new Error('contents_budget_exhausted'); contents++; } } };
+    await createRetriever({ clientFactory: () => fake })(claim, sharedContext);
+    await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, sharedContext);
+    expect(fake.getContents).toHaveBeenCalledTimes(3);
+    expect(fake.search).toHaveBeenCalledTimes(2);
   });
 
   it('distinguishes successful empty retrieval from malformed provider responses', async () => {
