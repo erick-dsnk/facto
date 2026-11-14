@@ -1,0 +1,110 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,hashlib,random,re
+base=Path('/workspace/task-evidence/content-basis-calibration-02'); origin=base/'origin-fetches'
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def dump(name,v):(base/name).write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+def load(p):return json.loads(Path(p).read_text())
+def cut(t,start,end):
+ a=t.index(start);b=t.index(end,a)+len(end);return t[a:b]
+records=[]
+for p in origin.glob('*fetch-manifest.json'):records+=load(p)['records']
+urls=[
+'https://www.legislation.gov.uk/ukpga/2004/37/section/1',
+'https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm',
+'https://collectionapi.metmuseum.org/public/collection/v1/objects/436535',
+'https://www.pulitzer.org/winners/colson-whitehead-0',
+'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665',
+'https://api.elifesciences.org/articles/78525']
+source=[]
+for i,url in enumerate(urls,1):
+ r=next(r for r in records if r['requestedUrl']==url);assert r['status']==200 and not r['truncated'];assert sha(r['bodyFile'])==r['bodySHA256'];source.append({'sourceFamily':f'CBF{i:02}','partition':'development' if i in [1,3,5] else 'validation','url':url,'proof':r})
+texts=[Path(s['proof']['textFile']).read_text() for s in source]
+raw=[Path(s['proof']['bodyFile']).read_text() for s in source]
+excerpts=[
+cut(texts[0],'1 Hunting wild mammals with dogs','unless his hunting is exempt.'),
+cut(texts[1],'Public Law 117-17 117th Congress An Act','Approved June 17, 2021.'),
+cut(raw[2],'"department":"European Paintings"','"medium":"Oil on canvas"'),
+cut(texts[3],'The 2020 Pulitzer Prize Winner in Fiction','The Nickel Boys , by Colson Whitehead (Doubleday)'),
+cut(texts[4],'We tested the effect of the LGMF','These results indicate that the LGMF does not act as the reference for the alignment of waggle-dancing bees.'),
+json.loads(raw[5])['abstract']['content'][0]['text']]
+titles=['Hunting Act 2004, section 1','Public Law 117-17: Juneteenth National Independence Day Act','Metropolitan Museum of Art collection object 436535','Colson Whitehead | The Pulitzer Prizes',"Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance?",json.loads(raw[5])['title']]
+claims=[
+('Under section 1 of the Hunting Act 2004, hunting a wild mammal with a dog is an offence unless the hunting is exempt.','Under section 1 of the Hunting Act 2004, hunting a wild mammal with a dog is not an offence even when the hunting is not exempt.'),
+('Public Law 117-17 designates Juneteenth National Independence Day on June 19 as a legal public holiday.','Public Law 117-17 designates Juneteenth National Independence Day on June 20 as a legal public holiday.'),
+('The Met catalogue dates Wheat Field with Cypresses by Vincent van Gogh to 1889.','The Met catalogue dates Wheat Field with Cypresses by Vincent van Gogh to 1888.'),
+('The 2020 Pulitzer Prize in Fiction was awarded to The Nickel Boys by Colson Whitehead.','The 2020 Pulitzer Prize in Fiction was awarded to The Underground Railroad by Colson Whitehead.'),
+('In the described honeybee experiments, neither reducing the local geomagnetic field to 2% nor shifting its declination reduced recruitment to the feeding station 200 m north of the hive.','In the described honeybee experiments, reducing the local geomagnetic field to 2% and shifting its declination both reduced recruitment to the feeding station 200 m north of the hive.'),
+('After learning pairs of flowers distinguished by sucrose concentration, the bumblebees in the described experiments preferred higher-ranking flowers over flowers with higher absolute reward in novel pairings.','After learning pairs of flowers distinguished by sucrose concentration, the bumblebees in the described experiments preferred flowers with higher absolute reward over higher-ranking flowers in novel pairings.')]
+basis=[
+'The retained provision includes its section heading, jurisdiction marker and the operative offence rule with its exemption. This is legal content, irrespective of whether the proposition agrees with it.',
+'The retained public-law identifier and operative amendment specify the designated holiday and June 19. A changed asserted date changes stance, not the presence of statutory content.',
+'The catalogue body contains labelled object-title, artist, date and medium fields. The date is an actual retained record field, not an inference from the separate page title.',
+'The retained award-register heading supplies the year and category, and its content supplies the winning work and author. This is the award record itself, not an unrelated promotional book description.',
+'The passage describes Helmholtz-coil experimental manipulations, recruitment outcome, station distance, and a null result. A claim falsely asserting a reduction still faces substantive experimental content.',
+'The abstract specifies flower-pair discrimination by sucrose concentration and novel-pairing preference outcomes. The opposing proposition does not erase that retained method and finding.']
+spans=[
+'A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.',
+'Section 6103(a) of title 5, United States Code, is amended by inserting after the item relating to Memorial Day the following: ``Juneteenth National Independence Day, June 19.\'\'.',
+'"objectDate":"1889","objectBeginDate":1889,"objectEndDate":1889',
+excerpts[3],
+excerpts[4],
+'A series of experiments showed that after learning to discriminate pairs of different flowers by sucrose concentration, bumblebees preferred flowers (in novel pairings) with (1) higher ranking over equal absolute reward, (2) higher ranking over higher absolute reward, and (3) identical qualitative ranking but different quantitative ranking equally.']
+strata=['legal_operative_rule','formal_enactment_date','catalogue_record_fields','award_register_heading_and_contents','experimental_null_finding','experimental_preference_finding']
+for i,s in enumerate(source):
+ s.update(title=titles[i],publishedAt=['2004-11-18','2021-06-17',None,None,'2014-12-26',json.loads(raw[5])['published']][i],dateNotes=['Act date; retained section is the current available text at fetch time.','Approval date appears in retained enacted law.','Artwork date is 1889; API metadataDate is not artwork or publication date.','Award year is 2020; page publication date not established.','Article publication date appears in source.','Article publication timestamp supplied by publisher API.'][i],passage=excerpts[i],passageSHA256=hashlib.sha256(excerpts[i].encode()).hexdigest(),extraction=['Contiguous whitespace-normalized visible HTML text.','Contiguous whitespace-normalized visible HTML text.','Contiguous exact raw JSON substring of catalogue response.','Contiguous whitespace-normalized visible HTML text.','Contiguous whitespace-normalized visible HTML text.','Exact decoded JSON string at /abstract/content/0/text; no rewriting or concatenation.'][i],qualifyingRecordCount=1)
+ assert spans[i] in excerpts[i]
+ assert len(excerpts[i])<=2000
+units=[];labels=[]
+def add(i,variant,proposition,excerpt,title=None,synthetic=False,transform='none',decision='substantive',reason='',span=None,stance='not_assessed',category=None,ambiguity=False):
+ s=source[i];uid=f'tmp-{i}-{variant}'
+ u={'id':uid,'proposition':proposition,'title':title or titles[i],'url':urls[i],'excerpt':excerpt,'partition':s['partition'],'sourceFamily':s['sourceFamily'],'category':category or strata[i],'synthetic':synthetic,'provenance':{'sourceFamily':s['sourceFamily'],'transform':transform,'sourceUrl':urls[i],'syntheticWarning':'Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.' if synthetic else None,'passageId':s['sourceFamily']+'-P01' if variant in ['support','refute'] else None}}
+ units.append(u);labels.append({'id':uid,'expectedBasis':decision,'supportingSpan':span if span is not None else excerpt,'stanceDiagnostic':stance,'labelReason':reason,'ambiguity':ambiguity,'excludeFromPrimary':ambiguity})
+for i in range(6):
+ add(i,'support',claims[i][0],excerpts[i],reason=basis[i],span=spans[i],stance='supports')
+ add(i,'refute',claims[i][1],excerpts[i],reason=basis[i],span=spans[i],stance='contradicts')
+# Actual heading / citation-only controls preserve text but intentionally strip substantive bodies.
+add(0,'heading',claims[0][0],cut(texts[0],'1 Hunting wild mammals with dogs','This section has no associated Explanatory Notes'),decision='insufficient',reason='The retained body identifies a section topic and geographic extent but contains no operative legal rule. A separate statute title cannot supply the missing offence or exemption terms.',category='actual_heading_without_operative_contents',transform='Exact contiguous heading/context retained; operative sentence removed.')
+add(0,'attribution','The Hunting Act 2004 has reduced illegal hunting.','Legal commentators agree that the Hunting Act 2004 has reduced illegal hunting. This landmark success shows that the law works.',synthetic=True,transform='Synthetic attributed efficacy claim; no genuine source quotation.',decision='non_substantive',reason='An unattributed consensus and efficacy assertion supplies no measurement, identified study, comparison, or specific record supporting the claimed reduction.',category='synthetic_attribution_without_basis')
+add(1,'citation',claims[1][0],'Public Law 117-17 117th Congress',title='Juneteenth National Independence Day is a legal public holiday on June 19',synthetic=True,transform='Body is an exact source identifier; separate retrieval title is a synthetic assertive metadata control. Operative contents omitted.',decision='insufficient',reason='A law citation identifies a document but does not retain its terms. The asserted holiday date appears only in separate metadata, which cannot substitute for body contents.',category='metadata_overclaim_with_identifier_only')
+add(1,'heading',claims[1][0],'SEC. 2. JUNETEENTH NATIONAL INDEPENDENCE DAY AS A LEGAL PUBLIC HOLIDAY.',decision='insufficient',transform='Exact contiguous section heading retained; operative date and amendment omitted.',reason='The section heading identifies the holiday topic but no operative text or calendar date is retained. It cannot establish the June 19 statutory relation from its heading alone.',category='actual_heading_without_operative_contents')
+add(2,'title',claims[2][1],'"title":"Wheat Field with Cypresses"',title='Wheat Field with Cypresses, Vincent van Gogh, 1888',synthetic=True,transform='Exact catalogue title field only; separate metadata title deliberately overclaims a false date. Artist/date fields omitted.',decision='insufficient',reason='The retained body gives only the object title. The separate metadata title asserts 1888 but the catalogue date field is missing. Source quality cannot be recovered from that title assertion.',category='metadata_overclaim_with_record_title_only')
+add(2,'promotion',claims[2][0],'Experts agree that Wheat Field with Cypresses dates to 1889. Our definitive art guide brings you the most accurate scholarship on this masterpiece.',synthetic=True,transform='Synthetic guide promotion and unsupported attribution; not actual museum text.',decision='non_substantive',reason='The passage repeats a date through unnamed experts and praises a guide. It provides no retained catalogue entry, identified scholarly account, analysis, or basis for the dating.',category='synthetic_promotion_with_factual_assertion')
+add(3,'heading',claims[3][0],'Winning Work',decision='insufficient',transform='Exact award-page body heading retained; winning-work contents and category/year heading omitted.',reason='The body heading does not identify the winning work, category, or award year; external page metadata and URL cannot supply an absent record.',category='actual_body_heading_without_record')
+add(3,'advert',claims[3][0],'A reading-club host says, “The Nickel Boys won the 2020 Pulitzer Prize in Fiction.” Join our discussion and discover the award-winning novel everyone is talking about.',synthetic=True,transform='Synthetic promotion quoting an unsubstantiated award assertion; not actual award-register content.',decision='non_substantive',reason='The host merely asserts the award outcome inside an advertisement. No actual award register, awarding act, named record, or reported examination is retained; the checked proposition concerns the award, not whether the host said this.',category='synthetic_attributed_award_assertion')
+citation=cut(texts[4],'Citation: Lambinet V, Hayden ME, Bieri M, Gries G (2014)','https://doi.org/10.1371/journal.pone.0115665')
+add(4,'citation',claims[4][0],citation,decision='insufficient',transform='Exact bibliographic citation retained; abstract methods/results omitted.',reason='A bibliographic citation with a question-form paper title locates research but retains no method or result. It is not itself the experimental finding.',category='actual_research_citation_only')
+speculation='Yet, there is tantalizing evidence that the local (ambient) geomagnetic field (LGMF) could play a role.'
+assert speculation in texts[4]
+add(4,'speculation','The local geomagnetic field acts as the reference for alignment of honeybee waggle dances.',speculation,decision='insufficient',transform='Exact single speculative sentence retained; all alleged evidence, methods and subsequent tests omitted.',reason='The sentence alludes to unspecified tantalizing evidence and a possible role without retaining an identifiable observation, method, result, or record. It does not become substantive just because it came from a research paper.',category='actual_research_sounding_assertion_without_evidence')
+add(5,'title',claims[5][0],titles[5],decision='insufficient',transform='Exact publisher article title retained as a body heading; abstract and findings omitted.',reason='The title asserts a conclusion, but no study design, observed contrast, data, or result account is retained. Heading wording and publisher metadata cannot replace the missing research body.',category='actual_conclusion_title_only')
+add(5,'promotion','Training with the advertised bumblebee learning system makes every bee choose the best reward in every setting.','Controlled research confirms flawless decisions. Our revolutionary bumblebee learning system makes every bee choose the best reward in every setting.',synthetic=True,transform='Synthetic research-sounding product promotion; no genuine research quotation.',decision='non_substantive',reason='The phrase controlled research names no identifiable study or procedure and the universal performance claim supplies no result or comparison. It is an unsupported benefit advertisement.',category='synthetic_research_sounding_promotion')
+assert len(units)==24
+# IDs and review order are deterministically shuffled independently of expected class/stance.
+rng=random.Random(2026111402);order=list(range(24));rng.shuffle(order);mapping={units[ix]['id']:f'CB{n+1:02}' for n,ix in enumerate(order)}
+for u in units:u['id']=mapping[u['id']]
+for l in labels:l['id']=mapping[l['id']]
+units=sorted(units,key=lambda u:u['id']);labels=sorted(labels,key=lambda u:u['id'])
+for u in units:
+ l=next(l for l in labels if l['id']==u['id']);assert 0<len(u['excerpt'])<=2000;assert l['supportingSpan'] in u['excerpt']
+minimal=[{k:u[k] for k in ['id','proposition','title','url','excerpt']} for u in units]
+dump('source-records.json',{'schemaVersion':1,'sources':source,'unusedOriginProbes':[r for r in records if r['requestedUrl'] not in urls],'note':'Only six selected fresh HTTP 200 substantive responses supply corpus excerpts. Failed or challenged origin responses and unused connector captures are not corpus proof.'})
+dump('units.unlabeled.json',{'schemaVersion':1,'purpose':'OPEN development content-basis calibration; six passages with opposed stance propositions and matched bounded controls. Not blind verdict evaluation.','units':units})
+dump('annotation-inputs.json',{'schemaVersion':1,'units':minimal})
+dump('annotation-first.json',{'schemaVersion':1,'annotator':'source_calibration independent AI agent','labels':labels,'candidatePromptOrCodeReadForThisStudy':False,'providerOutputsViewed':False})
+rubric='''Assess only the retained excerpt for the checked proposition. Choose expectedBasis substantive, non_substantive, or insufficient; provide a supportingSpan that is an exact substring of the excerpt, a rationale, a separate stanceDiagnostic, and ambiguity/excludeFromPrimary flags when a genuine boundary remains.
+
+Substantive means the body retains an identifiable concrete evidentiary basis: operative record content, a catalogue/register entry with relevant fields, an actual institutional act/award record, research methods and findings, or specific reporting of such a basis. A quoted record heading plus its actual contents can identify the field or relation; a heading, citation, URL or separate metadata title alone does not supply missing contents. A shorter record is not automatically weaker; a longer passage is not automatically stronger.
+
+This is a content-basis assessment, separate from agreement with the proposition. Substantive evidence may support or refute the claim. Do not mark a real record negative merely because its value disagrees with the claim. Conversely, a confidently repeated proposition may lack a substantive basis even if it is true. Do not equate detail richness, official-looking URLs, title assertions, institutional prestige, or the word research with evidence. URL/title may identify context, but do not supply absent body facts or prove authenticity.
+
+Non_substantive means the retained material is recognizably only promotion, attribution, an unsupported benefit/general assertion, or another form lacking a demonstrated content basis. Insufficient means a fragment, heading, citation, speculative allusion or incomplete extract leaves no adequate retained basis to assess. The boundary between these two negative categories is secondary; preserve disagreement about substantive status rather than forcing a favorable label.
+
+For attribution, distinguish the underlying proposition from the proposition that someone said it. A quote can establish the latter without substantiating the former. Generic reference sentences are not automatically positive or negative: assess whether the retained text actually identifies a substantive basis, and flag genuine uncertainty. This rubric does not assess source truth/authenticity, independence, source-group count, claim risk, or ultimate verdict sufficiency. A positive label does not authorize a definitive verdict or relax other gates.
+
+You are reviewing only exact candidate inputs. Some cases are controlled truncations or synthetic contrasts; no unstated source contents may rescue the retained excerpt. Independently label all units before seeing first labels, candidate prompt/code, or provider results. Do not browse source pages or infer hidden content from the URL. Record ambiguity explicitly.
+'''
+(base/'rubric.md').write_text(rubric)
+files=['source-records.json','units.unlabeled.json','annotation-inputs.json','annotation-first.json','rubric.md']
+dump('first-label-freeze.json',{'schemaVersion':1,'frozen':True,'frozenAt':datetime.now(timezone.utc).isoformat(),'candidatePromptOrCodeReadForThisStudy':False,'providerOutputsViewed':False,'projectProviderCalls':0,'counts':{'units':24,'positiveUnits':12,'distinctPositivePassages':6,'sourceFamilies':6,'developmentUnits':12,'validationUnits':12,'negativeUnits':12,'syntheticOrMetadataAlteredControls':sum(u['synthetic'] for u in units)},'files':{f:sha(base/f) for f in files}})
+print(json.dumps({'units':24,'counts':{x:sum(l['expectedBasis']==x for l in labels) for x in ['substantive','non_substantive','insufficient']},'firstFreezeSHA256':sha(base/'first-label-freeze.json'),'excerptLengths':[len(x) for x in excerpts]},indent=2))
