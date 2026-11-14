@@ -32,6 +32,8 @@ final class LensCardViewModel {
 /// - `notify`: a quiet chime plus a card. No playback reporting, so listening continues.
 /// - `silent` (and any action this build does not know): history only. Never promoted.
 /// - Muted: no speech and no chime; cards and history stay.
+/// - VoiceOver hears every card the wearer doesn't: a muted answer or a chimed alert is
+///   announced. A spoken card isn't, so VoiceOver never talks over the line.
 @MainActor
 final class ResultPresenter: ResultPresenting {
   private static let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "output")
@@ -48,6 +50,8 @@ final class ResultPresenter: ResultPresenting {
   private weak var playback: PlaybackReporting?
   private let now: () -> Date
   private let debugLog: DebugLog
+  /// Posts a VoiceOver announcement.
+  private let announce: @MainActor (String) -> Void
   /// Set while a line is speaking. Only the newest line's finish ends playback, so
   /// interrupting one answer with another reports a single started/ended pair.
   private var activeUtterance: UUID?
@@ -59,7 +63,8 @@ final class ResultPresenter: ResultPresenting {
     history: ResultHistory,
     lens: LensCardViewModel,
     now: @escaping () -> Date = Date.init,
-    debugLog: DebugLog = .shared
+    debugLog: DebugLog = .shared,
+    announce: @escaping @MainActor (String) -> Void = { VoiceOverAnnouncer.post($0) }
   ) {
     self.speaker = speaker
     self.chime = chime
@@ -68,6 +73,7 @@ final class ResultPresenter: ResultPresenting {
     self.lens = lens
     self.now = now
     self.debugLog = debugLog
+    self.announce = announce
   }
 
   /// Production wiring with the system speaker and chime.
@@ -191,6 +197,9 @@ final class ResultPresenter: ResultPresenting {
       }
     case .silent, .unknown:
       delivery = .silent
+    }
+    if delivery == .cardOnly || delivery == .chimed {
+      announce(card.accessibilityLabel)
     }
 
     history.record(ResultHistory.Entry(

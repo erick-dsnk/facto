@@ -388,6 +388,7 @@ final class ResultPresenterTests: XCTestCase {
   private var history: ResultHistory!
   private var lens: LensCardViewModel!
   private var presenter: ResultPresenter!
+  private var announced: [String] = []
 
   override func setUp() async throws {
     speaker = FakeSpeaker()
@@ -396,7 +397,11 @@ final class ResultPresenterTests: XCTestCase {
     speaker.log = playback
     history = ResultHistory()
     lens = LensCardViewModel()
-    presenter = ResultPresenter(speaker: speaker, chime: chime, playback: playback, history: history, lens: lens)
+    announced = []
+    presenter = ResultPresenter(
+      speaker: speaker, chime: chime, playback: playback, history: history, lens: lens,
+      announce: { [unowned self] in self.announced.append($0) }
+    )
   }
 
   private func present(_ result: ClaimResult, _ id: ClaimIdentity = identity(), userInitiated: Bool = false) {
@@ -463,6 +468,27 @@ final class ResultPresenterTests: XCTestCase {
 
     presenter.isMuted = false
     XCTAssertTrue(speaker.spoken.isEmpty, "unmuting does not replay muted results")
+  }
+
+  func testVoiceOverHearsEveryCardTheWearerDoesNot() {
+    present(result(.supported, action: .respond), identity("a"), userInitiated: true)
+    XCTAssertTrue(announced.isEmpty, "a spoken card isn't announced over the speech")
+
+    present(result(.contradicted, action: .notify), identity("b"))
+    XCTAssertEqual(announced, [lens.card?.accessibilityLabel ?? ""], "a chime alone doesn't say the verdict")
+
+    presenter.isMuted = true
+    present(result(.misleading, action: .respond), identity("c"), userInitiated: true)
+    XCTAssertEqual(announced.count, 2)
+    XCTAssertEqual(announced.last, lens.card?.accessibilityLabel)
+    XCTAssertEqual(announced.last?.hasPrefix("Misleading."), true)
+
+    present(result(.supported, action: .silent), identity("d"))
+    XCTAssertEqual(announced.count, 2, "silent results stay in history only")
+
+    presenter.isMuted = false
+    XCTAssertTrue(presenter.repeatLatest())
+    XCTAssertEqual(announced.count, 2, "Repeat speaks, so VoiceOver stays quiet")
   }
 
   func testInterruptingSpeechReportsOnePlaybackPair() {

@@ -4,7 +4,7 @@ import SwiftUI
 /// Live mode's latest notice.
 ///
 /// Tone shows as the badge's weight, from a hairline ring to a solid disc, never as green or
-/// red.
+/// red. VoiceOver announces the line when it turns into a problem.
 struct StatusLine: View {
   let status: HomeStatus
   let notice: String?
@@ -44,6 +44,15 @@ struct StatusLine: View {
           .frame(maxWidth: .infinity, alignment: .leading)
       }
     }
+    .onChange(of: status) { old, new in announceProblem(from: old, to: new) }
+  }
+
+  /// Announces going offline, an error, or a missing join code: any line with a fix button
+  /// or the solid badge. Reconnecting and connecting stay quiet.
+  private func announceProblem(from old: HomeStatus, to new: HomeStatus) {
+    guard new.tone == .bad || new.action != nil else { return }
+    guard new.text != old.text || new.detail != old.detail else { return }
+    VoiceOverAnnouncer.post("\(new.text.replacingOccurrences(of: " · ", with: ", ")). \(new.detail)")
   }
 
   /// Grows with Dynamic Type up to 56 pt, enough to read without crowding the text.

@@ -16,6 +16,9 @@ enum FactoPalette {
   static let verdictTrue = UIColor(factoHex: 0x2F6F3E)
   /// #8B1E24, `--v-false`.
   static let verdictFalse = UIColor(factoHex: 0x8B1E24)
+  /// #E3E3E6, secondary text on both verdict fills. Solid, because off-white at 74% over the
+  /// True fill drops to 3.9:1. This measures 4.7:1 on True and 7.1:1 on False (WCAG 1.4.3).
+  static let onVerdictSecondary = UIColor(factoHex: 0xE3E3E6)
   /// `verdictTrue` lifted 38% toward white, as the website's lens popup does. For the lens.
   static let lensTrue = UIColor(factoHex: 0x7EA484)
   /// `verdictFalse` lifted 38% toward white. For the lens.
@@ -51,8 +54,8 @@ extension ShapeStyle where Self == Color {
   static var factoVerdictFalse: Color { Color(uiColor: FactoPalette.verdictFalse) }
   /// Text on a verdict fill, in both modes.
   static var factoOnVerdict: Color { Color(uiColor: FactoPalette.offWhite) }
-  /// Secondary text on a verdict fill, in both modes.
-  static var factoOnVerdictSecondary: Color { Color(uiColor: FactoPalette.offWhite.withAlphaComponent(0.74)) }
+  /// Secondary text on a verdict fill, in both modes. At least 4.5:1 on both fills.
+  static var factoOnVerdictSecondary: Color { Color(uiColor: FactoPalette.onVerdictSecondary) }
 }
 
 extension Color {

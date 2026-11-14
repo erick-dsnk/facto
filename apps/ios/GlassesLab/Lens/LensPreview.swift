@@ -2,6 +2,8 @@ import SwiftUI
 
 /// What the lens shows right now, redrawn on the phone: the claim, then its result card.
 /// Cross-fades when the card changes, without animation under Reduce Motion.
+/// VoiceOver hears a new card from ResultPresenter, which announces every card it shows
+/// without speaking it.
 struct LensPreview: View {
   let card: ResultCard?
 
