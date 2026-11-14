@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { sliceSpan, textInputSchema } from './index.js';
-import { claimResultSchema, eventEnvelopeSchema } from './wire.js';
+import { claimResultSchema, eventEnvelopeSchema, displaySnapshotSchema } from './wire.js';
 
 const fixture = (name: string): unknown => JSON.parse(readFileSync(new URL(`../fixtures/${name}.json`, import.meta.url), 'utf8'));
 describe('version 1 golden contracts', () => {
@@ -25,6 +25,17 @@ describe('version 1 golden contracts', () => {
     const capture = fixture('event-capture-request') as Record<string, unknown>;
     expect(eventEnvelopeSchema.safeParse(capture).success).toBe(true);
     expect(eventEnvelopeSchema.safeParse({ ...capture, payload: {} }).success).toBe(false);
+  });
+  it('validates bounded correlated source progress and reconnect display snapshot', () => {
+    const sourceEvent = fixture('event-claim-sources') as Record<string, unknown>;
+    expect(eventEnvelopeSchema.safeParse(sourceEvent).success).toBe(true);
+    expect(eventEnvelopeSchema.safeParse({ ...sourceEvent, revision: undefined }).success).toBe(false);
+    const source = (sourceEvent.payload as { sources: unknown[] }).sources[0];
+    expect(eventEnvelopeSchema.safeParse({ ...sourceEvent, payload: { sources: Array(5).fill(source) } }).success).toBe(false);
+    const snapshot = displaySnapshotSchema.parse(fixture('display-snapshot'));
+    expect(displaySnapshotSchema.safeParse({ ...snapshot, state: { ...snapshot.state, claimText: '🙂'.repeat(800) } }).success).toBe(true);
+    expect(displaySnapshotSchema.safeParse({ ...snapshot, state: { ...snapshot.state, claimText: '🙂'.repeat(801) } }).success).toBe(false);
+    expect(displaySnapshotSchema.safeParse({ ...(fixture('display-snapshot') as object), state: null }).success).toBe(true);
   });
   it('rejects invented citations and spans that do not select the checked text', () => {
     const result = claimResultSchema.parse(fixture('result-manual-supported'));

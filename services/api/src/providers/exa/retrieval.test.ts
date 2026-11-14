@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { PipelineError, type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
+import { PipelineError, type DisplaySource, type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
 import { AttemptBudget } from '../../runtime/budget.js';
@@ -29,6 +29,20 @@ describe('Exa retrieval boundary', () => {
     expect(fake.getContents).not.toHaveBeenCalled();
     expect(calls).toEqual(['search']);
     expect(result[0].excerpt).toBe(excerpt);
+  });
+
+  it('reports actual source sites after search and around enrichment, bounded and without provider-as-source icons', async () => {
+    const { context, retrieve } = setup({
+      search: async () => ({ results: Array.from({ length: 6 }, (_, index) => ({ url: `https://source${index}.org/history`, title: `Eiffel Tower Source ${index}`, highlights: [] })) }),
+      getContents: async urls => ({ results: [{ url: urls[0], text: excerpt }] })
+    });
+    const progress: DisplaySource[][] = []; context.reportSources = sources => progress.push(sources);
+    await retrieve(claim, context);
+    expect(progress[0]).toHaveLength(4); expect(progress[0].every(source => source.stage === 'found')).toBe(true);
+    expect(progress.some(sources => sources.some(source => source.stage === 'reading'))).toBe(true);
+    expect(progress.at(-1)!.every(source => source.stage === 'ready')).toBe(true);
+    expect(progress.flat().every(source => source.hostname.startsWith('source') && source.provider === 'exa')).toBe(true);
+    expect(new Set(progress.flat().filter(source => source.hostname === 'source0.org').map(source => source.id)).size).toBe(1);
   });
 
   it('uses only the exact public span in the alternate query and keeps span validation', async () => {

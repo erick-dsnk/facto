@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "progress-1",
+  "eventSeq": 2,
+  "sessionId": "session-1",
+  "sessionEpoch": 1,
+  "requestId": "request-1",
+  "claimId": "claim-1",
+  "revision": 1,
+  "type": "claim.sources",
+  "serverAt": "2026-11-14T10:00:00Z",
+  "payload": {
+    "sources": [
+      {
+        "id": "tower-site",
+        "hostname": "toureiffel.paris",
+        "title": "The Eiffel Tower",
+        "stage": "reading",
+        "provider": "exa"
+      }
+    ]
+  }
+}

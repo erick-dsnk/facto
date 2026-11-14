@@ -411,19 +411,38 @@ final class ChimeToneTests: XCTestCase {
 
 @MainActor
 final class DisplayCardBuilderTests: XCTestCase {
-  func testCardShowsVerdictExcerptSourceAndHint() {
-    let card = ResultCard(result: result(.misleading))
+  func testCardUsesRealClaimSummaryAndPublisher() {
+    var checked = result(.misleading)
+    checked.summary = "The tower opened in 1889, after construction began in 1887."
+    let card = ResultCard(result: checked)
     let texts = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
-    XCTAssertEqual(texts, ["Needs context", "The Eiffel Tower opened in 1889.", "Source: Eiffel Tower", "Details on your phone"])
+    XCTAssertEqual(texts, ["The Eiffel Tower opened in 1889.", "Needs context", checked.summary, "Eiffel Tower"])
+    XCTAssertNil(card.captureLabel, "The result contract alone does not identify the input mode")
   }
 
-  func testButtonsAppearOnlyWithHandlers() {
+  func testDisplayControlsRemainOnThePhone() {
     let card = ResultCard(outcome: .checkFailed, claimText: nil)
     let plain = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
-    XCTAssertEqual(plain, ["Check failed", "Try again"])
+    let withHandlers = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card, onRepeat: {}, onDismiss: {}))
+    XCTAssertEqual(plain, ["Check failed", "The check didn't finish."])
+    XCTAssertEqual(withHandlers, plain)
+  }
 
-    let withButtons = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card, onRepeat: {}, onDismiss: {}))
-    XCTAssertEqual(withButtons, ["Check failed", "Try again", "Repeat", "Dismiss"])
+  func testEmptySummaryDoesNotInventACorrection() {
+    let card = ResultCard(result: result(.contradicted))
+    XCTAssertNil(card.detailText)
+    let texts = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
+    XCTAssertTrue(texts.contains("The evidence I found contradicts that claim."))
+  }
+
+  func testNativeSearchingUsesOnlyFourDistinctValidHosts() {
+    let hosts = ["toureiffel.paris", "https://bad.example/path", "TOUREIFFEL.PARIS", "user@bad.example", "britannica.com", "wikipedia.org", "sciencemuseum.org.uk", "extra.example"]
+    let sources = hosts.enumerated().map { index, host in
+      ClaimSourcesPayload.Source(id: String(index), hostname: host, title: "", stage: "found", provider: "exa")
+    }
+    XCTAssertEqual(NativeLensCardLayout.sourceHostnames(sources), ["toureiffel.paris", "britannica.com", "wikipedia.org", "sciencemuseum.org.uk"])
+    let texts = DisplayCardBuilder.textContents(of: NativeLensCardLayout.searching(claimText: "A real incoming claim", captureLabel: "Read from screen", sources: sources))
+    XCTAssertEqual(texts, ["Read from screen", "A real incoming claim", "Searching..."])
   }
 
   func testLensAndMirrorHaveAnIconForEveryKind() {

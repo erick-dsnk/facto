@@ -32,14 +32,33 @@ export const claimResultSchema: z.ZodType<ClaimResult> = z.object({
     ctx.addIssue({ code: 'custom', message: 'Result cannot expire before it was checked', path: ['expiresAt'] });
   }
 });
+export const displaySourceSchema = z.object({
+  id: z.string().min(1).max(100), hostname: z.string().min(1).max(253).regex(/^[a-z0-9.-]+$/i),
+  title: z.string().max(160), stage: z.enum(['found', 'reading', 'ready']), provider: z.literal('exa')
+}).strict();
+export const claimSourcesSchema = z.object({ sources: z.array(displaySourceSchema).max(4) }).strict().superRefine(({ sources }, ctx) => {
+  if (new Set(sources.map(source => source.id)).size !== sources.length || new Set(sources.map(source => source.hostname)).size !== sources.length) ctx.addIssue({ code: 'custom', message: 'Source sites must have unique IDs and hostnames' });
+});
+export const displayStateSchema = z.object({
+  requestId: z.string().min(1), claimId: z.string().min(1), revision: z.number().int().positive(), claimText: z.string().refine(value => Array.from(value).length <= 800),
+  mode: z.enum(['ocr', 'audio', 'typed']), userInitiated: z.boolean(), phase: z.enum(['checking', 'result']),
+  sources: z.array(displaySourceSchema).max(4), result: claimResultSchema.optional()
+}).strict().superRefine((state, ctx) => {
+  if (state.phase === 'checking' ? !state.userInitiated || state.result !== undefined : !state.result || state.result.presentation.action === 'silent') ctx.addIssue({ code: 'custom', message: 'Display state must be a manual check or a visible result' });
+});
+export const displayGrantSchema = z.object({ schemaVersion: z.literal(1), sessionId: z.string().min(1), sessionEpoch: z.number().int().positive(), displayToken: z.string().min(32), expiresAt: timestamp, streamPath: z.string().startsWith('/v1/sessions/') }).strict();
+export const displaySnapshotSchema = z.object({ schemaVersion: z.literal(1), type: z.literal('display.snapshot'), sessionId: z.string().min(1), sessionEpoch: z.number().int().positive(), eventSeq: z.number().int().nonnegative(), active: z.boolean(), expiresAt: timestamp, state: displayStateSchema.nullable() }).strict();
 export const eventEnvelopeSchema = z.object({
   schemaVersion: z.literal(1), eventId: z.string().min(1), eventSeq: z.number().int().positive(),
   sessionId: z.string().min(1), sessionEpoch: z.number().int().positive(), requestId: z.string().optional(),
   claimId: z.string().optional(), revision: z.number().int().positive().optional(),
   type: z.enum(['session.ready', 'session.ended', 'claim.detected', 'claim.waiting', 'claim.skipped', 'claim.needs_confirmation',
-    'claim.checking', 'claim.result', 'claim.superseded', 'check.cancelled', 'pipeline.error', 'audio.ready', 'audio.stopped', 'transcript.partial', 'transcript.final', 'capture.request']),
+    'claim.checking', 'claim.sources', 'claim.result', 'claim.superseded', 'check.cancelled', 'pipeline.error', 'audio.ready', 'audio.stopped', 'transcript.partial', 'transcript.final', 'capture.request']),
   serverAt: timestamp, payload: z.unknown()
 }).strict().superRefine((event, ctx) => {
+  if (event.type === 'claim.sources') {
+    if (!claimSourcesSchema.safeParse(event.payload).success || !event.requestId || !event.claimId || !event.revision) ctx.addIssue({ code: 'custom', message: 'Invalid correlated claim.sources payload' });
+  }
   if (event.type === 'claim.result') {
     const result = claimResultSchema.safeParse(event.payload);
     if (!result.success) ctx.addIssue({ code: 'custom', message: 'Invalid claim.result payload', path: ['payload'] });

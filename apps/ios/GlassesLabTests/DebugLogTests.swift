@@ -352,8 +352,9 @@ final class DebugLogWiringTests: XCTestCase {
 
   func testBackendClientLogsRawEventsAndCheckBodiesWithoutTheTokenOrJoinCode() async throws {
     let token = "tok_secret_value_123"
+    let expiresAt = ISO8601DateFormatter().string(from: Date().addingTimeInterval(300))
     let created = Data(#"""
-    {"schemaVersion":1,"sessionId":"session-1","token":"\#(token)","sessionEpoch":1,"expiresAt":"2026-11-14T10:05:00.000Z","capabilities":{"mode":"fixture","text":true,"audio":true}}
+    {"schemaVersion":1,"sessionId":"session-1","token":"\#(token)","sessionEpoch":1,"expiresAt":"\#(expiresAt)","capabilities":{"mode":"fixture","text":true,"audio":true}}
     """#.utf8)
     MockURLProtocol.handler = { request, _ in
       if request.httpMethod == "POST", request.url?.path == "/v1/sessions" { return (201, created) }
@@ -368,7 +369,7 @@ final class DebugLogWiringTests: XCTestCase {
     let client = BackendClient(
       config: BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "demo-join-code"),
       urlSession: MockURLProtocol.session(),
-      policy: ReconnectPolicy(openTimeout: 1, pingInterval: 0),
+      policy: ReconnectPolicy(retryCycleDelay: nil, openTimeout: 1, pingInterval: 0),
       webSocketFactory: sockets.factory,
       sleep: timeline.sleep,
       uptime: { timeline.now },

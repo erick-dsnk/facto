@@ -9,10 +9,15 @@ WORKDIR /app
 # Plain `npm ci`, not --omit=dev: on main, tsx and ws are devDependencies.
 # NODE_ENV stays unset before this line because NODE_ENV=production would also drop devDependencies.
 COPY package.json package-lock.json ./
+# npm workspaces needs each workspace manifest present before `npm ci`.
+COPY apps/glasses/package.json ./apps/glasses/package.json
 RUN npm ci --no-audit --no-fund && npm cache clean --force
 
 # Runtime sources only. .dockerignore allow-lists what gets here and keeps .env and secrets out.
 COPY . .
+
+# Build the web display into the path served by the API's /display/ routes.
+RUN npm run build:glasses
 
 # The server must listen on all interfaces so the Container's port proxy can reach it.
 # The Worker passes the same values, plus the secrets, at start().
