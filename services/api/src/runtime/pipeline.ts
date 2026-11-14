@@ -351,7 +351,7 @@ export class PipelineRuntime {
     const traitsOf = (records: Evidence[]) => records.map(record => sources.traits(record, frame.attribution));
     const judgeRound = async (inputs: Evidence[]): Promise<Round> => {
       const judgment = await timed('judgment', () => this.adapters.judge(claim, inputs, claimContext));
-      return { inputs, judgment, verdict: assessVerdict(judgment, { traits: traitsOf(judgment.evidence), frame, checkedText: claim.checkedText }) };
+      return { inputs, judgment, verdict: assessVerdict(judgment, { traits: traitsOf(judgment.evidence), frame, checkedText: claim.checkedText }, undefined, this.adapters.verdictRules) };
     };
     /** `complete`: every applicable source answered and the evidence found was judged. `cacheable`: nothing was cut short or failed;
      * a definitive label is kept even after a free source failed, an abstention only after a complete look. */

@@ -1,5 +1,6 @@
 import type { EvidenceSources, PipelineAdapters } from '../../../../packages/contracts/src/index.js';
 import type { ClaimCache } from './claim-cache.js';
+import type { VerdictRules } from '../policy/verdict-rules.js';
 
 /** Server-only capabilities; the frozen app/provider DTOs remain unchanged. */
 export interface RuntimeAdapters extends PipelineAdapters {
@@ -8,4 +9,6 @@ export interface RuntimeAdapters extends PipelineAdapters {
   sources?: EvidenceSources;
   /** The shared claim cache; the runtime uses one module-level cache when this is absent. */
   cache?: ClaimCache;
+  /** Verdict policy probabilities from the provider's prompt pack; the built-in rules apply when absent. */
+  verdictRules?: VerdictRules;
 }

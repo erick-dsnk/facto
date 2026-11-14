@@ -8,24 +8,27 @@ export const RULES = {
   stanceMinProbability: TALLY_DEFAULTS.stanceMinProbability, echoOverlap: TALLY_DEFAULTS.echoOverlap, echoMinTrigrams: TALLY_DEFAULTS.echoMinTrigrams,
 } as const;
 
+/** The probabilities the rules require; a prompt pack may override them per provider. */
+export type VerdictRules = Record<'minProbabilityTrue' | 'minProbabilityFalse' | 'minProbabilityMisleading' | 'minProbabilityMixed', number>;
+
 /** The label decided in code from Jev's joint verdict and the sources counted one voice per site. */
-export function decideLabel(joint: Verdict, probabilities: Record<Verdict, number>, tally: SourceTally): Verdict {
+export function decideLabel(joint: Verdict, probabilities: Record<Verdict, number>, tally: SourceTally, rules: VerdictRules = RULES): Verdict {
   const c = tally.counts;
   const p = (label: Verdict) => Number.isFinite(probabilities[label]) ? probabilities[label] : 0;
   // True: Jev says supported, and two sites back it (an echo alone never does) or one trusted site does,
   // with no trusted site against it.
-  if (joint === 'supported' && p('supported') >= RULES.minProbabilityTrue && c.trustedContradicting === 0
+  if (joint === 'supported' && p('supported') >= rules.minProbabilityTrue && c.trustedContradicting === 0
     && ((c.supporting >= 2 && tally.plainSupporting >= 1) || c.trustedSupporting >= 1)) return 'supported';
   // False: Jev says false, and two sites contradict it or one trusted site does. A trusted page that only
   // describes a myth often reads as backing it, so it doesn't block False.
-  if (joint === 'contradicted' && p('contradicted') >= RULES.minProbabilityFalse
+  if (joint === 'contradicted' && p('contradicted') >= rules.minProbabilityFalse
     && (c.contradicting >= 2 || c.trustedContradicting >= 1)) return 'contradicted';
   // Misleading: a fact-checker who checked this very claim rated it so, and Jev doesn't read it as true.
   if (tally.ratedMisleading.length > 0 && joint !== 'supported') return 'misleading';
   // Misleading: independent sites back it and contradict it, or Jev is sure it misleads and a source
   // contradicts part of it. Jev's "misleading" alone is never shown.
-  if (tally.plainSupporting >= 1 && tally.plainContradicting >= 1 && p('misleading') >= RULES.minProbabilityMixed) return 'misleading';
-  if (joint === 'misleading' && p('misleading') >= RULES.minProbabilityMisleading && c.contradicting >= 1) return 'misleading';
+  if (tally.plainSupporting >= 1 && tally.plainContradicting >= 1 && p('misleading') >= rules.minProbabilityMixed) return 'misleading';
+  if (joint === 'misleading' && p('misleading') >= rules.minProbabilityMisleading && c.contradicting >= 1) return 'misleading';
   return 'insufficient_evidence';
 }
 
@@ -41,12 +44,12 @@ export function rankedSources(label: Verdict, tally: SourceTally): string[] {
 }
 
 /** Why the rules abstained, for the result's reason code. */
-export function abstentionReason(joint: Verdict, probabilities: Record<Verdict, number>, tally: SourceTally): string {
+export function abstentionReason(joint: Verdict, probabilities: Record<Verdict, number>, tally: SourceTally, rules: VerdictRules = RULES): string {
   const c = tally.counts;
   if (c.supporting === 0 && c.contradicting === 0 && tally.ratedMisleading.length === 0) return 'no_direct_evidence';
   if (joint === 'insufficient_evidence') return 'model_abstained';
   if (joint === 'supported' && c.trustedContradicting > 0) return 'conflicting_sources';
-  const minimum = joint === 'supported' ? RULES.minProbabilityTrue : joint === 'contradicted' ? RULES.minProbabilityFalse : RULES.minProbabilityMisleading;
+  const minimum = joint === 'supported' ? rules.minProbabilityTrue : joint === 'contradicted' ? rules.minProbabilityFalse : rules.minProbabilityMisleading;
   if (!(probabilities[joint] >= minimum)) return 'below_threshold';
   return 'insufficient_independent_evidence';
 }

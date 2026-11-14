@@ -4,7 +4,7 @@ import {
 import { isDirectEvidence, needsStrongEvidence, qualifyingSourceSet, SOURCE_REGISTRY, type ReviewedSourceRule } from './sources.js';
 import { ASSESSMENT_THRESHOLD, readAssessment, type AssessedJudgment } from './assessment.js';
 import { tallySources, type SourceTally } from './source-tally.js';
-import { abstentionReason, decideLabel, rankedSources } from './verdict-rules.js';
+import { abstentionReason, decideLabel, rankedSources, type VerdictRules } from './verdict-rules.js';
 import { VERDICT_SUMMARIES, wireName } from './outcomes.js';
 
 const thresholds = { supported: 0.85, contradicted: 0.90, misleading: 0.85 };
@@ -37,7 +37,7 @@ export function decideVerdict(judgment: Judgment, context?: VerdictContext, regi
   return context ? assessVerdict(judgment, context, registry).decision : legacyDecision(judgment, registry);
 }
 
-export function assessVerdict(judgment: Judgment, context: VerdictContext, registry: readonly ReviewedSourceRule[] = SOURCE_REGISTRY): VerdictAssessment {
+export function assessVerdict(judgment: Judgment, context: VerdictContext, registry: readonly ReviewedSourceRule[] = SOURCE_REGISTRY, rules?: VerdictRules): VerdictAssessment {
   validate(judgment);
   if (context.traits.length !== judgment.evidence.length) throw new PipelineError('malformed_evidence');
   const assessment = readAssessment(judgment);
@@ -49,9 +49,9 @@ export function assessVerdict(judgment: Judgment, context: VerdictContext, regis
     context.traits, context.checkedText,
     { ratedMisleading: judgment.evidence.filter(source => source.origin === 'fact_check' && source.rating === 'misleading').map(source => source.id), commonOrigins },
   );
-  const ruleLabel = decideLabel(judgment.label, judgment.probabilities, tally);
+  const ruleLabel = decideLabel(judgment.label, judgment.probabilities, tally, rules);
   const done = (decision: VerdictDecision): VerdictAssessment => ({ decision, tally, ruleLabel });
-  if (ruleLabel === 'insufficient_evidence') return done(abstain(judgment.evidence.length ? abstentionReason(judgment.label, judgment.probabilities, tally) : 'no_evidence'));
+  if (ruleLabel === 'insufficient_evidence') return done(abstain(judgment.evidence.length ? abstentionReason(judgment.label, judgment.probabilities, tally, rules) : 'no_evidence'));
 
   // Eric's stricter route: a True or False on a health/safety, disputed or uncertain-stakes claim also needs a
   // reviewed expert anchor plus an independently corroborating passage with a disclosed distinct origin.

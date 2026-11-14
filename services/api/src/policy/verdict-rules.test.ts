@@ -149,3 +149,14 @@ describe('ported verdict rules', () => {
     expect(() => tallySources([{ evidenceId: 'e0', text: 'x', stance: 'supports', probability: 1 }], [], 'claim')).toThrow(RangeError);
   });
 });
+
+describe('verdict rules overridden by a prompt pack', () => {
+  const two = () => tally([['a.org', 'supports', sure], ['b.com', 'supports', sure]]);
+  it('uses the supplied probabilities instead of the built-in minimums', () => {
+    const stricter = { ...RULES, minProbabilityTrue: 0.9 };
+    expect(decideLabel('supported', probabilities('supported', pTrue), two(), stricter)).toBe('insufficient_evidence');
+    expect(abstentionReason('supported', probabilities('supported', pTrue), two(), stricter)).toBe('below_threshold');
+    expect(decideLabel('supported', probabilities('supported', 0.95), two(), stricter)).toBe('supported');
+    expect(decideLabel('supported', probabilities('supported', pTrue), two())).toBe('supported');
+  });
+});

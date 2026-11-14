@@ -116,14 +116,14 @@ LAYA_EXTRA_MODELS='{"english":"/tmp/laya-eval/hf/hub/models--convaiinnovations--
 /tmp/laya-eval/venv/bin/laya-serve
 ```
 
-Check `/health` for CUDA, no CPU fallbacks and loaded English model before evaluating. CPU fallback changes the experiment substantially. Frozen evidence is already provided; acquiring it again changes the evidence set and incurs provider charges.
+Check `/health` for CUDA, no CPU fallbacks and loaded English model before evaluating. CPU fallback changes the experiment substantially. Frozen evidence is already provided; acquiring it again changes the evidence set and incurs provider charges. Prompt variants, extra case files, a cross-process Laya lock and a metrics summary are described in [prompt-pack.md](prompt-pack.md).
 
 ```bash
 npm run evaluate:providers -- --providers jev --modes admission --output fixtures/evaluation/provider-comparison/results/admission-jev.json
 npm run evaluate:providers -- --providers laya --modes admission --output fixtures/evaluation/provider-comparison/results/admission-laya.json
 npm run evaluate:providers -- --providers jev,laya --modes pipeline,judge --output fixtures/evaluation/provider-comparison/results/pipeline-judge.json
-# Optional fresh evidence acquisition; requires EXA_API_KEY and overwrites frozen evidence:
-npm run evaluate:providers -- --acquire
+# Optional fresh evidence acquisition; requires EXA_API_KEY and writes to a new file (the frozen baseline is never overwritten):
+npm run evaluate:providers -- --acquire --evidence-out fixtures/evaluation/provider-comparison/evidence-new.json
 # Separate bounded context diagnostic; never pooled with the primary comparison:
 npm run evaluate:providers -- --providers laya --modes judge --limit 2 --laya-max-len 1024 --laya-head-max-len 512 --output fixtures/evaluation/provider-comparison/results/context-diagnostic.json
 ```

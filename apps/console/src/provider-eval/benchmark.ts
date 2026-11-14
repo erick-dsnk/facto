@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { performance } from 'node:perf_hooks';
-import { claimFrame, sourceQuery, MODEL_VERSION, POLICY_VERSION, PipelineError, type AcceptedClaim, type AdmissionResult, type Evidence, type EventEnvelope, type ProviderContext, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { claimFrame, lowConfidenceWordSchema, MAX_LOW_CONFIDENCE_WORDS, sourceQuery, MODEL_VERSION, POLICY_VERSION, PipelineError, type AcceptedClaim, type AdmissionResult, type Evidence, type EventEnvelope, type ProviderContext, type TextInput } from '../../../../packages/contracts/src/index.js';
 import { createClassifier } from '../../../../services/api/src/providers/jev/classification.js';
 import { createJevClient, type JevClient, type JevAnswer } from '../../../../services/api/src/providers/jev/client.js';
 import { createLayaClient } from '../../../../services/api/src/providers/laya/client.js';
@@ -15,8 +15,14 @@ import { Session } from '../../../../services/api/src/runtime/session.js';
 import { AttemptBudget } from '../../../../services/api/src/runtime/budget.js';
 import { assessVerdict } from '../../../../services/api/src/policy/verdict.js';
 import { loadDomainLists, rankEvidence, sourceTraits } from '../../../../services/api/src/sources/index.js';
-import { loadSets, type EvalCase } from '../eval-live/sets.js';
-import { labelTerminal, type EvalLabel } from '../eval-live/labels.js';
+import { loadSets, fitContext, type EvalCase } from '../eval-live/sets.js';
+import { labelTerminal, expectedLabel, type EvalLabel } from '../eval-live/labels.js';
+import { z } from 'zod';
+import { resolve as resolvePath } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import type { PromptPack } from '../../../../services/api/src/providers/prompt-pack.js';
+import { acquireLock } from './lock.js';
+import { providerSummaries } from './summary.js';
 
 export type CohortCase = { id: string; text: string; expected: 'true' | 'false' | 'misleading' | 'cant_verify'; category: string; rationale: string; sources: string[]; ambiguousLabel?: boolean; alternativeExpected?: string[] };
 export type FrozenCase = { id: string; text: string; primary: Evidence[]; alternate: Evidence[]; acquisition: { primaryMs: number; alternateMs: number; attempts: number; inputTokens: number; knownCostUSD: number | null; unknownCostResponses: number; errors: string[] } };
@@ -30,12 +36,29 @@ export async function jsonFile<T>(path: string | URL): Promise<T> { return JSON.
 export async function save(path: string | URL, data: unknown) { await mkdir(dirname(path instanceof URL ? path.pathname : path), { recursive: true }); await writeFile(path, `${JSON.stringify(data, null, 2)}\n`); }
 export const cohortPath = new URL('cohort.json', root);
 export const frozenPath = new URL('frozen-evidence.json', root);
-export async function loadCohort() { const loaded = await jsonFile<{ cases: CohortCase[] }>(cohortPath); if (!loaded.cases?.length) throw new Error('cohort_missing'); return loaded.cases; }
+export async function loadCohort(path: string | URL = cohortPath) { const loaded = await jsonFile<{ cases: CohortCase[] }>(path); if (!loaded.cases?.length) throw new Error('cohort_missing'); return loaded.cases; }
+const admissionFileSchema = z.array(z.object({ id: z.string().min(1), text: z.string().min(1), context: z.array(z.string()).max(2).default([]), mode: z.enum(['typed', 'audio']).default('typed'),
+  confidence: z.number().min(0).max(1).nullable().optional(), lowConfidenceWords: z.array(lowConfidenceWordSchema).max(MAX_LOW_CONFIDENCE_WORDS).optional(), expected: z.string() }).passthrough());
+/** Admission cases from a file: a JSON array (or `{cases}`) of {id, text, expected, context?, mode?, confidence?, lowConfidenceWords?}. `expected` takes the usual labels; not_a_claim and needs_confirmation are the negatives. */
+export async function loadAdmissionCases(path: string): Promise<EvalCase[]> {
+  const raw = await jsonFile<unknown>(path); const list = Array.isArray(raw) ? raw : (raw as { cases?: unknown })?.cases;
+  const parsed = admissionFileSchema.safeParse(list);
+  if (!parsed.success || !parsed.data.length) throw new Error(`admission_cases_invalid: ${parsed.success ? 'empty' : parsed.error.issues[0]?.path.join('.')}`);
+  const ids = new Set<string>();
+  return parsed.data.map(item => { if (ids.has(item.id)) throw new Error(`admission_cases_duplicate_id: ${item.id}`); ids.add(item.id);
+    return { set: 'everyday' as const, id: item.id, text: item.text, context: fitContext(item.context), mode: item.mode, confidence: item.confidence ?? (item.mode === 'audio' ? null : 1), ...(item.lowConfidenceWords?.length ? { lowConfidenceWords: item.lowConfidenceWords } : {}), expected: expectedLabel(item.expected) }; });
+}
 export function accepted(text: string, id: string): AcceptedClaim { return { id, originalText: text, checkedText: text, sourceSpan: { start: 0, end: Array.from(text).length }, admission: { assertionStatus: 'asserted', hasPracticalConsequence: null, matchedSelectedTopic: null, admissionAction: 'check', reasonCode: 'eligible_public_claim' } }; }
 export function makeInput(sample: Pick<EvalCase, 'text' | 'context' | 'mode' | 'confidence' | 'lowConfidenceWords'>, sessionId: string, requestId: string): TextInput {
   return { schemaVersion: 1, requestId, sessionId, sessionEpoch: 1, revision: 1, mode: sample.mode, text: sample.text, language: 'en', capturedAt: new Date().toISOString(), capture: { source: 'typed_fixture', segmentId: requestId, confidence: sample.confidence ?? 1, final: true, ...(sample.lowConfidenceWords ? { lowConfidenceWords: sample.lowConfidenceWords } : {}) }, context: sample.context, userInitiated: true };
 }
-export async function acquire(cases: CohortCase[], output = frozenPath) {
+/** The original frozen evidence is the published baseline; acquisition always writes somewhere else. */
+export function assertNotFrozenBaseline(output: string | URL) {
+  const target = resolvePath(output instanceof URL ? fileURLToPath(output) : output);
+  if (target === resolvePath(fileURLToPath(frozenPath))) throw new Error('refusing_to_overwrite_frozen_evidence');
+}
+export async function acquire(cases: CohortCase[], output: string | URL) {
+  assertNotFrozenBaseline(output);
   if (!process.env.EXA_API_KEY) throw new Error('missing_exa_key');
   const frozen: FrozenCase[] = [];
   let knownCostUSD = 0, unknownCostResponses = 0;
@@ -93,10 +116,10 @@ export function settledOutcome(terminals: Pick<EventEnvelope, 'type' | 'payload'
   const mapped = labelTerminal({ type: terminal.type as 'claim.result', payload: terminal.payload });
   return { predicted: mapped.label, reasonCode: mapped.reasonCode, ...(terminal.type === 'pipeline.error' ? { error: mapped.reasonCode ?? 'pipeline_error' } : {}) };
 }
-export async function pipelineCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number): Promise<Observation> {
-  const asks: AskObservation[] = []; const client = instrument(provider, asks); const classifier = createClassifier(client);
+export async function pipelineCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number, pack?: PromptPack): Promise<Observation> {
+  const asks: AskObservation[] = []; const client = instrument(provider, asks); const classifier = createClassifier(client, pack);
   const observation: Observation = { provider, mode: 'pipeline', id: sample.id, repetition, expected: sample.expected, ambiguousLabel: 'ambiguousLabel' in sample ? sample.ambiguousLabel : undefined, alternativeExpected: 'alternativeExpected' in sample ? sample.alternativeExpected : undefined, predicted: 'error', reasonCode: null, durationMs: 0, asks, events: [] };
-  const runtime = new PipelineRuntime({ classify: async (input, context) => { const result = await classifier(input, context); observation.admission = { action: result.action, claims: result.claims.length, checkedTexts: result.claims.map(claim => claim.checkedText) }; return result; }, judge: createJudge(client), retrieve: async () => { throw new PipelineError('unexpected_legacy_retrieval'); }, sources: replaySources(frozen), cache: new ClaimCache() }, Date.now, () => performance.now(), provider === 'jev' ? MODEL_VERSION : 'laya-20260512');
+  const runtime = new PipelineRuntime({ classify: async (input, context) => { const result = await classifier(input, context); observation.admission = { action: result.action, claims: result.claims.length, checkedTexts: result.claims.map(claim => claim.checkedText) }; return result; }, judge: createJudge(client, pack), ...(pack ? { verdictRules: pack.judge.policy } : {}), retrieve: async () => { throw new PipelineError('unexpected_legacy_retrieval'); }, sources: replaySources(frozen), cache: new ClaimCache() }, Date.now, () => performance.now(), provider === 'jev' ? MODEL_VERSION : 'laya-20260512');
   const session = new Session(Date.now); const requestId = randomUUID(); const input = makeInput({ text: sample.text, context: [], mode: 'typed', confidence: 1 }, session.id, requestId); const start = performance.now();
   const terminals: EventEnvelope[] = [];
   session.listeners.add(event => { if (event.requestId !== requestId) return; observation.events!.push(event.type); if (['claim.result', 'pipeline.error', 'claim.skipped', 'claim.needs_confirmation', 'check.cancelled'].includes(event.type)) terminals.push(event); });
@@ -111,20 +134,20 @@ export async function pipelineCase(provider: string, sample: CohortCase, frozen:
   if (observation.admission?.action === 'check' && (observation.admission.claims !== 1 || observation.admission.checkedTexts?.[0] !== sample.text)) { observation.admissionMismatch = true; observation.predicted = 'error'; observation.error = 'admission_proposition_mismatch'; }
   session.pause('benchmark_complete'); return observation;
 }
-export async function judgeCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number, deadlineMs = 10_000, limits?: LayaLimits): Promise<Observation> {
+export async function judgeCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number, deadlineMs = 10_000, limits?: LayaLimits, pack?: PromptPack): Promise<Observation> {
   const asks: AskObservation[] = []; const client = instrument(provider, asks, limits); const evidence = rankEvidence([], frozen.primary, lists); const start = performance.now();
   const observation: Observation = { provider, mode: limits ? 'judge_context_diagnostic' : deadlineMs === 10_000 ? 'judge' : 'judge_extended', id: sample.id, repetition, expected: sample.expected, ambiguousLabel: 'ambiguousLabel' in sample ? sample.ambiguousLabel : undefined, alternativeExpected: 'alternativeExpected' in sample ? sample.alternativeExpected : undefined, predicted: 'error', reasonCode: null, durationMs: 0, asks, evidenceCount: evidence.length };
   const controller = new AbortController(); const timer = setTimeout(() => controller.abort(new PipelineError('timeout')), deadlineMs); const context = new AttemptBudget().context(controller.signal, Date.now, Date.now() + deadlineMs);
-  try { const claim = accepted(sample.text, sample.id); const judgment = await createJudge(client)(claim, structuredClone(evidence), context); const assessment = assessVerdict(judgment, { checkedText: sample.text, frame: claimFrame(claim), traits: judgment.evidence.map(record => sourceTraits(record, null, lists)) }); observation.predicted = ({ supported: 'true', contradicted: 'false', misleading: 'misleading', insufficient_evidence: 'cant_verify', speculation: 'speculation' })[assessment.decision.verdict]; observation.reasonCode = assessment.decision.reasonCode; observation.judgment = { modelLabel: judgment.label, ruleLabel: assessment.ruleLabel, selected: assessment.decision.selectedEvidenceIds }; }
+  try { const claim = accepted(sample.text, sample.id); const judgment = await createJudge(client, pack)(claim, structuredClone(evidence), context); const assessment = assessVerdict(judgment, { checkedText: sample.text, frame: claimFrame(claim), traits: judgment.evidence.map(record => sourceTraits(record, null, lists)) }, undefined, pack?.judge.policy); observation.predicted = ({ supported: 'true', contradicted: 'false', misleading: 'misleading', insufficient_evidence: 'cant_verify', speculation: 'speculation' })[assessment.decision.verdict]; observation.reasonCode = assessment.decision.reasonCode; observation.judgment = { modelLabel: judgment.label, ruleLabel: assessment.ruleLabel, selected: assessment.decision.selectedEvidenceIds }; }
   catch (error) { observation.error = code(error); observation.reasonCode = observation.error; }
   finally { clearTimeout(timer); observation.durationMs = performance.now() - start; }
   return observation;
 }
-export async function admissionCase(provider: string, sample: EvalCase, repetition: number): Promise<Observation> {
+export async function admissionCase(provider: string, sample: EvalCase, repetition: number, deadlineMs = 10_000, pack?: PromptPack): Promise<Observation> {
   const asks: AskObservation[] = []; const client = instrument(provider, asks); const start = performance.now(); const observation: Observation = { provider, mode: 'admission', id: sample.id, repetition, expected: sample.expected, predicted: 'error', reasonCode: null, durationMs: 0, asks };
   observation.dataset = sample.id.startsWith('dev-') ? 'synthetic_device' : 'reference_everyday';
-  const controller = new AbortController(); const timer = setTimeout(() => controller.abort(new PipelineError('timeout')), 10_000);
-  try { const result: AdmissionResult = await createClassifier(client)(makeInput(sample, 'benchmark', sample.id), new AttemptBudget().context(controller.signal, Date.now, Date.now() + 10_000)); observation.admission = { action: result.action, claims: result.claims.length }; observation.predicted = result.action === 'check' ? 'check' : result.kind ? 'not_a_claim' : result.action; observation.reasonCode = result.reasonCode; }
+  const controller = new AbortController(); const timer = setTimeout(() => controller.abort(new PipelineError('timeout')), deadlineMs);
+  try { const result: AdmissionResult = await createClassifier(client, pack)(makeInput(sample, 'benchmark', sample.id), new AttemptBudget().context(controller.signal, Date.now, Date.now() + deadlineMs)); observation.admission = { action: result.action, claims: result.claims.length }; observation.predicted = result.action === 'check' ? 'check' : result.kind ? 'not_a_claim' : result.action; observation.reasonCode = result.reasonCode; }
   catch (error) { observation.error = code(error); observation.reasonCode = observation.error; }
   finally { clearTimeout(timer); observation.durationMs = performance.now() - start; }
   return observation;
@@ -152,22 +175,43 @@ export async function waitForLayaIdle(): Promise<number> {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
 }
-export async function run(options: { providers: string[]; modes: string[]; limit?: number; repetitions: number; output: string; deadlineMs?: number; layaLimits?: LayaLimits }) {
+export type RunOptions = {
+  providers: string[]; modes: string[]; limit?: number; repetitions: number; output: string; deadlineMs?: number; layaLimits?: LayaLimits;
+  /** Prompt pack per provider; a provider without one uses the built-in pack. */
+  packs?: Record<string, PromptPack>; packFiles?: Record<string, string>;
+  admissionCasesPath?: string; casesPath?: string; evidencePath?: string;
+  /** Eval only: the per-request deadline for Laya admission and judgment calls. Pipeline mode keeps the runtime's own 10 s. */
+  layaDeadlineMs?: number;
+  /** A cross-process lock directory held for every Laya case (the deadline starts after it is acquired). */
+  lockPath?: string; summaryPath?: string; dataset?: 'dev' | 'holdout';
+};
+export async function run(options: RunOptions) {
   const needsEvidence = options.modes.some(mode => mode !== 'admission');
-  const cases = needsEvidence ? await loadCohort() : [];
-  const frozen = needsEvidence ? await jsonFile<{ cases: FrozenCase[]; cohortSHA256: string }>(frozenPath) : { cases: [], cohortSHA256: digest([]) };
+  const cases = needsEvidence ? await loadCohort(options.casesPath ?? cohortPath) : [];
+  const frozen = needsEvidence ? await jsonFile<{ cases: FrozenCase[]; cohortSHA256: string }>(options.evidencePath ?? frozenPath) : { cases: [], cohortSHA256: digest([]) };
   if (frozen.cohortSHA256 !== digest(cases)) throw new Error('frozen_cohort_hash_mismatch');
-  const everyday = options.modes.includes('admission') ? await loadSets(['everyday']) : [];
-  const rows: Observation[] = []; const flush = () => save(options.output, { schemaVersion: 1, startedAt, updatedAt: new Date().toISOString(), modelVersion: MODEL_VERSION, policyVersion: POLICY_VERSION, cohortSHA256: digest(cases), evidenceSHA256: digest(frozen), options, summary: summarize(rows), observations: rows }); const startedAt = new Date().toISOString();
+  const everyday = options.modes.includes('admission') ? options.admissionCasesPath ? await loadAdmissionCases(options.admissionCasesPath) : await loadSets(['everyday']) : [];
+  const dataset = options.dataset ?? 'dev';
+  const { packs, ...recorded } = options;
+  const rows: Observation[] = []; const flush = async () => { await save(options.output, { schemaVersion: 1, startedAt, updatedAt: new Date().toISOString(), modelVersion: MODEL_VERSION, policyVersion: POLICY_VERSION, cohortSHA256: digest(cases), evidenceSHA256: digest(frozen), options: { ...recorded, promptPacks: Object.fromEntries(Object.entries(packs ?? {}).map(([name, pack]) => [name, { name: pack.name, sha256: digest(pack) }])) }, summary: summarize(rows), providerSummaries: providerSummaries(rows, options.providers, dataset), observations: rows }); if (options.summaryPath) await save(options.summaryPath, providerSummaries(rows, options.providers, dataset)); }; const startedAt = new Date().toISOString();
+  const layaDeadline = options.layaDeadlineMs ?? 10_000;
   for (let repetition = 0; repetition < options.repetitions; repetition++) for (const mode of options.modes) {
     const selected = (mode === 'admission' ? everyday : cases).slice(0, options.limit);
     for (const sample of selected) for (const provider of repetition % 2 ? [...options.providers].reverse() : options.providers) {
       const evidence = frozen.cases.find(entry => entry.id === sample.id);
-      const row = mode === 'admission' ? await admissionCase(provider, sample as EvalCase, repetition) : !evidence ? (() => { throw new Error('missing_frozen_case'); })() : mode === 'pipeline' ? await pipelineCase(provider, sample as CohortCase, evidence, repetition) : await judgeCase(provider, sample as CohortCase, evidence, repetition, options.deadlineMs, options.layaLimits);
-      if (evidence?.acquisition.errors.length && mode !== 'admission') { row.acquisitionErrors = evidence.acquisition.errors; row.predicted = 'error'; row.error = 'acquisition_failure'; }
-      rows.push(row); await flush(); if (provider === 'laya' && row.error === 'timeout') { row.postDeadlineDrainMs = await waitForLayaIdle(); await flush(); } console.log(JSON.stringify({ provider, mode: row.mode, id: sample.id, predicted: row.predicted, ms: Math.round(row.durationMs), error: row.error }));
+      const pack = packs?.[provider]; const isLaya = provider === 'laya';
+      const deadline = isLaya ? layaDeadline : options.deadlineMs;
+      // Serialise Laya inference across harness processes. The case's own clock only starts once the lock is ours.
+      const release = isLaya && options.lockPath ? await acquireLock(options.lockPath) : undefined;
+      let row: Observation;
+      try {
+        row = mode === 'admission' ? await admissionCase(provider, sample as EvalCase, repetition, isLaya ? layaDeadline : 10_000, pack) : !evidence ? (() => { throw new Error('missing_frozen_case'); })() : mode === 'pipeline' ? await pipelineCase(provider, sample as CohortCase, evidence, repetition, pack) : await judgeCase(provider, sample as CohortCase, evidence, repetition, deadline, options.layaLimits, pack);
+        if (evidence?.acquisition.errors.length && mode !== 'admission') { row.acquisitionErrors = evidence.acquisition.errors; row.predicted = 'error'; row.error = 'acquisition_failure'; }
+        rows.push(row); await flush(); if (isLaya && row.error === 'timeout') { row.postDeadlineDrainMs = await waitForLayaIdle(); await flush(); }
+      } finally { await release?.(); }
+      console.log(JSON.stringify({ provider, mode: row.mode, id: sample.id, predicted: row.predicted, ms: Math.round(row.durationMs), error: row.error }));
     }
   }
-  return { observations: rows, summary: summarize(rows) };
+  return { observations: rows, summary: summarize(rows), providers: providerSummaries(rows, options.providers, dataset) };
 }
 export type { EvalLabel };

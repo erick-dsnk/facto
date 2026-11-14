@@ -1,8 +1,9 @@
 import { ClaimCache } from '../runtime/claim-cache.js';
 import { createJevClient, type JevClient } from './jev/client.js';
 import { createLayaClient, type LayaDiagnostic } from './laya/client.js';
+import { packForProvider, type PromptPack } from './prompt-pack.js';
 
-export type DecisionProviderSelection = { provider: 'jev' | 'laya'; client: JevClient; cache?: ClaimCache };
+export type DecisionProviderSelection = { provider: 'jev' | 'laya'; client: JevClient; cache?: ClaimCache; /** The provider's prompt pack from the registry in prompt-pack.ts. */ pack: PromptPack };
 
 /** Resolve the one decision backend used for classification, judging and source queries. */
 export function selectDecisionProvider(options: {
@@ -23,7 +24,8 @@ export function selectDecisionProvider(options: {
       client: createLayaClient({ url: options.layaUrl ?? '', fetch: options.fetch, diagnostic: options.diagnostic }),
       // This runtime's provider is fixed at startup. Keep Laya decisions in a distinct cache from Jev.
       cache: new ClaimCache(),
+      pack: packForProvider(provider),
     };
   }
-  return { provider, client: createJevClient({ apiKey: options.jevApiKey ?? '', fetch: options.fetch }) };
+  return { provider, client: createJevClient({ apiKey: options.jevApiKey ?? '', fetch: options.fetch }), pack: packForProvider(provider) };
 }

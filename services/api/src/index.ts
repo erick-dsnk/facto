@@ -21,7 +21,7 @@ const debugTranscripts = process.env.DEBUG_TRANSCRIPTS === '1';
 const debugFeedKey = process.env.DEBUG_FEED_KEY ?? '';
 if (debugTranscripts && debugFeedKey.length < 16) console.warn('DEBUG_FEED_KEY is unset or shorter than 16 characters: the debug feed is off.');
 const debugFeed = debugTranscripts && debugFeedKey.length >= 16 ? new DebugFeed() : undefined;
-const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(client), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client),
+const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(client, decision.pack), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client, decision.pack), verdictRules: decision.pack.judge.policy,
   ...(decision.cache ? { cache: decision.cache } : {}),
   sources: createLiveSources({ jev: client, exaApiKey: process.env.EXA_API_KEY!, googleFactCheckApiKey: process.env.GOOGLE_FACTCHECK_API_KEY || undefined }) };
 const cert = process.env.TLS_CERT_PATH; const key = process.env.TLS_KEY_PATH;
