@@ -25,6 +25,17 @@ xcodebuild -project GlassesLab.xcodeproj -scheme GlassesLab \
   -destination 'platform=iOS,name=David' -allowProvisioningUpdates build
 ```
 
+## Deploy without Xcode
+
+```sh
+cd apps/ios
+scripts/deploy.sh           # build, install and launch on the connected iPhone (~20 s)
+scripts/deploy.sh --logs    # same, then stream the app's console output
+scripts/deploy.sh --watch   # redeploy whenever a Swift file or project.yml changes
+```
+
+Keep the iPhone **unlocked and plugged in by cable**. During a glasses stream the phone joins the glasses' Wi-Fi, so the Mac can't reach it over the network. `DEVICE=<UDID>` picks a specific phone.
+
 ## Using it
 
 1. **Connect to Meta AI.** The Meta AI app opens and asks you to approve Glasses Lab, then sends you back. The app appears under Meta AI > App connections > Developer mode apps.

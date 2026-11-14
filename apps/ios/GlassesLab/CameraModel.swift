@@ -34,7 +34,23 @@ final class CameraModel {
   var photo: UIImage?
   var photoInfo: String?
   var isCapturingPhoto = false
+  var photoStatus: String?
+  /// Medium/medium keeps text legible at reading distance and transfers far faster than full/high.
+  var photoResolution: PhotoResolution = .medium
+  var photoQuality: PhotoQuality = .medium
+  /// Instant alternative to a photo: the sharpest of the last stream frames, no transfer.
+  var grabbedFrame: UIImage?
+  var grabbedFrameInfo: String?
+  @ObservationIgnored private var recentFrames: [UIImage] = []
+  @ObservationIgnored private var firstProgressAt: CFTimeInterval = 0
+  /// Step-by-step photo trace for debugging, newest first.
+  var photoLog: [String] = []
+  @ObservationIgnored private var photoPath: PhotoPath = .stream
   @ObservationIgnored private var photoRequestedAt: CFTimeInterval = 0
+  @ObservationIgnored private let photoTokens = ListenerTokenBag()
+  @ObservationIgnored private var photoTimeout: Task<Void, Never>?
+  @ObservationIgnored private var photoAttempt = 0
+  @ObservationIgnored private var didRequestCapture = false
 
   var hasSession: Bool { session != nil }
   var isStreaming: Bool { camera != nil }
@@ -95,6 +111,7 @@ final class CameraModel {
   }
 
   private func clearSession() {
+    if isCapturingPhoto { failPhoto("The session ended during the photo.") }
     clearStream()
     sessionTokens.clear()
     session = nil
@@ -146,8 +163,12 @@ final class CameraModel {
       }.store(in: streamTokens)
       stream.errorPublisher.listen { [weak self] error in
         Task { @MainActor in
-          self?.isCapturingPhoto = false
-          self?.lastError = "Stream: \(error.localizedDescription)"
+          guard let self else { return }
+          if self.isCapturingPhoto {
+            self.handleStreamPhotoFailure(error.localizedDescription)
+          } else {
+            self.lastError = "Stream: \(error.localizedDescription)"
+          }
         }
       }.store(in: streamTokens)
       // Photos (app-requested or from the glasses' own shutter) arrive here.
@@ -183,32 +204,216 @@ final class CameraModel {
     audioLevelDb = level
   }
 
-  /// Full-quality still while streaming, as in Meta's CameraAccess sample.
-  func capturePhoto() {
-    guard let camera, !isCapturingPhoto else { return }
+  // MARK: Step 3: photo during the live stream (never pauses the stream)
+
+  private enum PhotoPath { case stream, photoChild }
+
+  /// Takes a still while the stream keeps running. The stream is never stopped for a photo.
+  /// 1. `stream.capturePhoto(format:)`, as Meta's CameraAccess sample does during a stream.
+  /// 2. If that is refused, fails or times out: the standalone `photo` child of the same,
+  ///    still-running camera, with retries. Photos travel over Bluetooth, not the Wi-Fi link.
+  func capturePhoto() async {
+    guard let session, session.state == .started else {
+      lastError = "Start a session first."
+      return
+    }
+    guard !isCapturingPhoto else { return }
     lastError = nil
+    do {
+      if try await Wearables.shared.checkPermissionStatus(.camera) != .granted {
+        guard try await Wearables.shared.requestPermission(.camera) == .granted else {
+          lastError = "Camera permission denied in Meta AI."
+          return
+        }
+      }
+    } catch {
+      lastError = "Photo: \(error.localizedDescription)"
+      return
+    }
     isCapturingPhoto = true
     photoRequestedAt = CACurrentMediaTime()
-    if !camera.stream.capturePhoto(format: .jpeg) {
-      isCapturingPhoto = false
-      lastError = "Photo didn't start. Another capture may be running; try again."
+    photoAttempt = 0
+    photoLog.removeAll()
+    plog("Take photo (\(photoResolution.rawValue)/\(photoQuality.rawValue)), stream \(camera == nil ? "off: starting it" : "running")")
+    if camera == nil {
+      // Starting a stream is fine; stopping one for a photo is not.
+      await startStream()
+    }
+    for _ in 0..<60 where streamState != .streaming {
+      try? await Task.sleep(for: .milliseconds(100))
+    }
+    guard isCapturingPhoto else { return }
+    guard camera != nil, streamState == .streaming else {
+      failPhoto("The stream isn't running, so there's nothing to take the photo from.")
+      return
+    }
+    captureViaStream()
+  }
+
+  /// Path 1: the stream's own capture. The result arrives on the stream's photo publisher.
+  private func captureViaStream() {
+    guard let camera else { return }
+    photoPath = .stream
+    photoStatus = "Capturing (stream)"
+    firstProgressAt = 0
+    let started = camera.stream.capturePhoto(format: .jpeg)
+    plog("stream.capturePhoto(format: .jpeg) returned \(started)")
+    guard started else {
+      startPhotoChild(reason: "stream capture refused to start")
+      return
+    }
+    startPhotoTimeout(seconds: 15) { [weak self] in
+      self?.startPhotoChild(reason: "stream capture timed out after 15 s")
+    }
+  }
+
+  /// Path 2: the standalone photo child of the camera that is already streaming.
+  private func startPhotoChild(reason: String) {
+    guard isCapturingPhoto, let camera else { return }
+    photoTimeout?.cancel()
+    photoPath = .photoChild
+    photoAttempt += 1
+    didRequestCapture = false
+    photoStatus = photoAttempt == 1 ? "Capturing (photo API)" : "Retrying (photo API)"
+    plog("photo API attempt \(photoAttempt) on the streaming camera (\(reason))")
+    photoTokens.clear()
+    let photoCapability = camera.photo
+    photoCapability.statePublisher.listen { [weak self] state in
+      Task { @MainActor in self?.handlePhotoState(state) }
+    }.store(in: photoTokens)
+    photoCapability.transferProgressPublisher.listen { [weak self] progress in
+      let fraction = progress.fraction
+      let now = CACurrentMediaTime()
+      Task { @MainActor in
+        guard let self else { return }
+        if self.firstProgressAt == 0 {
+          self.firstProgressAt = now
+          self.plog("first transfer progress")
+        }
+        self.photoStatus = String(format: "Transferring %.0f%%", fraction * 100)
+      }
+    }.store(in: photoTokens)
+    photoCapability.photoDataPublisher.listen { [weak self] captured in
+      let data = captured.imageData
+      Task { @MainActor in self?.handlePhoto(data) }
+    }.store(in: photoTokens)
+    photoCapability.errorPublisher.listen { [weak self] error in
+      Task { @MainActor in self?.handlePhotoError(error) }
+    }.store(in: photoTokens)
+    photoCapability.start()
+    startPhotoTimeout(seconds: 30) { [weak self] in
+      self?.failPhoto("Photo timed out (photo API, 30 s).")
+    }
+  }
+
+  /// Timestamped photo trace, newest first, also written to the device console.
+  private func plog(_ line: String) {
+    let elapsed = photoRequestedAt > 0 ? CACurrentMediaTime() - photoRequestedAt : 0
+    let entry = String(format: "+%.2fs  %@", elapsed, line)
+    photoLog.insert(entry, at: 0)
+    if photoLog.count > 40 { photoLog.removeLast(photoLog.count - 40) }
+    NSLog("[GlassesLab][photo] %@", entry)
+  }
+
+  /// The SDK's description plus the underlying error it wraps, which carries the real cause.
+  private func describe(_ error: PhotoError) -> String {
+    switch error {
+    case .captureFailure(let underlying), .sessionSetupFailed(let underlying):
+      guard let underlying else { return "\(error.description) (no underlying error)" }
+      let ns = underlying as NSError
+      return "\(error.description) ← \(ns.domain) \(ns.code): \(ns.localizedDescription)"
+    default:
+      return error.description
+    }
+  }
+
+  private func handlePhotoState(_ state: PhotoState) {
+    plog("photo state: \(state)")
+    // `.started` can arrive more than once; capture only on the first.
+    guard state == .started, !didRequestCapture, let camera else { return }
+    didRequestCapture = true
+    firstProgressAt = 0
+    plog("photo.capturePhoto(resolution: \(photoResolution.rawValue), quality: \(photoQuality.rawValue))")
+    camera.photo.capturePhoto(resolution: photoResolution, quality: photoQuality)
+  }
+
+  private func handlePhotoError(_ error: PhotoError) {
+    guard isCapturingPhoto, photoPath == .photoChild else { return }
+    plog("photo API error: \(describe(error))")
+    let retryable: Bool
+    switch error {
+    case .sessionSetupFailed, .captureFailure, .busy, .notReady: retryable = true
+    default: retryable = false
+    }
+    guard retryable, photoAttempt < 3 else {
+      failPhoto("Photo failed: \(describe(error))")
+      return
+    }
+    camera?.photo.stop()
+    Task { [weak self] in
+      try? await Task.sleep(for: .milliseconds(600))
+      guard let self, self.isCapturingPhoto else { return }
+      self.startPhotoChild(reason: "retry after \(error.description)")
+    }
+  }
+
+  /// A stream error while the stream path is capturing moves on to the photo API.
+  private func handleStreamPhotoFailure(_ message: String) {
+    plog("stream error during photo: \(message)")
+    if photoPath == .stream {
+      startPhotoChild(reason: "stream capture failed: \(message)")
+    } else {
+      failPhoto("Stream: \(message)")
     }
   }
 
   private func handlePhoto(_ data: Data) {
-    isCapturingPhoto = false
     guard let image = UIImage(data: data) else {
-      lastError = "Photo arrived but couldn't be decoded."
+      failPhoto("Photo arrived but couldn't be decoded.")
       return
     }
     photo = image
-    let seconds = photoRequestedAt > 0 ? CACurrentMediaTime() - photoRequestedAt : 0
+    let now = CACurrentMediaTime()
+    let total = photoRequestedAt > 0 ? now - photoRequestedAt : 0
+    // Before the first progress event the glasses are taking and encoding the shot;
+    // after it the bytes are moving over Bluetooth.
+    let capture = firstProgressAt > 0 ? firstProgressAt - photoRequestedAt : total
+    let transfer = firstProgressAt > 0 ? now - firstProgressAt : 0
     photoInfo = String(
-      format: "%d×%d · %.0f KB · %.1f s",
+      format: "%d×%d · %.0f KB · %.1f s total (capture %.1f s + transfer %.1f s) · %@",
       Int(image.size.width * image.scale), Int(image.size.height * image.scale),
-      Double(data.count) / 1024, seconds
+      Double(data.count) / 1024, total, capture, transfer,
+      photoPath == .stream ? "stream capture" : "photo API"
     )
+    photoStatus = "Done"
+    plog("photo arrived: \(data.count / 1024) KB")
+    finishPhoto()
+  }
+
+  private func failPhoto(_ message: String) {
+    lastError = message
+    photoStatus = "Failed"
+    plog("failed: \(message)")
+    finishPhoto()
+  }
+
+  /// Ends the photo attempt. Only the photo child is stopped; the stream keeps running.
+  private func finishPhoto() {
+    photoTimeout?.cancel()
+    photoTimeout = nil
+    photoTokens.clear()
+    if photoPath == .photoChild { camera?.photo.stop() }
+    isCapturingPhoto = false
     photoRequestedAt = 0
+  }
+
+  private func startPhotoTimeout(seconds: Int, onTimeout: @escaping @MainActor () -> Void) {
+    photoTimeout?.cancel()
+    photoTimeout = Task { @MainActor [weak self] in
+      try? await Task.sleep(for: .seconds(seconds))
+      guard !Task.isCancelled, let self, self.isCapturingPhoto else { return }
+      onTimeout()
+    }
   }
 
   func stopStream() {
@@ -222,6 +427,8 @@ final class CameraModel {
   }
 
   private func clearStream() {
+    // A pending photo can't arrive once the stream is gone; fail it so the UI doesn't hang.
+    if isCapturingPhoto { failPhoto("The stream stopped during the photo.") }
     streamTokens.clear()
     camera = nil
     streamState = .stopped
@@ -235,6 +442,7 @@ final class CameraModel {
     maxGapMs = 0
     frameCount = 0
     frame = nil
+    recentFrames.removeAll()
   }
 
   private func handleFrame(_ image: UIImage?, arrived: CFTimeInterval) {
@@ -250,6 +458,62 @@ final class CameraModel {
     if let image {
       frame = image
       frameSize = image.size
+      recentFrames.append(image)
+      if recentFrames.count > 10 { recentFrames.removeFirst(recentFrames.count - 10) }
     }
+  }
+
+  // MARK: Instant frame grab
+
+  /// Picks the sharpest of the last ~10 stream frames (about 0.3 s at 30 fps). No
+  /// transfer, so it is ready immediately; a photo is the fallback when OCR is unsure.
+  func grabSharpestFrame() {
+    let started = CACurrentMediaTime()
+    guard !recentFrames.isEmpty else {
+      lastError = "Start the stream first."
+      return
+    }
+    let scored = recentFrames.map { ($0, FrameSharpness.score($0)) }
+    guard let best = scored.max(by: { $0.1 < $1.1 }) else { return }
+    grabbedFrame = best.0
+    let ms = (CACurrentMediaTime() - started) * 1000
+    grabbedFrameInfo = String(
+      format: "%d×%d · sharpest of %d · picked in %.0f ms",
+      Int(best.0.size.width * best.0.scale), Int(best.0.size.height * best.0.scale),
+      scored.count, ms
+    )
+  }
+}
+
+/// Focus measure: variance of a Laplacian over a small grayscale copy. Higher is sharper.
+enum FrameSharpness {
+  static func score(_ image: UIImage) -> Double {
+    guard let cg = image.cgImage else { return 0 }
+    let width = 180, height = 320
+    var pixels = [UInt8](repeating: 0, count: width * height)
+    let drawn = pixels.withUnsafeMutableBytes { buffer -> Bool in
+      guard let context = CGContext(
+        data: buffer.baseAddress, width: width, height: height, bitsPerComponent: 8,
+        bytesPerRow: width, space: CGColorSpaceCreateDeviceGray(),
+        bitmapInfo: CGImageAlphaInfo.none.rawValue
+      ) else { return false }
+      context.interpolationQuality = .low
+      context.draw(cg, in: CGRect(x: 0, y: 0, width: width, height: height))
+      return true
+    }
+    guard drawn else { return 0 }
+    var sum = 0.0, sumSquares = 0.0, count = 0.0
+    for y in 1..<(height - 1) {
+      for x in 1..<(width - 1) {
+        let i = y * width + x
+        let laplacian = 4 * Double(pixels[i]) - Double(pixels[i - 1]) - Double(pixels[i + 1])
+          - Double(pixels[i - width]) - Double(pixels[i + width])
+        sum += laplacian
+        sumSquares += laplacian * laplacian
+        count += 1
+      }
+    }
+    let mean = sum / count
+    return sumSquares / count - mean * mean
   }
 }
