@@ -152,6 +152,18 @@ describe('injectable audio bridge', () => {
     expect(state.final).not.toHaveBeenCalled(); expect(state.stopped).toHaveBeenCalledTimes(1);
   });
 
+  it('dates sentences from when audio started arriving, not from audio.ready', async () => {
+    const readyAt = Date.parse('2026-11-14T10:00:00Z'); let clock = readyAt;
+    const session = new Session(() => clock);
+    let publish!: (event: AsrTranscript) => void; const final = vi.fn();
+    const bridge = new AudioBridge(session, { start: async (_config, callback) => { publish = callback; return { write: async () => {}, stop: async () => {} }; } }, final);
+    await bridge.start(config);
+    // The glasses only start sending audio 18 s after the stream is ready.
+    clock += 18_000; await bridge.accept(frame());
+    publish(transcript);
+    await vi.waitFor(() => expect(final).toHaveBeenCalledWith(transcript, config, readyAt + 18_000 + transcript.captureOffsetMs));
+    await bridge.stop();
+  });
   it('preserves capture time when a final transcript arrives late and rejects offsets beyond received audio', async () => {
     const startedAt = Date.parse('2026-11-14T10:00:00Z'); let clock = startedAt;
     const session = new Session(() => clock); const events: EventEnvelope[] = []; session.listeners.add(event => events.push(event));
