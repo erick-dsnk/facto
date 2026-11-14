@@ -84,6 +84,17 @@ describe('session HTTP and WebSocket boundary', () => {
     expect((await submit(server, a, input(b))).statusCode).toBe(409);
   });
 
+  it('normalizes the HTTP authentication scheme while preserving token matching', async () => {
+    const server = await setup(); const session = await join(server);
+    const body = input(session);
+    const accepted = await server.app.inject({ method: 'POST', url: `/v1/sessions/${session.sessionId}/checks`,
+      headers: { authorization: `bEaReR ${session.token}` }, payload: body });
+    expect(accepted.statusCode).toBe(202);
+    const malformed = await server.app.inject({ method: 'POST', url: `/v1/sessions/${session.sessionId}/checks`,
+      headers: { authorization: `Bearer  ${session.token}` }, payload: { ...body, requestId: 'malformed-auth' } });
+    expect(malformed.statusCode).toBe(401);
+  });
+
   it('rejects Unicode oversize, stale epochs and conflicting idempotency while exact retries do no extra work', async () => {
     const adapters = fixtureAdapters(); const classify = vi.fn(adapters.classify);
     const server = await setup({ adapters: { ...adapters, classify } }); const session = await join(server);

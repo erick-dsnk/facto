@@ -45,7 +45,9 @@ export async function buildServer(options: ServerOptions) {
     const status = code === 'unauthorized' ? 401 : /capacity|queue_full|cooldown|rate_limit/.test(code) ? 429 : /conflict|old_epoch|old_revision|wrong_session/.test(code) ? 409 : 400;
     reply.code(status).send({ error: code });
   });
-  const bearer = (value?: string) => value?.startsWith('Bearer ') ? value.slice(7) : undefined;
+  // RFC 6750 inherits HTTP's case-insensitive auth-scheme token. Keep the
+  // credential itself exact so malformed headers never get silently repaired.
+  const bearer = (value?: string) => /^Bearer ([^\s]+)$/i.exec(value ?? '')?.[1];
   const paramsSchema = z.object({ sessionId: z.string().min(1), requestId: z.string().optional() });
   function authenticated(params: unknown, authorization?: string) {
     const parsed = paramsSchema.parse(params); return store.authenticate(parsed.sessionId, bearer(authorization));
