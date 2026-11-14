@@ -2,7 +2,7 @@
 
 What the iOS DAT route actually does on our hardware. Every row says how it was proven. "Pending" means not yet tested on the device; nothing here is inferred from documentation alone.
 
-Last updated: 14 November 2026, 03:30 EET.
+Last updated: 14 November 2026, 03:45 EET. Tests run by A on the hardware below.
 
 ## Test setup
 
@@ -13,8 +13,8 @@ Last updated: 14 November 2026, 03:30 EET.
 | DAT SDK | `https://github.com/facebook/meta-wearables-dat-ios`, exact `1.0.1` (MWDATCore, MWDATCamera, MWDATDisplay, MWDATMockDevice). Legacy `facebook` URL kept because it resolves; canonical repo is `meta/meta-wearables-dat-ios`. |
 | Xcode / deployment target | Xcode 26.5 (17F42) / iOS 17.2 |
 | Phone | iPhone 17 Pro, iOS 26.6 (23G71) |
-| Glasses | Ray-Ban Meta Gen 2 (SDK `deviceType` = `rayBanMeta`), firmware 129 (exact build: TODO from Meta AI → Device settings → About) |
-| Meta AI app | Version: TODO. Release channel: Developer Mode, `MetaAppID` 0 |
+| Glasses | Ray-Ban Meta Gen 2 (SDK `deviceType` = `rayBanMeta`), firmware 129 (minor build not recorded) |
+| Meta AI app | Version not recorded. Release channel: Developer Mode, `MetaAppID` 0 |
 | Display glasses (MRBD) | Not tested yet: needs a Meta loaner |
 
 ## Capability matrix
@@ -24,23 +24,24 @@ Last updated: 14 November 2026, 03:30 EET.
 | Registration with Meta AI | **Proven** | Section 1 shows "Registered" after Connect → approve in Meta AI | Developer Mode, no app ID |
 | Device state | **Proven** | Section 1: `Connected · rayBanMeta · compatible · worn donned · hinge open · battery 98% · thermal none` | Needs link/compat/device-state listeners; without them the row went stale |
 | Device session | **Proven** | Section 3: session reaches `started` | Fails with "No eligible device available" unless the `AutoDeviceSelector` is created once and has reported an active device (matches CameraAccess) |
-| Camera stream | **Proven** (Bluetooth build) | Section 3: live frames at 720×1280 requested | Heavy compression on Bluetooth Classic |
-| Camera stream over Wi-Fi | Pending | Rebuild without External Accessory keys; phone should join the glasses' network on stream start | Meta: Info.plist keys choose the transport (issue #376). Expected 720×1280 @ 30 fps; no Wi-Fi internet while streaming |
+| Camera stream (Bluetooth Classic) | Proven, superseded | First build with External Accessory keys: frames arrived, heavily compressed | Not used any more |
+| Camera stream over Wi-Fi | **Proven** | iPhone joined the glasses' Wi-Fi on stream start. Section 3 measured **720×1280, 29.5 fps, max frame gap 153 ms, 792 frames** with mic audio on | Info.plist keys choose the transport (Meta, issue #376). No Wi-Fi internet while streaming; checks use mobile data |
 | Stream quality ceiling | Documented | `.high` = 720×1280, max 30 fps; measured ~0.5 Mbit/s by others | Higher resolution needs photo capture |
-| Photo capture (full res) | Pending | Section 3 "Take photo" while streaming → size, KB, seconds | Experimental API, not publishable yet; photos reportedly travel over Bluetooth (issue #363) |
-| Activation: glasses capture button | Pending | Press the glasses' shutter while streaming; the photo should arrive on the same publisher | Candidate activation control for Look and check |
-| Ambient PCM (DAT stream audio) | Pending | Section 3: enable "Glasses mic audio (beta)", start stream, read the delivered format and level; a consenting non-wearer talks at ~1 m, then a video/room speaker | Needs DAT `.microphone` permission; keeps the camera (and LED) active; beta/development channel |
-| HFP microphone (wearer dictation) | Pending | Audio routes: "Start HFP mic test" with no stream; check input route shows the glasses (BluetoothHFP), compare wearer vs non-wearer level | Meta advises not to set up HFP while a session starts/stops (issue #292) |
-| Spoken output (TTS) | Pending | Audio routes: "Speak a sample result"; output route should name the glasses | iPhone 17 / iOS 26 HFP silent-audio known issue: check route while HFP is active |
+| Photo capture (full res) | **Failed during a Wi-Fi stream** | "Take photo" while streaming over Wi-Fi returned no photo | Matches Meta issue #363 (photos don't use the Wi-Fi link) and #297 (36–48 s blocking over Wi-Fi). A2 starts with a stream frame for OCR and tests standalone `camera.photo` separately |
+| Activation control | **Proven (app)** | Session, stream and audio are started and stopped from on-screen buttons | Glasses capture button and voice trigger move to A2/A5; not proven yet |
+| Ambient PCM (DAT stream audio) | **Proven** | Delivered **16000 Hz · 1 ch · Float32**, buffers flowing (418 at −32 dBFS while speaking). The level rose for the wearer and for a consenting non-wearer at ~1 m (values not logged) | Needs DAT `.microphone` permission (granted in Meta AI). Rides on the camera stream, so the camera and its LED stay on. Beta/development channel |
+| HFP microphone (wearer dictation) | **Proven** | With the glasses as the only Bluetooth headset, the HFP level responded to speech, format 16000 Hz · 1 ch · Float32 | First attempt routed to connected AirPods Max and stayed at −160 dBFS: other headsets must be disconnected, or the app must pick the glasses port by name |
+| Spoken output (TTS) | **Proven** | "Speak a sample result" played the sample verdict line | Plays on whatever Bluetooth output is active; the glasses must be the active output for the demo |
 | Native display card | Simulated only | MockDeviceKit Ray-Ban Display preview shows the card; Tap me increments | Real MRBD needed for A4 |
-| Background behaviour | Pending | Background the app mid-stream; expect the raw stream to stop; explicit Start session/stream restores it | Foreground-only P0, as in CameraAccess |
+| Background behaviour | Not tested in A1 | Moved to A5 (#22): background the app mid-stream, expect the raw stream to stop, explicit Start session/stream restores it | Foreground-only P0, as in CameraAccess |
 | Simulated glasses | **Proven** | Section 2: MockDeviceKit Ray-Ban Meta and Ray-Ban Display, phone camera as feed | Always labelled simulated |
 
 ## Route decision (A1, 90 minutes)
 
 - **Look and check:** glasses camera frame → on-phone Vision OCR. Proven route: DAT camera stream. For reading text, prefer a full-resolution photo over a stream frame once photo capture is confirmed.
 - **Listen and check:** try DAT stream audio first (`glasses_stream_audio`). If no buffers arrive or other speakers are inaudible, fall back to HFP wearer dictation (`glasses_hfp`) plus OCR, and say so in the demo. Phone microphone (`phone_mic`) stays a labelled fallback only.
-- Decision owner: A (Davidtzuke). Fill the Pending rows, then update this section with the locked route.
+- **Locked (14 Nov, 03:45):** Listen and check uses **DAT stream audio** (`glasses_stream_audio`, 16 kHz mono Float32, converted to PCM16 for the backend). HFP (`glasses_hfp`) is the proven fallback. Look and check uses a **DAT stream frame** at 720×1280 for OCR until photo capture works.
+- Decision owner: A (Davidtzuke).
 
 ## Known issues observed
 
