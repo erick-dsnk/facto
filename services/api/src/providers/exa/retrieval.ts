@@ -1,4 +1,5 @@
 import { PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../packages/contracts/src/index.js';
+import { getDomain } from 'tldts';
 import { buildAlternateQuery, needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse } from '../../evidence/normalize.js';
 import { AbortableExa } from './client.js';
 
@@ -24,11 +25,18 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
     const pages = parseExaResponse(await client.search(options.queryStrategy ? buildAlternateQuery(claim.checkedText, options.queryStrategy) : claim.checkedText, { type: 'auto', numResults: 5, contents: { highlights: true } }));
     context.signal.throwIfAborted();
     const seen = new Set<string>();
+    const perDomain = new Map<string, number>();
     const candidates = pages.filter(page => {
       const url = normalizeUrl(page.url);
       if (!url || seen.has(url)) return false;
       seen.add(url);
-      return needsPageText(page, claim.checkedText);
+      if (!needsPageText(page, claim.checkedText)) return false;
+      const domain = getDomain(new URL(url).hostname, { allowPrivateDomains: true })!;
+      // At most two pages from one domain can survive the retention cap;
+      // preserve the bounded contents allowance for another publisher instead.
+      if ((perDomain.get(domain) ?? 0) >= 2) return false;
+      perDomain.set(domain, (perDomain.get(domain) ?? 0) + 1);
+      return true;
     }).slice(0, 3);
     for (const page of candidates) {
       context.signal.throwIfAborted();
