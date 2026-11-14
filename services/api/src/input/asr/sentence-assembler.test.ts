@@ -59,6 +59,20 @@ describe('sentence assembler', () => {
     expect(finals()[1].confidence).toBeCloseTo(0.8);
   });
 
+  it('keeps an early sentence on UtteranceEnd when the finals stopped short of its end', () => {
+    const { assembler, finals } = setup();
+    assembler.interim(words('Water boils at 100 degrees. At'));
+    assembler.interim(words('Water boils at 100 degrees. At sea'));
+    const partial = words('Water boils at').slice(0, 3);
+    assembler.final(partial, endOf(partial));
+    assembler.utteranceEnd();
+    expect(finals().map(event => [event.segmentId, event.text])).toEqual([['g1-1', 'Water boils at 100 degrees.']]);
+    const late = words('Water boils at 100 degrees. At sea level.').slice(3);
+    assembler.final(late, endOf(late) + 0.1);
+    assembler.utteranceEnd();
+    expect(finals().map(event => [event.segmentId, event.text])).toEqual([['g1-1', 'Water boils at 100 degrees.'], ['g1-2', 'At sea level.']]);
+  });
+
   it('confirms an early sentence only once a final chunk reaches its end', () => {
     const { assembler, finals } = setup();
     assembler.interim(words('Water boils at 90 degrees. At'));
