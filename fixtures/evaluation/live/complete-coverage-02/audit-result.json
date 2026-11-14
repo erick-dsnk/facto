@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_completed_campaign_accounting_audit",
+  "auditedAt": "2026-11-14T10:34:49.273996+00:00",
+  "status": "PASS accounting/completion; raw target20/24 met; citation target separately pending",
+  "reportSHA256": "a227f9a968e32031e39d2a14eb570045435152753a7e122199879bb3777331d6",
+  "freeze": {
+    "commit": "4f507f84d9f7f8881af62d9a9ae5a82aa0099ceb",
+    "dirty": false,
+    "sourceSHA256": "d81de5984903f607d4e6b8342f1777b3dc105f893f27e2739c98308d86f57147",
+    "planSHA256": "2ef968ffc05b3859791417da853a219bdc015250faea43251103891c2f12789c",
+    "executorSHA256": "47426d69570ffc972246a6837497079d628755db6a231b9e34fc2fdcf5fafde1",
+    "preflightSHA256": "ee0e620f823a6761dbd019ee8f1a0a4a859179dcfcf223f2c5454ec752c4f8fb"
+  },
+  "verifiedSource": {
+    "commit": "4f507f84d9f7f8881af62d9a9ae5a82aa0099ceb",
+    "dirty": false,
+    "sourceSHA256": "d81de5984903f607d4e6b8342f1777b3dc105f893f27e2739c98308d86f57147"
+  },
+  "checks": {
+    "exactPlanExecutorFreeze": true,
+    "cleanExactFrozenSource": true,
+    "reportMetadataMatchesFreeze": true,
+    "exactPlanLimits": true,
+    "exactTwoBatchesAll32InOrder": true,
+    "eachBatchMatchesOwnPlan": true,
+    "all32ObservedTerminalNoFailures": true,
+    "bothBatchAuthBoundaries": true,
+    "all114ActualAttemptsComplete": true,
+    "attemptOrdinalsEachBatch": true,
+    "actualAccountingMatchesReport": true,
+    "allJevUsageKnown": true,
+    "perCaseAccounted": true,
+    "perBatchAccounted": true,
+    "allCampaignBatchInputCaps": true,
+    "exactSearchAndHighlightQueryGuards": true,
+    "all24FactsAdmittedExactly": true,
+    "oneCorrelatedTerminalEachNoDuplicates": true,
+    "allManualRespond": true,
+    "eightControlsExactActionAndNoRetrieval": true,
+    "allObservedFactualDeadlines": true,
+    "rawOutcomesRecomputed": true,
+    "sourceRecordsSelectedIdsRetained": true,
+    "oldStoppedReportImmutable": true,
+    "all1120PortableHistoricalOriginalsUnchanged": true,
+    "reportNotMutatedByAudit": true
+  },
+  "accounting": {
+    "actualProviderCalls": {
+      "jev": 61,
+      "search": 29,
+      "contents": 24
+    },
+    "actualAttempts": 114,
+    "requestBytes": 1802485,
+    "maximumActualRequestBytes": 67824,
+    "measuredInputTokens": 421456,
+    "unknownInputTokens": 0,
+    "pendingDispatchReservations": 0,
+    "knownPartialCostUSD": 0.251,
+    "attemptsWithUnknownCost": 61,
+    "costsUnknownForAll61JevAttempts": true,
+    "campaignWallMs": 53611,
+    "batchWallMs": [
+      27809,
+      25682
+    ],
+    "responseByteAggregate": null
+  },
+  "outcomes": {
+    "eligible": 24,
+    "expectedTrue": 12,
+    "expectedFalse": 12,
+    "correctDefinitive": 20,
+    "rawCorrectDefinitiveCoverage": 0.8333333333333334,
+    "wrongDefinitiveObserved": 0,
+    "abstained": 4,
+    "operationalErrors": 0,
+    "missingOrUnexecutedFacts": 0,
+    "fullyCitationVerifiedCorrect": null,
+    "fullyCitationVerifiedStatus": "pending separate independent citation audits; no credit inferred from accounting",
+    "correctByExpectedVerdict": {
+      "supported": 11,
+      "contradicted": 9
+    },
+    "byDomain": {
+      "history": {
+        "declared": 6,
+        "correct": 6,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "geography": {
+        "declared": 6,
+        "correct": 5,
+        "abstained": 1,
+        "wrong": 0
+      },
+      "technology": {
+        "declared": 4,
+        "correct": 2,
+        "abstained": 2,
+        "wrong": 0
+      },
+      "science": {
+        "declared": 4,
+        "correct": 4,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "arts": {
+        "declared": 2,
+        "correct": 2,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "sport": {
+        "declared": 2,
+        "correct": 1,
+        "abstained": 1,
+        "wrong": 0
+      }
+    },
+    "abstentions": [
+      {
+        "label": "CA08",
+        "reasonCode": "below_threshold"
+      },
+      {
+        "label": "CB01",
+        "reasonCode": "below_threshold"
+      },
+      {
+        "label": "CB06",
+        "reasonCode": "insufficient_independent_evidence"
+      },
+      {
+        "label": "CC08",
+        "reasonCode": "insufficient_independent_evidence"
+      }
+    ],
+    "controls": {
+      "declared": 8,
+      "executed": 8,
+      "skip": 6,
+      "needsConfirmation": 2,
+      "allManualRespond": true,
+      "retrievalAttempts": 0,
+      "unsafeAdmittedPublicSpans": 0
+    },
+    "terminalReceipts": 32,
+    "declaredInputs": 32
+  },
+  "latency": {
+    "factualIncludingAllFourAbstentions": {
+      "n": 24,
+      "medianMs": 1877.5,
+      "p95Ms": 3472,
+      "minMs": 718,
+      "maxMs": 5423,
+      "method": "case.durationMs, all declared cases in stratum; p95 nearest rank ceil(0.95*n), median averages middle pair",
+      "terminalReceiptMedianMs": 1877.5,
+      "terminalReceiptP95Ms": 3472
+    },
+    "controlsSeparate": {
+      "n": 8,
+      "medianMs": 162.5,
+      "p95Ms": 188,
+      "minMs": 113,
+      "maxMs": 188,
+      "method": "case.durationMs, all declared cases in stratum; p95 nearest rank ceil(0.95*n), median averages middle pair",
+      "terminalReceiptMedianMs": 162.5,
+      "terminalReceiptP95Ms": 188
+    },
+    "allInputs": {
+      "n": 32,
+      "medianMs": 1743.0,
+      "p95Ms": 3472,
+      "minMs": 113,
+      "maxMs": 5423,
+      "method": "case.durationMs, all declared cases in stratum; p95 nearest rank ceil(0.95*n), median averages middle pair",
+      "terminalReceiptMedianMs": 1743.0,
+      "terminalReceiptP95Ms": 3472
+    },
+    "serviceDeadlineMs": 10000,
+    "maximumFactualServiceDurationMs": 5419.673137,
+    "campaignWallMs": 53611
+  },
+  "queryAudit": {
+    "searchesChecked": 29,
+    "contentsRequestsChecked": 24,
+    "initialSearches": 24,
+    "alternateSearches": 5,
+    "method": "Exact recorded search query matched admitted public text or frozen balanced alternate helper. Recorded objective/highlight hashes matched exact frozen helpers. Content URLs passed frozen public URL normalization. Raw private-capable request bodies are not retained; full nested schema guard is independently pinned in frozen observer source."
+  },
+  "historicalVerification": {
+    "verifiedFiles": 1120,
+    "verifiedRawBytes": 18865046,
+    "mode": "verify-restored",
+    "network": false,
+    "codeExecutedFromArchive": false,
+    "liveCallsAuthorized": false
+  },
+  "limitations": [
+    "Small purposive OPEN cohort; not blind accuracy, causal improvement or readiness evidence.",
+    "Correct labels do not imply all selected citations are substantively verified or independent; separate citation audit required.",
+    "No population privacy guarantee follows from eight zero-retrieval controls.",
+    "No true timeout occurred; observed runtime under deadline is distinct from proving every failure path live.",
+    "Known cost is partial; all61 Jev attempts have unknown cost and response-byte aggregate is unmeasured.",
+    "No provider request or historical campaign replay/resumption occurred in this audit."
+  ]
+}

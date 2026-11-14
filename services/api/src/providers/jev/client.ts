@@ -13,6 +13,11 @@ export interface JevClient {
 const object = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const probability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
 
+/** Cleanup must not delay or replace an already established provider failure. */
+function discardBody(body: ReadableStream<Uint8Array> | ReadableStreamDefaultReader<Uint8Array> | null | undefined): void {
+  try { void body?.cancel().catch(() => undefined); } catch { /* Best effort, including injected transports. */ }
+}
+
 /** Only return answers whose shape and fixed options match the actual request. */
 export function validateAnswers(value: unknown, questions: Record<string, JevQuestion>): Record<string, JevAnswer> {
   if (!object(value) || !object(value.answers)) throw new PipelineError('malformed_provider');
@@ -64,7 +69,8 @@ export function createJevClient(options: { apiKey: string; fetch?: typeof global
         context.signal.throwIfAborted();
         if (!response.ok) {
           const retryAfter = retryAfterDelay(response.headers.get('retry-after'), context.now());
-          await response.body?.cancel().catch(() => undefined);
+          discardBody(response.body);
+          context.signal.throwIfAborted();
           if (response.status === 401 || response.status === 403) throw new PipelineError('jev_authentication');
           if (response.status === 429) throw new RetryableProviderError('jev_rate_limited', retryAfter);
           if (response.status >= 500) throw new RetryableProviderError('jev_unavailable', retryAfter);
@@ -82,7 +88,6 @@ export function createJevClient(options: { apiKey: string; fetch?: typeof global
               if (chunk.done) break;
               bytes += chunk.value.byteLength;
               if (bytes > 128_000) {
-                await reader.cancel().catch(() => undefined);
                 throw new PipelineError('malformed_provider');
               }
               context.signal.throwIfAborted();
@@ -90,7 +95,7 @@ export function createJevClient(options: { apiKey: string; fetch?: typeof global
             }
             body += decoder.decode();
           } catch (error) {
-            await reader.cancel().catch(() => undefined);
+            discardBody(reader);
             context.signal.throwIfAborted();
             if (error instanceof PipelineError) throw error;
             throw new RetryableProviderError('jev_unavailable');
