@@ -31,18 +31,13 @@ describe('literal selected-topic matching', () => {
   });
 });
 
-/** Rows of the shared presentation fixture that the Q2 notification table supersedes: overheard Misleading now
- * alerts. The fixture file lives outside this builder's files; update it with this table at integration. */
-const SUPERSEDED: Record<string, { action: string; reasonCode: string }> = {
-  'automatic-misleading': { action: 'notify', reasonCode: 'automatic_misleading' },
-};
 const admitted: AdmissionMetadata = { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_claim', hasPracticalConsequence: null, matchedSelectedTopic: null };
 
 describe('independent presentation policy', () => {
   for (const fixture of fixtures) it(fixture.id, () => {
     const admission: AdmissionMetadata = { assertionStatus: 'asserted', admissionAction: (fixture.admissionAction ?? 'check') as AdmissionMetadata['admissionAction'], reasonCode: 'public_claim', hasPracticalConsequence: fixture.priority ?? null, matchedSelectedTopic: fixture.topic ?? null };
     const actual = decidePresentation({ verdict: fixture.verdict as Verdict, admission }, fixture.intent as 'manual' | 'automatic' | 'repeat', { ...state, ...fixture.state }, { ...preferences, ...fixture.preferences });
-    expect(actual).toEqual(SUPERSEDED[fixture.id] ?? { action: fixture.expected, reasonCode: fixture.reason });
+    expect(actual).toEqual({ action: fixture.expected, reasonCode: fixture.reason });
   });
   it.each([
     // Q2: asked always answers; overheard only False, Misleading and Speculation alert.
