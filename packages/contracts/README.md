@@ -9,7 +9,7 @@ The app owns glasses connection, permissions, capture, ASR assembly, playback an
 - `schemas/`: generated JSON Schema artifacts for native tooling. Regenerate with `npx tsx packages/contracts/export-schemas.ts` from the repo root. JSON Schema validates shapes; semantic constraints described in each schema are also enforced by TypeScript validation.
 - `fixtures/text-unicode.json`: exact captured input with a non-BMP emoji, private clause and public clause.
 - `fixtures/result-manual-supported.json`, `result-manual-insufficient.json`, `result-automatic-silent.json`: presenter fixtures.
-- `fixtures/events.json`, `event-waiting.json`: stream fixtures.
+- `fixtures/events.json`, `event-waiting.json`, `event-capture-request.json`: stream fixtures.
 
 Fixture evidence excerpts are authored test data, not a recorded provider response or a measured live result. Their URLs are illustrative retained-citation fields; inspect fresh source content before using a claim in a demo. `modelVersion: fixture` labels these artifacts explicitly.
 
@@ -33,7 +33,9 @@ Connect `WS /v1/sessions/{id}/stream`. Native `URLSessionWebSocketTask` can send
 
 Envelope fields are `schemaVersion`, `eventId`, increasing `eventSeq`, `sessionId`, `sessionEpoch`, `type`, `serverAt`, `payload`; claim events also identify `requestId`, `claimId`, `revision`. A request may produce up to two separate claim IDs. Do not overwrite one clause's result with another clause's result.
 
-Handle `session.ready`, `claim.detected`, `claim.checking`, `claim.waiting`, `claim.skipped`, `claim.needs_confirmation`, `claim.result`, `claim.superseded`, `check.cancelled`, `pipeline.error`, and `session.ended`. ASR integration adds `audio.ready`, `audio.stopped`, `transcript.partial`, `transcript.final`. Unknown future event types should be ignored safely. `claim.waiting` supplies `admissionAction: wait`, `reasonCode` and `waitExpiresAt`; it is not a factual verdict.
+Handle `session.ready`, `claim.detected`, `claim.checking`, `claim.waiting`, `claim.skipped`, `claim.needs_confirmation`, `claim.result`, `claim.superseded`, `check.cancelled`, `pipeline.error`, and `session.ended`. ASR integration adds `audio.ready`, `audio.stopped`, `transcript.partial`, `transcript.final`, and `capture.request`. Unknown future event types should be ignored safely. `claim.waiting` supplies `admissionAction: wait`, `reasonCode` and `waitExpiresAt`; it is not a factual verdict.
+
+`capture.request` (payload `{ "reasonCode": "voice_trigger" }`) means the wearer said a "check this" phrase. The app takes one photo from the running stream and sends its OCR text as a normal `POST /checks` with `userInitiated: true`. The trigger sentence itself is never fact-checked. Transcript event payloads carry `speaker`: the 0-based diarization index, or `null` when unknown.
 
 `claim.result` includes the checked text and source span, retained evidence, selected IDs, verdict, reason, summary, check/expiry times, monotonic duration, cache marker and policy/model versions. Evidence `publishedAt` preserves source precision: an ISO date (`YYYY-MM-DD`), a timestamp with explicit offset, or `null` when unknown. Do not invent a midnight timestamp for a date-only publication. Retrieval/check/expiry fields remain timestamps. Never present a provider error as false or insufficient evidence. A completed `insufficient_evidence` is a distinct factual abstention.
 
@@ -44,6 +46,18 @@ Render `presentation.action` independently of the verdict:
 - `silent`: inspectable result only. The app must not promote this to a warning.
 
 Ignore old epochs, old revisions and repeated event IDs. Mark a prior result superseded on correction. Stop/disconnect stops capture and playback; close the session, discard pending audio and suppress delayed delivery. Reconnection requires explicit resume; do not replay audio captured during the gap. No alert means **not verified**, not true.
+
+### Reconnecting after a short blip
+
+A session allows one stream. A newer authenticated connection replaces an older one, which the server closes with code `4000`, so a half-open socket left by a network drop never blocks reconnection. Every disconnect or replacement pauses the session and increments `sessionEpoch`. To resume automatically within the same session:
+
+1. Stop sending audio and drop any unsent frames from the gap. Never replay them.
+2. Reconnect `WS /v1/sessions/{id}/stream` with the same session token.
+3. Read `session.ready`: it carries the new `sessionEpoch` and `active: false`.
+4. Send `{"type":"session.resume","sessionEpoch":<new epoch>}` and wait for the second `session.ready` with `active: true`.
+5. Send `audio.start` with the new epoch and a stream generation strictly higher than the last one used, wait for `audio.ready`, then send frames with sequence and capture offset starting at `0`.
+
+Checks and results from the previous epoch are gone; resubmit an explicit check if the user still wants it. If the session token has expired or been deleted, create a new session instead.
 
 ## Unicode spans
 
@@ -61,7 +75,9 @@ Check bounds before slicing. Input text is at most 800 code points; the combined
 
 The friend implementing ASR provides `AsrAdapter` from `services/api/src/transport/audio.ts`; implementation belongs in their `input/asr/` module. `start(config, onTranscript, signal)` returns a stream with asynchronous `write(frame)` and `stop()`. Honor abort, discard incomplete segments on discontinuity, and never log raw PCM or transcripts. Backend transport must bound pending PCM to two seconds and await writes. No ASR provider is bundled with this seam; an unconfigured server reports `asr_unavailable` rather than acknowledging capture.
 
-Inject the implementation with `buildServer({ ..., asr: adapter })`. `AudioBridge` enforces the two-second backlog, validates frames, forwards only final transcripts to the checker, and closes the adapter on pause, disconnect, deletion or playback. Identical final retransmissions are idempotent; a correction to the same segment increments its revision without resetting its attempt budget. `playback.started` discards the active audio generation; after `playback.ended`, explicitly negotiate a higher generation. No ASR credentials or provider implementation are included in the default entry point.
+Inject the implementation with `buildServer({ ..., asr: adapter })`. An adapter may set an optional `speaker` (0-based diarization index or `null`) on each transcript. `AudioBridge` enforces the two-second backlog, validates frames, forwards only final transcripts to the checker, and closes the adapter on pause, disconnect, deletion or playback. Identical final retransmissions are idempotent; a correction to the same segment increments its revision without resetting its attempt budget. `playback.started` discards the active audio generation; after `playback.ended`, explicitly negotiate a higher generation. No ASR credentials or provider implementation are included in the default entry point.
+
+Each audio check carries `context`: up to two earlier final sentences from the last 60 seconds, oldest first, at most 1,200 code points combined. Older whole sentences are dropped first and a sentence is never cut. Lines read `Speaker N: text` (N is the diarization index plus one) when the speaker is known, plain text otherwise. The current sentence is never part of its own context, and a correction keeps the context of its first revision. The server clears this ring on stop, pause, disconnect and every epoch change. A final sentence that is a "check this" phrase ("check this", "can you check this", "could you check this", "is this true", "fact check this", optionally wrapped in filler such as "hey" or "please") emits `capture.request` instead of a check.
 
 Control messages always include the current `sessionEpoch`. Use `session.pause` and then explicit `session.resume`, `claim.cancel` with `requestId`, or `claim.repeat` with `requestId` and `claimId`. `session.preferences` sets `preferences: { muted, automaticNotifications, selectedTopics }`. Automatic notifications default off. The classifier does not infer semantic topic categories. Immediately before presentation, the runtime matches currently enabled topic strings as normalized whole literal phrases in the admitted `checkedText`, including cached and in-flight results. Rejected private clauses/context do not enter matching; a topic match still requires the ordinary contradiction, opt-in, session and budget gates before notification. Repeat uses an unexpired retained result without another provider call. A new check uses a new request ID.
 
