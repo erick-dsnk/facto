@@ -1,0 +1,70 @@
+{
+  "annotator": "source_calibration AI agent",
+  "annotatedBeforeProviderOutput": true,
+  "labels": [
+    {
+      "id": "Q49",
+      "expectedBasis": "non_substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Geographic assertion retained alone; no named record, survey, observation or explanatory basis.",
+      "supportingSpan": "Paris is located in the north-central part of France along the Seine River.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q50",
+      "expectedBasis": "non_substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Generic factual reference sentence; no retained experiment, formal definition or substantive explanation.",
+      "supportingSpan": "Water is made up of hydrogen and oxygen, and it exists in gaseous, liquid, and solid states.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q51",
+      "expectedBasis": "non_substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Ordinary image-caption assertion; no identifiable nomenclature record is retained. Truth and familiarity do not supply basis.",
+      "supportingSpan": "The precious metal gold is a chemical element with the symbol Au.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q52",
+      "expectedBasis": "non_substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Reference superlative with descriptive values but no identifiable measurements, observations or comparative basis for largest.",
+      "supportingSpan": "The blue whale (Balaenoptera musculus) is the largest animal on Earth, reaching up to 98 feet (30 meters) long and weighing 150 tons.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q53",
+      "expectedBasis": "non_substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Reference climate assertion with explanatory detail but no identifiable climatological record or observation; mark as boundary for adjudication.",
+      "supportingSpan": "The Sahara exhibits great climatic variability within its borders, with two major climatic regimes differentiating along a north-south axis: the desert’s northern latitudes are arid subtropical and have two rainy seasons, while the southern ones, although also arid, are more tropical and have only one rainy season.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q54",
+      "expectedBasis": "non_substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Isolated caption gives a value without identifying its measurement or record basis.",
+      "supportingSpan": "Reaching an elevation of 29,032 feet (8,849 meters), Mount Everest is the highest mountain in the world.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q55",
+      "expectedBasis": "substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Dated named declaration plus measurement qualifications provides a concrete descriptive record basis for what was declared, without proving physical elevation independently.",
+      "supportingSpan": "There is disagreement over the exact elevation of Mount Everest because of variations in snow level, gravity deviation, and light refraction, among other factors. However, in 2020 China and Nepal jointly declared Mount Everest’s elevation to be 29,031.69 feet (8,848.86 meters), which was subsequently widely accepted.",
+      "reviewFlag": "boundary: independent adjudication required"
+    },
+    {
+      "id": "Q56",
+      "expectedBasis": "substantive",
+      "basisSubtype": "routine_reference_boundary",
+      "labelReason": "Concrete morphological/explanatory description supplies descriptive substance beyond repeated proposition, though external observation provenance remains unspecified; explicit boundary for independent review.",
+      "supportingSpan": "The blue whale (Balaenoptera musculus) is the largest animal on Earth, reaching up to 98 feet (30 meters) long and weighing 150 tons. As mammals, blue whale calves drink 50 to 150 gallons of their mother’s milk per day, gaining about 200 pounds daily.\n\nBlue whales are blue-gray with lighter gray spots. They are baleen whales, possessing baleen plates instead of teeth, which they use to feed on krill.",
+      "reviewFlag": "boundary: independent adjudication required"
+    }
+  ]
+}

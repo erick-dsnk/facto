@@ -1,0 +1,78 @@
+from pathlib import Path
+import json,hashlib,datetime,urllib.request,re,collections
+p=Path(__file__).parent
+sources=json.loads((p/'sources.json').read_text()); lookup={s['id']:s for s in sources}
+text=(p/'source-batch-c.md').read_text().lstrip('# ')
+s={'id':'S13','title':text.splitlines()[0],'url':'https://www.law.cornell.edu/constitution/articlei','extraction':text,'extractionSha256':hashlib.sha256(text.encode()).hexdigest()}
+try:
+ with urllib.request.urlopen(s['url'],timeout=20) as r:
+  raw=r.read(2000000); s.update(originStatus=r.status,originUrl=r.url,originBytes=len(raw),originSha256=hashlib.sha256(raw).hexdigest()); (p/'S13.origin.html').write_bytes(raw)
+except Exception as e:s['originError']=str(e)
+s['retrievedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();lookup['S13']=s;sources.append(s);(p/'S13.source.md').write_text(text)
+# Each actual passage is one contiguous substring of the retained connector extraction.
+def passage(sid,start,end):
+ t=lookup[sid]['extraction']; a=t.index(start); b=t.index(end,a)+len(end); x=t[a:b]; assert len(x)<=2000,(sid,len(x));return x,a,b
+specs=[
+ ('S01','research','development','On September 14, 2015 at 09:50:45 UTC,','for the observations reported here.',[
+ ('LIGO Hanford and Livingston detected GW150914 on September 14, 2015.','On September 14, 2015'),
+ ('The initial GW150914 detection was reported within three minutes of data acquisition.','within three minutes of data acquisition')]),
+ ('S02','research','validation','A search for the Standard Model Higgs boson','Standard Model Higgs boson.',[
+ ('The 2012 ATLAS Higgs search used about 4.8 inverse femtobarns of 7 TeV data collected in 2011.','4.8 fb-1'),
+ ('The 2012 ATLAS report assigned its new neutral-boson observation a significance of 5.9 standard deviations.','5.9 standard deviations')]),
+ ('S03','research','validation','The dominant sequence transduction models','large and limited training data.',[
+ ('The Transformer paper reports 28.4 BLEU on WMT 2014 English-to-German translation.','28.4 BLEU'),
+ ('The Transformer architecture described in Attention Is All You Need requires recurrent networks.','dispensing with recurrence and convolutions entirely')]),
+ ('S07','research','validation','In this work we investigate','computer vision.',[
+ ('The VGG study evaluated convolutional networks with 16 to 19 weight layers.','16–19 weight layers'),
+ ('The VGG team placed first in classification and second in localisation in ImageNet Challenge 2014.','first and the second places in the localisation and classification tracks respectively')]),
+ ('S04','record','development','Note: The following text is a transcription','the causes which impel them to the separation.',[
+ ('The transcribed Declaration of Independence is headed In Congress, July 4, 1776.','In Congress, July 4, 1776'),
+ ('The transcribed Declaration of Independence describes thirteen united States of America.','thirteen united States of America')]),
+ ('S05','record','validation','Photo from the Nobel Foundation archive.','Also awarded: Nobel Prize in Chemistry 1911',[
+ ('Marie Curie received a one-quarter share of the 1903 Nobel Prize in Physics.','Prize share: 1/4'),
+ ('Marie Curie was awarded the Nobel Prize in Chemistry in 1911.','Nobel Prize in Chemistry 1911')]),
+ ('S06','record','validation','PRESS RELEASE January 9, 2007','redefines what users can do on their mobile phones.',[
+ ('Apple announced iPhone on January 9, 2007.','January 9, 2007'),
+ ('The January 2007 Apple announcement describes iPhone as having a multi-touch display.','a large multi-touch display')]),
+ ('S13','record','validation','## Section 1.','in which he shall be chosen.',[
+ ('Article I of the US Constitution provides for a Congress consisting of a Senate and a House of Representatives.','shall consist of a Senate and House of Representatives'),
+ ('Article I requires a US Representative to have attained the age of thirty years.','age of twenty five years')]),
+ ('S09','secondary','development','President Abraham Lincoln issued','depended upon Union military victory.',[
+ ('Abraham Lincoln issued the Emancipation Proclamation on January 1, 1863.','January 1, 1863'),
+ ('The Emancipation Proclamation immediately abolished slavery in the loyal border states.','leaving slavery untouched in the loyal border states')]),
+ ('S10','secondary','validation','Orville takes off with Wilbur running beside,','852 feet in 59 seconds.',[
+ ('Wilbur Wright flew 852 feet in 59 seconds on the fourth flight of December 17, 1903.','852 feet in 59 seconds'),
+ ('Orville Wright flew all four Wright brothers flights on December 17, 1903.','The brothers took turns flying three more times that day')]),
+ ('S11','secondary','development','The first reference to the diamond\'s next owner','how much he paid for it.',[
+ ('Henry Philip Hope\'s 1839 gem collection catalog contains a reference to the Hope Diamond.','1839 entry of the gem collection catalog'),
+ ('Henry Philip Hope\'s 1839 catalog records how much he paid for the Hope Diamond.','does not reveal where or from whom Hope acquired the diamond or how much he paid for it')]),
+ ('S12','secondary','validation','Great Fire of London, (September','near London Bridge.',[
+ ('The Great Fire of London began in September 1666.','September 2–5, 1666'),
+ ('The Great Fire of London destroyed old St. Paul\'s Cathedral.','old St. Paul’s Cathedral')]),
+]
+units=[];labels=[]
+def add(sid,part,claim,excerpt,synthetic,transformation,label,subtype,reason,span,offsets=None):
+ i=f'Q{len(units)+1:02}';source=lookup[sid]
+ unit={'id':i,'proposition':claim,'title':('Synthetic calibration control: '+i) if synthetic else source['title'],'url':f'https://calibration.invalid/{i}' if synthetic else source['url'],'excerpt':excerpt,'sourceFamily':sid,'partition':part,'synthetic':synthetic,'transformation':transformation,'sourceId':sid,'sourceExtractionSpan':offsets,'provenanceNotes':f"Derived family {sid}; original status {source.get('originStatus','unavailable')}. Content-basis annotation only; no truth or independence approval. Synthetic passages are authored controls, never represented as quotations from the linked real source." if synthetic else f"Exact contiguous passage of retained connector extraction {sid}; original fetch status {source.get('originStatus','unavailable')}. Whitespace/markdown comes from connector extraction, not raw HTML; citation availability is a separate property."}
+ assert 0<len(excerpt)<=2000;assert span in excerpt,(i,span)
+ units.append(unit);labels.append({'id':i,'expectedBasis':label,'basisSubtype':subtype,'labelReason':reason,'supportingSpan':span})
+for idx,(sid,kind,part,start,end,claims) in enumerate(specs):
+ excerpt,a,b=passage(sid,start,end)
+ for claim,span in claims:
+  add(sid,part,claim,excerpt,False,'unaltered contiguous source passage','substantive',kind,'Retained passage supplies identified record text or concrete attributable observations, methods, measurements or historical context bearing directly on this proposition. Label covers evidential basis whether stance supports or contradicts; it does not certify truth.',span,[a,b])
+ claim=claims[0][0]
+ if idx%2==0:
+  # Explicitly synthetic promotion/attribution contrast controls. No invented source quote.
+  promo=f'Discover the ultimate guide! {claim} Our premium service is the most trustworthy and effortless way to master this subject. Buy now and enjoy unbeatable results.'
+  add(sid,part,claim,promo,True,'authored promotional context preserving proposition','non_substantive','promotional','Sales assertion offers no record, method, measured finding or descriptive source basis; repetition is not evidence.','Buy now and enjoy unbeatable results.')
+  attr=f'A visitor commenting on the exhibition said, "{claim}" More reader comments are available below.'
+  add(sid,part,claim,attr,True,'authored mere-attribution context preserving proposition','non_substantive','attributed','Only a person\'s belief is recorded. The tested proposition is the underlying world claim, not whether the comment was made.',"A visitor commenting on the exhibition said")
+ else:
+  add(sid,part,claim,claim,True,'authored context-stripped generic assertion','non_substantive','bare_assertion','An isolated assertion supplies no identifiable record, method, concrete descriptive context or provenance; remembered correctness and metadata cannot fill the gap.',claim)
+  title=lookup[sid]['title'];t=lookup[sid]['extraction'];a=t.index(title)
+  add(sid,part,claim,title,False,'exact source title only; body deliberately withheld','insufficient','title_only','Title alone supplies no retained passage establishing the proposition. Do not infer article contents or source prestige.',title,[a,a+len(title)])
+(p/'units.unlabeled.json').write_text(json.dumps({'schemaVersion':1,'purpose':'Open evidence-quality calibration; not a factual accuracy evaluation','units':units},ensure_ascii=False,indent=2)+'\n')
+(p/'annotation-first.json').write_text(json.dumps({'annotator':'source_calibration AI agent','annotatedBeforeProviderOutput':True,'labels':labels},ensure_ascii=False,indent=2)+'\n')
+(p/'sources.json').write_text(json.dumps(sources,ensure_ascii=False,indent=2)+'\n')
+print('units',len(units), 'partitions',dict(collections.Counter(x['partition'] for x in units)),'labels',dict(collections.Counter(x['expectedBasis'] for x in labels)))
+print('subtypes',dict(collections.Counter(x['basisSubtype'] for x in labels)))

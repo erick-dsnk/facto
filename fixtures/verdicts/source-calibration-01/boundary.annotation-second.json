@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "role": "independent_second_annotation",
+  "annotator": "final_stack_review",
+  "createdAt": "2026-11-14T04:13:32.896702+00:00",
+  "inputSHA256": "31c7ffbced77005335bd0529145a2b73a82d8633b20ed7b699a10e4ec275d19d",
+  "rubricSHA256": "56a0de7fe53b98a1d9ecc58db6df9f48cf77098ea600064bcb7296173368b6cd",
+  "firstLabelsViewed": false,
+  "providerOutputsViewed": false,
+  "keyedCalls": 0,
+  "annotations": [
+    {
+      "id": "Q49",
+      "label": "substantive",
+      "subtype": "concise_descriptive_reference",
+      "supportingSubstring": "north-central part of France along the Seine River",
+      "supportingSpan": {
+        "start": 24,
+        "end": 74,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Locational reference gives regional and national placement together with river relation; no study citation is required to make this a limited descriptive account. The short description boundary remains uncertain.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q50",
+      "label": "substantive",
+      "subtype": "concise_descriptive_reference",
+      "supportingSubstring": "hydrogen and oxygen, and it exists in gaseous, liquid, and solid states",
+      "supportingSpan": {
+        "start": 20,
+        "end": 91,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Describes composition and concrete phase context, rather than a research benefit or attributed belief. Minimal ordinary-reference substance boundary is flagged.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q51",
+      "label": "substantive",
+      "subtype": "concise_definitional_reference",
+      "supportingSubstring": "chemical element with the symbol Au",
+      "supportingSpan": {
+        "start": 29,
+        "end": 64,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Gives entity class and exact chemical nomenclature. This is limited descriptive/definitional reference content; no claim of original authority follows. Borderline short-form record.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q52",
+      "label": "substantive",
+      "subtype": "descriptive_reference",
+      "supportingSubstring": "reaching up to 98 feet (30 meters) long and weighing 150 tons",
+      "supportingSpan": {
+        "start": 71,
+        "end": 132,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Named biological entity plus physical measurements give concrete context for the size comparison.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q53",
+      "label": "substantive",
+      "subtype": "explanatory_reference",
+      "supportingSubstring": "northern latitudes are arid subtropical and have two rainy seasons",
+      "supportingSpan": {
+        "start": 154,
+        "end": 220,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Explains how the two regimes differ by latitude and precipitation, beyond repeating the proposition.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q54",
+      "label": "substantive",
+      "subtype": "concise_descriptive_reference",
+      "supportingSubstring": "29,032 feet (8,849 meters)",
+      "supportingSpan": {
+        "start": 25,
+        "end": 51,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Height measurement, unit equivalence and highest-mountain context give a bounded descriptive record. No survey methodology retained; borderline reference case.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q55",
+      "label": "substantive",
+      "subtype": "named_declaration_explanatory_account",
+      "supportingSubstring": "in 2020 China and Nepal jointly declared",
+      "supportingSpan": {
+        "start": 172,
+        "end": 212,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Identifies date, actors, declared figure and reasons measurement varies; a concrete recorded declaration and explanatory context.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q56",
+      "label": "substantive",
+      "subtype": "explanatory_reference",
+      "supportingSubstring": "baleen plates instead of teeth, which they use to feed on krill",
+      "supportingSpan": {
+        "start": 339,
+        "end": 402,
+        "unit": "unicode_code_points"
+      },
+      "rationale": "Anatomical classification and feeding mechanism in a broader physical description provide substantive explanatory content.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    }
+  ],
+  "reviewNotes": [
+    "All labels concern retained reference content only, not real-world truth, publisher authority, accessibility or independence.",
+    "Genre/source authenticity cannot be inferred merely from a genuine-source marker. Concise cases are flagged so the binary substantive/non-substantive boundary is adjudicated before provider output.",
+    "Do not silently equate page length, scientific citations or a named experiment with substantive content; ordinary reference descriptions can be substantive."
+  ]
+}
