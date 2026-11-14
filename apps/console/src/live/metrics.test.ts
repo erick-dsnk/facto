@@ -83,3 +83,86 @@ describe('honest factual and admission metrics', () => {
     expect(metrics.factual.expected).toBe(0);
   });
 });
+
+describe('explicit factual error rates', () => {
+  function fixture(label: string, gold: 'supported' | 'contradicted' | 'misleading', prediction: string | null) {
+    const input = `Synthetic proposition ${label}.`;
+    const sample: LiveCase = { label, text: input, allowedPublic: [input], expected: {
+      claims: [{ id: `${label}-fact`, acceptedTexts: [input], verdict: gold, domain: 'synthetic' }],
+    } };
+    const observed = { label, terminalReceived: true, status: prediction === null ? 'error' : 'observed', admittedPublic: [input],
+      events: prediction === null ? [{ type: 'claim.error', claimId: label }]
+        : [{ type: 'claim.result', claimId: label, checkedPublicText: input, verdict: prediction }] };
+    return { sample, observed };
+  }
+
+  it('distinguishes false alarms and false support with explicit completed and definitive denominators', () => {
+    const rows = (['supported', 'contradicted'] as const).flatMap(gold =>
+      ['supported', 'contradicted', 'misleading', 'insufficient_evidence', null, 'unrun'].map((prediction, index) =>
+        ({ ...fixture(`${gold}-${index}`, gold, prediction), run: prediction !== 'unrun' })));
+    const rates = summarizeCampaign(rows.map(row => row.sample), rows.filter(row => row.run).map(row => row.observed)).factualErrorRates;
+    for (const counts of [rates.trueGold, rates.falseGold]) {
+      expect(counts).toEqual({ declared: 6, completed: 4, definitive: 3, abstained: 1, noResult: 1, notObserved: 1 });
+    }
+    expect(rates.falseAlarm).toMatchObject({ count: 2, completedChecks: { numerator: 2, denominator: 4, rate: .5 },
+      definitiveOnly: { numerator: 2, denominator: 3, rate: 2 / 3 } });
+    expect(rates.falseSupport).toMatchObject({ count: 1, completedChecks: { numerator: 1, denominator: 4, rate: .25 },
+      definitiveOnly: { numerator: 1, denominator: 3, rate: 1 / 3 } });
+  });
+
+  it('excludes unlabeled inputs and separately reports misleading gold without inventing binary truth', () => {
+    const binary = fixture('true', 'supported', 'supported');
+    const misleading = fixture('context', 'misleading', 'supported');
+    const abstained = fixture('context-abstention', 'misleading', 'insufficient_evidence');
+    const unlabeled = fixture('unlabeled', 'contradicted', 'supported');
+    const result = summarizeCampaign([binary.sample, misleading.sample, abstained.sample, { ...unlabeled.sample, expected: undefined }],
+      [binary.observed, misleading.observed, abstained.observed, unlabeled.observed]);
+    expect(result.unlabeledCases).toBe(1);
+    expect(result.factualErrorRates.trueGold.declared).toBe(1);
+    expect(result.factualErrorRates.falseGold.declared).toBe(0);
+    expect(result.factualErrorRates.excludedGoldMisleading).toEqual({ declared: 2, completed: 2, definitive: 1, abstained: 1, noResult: 0, notObserved: 0 });
+    expect(result.factualErrorRates.falseSupport.count).toBe(0);
+    expect(result.factualErrorRates.falseSupport.completedChecks.rate).toBeNull();
+  });
+
+  it('returns null for empty observed denominators and keeps pure abstention distinct from a definitive pass', () => {
+    const row = fixture('abstention', 'supported', 'insufficient_evidence');
+    const unrun = summarizeCampaign([row.sample], []).factualErrorRates;
+    expect(unrun.trueGold).toMatchObject({ declared: 1, completed: 0, notObserved: 1 });
+    expect(unrun.falseAlarm.completedChecks.rate).toBeNull();
+    expect(unrun.falseAlarm.definitiveOnly.rate).toBeNull();
+    const observed = summarizeCampaign([row.sample], [row.observed]).factualErrorRates;
+    expect(observed.trueGold).toMatchObject({ declared: 1, completed: 1, definitive: 0, abstained: 1 });
+    expect(observed.falseAlarm.completedChecks).toEqual({ numerator: 0, denominator: 1, rate: 0 });
+    expect(observed.falseAlarm.definitiveOnly.rate).toBeNull();
+  });
+
+  it('scores multiple expected claims independently and denies duplicated outputs an observed-outcome denominator', () => {
+    const first = fixture('first', 'supported', 'contradicted');
+    const second = fixture('second', 'contradicted', 'supported');
+    const mixed: LiveCase = { ...first.sample, text: `${first.sample.text} ${second.sample.text}`,
+      allowedPublic: [first.sample.text, second.sample.text],
+      expected: { claims: [...first.sample.expected!.claims, ...second.sample.expected!.claims] } };
+    const observed = { ...first.observed, admittedPublic: mixed.allowedPublic,
+      events: [...first.observed.events, ...second.observed.events] };
+    const result = summarizeCampaign([mixed], [observed]).factualErrorRates;
+    expect(result.falseAlarm).toMatchObject({ count: 1, definitiveOnly: { denominator: 1, rate: 1 } });
+    expect(result.falseSupport).toMatchObject({ count: 1, definitiveOnly: { denominator: 1, rate: 1 } });
+    observed.events.push(first.observed.events[0]);
+    const duplicated = summarizeCampaign([mixed], [observed]).factualErrorRates;
+    expect(duplicated.trueGold).toEqual({ declared: 1, completed: 0, definitive: 0, abstained: 0, noResult: 1, notObserved: 0 });
+    expect(duplicated.falseAlarm.count).toBe(0);
+    expect(duplicated.falseAlarm.completedChecks.rate).toBeNull();
+    expect(duplicated.falseSupport.completedChecks.rate).toBe(1);
+  });
+
+  it('never turns a missing or invalid factual verdict into a completed negative observation', () => {
+    const invalid = fixture('invalid', 'supported', 'unknown_verdict');
+    const missing = fixture('missing', 'contradicted', 'supported');
+    const missingVerdict = { ...missing.observed, events: [{ type: 'claim.result', checkedPublicText: missing.sample.text }] };
+    const rates = summarizeCampaign([invalid.sample, missing.sample], [invalid.observed, missingVerdict]).factualErrorRates;
+    for (const counts of [rates.trueGold, rates.falseGold]) expect(counts).toMatchObject({ declared: 1, completed: 0, noResult: 1 });
+    expect(rates.falseAlarm.completedChecks.rate).toBeNull();
+    expect(rates.falseSupport.definitiveOnly.rate).toBeNull();
+  });
+});
