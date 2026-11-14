@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "kind": "single_scope_only_experimental_appendix",
+  "frozenAt": "2026-11-14T05:33:33.376847+00:00",
+  "appendix": "For this item, require the retained passage itself to state or explicitly relate the subject, relation and material qualifiers at issue in the whole proposition, including ordinal, condition and geographic level. This asks coverage, not agreement or a verdict. Missing factual links cannot come from another retained record, the separate metadata title field, host identity or world knowledge; actual in-body headings or row labels may identify their attached contents. Ordinary language interpretation, explicit negation, different compared values and logical counterexamples remain allowed. A partial match missing a required factual link does not cover the claim.",
+  "fullScopeInstructionTemplate": "Does retained evidence ${source.id} address the same referent, factual relation and material time, place and population circumstances as the proposition without guessing? Assess scope separately from agreement: a different asserted value, location or date can directly refute the claim and is not itself a scope mismatch. For example, evidence naming a different capital of the same country addresses the same relation; evidence about another country, period or population does not. An in-scope counterexample can refute a universal claim; a limited sample cannot substantiate a universal claim about all places, times or people. For this item, require the retained passage itself to state or explicitly relate the subject, relation and material qualifiers at issue in the whole proposition, including ordinal, condition and geographic level. This asks coverage, not agreement or a verdict. Missing factual links cannot come from another retained record, the separate metadata title field, host identity or world knowledge; actual in-body headings or row labels may identify their attached contents. Ordinary language interpretation, explicit negation, different compared values and logical counterexamples remain allowed. A partial match missing a required factual link does not cover the claim.",
+  "baselineScopeInstructionTemplate": "Does retained evidence ${source.id} address the same referent, factual relation and material time, place and population circumstances as the proposition without guessing? Assess scope separately from agreement: a different asserted value, location or date can directly refute the claim and is not itself a scope mismatch. For example, evidence naming a different capital of the same country addresses the same relation; evidence about another country, period or population does not. An in-scope counterexample can refute a universal claim; a limited sample cannot substantiate a universal claim about all places, times or people.",
+  "appendixSHA256": "724a653bfab1a94aa22189ffc6368b3c64b881658033802a6982ccd472d04662",
+  "fullTemplateSHA256": "74d08f816b2dc162fe971dc33e24dfcad7bcc241f2dd52bbe493c63c765d1e10",
+  "onlyChangedQuestionPattern": "eN_scope.instructions",
+  "threshold": 0.85,
+  "stanceChanged": false,
+  "contentBasisChanged": false,
+  "stateOrCompanionsChanged": false,
+  "productionChanged": false,
+  "providerCalls": 0,
+  "prospectiveControlBodiesReadBeforeFreeze": false,
+  "review": "final_stack_review approved exact appendix before freeze; logical counterexamples must use retained premises only",
+  "purpose": "Test complete source-specific relation/qualifier coverage; no claimed coverage gain or promotion."
+}

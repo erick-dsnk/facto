@@ -1,0 +1,22 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { captureRequest, hash, LIMITS, STRATUM_LIMITS, type Context, type Arm } from './runner.ts';
+const path = '/workspace/task-evidence/scope-stance-contrasts-v1/annotation-inputs.json';
+const bytes = readFileSync(path), expected = '43b1be4002c43d8d8d2fd7d52060c1a19b1d7c4045c88038b80777cddbe925d0';
+if (hash(bytes) !== expected)
+    throw Error('Prospective neutral packet changed');
+const contexts = JSON.parse(bytes.toString('utf8')).contexts as Context[];
+const rows = [];
+for (const context of contexts)
+    for (const arm of ['baseline', 'scope_candidate'] as Arm[]) {
+        const request = await captureRequest(context, 'original_full', arm), body = JSON.stringify({ model: 'jev-latest', state: request.state, questions: request.questions });
+        const row = { caseId: context.caseId, arm, bytes: Buffer.byteLength(body), bodyHash: hash(body), sourceCount: context.records.length };
+        if (row.bytes > LIMITS.maxRequestBytes)
+            throw Error('Actual captured request exceeds cap');
+        rows.push(row);
+    }
+const total = rows.reduce((n, r) => n + r.bytes, 0);
+if (total > STRATUM_LIMITS.maxTotalRequestBytes)
+    throw Error('Stratum byte cap');
+const report = { kind: 'offline_prospective_full_context_request_capture', providerCalls: 0, labelsRead: false, inputPath: path, inputSHA256: expected, calls: rows.length, totalRequestBytes: total, largestRequestBytes: Math.max(...rows.map(r => r.bytes)), rows };
+writeFileSync('/workspace/task-evidence/full-context-scope-study-01/prospective-payload-check.json', JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
+console.log(JSON.stringify({ providerCalls: 0, calls: rows.length, totalRequestBytes: total, largestRequestBytes: report.largestRequestBytes }));
