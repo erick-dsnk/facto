@@ -63,7 +63,7 @@ final class PCM16Converter {
 
   static func pcm16LittleEndian(_ samples: UnsafeBufferPointer<Float>) -> Data {
     var data = Data(count: samples.count * AudioWireFormat.bytesPerSample)
-    data.withUnsafeMutableBytes { raw in
+    data.withUnsafeMutableBytes { (raw: UnsafeMutableRawBufferPointer) in
       for (index, sample) in samples.enumerated() {
         let bits = UInt16(bitPattern: int16(from: sample))
         raw[index * 2] = UInt8(truncatingIfNeeded: bits)
@@ -75,7 +75,7 @@ final class PCM16Converter {
 
   static func pcm16LittleEndian(_ samples: UnsafeBufferPointer<Int16>) -> Data {
     var data = Data(count: samples.count * AudioWireFormat.bytesPerSample)
-    data.withUnsafeMutableBytes { raw in
+    data.withUnsafeMutableBytes { (raw: UnsafeMutableRawBufferPointer) in
       for (index, sample) in samples.enumerated() {
         let bits = UInt16(bitPattern: sample)
         raw[index * 2] = UInt8(truncatingIfNeeded: bits)
