@@ -20,7 +20,7 @@ npm run dev
 
 Fixture mode accepts these exact examples: `Helsinki is the capital of Finland.`, `Lightning never strikes the same place twice.`, `There is not enough fixture evidence.`, and `I felt tired after lunch.`. Text ending in `...` demonstrates incomplete input. Other text requests clarification; no live lookup happens. Synthetic evidence and `modelVersion: fixture` must remain labelled in demos.
 
-For real typed text, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY` in `.env` and restart. The implementation calls Jev's System One endpoint and Exa's official SDK. No live provider smoke test has been recorded yet. Keep all keys on the server; no Deepgram key is required until the app owner supplies an ASR adapter.
+For real typed text, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY` in `.env` and restart. The implementation calls Jev's System One endpoint and Exa's official SDK. A bounded direct-adapter smoke test on 14 November 2026 verified actual Jev/Exa wire parsing, two public-only queries, one cited supported result, one conservative abstention and distinct HTTP 401 errors. See [evaluation](../../docs/evaluation.md); this did not exercise the authenticated live console or native client. Keep all keys on the server; no Deepgram key is required until the app owner supplies an ASR adapter.
 
 For a phone connection, configure the explicit allowed browser origins and a reachable HTTPS/WSS address. `TLS_CERT_PATH` and `TLS_KEY_PATH` support direct TLS; a TLS reverse proxy is another option. Set `HOST=0.0.0.0` only when intentionally exposing the service. No remote endpoint is deployed by this branch.
 
@@ -32,11 +32,13 @@ The backend imports no iOS code. The app owner can consume `packages/contracts/s
 | --- | --- | --- |
 | #12 | Session auth, HTTP/WS, contracts, console, audio framing and adapter boundary | Swift decoding review, reachable HTTPS endpoint and real ASR adapter |
 | #15 | Exact spans, batched Jev admission, private-subspan veto, wait/clarification | Live semantic evaluation, native continuation assembly |
-| #16 | Official Exa adapter, cancellation, bounded passages and source grouping | Live source inspection and freshness evaluation; optional alternate query |
-| #17 | Typed judgment, conservative verdict/source gates and retained citations | Expand reviewed source rubric only with evidence; live demo citation inspection |
-| #18 | Pure notification policy and action fixtures | App delivery/repeat/mute validation; explicit topic matching remains unset |
+| #16 | Official Exa adapter, cancellation, bounded passages and source grouping | Broader source/freshness evaluation; two live searches retained passages, optional alternate query absent |
+| #17 | Typed judgment, conservative verdict/source gates and retained citations | One selected live citation inspected by agent; human demo review and broader source evaluation pending |
+| #18 | Pure notification policy, action fixtures and enabled-topic literal phrase matching | App delivery/repeat/mute validation; no semantic topic inference |
 | #20 | Deadlines, bounded queues/cache, epoch/revision cancellation, attempt budgets and sanitized in-memory diagnostics | Venue load testing; provider retries are deliberately absent, 429 returns an operational error |
-| #24 | 48-case manifest, 12 reserved held-outs, deterministic runner, evaluation/deck drafts | Live and hardware measurements, human citation review and joint rehearsal |
+| #24 | 48-case manifest, 12 reserved held-outs, deterministic runner, evaluation/deck drafts | Broader live and hardware measurements, human citation review and joint rehearsal |
+
+Automatic selected-topic priority matches whole literal phrases in the admitted `checkedText` against currently enabled `selectedTopics`. Matching normalizes Unicode (NFKC), case and whitespace; it ignores empty or punctuation-only topics. It does not infer categories: selecting `weather` does not match a lightning sentence unless that phrase occurs in the admitted public span. Private rejected clauses/context do not enter matching, and a match grants no truth verdict or notification by itself. Automatic notifications still require an opted-in, current, healthy, qualifying contradiction and available budget; preference changes apply before delivery, including cached/in-flight results.
 
 Run `npm run evaluate` for the development fixture report. It measures deterministic control flow, not provider accuracy. The issue set remains open because the live/native acceptance criteria are not yet fulfilled.
 

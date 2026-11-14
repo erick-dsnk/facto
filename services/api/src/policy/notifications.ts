@@ -3,6 +3,26 @@ import type { AdmissionMetadata, Preferences, Presentation, PresentationState, V
 export type PresentationResult = Pick<VerdictDecision, 'verdict'> & { admission?: AdmissionMetadata };
 const silent = (reasonCode: string): Presentation => ({ action: 'silent', reasonCode });
 
+const normalizedPhrase = (value: string) => value.normalize('NFKC').toLowerCase().replace(/\s+/gu, ' ').trim();
+const tokenEnd = /[\p{L}\p{N}\p{M}\p{Pc}]$/u;
+const tokenStart = /^[\p{L}\p{N}\p{M}\p{Pc}]/u;
+
+/** Literal enabled phrases only; call with an admitted public span, never context or rejected text. */
+export function matchSelectedTopic(checkedText: string, selectedTopics: readonly string[]): string | null {
+  const text = normalizedPhrase(checkedText);
+  for (const topic of selectedTopics) {
+    const phrase = normalizedPhrase(topic);
+    if (!/[\p{L}\p{N}]/u.test(phrase)) continue;
+    let start = text.indexOf(phrase);
+    while (start !== -1) {
+      const end = start + phrase.length;
+      if (!tokenEnd.test(text.slice(0, start)) && !tokenStart.test(text.slice(end))) return topic;
+      start = text.indexOf(phrase, start + 1);
+    }
+  }
+  return null;
+}
+
 /** State comes from the runtime. This policy never mutates counters or history. */
 export function decidePresentation(
   result: PresentationResult,
