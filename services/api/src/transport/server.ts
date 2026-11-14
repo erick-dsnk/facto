@@ -7,6 +7,7 @@ import { PipelineError, textInputSchema } from '../../../../packages/contracts/s
 import type { RuntimeAdapters } from '../runtime/adapters.js';
 import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
+import type { DebugFeed } from '../runtime/debug-feed.js';
 import { audioStartSchema, type AsrAdapter } from './audio.js';
 import { AudioBridge } from './audio-bridge.js';
 import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
@@ -19,6 +20,8 @@ export type ServerOptions = {
    * appended to X-Forwarded-For, so a forged left-most entry is ignored. Leave unset when clients can connect directly.
    */
   trustProxy?: number;
+  /** Debug only: records every session event and check request, readable at GET /v1/debug/feed with the join code. */
+  debugFeed?: DebugFeed;
 };
 /** Spoken segments remembered per stream for corrections. The oldest is forgotten first, so listening never stops on a count. */
 const SEGMENT_MEMORY = 64;
@@ -79,13 +82,28 @@ export async function buildServer(options: ServerOptions) {
     const { joinCode } = z.object({ joinCode: z.string().max(256) }).strict().parse(request.body);
     if (now() >= options.joinExpiresAt || !equalSecret(joinCode, options.joinCode)) throw new PipelineError('unauthorized');
     const session = store.create();
+    const feed = options.debugFeed;
+    if (feed) {
+      feed.push('session.created', { expiresAt: new Date(session.expiresAt).toISOString() }, session.id);
+      session.listeners.add(event => feed.push(event.type, { requestId: event.requestId, revision: event.revision, claimId: event.claimId, payload: event.payload }, session.id));
+    }
     return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, token: session.token, sessionEpoch: session.epoch, expiresAt: new Date(session.expiresAt).toISOString(), capabilities: { mode: options.mode, text: true, audio: !!options.asr }, budgets: { deadlineMs: 10_000, running: 2, queued: 3, jev: 3, searchesPerClaim: 2 } });
   });
   app.post('/v1/sessions/:sessionId/checks', async (request, reply) => {
     const session = authenticated(request.params, request.headers.authorization);
     const input = textInputSchema.parse(request.body);
+    options.debugFeed?.push('check.request', { requestId: input.requestId, revision: input.revision, mode: input.mode, text: input.text, capture: input.capture, context: input.context, userInitiated: input.userInitiated }, session.id);
     return reply.code(202).send(runtime.submit(session, input));
   });
+  if (options.debugFeed) {
+    const feed = options.debugFeed;
+    app.get('/v1/debug/feed', async (request, reply) => {
+      const key = request.headers['x-debug-key'];
+      if (typeof key !== 'string' || now() >= options.joinExpiresAt || !equalSecret(key, options.joinCode)) throw new PipelineError('unauthorized');
+      const after = Number((request.query as { after?: string }).after ?? 0);
+      return reply.send({ entries: feed.after(Number.isFinite(after) ? after : 0) });
+    });
+  }
   app.post('/v1/sessions/:sessionId/checks/:requestId/cancel', async (request, reply) => {
     const session = authenticated(request.params, request.headers.authorization);
     session.cancel(paramsSchema.parse(request.params).requestId!); return reply.code(204).send();

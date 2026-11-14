@@ -6,6 +6,7 @@ import { DEFAULT_MIN_CAPTURE_CONFIDENCE, createClassifier } from './providers/je
 import { createJudge } from './providers/jev/judgment.js';
 import { createRetriever } from './providers/exa/retrieval.js';
 import { createDeepgramAdapter } from './input/asr/deepgram-adapter.js';
+import { DebugFeed } from './runtime/debug-feed.js';
 
 const mode = process.env.PIPELINE_MODE ?? 'fixture';
 if (mode !== 'fixture' && mode !== 'live') throw new Error('PIPELINE_MODE must be fixture or live.');
@@ -15,6 +16,7 @@ const minCaptureConfidence = Number(process.env.MIN_CAPTURE_CONFIDENCE || DEFAUL
 if (!Number.isFinite(minCaptureConfidence) || minCaptureConfidence < 0 || minCaptureConfidence > 1) throw new Error('MIN_CAPTURE_CONFIDENCE must be a number from 0 to 1.');
 // Debug only: logs every final Deepgram result, including what bystanders said. Off unless set to 1.
 const debugTranscripts = process.env.DEBUG_TRANSCRIPTS === '1';
+const debugFeed = debugTranscripts ? new DebugFeed() : undefined;
 const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(client, { minCaptureConfidence }), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client) };
 const cert = process.env.TLS_CERT_PATH; const key = process.env.TLS_KEY_PATH;
 if (!!cert !== !!key) throw new Error('Set both TLS_CERT_PATH and TLS_KEY_PATH.');
@@ -27,7 +29,8 @@ const deepgramKey = process.env.DEEPGRAM_API_KEY;
 if (mode === 'live' && !deepgramKey) console.warn('DEEPGRAM_API_KEY is not set: live mode has no speech recognition and audio.start fails with asr_unavailable.');
 const { app } = await buildServer({ adapters, mode, joinCode: process.env.DEMO_JOIN_CODE ?? '', joinExpiresAt: Date.parse(process.env.DEMO_JOIN_EXPIRES_AT ?? ''),
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',').map(s => s.trim()), tls: cert && key ? { cert: await readFile(cert), key: await readFile(key) } : undefined, trustProxy,
-  asr: deepgramKey ? createDeepgramAdapter({ apiKey: deepgramKey, transcriptLog: debugTranscripts ? entry => console.info(`[asr:final] ${JSON.stringify(entry)}`) : undefined }) : undefined });
+  debugFeed,
+  asr: deepgramKey ? createDeepgramAdapter({ apiKey: deepgramKey, transcriptLog: debugFeed ? entry => { console.info(`[asr:final] ${JSON.stringify(entry)}`); debugFeed.push('asr.final', entry); } : undefined }) : undefined });
 await app.listen({ host: process.env.HOST || (onRailway ? '0.0.0.0' : '127.0.0.1'), port: Number(process.env.PORT ?? '3000') });
 console.info(`Actually API listening (${mode} mode, audio ${deepgramKey ? 'on' : 'off'}, min capture confidence ${minCaptureConfidence}${debugTranscripts ? ', transcript debug log ON' : ''}). No alert does not mean verified.`);
 const stop = async () => { await app.close(); process.exit(0); };
