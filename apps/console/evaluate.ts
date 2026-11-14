@@ -13,6 +13,7 @@ import actionFixtures from '../../fixtures/actions/presentation-cases.json' with
 type SemanticFixture = {
   kind: string; selfContained: number; privateData: number;
   assertionStatus: string; hasPracticalConsequence: number | null;
+  claimStructure?: 'one_coherent' | 'multiple_propositions' | 'unclear';
 };
 export type EvaluationCase = {
   id: string; category: 'personal' | 'public' | 'mixed' | 'capture' | 'service'; split: 'development' | 'heldout';
@@ -47,7 +48,7 @@ function fixtureAnswers(request: JevRequest, sample: EvaluationCase): Record<str
       const choice = suffix === 'kind' ? semantic.kind
         : suffix === 'assertion_status' ? semantic.assertionStatus
         : suffix === 'quote_use' ? 'name_or_title'
-        : state.candidates.length > 1 ? 'multiple_propositions' : 'one_coherent';
+        : semantic.claimStructure ?? (candidate.id === 'span_0' && state.candidates.length > 1 ? 'multiple_propositions' : 'one_coherent');
       answers[key] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(option => [option, Number(option === choice)])) };
     }
     answers[`${candidate.id}_self_contained`] = { noul: semantic.selfContained };
