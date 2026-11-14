@@ -1,0 +1,543 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_public_acquisition_review",
+  "reviewedAt": "2026-11-14T04:16:39.651674+00:00",
+  "reviewer": "broader_dev_author",
+  "scope": "Public retrieval diagnostic only: relation, qualifier, provenance, copy-origin and accessibility preservation. No implementation/diffs, private case bodies, engine judgments or verdict outputs inspected; no provider or API-key calls performed.",
+  "reviewedInputs": [
+    {
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/summary.json",
+      "bytes": 130158,
+      "sha256": "a9d83fcfcac99b5f79c601aa64efc7310d11de1cd04193bcfeb57b178eb89f94"
+    },
+    {
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/L2-lightning-evidence.json",
+      "bytes": 45066,
+      "sha256": "b665dd3cb665801eb685d033d480d0d75627c3069d4c41cde34483af7f2f9dfd"
+    },
+    {
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/L4-mixed-evidence.json",
+      "bytes": 42380,
+      "sha256": "b5b7898baf6799993d4be2cecffab75987ecf7ec6c41e7cb01d2098f21fb69e1"
+    },
+    {
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/L8-first-person-evidence.json",
+      "bytes": 30519,
+      "sha256": "b9c75543ba2a4c3ecb10c7b09fd507766e7df592f5dcfc3ff4217ee71b30cea2"
+    }
+  ],
+  "counts": {
+    "publicDiagnosticInputs": 3,
+    "retainedRecords": 18,
+    "retainedPageText": 7,
+    "retainedHighlights": 11,
+    "contentsRequests": 9,
+    "cachedContentsSuccesses": 9,
+    "maxSelectedExcerptCodepoints": 2000,
+    "rawRequestResponseFilesHashChecked": 30
+  },
+  "rawIntegrityChecks": [
+    {
+      "ordinal": 1,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01/01-search-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 1,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01/01-search-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 2,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/02-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 2,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/02-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 3,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/03-search-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 3,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/03-search-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 4,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/04-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 4,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/04-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 5,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/05-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 5,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/05-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 6,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/06-search-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 6,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/06-search-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 7,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/07-search-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 7,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/07-search-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 8,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/08-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 8,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/08-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 9,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/09-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 9,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/09-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 10,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/10-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 10,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/10-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 11,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/11-search-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 11,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/11-search-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 12,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/12-search-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 12,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/12-search-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 13,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/13-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 13,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/13-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 14,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/14-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 14,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/14-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 15,
+      "kind": "request",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/15-contents-request.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    },
+    {
+      "ordinal": 15,
+      "kind": "response",
+      "path": "/workspace/stack-16/fixtures/retrieval/public-acquisition-01-resumed/15-contents-response.json",
+      "sha256Match": true,
+      "bytesMatch": true
+    }
+  ],
+  "retainedExcerptIntegrity": [
+    {
+      "label": "L2-lightning",
+      "id": "ev-7cb444a67bc072cae085",
+      "url": "https://www.weather.gov/safety/lightning-myths",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L2-lightning",
+      "id": "ev-a652daec94c552b7d2e6",
+      "url": "https://sites.psu.edu/siowfa16/2016/10/20/does-lightning-strike-twice-in-the-same-place/",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L2-lightning",
+      "id": "ev-662cdf26da5939a86809",
+      "url": "https://www.noaa.gov/stories/5-striking-facts-versus-myths-about-lightning-you-should-know",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L2-lightning",
+      "id": "ev-980e9057afda22df9487",
+      "url": "https://weather.com/science/weather-explainers/news/2025-03-17-lightning-never-strikes-twice-fact-fiction",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L2-lightning",
+      "id": "ev-fb8a926b33ca635c8555",
+      "url": "http://www.rakov.ece.ufl.edu/FAQ.html",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L2-lightning",
+      "id": "ev-f75bb10b12a3da8b4926",
+      "url": "https://doi.org/10.1017/cbo9781139680370.015",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L4-mixed",
+      "id": "ev-b2b06c720d49d229491e",
+      "url": "https://www.oslo.kommune.no/english/politics/about-oslo/",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L4-mixed",
+      "id": "ev-1742e902ec76e5b17d89",
+      "url": "http://hdl.handle.net/11250/242259",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L4-mixed",
+      "id": "ev-3764e389155cfd704c7c",
+      "url": "https://rm.coe.int/16802ff6d9",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L4-mixed",
+      "id": "ev-95fb100c0ada17804fd1",
+      "url": "https://en.wikipedia.org/wiki/Norway",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L4-mixed",
+      "id": "ev-2f628d9f06cdb9aa31c5",
+      "url": "https://static.ngu.no/upload/Publikasjoner/Rapporter/EU_COST/TU1206-WG1-012_Oslo.pdf",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L4-mixed",
+      "id": "ev-c1a109f4d7848dff2d6a",
+      "url": "https://rm.coe.int/CoERMPublicCommonSearchServices/DisplayDCTMContent?documentId=09000016802ff6d9",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L8-first-person",
+      "id": "ev-9b4a5d66da474e3720a5",
+      "url": "https://world-capitals.org/en/capitals-capital_norway/",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 619,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L8-first-person",
+      "id": "ev-abc43590e4052b02b07e",
+      "url": "https://bpscpyq.com/q/11571",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 270,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L8-first-person",
+      "id": "ev-919efae91538a6242181",
+      "url": "https://www.btb.termiumplus.gc.ca/tpv2alpha/alpha-eng.html?i=&index=est&lang=eng&srchtxt=NO",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L8-first-person",
+      "id": "ev-5d100db2f3d4e3cc4a23",
+      "url": "https://assets.publishing.service.gov.uk/media/6ab67eec997a4b2950ccef42/Norway_Toponymic_Factfile.pdf",
+      "contentBasis": "page_text",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": true
+    },
+    {
+      "label": "L8-first-person",
+      "id": "ev-46113aae7c4951786ae9",
+      "url": "https://en.wikipedia.org/wiki/List_of_national_capitals",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 2000,
+      "contiguousSubstringOfReturnedContents": null
+    },
+    {
+      "label": "L8-first-person",
+      "id": "ev-508f5baf8874922667c1",
+      "url": "https://id.loc.gov/authorities/names/n80123283.html",
+      "contentBasis": "highlight",
+      "excerptCodepoints": 1417,
+      "contiguousSubstringOfReturnedContents": null
+    }
+  ],
+  "accessibilityStatuses": [
+    {
+      "id": "https://spinoff.nasa.gov/Spinoff2005/ps_3.html",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "https://www.weather.gov/safety/lightning-myths",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "https://sites.psu.edu/siowfa16/2016/10/20/does-lightning-strike-twice-in-the-same-place/",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "https://www.oslo.kommune.no/english/politics/about-oslo/",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "http://hdl.handle.net/11250/242259",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "https://rm.coe.int/16802ff6d9",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "https://www.btb.termiumplus.gc.ca/tpv2alpha/alpha-eng.html?i=&index=est&lang=eng&srchtxt=NO",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "https://assets.publishing.service.gov.uk/media/6ab67eec997a4b2950ccef42/Norway_Toponymic_Factfile.pdf",
+      "status": "success",
+      "source": "cached"
+    },
+    {
+      "id": "http://id.loc.gov/rwo/agents/n79018884",
+      "status": "success",
+      "source": "cached"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R01",
+      "importance": "positive",
+      "topic": "relation_preservation",
+      "finding": "Several selected windows retain an actual relation with subject association: explicit Myth/Fact pairs, municipal city/country statement, named terminology record plus Capital field, and country-table header plus Capital row. This is stronger than retaining only shared entity keywords.",
+      "examples": [
+        "ev-7cb444a67bc072cae085",
+        "ev-b2b06c720d49d229491e",
+        "ev-919efae91538a6242181",
+        "ev-5d100db2f3d4e3cc4a23"
+      ]
+    },
+    {
+      "id": "R02",
+      "importance": "material_limitation",
+      "topic": "claim_matching_context_bias",
+      "finding": "The retained capitals-list window contains an alphabetical L/M section and incidental country names, but not the requested capital relation. A subject/keyword hit is not relation preservation. The quiz window does preserve its answer and explanation; losing that structure would make an incorrect multiple-choice option look like evidence. Verbatim-claim-conditioned queries can retrieve claim-shaped pages and options even with a neutral support/challenge/qualify objective. This diagnostic cannot measure general recall or eliminate selection bias.",
+      "examples": [
+        "ev-46113aae7c4951786ae9",
+        "ev-abc43590e4052b02b07e"
+      ]
+    },
+    {
+      "id": "R03",
+      "importance": "material_limitation",
+      "topic": "incidental_assertion_vs_researched_relation",
+      "finding": "The urban-water dissertation and sub-surface report mention an administrative relation in background prose. Their methods concern water/energy or geology; those methods do not independently establish the background administrative fact. Institutional hosting, a dissertation label, methods text or an official report cannot by themselves upgrade this incidental assertion to primary proof of that relation. The municipal source speaks directly about its own city, a different evidentiary role.",
+      "examples": [
+        "ev-1742e902ec76e5b17d89",
+        "ev-2f628d9f06cdb9aa31c5",
+        "ev-b2b06c720d49d229491e"
+      ]
+    },
+    {
+      "id": "R04",
+      "importance": "material_limitation",
+      "topic": "qualifier_scope_preservation",
+      "finding": "The expert FAQ and book excerpt retain the flat/homogeneous-terrain hypothetical, very small area, long recurrence interval, multiple component strokes, and later non-homogeneous-ground discussion. Those clauses are essential to interpreting the apparent qualification. They must stay attached to their statements; the conditional practical-use wording is not a universal competing proposition. Myth labels and attributed anecdotal explanations similarly change the status of nearby sentences. Several excerpts end mid-sentence at the hard 2000-code-point limit, so continuation-dependent qualifications beyond that limit are unknown.",
+      "examples": [
+        "ev-fb8a926b33ca635c8555",
+        "ev-f75bb10b12a3da8b4926",
+        "ev-a652daec94c552b7d2e6"
+      ]
+    },
+    {
+      "id": "R05",
+      "importance": "material_limitation",
+      "topic": "origin_and_echoes",
+      "finding": "NWS/NOAA belong to the same institutional evidence family. Weather.com explicitly attributes its numerical example to NWS. The FAQ and book excerpt have near-verbatim shared exposition and should not be assumed independent. Two Council of Europe URLs carry the same document identifier and duplicated overview prose. Retained echoGroup values are null, so this acquisition record does not itself encode these visible origins. Domain and URL diversity overstate independent evidence here.",
+      "examples": [
+        "ev-7cb444a67bc072cae085",
+        "ev-662cdf26da5939a86809",
+        "ev-980e9057afda22df9487",
+        "ev-fb8a926b33ca635c8555",
+        "ev-f75bb10b12a3da8b4926",
+        "ev-3764e389155cfd704c7c",
+        "ev-c1a109f4d7848dff2d6a"
+      ]
+    },
+    {
+      "id": "R06",
+      "importance": "material_limitation",
+      "topic": "keeper_author_and_source_scope",
+      "finding": "The PSU item is an individually authored course blog, not institutional primary research because it is on a university domain. The LC Helsinki authority record explicitly cites Wikipedia for its capital-description note and GeoNames for algorithmic matching; the LC keeper does not make that cited note an independently observed government fact. The UK PCGN factfile is a maintained British geographic-names reference with policy provenance, rather than an issuing Norwegian legal record. Roles should follow those exact relationships.",
+      "examples": [
+        "ev-a652daec94c552b7d2e6",
+        "ev-508f5baf8874922667c1",
+        "ev-5d100db2f3d4e3cc4a23"
+      ]
+    },
+    {
+      "id": "R07",
+      "importance": "material_limitation",
+      "topic": "provenance_loss",
+      "finding": "Returned raw content metadata contains an individual author for the course blog and dissertation, PCGN authorship, and a September 2026 update/keeper footer in the PCGN text. These are not all retained in the compact records: publisher remains null, several dates remain null, and some windows start in body text without document identity. A contiguous relation window can preserve the fact while dropping its evidentiary provenance; this diagnostic does not show complete provenance preservation.",
+      "examples": [
+        "ev-a652daec94c552b7d2e6",
+        "ev-1742e902ec76e5b17d89",
+        "ev-5d100db2f3d4e3cc4a23"
+      ]
+    },
+    {
+      "id": "R08",
+      "importance": "material_limitation",
+      "topic": "accessibility_and_freshness",
+      "finding": "All nine contents statuses report success with source=cached. No explicit unreachable-origin response was observed, but none of these successes certifies current origin-server accessibility or freshness. HTTP 200 records provider response status, not necessarily origin status. Eleven of eighteen retained records remain highlights, and no direct-origin accessibility assertion is justified for those either. Author/date extraction and source existence in an index are distinct from live access.",
+      "examples": []
+    }
+  ],
+  "conclusion": "Partial success: several compact windows preserve useful subject/relation and critical conditions, but this is not universal relation coverage, independent-source grouping, complete provenance retention or live-origin accessibility verification. No engine verdict or case-specific implementation fix is supplied.",
+  "generalReviewCriteria": [
+    "Keep relation-bearing row labels and named record association attached.",
+    "Keep conditions, time scope, negation, quotation, Myth/Fact and answer/option distinctions attached.",
+    "Carry document/author/keeper/date provenance separately when it lies outside the bounded relation window.",
+    "Distinguish maintained records, normative instruments, incidental background assertions and original observations.",
+    "Treat explicit attribution, shared text and alternate document URLs as origin evidence, not independent corroboration.",
+    "Report cached retrieval and highlight-only evidence without claiming live origin verification."
+  ]
+}
