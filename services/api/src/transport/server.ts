@@ -3,14 +3,15 @@ import websocket from '@fastify/websocket';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { PipelineError, textInputSchema, type PipelineAdapters } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
+import type { RuntimeAdapters } from '../runtime/adapters.js';
 import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
 import { audioStartSchema, type AsrAdapter } from './audio.js';
 import { AudioBridge } from './audio-bridge.js';
 
 export type ServerOptions = {
-  adapters: PipelineAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
+  adapters: RuntimeAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
   allowedOrigins?: string[]; now?: () => number; tls?: { cert: Buffer; key: Buffer }; asr?: AsrAdapter;
 };
 export async function buildServer(options: ServerOptions) {
