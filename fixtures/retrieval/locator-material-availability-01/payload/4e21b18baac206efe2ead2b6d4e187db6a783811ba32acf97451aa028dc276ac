@@ -1,0 +1,28 @@
+{
+  "kind": "root_exact_once_locator_material_authorization",
+  "createdAt": "2026-11-14T07:53:37.114384+00:00",
+  "networkAuthorized": true,
+  "executor": "/root/broader_dev_author",
+  "planSHA256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+  "runnerSHA256": "13f8d681fc58c75a6f5a86610581277e371404acd575075860f2983ddf9c37f8",
+  "runnerManifestSHA256": "8845f622affef00a097b6868e5e0a7cd73a8b4d1c2fa67a1aae6c8f2a397195b",
+  "runtimeReview": {
+    "path": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/final-review.json",
+    "sha256": "4ea7273a107e4c81e5b9e7101ce32c4e14055d88607099ca6feec6fe3a822899"
+  },
+  "outputRoot": "/workspace/task-evidence/locator-material-availability-01",
+  "limits": {
+    "contents": 1,
+    "search": 0,
+    "jev": 0,
+    "originGET": 0,
+    "childFollows": 0,
+    "retries": 0,
+    "deadlineMs": 10000,
+    "requestBytes": 65536,
+    "storedResponseBytes": 262144
+  },
+  "rootReview": "Read full runner, plan and README; verified sole revision02 status-validation delta, all212 manifest rows and source preflight. Accept reviewed one-contents material-only scope.",
+  "interpretation": "SDK field availability only; no factual coverage, alias, source identity, currentness, witness or authority credit.",
+  "failurePolicy": "Preserve first result, indeterminate costs, unknown settlement and failures. No resume, repeat, retry, reroot or additional calls."
+}

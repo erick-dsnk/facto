@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_single_locator_material_availability_request",
+  "status": "NOT_AUTHORIZED_NO_RUNNER_NO_LIVE_OUTPUT_RESERVED",
+  "purpose": "Observe whether actual SDK source-bound locator material arrives; not routing/identity/factual or semantic evaluation.",
+  "calls": {
+    "searchMax": 0,
+    "contentsMax": 1,
+    "jevMax": 0,
+    "websiteGETMax": 0,
+    "nativeRetriesMax": 0,
+    "childFollowupsMax": 0,
+    "resumeReplayRerun": false
+  },
+  "sdkVersion": "2.28.0",
+  "sdkPreview": "sdk-serialization.json",
+  "request": {
+    "endpoint": "https://api.exa.ai/contents",
+    "method": "POST",
+    "redirect": "error",
+    "body": {
+      "urls": [
+        "https://www.rfc-editor.org/info/rfc8174/"
+      ],
+      "text": {
+        "maxCharacters": 12000,
+        "includeHtmlTags": true
+      },
+      "extras": {
+        "links": 4
+      },
+      "livecrawl": "preferred",
+      "livecrawlTimeout": 1500
+    },
+    "bodyBytes": 176,
+    "bodySHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd"
+  },
+  "limits": {
+    "absoluteOriginalDeadlineMs": 10000,
+    "serializedRequestBytesMax": 65536,
+    "observedAcceptedStoredResponseBytesMax": 262144,
+    "sdkURLHintsMaxPerResult": 4,
+    "urlUTF8BytesMax": 4096,
+    "parsedDocumentLinksMaxPerField": 128,
+    "requestedRecordCount": 1
+  },
+  "durability": "Later separately reviewed runner must atomically reserve absent root and fsync request/checkpoint before exactly one dispatch; no live output path is assigned in this proposal.",
+  "cleanup": "Collector04 semantics: fulfilled single cancellation only establishes cleanup; rejection/pending remains sticky unknown; no second logical cancel upgrade, retry or continuation. Underlying HTTP/body settlement must be observed.",
+  "cost": "Maximum one attempted chargeable provider operation; dollar cost unknown before response, retain returned finite nonnegative cost/total else null and unknown1. Prior0.002/call is illustrative only.",
+  "sourceContract": "results[i].extras.links are bare URL hints with roleunknown; literal text HTML, if actually returned, needs decoded-field SHA/span plus outer responseSHA/result/field envelope. No inferred anchors, aliases, current proof or quote repairs.",
+  "outputs": null,
+  "newNetworkCalls": 0,
+  "providerCalls": 0,
+  "authorizationRequiredBeforeLiveOutput": true
+}
