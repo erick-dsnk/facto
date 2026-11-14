@@ -608,10 +608,30 @@ final class ChimeToneTests: XCTestCase {
 
 @MainActor
 final class DisplayCardBuilderTests: XCTestCase {
-  func testCardShowsVerdictExcerptSourceAndDetail() {
-    let card = ResultCard(result: result(.misleading, reasonCode: "outdated_fact"))
-    let texts = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
-    XCTAssertEqual(texts, ["Misleading", "The Eiffel Tower opened in 1889.", "Eiffel Tower", "Out of date"])
+  private struct SendFailed: Error {}
+
+  func testFalseCardShowsExcerptVerdictDetailAndSource() {
+    let card = ResultCard(result: falseEiffel())
+    let box = DisplayCardBuilder.build(card)
+    XCTAssertEqual(
+      DisplayCardBuilder.textContents(of: box),
+      ["The Eiffel Tower opened in 1890.", "False", "3 of 3 sources disagree", "Live Science"]
+    )
+    XCTAssertTrue(DisplayCardBuilder.containsImage(box), "True and False carry the verdict swatch")
+  }
+
+  func testCardWithoutSwatchShowsTheIcon() {
+    let card = ResultCard(result: falseEiffel())
+    let box = DisplayCardBuilder.build(card, includeSwatch: false)
+    XCTAssertFalse(DisplayCardBuilder.containsImage(box))
+    XCTAssertEqual(DisplayCardBuilder.textContents(of: box), DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card)))
+  }
+
+  func testNotSureAndCheckFailedUseIconsNotSwatches() {
+    for outcome in [OutputOutcome.needsConfirmation(heard: true), .checkFailed] {
+      let box = DisplayCardBuilder.build(ResultCard(outcome: outcome, claimText: "x"))
+      XCTAssertFalse(DisplayCardBuilder.containsImage(box), "\(outcome)")
+    }
   }
 
   func testButtonsAppearOnlyWithHandlers() {
@@ -621,10 +641,86 @@ final class DisplayCardBuilderTests: XCTestCase {
 
     let withButtons = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card, onRepeat: {}, onDismiss: {}))
     XCTAssertEqual(withButtons, ["Check failed", "Try again", "Repeat", "Dismiss"])
+
+    let repeatOnly = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card, onRepeat: {}))
+    XCTAssertEqual(repeatOnly, ["Check failed", "Try again", "Repeat"])
+  }
+
+  func testReadyCard() {
+    XCTAssertEqual(DisplayCardBuilder.textContents(of: DisplayCardBuilder.buildReady()), ["facto", "Ready"])
+  }
+
+  func testSwatchesExistForTheFourVerdictsOnly() throws {
+    for kind in [CardKind.supported, .contradicted, .misleading, .unverified] {
+      let image = try XCTUnwrap(DisplayCardBuilder.swatchImage(for: kind), "\(kind)")
+      XCTAssertEqual(image.size, CGSize(width: 64, height: 64), "\(kind)")
+      XCTAssertEqual(image.scale, 1, "\(kind)")
+    }
+    XCTAssertNil(DisplayCardBuilder.swatchImage(for: .needsConfirmation))
+    XCTAssertNil(DisplayCardBuilder.swatchImage(for: .checkFailed))
+    XCTAssertTrue(
+      DisplayCardBuilder.swatchImage(for: .supported) === DisplayCardBuilder.swatchImage(for: .supported),
+      "swatches are drawn once"
+    )
   }
 
   func testLensHasAnIconForEveryKind() {
     let kinds: [CardKind] = [.supported, .contradicted, .misleading, .unverified, .needsConfirmation, .checkFailed]
     XCTAssertEqual(Set(kinds.map { DisplayCardBuilder.icon(for: $0).rawValue }).count, kinds.count)
+  }
+
+  // MARK: Swatch fallback
+
+  func testFailedSwatchSendIsResentWithTheIcon() async throws {
+    var sent: [Bool] = []
+    let keepSwatches = try await DisplayCardBuilder.send(
+      ResultCard(result: falseEiffel()), includeSwatch: true, onRepeat: nil, onDismiss: nil
+    ) { box in
+      let hasSwatch = DisplayCardBuilder.containsImage(box)
+      sent.append(hasSwatch)
+      if hasSwatch { throw SendFailed() }
+    }
+    XCTAssertEqual(sent, [true, false])
+    XCTAssertFalse(keepSwatches)
+  }
+
+  func testSuccessfulSwatchSendKeepsSwatches() async throws {
+    var sent: [Bool] = []
+    let keepSwatches = try await DisplayCardBuilder.send(
+      ResultCard(result: falseEiffel()), includeSwatch: true, onRepeat: nil, onDismiss: nil
+    ) { sent.append(DisplayCardBuilder.containsImage($0)) }
+    XCTAssertEqual(sent, [true])
+    XCTAssertTrue(keepSwatches)
+  }
+
+  func testSendWithoutSwatchesNeverRetries() async {
+    var attempts = 0
+    do {
+      _ = try await DisplayCardBuilder.send(
+        ResultCard(result: falseEiffel()), includeSwatch: false, onRepeat: nil, onDismiss: nil
+      ) { box in
+        attempts += 1
+        XCTAssertFalse(DisplayCardBuilder.containsImage(box))
+        throw SendFailed()
+      }
+      XCTFail("the send error reaches the caller")
+    } catch {
+      XCTAssertEqual(attempts, 1)
+    }
+  }
+
+  func testIconCardFailureKeepsSwatchesForLaterCards() async {
+    var attempts = 0
+    do {
+      _ = try await DisplayCardBuilder.send(
+        ResultCard(outcome: .checkFailed, claimText: nil), includeSwatch: true, onRepeat: nil, onDismiss: nil
+      ) { _ in
+        attempts += 1
+        throw SendFailed()
+      }
+      XCTFail("the send error reaches the caller")
+    } catch {
+      XCTAssertEqual(attempts, 1, "a card without a swatch has nothing to drop")
+    }
   }
 }
