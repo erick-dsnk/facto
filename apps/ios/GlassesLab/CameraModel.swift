@@ -77,20 +77,19 @@ final class CameraModel {
   /// this fails with "No eligible device available".
   var hasActiveDevice = false
 
-  /// Created once and kept, as in Meta's CameraAccess sample. A selector made at tap
-  /// time has not seen any device yet.
-  @ObservationIgnored private let deviceSelector = AutoDeviceSelector(wearables: Wearables.shared)
+  /// The one session shared with the display (see GlassesSession).
+  @ObservationIgnored private let glasses: GlassesSession
   @ObservationIgnored private var session: DeviceSession?
   @ObservationIgnored private var camera: MWDATCamera.Camera?
-  @ObservationIgnored private let sessionTokens = ListenerTokenBag()
   @ObservationIgnored private let streamTokens = ListenerTokenBag()
   @ObservationIgnored private var arrivals: [CFTimeInterval] = []
 
   /// Must be created after `Wearables.configure()`.
-  init() {
+  init(glasses: GlassesSession = .shared) {
+    self.glasses = glasses
     Task { [weak self] in
       guard let self else { return }
-      for await deviceId in self.deviceSelector.activeDeviceStream() {
+      for await deviceId in self.glasses.deviceSelector.activeDeviceStream() {
         self.hasActiveDevice = deviceId != nil
       }
     }
@@ -102,17 +101,13 @@ final class CameraModel {
     guard session == nil else { return }
     lastError = nil
     do {
-      let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
-      session = newSession
-      // Subscribe before start() so no transition is missed.
-      newSession.statePublisher.listen { [weak self] state in
-        Task { @MainActor in self?.handleSession(state) }
-      }.store(in: sessionTokens)
-      newSession.errorPublisher.listen { [weak self] error in
-        Task { @MainActor in self?.lastError = "Session: \(error.localizedDescription)" }
-      }.store(in: sessionTokens)
-      sessionState = .starting
-      try newSession.start()
+      // Joins the display's session when it already has one: the glasses take one session.
+      session = try glasses.acquire(
+        .camera,
+        onState: { [weak self] state in self?.handleSession(state) },
+        onError: { [weak self] message in self?.lastError = "Session: \(message)" }
+      )
+      handleSession(glasses.state)
     } catch {
       lastError = "Session: \(error.localizedDescription)"
       clearSession()
@@ -120,9 +115,16 @@ final class CameraModel {
   }
 
   func endSession() {
+    guard session != nil else { return }
     userStoppedStream = true
-    sessionState = .stopping
-    session?.stop()
+    if glasses.release(.camera) {
+      // Last holder: the session stops and `.stopped` clears the rest.
+      sessionState = .stopping
+    } else {
+      // The display keeps the session; stop only the camera (its LED goes off).
+      camera?.stop()
+      clearSession()
+    }
   }
 
   private func handleSession(_ state: DeviceSessionState) {
@@ -134,7 +136,6 @@ final class CameraModel {
   private func clearSession() {
     if isCapturingPhoto { failPhoto("The session ended during the photo.") }
     clearStream()
-    sessionTokens.clear()
     session = nil
     sessionState = .idle
   }

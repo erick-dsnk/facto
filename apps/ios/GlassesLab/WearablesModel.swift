@@ -161,6 +161,15 @@ final class WearablesModel {
     }
   }
 
+  /// Opens App Connections in Meta AI, where the app's copy on the glasses is updated.
+  func openGlassesAppUpdate() async {
+    do {
+      try await Wearables.shared.openDATGlassesAppUpdate()
+    } catch {
+      lastError = "\(error)"
+    }
+  }
+
   private func refreshDevices(_ ids: [DeviceIdentifier]) {
     devices = ids.compactMap { id in
       guard let device = Wearables.shared.deviceForIdentifier(id) else { return nil }

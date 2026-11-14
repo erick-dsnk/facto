@@ -101,6 +101,11 @@ struct HomeView: View {
         .buttonStyle(.factoPillSecondary)
         .disabled(!live.isConnected || live.isChecking)
 
+      if GlassesSession.shared.needsGlassesAppUpdate {
+        Button("Update in Meta AI") { Task { await wearables.openGlassesAppUpdate() } }
+          .buttonStyle(.factoPillSecondary)
+          .accessibilityHint("Opens App Connections in Meta AI to update Facto on your glasses.")
+      }
       if let message = live.checkMessage {
         footnote(message)
       }
