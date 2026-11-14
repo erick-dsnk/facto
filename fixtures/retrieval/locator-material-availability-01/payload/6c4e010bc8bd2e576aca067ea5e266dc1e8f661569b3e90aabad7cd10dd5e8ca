@@ -1,0 +1,125 @@
+{
+  "kind": "frozen_open_design_controls_before_implementation",
+  "denominator": 8,
+  "factualTruthDenominator": 0,
+  "genericEnglishMappingClaimed": false,
+  "controls": [
+    {
+      "id": "LOC01",
+      "category": "alternate_format",
+      "claim": "The AB-17 record has the stated requirement.",
+      "source": "<a href=\"https://records.example.org/records/AB-17/plain.txt\">Plain Text</a>",
+      "expectedCandidate": true,
+      "reason": "Explicit same-origin alternate format is only a discovery candidate.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "sourceSHA256": "ba0402518cc6d9f8a7324bc11bbbf79cb3d12d769df6e1bae25989f3c147d7da"
+    },
+    {
+      "id": "LOC02",
+      "category": "historic_versus_latest",
+      "claim": "The 2019 edition of AB-17 has the stated requirement.",
+      "edition": "2019",
+      "source": "<a rel=\"canonical\" href=\"https://records.example.org/records/AB-17/latest\">Latest edition (2024)</a>",
+      "expectedCandidate": false,
+      "reason": "Canonical hint cannot erase a dated public edition.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "editionSpan": {
+        "start": 4,
+        "end": 8
+      },
+      "sourceSHA256": "9b5fc8f393cca3170a0214b99f48e284ce420004647c8f722d5747343cec127a"
+    },
+    {
+      "id": "LOC03",
+      "category": "compared_date_not_edition",
+      "claim": "The 2019 edition of AB-17 states its publication date is 2004.",
+      "edition": "2019",
+      "source": "<a href=\"https://records.example.org/records/AB-17/2019/plain.txt\">Full document,2019 edition</a>",
+      "expectedCandidate": true,
+      "reason": "2004 is a compared value; compatible2019 record remains eligible even if it contradicts that value.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "editionSpan": {
+        "start": 4,
+        "end": 8
+      },
+      "sourceSHA256": "898b3b5608249b5ba00594b96dc411eafdb316da3ac8ed01f2519d4935c28cc5"
+    },
+    {
+      "id": "LOC04",
+      "category": "bare_sdk_url",
+      "claim": "The AB-17 record has the stated requirement.",
+      "sdkLinks": [
+        "https://records.example.org/records/AB-17/plain.txt"
+      ],
+      "expectedCandidate": false,
+      "reason": "URL strings have roleunknown and no fabricated anchor/edition proof.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false
+    },
+    {
+      "id": "LOC05",
+      "category": "external_link",
+      "claim": "The AB-17 record has the stated requirement.",
+      "source": "<a href=\"https://cdn.example.net/AB-17.txt\">Plain Text</a>",
+      "expectedCandidate": false,
+      "reason": "External candidate is deferred by same-origin prototype, without calling it false or independent.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "sourceSHA256": "ba84893ab2e070d1fdb779a4abe8ca49b3bd45015e06766f3022a4cf9bdb937c"
+    },
+    {
+      "id": "LOC06",
+      "category": "credentials_or_private_target",
+      "claim": "The AB-17 record has the stated requirement.",
+      "source": "<a href=\"https://user:pass@records.example.org/private\">Full document</a>",
+      "expectedCandidate": false,
+      "reason": "Credentials invalidate a transport target.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "sourceSHA256": "4c3c74df26857b28ab06ecb04822cfcbeef49d17e36e0947465033e6e6e56b39"
+    },
+    {
+      "id": "LOC07",
+      "category": "shared_budget_exhausted",
+      "claim": "The AB-17 record has the stated requirement.",
+      "source": "<a href=\"https://records.example.org/records/AB-17/plain.txt\">Plain Text</a>",
+      "remaining": 0,
+      "expectedCandidate": false,
+      "reason": "Explicit source link cannot create an extra contents allowance.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "sourceSHA256": "ba0402518cc6d9f8a7324bc11bbbf79cb3d12d769df6e1bae25989f3c147d7da"
+    },
+    {
+      "id": "LOC08",
+      "category": "cancelled_owner",
+      "claim": "The AB-17 record has the stated requirement.",
+      "source": "<a href=\"https://records.example.org/records/AB-17/plain.txt\">Plain Text</a>",
+      "cancelled": true,
+      "expectedCandidate": false,
+      "reason": "Cancelled owner cannot reserve or dispatch a child.",
+      "synthetic": true,
+      "parentURL": "https://records.example.org/records/AB-17/",
+      "expectedIdentityProof": false,
+      "expectedRecordWitnessCredit": false,
+      "sourceSHA256": "ba0402518cc6d9f8a7324bc11bbbf79cb3d12d769df6e1bae25989f3c147d7da"
+    }
+  ]
+}

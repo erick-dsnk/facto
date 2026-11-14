@@ -1,0 +1,39 @@
+# Inert archive verification source. Explicitly run with Python; no imports from repository.
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import sys
+root = Path(sys.argv[1] if len(sys.argv) > 1 else '.').resolve()
+manifest = json.loads((root / 'ARCHIVE-MANIFEST.json').read_text())
+def sha(b): return hashlib.sha256(b).hexdigest()
+actual = {str(p.relative_to(root)) for p in root.rglob('*') if p.is_file() and p.name != 'ARCHIVE-MANIFEST.json'}
+assert actual == set(manifest['files']), 'inventory mismatch'
+for rel, pin in manifest['files'].items():
+    f = root / rel
+    assert not f.is_symlink() and f.resolve().is_relative_to(root)
+    b = f.read_bytes()
+    assert len(b) == pin['bytes'] and sha(b) == pin['sha256'], rel
+assert not any(Path(rel).suffix in {'.ts', '.mts', '.js', '.mjs', '.py'} for rel in actual)
+rows = json.loads((root / 'original-path-map.json').read_text())['files']
+for row in rows:
+    b = (root / row['archivePath']).read_bytes()
+    if row['encoding'] == 'gzip': b = gzip.decompress(b)
+    else: assert row['encoding'] == 'identity'
+    assert len(b) == row['originalBytes'] and sha(b) == row['originalSHA256'], row['archivePath']
+v = json.loads((root / 'validation.json').read_text())
+assert v['before']['failed'] == 33 and v['afterFocused']['passed'] == 120 and v['fullGate']['tests'] == 621
+assert v['development']['passed'] == 36 and v['presentation']['passed'] == 21
+report = json.loads((root / 'saved-response-compatibility/report.json').read_text())
+assert report['actualReplayedResponses'] == report['equalResponses'] == 10
+assert report['searchResponses'] == 4 and report['contentsResponses'] == 6 and report['successfulPages'] == 26
+assert not report['regressions'] and report['documentedTargetFailures'] == 0
+runtime = json.loads((root / 'independent-runtime/review.json').read_text())
+assert runtime['testsPassed'] == 13 and runtime['actualSDKInjectedHTTPInvocations'] == 18
+for row in report['rows']:
+    for kind in ['request', 'response']:
+        b = gzip.decompress((root / 'saved-response-inputs' / (row['id'] + '-' + kind + '.json.gz')).read_bytes())
+        assert sha(b) == row[kind + 'SHA256']
+commit = json.loads((root / 'commit.json').read_text())
+assert len(commit['ownedFiles']) == 3 and commit['commit'] == manifest['productionCommit']
+print(json.dumps({'filesVerified':len(actual),'mappedOriginals':len(rows),'savedResponses':10,'successfulPages':26,'runtimeTests':13,'productionChangedFiles':3,'networkCalls':0}))
