@@ -643,7 +643,7 @@ final class DisplayCardBuilderTests: XCTestCase {
     let box = DisplayCardBuilder.build(card)
     XCTAssertEqual(
       DisplayCardBuilder.textContents(of: box),
-      ["The Eiffel Tower opened in 1890.", "False", "3 of 3 sources disagree", ResultWording.line(for: .verdict(.contradicted)), "Live Science"]
+      ["The Eiffel Tower opened in 1890.", "False", "3 of 3 sources disagree", ResultWording.lensSentence(for: .contradicted), "Live Science"]
     )
     XCTAssertTrue(DisplayCardBuilder.containsImage(box), "the verdict dot")
   }
@@ -661,7 +661,7 @@ final class DisplayCardBuilderTests: XCTestCase {
     let card = ResultCard(outcome: .checkFailed, claimText: nil)
     let plain = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
     let withHandlers = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card, onRepeat: {}, onDismiss: {}))
-    XCTAssertEqual(plain, ["Check failed", "Try again", "The check didn't finish."])
+    XCTAssertEqual(plain, ["Check failed", "Try again", "The check didn’t finish."])
     XCTAssertEqual(withHandlers, plain)
   }
 

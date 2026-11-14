@@ -835,10 +835,13 @@ final class LiveModel {
     }
     // Listening uses the glasses' Bluetooth mic, not the camera stream: on Display glasses a
     // running camera holds back the lens cards and shows a viewfinder.
-    guard await AVAudioApplication.requestRecordPermission() else {
+    guard await mic.requestPermission() else {
       notice = MicrophoneError.denied.message
       return
     }
+    // The permission prompt can take a while: never open the mic after the app went to the
+    // background or the capture was cancelled meanwhile.
+    guard current() else { return }
     do {
       try mic.start()
     } catch {

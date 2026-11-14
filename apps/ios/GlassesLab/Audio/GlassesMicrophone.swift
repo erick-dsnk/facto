@@ -16,6 +16,8 @@ protocol ListeningMicrophone: AnyObject {
   var isRunning: Bool { get }
   /// The input in use, for the debug log ("Bluetooth HFP: Ray-Ban Display", "iPhone Microphone").
   var inputName: String? { get }
+  /// Asks for microphone access (iOS shows its prompt once). False when the user said no.
+  func requestPermission() async -> Bool
   func start() throws
   func stop()
 }
@@ -29,6 +31,10 @@ final class GlassesMicrophone: ListeningMicrophone {
   private let engine = AVAudioEngine()
   private var deliveries: AsyncStream<PCMBufferCopy>.Continuation?
   private static let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "mic")
+
+  func requestPermission() async -> Bool {
+    await AVAudioApplication.requestRecordPermission()
+  }
 
   func start() throws {
     guard !isRunning else { return }
