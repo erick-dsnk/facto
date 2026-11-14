@@ -1,0 +1,44 @@
+import csv,hashlib,json,re
+from pathlib import Path
+from collections import Counter
+P=Path('/workspace/task-evidence/coverage-100-01')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+enc=lambda x:(json.dumps(x,indent=2,ensure_ascii=False)+'\n').encode()
+d=json.loads((P/'dataset.json').read_bytes());plan=json.loads((P/'plan.json').read_bytes())
+allcases=[];rawrefs={};styles={}
+for n in 'abcd':
+ name=f'part-{n}.json';part=json.loads((P/name).read_bytes());allcases+=part['cases'];st=part.get('stylesByLabel',part.get('styles',part.get('styleMetadata')))
+ for label,s in st.items():
+  s=s if isinstance(s,str)else s['style'];styles[label]={'first_person_assertion':'first_person_public','public_assertion_i_think':'first_person_public'}.get(s,s)
+ for r in part['truthReferences']:rawrefs[(name,r.get('label',r.get('caseId')))]=r
+controls=json.loads((P/'controls.json').read_bytes());allcases+=controls
+expected={c['label']:c for c in allcases};assert len(expected)==100
+assert {c['label']:c for c in d['cases']}==expected
+assert d['cases']==plan['cases'] and d['counts']==plan['counts']
+seed=d['order']['seed'];ordered=sorted(expected,key=lambda label:(sha((seed+'\0'+label).encode()),label));assert [c['label']for c in d['cases']]==ordered==plan['order']['labels']
+assert len({c['text']for c in d['cases']})==100
+assert sha((P/'dataset.json').read_bytes())==plan['datasetSHA256'];assert sha((P/'dataset.csv').read_bytes())==plan['datasetCSVSHA256']
+assert sha((P/'build-dataset.py').read_bytes())==d['assemblerSHA256']==plan['assemblerSHA256'];assert sha((P/'execute.mts').read_bytes())==plan['budgetConstantsSourceSHA256']
+for name,h in plan['sourceFilesSHA256'].items():assert sha((P/name).read_bytes())==h==d['sourceFilesSHA256'][name]
+refs={r['label']:r for r in d['truthReferences']};assert len(refs)==80
+for label,c in expected.items():
+ meta=d['metadataByLabel'][label];gold=c['expected']['claims'];assert c.get('automatic',False) is False and c.get('final',True) is True and c['expected']['presentationActions']==['respond']
+ assert meta['containsRealParticipantData'] is False and meta['syntheticAuthored'] is True
+ if not gold:assert label not in refs and not c['allowedPublic'] and meta['style']=='control';continue
+ assert len(gold)==1 and gold[0]['acceptedTexts']==c['allowedPublic'];assert meta['style']==styles[label]==plan['styles'][label];assert meta['domain']==gold[0]['domain'];assert meta['polarity']==('true'if gold[0]['verdict']=='supported'else'false')
+ for text in c['allowedPublic']:assert text in c['text']
+ if styles[label]=='mixed_private_public':assert len(c['allowedPublic'])==1 and c['text'].endswith(c['allowedPublic'][0])and c['text']!=c['allowedPublic'][0]
+ if styles[label]=='first_person_public':assert c['text'].startswith('I think ')and c['text']in c['allowedPublic']and c['text'][8:]in c['allowedPublic']
+ r=refs[label];raw=rawrefs[(r['sourcePart'],label)];assert r['expectedVerdict']==gold[0]['verdict'];assert r['worldTruth']==(gold[0]['verdict']=='supported');assert r['url']==raw['url'];assert r['httpStatus']==200 and re.fullmatch('[a-f0-9]{64}',r['responseBodySHA256']);assert r['sourceReferenceSHA256']==sha(enc(raw));assert r['runtimeReferenceInjected']is False and r['underlyingOriginIndependentlyAuthenticated']is False
+ assert r['quoteSHA256']==sha(r['quote'].encode()) and r['quoteWords']==len(r['quote'].split())and 0<r['quoteWords']<=75
+ passages=next(raw[k]for k in ['exactExtractedMaterial','supportingTextWindows','substantivePassages','matchedTextWindows']if raw.get(k));passages=[passages]if isinstance(passages,str)else passages;assert any(r['quote']in' '.join(t.split())for t in passages)
+ assert r['responseBodySHA256']==next(raw[k]for k in ['responseBodySHA256','bodySha256']if raw.get(k));assert r['inspectedAt']==next(raw[k]for k in ['inspectedAt','observedAt']if raw.get(k))
+rows=list(csv.DictReader((P/'dataset.csv').open()));assert len(rows)==100 and [r['label']for r in rows]==ordered
+for row,c in zip(rows,d['cases']):
+ label=c['label'];meta=d['metadataByLabel'][label];gold=c['expected']['claims'];assert row['text']==c['text']and row['style']==meta['style']and row['domain']==meta['domain'];assert row['polarity']==(meta['polarity']or'control');assert row['expected_verdict']==(gold[0]['verdict']if gold else'');assert row['admission_action']==c['expected']['admissionAction'];assert json.loads(row['presentation_actions_json'])==c['expected']['presentationActions'];assert json.loads(row['allowed_public_json'])==c['allowedPublic'];assert json.loads(row['accepted_texts_json'])==(gold[0]['acceptedTexts']if gold else[])
+ if gold:r=refs[label];assert row['source_url']==r['url']and row['source_inspected_at']==r['inspectedAt']and row['source_body_sha256']==r['responseBodySHA256']and row['source_quote']==r['quote']
+ else:assert not row['source_url']and not row['source_quote']
+facts=[c for c in d['cases']if c['expected']['claims']];assert len(facts)==80 and Counter(c['expected']['claims'][0]['verdict']for c in facts)=={'supported':40,'contradicted':40};assert Counter(styles.values())=={'standalone':56,'mixed_private_public':12,'first_person_public':12};assert Counter(c['expected']['admissionAction']for c in controls)=={'skip':16,'needs_confirmation':4}
+for domain in set(c['expected']['claims'][0]['domain']for c in facts):assert Counter(c['expected']['claims'][0]['verdict']for c in facts if c['expected']['claims'][0]['domain']==domain)=={'supported':5,'contradicted':5}
+result={'kind':'independent_final_compiled_dataset_csv_plan_review','decision':'PASS exact100case transfer/80researchedlabels/20controls/proof-pins/CSV/source-closure','datasetSHA256':sha((P/'dataset.json').read_bytes()),'datasetCSVSHA256':sha((P/'dataset.csv').read_bytes()),'planSHA256':sha((P/'plan.json').read_bytes()),'executorSHA256':sha((P/'execute.mts').read_bytes()),'assemblerSHA256':sha((P/'build-dataset.py').read_bytes()),'inputs':100,'facts':80,'true':40,'false':40,'controls':20,'styleCounts':d['counts']['styles'],'domains':d['counts']['domains'],'curatedSourceQuotesBoundAndHashed':80,'exactCSVRowsVerified':100,'sourceFilesPinned':len(plan['sourceFilesSHA256']),'providerCalls':0,'limitations':['OPEN authored purposive dataset; no blind or representative conversation claim.','Truth grounding follows author-inspected source context, scope notes and bound quotes; individual short quote need not repeat every referent identified by its source document.','No neworiginGETs or independent authentication of underlying source origins during this review.']}
+(P/'independent-review-dataset.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
