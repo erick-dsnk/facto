@@ -90,7 +90,7 @@ final class OCRServiceTests: XCTestCase {
   func testAssembleOrdersTopToBottomThenLeftToRightAndDropsLowConfidence() {
     let result = OCRService.assemble([
       line("bottom", x: 0.1, y: 0.10),
-      line("right", x: 0.6, y: 0.81),
+      line("right", x: 0.45, y: 0.81),
       line("noise", x: 0.1, y: 0.50, confidence: 0.2),
       line("left", x: 0.1, y: 0.80),
       line("   ", x: 0.1, y: 0.40),
