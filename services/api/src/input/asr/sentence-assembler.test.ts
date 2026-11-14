@@ -15,6 +15,23 @@ function setup(maxChars?: number) {
 }
 
 describe('sentence assembler', () => {
+  it('never ends a sentence after initials or an abbreviation, so a claim keeps its subject', () => {
+    const { assembler, finals } = setup();
+    const locked = words('The U.S. economy grew 3 percent. Dr. Smith agreed, e.g. on taxes. He moved to the U.S. It was cold.');
+    assembler.final(locked, endOf(locked) + 0.1);
+    expect(finals().map(event => event.text)).toEqual(['The U.S. economy grew 3 percent.', 'Dr. Smith agreed, e.g. on taxes.', 'He moved to the U.S. It was cold.']);
+    const tail = words('She lives in the U.K.', 20);
+    assembler.final(tail, endOf(tail) + 0.1);
+    expect(finals()).toHaveLength(3);
+    assembler.utteranceEnd();
+    expect(finals().map(event => event.text).at(-1)).toBe('She lives in the U.K.');
+
+    const early = setup();
+    early.assembler.interim(words('Mr. Jones met the U.S. Senate. Then'));
+    early.assembler.interim(words('Mr. Jones met the U.S. Senate. Then he'));
+    expect(early.finals().map(event => event.text)).toEqual(['Mr. Jones met the U.S. Senate.']);
+  });
+
   it('emits a punctuated sentence early once it is unchanged in two interim results and more words follow', () => {
     const { assembler, finals } = setup();
     assembler.interim(words('The Eiffel Tower opened in 1889. It'));

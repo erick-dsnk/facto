@@ -15,16 +15,27 @@ export interface DeepgramSocket {
   terminate(): void;
   on(event: 'open', listener: () => void): unknown;
   on(event: 'message', listener: (data: unknown, isBinary: boolean) => void): unknown;
-  on(event: 'close', listener: () => void): unknown;
+  on(event: 'close', listener: (code?: number) => void): unknown;
   on(event: 'error', listener: (error: Error) => void): unknown;
 }
 export type DeepgramSocketFactory = (url: string, headers: Record<string, string>) => DeepgramSocket;
+/** One diagnostic line: an event name plus numbers and fixed codes. Never text, audio or the key. */
+export type DeepgramLog = (event: string, fields: Record<string, number | string>) => void;
 export type DeepgramOptions = {
   apiKey: string; url?: string; socketFactory?: DeepgramSocketFactory;
-  openTimeoutMs?: number; keepAliveMs?: number; closeGraceMs?: number; now?: () => number;
+  openTimeoutMs?: number; keepAliveMs?: number; closeGraceMs?: number; now?: () => number; log?: DeepgramLog;
 };
 
 const defaultSocketFactory: DeepgramSocketFactory = (url, headers) => new WebSocket(url, { headers, handshakeTimeout: 10_000 });
+const defaultLog: DeepgramLog = (event, fields) => console.warn(`[asr] ${event}`, fields);
+/** Message types that need no diagnostics. Results and UtteranceEnd are parsed; the others carry nothing the pipeline uses. */
+const QUIET_TYPES = new Set(['Results', 'UtteranceEnd', 'Metadata', 'SpeechStarted']);
+/** ws reports a refused handshake as "Unexpected server response: 401". Keep only the status code. */
+const handshakeStatus = (error: unknown) => Number(/Unexpected server response: (\d{3})/.exec(error instanceof Error ? error.message : '')?.[1] ?? 0);
+const messageType = (message: unknown) => {
+  const type = typeof message === 'object' && message !== null ? (message as { type?: unknown }).type : undefined;
+  return typeof type === 'string' && /^[A-Za-z]{1,32}$/.test(type) ? type : 'unknown';
+};
 
 const wordSchema = z.object({
   word: z.string(), punctuated_word: z.string().optional(), start: z.number(), end: z.number(),
@@ -70,27 +81,38 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
   const keepAliveMs = options.keepAliveMs ?? 3_000;
   const closeGraceMs = options.closeGraceMs ?? 2_000;
   const now = options.now ?? Date.now;
+  const log = options.log ?? defaultLog;
 
   return {
-    async start(config, onTranscript, signal) {
+    async start(config, onTranscript, signal, onFailure) {
       signal.throwIfAborted();
       const socket = factory(options.url ?? DEEPGRAM_LISTEN_URL, { Authorization: `Token ${options.apiKey}` });
       const assembler = new SentenceAssembler(onTranscript, { idPrefix: `g${config.streamGeneration}` });
+      const generation = config.streamGeneration;
+      // One line per kind of failure and stream, so a broken provider is visible in the server log without flooding it.
+      const reported = new Set<string>();
+      const report = (event: string, fields: Record<string, number | string> = {}) => {
+        if (reported.has(event)) return;
+        reported.add(event); log(event, { generation, ...fields });
+      };
+      // After open, a provider failure is pushed to the bridge at once instead of waiting for the next frame write.
+      let failed = false;
+      const fail = () => { if (failed) return; failed = true; onFailure?.('asr_unavailable'); };
       let state: 'opening' | 'open' | 'closing' | 'closed' = 'opening';
       let lastSentAt = now();
       let keepAlive: ReturnType<typeof setInterval> | undefined;
       let closeTimer: ReturnType<typeof setTimeout> | undefined;
       let opened!: { resolve: () => void; reject: (error: unknown) => void };
       const opening = new Promise<void>((resolve, reject) => { opened = { resolve, reject }; });
-      const openTimer = setTimeout(() => { opened.reject(new PipelineError('asr_unavailable')); shutdown(); }, openTimeoutMs);
+      const openTimer = setTimeout(() => { report('deepgram_open_timeout'); opened.reject(new PipelineError('asr_unavailable')); shutdown(); }, openTimeoutMs);
 
-      const shutdown = () => {
+      const shutdown = (immediate = false) => {
         if (state === 'closing' || state === 'closed') return;
         const wasOpen = state === 'open';
         state = 'closing';
         clearTimeout(openTimer); clearInterval(keepAlive);
         signal.removeEventListener('abort', onAbort);
-        if (!wasOpen) { socket.terminate(); return; }
+        if (!wasOpen || immediate) { socket.terminate(); return; }
         try { socket.send(JSON.stringify({ type: 'CloseStream' })); } catch { socket.terminate(); return; }
         closeTimer = setTimeout(() => socket.terminate(), closeGraceMs);
         closeTimer.unref?.();
@@ -114,9 +136,9 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
       socket.on('message', (data, isBinary) => {
         if (state !== 'open' || isBinary) return;
         const text = decode(data);
-        if (text === null) return;
+        if (text === null) { report('deepgram_undecodable_message'); return; }
         let message: unknown;
-        try { message = JSON.parse(text); } catch { return; }
+        try { message = JSON.parse(text); } catch { report('deepgram_unparsable_message', { bytes: Buffer.byteLength(text) }); return; }
         const results = resultsSchema.safeParse(message);
         if (results.success) {
           const words = toWords(results.data);
@@ -124,11 +146,25 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
           else assembler.interim(words);
           return;
         }
-        if (utteranceEndSchema.safeParse(message).success) assembler.utteranceEnd();
+        if (utteranceEndSchema.safeParse(message).success) { assembler.utteranceEnd(); return; }
+        const type = messageType(message);
+        if (type === 'Error') {
+          // A provider error ends recognition: tear the stream down and tell the bridge now.
+          report('deepgram_provider_error', { bytes: Buffer.byteLength(text) });
+          fail(); shutdown(true); return;
+        }
+        // A Results message that no longer fits the schema means the provider format changed: make that visible.
+        if (!QUIET_TYPES.has(type) || type === 'Results') report('deepgram_unexpected_message', { type, bytes: Buffer.byteLength(text) });
       });
-      socket.on('error', () => { if (state === 'opening') opened.reject(new PipelineError('asr_unavailable')); });
-      socket.on('close', () => {
-        if (state === 'opening') opened.reject(new PipelineError('asr_unavailable'));
+      socket.on('error', error => {
+        if (state === 'opening') {
+          report('deepgram_open_failed', { status: handshakeStatus(error) });
+          opened.reject(new PipelineError('asr_unavailable'));
+        } else if (state === 'open') { report('deepgram_socket_error'); fail(); shutdown(true); }
+      });
+      socket.on('close', code => {
+        if (state === 'opening') { report('deepgram_open_failed', { code: code ?? 1005 }); opened.reject(new PipelineError('asr_unavailable')); }
+        else if (state === 'open') { report('deepgram_closed', { code: code ?? 1005 }); fail(); }
         state = 'closed';
         clearTimeout(openTimer); clearTimeout(closeTimer); clearInterval(keepAlive);
         signal.removeEventListener('abort', onAbort);
@@ -136,6 +172,9 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
 
       try { await opening; }
       catch (error) { shutdown(); throw error instanceof PipelineError || error === signal.reason ? error : new PipelineError('asr_unavailable'); }
+      // The socket can close in the same tick it opened; never hand the bridge a dead stream.
+      const isOpen = () => state === 'open';
+      if (!isOpen()) { shutdown(); throw new PipelineError('asr_unavailable'); }
 
       const stream: AsrStream = {
         async write(frame: AudioFrame) {

@@ -18,8 +18,8 @@ class FakeSocket extends EventEmitter implements DeepgramSocket {
     if (this.failSends) { callback?.(new Error('socket closed')); return; }
     this.sent.push(data); callback?.();
   }
-  close() { this.emit('close'); }
-  terminate() { if (this.terminated) return; this.terminated = true; this.emit('close'); }
+  close(code?: number) { this.emit('close', code); }
+  terminate() { if (this.terminated) return; this.terminated = true; this.emit('close', 1006); }
   controls() { return this.sent.filter((item): item is string => typeof item === 'string').map(item => JSON.parse(item).type as string); }
   results(words: [string, number, number, number?][], isFinal: boolean, start = 0, duration = 2) {
     this.emit('message', Buffer.from(JSON.stringify({
@@ -32,11 +32,14 @@ class FakeSocket extends EventEmitter implements DeepgramSocket {
 
 function setup(overrides: Partial<Parameters<typeof createDeepgramAdapter>[0]> = {}) {
   const sockets: FakeSocket[] = [];
-  const adapter = createDeepgramAdapter({ apiKey, socketFactory: (url, headers) => { const socket = new FakeSocket(url, headers); sockets.push(socket); return socket; }, ...overrides });
+  const logs: [string, Record<string, number | string>][] = [];
+  const adapter = createDeepgramAdapter({ apiKey, socketFactory: (url, headers) => { const socket = new FakeSocket(url, headers); sockets.push(socket); return socket; },
+    log: (event, fields) => { logs.push([event, fields]); }, ...overrides });
   const transcripts: AsrTranscript[] = [];
+  const failures: string[] = [];
   const controller = new AbortController();
-  const begin = () => adapter.start(config, event => transcripts.push(event), controller.signal);
-  return { adapter, sockets, transcripts, controller, begin, socket: () => sockets[0] };
+  const begin = () => adapter.start(config, event => transcripts.push(event), controller.signal, code => { failures.push(code); });
+  return { adapter, sockets, transcripts, failures, logs, controller, begin, socket: () => sockets[0] };
 }
 const frame = (sequence: number): AudioFrame => ({ streamGeneration: 3, sequence, captureOffsetMs: sequence * 100, pcm: new Uint8Array(3200).fill(sequence + 1), durationMs: 100 });
 
@@ -127,12 +130,57 @@ describe('Deepgram adapter', () => {
     await expect(stream.write(frame(1))).rejects.toThrow('asr_unavailable');
   });
 
-  it('never logs audio, transcripts or the key', async () => {
+  it('never logs audio, transcripts or the key, only failure codes and sizes', async () => {
     const spies = (['log', 'info', 'warn', 'error', 'debug'] as const).map(method => vi.spyOn(console, method).mockImplementation(() => {}));
-    const state = setup(); const starting = state.begin(); state.socket().emit('open'); const stream = await starting;
+    const state = setup({ log: undefined }); const starting = state.begin(); state.socket().emit('open'); const stream = await starting;
     await stream.write(frame(0)); state.socket().results([['Secret', 0, 0.3], ['words.', 0.4, 0.6]], true);
-    state.socket().emit('message', 'garbage', false); state.socket().emit('error', new Error('boom')); await stream.stop();
-    for (const spy of spies) expect(spy).not.toHaveBeenCalled();
+    state.socket().emit('message', 'garbage Secret words', false); state.socket().emit('error', new Error(`boom ${apiKey} Secret`)); await stream.stop();
+    const refused = setup({ log: undefined }); const refusing = refused.begin().catch(() => undefined);
+    refused.socket().emit('error', new Error(`Unexpected server response: 401 ${apiKey}`)); await refusing;
+    const logged = JSON.stringify(spies.flatMap(spy => spy.mock.calls));
+    expect(spies[2]).toHaveBeenCalled();
+    for (const forbidden of ['Secret', 'words', 'garbage', 'boom', apiKey]) expect(logged).not.toContain(forbidden);
+    expect(logged).toContain('deepgram_unparsable_message'); expect(logged).toContain('"status":401');
+    for (const spy of [spies[0], spies[1], spies[3], spies[4]]) expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('reports a provider close, socket error or Error message after open to the bridge once, with a code', async () => {
+    const closed = setup(); const starting = closed.begin(); closed.socket().emit('open'); const stream = await starting;
+    closed.socket().close(1011);
+    expect(closed.failures).toEqual(['asr_unavailable']);
+    expect(closed.logs).toEqual([['deepgram_closed', { generation: 3, code: 1011 }]]);
+    await stream.stop(); expect(closed.failures).toHaveLength(1);
+    await expect(stream.write(frame(0))).rejects.toThrow('asr_unavailable');
+
+    const errored = setup(); const opening = errored.begin(); errored.socket().emit('open'); await opening;
+    errored.socket().emit('error', new Error('reset'));
+    expect(errored.failures).toEqual(['asr_unavailable']); expect(errored.socket().terminated).toBe(true);
+    expect(errored.logs.map(([event]) => event)).toEqual(['deepgram_socket_error']);
+
+    const provider = setup(); const begun = provider.begin(); provider.socket().emit('open'); await begun;
+    provider.socket().emit('message', JSON.stringify({ type: 'Warning', description: 'private detail' }), false);
+    provider.socket().emit('message', JSON.stringify({ type: 'Error', description: 'private detail' }), false);
+    expect(provider.failures).toEqual(['asr_unavailable']); expect(provider.socket().terminated).toBe(true);
+    expect(provider.logs.map(([event, fields]) => [event, fields.type])).toEqual([['deepgram_unexpected_message', 'Warning'], ['deepgram_provider_error', undefined]]);
+    expect(JSON.stringify(provider.logs)).not.toContain('private');
+
+    const stopped = setup({ closeGraceMs: 0 }); const ready = stopped.begin(); stopped.socket().emit('open'); const own = await ready;
+    await own.stop(); stopped.socket().close(1000);
+    expect(stopped.failures).toEqual([]); expect(stopped.logs).toEqual([]);
+  });
+
+  it('makes the audio bridge stop listening when Deepgram drops while no frames arrive', async () => {
+    const session = new Session(() => Date.parse('2026-11-14T10:00:00Z'));
+    const events: EventEnvelope[] = []; session.listeners.add(event => events.push(event));
+    const state = setup();
+    const bridge = new AudioBridge(session, state.adapter, () => {});
+    const starting = bridge.start(config);
+    await vi.waitFor(() => expect(state.sockets).toHaveLength(1));
+    state.socket().emit('open'); await starting;
+    state.socket().close(1011);
+    await vi.waitFor(() => expect(events.some(event => event.type === 'pipeline.error')).toBe(true));
+    expect(events.find(event => event.type === 'audio.stopped')?.payload).toMatchObject({ reasonCode: 'asr_failed', streamGeneration: 3 });
+    expect(events.find(event => event.type === 'pipeline.error')?.payload).toMatchObject({ reasonCode: 'asr_unavailable' });
   });
 
   it('feeds the audio bridge transcripts it accepts, including speaker and corrections as revisions', async () => {

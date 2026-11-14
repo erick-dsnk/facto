@@ -9,6 +9,12 @@ type Pending = { segmentId: string; text: string; endTime: number };
 
 const TRANSCRIPT_MAX_CODE_POINTS = 800;
 const TERMINAL = /[.?!]["'”’)\]]*$/;
+const CLOSING = /["'”’)\]]+$/;
+/** Dotted initials such as "U.S.", "e.g." or "J.". */
+const INITIALS = /^(?:\p{L}\.)+$/u;
+/** Titles and abbreviations that smart_format writes with a period. */
+const ABBREVIATIONS = new Set(['mr.', 'mrs.', 'ms.', 'dr.', 'prof.', 'st.', 'mt.', 'vs.', 'gen.', 'sen.', 'rep.', 'gov.', 'lt.', 'col.', 'capt.', 'sgt.',
+  'etc.', 'jr.', 'sr.', 'inc.', 'ltd.', 'co.', 'corp.', 'approx.']);
 const length = (text: string) => Array.from(text).length;
 const middle = (word: AsrWord) => (word.start + word.end) / 2;
 const join = (words: AsrWord[]) => words.map(word => word.text).join(' ');
@@ -49,13 +55,24 @@ function cap(words: AsrWord[], boundary: boolean, maxChars: number): Piece[] {
   return pieces;
 }
 
-/** Sentences end at . ? ! (optionally followed by a closing quote or bracket). */
+/**
+ * True when `word` closes a sentence. "?" and "!" always do. A period after dotted initials ("U.S.") or a known abbreviation
+ * ("Dr.", "etc.") never does: "The U.S. economy grew." and "the U.S. Senate" stay whole. Joining "moved to the U.S. It was cold."
+ * into one input is safer for the checker than cutting a claim from its subject; UtteranceEnd and the length cap still flush it.
+ */
+function terminal(word: AsrWord): boolean {
+  if (!TERMINAL.test(word.text)) return false;
+  const bare = word.text.replace(CLOSING, '');
+  return !bare.endsWith('.') || !(INITIALS.test(bare) || ABBREVIATIONS.has(bare.toLowerCase()));
+}
+
+/** Sentences end at . ? ! (optionally followed by a closing quote or bracket), except after initials and abbreviations. */
 function segment(words: AsrWord[], maxChars: number): Piece[] {
   const pieces: Piece[] = [];
   let current: AsrWord[] = [];
   for (const word of words) {
     current.push(word);
-    if (TERMINAL.test(word.text)) { pieces.push(...cap(current, true, maxChars)); current = []; }
+    if (terminal(word)) { pieces.push(...cap(current, true, maxChars)); current = []; }
   }
   if (current.length) pieces.push(...cap(current, false, maxChars));
   return pieces;
