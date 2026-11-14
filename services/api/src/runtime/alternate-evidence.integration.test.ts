@@ -171,4 +171,29 @@ describe('alternate evidence retention through the composed runtime', () => {
     expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 3, searchAttempts: 2, contentAttempts: 0 });
     expect(deadlines).toEqual([acceptedAt + 10_000, acceptedAt + 10_000]);
   });
+
+  it('freshly resets a chosen incoming fallback instead of transferring the old page assessment', async () => {
+    const shared = Array.from({ length: 20 }, (_, i) => `shared${i}`).join(' ');
+    const page = { ...witnesses()[0], contentBasis: 'page_text' as const,
+      excerpt: `${Array.from({ length: 70 }, (_, i) => `prior${i}`).join(' ')} ${shared}` };
+    const fallback = { ...page, contentBasis: 'highlight' as const, excerpt: shared, retrievedAt: '2026-11-14T12:00:02Z' };
+    const sibling = source('new-witness', `${shared} ${Array.from({ length: 20 }, (_, i) => `fresh${i}`).join(' ')}`);
+    const { session, events, runtime, input, judge } = setup([page, witnesses()[1]], [fallback, sibling]);
+    const originalJudge = judge.getMockImplementation()!;
+    judge.mockImplementation(async (claim, records, context) => {
+      const result = await originalJudge(claim, records, context);
+      if (judge.mock.calls.length === 2) result.sourceAssessments = Object.fromEntries(records.map(record => [record.id, { contentBasis: 'bare_assertion', confidence: .99 }]));
+      return result;
+    });
+    runtime.submit(session, input);
+    await vi.advanceTimersByTimeAsync(2_000);
+
+    expect(judge).toHaveBeenCalledTimes(2);
+    const raw = judge.mock.calls[1][1];
+    expect(raw.find(record => record.id === page.id)).toMatchObject({ excerpt: shared, contentBasis: 'highlight', retrievedAt: fallback.retrievedAt });
+    expect(raw.every(record => record.sourceRole === 'unknown' && !record.directlyAddressesClaim
+      && !record.matchesTimePlaceAndPopulation && record.stance === 'unrelated' && record.stanceProbability === 0)).toBe(true);
+    expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence', selectedEvidenceIds: [] });
+    expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 3, searchAttempts: 2, contentAttempts: 0 });
+  });
 });
