@@ -71,7 +71,7 @@ struct HomeView: View {
   // MARK: Glasses and listening
 
   @ViewBuilder private var glassesContent: some View {
-    if wearables.glassesLink == .connected {
+    if wearables.glassesLink == .connected || live.isListening {
       listeningControls
     } else {
       GlassesSetupCard(
@@ -158,7 +158,6 @@ struct HomeView: View {
             }
             Button { live.show(entry) } label: {
               RecentRow(entry: entry)
-                .padding(.vertical, FactoSpacing.s)
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
@@ -177,8 +176,8 @@ struct HomeView: View {
   }
 }
 
-/// A home section title with one text button on the trailing edge. At accessibility sizes the
-/// button moves under the title so neither gets squeezed.
+/// A home section title with one small outlined button on the trailing edge. At accessibility
+/// sizes the button moves under the title so neither gets squeezed.
 private struct SectionHeader<Trailing: View>: View {
   let title: String
   @ViewBuilder let trailing: Trailing
@@ -200,7 +199,8 @@ private struct SectionHeader<Trailing: View>: View {
   }
 }
 
-/// A plain text button in Onest medium with a 44 pt tall hit area.
+/// The website's small pill, outlined: Onest medium inside a 1.5 pt capsule, so it reads as a
+/// button next to plain labels. The hit area is at least 44 × 44 pt around the capsule.
 private struct HeaderButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     HeaderButton(configuration: configuration)
@@ -214,7 +214,10 @@ private struct HeaderButtonStyle: ButtonStyle {
       configuration.label
         .font(.onest(.subheadline, weight: .medium))
         .foregroundStyle(.factoText)
-        .frame(minHeight: 44)
+        .padding(.horizontal, FactoSpacing.s)
+        .padding(.vertical, FactoSpacing.xs)
+        .background { Capsule().strokeBorder(.factoText, lineWidth: 1.5) }
+        .frame(minWidth: 44, minHeight: 44)
         .contentShape(.rect)
         .opacity(isEnabled ? (configuration.isPressed ? 0.6 : 1) : 0.4)
     }

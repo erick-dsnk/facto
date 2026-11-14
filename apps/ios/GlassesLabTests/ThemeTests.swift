@@ -78,7 +78,7 @@ final class ThemeTests: XCTestCase {
     assertColor(.factoVerdictTrue, light: 0x2F6F3E, dark: 0x2F6F3E)
     assertColor(.factoVerdictFalse, light: 0x8B1E24, dark: 0x8B1E24)
     assertColor(.factoOnVerdict, light: 0xF5F5F7, dark: 0xF5F5F7)
-    assertColor(.factoOnVerdictSecondary, light: 0xF5F5F7, 0.74, dark: 0xF5F5F7, 0.74)
+    assertColor(.factoOnVerdictSecondary, light: 0xE3E3E6, dark: 0xE3E3E6)
   }
 
   func testPaletteMatchesTheWebsite() {
@@ -86,9 +86,59 @@ final class ThemeTests: XCTestCase {
       (FactoPalette.offWhite, 0xF5F5F7), (FactoPalette.mahogany, 0x380C00),
       (FactoPalette.verdictTrue, 0x2F6F3E), (FactoPalette.verdictFalse, 0x8B1E24),
       (FactoPalette.lensTrue, 0x7EA484), (FactoPalette.lensFalse, 0xBD7672),
+      (FactoPalette.onVerdictSecondary, 0xE3E3E6),
     ]
     for (color, hex) in expected {
       assertColor(Color(uiColor: color), light: hex, dark: hex)
     }
+  }
+
+  // MARK: Contrast
+
+  /// Every text colour on the fill it sits on, in both modes, meets WCAG 1.4.3 (4.5:1 for
+  /// small text). The cards put subheadline and body text on these fills.
+  func testTextMeetsContrastOnEveryFill() {
+    let pairs: [(name: String, text: Color, fill: Color)] = [
+      ("text on background", .factoText, .factoBackground),
+      ("secondary text on background", .factoTextSecondary, .factoBackground),
+      ("inverse text on inverse fill", .factoInverseText, .factoInverseFill),
+      ("inverse secondary on inverse fill", .factoInverseTextSecondary, .factoInverseFill),
+      ("text on True", .factoOnVerdict, .factoVerdictTrue),
+      ("secondary text on True", .factoOnVerdictSecondary, .factoVerdictTrue),
+      ("text on False", .factoOnVerdict, .factoVerdictFalse),
+      ("secondary text on False", .factoOnVerdictSecondary, .factoVerdictFalse),
+    ]
+    for style in [UIUserInterfaceStyle.light, .dark] {
+      let traits = UITraitCollection(userInterfaceStyle: style)
+      for pair in pairs {
+        let ratio = contrast(of: pair.text, on: pair.fill, traits: traits)
+        XCTAssertGreaterThanOrEqual(
+          ratio, 4.5, "\(pair.name), \(style == .dark ? "dark" : "light"): \(String(format: "%.2f", ratio)):1"
+        )
+      }
+    }
+  }
+
+  /// WCAG 2 contrast ratio of `text`, composited over the opaque `fill`.
+  private func contrast(of text: Color, on fill: Color, traits: UITraitCollection) -> Double {
+    let back = components(fill, traits)
+    let front = components(text, traits)
+    let alpha = front[3]
+    let mixed = (0..<3).map { front[$0] * alpha + back[$0] * (1 - alpha) }
+    let lighter = max(luminance(mixed), luminance(back)), darker = min(luminance(mixed), luminance(back))
+    return (lighter + 0.05) / (darker + 0.05)
+  }
+
+  /// sRGB red, green, blue and alpha, 0 to 1.
+  private func components(_ color: Color, _ traits: UITraitCollection) -> [Double] {
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+    UIColor(color).resolvedColor(with: traits).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+    return [red, green, blue, alpha].map(Double.init)
+  }
+
+  /// WCAG relative luminance of the first three components.
+  private func luminance(_ rgb: [Double]) -> Double {
+    let linear = rgb.prefix(3).map { $0 <= 0.03928 ? $0 / 12.92 : pow(($0 + 0.055) / 1.055, 2.4) }
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
   }
 }

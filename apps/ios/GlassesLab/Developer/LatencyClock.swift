@@ -14,5 +14,6 @@ struct LatencyClock: View {
         .background(.black, in: RoundedRectangle(cornerRadius: 8))
         .foregroundStyle(.white)
     }
+    .accessibilityHidden(true)
   }
 }
