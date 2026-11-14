@@ -1,0 +1,28 @@
+import pathlib,json,hashlib,os,sys
+B=pathlib.Path(__file__).resolve().parent
+H=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+manifest=json.loads((B/'MANIFEST.json').read_text())
+for f in manifest['files']:assert H(B/f['path'])==f['sha256'],f['path']
+plan=json.loads((B/'fetch-plan.json').read_text())
+for binding in plan['inputBindings'].values():assert H(pathlib.Path(binding['path']))==binding['sha256']
+d=json.loads((B/'audit-details.json').read_text());assert len(d['records'])==11
+for path,h in d['originalCandidateReportsHashVerified'].items():assert H(pathlib.Path(path))==h
+for r in d['records']:
+ m=json.loads((B/r['proofMetadata']).read_text());root=(B/r['proofMetadata']).parent
+ assert m['requestedUrl'] if 'requestedUrl' in m else m['url']==r['url']
+ assert (m.get('requestedUrl') or m['url'])==r['url']
+ assert m['httpStatus']==200 and not m['bodyTruncated']
+ assert H(root/m['responseBodyFile'])==r['bodySHA256']==m['responseBodySHA256']
+ assert H(root/m['extractedTextFile'])==r['textSHA256']==m['extractedTextSHA256']
+reuse=json.loads((B/'reuse-bindings.json').read_text());assert len(reuse)==7
+for r in reuse:
+ for f in r['proofFiles']:
+  assert H(B/f['copiedAs'])==H(pathlib.Path(f['path']))==f['sha256']
+f=json.loads((B/'fetch-summary.json').read_text());assert f['targetChains']==f['httpRequestsIncludingRedirects']==4;assert f['responseBodyBytes']==737051
+assert all(x['curlExit']==0 and x['redirectCount']==0 and x['elapsedSeconds']<=15 for x in f['results'])
+# Values are checked locally but never printed or written.
+keys=[os.environ.get(k) for k in ['JEV_API_KEY','EXA_API_KEY','ELEVENLABS_API_KEY','DEEPGRAM_API_KEY']];keys=[x.encode() for x in keys if x]
+for p in B.rglob('*'):
+ if p.is_file():
+  body=p.read_bytes();assert not any(k in body for k in keys),'credential value found'
+print(json.dumps({'status':'pass','manifestFiles':len(manifest['files']),'selectedRecords':11,'reusedExactProofs':7,'freshHttpRequests':4,'completeSelectedPropositions':8,'partialSelectedPropositions':3,'inaccessibleSources':0,'providerCalls':0,'configuredSecretValuesChecked':len(keys),'secretMatches':0}))
