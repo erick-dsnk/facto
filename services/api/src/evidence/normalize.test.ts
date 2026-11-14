@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { codePoints } from '../../../../packages/contracts/src/index.js';
 import { evidenceSchema } from '../../../../packages/contracts/src/wire.js';
-import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE, mergeRetainedEvidence, needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse, selectExcerpt } from './normalize.js';
+import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE, mergeRetainedEvidence, needsPageText, normalizeEvidence, normalizeUrl, parseExaContentsResponse, parseExaResponse, selectExcerpt } from './normalize.js';
 
 const now = '2026-11-14T10:00:00.000Z';
 const quote = 'The Eiffel Tower officially opened in 1889. This historical statement is retained exactly as the provider returned it.';
@@ -317,6 +317,42 @@ describe('evidence normalization', () => {
     expect(query).not.toContain(JSON.stringify(checked));
     // Ordinary JSON transport escaping must decode back to the exact query.
     expect(JSON.parse(JSON.stringify({ query })).query).toBe(query);
+  });
+
+  it.each([
+    ['CRAWL_NOT_FOUND', 404], ['CRAWL_HTTP_403', 403], ['CRAWL_HTTP_429', 429], ['CRAWL_HTTP_503', 503],
+    ['CRAWL_TIMEOUT', null], ['CRAWL_LIVECRAWL_TIMEOUT', null], ['SOURCE_NOT_AVAILABLE', null], ['UNSUPPORTED_URL', null],
+  ])('recognizes documented optional target failures without accepting their returned text (%s)', (tag, httpStatusCode) => {
+    const url = 'https://archive.example.org/record';
+    const value = { results: [{ url, text: 'This must not replace the indexed passage.' }],
+      statuses: [{ id: url, status: 'error', error: { tag, httpStatusCode } }] };
+    expect(parseExaContentsResponse(value, [url])).toEqual({ pages: [], pageFailures: [{ url, tag, targetHttpStatus: httpStatusCode }] });
+    expect(() => parseExaResponse(value)).toThrow('exa_content_failed');
+  });
+
+  it.each(['CRAWL_UNKNOWN_ERROR', 'SERVICE_OVERLOADED', 'INVALID_API_KEY', 'NEW_PROVIDER_ERROR', undefined])('keeps unknown or provider error tags operational (%s)', tag => {
+    const url = 'https://archive.example.org/record';
+    expect(() => parseExaContentsResponse({ results: [], statuses: [{ id: url, status: 'error', error: { tag } }] }, [url]))
+      .toThrow('exa_content_failed');
+  });
+
+  it('rejects missing/mismatched/duplicate status identity and malformed or contradictory statuses', () => {
+    const url = 'https://archive.example.org/record';
+    const error = { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 404 };
+    const statuses = [
+      [{ status: 'error', error }],
+      [{ id: 'https://other.example.org/record', status: 'error', error }],
+      [{ id: url, status: 'error', error }, { id: url, status: 'success' }],
+      [{ id: url, status: 'pending' }],
+      [{ id: url, status: 'success', error }],
+      [{ id: url, status: 'error', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 503 } }],
+      [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 503 } }],
+      [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: '404' } }],
+    ];
+    for (const status of statuses) expect(() => parseExaContentsResponse({ results: [], statuses: status }, [url])).toThrow('malformed_exa_response');
+    expect(() => parseExaContentsResponse({ results: [{ url, text: 42 }] }, [url])).toThrow('malformed_exa_response');
+    expect(() => parseExaContentsResponse({ results: [], error: 'Provider unavailable', tag: 'SERVICE_OVERLOADED' }, [url]))
+      .toThrow('exa_content_failed');
   });
 
   it('bare URLs and synthesized answers cannot become evidence', () => {
