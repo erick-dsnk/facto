@@ -1,0 +1,36 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { captureRequest, type Unit, type Label } from './runner.ts';
+
+async function main(): Promise<void> {
+  const base = '/workspace/task-evidence/privacy-calibration';
+  const plan = JSON.parse(readFileSync(`${base}/biography24-plan.json`, 'utf8'));
+  const report = JSON.parse(readFileSync(`${base}/biography24-run-01/report.json`, 'utf8'));
+  const units: Unit[] = JSON.parse(readFileSync(plan.unitsPath, 'utf8')).units;
+  const labels: Label[] = plan.labels;
+  const diagnostics = [];
+  for (const observation of report.observations) {
+    const unit = units.find(value => value.id === observation.unitId)!;
+    const label = labels.find(value => value.id === unit.id)!;
+    const request = await captureRequest(unit, observation.arm); // Offline only.
+    const state = request.state as { candidates: Array<{ id: string; text: string; span: { start: number; end: number } }> };
+    const publicSpans = label.expectedPublicSpans.map(span => {
+      const candidate = state.candidates.find(value => value.text === span);
+      if (!candidate) return { candidateFound: false };
+      const answer = observation.answers;
+      const prefix = candidate.id;
+      const scores = { privateData: answer[`${prefix}_private_data`]?.noul, kind: answer[`${prefix}_kind`]?.choice, publicFactProbability: answer[`${prefix}_kind`]?.probabilities?.public_fact, selfContained: answer[`${prefix}_self_contained`]?.noul, structure: answer[`${prefix}_claim_structure`]?.choice, assertion: answer[`${prefix}_assertion_status`]?.choice, preservesScope: answer[`${prefix}_preserves_scope`]?.noul ?? 1 };
+      const admitted = observation.admission.claims.some((claim: { sourceSpan: { start: number; end: number } }) => claim.sourceSpan.start === candidate.span.start && claim.sourceSpan.end === candidate.span.end);
+      return { candidateFound: true, candidateId: candidate.id, span: candidate.span, admitted, ...scores, privacyBlocks: scores.privateData >= .10, structureBlocks: scores.structure !== 'one_coherent' };
+    });
+    diagnostics.push({ unitId: unit.id, arm: observation.arm, category: unit.category, expectedPrivate: label.expectedPrivate, mixed: label.expectedPrivate && label.expectedPublicSpans.length > 0, action: observation.admission.action, publicSpans });
+  }
+  const sourceHashesUnchanged = Object.entries(plan.sourceHashes).every(([path, expected]) => {
+    const file = path === 'candidate.ts' || path === 'runner.ts' ? `${base}/${path}` : `/workspace/stack-15/${path}`;
+    return createHash('sha256').update(readFileSync(file)).digest('hex') === expected;
+  });
+  const comparison = { planHash: report.planHash, sourceHashesUnchanged, productionChanged: false, repeated: false, uniquePublicPropositions: new Set(labels.flatMap(label => label.expectedPublicSpans)).size, safeSpanOccurrences: labels.reduce((sum, label) => sum + label.expectedPublicSpans.length, 0), diagnostics };
+  writeFileSync(`${base}/biography24-run-01/comparison.json`, `${JSON.stringify(comparison, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
+  process.stdout.write(`${JSON.stringify({ sourceHashesUnchanged, uniquePublicPropositions: comparison.uniquePublicPropositions, safeSpanOccurrences: comparison.safeSpanOccurrences, remaining: diagnostics.filter(value => value.arm === 'candidate' && value.publicSpans.some(span => !('admitted' in span) || !span.admitted)), mixed: diagnostics.filter(value => value.mixed) })}\n`);
+}
+main().catch(error => { process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`); process.exitCode = 1; });

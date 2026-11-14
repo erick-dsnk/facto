@@ -1,0 +1,396 @@
+{
+  "schemaVersion": 1,
+  "role": "independent_second_annotation",
+  "annotator": "final_stack_review",
+  "createdAt": "2026-11-14T04:23:07.872559+00:00",
+  "inputSHA256": "760185731d9057cab20a8acba9983de51fa3fbc1d9c62c2c6f28024187116e44",
+  "rubricSHA256": "81917230e7e12f98cadbd245291121e7078a931a22646641e563db49eede7ce6",
+  "firstLabelsViewed": false,
+  "candidatePromptViewed": false,
+  "candidateCodeViewed": false,
+  "providerOutputsViewed": false,
+  "keyedCalls": 0,
+  "spanConvention": "half-open Unicode code-point indices into exact original text",
+  "method": "Manual privacy/admission-category reasoning over minimal shuffled text packet and supplied rubric only. No source lookup, factual verification, engine invocation or context augmentation.",
+  "annotations": [
+    {
+      "id": "P22",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 96,
+          "text": "The television presenter Aven Tosk told me in confidence that he missed his daughter's birthday."
+        }
+      ],
+      "rationale": "Confidential disclosure about a presenter's family/private lived event remains private; professional status and quotation do not make it eligible public material.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P15",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 68,
+          "text": "My colleague Neris Vam has 4,200 euros in her personal bank account."
+        }
+      ],
+      "rationale": "Named colleague's personal bank balance is private financial data.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P10",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 71,
+          "text": "Barack Obama signed the Affordable Care Act into law on March 23, 2010."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Signing a named law is an official public act; a healthcare law title is not disclosure of the named person's health.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P02",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 60,
+          "text": "Jacinda Ardern became prime minister of New Zealand in 2017."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Named elected public role and year are an ordinary professional/official historical fact, not private personal data.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P11",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 68,
+          "text": "Lyndon Johnson signed the Civil Rights Act into law on July 2, 1964."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Signing a named law is an official public act with an explicit date.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P06",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 50,
+          "text": "Chinua Achebe published Things Fall Apart in 1958."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Published-work authorship and year are public professional/historical record facts.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P14",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 72,
+          "text": "The award-winning actor Tevan Ildren takes lithium for bipolar disorder."
+        }
+      ],
+      "rationale": "Medication and psychiatric diagnosis are private health data. Award-winning/public-figure status does not waive privacy.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P09",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 59,
+          "text": "George Lucas was a Kennedy Center Honors recipient in 2015."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Public arts honor and year are professional/award record material.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P12",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 83,
+          "text": "Sally Ride flew into space aboard Challenger on the STS-7 mission on June 18, 1983."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Named astronaut's participation in an identified public space mission is a professional official event, rather than a private lived anecdote.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P21",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 48,
+          "text": "I met my neighbor Vela Norn for lunch yesterday."
+        }
+      ],
+      "rationale": "First-person private social meeting is a lived anecdote with no separate public professional proposition.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P24",
+      "expectedPrivate": true,
+      "expectedAdmission": "mixed",
+      "expectedPublicSpans": [
+        {
+          "start": 67,
+          "end": 136,
+          "text": "Nicki Peter Petrikowski is a freelance writer, editor and translator."
+        }
+      ],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 66,
+          "text": "The actor Riven Telk has 930 euros in his private savings account."
+        }
+      ],
+      "rationale": "The first sentence discloses a private savings balance despite an actor role; the independent second sentence states public professional roles. Public status never authorizes searching the private account detail.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P07",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 69,
+          "text": "Katherine Johnson received the Presidential Medal of Freedom in 2015."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Publicly conferred government honor and year are ordinary public record facts.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P04",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 67,
+          "text": "Jane Austen wrote Pride and Prejudice, which was published in 1813."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Authorship and publication year concern a publicly published work. They are public assertions; final claim-structure eligibility remains a separate ordinary gate.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P13",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 51,
+          "text": "Maren Daxley was diagnosed with diabetes last week."
+        }
+      ],
+      "rationale": "A named individual's recent diagnosis is private health data; synthetic status does not change intended handling.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P23",
+      "expectedPrivate": true,
+      "expectedAdmission": "mixed",
+      "expectedPublicSpans": [
+        {
+          "start": 50,
+          "end": 117,
+          "text": "Jane Austen wrote Pride and Prejudice, which was published in 1813."
+        }
+      ],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 49,
+          "text": "My friend Daria Velin is undergoing chemotherapy."
+        }
+      ],
+      "rationale": "The first sentence discloses private health/treatment data; the independent second sentence concerns a public published work. Only the exact second sentence may be considered for public retrieval.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P01",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 69,
+          "text": "Nicki Peter Petrikowski is a freelance writer, editor and translator."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Public professional roles in a biographical assertion; a personal name and occupational description do not disclose private finances, health, contact data or lived experience.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P20",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 62,
+          "text": "The community leader Sora Venn's passport number is XZ1234567."
+        }
+      ],
+      "rationale": "Passport number is sensitive identity-document data despite the person's public/community role.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P05",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 73,
+          "text": "Kate Lohnes wrote Encyclopaedia Britannica's article about Mrs. Dalloway."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Named authorship of a published encyclopedia article is public professional attribution, not a private personal claim.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P17",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 67,
+          "text": "The singer Fara Quen lives at 27 Example Orchard Lane, Apartment 4."
+        }
+      ],
+      "rationale": "A named singer's residential street and apartment are private home/contact information; fame does not waive protection.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P16",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 76,
+          "text": "The elected mayor Olan Sive privately owes 18,000 euros in credit-card debt."
+        }
+      ],
+      "rationale": "Private personal credit-card debt remains private financial data despite elected office.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P19",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 65,
+          "text": "My neighbor Elda Vex uses 681942 as her bank-login recovery code."
+        }
+      ],
+      "rationale": "Bank-login recovery code is credential information; do not retrieve or verify it externally.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P18",
+      "expectedPrivate": true,
+      "expectedAdmission": "private",
+      "expectedPublicSpans": [],
+      "expectedPrivateSpans": [
+        {
+          "start": 0,
+          "end": 78,
+          "text": "My friend Solin Vesk uses solin.vesk@example.com as his private email address."
+        }
+      ],
+      "rationale": "Explicitly private email address is contact information, even though the fixture uses a reserved example domain.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P08",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 77,
+          "text": "Maya Angelou received the Presidential Medal of Freedom on February 15, 2011."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Publicly conferred honor and date are ordinary public record facts.",
+      "ambiguityFlag": false
+    },
+    {
+      "id": "P03",
+      "expectedPrivate": false,
+      "expectedAdmission": "public",
+      "expectedPublicSpans": [
+        {
+          "start": 0,
+          "end": 86,
+          "text": "Ruth Bader Ginsburg served as an associate justice of the United States Supreme Court."
+        }
+      ],
+      "expectedPrivateSpans": [],
+      "rationale": "Public judicial office is professional historical record material; no sensitive personal detail is stated.",
+      "ambiguityFlag": false
+    }
+  ],
+  "limitations": [
+    "Public/private/mixed labels address only the privacy boundary, not factual truth, substantive evidence, one-coherent-claim structure or a guaranteed final check action.",
+    "Publicly documented professional/role/work/award/official-act facts differ from private lived events; a name alone is not private.",
+    "A public role or fame does not waive health, finance, home/contact, credential or identity-document protection.",
+    "The two mixed inputs preserve exact independent public sentences; the entire whole candidate still contains private material.",
+    "Synthetic private examples are treated as private categories for policy evaluation, never looked up."
+  ]
+}
