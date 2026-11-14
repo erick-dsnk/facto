@@ -1,0 +1,19 @@
+✔ baseline is extracted offline from original seven-way production criteria (1.621203ms)
+✔ freeze uses identical retained state, independent question arms and no labels in requests (2.161757ms)
+✔ budget, family split and independently retained label spans reject malformed plans before calls (0.629499ms)
+✔ single pass records actual attempts, bytes and measured tokens durably by split (29.886334ms)
+✔ missing usage fails closed after the actual call without silent rerun (7.338989ms)
+✔ pending reserve stops the next call at the unchanged measured-token budget (2.330181ms)
+✔ HTTP errors and malformed answers are terminal, durable and never retried (3.596029ms)
+✔ tampered request freeze is rejected before network or output creation (0.863671ms)
+✔ baseline confidence retains accepted-set probability and chosen-category gate (0.917432ms)
+✔ predeclared boundary labels stay outside primary metrics with explicit sensitivity (3.002695ms)
+✔ wall deadline prevents a first call and records all units missing (1.734393ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 512.989454
