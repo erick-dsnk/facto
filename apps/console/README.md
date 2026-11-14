@@ -56,6 +56,14 @@ With server-side keys configured through the environment, execute a fresh campai
 npm run evaluate:live -- --live --output artifacts/live/development-2026-11-14-01.json
 ```
 
+In a managed environment that requires its configured HTTP(S) proxy, use Node 24 and enable Node's environment-proxy support for the runner:
+
+```sh
+NODE_USE_ENV_PROXY=1 npm run evaluate:live -- --live --output artifacts/live/development-2026-11-14-02.json
+```
+
+The default Node fetch may otherwise attempt a blocked direct connection even when proxy environment variables exist. A network failure with no provider response leaves usage unknown and triggers the runner's safety stop; preserve that report and choose a fresh filename after correcting connectivity. Never print proxy credentials or provider keys while diagnosing the environment.
+
 The output path must be writable and absent before dispatch. The runner reserves it with mode `0600`, then atomically checkpoints sanitized dispatch reservations, completed attempts and completed cases. A final report replaces the checkpoints. Interrupted reports retain `completed: false`; a `dispatch_reserved` checkpoint means dispatch may or may not have happened and retains the conservative allowance. Reusing an existing filename fails before paid calls. Metadata records the current commit, dirty status and a SHA-256 of console/API/contracts source plus package manifests, including untracked harness files. Optional `--commit SHA` rejects a mismatched checkout; it does not hide a dirty tree.
 
 Fresh campaign limits are 24 actual Jev attempts, 12 Exa search attempts, 18 content attempts, 150 seconds, 65,536 bytes per serialized provider request body and 1,000,000 total request-body bytes. Headers and URLs are excluded from byte totals. Every retry and content fetch is counted at the provider HTTP boundary. Runtime consumed allowances are recorded separately from actual dispatched requests, so a locally denied call cannot appear as a paid attempt.
