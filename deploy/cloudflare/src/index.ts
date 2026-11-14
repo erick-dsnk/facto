@@ -11,11 +11,14 @@ interface Env {
   // vars (wrangler.jsonc)
   PIPELINE_MODE?: string;
   TRUST_PROXY?: string;
+  MIN_CAPTURE_CONFIDENCE?: string;
+  DEBUG_TRANSCRIPTS?: string;
   // secrets (wrangler secret put)
   JEV_API_KEY?: string;
   EXA_API_KEY?: string;
   DEEPGRAM_API_KEY?: string;
   DEMO_JOIN_CODE?: string;
+  DEBUG_FEED_KEY?: string;
   DEMO_JOIN_EXPIRES_AT?: string;
   ALLOWED_ORIGINS?: string;
 }
@@ -30,10 +33,13 @@ const READY_TIMEOUT_MS = 90_000;
 const PASSTHROUGH = [
   "PIPELINE_MODE",
   "TRUST_PROXY",
+  "MIN_CAPTURE_CONFIDENCE",
+  "DEBUG_TRANSCRIPTS",
   "JEV_API_KEY",
   "EXA_API_KEY",
   "DEEPGRAM_API_KEY",
   "DEMO_JOIN_CODE",
+  "DEBUG_FEED_KEY",
   "DEMO_JOIN_EXPIRES_AT",
   "ALLOWED_ORIGINS",
 ] as const;

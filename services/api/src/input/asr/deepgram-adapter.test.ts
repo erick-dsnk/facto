@@ -206,4 +206,23 @@ describe('Deepgram adapter', () => {
     await bridge.stop();
     expect(state.socket().controls()).toEqual(['CloseStream']);
   });
+  it('sends every final result with per-word confidence to the opt-in transcript log, and nothing for interims', async () => {
+    const entries: unknown[] = [];
+    const state = setup({ transcriptLog: entry => { entries.push(entry); } }); const starting = state.begin();
+    state.socket().emit('open'); await starting;
+    state.socket().results([['Jensen', 0.1, 0.4, 0], ['Huang', 0.5, 0.8, 0]], false, 0, 1);
+    expect(entries).toEqual([]);
+    state.socket().results([['Jensen', 0.1, 0.4, 0], ['Huang', 0.5, 0.8, 0], ['spoke.', 0.9, 1.2, 0]], true, 0, 1.3);
+    expect(entries).toEqual([{ generation: 3, start: 0, duration: 1.3, transcript: 'Jensen Huang spoke.', averageConfidence: 0.9,
+      words: [{ word: 'Jensen', confidence: 0.9, speaker: 0 }, { word: 'Huang', confidence: 0.9, speaker: 0 }, { word: 'spoke.', confidence: 0.9, speaker: 0 }] }]);
+    state.controller.abort();
+  });
+
+  it('logs no transcript text without the opt-in', async () => {
+    const state = setup(); const starting = state.begin();
+    state.socket().emit('open'); await starting;
+    state.socket().results([['Helsinki', 0.1, 0.4, 0], ['is', 0.5, 0.6, 0], ['north.', 0.7, 0.9, 0]], true, 0, 1);
+    expect(JSON.stringify(state.logs)).not.toContain('Helsinki');
+    state.controller.abort();
+  });
 });
