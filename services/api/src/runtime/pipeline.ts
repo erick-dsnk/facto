@@ -45,8 +45,9 @@ export class PipelineRuntime {
     }
     // Revisions and continuations share the original deadline and attempt budget.
     const acceptedAt = previous?.acceptedAt ?? this.now();
+    const acceptedMonotonic = previous?.acceptedMonotonic ?? this.monotonic();
     const record: RequestRecord = { input, fingerprint: hash, budget: previous?.budget ?? new AttemptBudget(), controller: new AbortController(), acceptedAt,
-      state: 'queued', continuationCount: (previous?.continuationCount ?? 0) + (continuing ? 1 : 0), results: new Map() };
+      acceptedMonotonic, state: 'queued', continuationCount: (previous?.continuationCount ?? 0) + (continuing ? 1 : 0), results: new Map() };
     session.requests.set(input.requestId, record);
     if (!input.userInitiated) session.lastAutomaticAt = this.now();
     record.timer = setTimeout(() => {
@@ -78,8 +79,8 @@ export class PipelineRuntime {
 
   private async run({ session, record }: Job) {
     const { input } = record;
-    const started = this.monotonic();
-    const ctx = record.budget.context(record.controller.signal, this.now);
+    const started = record.acceptedMonotonic;
+    const ctx = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000);
     const stageMs = { admission: 0, retrieval: 0, judgment: 0 };
     const timed = async <T>(stage: keyof typeof stageMs, call: () => Promise<T>): Promise<T> => {
       const start = this.monotonic();
@@ -119,7 +120,11 @@ export class PipelineRuntime {
           record.state = 'done'; return;
         }
         session.emit('claim.checking', { admissionAction: 'check', reasonCode: 'eligible_public_claim' }, input, claim.id);
-        const key = JSON.stringify([claim.checkedText.replace(/\s+/g, ' ').trim().toLowerCase(), input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
+        const normalizedClaim = claim.checkedText.replace(/\s+/g, ' ').trim().toLowerCase();
+        const key = JSON.stringify([normalizedClaim, input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
+        // Notification identity is the complete admitted proposition, independent of
+        // capture mode/context. Keep factual cache identity context-sensitive above.
+        const notificationKey = normalizedClaim;
         const stored = session.cache.get(key);
         let result: ClaimResult;
         if (stored && stored.expiresAt > this.now()) {
@@ -146,10 +151,10 @@ export class PipelineRuntime {
         const currentAdmission = { ...claim.admission, matchedSelectedTopic: matchSelectedTopic(claim.checkedText, session.preferences.selectedTopics) };
         result = { ...result, presentation: decidePresentation({ ...result, admission: currentAdmission }, input.userInitiated ? 'manual' : 'automatic', {
           active: session.active, healthy: true, current: session.current(record), expired: Date.parse(result.expiresAt) <= this.now(),
-          duplicate: !input.userInitiated && session.recentClaims.has(key), notificationCount: session.notifications.length
+          duplicate: !input.userInitiated && session.recentClaims.has(notificationKey), notificationCount: session.notifications.length
         }, session.preferences) };
         if (!session.current(record)) return;
-        if (result.presentation.action === 'notify') { session.notifications.push(this.now()); session.recentClaims.set(key, this.now() + 60_000); }
+        if (result.presentation.action === 'notify') { session.notifications.push(this.now()); session.recentClaims.set(notificationKey, this.now() + 60_000); }
         record.results.set(claim.id, result); session.emit('claim.result', result, input, claim.id);
       }
       record.state = 'done';

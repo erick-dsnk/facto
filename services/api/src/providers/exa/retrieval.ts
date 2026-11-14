@@ -2,6 +2,8 @@ import { PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../
 import { needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse } from '../../evidence/normalize.js';
 import { AbortableExa } from './client.js';
 
+type BudgetAwareContext = Parameters<PipelineAdapters['retrieve']>[1] & { canConsume?(kind: 'contents', claimId?: string): boolean };
+
 export interface ExaClient {
   search(query: string, options: { type: 'auto'; numResults: number; contents: { highlights: true } }): Promise<unknown>;
   getContents(urls: string[], options: { text: { maxCharacters: number }; livecrawl: 'preferred'; livecrawlTimeout: number }): Promise<unknown>;
@@ -10,14 +12,15 @@ export type RetrieverOptions = { apiKey?: string; fetch?: typeof fetch; clientFa
 
 export function createRetriever(options: RetrieverOptions): PipelineAdapters['retrieve'] {
   return async (claim, context) => {
+    const budget = context as BudgetAwareContext;
     context.signal.throwIfAborted();
     // Retrieval cannot be called with an unadmitted/reconstructed proposition.
     if (claim.admission.admissionAction !== 'check' || claim.admission.assertionStatus !== 'asserted' || !claim.checkedText.trim() || sliceSpan(claim.originalText, claim.sourceSpan) !== claim.checkedText) {
       throw new PipelineError('claim_not_admitted');
     }
     if (!options.clientFactory && !options.apiKey) throw new PipelineError('missing_exa_key');
-    const client = options.clientFactory?.(context.signal) ?? new AbortableExa(options.apiKey!, context.signal, options.fetch);
-    context.consume('search', claim.id);
+    const client = options.clientFactory?.(context.signal) ?? new AbortableExa(options.apiKey!, context.signal, options.fetch, context, claim.id);
+    if (options.clientFactory) context.consume('search', claim.id);
     const pages = parseExaResponse(await client.search(claim.checkedText, { type: 'auto', numResults: 5, contents: { highlights: true } }));
     context.signal.throwIfAborted();
     const seen = new Set<string>();
@@ -29,7 +32,11 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
     }).slice(0, 3);
     for (const page of candidates) {
       context.signal.throwIfAborted();
-      context.consume('contents', claim.id);
+      // Contents are optional enrichment. Retries share this same allowance,
+      // so stop before beginning another page when no attempt remains; keep
+      // the original search results and any page text already obtained.
+      if (budget.canConsume && !budget.canConsume('contents', claim.id)) break;
+      if (options.clientFactory) context.consume('contents', claim.id);
       const contents = parseExaResponse(await client.getContents([page.url], { text: { maxCharacters: 6000 }, livecrawl: 'preferred', livecrawlTimeout: 1500 }));
       context.signal.throwIfAborted();
       const match = contents.find(item => normalizeUrl(item.url) === normalizeUrl(page.url));
