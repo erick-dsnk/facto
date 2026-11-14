@@ -1,0 +1,30 @@
+// Separate from the frozen selector seam. Trusted runtime call-site factory only.
+import type { AcceptedClaim } from '/workspace/stack-20/packages/contracts/src/index.js';
+import type { RequestRecord, Session } from '/workspace/stack-20/services/api/src/runtime/session.js';
+import { captureRuntimeOwner, assertCurrentOwner, type MaterialHandle, type RuntimeOwnerHandle } from '../capability-selection-seam-01/material.js';
+export interface DispatchOwner { readonly kind: 'unwired_dispatch_owner' }
+type State = { material: MaterialHandle; owner: RuntimeOwnerHandle; context: ReturnType<RequestRecord['budget']['context']> };
+const states = new WeakMap<object, State>();
+export function captureDispatchOwner(material: MaterialHandle, input: {
+ session: Session; record: RequestRecord; claimSlot: number; admittedClaim: AcceptedClaim;
+ readMaterialGeneration: () => string; readInstallGeneration: () => string; reservedJev: number;
+}): DispatchOwner {
+ const reserved = input.reservedJev;
+ if (!Number.isInteger(reserved) || reserved < 0 || reserved > 2) throw new Error('invalid_inherited_reservation');
+ const owner = captureRuntimeOwner(material,input);
+ // The context closes over the actual request budget. No external consume or
+ // canConsume function can substitute a different allowance after capture.
+ const inherited = input.record.budget.context(input.record.controller.signal,input.session.now,input.record.acceptedAt+10000,reserved);
+ const context = Object.freeze({ ...inherited,
+  consume: (...args: Parameters<typeof inherited.consume>) => { assertCurrentOwner(owner); inherited.consume(...args); },
+  canConsume: (...args: Parameters<typeof inherited.canConsume>) => {
+   try { assertCurrentOwner(owner); return inherited.canConsume(...args); } catch { return false; }
+  }
+ });
+ const handle = Object.freeze({kind:'unwired_dispatch_owner' as const});
+ states.set(handle,{material,owner,context}); return handle;
+}
+export function inspectDispatchOwner(handle: DispatchOwner) {
+ const s = states.get(handle); if (!s) throw new Error('untrusted_dispatch_owner');
+ assertCurrentOwner(s.owner); return Object.freeze({material:s.material,owner:s.owner,context:s.context});
+}

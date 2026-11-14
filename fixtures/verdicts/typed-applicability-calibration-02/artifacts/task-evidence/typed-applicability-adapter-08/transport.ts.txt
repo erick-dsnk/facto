@@ -1,0 +1,31 @@
+// Own the returned reader so cancellation can reach it even while the client's
+// proxy reader is locked or an injected underlying read/cancel never settles.
+const ignore = (work: () => unknown) => { try { void Promise.resolve(work()).catch(() => undefined); } catch { /* cleanup cannot replace the original failure */ } };
+export function discardResponse(response: Response, reason: unknown): void {
+ ignore(() => response.body?.cancel(reason));
+}
+export function ownResponse(response: Response, signal: AbortSignal, assertOwner: () => void): Response {
+ if(!response.body)return response;
+ const reader=response.body.getReader();let ended=false;
+ let controller:ReadableStreamDefaultController<Uint8Array>;
+ const cleanup=()=>signal.removeEventListener('abort',onAbort);
+ const cancel=(reason:unknown)=>{ignore(()=>reader.cancel(reason));};
+ const onAbort=()=>{
+  if(ended)return;ended=true;cleanup();cancel(signal.reason);
+  try{controller.error(signal.reason);}catch{/* already closed */}
+ };
+ const body=new ReadableStream<Uint8Array>({
+  start(c){controller=c;signal.addEventListener('abort',onAbort,{once:true});if(signal.aborted)onAbort();},
+  async pull(c){
+   try{
+    assertOwner();const chunk=await reader.read();assertOwner();
+    if(ended)return;
+    if(chunk.done){ended=true;cleanup();reader.releaseLock();c.close();}else c.enqueue(chunk.value);
+   }catch(error){
+    if(ended)return;ended=true;cleanup();cancel(error);c.error(error);
+   }
+  },
+  cancel(reason){if(ended)return;ended=true;cleanup();cancel(reason);}
+ });
+ return new Response(body,{status:response.status,statusText:response.statusText,headers:response.headers});
+}

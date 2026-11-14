@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 1,
+  "role": "independent_second_annotation",
+  "annotator": "final_stack_review",
+  "createdAt": "2026-11-14T04:13:32.897446+00:00",
+  "inputSHA256": "8e150d2c358f4084cca6ca38b9075b76b238cacd310136c878d921c94b84135b",
+  "rubricSHA256": "56a0de7fe53b98a1d9ecc58db6df9f48cf77098ea600064bcb7296173368b6cd",
+  "firstLabelsViewed": false,
+  "providerOutputsViewed": false,
+  "keyedCalls": 0,
+  "annotations": [
+    {
+      "id": "O01",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O01a",
+          "substring": "On September 14, 2015 at 09:50:45 UTC, the LIGO Hanford, WA, and Livingston, LA,",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O01b",
+          "substring": "On September 14, 2015 at 09:50:45 UTC, the LIGO Hanford, WA, and Livingston, LA,",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "The full retained passages are verbatim identical, including distinctive method/statistical context; this is positive copy-family evidence despite mirror metadata.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O02",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O02a",
+          "substring": "On September 14, 2015 at 09:50:45 UTC, the LIGO Hanford, WA, and Livingston, LA,",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O02b",
+          "substring": "On September 14, 2015 at 09:50:45 UTC, the LIGO Hanford, WA, and Livingston, LA,",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "The full retained passages are verbatim identical, including distinctive method/statistical context; this is positive copy-family evidence despite mirror metadata.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O03",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O03a",
+          "substring": "Cedar Municipal Archive, gate register CR-84-12, entry dated 12 June 1984",
+          "span": {
+            "start": 0,
+            "end": 73,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O03b",
+          "substring": "Local Heritage Digest reproduces Cedar Municipal Archive gate register CR-84-12",
+          "span": {
+            "start": 0,
+            "end": 79,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Both explicitly identify the same numbered municipal register; the second states it reproduces that record.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O04",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O04a",
+          "substring": "Trial Vega report VG-01",
+          "span": {
+            "start": 0,
+            "end": 23,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O04b",
+          "substring": "This press release summarizes Trial Vega VG-01",
+          "span": {
+            "start": 0,
+            "end": 46,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "The second explicitly summarizes the very same identified trial record as the first; editorial restatement is not a new observation.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O05",
+      "label": "distinct_origins",
+      "supportingSpans": [
+        {
+          "evidenceId": "O05a",
+          "substring": "This entry was made at the control panel.",
+          "span": {
+            "start": 109,
+            "end": 150,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O05b",
+          "substring": "completed before access to municipal operating logs",
+          "span": {
+            "start": 192,
+            "end": 243,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Separate numbered operational log and field notebook, different observation positions/times, and explicit no-access sequence provide positive separate-record cues. Gate operation and downstream discharge are different observations; origin label does not settle exact factual scope.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O06",
+      "label": "distinct_origins",
+      "supportingSpans": [
+        {
+          "evidenceId": "O06a",
+          "substring": "Investigators collected and analyzed their own measurements.",
+          "span": {
+            "start": 111,
+            "end": 171,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O06b",
+          "substring": "participants or measurement records were reused.",
+          "span": {
+            "start": 159,
+            "end": 207,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Different identified trials, separate participants/sites/dates/sensors and explicit nonreuse of measurements supply positive distinct-observation cues.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O07",
+      "label": "unclear",
+      "supportingSpans": [
+        {
+          "evidenceId": "O07a",
+          "substring": "Cedar municipal history: the reservoir gate opened on 12 June 1984.",
+          "span": {
+            "start": 0,
+            "end": 67,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O07b",
+          "substring": "River county guide: the reservoir gate opened on 12 June 1984.",
+          "span": {
+            "start": 0,
+            "end": 62,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Different guide/history names and hosts do not identify underlying records or exclude copying. The repeated short factual phrase alone is too generic to establish common origin.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O08",
+      "label": "unclear",
+      "supportingSpans": [
+        {
+          "evidenceId": "O08a",
+          "substring": "citing studies without naming them",
+          "span": {
+            "start": 71,
+            "end": 105,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O08b",
+          "substring": "does not identify participants, source study or measurement records",
+          "span": {
+            "start": 100,
+            "end": 167,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Neither passage identifies underlying studies/data sufficiently to establish shared or separate observations; different result numbers and publishers do not suffice.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O09",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O09a",
+          "substring": "A search for the Standard Model Higgs boson in proton-proton collisions with the",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O09b",
+          "substring": "A search for the Standard Model Higgs boson in proton-proton collisions with the",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "The full retained passages are verbatim identical, including distinctive method/statistical context; this is positive copy-family evidence despite mirror metadata.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O10",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O10a",
+          "substring": "A search for the Standard Model Higgs boson in proton-proton collisions with the",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O10b",
+          "substring": "A search for the Standard Model Higgs boson in proton-proton collisions with the",
+          "span": {
+            "start": 0,
+            "end": 80,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "The full retained passages are verbatim identical, including distinctive method/statistical context; this is positive copy-family evidence despite mirror metadata.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O11",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O11a",
+          "substring": "Birch Municipal Archive, gate register BR-91-19, entry dated 19 August 1991",
+          "span": {
+            "start": 0,
+            "end": 75,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O11b",
+          "substring": "Local Heritage Digest reproduces Birch Municipal Archive gate register BR-91-19",
+          "span": {
+            "start": 0,
+            "end": 79,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Both explicitly identify the same numbered municipal register; the second states it reproduces that record.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O12",
+      "label": "common_origin",
+      "supportingSpans": [
+        {
+          "evidenceId": "O12a",
+          "substring": "Trial Orion report OR-11",
+          "span": {
+            "start": 0,
+            "end": 24,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O12b",
+          "substring": "This press release summarizes Trial Orion OR-11",
+          "span": {
+            "start": 0,
+            "end": 47,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "The second explicitly summarizes the very same identified trial record as the first; editorial restatement is not a new observation.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O13",
+      "label": "distinct_origins",
+      "supportingSpans": [
+        {
+          "evidenceId": "O13a",
+          "substring": "This entry was made at the control panel.",
+          "span": {
+            "start": 111,
+            "end": 152,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O13b",
+          "substring": "completed before access to municipal operating logs",
+          "span": {
+            "start": 194,
+            "end": 245,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Separate numbered operational log and field notebook, different observation positions/times, and explicit no-access sequence provide positive separate-record cues. Gate operation and downstream discharge are different observations; origin label does not settle exact factual scope.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O14",
+      "label": "distinct_origins",
+      "supportingSpans": [
+        {
+          "evidenceId": "O14a",
+          "substring": "Investigators collected and analyzed their own measurements.",
+          "span": {
+            "start": 112,
+            "end": 172,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O14b",
+          "substring": "participants or measurement records were reused.",
+          "span": {
+            "start": 162,
+            "end": 210,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Different identified trials, separate participants/sites/dates/sensors and explicit nonreuse of measurements supply positive distinct-observation cues.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O15",
+      "label": "unclear",
+      "supportingSpans": [
+        {
+          "evidenceId": "O15a",
+          "substring": "Birch municipal history: the reservoir gate opened on 19 August 1991.",
+          "span": {
+            "start": 0,
+            "end": 69,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O15b",
+          "substring": "River county guide: the reservoir gate opened on 19 August 1991.",
+          "span": {
+            "start": 0,
+            "end": 64,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Different guide/history names and hosts do not identify underlying records or exclude copying. The repeated short factual phrase alone is too generic to establish common origin.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    },
+    {
+      "id": "O16",
+      "label": "unclear",
+      "supportingSpans": [
+        {
+          "evidenceId": "O16a",
+          "substring": "citing studies without naming them",
+          "span": {
+            "start": 71,
+            "end": 105,
+            "unit": "unicode_code_points"
+          }
+        },
+        {
+          "evidenceId": "O16b",
+          "substring": "does not identify participants, source study or measurement records",
+          "span": {
+            "start": 100,
+            "end": 167,
+            "unit": "unicode_code_points"
+          }
+        }
+      ],
+      "rationale": "Neither passage identifies underlying studies/data sufficiently to establish shared or separate observations; different result numbers and publishers do not suffice.",
+      "ambiguityFlag": false,
+      "scopeQualification": "Synthetic retained provenance cues only; no actual worldwide independence or factual verdict is certified."
+    }
+  ],
+  "reviewNotes": [
+    "All pairs are explicit synthetic provenance controls or copied public text under synthetic metadata.",
+    "The two eight-pair groups repeat templates with changed identifiers; sixteen controls are not sixteen independent provenance strategies.",
+    "A distinct label requires explicit separate records/observations and nonreuse cues; hosts, publisher names, dates or different wording alone never suffice."
+  ]
+}

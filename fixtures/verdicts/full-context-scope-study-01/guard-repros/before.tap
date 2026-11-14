@@ -1,0 +1,48 @@
+{"mode":"fetch","settledWithin100msOfWallAbort":false,"networkCalls":0,"outputRoot":"/tmp/scope-wall-repro-w0RpM6"}
+✖ wall stop settles when injected fetch ignores abort (141.601483ms)
+{"mode":"reader","settledWithin100msOfWallAbort":false,"networkCalls":0,"outputRoot":"/tmp/scope-wall-repro-w0RpM6"}
+✖ wall stop settles when injected reader ignores abort (116.702285ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 889.362302
+
+✖ failing tests:
+
+test at task-evidence/scope-study-wall-repro/repro.test.ts:2:2404
+✖ wall stop settles when injected fetch ignores abort (141.601483ms)
+  AssertionError [ERR_ASSERTION]: Wall abort must settle the report even when injected transport ignores its signal
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/workspace/task-evidence/scope-study-wall-repro/repro.test.ts:20:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at task-evidence/scope-study-wall-repro/repro.test.ts:2:2404
+✖ wall stop settles when injected reader ignores abort (116.702285ms)
+  AssertionError [ERR_ASSERTION]: Wall abort must settle the report even when injected transport ignores its signal
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/workspace/task-evidence/scope-study-wall-repro/repro.test.ts:20:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

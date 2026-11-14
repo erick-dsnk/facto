@@ -54,18 +54,31 @@ function fixtureAnswers(request: JevRequest, sample: EvaluationCase): Record<str
 }
 
 /** Synthetic passages test policy mechanics; they are never presented as live evidence. */
-function fixtureJudgment(sample: EvaluationCase, checkedText: string): Judgment {
+function fixtureJudgment(sample: EvaluationCase, checkedText: string): Judgment & import('../../services/api/src/policy/assessment.js').JudgmentAssessment {
+  // These predeclared development facts have substantive synthetic records.
+  // Unknown fixture propositions do not inherit a positive quality assessment.
+  const records: [string, string] | undefined = checkedText === 'Helsinki is the capital of Finland.' ? [
+    'SYNTHETIC municipal register F-1 lists Helsinki as Finland’s national capital and records the national parliament and central government there.',
+    'SYNTHETIC independent geographic directory G-2 identifies the capital of Finland as Helsinki and describes its administrative role.',
+  ] : /^(?:I think )?Helsinki is the capital of Norway\.$/.test(checkedText) ? [
+    'SYNTHETIC national register N-1 lists Oslo as Norway’s sole national capital and identifies Helsinki as the capital of Finland.',
+    'SYNTHETIC independent diplomatic directory D-2 records Norway’s central government in Oslo and Finland’s capital in Helsinki.',
+  ] : checkedText === 'Lightning never strikes the same place twice.' ? [
+    'SYNTHETIC meteorological observation log L-1 records repeated lightning strikes at the same marked tower coordinates during separate storms.',
+    'SYNTHETIC independent university field experiment U-2 used tower-mounted sensors to record two lightning impacts at the identical location in one storm.',
+  ] : undefined;
+  const recipe = sample.evidenceFixture;
   const source = (index: number, stance: Evidence['stance']): Evidence => ({
     id: `synthetic-${index}`, url: index === 1 ? 'https://example.org/fixture' : 'https://example.net/fixture',
     title: `Synthetic policy passage ${index}`, publisher: null, publishedAt: null,
     retrievedAt: new Date(FIXED_NOW).toISOString(), contentBasis: 'page_text',
-    excerpt: index === 1
-      ? 'Synthetic fixture: the recorded measurements establish the specified proposition and its temporal scope.'
-      : 'Independent test passage: an archival account describes the relevant result, with a separate method and provenance.',
+    excerpt: records?.[index - 1] ?? (recipe === 'conflict'
+      ? index === 1 ? 'SYNTHETIC lab record T-1 reports successful device operation in every tested temperature range under its stated protocol.' : 'SYNTHETIC independent freezer experiment F-2 records failure of the device below minus ten degrees, contradicting operation in every range.'
+      : recipe === 'echo' ? 'SYNTHETIC manufacturer advertisement PR-1 asserts that its battery accessory doubles battery life without disclosing independently measured results.'
+      : 'SYNTHETIC unreviewed fixture assertion with no established substantive basis for this proposition.'),
     sourceGroup: index === 1 ? 'example.org' : 'example.net', echoGroup: null, sourceRole: 'secondary',
     directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance, stanceProbability: 0.95,
   });
-  const recipe = sample.evidenceFixture;
   const label: Verdict = recipe === 'none' ? 'insufficient_evidence' : recipe === 'contradict' ? 'contradicted' : recipe === 'omitted_condition' ? 'misleading' : 'supported';
   const evidence = recipe === 'none' ? [] : [source(1, label === 'contradicted' ? 'contradicts' : 'supports'), source(2, label === 'contradicted' ? 'contradicts' : 'supports')];
   if (recipe === 'conflict') evidence[1].stance = 'contradicts';
@@ -77,6 +90,12 @@ function fixtureJudgment(sample: EvaluationCase, checkedText: string): Judgment 
     checkedText, label, probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 0, [label]: 1 }, evidence,
     selectedEvidenceIds: evidence.map(record => record.id), misleadingReason: recipe === 'omitted_condition' ? 'omitted_condition' : null,
     misleadingEvidenceIds: recipe === 'omitted_condition' ? evidence.map(record => record.id) : [],
+    sourceAssessments: Object.fromEntries(evidence.map(record => [record.id, {
+      contentBasis: records || recipe === 'conflict' ? 'original_record' as const : recipe === 'echo' ? 'promotional' as const : 'unclear' as const,
+      confidence: .99,
+    }])),
+    claimRisk: { level: records ? 'ordinary' : 'unknown', confidence: .99 },
+    originAssessments: evidence.length === 2 ? [{ evidenceIds: [evidence[0].id, evidence[1].id], relationship: recipe === 'echo' ? 'common_origin' : records || recipe === 'conflict' ? 'distinct_origins' : 'unclear', confidence: .99 }] : [],
   };
 }
 

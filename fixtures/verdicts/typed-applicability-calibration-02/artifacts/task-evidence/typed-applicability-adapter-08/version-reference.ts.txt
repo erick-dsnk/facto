@@ -1,0 +1,30 @@
+// Narrow availability guard, never an operative-value or current-force proof.
+// Called only after genuine receipt/private snapshot/full audited-unit binding.
+const markers=/\b(current(?:ly)?|latest|now|today|present(?:ly)?)\b/i;
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const english=`\\d{1,2}\\s+(?:${months.join('|')})\\s+\\d{4}`;
+const phrase=new RegExp(`\\b(consolidation|version|edition|snapshot)\\s+current\\s+to\\s+(\\d{4}-\\d{2}-\\d{2}|${english})\\b`,'gi');
+const force=/\b(?:is|are|remains?|continues?(?:\s+to\s+be)?)\s+(?:(?:still|legally|currently)\s+)*(?:in\s+(?:force|effect)|operative|effective|binding|applicable)\b|\b(?:has|have|retains?|continues?\s+to\s+have)\s+(?:(?:legal|binding)\s+)?(?:force|effect)\b/i;
+function calendar(value:string):string|undefined{
+ let year:number,month:number,day:number;
+ if(/^\d{4}-\d{2}-\d{2}$/.test(value)){[year,month,day]=value.split('-').map(Number) as [number,number,number];}
+ else{const match=value.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);if(!match)return;day=Number(match[1]);month=months.findIndex(m=>m.toLowerCase()===match[2]!.toLowerCase())+1;year=Number(match[3]);}
+ if(year<1000||year>9999||month<1||month>12||day<1||day>31)return;
+ const date=new Date(Date.UTC(year,month-1,day));
+ if(date.getUTCFullYear()!==year||date.getUTCMonth()!==month-1||date.getUTCDate()!==day)return;
+ return date.toISOString().slice(0,10);
+}
+export function versionReferenceAvailability(exactClaim:string,trustedVersionId:string):
+ {allowed:true;mode:'no_current_marker'|'bound_historical_version';versionDate?:string;matchedSpan?:{start:number;end:number}}|{allowed:false;reason:string}{
+ if(!markers.test(exactClaim))return{allowed:true,mode:'no_current_marker'};
+ const found=[...exactClaim.matchAll(new RegExp(phrase))];
+ if(found.length!==1)return{allowed:false,reason:'current_version_proof_unavailable'};
+ const match=found[0]!, date=calendar(match[2]!);
+ const installed=trustedVersionId.split(';').map(part=>part.trim().match(/^(?:(?:consolidation|version|edition|snapshot)[- ]+)?current[- ]+to[- ]+(\d{4}-\d{2}-\d{2})$/i)).filter((m):m is RegExpMatchArray=>m!==null);
+ const installedCurrentMarkers=[...trustedVersionId.matchAll(/\bcurrent(?:ly)?\b/gi)];
+ if(!date||installed.length!==1||installedCurrentMarkers.length!==1||calendar(installed[0]![1]!)!==date)return{allowed:false,reason:'historical_version_date_mismatch_or_ambiguous'};
+ const start=match.index!,end=start+match[0].length;
+ const remaining=exactClaim.slice(0,start)+' '.repeat(end-start)+exactClaim.slice(end);
+ if(markers.test(remaining)||force.test(exactClaim))return{allowed:false,reason:'additional_present_force_or_current_marker'};
+ return{allowed:true,mode:'bound_historical_version',versionDate:date,matchedSpan:{start,end}};
+}

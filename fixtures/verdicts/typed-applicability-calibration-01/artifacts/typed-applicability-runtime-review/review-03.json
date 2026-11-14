@@ -1,0 +1,42 @@
+{
+  "decision": "APPROVED_no_remaining_P1_runtime_findings",
+  "scope": "unwired adapter03 runtime ownership, shared accounting, cancellation, absolute deadline and transport/body resource cleanup only",
+  "adapter03ManifestSHA256": "58821949482ebfe0e2eedafa51f4982dac9ec088ec9ef985c43d576e39fc9790",
+  "predecessors01And02AllManifestFilesUnchanged": true,
+  "adapter03AllFilesAndDependencyPinsVerified": true,
+  "questionAndIdentityContractUnchangedFrom02": true,
+  "independentValidation": {
+    "saved01CancellationAndBudgetProbesAgainst03": 2,
+    "saved02TransportResourceProbesAgainst03": 2,
+    "allSavedProbesPassed": 4,
+    "adapter03SuitePassed": 34
+  },
+  "observedOutcomes": [
+    "cancellation settles before signal-ignoring transport release;1chargedattempt/cache0",
+    "replacement budget blocks before dispatch;captured/current ledgers0",
+    "absolute timeout aborts actual local HTTP signal before late transport release;charged attempt remains1",
+    "owner rejection after headers cancels exact returned body;replacement ledger untouched",
+    "timeout during body read cancels underlying reader despite locked proxy and ignored signal",
+    "rejecting or never-settling cleanup cannot hide or delay original failure",
+    "late cancelled/expired release produces no usage/result/cache/notification commit",
+    "original/replacement request controllers remain unchanged by local transport teardown"
+  ],
+  "reviewedBoundaries": [
+    "opaque owner factory captures actual request budget and inherited reservation0..2",
+    "budget/controller/signal/session clock/acceptedAt identity and session/epoch/request/revision/admitted span/material/install currentness checked before dispatch and usage",
+    "one actual attempt;no hidden retry;no refund after charged failure",
+    "request body and question map still bound to actual serialization",
+    "local transport signal follows captured original request signal during owned work",
+    "proxy reader preserves response bytes/status/headers consumed by current client and removes abort listener at completion",
+    "no production integration, core RecordCapability, verdict, cache capability or source-authority activation"
+  ],
+  "limitations": [
+    "this is no approval of prospective semantic accuracy, corpus labels or prompt promotion",
+    "response cleanup for a deliberately non-cooperative injected reader is requested without blocking; code cannot force foreign cancellation implementation to finish",
+    "production integration must retain existing final pipeline current/deadline/commit and all policy/presentation gates",
+    "initial native graph pending path under separate seam02 review"
+  ],
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "productionEditsByReviewer": 0
+}

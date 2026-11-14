@@ -1,0 +1,49 @@
+import { constants } from 'node:fs';
+import { lstat, open, realpath } from 'node:fs/promises';
+import path from 'node:path';
+import { fail, LIMITS } from './types.js';
+/** Trusted bootstrap root only. Content-addressed descendants never come from source paths. */
+export async function assertRoot(root: string): Promise<string> {
+    if (!path.isAbsolute(root) || path.resolve(root) !== root || await realpath(root) !== root)
+        return fail('unsafe_root');
+    const parts = root.split(path.sep).filter(Boolean);
+    let current = path.parse(root).root;
+    for (const part of parts) {
+        current = path.join(current, part);
+        const s = await lstat(current);
+        if (s.isSymbolicLink() || !s.isDirectory())
+            return fail('unsafe_root');
+    }
+    return root;
+}
+export async function readBounded(root: string, relative: string, max = LIMITS.fileBytes): Promise<Buffer> {
+    if (!/^(?:manifest\.json|receipts\/[a-f0-9]{64}\.json|artifacts\/[a-f0-9]{64})$/.test(relative))
+        return fail('unsafe_artifact_path');
+    await assertRoot(root);
+    const target = path.join(root, relative);
+    const parent = path.dirname(target);
+    if (await realpath(parent) !== parent || (await lstat(parent)).isSymbolicLink())
+        return fail('symlink_parent');
+    const handle = await open(target, constants.O_RDONLY | constants.O_NOFOLLOW);
+    try {
+        const s = await handle.stat();
+        if (!s.isFile() || s.size > max)
+            return fail('artifact_size_limit');
+        const buf = Buffer.alloc(max + 1);
+        let offset = 0;
+        while (offset <= max) {
+            const n = await handle.read(buf, offset, max + 1 - offset, null);
+            if (!n.bytesRead)
+                break;
+            offset += n.bytesRead;
+        }
+        if (offset > max)
+            return fail('artifact_size_limit');
+        if (await realpath(target) !== target)
+            return fail('symlink_artifact');
+        return buf.subarray(0, offset);
+    }
+    finally {
+        await handle.close();
+    }
+}

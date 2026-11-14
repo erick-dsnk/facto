@@ -1,0 +1,55 @@
+{
+  "kind": "frozen_read_only_candidate08_only42_helper",
+  "createdAt": "2026-11-14T07:00:25.683701+00:00",
+  "frozenBeforeAnyCorrected08LiveOutputs": true,
+  "providerCalls": 0,
+  "sourceRequests": 0,
+  "scope": "Single declared candidate08-only42 execution; baseline N/A, no causal paired/07 pooling.",
+  "authorshipOverlap": "Prior calibration/companion/core/guard author; independent of corrected runner/scorer authorship, with previous07 outcome exposure.",
+  "files": {
+    "analysis.ts": {
+      "sha256": "f88ba5dbddee236b43699d8cdcef8b25fc01a9ebf6fb2977d7911e45e6dd8908",
+      "bytes": 14458
+    },
+    "analysis.test.ts": {
+      "sha256": "ede5e5b135d63abc008c325c9cd6658c3c3bf1a81dc1d93aa2b16e4f5937ba2a",
+      "bytes": 9313
+    },
+    "run.ts": {
+      "sha256": "2afaf0ac96412f10ccafad1dd7813632417c317890be54a6c34ae38a3c07397f",
+      "bytes": 1508
+    },
+    "package.json": {
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+      "bytes": 33
+    },
+    "README.md": {
+      "sha256": "2b9fba4f118bfeafead0055835b71af9c53c644ce0cb2e225a5740e893f557ae",
+      "bytes": 2773
+    },
+    "mock-tests.log": {
+      "sha256": "207d446eff13a15cb6d453e79ae53ec33c7a938573c44feb82d97ef566711b9a",
+      "bytes": 1073
+    },
+    "typecheck.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "mock-complete42-analysis.json": {
+      "sha256": "c62c5ff603ed49f426969c2d4867b24cce7fb36805fc2a2ccd3acad789ffa184",
+      "bytes": 721068
+    },
+    "mock-unknown-usage-analysis.json": {
+      "sha256": "2a48528e53681bfb19004cb6d8fdf03ebd2ecf799817f47e3684692364fb5faa",
+      "bytes": 91402
+    },
+    "mock-provider-failure-analysis.json": {
+      "sha256": "ccb29e7395c8e5313978e7943e4c1ba7749121a4487912c7a757b4909262679a",
+      "bytes": 69765
+    },
+    "validation.json": {
+      "sha256": "fb89d4691255ac270e3a1f985a1452ebb330c52484cda2df731792a996010bfc",
+      "bytes": 1664
+    }
+  }
+}

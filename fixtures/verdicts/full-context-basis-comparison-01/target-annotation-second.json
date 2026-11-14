@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "final_stack_review",
+  "createdAt": "2026-11-14T05:00:56.237281+00:00",
+  "inputSHA256": "65b461920fdc102c7250ffb783fa4e6363af3db519e4411f73a5a995168580fe",
+  "firstLabelsViewed": false,
+  "contextsOrStaleScoresViewedForThisAnnotation": false,
+  "candidatePromptViewed": false,
+  "providerOutputsViewedForThisDiagnostic": false,
+  "sourceBrowsingCalls": 0,
+  "providerCalls": 0,
+  "method": "Independent manual assessment of minimal anonymous target packet only. Earlier public project diagnostics were already known; this is an open predeclared-control annotation, not blind data construction.",
+  "annotations": [
+    {
+      "id": "T01",
+      "retainedId": "ev-eb0bdcebbd68c35e5e3a",
+      "contentBasis": "substantive",
+      "basisTypeDiagnostic": "substantive_secondary",
+      "exactScope": true,
+      "stanceDiagnostic": "contradicts",
+      "supportingSpan": "President James K. Polk signed the bill into law on August 10, 1846.",
+      "supportingOffsets": {
+        "start": 1932,
+        "end": 2000,
+        "unit": "unicode_code_points"
+      },
+      "labelReason": "Retained historical account identifies the establishing bill, select committee, House vote and presidential enactment. These concrete documentary events contradict creation by a British royal charter; the donor's British origin is distinct from legal establishment.",
+      "qualifierCaveat": "No underlying statute text or authenticity chain is supplied by this excerpt; a House-hosted historical account is not automatically the legislative act itself.",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T02",
+      "retainedId": "ev-d13ed099d4e84ec8c01d",
+      "contentBasis": "substantive",
+      "basisTypeDiagnostic": "original_record",
+      "exactScope": true,
+      "stanceDiagnostic": "supports",
+      "supportingSpan": "Adopted in London on 16 November 1945",
+      "supportingOffsets": {
+        "start": 90,
+        "end": 127,
+        "unit": "unicode_code_points"
+      },
+      "labelReason": "The retained constitution heading names its adoption place/date, identifies later amendments, and continues into actual constitutional preamble. The record content, rather than a title alone, directly addresses adoption.",
+      "qualifierCaveat": "Source authenticity/canonical version remains a separate check; do not substitute signed/conclusion/entry-into-force dates from other records.",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T03",
+      "retainedId": "ev-f00642f438bb08f87910",
+      "contentBasis": "substantive",
+      "basisTypeDiagnostic": "substantive_secondary",
+      "exactScope": null,
+      "stanceDiagnostic": "partial_support",
+      "supportingSpan": "first ever awarded Nobel Prize in December 1901",
+      "supportingOffsets": {
+        "start": 936,
+        "end": 983,
+        "unit": "unicode_code_points"
+      },
+      "labelReason": "The detailed professional chronology and historical account are substantive biographical content. It explicitly binds the person to Physics1901 and separately calls the reception the first ever awarded Nobel Prize; whether that broad ordinal is intended specifically as the first Physics award is not unambiguous.",
+      "qualifierCaveat": "Exclude from primary exact-scope/stance scoring: the ordinal refers broadly to Nobel Prize, not explicitly Physics, and cannot be repaired using outside award history or the hostname. Content-basis positivity does not certify the full checked proposition.",
+      "ambiguityFlag": true,
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "T04",
+      "retainedId": "ev-68dd14f72943d0b9f377",
+      "contentBasis": "substantive",
+      "basisTypeDiagnostic": "original_record",
+      "exactScope": true,
+      "stanceDiagnostic": "supports",
+      "supportingSpan": "the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom",
+      "supportingOffsets": {
+        "start": 128,
+        "end": 211,
+        "unit": "unicode_code_points"
+      },
+      "labelReason": "The retained normative definition supplies the atom, transition, fixed numerical frequency, Hz unit and explicit defining relation. No separate empirical method is needed to state the contents of a formal definition.",
+      "qualifierCaveat": "This labels content, not verified issuer authority or independent corroboration. Inspect exact numerical value and all physical qualifiers; do not generalize beyond the defined SI relation.",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T05",
+      "retainedId": "ev-c0111d21601a8a647c04",
+      "contentBasis": "insufficient",
+      "basisTypeDiagnostic": "unclear",
+      "exactScope": false,
+      "stanceDiagnostic": "unclear",
+      "supportingSpan": "Hydrobiologia. Published: 1991-03-01. 52 citations.",
+      "supportingOffsets": {
+        "start": 110,
+        "end": 161,
+        "unit": "unicode_code_points"
+      },
+      "labelReason": "Only paper title and bibliographic/author metrics are retained. They do not give study observations or an explicit geographic location for LakeBaikal. Shared Africa vocabulary in a comparison title is not direct location evidence.",
+      "qualifierCaveat": "Negative content control; neither support nor contradiction of the actual continent claim is established by citation prestige or by contrasting title nouns.",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T06",
+      "retainedId": "ev-fc10664bbaa8225ad8ac",
+      "contentBasis": "substantive",
+      "basisTypeDiagnostic": "original_record",
+      "exactScope": true,
+      "stanceDiagnostic": "supports",
+      "supportingSpan": "submitted | by Tanzania.",
+      "supportingOffsets": {
+        "start": 243,
+        "end": 267,
+        "unit": "unicode_code_points"
+      },
+      "labelReason": "The retained named WorldHeritage/IUCN nomination summary identifies the Tanzanian submission, describes the park/forest reserve on MountKilimanjaro, and gives location/juridical and identification fields. The document-country heading is attached to actual relevant record contents.",
+      "qualifierCaveat": "OCR errors are retained. This supports the bounded country-location relation, not precise coordinates, border extent, every height/species number, issuer authenticity or source independence.",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    }
+  ],
+  "limitations": [
+    "Content genre and substantive basis do not authenticate an issuer, confer authority or establish final verdict eligibility.",
+    "T03 preserves a real ordinal ambiguity and is excluded from primary scope/stance claims.",
+    "The negative DOI/citation fragment cannot acquire missing geographic facts or research findings from metadata."
+  ]
+}

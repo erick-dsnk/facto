@@ -1,0 +1,200 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import type { AcceptedClaim, Evidence, ProviderContext } from '/workspace/stack-20/packages/contracts/src/index.js';
+import { Session, type RequestRecord } from '/workspace/stack-20/services/api/src/runtime/session.js';
+import { AttemptBudget } from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import { loadInstalledManifest, resolveReceipt, retireInstalledManifest } from '../record-capability-prototype-02/src/manifest.js';
+import { loadSnapshot, snapshotState } from '../record-capability-prototype-02/src/snapshot.js';
+import { verifyCapability } from '../record-capability-prototype-02/src/evaluate.js';
+import { captureSelectionMaterial, inspectMaterial, captureRuntimeOwner } from '../capability-selection-seam-01/material.js';
+import { captureDispatchOwner, inspectDispatchOwner } from './runtime-owner.js';
+import { createApplicabilityAdapter, verifySemanticEligibility } from './adapter.js';
+import type { JevQuestion } from '/workspace/stack-20/services/api/src/providers/jev/client.js';
+const root = '/workspace/task-evidence/record-capability-prototype-02/installed';
+const pin = '7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4';
+async function setup(options: { clip?: boolean; current?: boolean; companions?: number; padding?: number; title?: string; idWidth?: number; reservedJev?: number; responseStatus?: number; blockFetch?: boolean; deadlineRemainingMs?: number; responseFactory?: (signal:AbortSignal)=>Response } = {}) {
+ const manifest = await loadInstalledManifest(root,pin), receipt = resolveReceipt(manifest,'RA03').receipt;
+ const artifact = await loadSnapshot(manifest,receipt.proofId), text = snapshotState(artifact,manifest).text;
+ const unit = receipt.units[0]!, excerpt = text.slice(unit.start,unit.end);
+ const exactClaim = options.current ? 'The latest Fiction prize winner was The Night Watchman.' : 'The 2021 Pulitzer Prize in Fiction winner was The Night Watchman by Louise Erdrich.';
+ const source: Evidence = { id:'target',url:receipt.canonicalURL,title:options.title ?? 'Award record',publisher:null,publishedAt:null,
+  retrievedAt:'2026-11-14T10:00:00Z',contentBasis:'page_text',excerpt:options.clip ? excerpt.slice(0,80) : excerpt,
+  sourceGroup:'pulitzer.org',echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated',stanceProbability:null };
+ const records = [source,...Array.from({length:options.companions ?? 0},(_,i)=>({...source,id:`control-${i}`+"i".repeat(options.idWidth ?? 0),url:`https://control-${i}.example.org/record`,sourceGroup:'example.org',
+  excerpt: ('Unrelated control record. '+ 'x'.repeat(options.padding ?? 0)).slice(0,2000) }))];
+ const material = captureSelectionMaterial({existing:records,incoming:[],checkedText:exactClaim});
+ let clock = Date.parse('2026-11-14T10:00:00Z'), generation = inspectMaterial(material).materialGeneration, install = pin;
+ const session = new Session(()=>clock);
+ const record: RequestRecord = {input:{schemaVersion:1,sessionId:session.id,sessionEpoch:session.epoch,requestId:'adapter-request',revision:1,
+  text:exactClaim,context:[],mode:'typed',language:'en',capturedAt:new Date(clock).toISOString(),capture:{source:'typed_fixture',segmentId:'adapter-fixture',confidence:1},userInitiated:true},
+  budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:options.deadlineRemainingMs===undefined ? clock : clock-10000+options.deadlineRemainingMs,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map(),fingerprint:'synthetic-test'};
+ session.requests.set(record.input.requestId,record);
+ const claim: AcceptedClaim = {id:'adapter-request-claim-0',originalText:exactClaim,checkedText:exactClaim,sourceSpan:{start:0,end:Array.from(exactClaim).length},
+  admission:{assertionStatus:'asserted',hasPracticalConsequence:null,matchedSelectedTopic:null,admissionAction:'check',reasonCode:'synthetic-public-test'}};
+ const dispatchOwner = captureDispatchOwner(material,{reservedJev:options.reservedJev ?? 0,session,record,claimSlot:0,admittedClaim:claim,readMaterialGeneration:()=>generation,readInstallGeneration:()=>install});
+ const owner=inspectDispatchOwner(dispatchOwner).owner;
+ let releaseTransport=()=>{};let startedResolve=()=>{};const started=new Promise<void>(resolve=>{startedResolve=resolve;});
+ const originalBudget=record.budget;
+ let transportSignal:AbortSignal|undefined;
+ let calls=0, lastBody=''; let choice='covered', score=.99, risk='ordinary', intervention=()=>{};
+ const fetcher: typeof fetch = async (_url,init) => {
+  calls++;transportSignal=init?.signal as AbortSignal;startedResolve();if(options.blockFetch)await new Promise<void>(resolve=>{releaseTransport=resolve;}); if(options.responseStatus) return new Response("transient",{status:options.responseStatus}); lastBody=String(init?.body); const request=JSON.parse(lastBody);
+  const answers=Object.fromEntries(Object.entries(request.questions as Record<string,JevQuestion>).map(([key,q])=>{
+   if(q.type==='noul') return [key,{noul:.99}];
+   const keys=Object.keys(q.criteria);
+   const selected = key.endsWith('_applicability') ? choice : key==='claim_risk' ? risk : key==='verdict' ? 'insufficient_evidence'
+    :key==='selected_evidence' ? 'none' : key.endsWith('_content_basis') ? 'original_record'
+    :key.endsWith('_stance') ? 'supports' : keys.includes('none') ? 'none' : keys[keys.length-1]!;
+   const p=key.endsWith('_applicability') ? score:.99;
+   return [key,{choice:selected,probabilities:Object.fromEntries(keys.map(k=>[k,k===selected?p:(1-p)/(keys.length-1)]))}];
+  }));
+  intervention(); if(options.responseFactory)return options.responseFactory(transportSignal!);return new Response(JSON.stringify({answers,usage:{input_tokens:123}}),{status:200});
+ };
+
+ const execute = () => createApplicabilityAdapter({manifest,dispatchOwner,semanticAsOf:'2026-11-14T06:00:00Z',bindings:[{receiptAlias:'RA03',artifact,evidenceId:'target'}],apiKey:'offline-test-key',fetch:fetcher})(claim);
+ return {manifest,artifact,material,owner,claim,record,session,dispatchOwner,execute,started,releaseTransport:()=>releaseTransport(),transportSignal:()=>transportSignal,originalBudget,stats:()=>({calls,consumed:record.budget.jev,lastBody}),
+  intervene:(fn:()=>void)=>{intervention=fn;},advance:()=>{clock+=10001;},cancel:()=>record.controller.abort(),
+  replaceMaterial:()=>{generation='new';},replaceInstall:()=>{install='new';},setAnswer:(c:string,p=.99)=>{choice=c;score=p;},setRisk:(v:string)=>{risk=v;}};
+}
+test('same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability',async()=>{
+ const s=await setup({companions:5}); const result=await s.execute();
+ assert.equal(s.stats().calls,1);assert.equal(s.stats().consumed,1);assert.equal(result.dispatch.questionMap.length,1);
+ assert.equal(JSON.parse(s.stats().lastBody).state.evidence.length,6);assert.equal(result.judgment.evidence.length,6);
+ assert.equal(result.assessmentContext!.originNodes.length,6);assert.equal(result.assessmentContext!.originLinks.length,15);
+ assert.equal(result.eligibility.length,1);const e=result.eligibility[0]!;
+ assert.equal(verifySemanticEligibility(e.token,{manifest:s.manifest,material:s.material,owner:s.owner,context:result.assessmentContext!}),true);
+ assert.equal(verifySemanticEligibility(structuredClone(e.token),{manifest:s.manifest,material:s.material,owner:s.owner,context:result.assessmentContext!}),false);
+ assert.equal(verifyCapability(e.token,{} as never),false);assert.equal(e.audit.recordCapabilityIssued,false);assert.equal(e.audit.temporalAuthorization,false);
+ const wire=JSON.parse(s.stats().lastBody);const descriptor=wire.state.record_applicability[0];
+ assert.deepEqual(Object.keys(descriptor).sort(),['question','relation','scopeDimensions','snapshotOnly','source','trusted_record_identity'].sort());
+ assert.equal('originNodes' in wire.state,false);assert.equal('assessment' in wire.state,false);assert.equal(JSON.stringify(descriptor).includes('Louise'),false);
+ assert.deepEqual(Object.keys(descriptor.trusted_record_identity).sort(),['canonicalDocumentId','versionId','documentClass','provenanceMode'].sort());
+ assert.equal(descriptor.trusted_record_identity.canonicalDocumentId,'Pulitzer-2021-Fiction-winner');
+ assert.equal(descriptor.trusted_record_identity.provenanceMode,'dated_reviewed_snapshot');
+});
+test('clipped entire-unit binding fails before ask but unchanged baseline still executes once',async()=>{
+ const s=await setup({clip:true});const r=await s.execute();assert.equal(r.eligibility.length,0);assert.equal(r.dispatch.questionMap.length,0);
+ assert.equal('record_applicability' in JSON.parse(s.stats().lastBody).state,false);assert.equal(s.stats().calls,1);
+ assert.match(r.unavailable[0]!.reason,/alignment/);
+});
+for(const [choice,p] of [['not_covered',.99],['uncertain',.99],['covered',.84]] as const) test(`fails closed on ${choice} ${p}`,async()=>{
+ const s=await setup();s.setAnswer(choice,p);assert.equal((await s.execute()).eligibility.length,0);
+});
+test('public/current wording cannot acquire freshness by covered answer',async()=>{
+ const s=await setup({current:true});const r=await s.execute();assert.equal(r.eligibility.length,0);assert.match(r.unavailable[0]!.reason,/current_version/);
+ assert.equal(r.dispatch.questionMap.length,0);
+});
+for(const change of ['advance','cancel','replaceMaterial','replaceInstall'] as const) test(`post-await ${change} invalidates response`,async()=>{
+ const s=await setup();s.intervene(s[change]);await assert.rejects(s.execute());assert.equal(s.stats().calls,1);
+});
+test('retirement invalidates a previously issued semantic token',async()=>{
+ const s=await setup();const r=await s.execute();retireInstalledManifest(s.manifest);
+ assert.equal(verifySemanticEligibility(r.eligibility[0]!.token,{manifest:s.manifest,material:s.material,owner:s.owner,context:r.assessmentContext!}),false);
+});
+test('same-ID companion and assessment changes do not validate token',async()=>{
+ const s=await setup({companions:1});const r=await s.execute();const changed=structuredClone(r.assessmentContext!);
+ changed.retainedRecords[1]!.excerpt='same ID different material';
+ assert.equal(verifySemanticEligibility(r.eligibility[0]!.token,{manifest:s.manifest,material:s.material,owner:s.owner,context:changed}),false);
+ const changedAssessment=structuredClone(r.assessmentContext!);changedAssessment.assessment.state.changed=true;
+ assert.equal(verifySemanticEligibility(r.eligibility[0]!.token,{manifest:s.manifest,material:s.material,owner:s.owner,context:changedAssessment}),false);
+});
+test('nonordinary risk never gains semantic eligibility even with covered answer',async()=>{
+ const s=await setup();s.setRisk('health_safety');assert.equal((await s.execute()).eligibility.length,0);
+});
+test('prototype width mismatch preserves exact baseline title and disables optional route',async()=>{
+ const s=await setup({title:'T'.repeat(2547)});const r=await s.execute();assert.equal(r.eligibility.length,0);
+ assert.equal(r.judgment.evidence[0]!.title.length,2547);assert.match(r.unavailable[0]!.reason,/prototype_material_unavailable/);
+});
+
+test('maximal legal companion material preflights actual serialization without dropping any source',async()=>{
+ const s=await setup({companions:5,padding:2000,idWidth:100});const r=await s.execute();
+ assert.equal(JSON.parse(s.stats().lastBody).state.evidence.length,6);
+ assert.ok(r.dispatch.actualBytes<=65536);assert.equal(s.stats().calls,1);
+ console.log('REQUEST_BYTES',JSON.stringify({baseline:r.dispatch.baselineBytes,augmentation:r.dispatch.augmentationBytes,actual:r.dispatch.actualBytes}));
+});
+
+test('over-limit augmentation preserves baseline byte for byte and sends no optional item',async()=>{
+ const s=await setup({companions:5,padding:2000,idWidth:110});const r=await s.execute();
+ assert.equal(r.dispatch.augmentationBytes,0);assert.equal(r.dispatch.questionMap.length,0);assert.equal(r.eligibility.length,0);
+ assert.equal(r.dispatch.actualBytes,r.dispatch.baselineBytes);assert.ok(r.dispatch.actualBytes<=65536);
+ assert.ok(r.unavailable.some(u=>u.reason==='augmentation_request_too_large'));
+ assert.equal(JSON.parse(s.stats().lastBody).state.evidence.length,6);assert.equal(s.stats().calls,1);
+});
+
+test('shared inherited exhausted allowance prevents any HTTP attempt',async()=>{
+ const s=await setup();s.record.budget.jev=3;await assert.rejects(s.execute(),/jev_budget_exhausted/);assert.equal(s.stats().calls,0);
+});
+test('actual response token accounting charges the same request budget',async()=>{
+ const s=await setup();await s.execute();assert.equal(s.record.budget.inputTokens,123);assert.equal(s.record.budget.jev,1);
+});
+
+test('explicit second-claim reservation cannot be stolen by optional question',async()=>{
+ const s=await setup({reservedJev:2});s.record.budget.jev=1;await assert.rejects(s.execute(),/jev_budget_exhausted/);assert.equal(s.stats().calls,0);
+});
+test('stale owner is rechecked on every consume, not just factory creation',async()=>{
+ const s=await setup();const ctx=inspectDispatchOwner(s.dispatchOwner).context;s.replaceInstall();
+ assert.equal(ctx.canConsume('jev'),false);assert.throws(()=>ctx.consume('jev'),/stale_install_generation/);assert.equal(s.record.budget.jev,0);
+});
+test('transient HTTP failure is terminal with one actual attempt and no hidden allowance',async()=>{
+ const s=await setup({responseStatus:429});await assert.rejects(s.execute());assert.equal(s.stats().calls,1);assert.equal(s.record.budget.jev,1);
+});
+test('forged or serialized dispatch-owner handle is rejected before ask',async()=>{
+ const s=await setup();assert.throws(()=>inspectDispatchOwner(structuredClone(s.dispatchOwner)),/untrusted_dispatch_owner/);
+ assert.throws(()=>inspectDispatchOwner({kind:'unwired_dispatch_owner'}),/untrusted_dispatch_owner/);
+});
+
+const settleWithin = async<T>(promise:Promise<T>,ms=200):Promise<T>=>{
+ let timer:ReturnType<typeof setTimeout>|undefined;try{return await Promise.race([promise,new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(Error('did_not_settle')),ms);})]);}finally{clearTimeout(timer);}
+};
+test('hung transport settles on Session.cancel before release; late result creates no answer/usage/commit',async()=>{
+ const s=await setup({blockFetch:true});let fulfilled=0;const pending=s.execute().then(r=>{fulfilled++;return r;});
+ const rejected=assert.rejects(pending,/cancelled|stale|invalidated/);await s.started;s.session.cancel(s.record.input.requestId);
+ await settleWithin(rejected);assert.equal(fulfilled,0);assert.equal(s.originalBudget.jev,1);assert.equal(s.originalBudget.inputTokens,0);
+ const results=s.record.results.size,cache=s.session.cache.size,events=s.session.sequence;
+ s.releaseTransport();await new Promise(resolve=>setTimeout(resolve,20));
+ assert.equal(fulfilled,0);assert.equal(s.originalBudget.inputTokens,0);assert.equal(s.record.results.size,results);assert.equal(s.session.cache.size,cache);assert.equal(s.session.sequence,events);
+});
+test('hung transport settles at inherited absolute deadline even if injected transport ignores signal',async()=>{
+ const s=await setup({blockFetch:true,deadlineRemainingMs:5});const pending=s.execute();const rejected=assert.rejects(pending,/timeout/);
+ await s.started;await settleWithin(rejected);assert.equal(s.originalBudget.jev,1);s.releaseTransport();
+ await new Promise(resolve=>setTimeout(resolve,20));assert.equal(s.originalBudget.inputTokens,0);
+});
+for(const resource of ['budget','controller','clock','acceptedAt'] as const)test(`captured ${resource} replacement fails before any dispatch`,async()=>{
+ const s=await setup();if(resource==='budget')s.record.budget=new AttemptBudget();else if(resource==='controller')s.record.controller=new AbortController();
+ else if(resource==='clock')s.session.now=()=>Date.now();else s.record.acceptedAt++;
+ await assert.rejects(s.execute(),/replaced/);assert.equal(s.stats().calls,0);assert.equal(s.originalBudget.jev,0);
+});
+test('budget replaced during hung transport cannot receive usage or validate old response',async()=>{
+ const s=await setup({blockFetch:true});const pending=s.execute();const rejected=assert.rejects(pending,/replaced|unavailable/);
+ await s.started;s.record.budget=new AttemptBudget();s.releaseTransport();await settleWithin(rejected);
+ assert.equal(s.originalBudget.jev,1);assert.equal(s.originalBudget.inputTokens,0);assert.equal(s.record.budget.jev,0);assert.equal(s.record.budget.inputTokens,0);
+});
+
+test('deadline aborts actual local transport signal without aborting pinned request controller',async()=>{
+ const s=await setup({blockFetch:true,deadlineRemainingMs:5});const pending=s.execute();const rejected=assert.rejects(pending,/timeout/);
+ await s.started;await settleWithin(rejected);assert.equal(s.transportSignal()!.aborted,true);assert.equal(s.record.controller.signal.aborted,false);
+ s.releaseTransport();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(s.originalBudget.inputTokens,0);
+});
+test('deadline during ignored-signal body read cancels owned underlying reader and settles',async()=>{
+ let cancelled=0;const s=await setup({deadlineRemainingMs:10,responseFactory:()=>new Response(new ReadableStream<Uint8Array>({
+  pull(){return new Promise(()=>{});},cancel(){cancelled++;}
+ }))});const pending=s.execute();const rejected=assert.rejects(pending,/timeout/);await s.started;await settleWithin(rejected);
+ assert.equal(s.transportSignal()!.aborted,true);assert.equal(cancelled,1);assert.equal(s.originalBudget.inputTokens,0);
+});
+for(const cleanup of ['reject','hang'] as const)test(`postheaders owner failure cancels exact returned body; ${cleanup} cleanup cannot mask or delay failure`,async()=>{
+ let cancelled=0;const s=await setup({responseFactory:()=>new Response(new ReadableStream<Uint8Array>({cancel(){cancelled++;return cleanup==='hang'?new Promise(()=>{}):Promise.reject(Error('cleanup_failed'));}}))});
+ s.intervene(s.replaceMaterial);await settleWithin(assert.rejects(s.execute(),/stale_material_generation/));
+ assert.equal(cancelled,1);assert.equal(s.transportSignal()!.aborted,true);assert.equal(s.originalBudget.jev,1);assert.equal(s.originalBudget.inputTokens,0);
+});
+test('owner failure aborts local transport but never a replacement controller',async()=>{
+ let cancelled=0;const s=await setup({responseFactory:()=>new Response(new ReadableStream<Uint8Array>({cancel(){cancelled++;}}))});
+ const pinned=s.record.controller;s.intervene(()=>{s.record.controller=new AbortController();});
+ await settleWithin(assert.rejects(s.execute(),/request_controller_replaced/));assert.equal(s.transportSignal()!.aborted,true);
+ assert.equal(pinned.signal.aborted,false);assert.equal(s.record.controller.signal.aborted,false);assert.equal(cancelled,1);
+});
+
+test('declared semantic anchor is serialized as interpretation context while runtime clock remains separate',async()=>{
+ const s=await setup();const r=await s.execute();const state=JSON.parse(s.stats().lastBody).state;
+ assert.equal(state.semantic_as_of,'2026-11-14T06:00:00Z');assert.notEqual(state.semantic_as_of,new Date(s.session.now()).toISOString());
+ assert.equal(r.judgment.checkedText,s.claim.checkedText);assert.equal(r.eligibility[0]!.audit.temporalAuthorization,false);
+});
