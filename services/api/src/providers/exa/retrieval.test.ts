@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { PipelineError, type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
+import { AttemptBudget } from '../../runtime/budget.js';
 import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE } from '../../evidence/normalize.js';
 
 const checkedText = 'The Eiffel Tower opened in 1889.';
@@ -30,6 +31,43 @@ describe('Exa retrieval boundary', () => {
     expect(result[0].excerpt).toBe(excerpt);
   });
 
+  it('uses only the exact public span in the alternate query and keeps span validation', async () => {
+    const { fake, context } = setup();
+    const retrieve = createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' });
+    await retrieve(claim, context);
+    expect(fake.search).toHaveBeenCalledWith(buildAlternateQuery(checkedText, 'balanced_evidence'), {
+      type: 'auto', numResults: 8, objective: RETRIEVAL_OBJECTIVE,
+      contents: { highlights: { query: buildHighlightQuery(checkedText), maxCharacters: 4000 } },
+    });
+    expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
+    await expect(retrieve({ ...claim, checkedText: 'Rewritten.' }, context)).rejects.toThrow('claim_not_admitted');
+    expect(fake.search).toHaveBeenCalledTimes(1);
+  });
+
+  it('enriches complete subject-matching highlights only on the policy-approved alternate pass', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: [
+        { url: 'https://unrelated.org/garden', highlights: ['A report on gardening, seasonal planting, soil and greenhouse conditions for the community.'] },
+        ...Array.from({ length: 4 }, (_, i) => ({ url: `https://source${i}.org/history`, highlights: [excerpt] })),
+      ] })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: `${excerpt} Archive record A-17 documents the inauguration.` }] })),
+    };
+    const { context } = setup(fake);
+    await createRetriever({ clientFactory: () => fake })(claim, context);
+    expect(fake.getContents).not.toHaveBeenCalled();
+    const enriched = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.getContents.mock.calls.map(call => call[0][0])).toEqual(['https://source0.org/history', 'https://source1.org/history', 'https://source2.org/history']);
+    expect(enriched.filter(source => source.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('does not let alternate enrichment exceed the shared contents allowance', async () => {
+    const { fake, context } = setup();
+    const exhausted = { ...context, canConsume: () => false };
+    const result = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, exhausted);
+    expect(fake.getContents).not.toHaveBeenCalled();
+    expect(result[0].contentBasis).toBe('highlight');
+  });
+
   it('rejects non-admitted or rewritten text before a provider call', async () => {
     const { retrieve, fake, context } = setup();
     await expect(retrieve({ ...claim, checkedText: 'Different claim.' }, context)).rejects.toThrow('claim_not_admitted');
@@ -48,6 +86,33 @@ describe('Exa retrieval boundary', () => {
     expect(fake.getContents.mock.calls[0][0]).toEqual(['https://source0.org/fact']);
     expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
     expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('keeps search and fetched evidence when a contents retry spends the shared budget before the next candidate', async () => {
+    const urls = ['https://source0.org/fact', 'https://source1.org/fact', 'https://source2.org/fact'];
+    let contentRequests = 0;
+    const fetcher = vi.fn<typeof fetch>(async (_input, init) => {
+      const endpoint = new URL(String(_input)).pathname;
+      if (endpoint === '/search') return new Response(JSON.stringify({ results: urls.map(url => ({ url, highlights: ['1889'] })) }));
+      contentRequests++;
+      if (contentRequests === 1) return new Response('temporary upstream error', { status: 503, headers: { 'retry-after': '0' } });
+      const body = JSON.parse(String(init?.body)) as { urls: string[] };
+      return new Response(JSON.stringify({ results: [{ url: body.urls[0], text: excerpt }] }));
+    });
+    const controller = new AbortController();
+    const now = () => Date.parse('2026-11-14T10:00:00Z');
+    const budget = new AttemptBudget();
+    const context = budget.context(controller.signal, now, now() + 10_000);
+    const retrieve = createRetriever({ apiKey: 'test-key', fetch: fetcher });
+
+    const result = await retrieve(claim, context);
+
+    expect(contentRequests).toBe(3); // failed attempt, its retry, then one more page
+    expect(fetcher).toHaveBeenCalledTimes(4); // search plus exactly the shared three contents attempts
+    expect(budget.contents.get(claim.id)).toBe(3);
+    expect(result).toHaveLength(3); // includes the untouched initial highlight for candidate three
+    expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(2);
+    expect(result.some(item => item.url === urls[2] && item.excerpt === '1889')).toBe(true);
   });
 
   it('does not spend the third contents request on a page beyond the retained domain cap', async () => {
@@ -192,8 +257,10 @@ describe('Exa retrieval boundary', () => {
       ? new Response(JSON.stringify({ results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }))
       : new Response('Provider unavailable', { status }));
     await expect(createRetriever({ apiKey: 'test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow(code);
-    expect(fetcher).toHaveBeenCalledTimes(2);
-    expect(calls).toEqual(['search', 'contents']);
+    // Runtime transport retries transient provider failures once; target-page
+    // fallback must neither absorb that error nor hide the extra paid attempt.
+    expect(fetcher).toHaveBeenCalledTimes(status === 401 ? 2 : 3);
+    expect(calls).toEqual(status === 401 ? ['search', 'contents'] : ['search', 'contents', 'contents']);
   });
 
   it('propagates request cancellation even when a provider returns a recognized target timeout', async () => {

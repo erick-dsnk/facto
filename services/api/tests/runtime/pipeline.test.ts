@@ -117,6 +117,25 @@ describe('bounded pipeline runtime', () => {
     expect(session.notifications).toHaveLength(1);
   });
 
+  it('suppresses repeat notifications across irrelevant context and mode changes while preserving qualifier differences', async () => {
+    const adapters = topicAdapters(); const retrieve = vi.spyOn(adapters, 'retrieve');
+    const { session, runtime, events } = setup(adapters);
+    session.preferences = { muted: false, automaticNotifications: true, selectedTopics: ['Lightning'] };
+    const text = 'Lightning never strikes the same place twice.';
+    runtime.submit(session, input(session, 'first', { text, context: ['We are discussing weather.'], userInitiated: false })); await flush();
+    await vi.advanceTimersByTimeAsync(4_000);
+    runtime.submit(session, input(session, 'second', { text, context: ['We are discussing science.'], mode: 'audio', capture: { source: 'recorded_fixture', segmentId: 'seg', confidence: 1 }, userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').map(event => (event.payload as { presentation: { action: string }; cached: boolean }).presentation.action)).toEqual(['notify', 'silent']);
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { reasonCode: 'duplicate' } });
+    expect(retrieve).toHaveBeenCalledTimes(2); // factual cache remains context/mode-sensitive
+    await vi.advanceTimersByTimeAsync(4_000);
+    runtime.submit(session, input(session, 'qualifier', { text: 'Lightning never strikes the same place twice in 1980.', userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { action: 'notify' } });
+    runtime.submit(session, input(session, 'manual-repeat', { text, userInitiated: true })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { action: 'respond' } });
+    expect(session.notifications).toHaveLength(2);
+  });
+
   it.each([true, false])('uses preferences current at completion when a topic is enabled=%s during provider work', async enabled => {
     const adapters = topicAdapters(); const original = adapters.retrieve;
     let resolve!: (value: Awaited<ReturnType<PipelineAdapters['retrieve']>>) => void;
@@ -170,6 +189,22 @@ describe('bounded pipeline runtime', () => {
     for (let i = 0; i < 5; i++) runtime.submit(b, input(b, `b${i}`));
     expect(classify).toHaveBeenCalledTimes(4);
     a.pause(); b.pause(); await flush();
+  });
+
+  it('includes queue wait in result duration while stage timing starts at provider work', async () => {
+    const adapters = fixtureAdapters(); const classify = adapters.classify;
+    adapters.classify = (body, context) => body.requestId.startsWith('block') ? new Promise(() => undefined) : classify(body, context);
+    const session = new Session(Date.now); const events: EventEnvelope[] = []; session.listeners.add(event => events.push(event));
+    let mono = 0; const runtime = new PipelineRuntime(adapters, Date.now, () => mono);
+    runtime.submit(session, input(session, 'block-a')); runtime.submit(session, input(session, 'block-b'));
+    mono = 250; runtime.submit(session, input(session, 'queued'));
+    mono = 5_250; session.cancel('block-a'); await flush();
+    const result = events.find(event => event.requestId === 'queued' && event.type === 'claim.result')?.payload as { durationMs: number } | undefined;
+    expect(result?.durationMs).toBe(5_000);
+    const metric = runtime.metrics.find(item => item.searchAttempts === 1);
+    expect(metric?.durationMs).toBe(5_000);
+    expect(metric?.stageMs.admission).toBe(0);
+    session.cancel('block-b'); await flush();
   });
 
   it('waits without retrieval and expires as a non-verdict', async () => {
