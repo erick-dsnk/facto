@@ -25,9 +25,13 @@ targets:
     platform: iOS
     sources:
       - path: GlassesLab
-        # Placeholder files that keep empty module folders in git.
         excludes:
+          # Placeholder files that keep empty module folders in git.
           - "**/.keep"
+          # Added back below as plain resources, so the font lands at the bundle root.
+          - "Resources/Fonts/**"
+      - path: GlassesLab/Resources/Fonts
+        buildPhase: resources
     scheme:
       testTargets:
         - GlassesLabTests
@@ -36,6 +40,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.davidvasilescu.junction.glasseslab
         CODE_SIGN_ENTITLEMENTS: GlassesLab/GlassesLab.entitlements
         TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     dependencies:
       - package: MWDAT
         product: MWDATCore
@@ -48,7 +53,9 @@ targets:
     info:
       path: GlassesLab/Info.plist
       properties:
-        CFBundleDisplayName: Glasses Lab
+        CFBundleDisplayName: Facto
+        # Onest (SIL OFL 1.1), the website's font. Licence: Resources/Fonts/Onest-OFL.txt.
+        UIAppFonts: [Onest-Variable.ttf]
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         CFBundleURLTypes:
@@ -67,11 +74,11 @@ targets:
           - processing
           - bluetooth-central
           - bluetooth-peripheral
-        NSBluetoothAlwaysUsageDescription: Needed to connect to Meta AI glasses.
-        NSLocalNetworkUsageDescription: This lets your phone find and connect to your glasses over Wi-Fi.
+        NSBluetoothAlwaysUsageDescription: Facto connects to your Meta glasses over Bluetooth.
+        NSLocalNetworkUsageDescription: Facto finds your glasses on Wi-Fi to use their camera and mic.
         NSBonjourServices: [_bonjour._tcp]
-        NSCameraUsageDescription: The simulated glasses use the phone camera as their video feed.
-        NSMicrophoneUsageDescription: Listens through the glasses microphone only while you run an audio check.
+        NSCameraUsageDescription: Simulated glasses use the phone camera as their video feed.
+        NSMicrophoneUsageDescription: Used only for the glasses mic test in Developer settings.
 
   GlassesLabTests:
     type: bundle.unit-test

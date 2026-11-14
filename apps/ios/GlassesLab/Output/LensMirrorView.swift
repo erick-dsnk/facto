@@ -60,9 +60,11 @@ struct LensMirrorCanvas: View {
             .font(.system(size: DisplayMetrics.metaSize))
             .foregroundStyle(DisplayMetrics.secondary)
         }
-        Text(card.hint)
-          .font(.system(size: DisplayMetrics.metaSize))
-          .foregroundStyle(DisplayMetrics.secondary)
+        if let detail = card.detail {
+          Text(detail)
+            .font(.system(size: DisplayMetrics.metaSize))
+            .foregroundStyle(DisplayMetrics.secondary)
+        }
       }
       .foregroundStyle(DisplayMetrics.primary)
       .lineLimit(nil)
@@ -101,8 +103,8 @@ private enum DisplayMetrics {
 
 #Preview("Supported") {
   LensMirrorCanvas(card: ResultCard(
-    kind: .supported, verdictWord: "Supported", excerpt: "The Eiffel Tower opened in 1889.",
-    sourceName: "Eiffel Tower", hint: "Details on your phone"
+    kind: .supported, verdictWord: "True", detail: "2 of 3 sources agree", excerpt: "The Eiffel Tower opened in 1889.",
+    quote: nil, sourceName: "toureiffel.paris", spokenLine: "True. 2 of 3 sources agree, including toureiffel.paris."
   ))
   .padding()
 }

@@ -240,7 +240,10 @@ final class ContractsV1Tests: XCTestCase {
     XCTAssertEqual(secrets.read(BackendConfig.joinCodeKey), "demo-code")
     XCTAssertEqual(loaded.streamURL(sessionId: "abc")?.absoluteString, "wss://api.example.com/v1/sessions/abc/stream")
     XCTAssertEqual(loaded.checksURL(sessionId: "abc").absoluteString, "https://api.example.com/v1/sessions/abc/checks")
-    XCTAssertEqual(BackendConfig().streamURL(sessionId: "abc")?.absoluteString, "ws://localhost:3000/v1/sessions/abc/stream")
+    XCTAssertEqual(
+      BackendConfig().streamURL(sessionId: "abc")?.absoluteString,
+      "wss://actually-api.lively-voice-2bf8.workers.dev/v1/sessions/abc/stream"
+    )
 
     defaults.set("ftp://nope", forKey: BackendConfig.baseURLKey)
     XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).baseURL, BackendConfig.defaultBaseURL)
@@ -251,5 +254,36 @@ final class ContractsV1Tests: XCTestCase {
     XCTAssertEqual(BackendConfig.load(from: defaults, secrets: fresh).joinCode, "old-code")
     XCTAssertNil(defaults.string(forKey: BackendConfig.joinCodeKey))
     XCTAssertEqual(fresh.read(BackendConfig.joinCodeKey), "old-code")
+  }
+
+  func testOneTimeMigrationDropsLocalhostAndRailwayURLs() throws {
+    func freshDefaults() throws -> (UserDefaults, String) {
+      let suite = "ContractsV1Tests-migration-\(UUID().uuidString)"
+      return (try XCTUnwrap(UserDefaults(suiteName: suite)), suite)
+    }
+    let secrets = MemorySecretStore()
+
+    for old in ["http://localhost:3000", "https://glasses-api-production.up.railway.app", " http://LOCALHOST:8080 "] {
+      let (defaults, suite) = try freshDefaults()
+      defer { defaults.removePersistentDomain(forName: suite) }
+      defaults.set(old, forKey: BackendConfig.baseURLKey)
+      XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).baseURL, BackendConfig.defaultBaseURL, old)
+      XCTAssertNil(defaults.string(forKey: BackendConfig.baseURLKey), old)
+      XCTAssertTrue(defaults.bool(forKey: BackendConfig.baseURLMigratedKey))
+    }
+
+    // A laptop on the LAN stays.
+    let (lan, lanSuite) = try freshDefaults()
+    defer { lan.removePersistentDomain(forName: lanSuite) }
+    lan.set("http://192.168.1.20:3000", forKey: BackendConfig.baseURLKey)
+    XCTAssertEqual(BackendConfig.load(from: lan, secrets: secrets).baseURL.absoluteString, "http://192.168.1.20:3000")
+
+    // The migration runs once: a localhost URL saved afterwards is the user's choice.
+    let (once, onceSuite) = try freshDefaults()
+    defer { once.removePersistentDomain(forName: onceSuite) }
+    _ = BackendConfig.load(from: once, secrets: secrets)
+    once.set("http://localhost:3000", forKey: BackendConfig.baseURLKey)
+    XCTAssertEqual(BackendConfig.load(from: once, secrets: secrets).baseURL.absoluteString, "http://localhost:3000")
+    XCTAssertEqual(BackendConfig.load(from: once, secrets: secrets).baseURL.absoluteString, "http://localhost:3000")
   }
 }

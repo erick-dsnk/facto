@@ -2,8 +2,8 @@ import Foundation
 import Observation
 import os
 
-/// The one active card. The lens (via DisplayCardBuilder) and the phone mirror
-/// (LensMirrorView) both render from this model, so they always match.
+/// The one active card. The lens (via DisplayCardBuilder) and the phone preview both render
+/// from this model, so they always match.
 @Observable
 @MainActor
 final class LensCardViewModel {
@@ -26,7 +26,8 @@ final class LensCardViewModel {
 
 /// Turns check outcomes into speech, chimes, cards and history (decisions 7 and 11).
 ///
-/// - `respond`: speaks the plan's line plus the best source (never a URL) and shows a card.
+/// - `respond`: speaks the card's line ("False. 3 of 3 sources disagree, including Live
+///   Science.", never a URL) and shows the card.
 ///   `playbackStarted` / `playbackEnded` wrap the speech so the backend ignores our voice.
 /// - `notify`: a quiet chime plus a card. No playback reporting, so listening continues.
 /// - `silent` (and any action this build does not know): history only. Never promoted.
@@ -92,9 +93,8 @@ final class ResultPresenter: ResultPresenting {
     }
     let outcome = OutputOutcome.verdict(result.verdict)
     let card = ResultCard(result: result)
-    let line = ResultWording.spokenLine(for: outcome, sourceName: card.sourceName)
     deliver(
-      outcome: outcome, result: result, card: card, line: line, presentation: presentation,
+      outcome: outcome, result: result, card: card, line: card.spokenLine, presentation: presentation,
       userInitiated: userInitiated, identity: identity
     )
   }
@@ -119,7 +119,7 @@ final class ResultPresenter: ResultPresenting {
     )
     let card = ResultCard(outcome: outcome, claimText: claimText)
     deliver(
-      outcome: outcome, result: nil, card: card, line: ResultWording.line(for: outcome), presentation: presentation,
+      outcome: outcome, result: nil, card: card, line: card.spokenLine, presentation: presentation,
       userInitiated: userInitiated, identity: identity
     )
   }
@@ -136,7 +136,7 @@ final class ResultPresenter: ResultPresenting {
     }
     debugLog.log("present.repeat", ["repeated": true, "kind": entry.card.kind.rawValue])
     lens.show(entry.card)
-    speak(ResultWording.spokenLine(for: entry.outcome, sourceName: entry.card.sourceName))
+    speak(entry.card.spokenLine)
     return true
   }
 
