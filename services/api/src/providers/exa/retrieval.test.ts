@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
+import { buildAlternateQuery } from '../../evidence/normalize.js';
 
 const checkedText = 'The Eiffel Tower opened in 1889.';
 const originalText = `My salary is private. ${checkedText}`;
@@ -47,6 +48,52 @@ describe('Exa retrieval boundary', () => {
     expect(fake.getContents.mock.calls[0][0]).toEqual(['https://source0.org/fact']);
     expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
     expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('fetches long highlights that omit dates, negation, attribution or qualifications', async () => {
+    const cases = [
+      { claim: 'The Eiffel Tower opened in 1889.', highlight: 'A detailed history describes when the Eiffel Tower opened and the public ceremony held at the site.' },
+      { claim: 'The Eiffel Tower did not open in 1889.', highlight: 'A detailed history says the Eiffel Tower opened in 1889 after construction was completed.' },
+      { claim: 'According to researchers, the bridge opened in 1924.', highlight: 'A detailed account describes the bridge opening in 1924 and the people who attended.' },
+      { claim: 'The bridge opened only after the river was drained.', highlight: 'A detailed account describes the bridge opening after extensive work at the river site.' },
+    ];
+    for (const [index, item] of cases.entries()) {
+      const accepted: AcceptedClaim = { ...claim, checkedText: item.claim, originalText: item.claim, sourceSpan: { start: 0, end: Array.from(item.claim).length } };
+      const fake = {
+        search: vi.fn(async () => ({ results: [{ url: `https://source${index}.org/fact`, highlights: [item.highlight] }] })),
+        getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: `${item.highlight} Primary records state: ${item.claim} Full page context explains the relevant date, qualification, attribution and scope.` }] })),
+      };
+      const { retrieve, context } = setup(fake);
+      const evidence = await retrieve(accepted, context);
+      expect(fake.getContents, item.claim).toHaveBeenCalledTimes(1);
+      expect(evidence[0].contentBasis).toBe('page_text');
+      expect(evidence[0].excerpt).toContain(item.claim);
+    }
+  });
+
+  it('does not spend bounded page-text requests on clearly unrelated pages', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: [
+        { url: 'https://unrelated.org/story', highlights: ['A long report on local gardening, seasonal planting and soil conditions at the community greenhouse.'] },
+        { url: 'https://relevant.org/history', highlights: ['A long report on the Eiffel Tower opening and visitors to the famous Paris landmark.'] },
+      ] })),
+      getContents: vi.fn(async (urls: string[]) => ({ results: [{ url: urls[0], text: excerpt }] })),
+    };
+    const { retrieve, context } = setup(fake);
+    const result = await retrieve(claim, context);
+    expect(fake.getContents).toHaveBeenCalledTimes(1);
+    expect(fake.getContents.mock.calls[0][0]).toEqual(['https://relevant.org/history']);
+    const unrelated = result.find(item => item.url.includes('unrelated'))!;
+    expect(unrelated).toMatchObject({ directlyAddressesClaim: false, stance: 'unrelated' });
+  });
+
+  it('builds a neutral alternate query from the admitted claim while preserving every qualifier', () => {
+    const admitted = 'According to the 2024 report, the bridge did not open before May.';
+    const query = buildAlternateQuery(admitted, 'balanced_evidence');
+    expect(query).toContain(JSON.stringify(admitted));
+    expect(query).toContain('supports, challenges, or qualifies');
+    expect(query).not.toContain('private salary');
+    expect(() => buildAlternateQuery(' ', 'balanced_evidence')).toThrow('claim_not_admitted');
   });
 
   it('distinguishes successful empty retrieval from malformed provider responses', async () => {

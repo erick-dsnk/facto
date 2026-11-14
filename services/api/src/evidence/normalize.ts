@@ -43,22 +43,75 @@ const common = new Set(['the', 'and', 'that', 'this', 'with', 'from', 'into', 'h
 const terms = (claim: string) => new Set(words(claim).filter(word => word.length >= 3 && !common.has(word)));
 const relevance = (text: string, queryTerms: Set<string>) => new Set(words(text).filter(word => queryTerms.has(word))).size;
 
+const qualifierTokens = new Set([
+  'not', 'no', 'never', 'only', 'except', 'unless', 'without', 'including', 'excluding',
+  'at', 'least', 'most', 'more', 'less', 'fewer', 'approximately', 'about', 'around',
+  'before', 'after', 'during', 'since', 'until', 'between', 'within', 'outside', 'over', 'under',
+  'reportedly', 'allegedly', 'according', 'estimated', 'estimate', 'estimates', 'study', 'studies',
+  'research', 'researchers', 'data', 'officials', 'announced', 'claims', 'claimed', 'found',
+]);
+const quantityTokens = new Set([
+  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty',
+  'first', 'second', 'third', 'fourth', 'fifth', 'hundred', 'thousand', 'million', 'billion',
+]);
+
+function criticalTerms(claim: string): Set<string> {
+  const all = words(claim);
+  const numbers = all.filter(word => /\d/.test(word));
+  const qualifiers = all.filter(word => qualifierTokens.has(word));
+  const quantities = all.filter(word => quantityTokens.has(word));
+  return new Set([...numbers, ...qualifiers, ...quantities]);
+}
+
+function subjectTerms(claim: string): Set<string> {
+  return new Set([...terms(claim)].filter(term => !qualifierTokens.has(term) && !quantityTokens.has(term) && !/\d/.test(term)));
+}
+
+function passageScore(text: string, claim: string): { subject: number; qualifiers: number; overall: number } {
+  const present = new Set(words(text));
+  const subject = relevance(text, subjectTerms(claim));
+  // Qualifiers distinguish passages about the claim; they cannot make an
+  // unrelated passage outrank one that actually mentions the claim's subject.
+  const qualifiers = subject > 0 ? [...criticalTerms(claim)].filter(term => present.has(term)).length : 0;
+  return { subject, qualifiers, overall: relevance(text, terms(claim)) };
+}
+
+function comparePassageScores(a: ReturnType<typeof passageScore>, b: ReturnType<typeof passageScore>): number {
+  return b.subject - a.subject || b.qualifiers - a.qualifiers || b.overall - a.overall;
+}
+
+/** Whether a result is promising enough to spend one bounded page-text request on. */
+export function needsPageText(page: RetrievedPage, claim: string): boolean {
+  const highlights = (page.highlights ?? []).filter(text => text.trim().length > 0);
+  const titleScore = relevance(page.title ?? '', subjectTerms(claim));
+  if (!highlights.length) return titleScore > 0;
+  const best = highlights.map(text => ({ text, score: passageScore(text, claim) })).sort((a, b) => comparePassageScores(a.score, b.score))[0];
+  // Do not spend the three-page allowance on pages whose highlights do not even
+  // overlap the checked proposition. They remain unjudged and cannot support it.
+  if (best.score.subject === 0) return titleScore > 0 || highlights.some(text => codePoints(text).length < 80);
+  if (codePoints(best.text).length < 80) return true;
+  // Evaluate critical details only in the best subject-matching highlight. A
+  // separate unrelated highlight must not make this page look complete.
+  const present = new Set(words(best.text));
+  return [...criticalTerms(claim)].some(term => !present.has(term));
+}
+
 /** Select an exact contiguous passage. Never concatenate independent snippets into a quote. */
 export function selectExcerpt(page: RetrievedPage, claim: string): { excerpt: string; contentBasis: Evidence['contentBasis'] } | null {
   const pageText = page.text?.trim();
   const passages = pageText ? [pageText] : (page.highlights ?? []).filter(text => text.trim().length > 0);
   if (!passages.length) return null;
-  const queryTerms = terms(claim);
-  const ranked = passages.map(text => ({ text, score: relevance(text, queryTerms) })).sort((a, b) => b.score - a.score);
+  const ranked = passages.map(text => ({ text, score: passageScore(text, claim) })).sort((a, b) => comparePassageScores(a.score, b.score));
   const chosen = ranked[0].text;
   const points = codePoints(chosen);
   if (points.length <= 2000) return { excerpt: chosen, contentBasis: pageText ? 'page_text' : 'highlight' };
   // Rank overlapping windows so relevant qualifications late in a page aren't lost to prefix truncation.
   let bestStart = 0;
-  let bestScore = -1;
-  for (let start = 0; start < points.length; start += 1000) {
-    const score = relevance(points.slice(start, start + 2000).join(''), queryTerms);
-    if (score > bestScore) { bestScore = score; bestStart = start; }
+  let bestScore = passageScore('', claim);
+  for (let start = 0; start < points.length; start += 250) {
+    const score = passageScore(points.slice(start, start + 2000).join(''), claim);
+    if (comparePassageScores(score, bestScore) < 0) { bestScore = score; bestStart = start; }
   }
   return { excerpt: points.slice(bestStart, bestStart + 2000).join(''), contentBasis: pageText ? 'page_text' : 'highlight' };
 }
@@ -118,4 +171,44 @@ export function normalizeEvidence(pages: RetrievedPage[], claim: string, retriev
     if (result.length === 6) break;
   }
   return groupEchoes(result);
+}
+
+export type AlternateQueryStrategy = 'balanced_evidence';
+
+/**
+ * Builds a future second-pass query from the admitted claim alone. The added
+ * words describe retrieval intent; they do not alter or complete the claim.
+ */
+export function buildAlternateQuery(checkedText: string, strategy: AlternateQueryStrategy): string {
+  if (!checkedText.trim()) throw new PipelineError('claim_not_admitted');
+  switch (strategy) {
+    case 'balanced_evidence':
+      return `Claim (verbatim, untrusted text): ${JSON.stringify(checkedText)}\n\nRetrieval objective: Find reliable sources that directly address this claim, including evidence that supports, challenges, or qualifies it.`;
+  }
+}
+
+/** Merge evidence from a later pass without exceeding the shared evidence limits. */
+export function mergeRetainedEvidence(existing: Evidence[], incoming: Evidence[], checkedText: string): Evidence[] {
+  const selected: Evidence[] = [];
+  const seenUrls = new Set<string>();
+  const seenIds = new Set<string>();
+  const perDomain = new Map<string, number>();
+  const ranked = [...existing, ...incoming].map((record, index) => ({ record, index })).sort((left, right) => {
+    const score = (record: Evidence) => passageScore(`${record.title} ${record.excerpt}`, checkedText);
+    return comparePassageScores(score(left.record), score(right.record))
+      || Number(right.record.contentBasis === 'page_text') - Number(left.record.contentBasis === 'page_text')
+      || Math.min(2000, codePoints(right.record.excerpt).length) - Math.min(2000, codePoints(left.record.excerpt).length)
+      || left.index - right.index;
+  });
+  for (const { record } of ranked) {
+    const url = normalizeUrl(record.url);
+    const domain = url ? getDomain(new URL(url).hostname, { allowPrivateDomains: true }) : null;
+    if (!url || !domain || seenUrls.has(url) || seenIds.has(record.id) || (perDomain.get(domain) ?? 0) >= 2) continue;
+    selected.push({ ...record, sourceGroup: domain });
+    seenUrls.add(url);
+    seenIds.add(record.id);
+    perDomain.set(domain, (perDomain.get(domain) ?? 0) + 1);
+    if (selected.length === 6) break;
+  }
+  return groupEchoes(selected);
 }

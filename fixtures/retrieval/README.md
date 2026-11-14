@@ -11,18 +11,21 @@ Run both with:
 npx vitest run services/api/src/providers/exa/retrieval.test.ts services/api/src/evidence/normalize.test.ts
 ```
 
-The fixtures cover private-context exclusion from queries, exact admitted spans,
-provider failure versus successful empty retrieval, prompt-injection text,
+The fixtures cover private-context exclusion from the initial query, exact admitted
+spans, provider failure versus successful empty retrieval, prompt-injection text,
 actual HTTP cancellation, source provenance, copied passages, Public Suffix List
 grouping, URL deduplication, Unicode excerpt bounds and three-page content limits.
 
 The adapter uses the official Exa SDK with a bounded, abortable HTTP transport.
 Only `/search` and `/contents` at `https://api.exa.ai` are enabled. It never fetches
 arbitrary source URLs directly. `EXA_API_KEY` is supplied by server configuration.
-There are no automatic retries or alternate searches in this initial adapter;
-future attempts must consume the same runtime search budget. Page text is fetched
-only when highlights are absent or shorter than 80 code points, which is a simple
-content-availability heuristic, not a measure of evidential sufficiency.
+Page text is fetched for at most three promising results when highlights are
+absent/short or omit claim-critical numbers, negation, attribution or qualifiers.
+The deterministic relevance check only selects passages and limits content
+requests; it does not judge truth. Excerpts remain a single exact contiguous span,
+and evidence starts unjudged. A pure balanced alternate-query builder and a
+six-record merge/dedupe helper are provided for future budgeted rejudgment; the
+retriever still makes one exact-claim search and does not wire a second pass.
 
 Evidence starts unjudged: source role is unknown, relevance/scope are false and
 stance is unrelated. The judgment and deterministic source policies must qualify
