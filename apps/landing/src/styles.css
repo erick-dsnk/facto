@@ -1,0 +1,687 @@
+@import '@fontsource-variable/onest';
+
+/* Two colours, everywhere: mahogany and off-white. */
+:root {
+  --bg: #f5f5f7;
+  --brown: #380c00;
+  --brown-2: rgb(56 12 0 / 0.72); /* secondary text on light */
+  --light-2: rgb(245 245 247 / 0.74); /* secondary text on mahogany */
+
+  /* Verdicts only. They fill the popup card; never used as text. */
+  --v-true: #2f6f3e;
+  --v-false: #8b1e24;
+
+  --font: 'Onest Variable', system-ui, sans-serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --gutter: clamp(16px, 4vw, 48px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--brown);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+ol {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brown);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--bg);
+  border-radius: 6px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--brown);
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip:focus {
+  transform: none;
+}
+
+/* ------------------------------------------------------------ bar */
+.bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px var(--gutter);
+  pointer-events: none;
+  color: var(--brown);
+  transition: color 0.3s;
+}
+
+.bar > * {
+  pointer-events: auto;
+}
+
+.bar--dark {
+  color: var(--bg);
+}
+
+.wordmark {
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.wordmark--small {
+  font-size: 18px;
+}
+
+/* Pills take the opposite colour of their surface. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--brown);
+  color: var(--bg);
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s;
+}
+
+.pill:hover {
+  opacity: 0.88;
+}
+
+.pill:active {
+  transform: scale(0.97);
+}
+
+.pill--small {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.stage .pill,
+.bar--dark .pill {
+  background: var(--bg);
+  color: var(--brown);
+}
+
+.stage :focus-visible,
+.bar--dark :focus-visible {
+  outline-color: var(--bg);
+  box-shadow: 0 0 0 6px var(--brown);
+}
+
+/* ------------------------------------------------------------ stage */
+.stage {
+  position: relative;
+  height: 560vh;
+  background: var(--brown);
+  color: var(--bg);
+}
+
+.stage__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+}
+
+.stage__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--brown);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 0 var(--gutter);
+  text-align: center;
+}
+
+.hero__title {
+  font-weight: 700;
+  font-size: clamp(44px, 8.4vw, 112px);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  max-width: 11ch;
+  text-wrap: balance;
+}
+
+.hero__sub {
+  max-width: 34ch;
+  font-size: clamp(17px, 1.5vw, 21px);
+  color: var(--light-2);
+  text-wrap: balance;
+}
+
+.hero .pill {
+  margin-top: 6px;
+}
+
+.stage__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(32px, 8vh, 80px);
+  padding: 0 var(--gutter);
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(26px, 3.4vw, 44px);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  opacity: 0;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------ display popup
+   Modelled on Meta Ray-Ban Display: the display only adds light, so the card is
+   a faint projected square over the lens, off-white text at weight 500+, flat. */
+.hud {
+  --lw: 600px;
+  --lh: 500px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  /* The display adds light: screen-blend the whole popup onto the lens. */
+  mix-blend-mode: screen;
+  perspective: 1100px;
+}
+
+/* The image plane sits a little behind the lens and follows its curve. */
+.hud__plane {
+  transform: rotateY(-7deg) rotateX(3deg) translateZ(-30px);
+}
+
+/* Lens glare in front of the display, so the card reads as seen through glass. */
+.hud::after {
+  content: '';
+  position: absolute;
+  inset: 4% 3% 6%;
+  border-radius: 18% 18% 36% 36% / 16% 16% 42% 42%;
+  background:
+    linear-gradient(162deg, rgb(255 255 255 / 0.1) 0%, rgb(255 255 255 / 0.03) 26%, transparent 42%),
+    linear-gradient(340deg, rgb(255 255 255 / 0.05) 0%, transparent 22%);
+  pointer-events: none;
+}
+
+/* Lens UI, scaled from the lens width. */
+.lensui {
+  --s: min(calc(var(--lw) * 0.74), calc(var(--lh) * 1.05), 440px);
+  width: var(--s);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  font-size: max(12px, calc(var(--s) * 0.05));
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ecebe8;
+}
+
+.lensui__ctx {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.8em;
+  color: rgb(236 235 232 / 0.7);
+  opacity: 0;
+}
+
+.lensui__live {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: currentColor;
+  animation: live 1.4s ease-in-out infinite;
+}
+
+@keyframes live {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.lensui__claim {
+  position: relative;
+  overflow: hidden;
+}
+
+.lensui__text {
+  font-size: 1.24em;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.lensui__text span {
+  opacity: 0;
+}
+
+/* The band of light that sweeps the claim once it's heard. */
+.lensui__band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4em;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.32), transparent);
+  transform: translateX(-4em);
+}
+
+/* The pop-up: one surface whose clip grows from a pill into the card. */
+.pop {
+  --pw: 9em; /* current clip width, animated */
+  --ph: 1.9em; /* current clip height, animated */
+  --r: 0.95em;
+  position: relative;
+  width: 100%;
+  min-height: 1.9em;
+  opacity: 0;
+  transform-origin: 1em 0;
+}
+
+.pop__edge,
+.pop__fill,
+.pop__pill,
+.pop__card {
+  clip-path: inset(0 calc(100% - var(--pw)) calc(100% - var(--ph)) 0 round var(--r));
+}
+
+.pop__edge,
+.pop__fill,
+.pop__pill {
+  position: absolute;
+  inset: 0;
+}
+
+.pop__edge {
+  background: rgb(255 255 255 / 0.16);
+}
+
+.pop__fill {
+  inset: 1px;
+  background: rgb(44 44 46 / 0.72);
+  clip-path: inset(0 calc(100% - var(--pw) + 2px) calc(100% - var(--ph) + 2px) 0 round calc(var(--r) - 1px));
+}
+
+.pop__dot {
+  width: 0.55em;
+  height: 0.55em;
+  flex: none;
+  border-radius: 50%;
+  background: #8e8e93;
+}
+
+.pop__pill .pop__dot {
+  position: absolute;
+  left: 0.75em;
+  top: 0.68em;
+}
+
+.pop__stage {
+  position: absolute;
+  left: 1.75em;
+  top: 0;
+  line-height: 1.9em;
+  white-space: nowrap;
+  color: #b5b5ba;
+  opacity: 0;
+}
+
+.pop__icons {
+  position: absolute;
+  top: 0.45em;
+  display: flex;
+}
+
+/* Source tiles: first letter of each outlet, overlapping. */
+.pop__icons i {
+  display: grid;
+  place-items: center;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 0.45em;
+  font: 600 0.62em/1 var(--font);
+  font-style: normal;
+  color: #fff;
+  box-shadow: 0 0 0 0.12em rgb(44 44 46);
+  opacity: 0;
+}
+
+.pop__icons i + i {
+  margin-left: -0.45em;
+}
+
+.pop__card {
+  position: relative;
+  padding: 0.8em 0.95em 0.95em;
+  opacity: 0;
+}
+
+.pop__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/* Verdict colours, lifted toward white so they read as light on the lens. */
+.pop[data-verdict='false'] {
+  --v: color-mix(in oklab, #8b1e24, #fff 38%);
+}
+
+.pop[data-verdict='true'] {
+  --v: color-mix(in oklab, #2f6f3e, #fff 38%);
+}
+
+.pop__dot--v {
+  background: var(--v);
+}
+
+.pop__label {
+  font-weight: 650;
+  font-size: 1.12em;
+  color: var(--v);
+}
+
+.pop__after {
+  font-size: 0.92em;
+  color: #b5b5ba;
+}
+
+.pop__after::before {
+  content: '·';
+  margin-right: 0.45em;
+}
+
+.pop__quote {
+  margin-top: 0.45em;
+  color: #c9c8cc;
+  text-wrap: pretty;
+}
+
+.pop__pub {
+  margin-top: 0.3em;
+  font-size: 0.88em;
+  font-weight: 600;
+  color: #ecebe8;
+}
+
+/* ------------------------------------------------------------ band */
+.band {
+  padding: clamp(80px, 14vh, 160px) var(--gutter) clamp(96px, 16vh, 180px);
+}
+
+.band__glasses {
+  display: block;
+  width: min(820px, 100%);
+  height: auto;
+  margin: 0 auto clamp(48px, 9vh, 104px);
+}
+
+.band__beats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: clamp(48px, 8vw, 120px);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.beat__title {
+  font-weight: 700;
+  font-size: clamp(44px, 6vw, 84px);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin-bottom: 18px;
+}
+
+.beat__body {
+  max-width: 34ch;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.55;
+  color: var(--brown-2);
+}
+
+/* ------------------------------------------------------------ verdicts */
+.verdicts {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(48px, 10vh, 120px) var(--gutter) clamp(96px, 16vh, 180px);
+}
+
+.verdicts__title {
+  font-weight: 700;
+  font-size: clamp(40px, 5.6vw, 76px);
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  max-width: 13ch;
+  margin-bottom: clamp(40px, 7vh, 80px);
+}
+
+.verdict {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px 32px;
+  padding: clamp(20px, 3vh, 32px) 0;
+  border-top: 1px solid rgb(56 12 0 / 0.16);
+}
+
+.verdict:last-child {
+  border-bottom: 1px solid rgb(56 12 0 / 0.16);
+}
+
+.verdict dt {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 700;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.verdict dd {
+  font-size: clamp(17px, 1.4vw, 20px);
+  color: var(--brown-2);
+}
+
+.verdict__swatch {
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 0.12em;
+  background: var(--brown);
+}
+
+[data-verdict='true'] .verdict__swatch {
+  background: var(--v-true);
+}
+
+[data-verdict='false'] .verdict__swatch {
+  background: var(--v-false);
+}
+
+[data-verdict='unverified'] .verdict__swatch {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--brown);
+}
+
+@media (max-width: 640px) {
+  .verdict {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------ close */
+.close {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(48px, 10vh, 120px) var(--gutter) clamp(96px, 16vh, 180px);
+}
+
+.close__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.close__line {
+  max-width: 22ch;
+  font-weight: 700;
+  font-size: clamp(32px, 4.4vw, 60px);
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.close__glasses {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 28px var(--gutter) 40px;
+  border-top: 1px solid rgb(56 12 0 / 0.16);
+  color: var(--brown-2);
+  font-size: 14px;
+}
+
+.foot .wordmark {
+  color: var(--brown);
+}
+
+/* ------------------------------------------------------------ static layout
+   Reduced motion, or a viewport too short to pin the stage. */
+.stage__text:not(.is-static *) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.is-static .stage {
+  height: auto;
+}
+
+.is-static .stage__sticky {
+  position: relative;
+  height: auto;
+}
+
+.is-static .hero {
+  position: relative;
+  min-height: 100svh;
+}
+
+.is-static .stage__canvas {
+  position: relative;
+  display: block;
+  height: 100svh;
+}
+
+.is-static .stage__caption {
+  display: none;
+}
+
+.is-static .stage__text {
+  display: grid;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px var(--gutter) 96px;
+  color: var(--light-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
