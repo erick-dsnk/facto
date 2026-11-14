@@ -1,0 +1,543 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_public_selected_citation_review",
+  "reviewedAt": "2026-11-14T03:48:09.010226+00:00",
+  "reviewer": "Automated independent citation-review agent; no human-review claim",
+  "input": "/workspace/task-evidence/live-development-07.json",
+  "inputSHA256": "08568d66d77d0fd234bc66b3a4d8ab7afbcca67e4aa2e85dbb8cb89a5b090695",
+  "inputMetadata": {
+    "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+    "dirty": false,
+    "sourceSHA256": "e6f36587593f39415f161a64a02f0946f4758b9a90b5c2c0ac40399adfb8de85"
+  },
+  "priorPublicReviews": [
+    {
+      "jsonPath": "/workspace/junction-2026/fixtures/evaluation/live/citation-review-04.json",
+      "jsonSHA256": "8eda0ef5f7d7f5eaf817e88a34ff6a24d12a0e439e888d134149547a21750437",
+      "markdownPath": "/workspace/junction-2026/fixtures/evaluation/live/citation-review-04.md",
+      "reviewedAt": "2026-11-14T02:52:47.486535+00:00"
+    },
+    {
+      "jsonPath": "/workspace/junction-2026/fixtures/evaluation/live/citation-review-05.json",
+      "jsonSHA256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+      "markdownPath": "/workspace/junction-2026/fixtures/evaluation/live/citation-review-05.md",
+      "reviewedAt": "2026-11-14T02:56:01.319233+00:00"
+    },
+    {
+      "jsonPath": "/workspace/junction-2026/fixtures/evaluation/live/citation-review-06.json",
+      "jsonSHA256": "e8ea283b984e4007f76145a46b8f3c7b3eaf79a9d4ef8785e4a7d7738a678e7c",
+      "markdownPath": "/workspace/junction-2026/fixtures/evaluation/live/citation-review-06.md",
+      "reviewedAt": "2026-11-14T03:19:59.537648+00:00"
+    }
+  ],
+  "scope": {
+    "requests": 9,
+    "uniqueFactChecks": 5,
+    "factBearingResultReceiptsIncludingCachedRepeat": 6,
+    "definitiveSupportedUniqueFacts": 2,
+    "supportedResultReceiptsIncludingCachedRepeat": 3,
+    "selectedCases": [
+      "L1-opera",
+      "L5-cache-repeat",
+      "L6-existential"
+    ],
+    "cacheQualification": "L5 exactly reuses L1 selected IDs/URLs/excerpts and adds neither a new unique fact nor independent evidence.",
+    "selectedUniqueEvidenceIds": 7,
+    "selectedUniqueUrls": 7,
+    "selectedReferencesIncludingCachedRepeat": 9,
+    "uniqueSelectedUrlsAttemptedNow": 7,
+    "uniqueArticlePagesOpenedNow": 6,
+    "uniqueRelevantOpenedUrls": 6,
+    "uniqueInaccessibleUrls": 1,
+    "uniqueUncertainUrls": 1,
+    "wrongScopeOrGroundingFailuresIdentifiedAmongOpenedRelevantPassages": 0,
+    "nonselectedCitationsNotValidatedAsSelectedEvidence": true
+  },
+  "selectedIdRetentionAudit": {
+    "allSelectedIdsHaveRetainedRecord": true,
+    "missingRecords": [],
+    "ambiguousDuplicateRecords": [],
+    "referenceAudit": [
+      {
+        "case": "L1-opera",
+        "evidenceId": "ev-98bba1d289c45e2bce3a",
+        "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+        "retainedRecordPointer": "/cases/0/events/2/evidence/3",
+        "retainedExcerptSHA256": "191fa15bc6315c99781e287866d06ba5220b12c524b517f432e10eee281b163e",
+        "cached": false
+      },
+      {
+        "case": "L1-opera",
+        "evidenceId": "ev-c6ef4b33746b6e519887",
+        "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+        "retainedRecordPointer": "/cases/0/events/2/evidence/4",
+        "retainedExcerptSHA256": "36366b4e5600497dcd99f85db4884a623c1894a0c189b433a25e2075d3302358",
+        "cached": false
+      },
+      {
+        "case": "L5-cache-repeat",
+        "evidenceId": "ev-98bba1d289c45e2bce3a",
+        "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+        "retainedRecordPointer": "/cases/4/events/2/evidence/3",
+        "retainedExcerptSHA256": "191fa15bc6315c99781e287866d06ba5220b12c524b517f432e10eee281b163e",
+        "cached": true
+      },
+      {
+        "case": "L5-cache-repeat",
+        "evidenceId": "ev-c6ef4b33746b6e519887",
+        "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+        "retainedRecordPointer": "/cases/4/events/2/evidence/4",
+        "retainedExcerptSHA256": "36366b4e5600497dcd99f85db4884a623c1894a0c189b433a25e2075d3302358",
+        "cached": true
+      },
+      {
+        "case": "L6-existential",
+        "evidenceId": "ev-caf1e0a1533ac3783477",
+        "url": "https://ssd.jpl.nasa.gov/planets/def.html",
+        "retainedRecordPointer": "/cases/5/events/2/evidence/0",
+        "retainedExcerptSHA256": "58bf8175e13a26a176783e67611d22e99d41c3db7d3e353c5f010a3581c98f40",
+        "cached": false
+      },
+      {
+        "case": "L6-existential",
+        "evidenceId": "ev-1a695a106a22850b30b3",
+        "url": "https://astro4edu.org/bigideas/bigidea7/",
+        "retainedRecordPointer": "/cases/5/events/2/evidence/1",
+        "retainedExcerptSHA256": "0a07b90c5dd91bb9206e024c2d59dd657aaef64d3555d8e905169622110c5d35",
+        "cached": false
+      },
+      {
+        "case": "L6-existential",
+        "evidenceId": "ev-de510503319a759fc462",
+        "url": "https://ssd.jpl.nasa.gov/planets/",
+        "retainedRecordPointer": "/cases/5/events/2/evidence/2",
+        "retainedExcerptSHA256": "08e6645187a6a474b0302fbcd5371d16dbc53febc8f8afb8daa62bf4dff49a43",
+        "cached": false
+      },
+      {
+        "case": "L6-existential",
+        "evidenceId": "ev-533b3489b31330136bde",
+        "url": "https://www.timeanddate.com/astronomy/planets/planet",
+        "retainedRecordPointer": "/cases/5/events/2/evidence/3",
+        "retainedExcerptSHA256": "318fc293a3d152399b9623ca500aa75595870f81afd87d3a10c082fe1469d6f8",
+        "cached": false
+      },
+      {
+        "case": "L6-existential",
+        "evidenceId": "ev-af7c05813e2333997b30",
+        "url": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+        "retainedRecordPointer": "/cases/5/events/2/evidence/4",
+        "retainedExcerptSHA256": "e96c176a52c240f5340bb0665d34d95c69f841e67e9ea39ec095e4b451b2344a",
+        "cached": false
+      }
+    ]
+  },
+  "caseResults": [
+    {
+      "case": "L1-opera",
+      "verdict": "supported",
+      "checkedPublicText": "The Sydney Opera House opened in 1973.",
+      "cached": false,
+      "selectedEvidenceIds": [
+        "ev-98bba1d289c45e2bce3a",
+        "ev-c6ef4b33746b6e519887"
+      ]
+    },
+    {
+      "case": "L2-lightning",
+      "verdict": "insufficient_evidence",
+      "checkedPublicText": "Lightning never strikes the same place twice.",
+      "cached": false,
+      "selectedEvidenceIds": []
+    },
+    {
+      "case": "L4-mixed",
+      "verdict": "insufficient_evidence",
+      "checkedPublicText": "Oslo is the capital of Norway.",
+      "cached": false,
+      "selectedEvidenceIds": []
+    },
+    {
+      "case": "L5-cache-repeat",
+      "verdict": "supported",
+      "checkedPublicText": "The Sydney Opera House opened in 1973.",
+      "cached": true,
+      "selectedEvidenceIds": [
+        "ev-98bba1d289c45e2bce3a",
+        "ev-c6ef4b33746b6e519887"
+      ]
+    },
+    {
+      "case": "L6-existential",
+      "verdict": "supported",
+      "checkedPublicText": "There are eight planets in the Solar System.",
+      "cached": false,
+      "selectedEvidenceIds": [
+        "ev-caf1e0a1533ac3783477",
+        "ev-1a695a106a22850b30b3",
+        "ev-de510503319a759fc462",
+        "ev-533b3489b31330136bde",
+        "ev-af7c05813e2333997b30"
+      ]
+    },
+    {
+      "case": "L8-first-person",
+      "verdict": "insufficient_evidence",
+      "checkedPublicText": "I think Helsinki is the capital of Norway.",
+      "cached": false,
+      "selectedEvidenceIds": []
+    }
+  ],
+  "comparison": {
+    "vs06NewlySelectedUrls": [
+      "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+      "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments"
+    ],
+    "neverSeenUrlsVsPrior04To06": [],
+    "removedSelectedUrlsVs06": [],
+    "planetSelectedIdsUrlsAndExcerptsUnchangedVs06": true,
+    "selectedExcerptDeltasVs06": [],
+    "newlySelectedOperaExcerptsVs06": "No selected Opera excerpt exists in run06 to compare. Current operator highlight was inspected against opened article; memorial highlight could not be verified.",
+    "vs04And05": "Both selected Opera URLs are known from reviews04/05, but NMA is omitted from run07 selected IDs. Five planet URLs remain known; review06 records intermediate IAU and Timeanddate excerpt changes now unchanged in run07. Exact older Opera excerpt byte equality is not asserted because prior review summaries omit those hashes."
+  },
+  "sources": [
+    {
+      "evidenceId": "ev-98bba1d289c45e2bce3a",
+      "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+      "selectedByCases": [
+        "L1-opera",
+        "L5-cache-repeat"
+      ],
+      "suppliedTitle": "50 years of extraordinary moments | Sydney Opera House",
+      "suppliedContentBasis": "highlight",
+      "suppliedSourceGroup": "sydneyoperahouse.com",
+      "retainedExcerptSHA256": "191fa15bc6315c99781e287866d06ba5220b12c524b517f432e10eee281b163e",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "opened",
+        "openedArticle": true,
+        "httpStatus": null,
+        "httpStatusQualification": "Successful article extraction; HTTP status not separately surfaced by connected tool",
+        "toolCrawlLabelsAsReported": [
+          "today",
+          "today"
+        ],
+        "inspectedLines": "60–61, 68–78",
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Operator article paragraphs on the 20 October 1973 milestone and Queen Elizabeth II opening match the selected highlight; the separately described 28 September 1973 production and venue history also correspond. Early performances and the formal opening are distinguished.",
+      "scope": "Official opening of the Sydney Opera House in Sydney, Australia, during 1973. Earlier performance history does not invalidate this ordinary opening-year claim.",
+      "sourceFamily": "Sydney Opera House",
+      "originAssessment": "First-party operator retrospective. It repeats the same royal speech seen in the unverified memorial highlight, so full underlying-source independence cannot be established. Prior NMA inspection recorded a reference to an ABC/Opera House history project; NMA is retained but not selected in run07 and cannot restore the selected two-source corroboration.",
+      "incorrectContext": "none affecting the selected proposition identified",
+      "comparison": {
+        "vs06": "not selected in run06; restored to selected set in run07",
+        "priorExcerptSHA256": null,
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": "Prior review04/05 source summaries do not retain a full excerpt or hash for this Opera source; exact older excerpt equality is not asserted. Current operator passages were reopened; memorial remains inaccessible."
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    },
+    {
+      "evidenceId": "ev-c6ef4b33746b6e519887",
+      "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+      "selectedByCases": [
+        "L1-opera",
+        "L5-cache-repeat"
+      ],
+      "suppliedTitle": "Opening of Sydney Opera House | Queen Elizabeth Digital Memorial",
+      "suppliedContentBasis": "highlight",
+      "suppliedSourceGroup": "queenelizabeth.com",
+      "retainedExcerptSHA256": "36366b4e5600497dcd99f85db4884a623c1894a0c189b433a25e2075d3302358",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "inaccessible",
+        "openedArticle": false,
+        "httpStatus": 403,
+        "httpStatusQualification": "Explicit 403 in tool failure",
+        "toolCrawlLabelsAsReported": [],
+        "inspectedLines": null,
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "unverified_inaccessible",
+      "passageCorrespondence": "The supplied highlight asserts the opening date, but the article could not be opened. Neither highlighted wording nor article attribution, context, source reuse, or provenance was independently confirmed.",
+      "scope": "Unverified; supplied highlight appears on-topic but is not independent confirmation.",
+      "sourceFamily": "Queen Elizabeth Digital Memorial (supplied attribution only)",
+      "originAssessment": "Fresh run07 opening failed with explicit 403 Forbidden. The prior review04 403 was also unverified; this report does not carry it forward as source verification. Do not count as independently inspected corroboration.",
+      "incorrectContext": "uncertain because inaccessible",
+      "comparison": {
+        "vs06": "not selected in run06; restored to selected set in run07",
+        "priorExcerptSHA256": null,
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": "Prior review04/05 source summaries do not retain a full excerpt or hash for this Opera source; exact older excerpt equality is not asserted. Current operator passages were reopened; memorial remains inaccessible."
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    },
+    {
+      "evidenceId": "ev-caf1e0a1533ac3783477",
+      "url": "https://ssd.jpl.nasa.gov/planets/def.html",
+      "selectedByCases": [
+        "L6-existential"
+      ],
+      "suppliedTitle": "What is a Planet?",
+      "suppliedContentBasis": "page_text",
+      "suppliedSourceGroup": "nasa.gov",
+      "retainedExcerptSHA256": "58bf8175e13a26a176783e67611d22e99d41c3db7d3e353c5f010a3581c98f40",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "opened",
+        "openedArticle": true,
+        "httpStatus": null,
+        "httpStatusQualification": "Successful article extraction; HTTP status not separately surfaced by connected tool",
+        "toolCrawlLabelsAsReported": [
+          "yesterday"
+        ],
+        "inspectedLines": "78–84",
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Article credited to Donald K. Yeomans and Paul W. Chodas, October 2006; explicit eight-count and list match the retained excerpt in the immediate IAU-definition context.",
+      "scope": "Recognized Solar System planets under the August 2006 IAU definition, excluding dwarf planets. A historical explanatory article is not proof of an unrestricted timeless census.",
+      "sourceFamily": "NASA / JPL Solar System Dynamics",
+      "originAssessment": "Same institution/site and substantially overlapping lead wording as /planets/; count the two JPL URLs as one source family. Both explain the IAU resolution.",
+      "incorrectContext": "none affecting the selected proposition identified",
+      "comparison": {
+        "vs06": "same selected ID, URL and exact excerpt SHA-256 as review06",
+        "priorExcerptSHA256": "58bf8175e13a26a176783e67611d22e99d41c3db7d3e353c5f010a3581c98f40",
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": null
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    },
+    {
+      "evidenceId": "ev-1a695a106a22850b30b3",
+      "url": "https://astro4edu.org/bigideas/bigidea7/",
+      "selectedByCases": [
+        "L6-existential"
+      ],
+      "suppliedTitle": "Big Ideas in Astronomy |",
+      "suppliedContentBasis": "page_text",
+      "suppliedSourceGroup": "astro4edu.org",
+      "retainedExcerptSHA256": "0a07b90c5dd91bb9206e024c2d59dd657aaef64d3555d8e905169622110c5d35",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "opened",
+        "openedArticle": true,
+        "httpStatus": null,
+        "httpStatusQualification": "Successful article extraction; HTTP status not separately surfaced by connected tool",
+        "toolCrawlLabelsAsReported": [
+          "6 days ago",
+          "today"
+        ],
+        "inspectedLines": "64–98; project attribution 147",
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Section 7.3 explicitly states eight, lists the planets and explains the IAU criteria; surrounding Solar System composition, dwarf-planet, and terrestrial/gas-giant sections correspond to the retained window.",
+      "scope": "Solar System recognized planet classification according to the 2006 IAU resolution. Neighboring broad gas-giant terminology is not a separate verified claim here.",
+      "sourceFamily": "IAU Office of Astronomy for Education",
+      "originAssessment": "Page identifies the IAU education project. Distinct institutional publication from JPL, but supplies the same underlying IAU classification, not another empirical measurement.",
+      "incorrectContext": "none affecting the selected proposition identified",
+      "comparison": {
+        "vs06": "same selected ID, URL and exact excerpt SHA-256 as review06",
+        "priorExcerptSHA256": "0a07b90c5dd91bb9206e024c2d59dd657aaef64d3555d8e905169622110c5d35",
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": null
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    },
+    {
+      "evidenceId": "ev-de510503319a759fc462",
+      "url": "https://ssd.jpl.nasa.gov/planets/",
+      "selectedByCases": [
+        "L6-existential"
+      ],
+      "suppliedTitle": "Planets",
+      "suppliedContentBasis": "page_text",
+      "suppliedSourceGroup": "nasa.gov",
+      "retainedExcerptSHA256": "08e6645187a6a474b0302fbcd5371d16dbc53febc8f8afb8daa62bf4dff49a43",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "opened",
+        "openedArticle": true,
+        "httpStatus": null,
+        "httpStatusQualification": "Successful article extraction; HTTP status not separately surfaced by connected tool",
+        "toolCrawlLabelsAsReported": [
+          "yesterday"
+        ],
+        "inspectedLines": "78–88",
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Explicit eight-count and full list correspond to the selected excerpt; inclusion of Pluto in JPL ephemerides is explicitly explained as historical and does not add a ninth recognized planet.",
+      "scope": "Recognized Solar System planets under the 2006 definition; ephemeris inclusion differs from formal classification.",
+      "sourceFamily": "NASA / JPL Solar System Dynamics",
+      "originAssessment": "Same source family and closely overlapping wording as def.html; it links the fuller classification discussion and adds no independent family.",
+      "incorrectContext": "none affecting the selected proposition identified",
+      "comparison": {
+        "vs06": "same selected ID, URL and exact excerpt SHA-256 as review06",
+        "priorExcerptSHA256": "08e6645187a6a474b0302fbcd5371d16dbc53febc8f8afb8daa62bf4dff49a43",
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": null
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    },
+    {
+      "evidenceId": "ev-533b3489b31330136bde",
+      "url": "https://www.timeanddate.com/astronomy/planets/planet",
+      "selectedByCases": [
+        "L6-existential"
+      ],
+      "suppliedTitle": "What Is a Planet?",
+      "suppliedContentBasis": "highlight",
+      "suppliedSourceGroup": "timeanddate.com",
+      "retainedExcerptSHA256": "318fc293a3d152399b9623ca500aa75595870f81afd87d3a10c082fe1469d6f8",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "opened",
+        "openedArticle": true,
+        "httpStatus": null,
+        "httpStatusQualification": "Successful article extraction; HTTP status not separately surfaced by connected tool",
+        "toolCrawlLabelsAsReported": [
+          "3 weeks ago",
+          "today"
+        ],
+        "inspectedLines": "94–100, 110–128, 134–180, 190–194",
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Graham Jones byline, eight-count/list, Ceres/Pluto history, criteria, exoplanet discussion and hypothetical Planet Nine material match the retained highlight. The truncated final sentence continues by describing Planet X as a hypothesis.",
+      "scope": "Eight recognized Solar System planets, not exoplanets or dwarf planets. The page explicitly allows an undiscovered hypothetical planet. Its generic star wording in the definition is broader than the formal Sun criterion, but does not change the selected Solar System count.",
+      "sourceFamily": "Time and Date AS",
+      "originAssessment": "Separately authored educational article, byline Graham Jones. No article-level syndication identified in inspected text; NASA credits shown for images are not article authorship. Shared IAU classification underlies the count.",
+      "incorrectContext": "none affecting the selected proposition identified",
+      "comparison": {
+        "vs06": "same selected ID, URL and exact excerpt SHA-256 as review06",
+        "priorExcerptSHA256": "318fc293a3d152399b9623ca500aa75595870f81afd87d3a10c082fe1469d6f8",
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": null
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    },
+    {
+      "evidenceId": "ev-af7c05813e2333997b30",
+      "url": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+      "selectedByCases": [
+        "L6-existential"
+      ],
+      "suppliedTitle": "How Many Planets Are In Our Solar System?",
+      "suppliedContentBasis": "highlight",
+      "suppliedSourceGroup": "skyandtelescope.org",
+      "retainedExcerptSHA256": "e96c176a52c240f5340bb0665d34d95c69f841e67e9ea39ec095e4b451b2344a",
+      "access": {
+        "review07Attempted": true,
+        "method": "Connected public web open/extracted article text; no project provider-key API calls",
+        "status": "opened",
+        "openedArticle": true,
+        "httpStatus": null,
+        "httpStatusQualification": "Successful article extraction; HTTP status not separately surfaced by connected tool",
+        "toolCrawlLabelsAsReported": [
+          "2 weeks ago"
+        ],
+        "inspectedLines": "17–28",
+        "freshnessQualification": "Requested during this review. Connected service may use an index/cache; relative crawl labels are service reports, not established origin timestamps. No direct-origin retrieval or cache bypass was established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Maria Temming byline, July 15 2021; opening count/list, IAU criteria, dwarf-planet distinction and New Horizons paragraph match the selected excerpt. Loose wording calling Pluto a surprising solar-system planet appears alongside repeated dwarf-planet labels and an explicit statement that it is no longer considered a planet.",
+      "scope": "Eight recognized Solar System planets under the IAU criteria. The loose later Pluto phrase is not a formal reclassification and does not reverse the opening count.",
+      "sourceFamily": "Sky & Telescope",
+      "originAssessment": "Distinct bylined editorial article; no full-article republication attribution identified in inspected material. NASA image attribution does not make the prose a NASA syndication. Same underlying IAU definition.",
+      "incorrectContext": "none affecting the selected proposition identified",
+      "comparison": {
+        "vs06": "same selected ID, URL and exact excerpt SHA-256 as review06",
+        "priorExcerptSHA256": "e96c176a52c240f5340bb0665d34d95c69f841e67e9ea39ec095e4b451b2344a",
+        "priorReview04URLKnown": true,
+        "priorOperaExcerptEqualityQualification": null
+      },
+      "inspectionReuse": {
+        "sourceFindingsReadFromPriorReviews": true,
+        "priorAttributionGroupingLimitsReused": true,
+        "review07AccessOrPassageFindingOnlyCarriedForward": false,
+        "basis": "Prior reports supply comparison/grouping context; every selected URL was independently attempted now, and every accessible relevant passage inspected now."
+      }
+    }
+  ],
+  "caseFindings": [
+    {
+      "case": "L1-opera",
+      "proposition": "The Sydney Opera House opened in 1973.",
+      "finding": "The selected operator page supports the opening year in the correct historical context. The other selected URL is inaccessible and cannot be independently validated.",
+      "selectedAccessibleSourceFamilies": 1,
+      "independenceQualification": "Run07 selected pair does not establish two independently inspected substantive families in this review. This is an access/provenance limitation, not evidence that the historical proposition is false.",
+      "retainedButUnselectedNMA": "NMA remains a retained evidence record, but is unselected. Prior inspection found potential underlying ABC/Opera House history overlap; it is not credited as an extra selected or wholly independent source."
+    },
+    {
+      "case": "L5-cache-repeat",
+      "finding": "Cached L1 duplicate; same limitation and no extra independent check."
+    },
+    {
+      "case": "L6-existential",
+      "proposition": "There are eight planets in the Solar System.",
+      "finding": "All five selected pages were opened and substantively support eight recognized planets under the IAU classification.",
+      "selectedAccessibleSourceFamilies": 4,
+      "independenceQualification": "NASA/JPL appears twice but counts once. IAU education, Timeanddate and Sky & Telescope are distinct substantive institutional/editorial families; all rely on the same underlying IAU definition. These are not five independent measurements.",
+      "scopeQualification": "The ordinary recognized-planet claim is supported; absence of an additional undiscovered planet is not established."
+    }
+  ],
+  "materialFindings": [
+    {
+      "severity": "citation_access_and_independence_limitation",
+      "cases": [
+        "L1-opera",
+        "L5-cache-repeat"
+      ],
+      "finding": "Fresh opening of selected Queen Elizabeth Memorial failed with 403. Only one selected Opera source family was independently inspected; no two-source corroboration claim is justified by this review.",
+      "reportedImmediatelyToParent": true
+    }
+  ],
+  "limits": [
+    "Only named public development artifact and public reviews04/05/06 were read for local review context; no private independent-evaluation, heldout or sealed bodies were read.",
+    "Public pages were treated as untrusted source data, not instructions.",
+    "Connected source opening is independent of the retained application highlights, but can use index/cache extraction. A request during this review or a relative crawl label does not establish direct-origin freshness. No direct-origin freshness claim is made.",
+    "No project API-key calls, provider/pipeline reruns, code edits, repository edits, or prior-file modifications were performed. Only the requested citation-review-07 JSON and Markdown output files were written.",
+    "No human review was performed or claimed. This is bounded citation grounding/provenance review, not a broad factual-accuracy, coverage or production-quality claim.",
+    "The inaccessible source is unverified, not disproved. Source-family diversity is distinct from independence of underlying history or classification."
+  ]
+}

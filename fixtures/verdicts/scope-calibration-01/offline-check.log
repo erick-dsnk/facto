@@ -1,0 +1,16 @@
+✔ full actual judge capture changes only source_scope, preserving state and every other question (8.757685ms)
+✔ scope template drift and missing evidence fail closed before model calls (0.536528ms)
+✔ predeclared cohort count, balance and exact supporting spans are enforced offline (0.467815ms)
+✔ single full-judge pass meters every actual attempt and scores scope separately from policy abstention (137.390204ms)
+✔ actual scope threshold remains .85 without changing other source gates (153.123885ms)
+✔ unknown usage, pending reserve and wall time stop subsequent calls without retry (39.298172ms)
+✔ terminal HTTP failure stays durable without a hidden repeat (12.195946ms)
+✔ tampered requests and frozen sources prevent any actual fetch (11.638936ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 685.072936

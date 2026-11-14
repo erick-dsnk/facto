@@ -1,0 +1,233 @@
+// UNWIRED experiment. No FrozenClaimFrame or RecordCapability is constructed.
+import { createHash } from 'node:crypto';
+import { createJudge } from '/workspace/stack-20/services/api/src/providers/jev/judgment.js';
+import { createJevClient, validateAnswers, type JevRequest, type JevAnswer } from '/workspace/stack-20/services/api/src/providers/jev/client.js';
+import { MODEL_VERSION, type AcceptedClaim } from '/workspace/stack-20/packages/contracts/src/index.js';
+import { resolveReceipt, manifestIdentity, type InstalledManifest } from '../record-capability-prototype-02/src/manifest.js';
+import { snapshotState, type VerifiedSnapshot } from '../record-capability-prototype-02/src/snapshot.js';
+import { bindExcerpt } from '../record-capability-prototype-02/src/bind.js';
+import { canonical, deepFreeze, contextInputDigest, parseContext, parseRetainedRecord, type Context, type JsonObject } from '../record-capability-prototype-02/src/types.js';
+import { inspectMaterial, inspectOwnerBinding, assertCurrentOwner, deriveInitialGraph, type MaterialSnapshot, type MaterialHandle, type RuntimeOwnerHandle } from '../capability-selection-seam-02/material.js';
+import { versionReferenceAvailability } from './version-reference.js';
+import { ownResponse, discardResponse } from './transport.js';
+import { inspectDispatchOwner, assertDispatchOwnerCurrent, awaitOwnedDispatch, type DispatchOwner } from './runtime-owner.js';
+import { APPLICABILITY_INSTRUCTIONS, APPLICABILITY_CRITERIA } from './question.js';
+const hash = (v: string) => createHash('sha256').update(v).digest('hex');
+const fail = (reason: string): never => { throw new Error(reason); };
+const wire = (request: JevRequest) => JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions });
+
+export interface ReceiptBinding { receiptAlias: string; artifact: VerifiedSnapshot; evidenceId: string }
+export interface SemanticEligibility { readonly kind: 'unwired_semantic_eligibility' }
+interface Bound {
+  questionId: string; evidenceId: string; evidenceSHA256: string; receiptAlias: string;
+  receiptSHA256: string; manifestSHA256: string; versionId: string;
+  relation: string; scopeDimensions: string[]; canonicalDocumentId: string; documentClass: string;
+}
+interface TokenState { manifest: InstalledManifest; material: MaterialHandle; owner: RuntimeOwnerHandle; dispatchOwner: DispatchOwner; context: Context; bound: Bound; audit: EligibilityAudit; actualAsk:object }
+const tokens = new WeakMap<object, TokenState>();
+export interface CompletedJudgment {readonly kind:'unwired_completed_judgment'}
+interface ActualAsk {
+ material:MaterialHandle;dispatchOwner:DispatchOwner;manifest:InstalledManifest;rawGeneration:string;preAskMaterialGeneration:string;
+ request:string;requestSHA256:string;answers:Record<string,JevAnswer>;answersSHA256:string;
+ judgment:Awaited<ReturnType<ReturnType<typeof createJudge>>>;judgmentSHA256:string;chargedAttempts:1;consumed:boolean;
+}
+const actualAsks=new WeakMap<object,ActualAsk>();
+const completedJudgments=new WeakMap<object,{ask:object;context:Context;contextSHA256:string;graphGeneration:string}>();
+function sealActualAsk(input:Omit<ActualAsk,'consumed'>):object{
+ const handle=Object.freeze(Object.create(null));actualAsks.set(handle,{...input,consumed:false});return handle;
+}
+/** Only this private closure consumes an actually observed response. Pure native
+ * derivation data and caller-authored Judgment/hash objects cannot mint it. */
+function consumeActualAsk(handle:object):{snapshot:Readonly<MaterialSnapshot>;ask:ActualAsk}{
+ const s=actualAsks.get(handle);if(!s)throw Error('actual_ask_missing');if(s.consumed)throw Error('actual_ask_consumed');
+ assertDispatchOwnerCurrent(s.dispatchOwner);manifestIdentity(s.manifest);
+ const before=inspectMaterial(s.material);
+ if(before.rawGeneration!==s.rawGeneration||before.materialGeneration!==s.preAskMaterialGeneration
+  ||hash(s.request)!==s.requestSHA256||hash(canonical(s.answers))!==s.answersSHA256||hash(canonical(s.judgment))!==s.judgmentSHA256)fail('actual_ask_binding_changed');
+ s.consumed=true;
+ const derived=before.originGraphState.mode==='initial_pending_judgment'?deriveInitialGraph(s.material,s.judgment):undefined;
+ const after=derived?.completedSnapshot??before;
+ if(after.rawGeneration!==before.rawGeneration||canonical(after.retainedRecords)!==canonical(before.retainedRecords)
+  ||after.originGraphState.nativeContextAvailable!==true||after.originGraphState.completeAtSelectorInputBoundary!==true)fail('completed_native_graph_unavailable');
+ if(derived&&(derived.preAskMaterialGeneration!==before.materialGeneration||derived.judgmentSHA256!==s.judgmentSHA256))fail('derived_response_mismatch');
+ assertDispatchOwnerCurrent(s.dispatchOwner);return{snapshot:after,ask:s};
+}
+export function verifyCompletedJudgment(token:unknown,input:{material:MaterialHandle;dispatchOwner:DispatchOwner;context:Context}):boolean{
+ try{
+  if(!token||typeof token!=='object')return false;const complete=completedJudgments.get(token);if(!complete)return false;
+  const s=actualAsks.get(complete.ask);if(!s||!s.consumed||s.material!==input.material||s.dispatchOwner!==input.dispatchOwner)return false;
+  assertDispatchOwnerCurrent(s.dispatchOwner);manifestIdentity(s.manifest);
+  const before=inspectMaterial(s.material);
+  return before.rawGeneration===s.rawGeneration&&before.materialGeneration===s.preAskMaterialGeneration
+   &&hash(s.request)===s.requestSHA256&&hash(canonical(s.answers))===s.answersSHA256&&hash(canonical(s.judgment))===s.judgmentSHA256
+   &&hash(canonical(complete.context))===complete.contextSHA256&&hash(canonical(parseContext(input.context)))===complete.contextSHA256;
+ }catch{return false;}
+}
+
+export interface EligibilityAudit {
+  requestSHA256: string; answersSHA256: string; contextSHA256: string; receiptSHA256: string;
+  evidenceId: string; excerptSHA256: string; claimSHA256: string; ownerIdentity: string;
+  applicability: string; coveredProbability: number; allOtherPolicyGatesRequired: true;
+  productionWired: false; verdictAssigned: false; recordCapabilityIssued: false;
+  temporalAuthorization: false; independentCorroborationCredit: false;
+}
+export function verifySemanticEligibility(token: unknown, input: { manifest: InstalledManifest; material: MaterialHandle; owner: RuntimeOwnerHandle; context: Context }): boolean {
+  try {
+    if (!token || typeof token !== 'object') return false;
+    const s = tokens.get(token); if (!s || s.manifest !== input.manifest || s.material !== input.material || s.owner !== input.owner) return false;
+    const actual=actualAsks.get(s.actualAsk);if(!actual?.consumed||actual.material!==s.material||actual.dispatchOwner!==s.dispatchOwner)return false;
+    assertDispatchOwnerCurrent(s.dispatchOwner); manifestIdentity(s.manifest); resolveReceipt(s.manifest, s.bound.receiptAlias);
+    return hash(canonical(s.context))===s.audit.contextSHA256&&hash(canonical(parseContext(input.context)))===s.audit.contextSHA256;
+  } catch { return false; }
+}
+
+/** Owns actual serialization and fetch; callers cannot claim a body was sent.
+ * Fetch injection is the same test/transport dependency seam as production.
+ * Never installs receipts or supplies a source/model-defined authority handle. */
+export function createApplicabilityAdapter(options: {
+  manifest: InstalledManifest; dispatchOwner: DispatchOwner;
+  bindings: ReceiptBinding[]; semanticAsOf: string; apiKey: string; fetch?: typeof globalThis.fetch;
+}) {
+  const { manifest, dispatchOwner, apiKey, semanticAsOf } = options;
+  if(typeof semanticAsOf!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(semanticAsOf)||!Number.isFinite(Date.parse(semanticAsOf)))fail('invalid_semantic_anchor');
+  const bindings = options.bindings.map(b => Object.freeze({ ...b }));
+  const fetcher = options.fetch ?? globalThis.fetch;
+  let used = false;
+  return async (claim: AcceptedClaim) => {
+    const { owner: runtimeOwner, material, context } = inspectDispatchOwner(dispatchOwner);
+    if (used) fail('adapter_already_used'); used = true;
+    assertDispatchOwnerCurrent(dispatchOwner);
+    const snapshot = inspectMaterial(material), owner = inspectOwnerBinding(runtimeOwner);
+    if (claim.id !== owner.claimId || claim.checkedText !== snapshot.exactCheckedText) fail('adapter_claim_mismatch');
+    const unavailable: { evidenceId: string; reason: string }[] = [];
+    let bound: Bound[] = [];
+    try { for(const record of [...snapshot.retainedRecords,...snapshot.originNodes.map(n=>n.record)])parseRetainedRecord(record); } catch (error) { unavailable.push({ evidenceId: '*', reason: `prototype_material_unavailable:${String(error)}` }); }
+    if (!unavailable.length) for (const binding of bindings) {
+      try {
+        assertDispatchOwnerCurrent(dispatchOwner);
+        const identity = manifestIdentity(manifest), entry = resolveReceipt(manifest, binding.receiptAlias);
+        const artifact = snapshotState(binding.artifact, manifest), receipt = entry.receipt;
+        const index = snapshot.retainedRecords.findIndex(e => e.id === binding.evidenceId);
+        if (index < 0) fail('receipt_target_not_retained');
+        const evidence = snapshot.retainedRecords[index]!;
+        if (bound.some(b => b.evidenceId === evidence.id)) fail('duplicate_receipt_target');
+        if (evidence.url !== receipt.canonicalURL || artifact.proof.id !== receipt.proofId
+          || artifact.proof.rawBodySHA256 !== receipt.rawBodySHA256 || artifact.proof.extractionSHA256 !== receipt.extractionSHA256
+          || artifact.proof.requestedURL !== receipt.canonicalURL) fail('receipt_material_mismatch');
+        bindExcerpt(receipt, artifact.text, evidence.excerpt);
+        const temporal=versionReferenceAvailability(claim.checkedText,receipt.versionId);
+        if(!temporal.allowed)fail(temporal.reason);
+        bound.push({ questionId: `a${index}_applicability`, evidenceId: evidence.id, evidenceSHA256: hash(evidence.excerpt),
+          receiptAlias: binding.receiptAlias, receiptSHA256: entry.sha256, manifestSHA256: identity, versionId: receipt.versionId,
+          canonicalDocumentId: receipt.canonicalDocumentId, documentClass: receipt.documentClass, relation: receipt.relation, scopeDimensions: Object.keys(receipt.scope).sort() });
+      } catch (error) { unavailable.push({ evidenceId: binding.evidenceId, reason: String(error) }); }
+    }
+    let actualRequest = '', rawAnswers: Record<string, JevAnswer> | undefined;
+    let dispatchCount = 0, augmentationBytes = 0, baselineBytes = 0;
+    let dispatchMap: Bound[] = [];
+    const transport = createJevClient({ apiKey: apiKey, fetch: async (url, init) => {
+      assertDispatchOwnerCurrent(dispatchOwner);
+      for (const b of dispatchMap) { manifestIdentity(manifest); if (resolveReceipt(manifest, b.receiptAlias).sha256 !== b.receiptSHA256) fail('receipt_changed'); }
+      if (++dispatchCount !== 1 || typeof init?.body !== 'string' || init.body !== actualRequest) fail('unsealed_dispatch');
+      context.signal.throwIfAborted();
+      const response = await fetcher(url, init);
+      try {
+        assertDispatchOwnerCurrent(dispatchOwner);
+        return ownResponse(response, context.signal, () => assertDispatchOwnerCurrent(dispatchOwner));
+      } catch(error) { discardResponse(response,error); throw error; }
+    } });
+    const judge = createJudge({ ask: async (request, inherited) => {
+      assertDispatchOwnerCurrent(dispatchOwner);
+      const state = request.state as { checked_proposition: string; evidence: { id: string; url: string; excerpt: string }[] };
+      if (state.checked_proposition !== snapshot.exactCheckedText || state.evidence.length !== snapshot.retainedRecords.length
+        || state.evidence.some((e, i) => e.id !== snapshot.retainedRecords[i]!.id || e.url !== snapshot.retainedRecords[i]!.url || e.excerpt !== snapshot.retainedRecords[i]!.excerpt)) fail('base_request_material_mismatch');
+      // Study-only declared interpretation anchor, identical in both arms. It is
+      // not runtime time, freshness proof or an operative factual premise.
+      request=structuredClone(request);
+      (request.state as Record<string,unknown>).semantic_as_of=semanticAsOf;
+      baselineBytes = Buffer.byteLength(wire(request));
+      if (baselineBytes > 65536) fail('baseline_request_too_large');
+      const augmented = structuredClone(request);
+      if (bound.length) {
+        (augmented.state as Record<string, unknown>).record_applicability = bound.map(b => ({ question: b.questionId,
+          source: `e${snapshot.retainedRecords.findIndex(e => e.id === b.evidenceId)}`, relation: b.relation,
+          scopeDimensions: b.scopeDimensions, snapshotOnly: true,
+          trusted_record_identity: { canonicalDocumentId: b.canonicalDocumentId, versionId: b.versionId,
+            documentClass: b.documentClass, provenanceMode: 'dated_reviewed_snapshot' } }));
+        for (const b of bound) {
+          if (Object.hasOwn(augmented.questions, b.questionId)) fail('question_collision');
+          augmented.questions[b.questionId] = { type: 'choice', instructions: APPLICABILITY_INSTRUCTIONS, criteria: { ...APPLICABILITY_CRITERIA } };
+        }
+      }
+      const augmentedBytes = Buffer.byteLength(wire(augmented));
+      const fits = augmentedBytes <= 65536;
+      if (!fits) { unavailable.push(...bound.map(b => ({ evidenceId: b.evidenceId, reason: 'augmentation_request_too_large' }))); bound = []; }
+      dispatchMap = structuredClone(bound);
+      const sent = fits ? augmented : request;
+      actualRequest = wire(sent); augmentationBytes = Buffer.byteLength(actualRequest) - baselineBytes;
+      deepFreeze(sent);
+      // Experimental adapter has exactly one actual attempt; no hidden retry.
+      const noRetryContext = { ...inherited, canConsume: () => false };
+      rawAnswers = validateAnswers({ answers: await transport.ask(sent, noRetryContext) }, sent.questions);
+      assertDispatchOwnerCurrent(dispatchOwner);
+      // Existing judge validates only its unchanged baseline questions.
+      return Object.fromEntries(Object.keys(request.questions).map(key => [key, rawAnswers![key]!]));
+    } });
+    const judgment = await awaitOwnedDispatch(dispatchOwner, () => judge(claim, snapshot.retainedEvidence, context));
+    assertDispatchOwnerCurrent(dispatchOwner);
+    if (!actualRequest || dispatchCount !== 1 || !rawAnswers) fail('assessment_dispatch_missing');
+    const answers = deepFreeze(structuredClone(rawAnswers!));
+    const privateJudgment=deepFreeze(structuredClone(judgment));
+    const actualAsk=sealActualAsk({material,dispatchOwner,manifest,rawGeneration:snapshot.rawGeneration,preAskMaterialGeneration:snapshot.materialGeneration,
+      request:actualRequest,requestSHA256:hash(actualRequest),answers,answersSHA256:hash(canonical(answers)),judgment:privateJudgment,judgmentSHA256:hash(canonical(privateJudgment)),chargedAttempts:1});
+    let completedSnapshot:Readonly<MaterialSnapshot>|undefined;
+    try{completedSnapshot=consumeActualAsk(actualAsk).snapshot;}
+    catch(error){unavailable.push({evidenceId:'*',reason:`native_completion_unavailable:${String(error)}`});bound=[];}
+    const conflict = judgment.evidence.some(e => e.directlyAddressesClaim && e.matchesTimePlaceAndPopulation
+      && (e.stanceProbability ?? 0) >= .8 && e.stance === 'supports')
+      && judgment.evidence.some(e => e.directlyAddressesClaim && e.matchesTimePlaceAndPopulation
+        && (e.stanceProbability ?? 0) >= .8 && e.stance === 'contradicts');
+    const input = { claim: { exactText: claim.checkedText, revision: String(owner.revision) },
+      risk: judgment.claimRisk.level, credibleConflictPresent: conflict,
+      retainedEvidenceIds: (completedSnapshot??snapshot).retainedRecords.map(e => e.id), retainedRecords: (completedSnapshot??snapshot).retainedRecords,
+      retainedNodeKeys: (completedSnapshot??snapshot).retainedNodeKeys, originNodes: (completedSnapshot??snapshot).originNodes,
+      originLinks: (completedSnapshot??snapshot).originLinks, originGraphState: (completedSnapshot??snapshot).originGraphState };
+    // This is the actual assessment, not a fabricated pre-ask fixture/context.
+    let assessmentContext: Context | undefined;
+    try { if(!completedSnapshot)fail('native_completion_missing');assessmentContext = deepFreeze(parseContext({ ...input, assessment: {
+      id: hash(actualRequest), revision: hash(canonical(answers)), inputSHA256: contextInputDigest(input),
+      state: JSON.parse(JSON.stringify({ requestSHA256: hash(actualRequest), answers, judgment:privateJudgment,preAskMaterialGeneration:snapshot.materialGeneration,rawGeneration:snapshot.rawGeneration,derivedGraphGeneration:completedSnapshot!.graphGeneration })) as JsonObject } })); } catch (error) {
+      unavailable.push(...bound.map(b => ({ evidenceId: b.evidenceId, reason: `assessment_context_unavailable:${String(error)}` })));
+      bound = [];
+    }
+    let completedJudgment:{token:CompletedJudgment;audit:{requestSHA256:string;answersSHA256:string;judgmentSHA256:string;rawGeneration:string;preAskMaterialGeneration:string;derivedGraphGeneration:string;actualAskConsumed:true;authorityGranted:false}}|undefined;
+    assertDispatchOwnerCurrent(dispatchOwner);
+    if(assessmentContext&&completedSnapshot){
+      assertDispatchOwnerCurrent(dispatchOwner);
+      const token=Object.freeze({kind:'unwired_completed_judgment' as const});
+      completedJudgments.set(token,{ask:actualAsk,context:assessmentContext,contextSHA256:hash(canonical(assessmentContext)),graphGeneration:completedSnapshot.graphGeneration});
+      completedJudgment={token,audit:deepFreeze({requestSHA256:hash(actualRequest),answersSHA256:hash(canonical(answers)),judgmentSHA256:hash(canonical(privateJudgment)),rawGeneration:snapshot.rawGeneration,preAskMaterialGeneration:snapshot.materialGeneration,derivedGraphGeneration:completedSnapshot.graphGeneration,actualAskConsumed:true,authorityGranted:false})};
+    }
+    const eligibility: { token: SemanticEligibility; audit: EligibilityAudit }[] = [];
+    for (const b of bound) {
+      const answer = answers[b.questionId]!;
+      const p = answer.probabilities!.covered!;
+      if (answer.choice !== 'covered' || p < .85) { unavailable.push({ evidenceId: b.evidenceId, reason: 'applicability_not_established' }); continue; }
+      if (judgment.claimRisk.level !== 'ordinary' || judgment.claimRisk.confidence < .85) { unavailable.push({ evidenceId: b.evidenceId, reason: 'risk_requires_existing_stronger_route' }); continue; }
+      assertDispatchOwnerCurrent(dispatchOwner); resolveReceipt(manifest, b.receiptAlias);
+      const audit: EligibilityAudit = deepFreeze({ requestSHA256: hash(actualRequest), answersSHA256: hash(canonical(answers)),
+        contextSHA256: hash(canonical(assessmentContext!)), receiptSHA256: b.receiptSHA256,
+        evidenceId: b.evidenceId, excerptSHA256: b.evidenceSHA256, claimSHA256: hash(claim.checkedText), ownerIdentity: owner.ownerIdentity,
+        applicability: answer.choice, coveredProbability: p, allOtherPolicyGatesRequired: true,
+        productionWired: false, verdictAssigned: false, recordCapabilityIssued: false, temporalAuthorization: false, independentCorroborationCredit: false });
+      const token = Object.freeze({ kind: 'unwired_semantic_eligibility' as const });
+      tokens.set(token, { manifest: manifest, material: material, owner: runtimeOwner, dispatchOwner, context: assessmentContext!, bound: b, audit, actualAsk });
+      eligibility.push({ token, audit });
+    }
+    assertDispatchOwnerCurrent(dispatchOwner);
+    return { judgment, eligibility, unavailable, assessmentContext,completedJudgment,
+      dispatch: deepFreeze({ requestSHA256: hash(actualRequest), answersSHA256: hash(canonical(answers)), baselineBytes,
+        augmentationBytes, actualBytes: Buffer.byteLength(actualRequest), attempts: dispatchCount, questionMap: dispatchMap,
+        model: MODEL_VERSION, productionWired: false }) };
+  };
+}

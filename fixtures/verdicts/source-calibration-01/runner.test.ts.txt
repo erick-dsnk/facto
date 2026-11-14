@@ -1,0 +1,135 @@
+import { strict as assert } from 'node:assert';
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import { buildPlan, decode, executePlan, extractBaselineQuestion, LIMITS, metrics } from './runner.ts';
+
+const units = [
+  { id: 'test-positive', proposition: 'The port opened in 1902.', title: 'Port record', url: 'https://record.example/entry', excerpt: 'SYNTHETIC registry entry P-24: the port opened in 1902 and the first vessel was logged.', sourceFamily: 'one', partition: 'development' as const },
+  { id: 'test-negative', proposition: 'The port opened in 1902.', title: 'Port record', url: 'https://assertion.example/entry', excerpt: 'The port opened in 1902. Everybody knows it.', sourceFamily: 'two', partition: 'validation' as const },
+];
+const labels = [{ id: units[0].id, expectedBasis: 'substantive' as const, supportingSpan: 'registry entry P-24' }, { id: units[1].id, expectedBasis: 'non_substantive' as const, supportingSpan: 'Everybody knows it.' }];
+const makePlan = () => buildPlan(units, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'calibration-test-')), 'run');
+const answersFor = (body: string) => {
+  const request = JSON.parse(body);
+  return Object.fromEntries(Object.entries(request.questions).map(([key, value]) => {
+    const question = value as { criteria: Record<string, string> };
+    const selected = key.endsWith('_substantive_basis') ? 'substantive' : 'original_record';
+    return [key, { choice: selected, probabilities: Object.fromEntries(Object.keys(question.criteria).map(option => [option, option === selected ? 1 : 0])) }];
+  }));
+};
+const fakeFetch = (usage?: number): typeof fetch => async (_input, init) => new Response(JSON.stringify({ answers: answersFor(String(init!.body)), ...(usage === undefined ? {} : { usage: { input_tokens: usage } }) }), { status: 200 });
+
+test('baseline is extracted offline from original seven-way production criteria', async () => {
+  const question = await extractBaselineQuestion(units[0]);
+  assert.equal(question.type, 'choice');
+  if (question.type !== 'choice') throw new Error();
+  assert.equal(Object.keys(question.criteria).length, 7);
+  assert.match(question.criteria.bare_assertion, /generic reference entry/);
+  assert.match(question.instructions, /NOT verified publisher reliability/);
+});
+
+test('freeze uses identical retained state, independent question arms and no labels in requests', async () => {
+  const plan = await makePlan();
+  assert.equal(plan.calls.length, 2);
+  assert.deepEqual(plan.calls[0].request.state, plan.calls[1].request.state);
+  assert.ok(plan.calls.every(call => !JSON.stringify(call.request).includes('expectedBasis')));
+  assert.equal(plan.threshold, .85);
+  assert.equal(plan.limits.maxAttempts, 16);
+  assert.ok(Object.keys(plan.templateHashes).length >= 3);
+  assert.ok(Object.keys(plan.sourceHashes).length >= 6);
+});
+
+test('budget, family split and independently retained label spans reject malformed plans before calls', async () => {
+  await assert.rejects(buildPlan([...units, { ...units[0], id: 'cross', partition: 'validation' }], [...labels, { ...labels[0], id: 'cross' }], {}), /family crosses/);
+  await assert.rejects(buildPlan(units, labels.slice(0, 1), {}), /one frozen label/);
+  await assert.rejects(buildPlan(units, [{ ...labels[0], supportingSpan: 'invented' }, labels[1]], {}), /span not retained/);
+  await assert.rejects(buildPlan(Array.from({ length: 49 }, (_, index) => ({ ...units[0], id: `${index}` })), [], {}), /unit count/);
+});
+
+test('single pass records actual attempts, bytes and measured tokens durably by split', async () => {
+  const plan = await makePlan();
+  const directory = output();
+  const report = await executePlan(plan, directory, { apiKey: 'offline-test', fetch: fakeFetch(100) }) as any;
+  assert.equal(report.stopReason, 'completed');
+  assert.equal(report.completedAllCalls, true);
+  assert.equal(report.totals.attempts, 2);
+  assert.equal(report.totals.actualFetches, 2);
+  assert.equal(report.totals.measuredInputTokens, 200);
+  assert.equal(report.totals.requestBytes, plan.calls.reduce((sum, call) => sum + call.requestBytes, 0));
+  assert.ok(report.totals.responseBytes > 0);
+  assert.equal(report.metrics.development.baseline.truePositive, 1);
+  assert.equal(report.metrics.validation.candidate.falsePositive, 1);
+  const journal = readFileSync(join(directory, 'events.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(journal.filter(event => event.type === 'attempt_terminal').length, 2);
+  assert.equal(journal.at(-1).type, 'finished');
+  await assert.rejects(executePlan(plan, directory, { apiKey: 'offline-test', fetch: fakeFetch(100) }), /EEXIST/);
+});
+
+test('missing usage fails closed after the actual call without silent rerun', async () => {
+  const plan = await makePlan();
+  const report = await executePlan(plan, output(), { apiKey: 'offline-test', fetch: fakeFetch() }) as any;
+  assert.equal(report.stopReason, 'unknown_usage');
+  assert.equal(report.totals.attempts, 1);
+  assert.equal(report.totals.unknownUsage, true);
+  assert.equal(report.outcomes.length, 1);
+  assert.equal(report.metrics.validation.candidate.missingOrFailed, 1);
+});
+
+test('pending reserve stops the next call at the unchanged measured-token budget', async () => {
+  const report = await executePlan(await makePlan(), output(), { apiKey: 'offline-test', fetch: fakeFetch(LIMITS.maxInputTokens - LIMITS.pendingReserve + 1) }) as any;
+  assert.equal(report.stopReason, 'budget_reserve');
+  assert.equal(report.totals.attempts, 1);
+});
+
+test('HTTP errors and malformed answers are terminal, durable and never retried', async () => {
+  for (const response of [new Response('denied', { status: 401 }), new Response(JSON.stringify({ answers: {}, usage: { input_tokens: 10 } }), { status: 200 })]) {
+    const directory = output();
+    const report = await executePlan(await makePlan(), directory, { apiKey: 'offline-test', fetch: async () => response }) as any;
+    assert.equal(report.totals.attempts, 1);
+    assert.equal(report.outcomes[0].status, 'failed');
+    assert.ok(readFileSync(join(directory, 'events.jsonl'), 'utf8').includes('attempt_terminal'));
+  }
+});
+
+test('tampered request freeze is rejected before network or output creation', async () => {
+  const plan = await makePlan();
+  plan.calls[0].request.state = { replaced: true };
+  let calls = 0;
+  await assert.rejects(executePlan(plan, output(), { apiKey: 'offline-test', fetch: async () => { calls++; throw new Error(); } }), /freeze mismatch/);
+  assert.equal(calls, 0);
+});
+
+test('baseline confidence retains accepted-set probability and chosen-category gate', async () => {
+  const plan = await makePlan();
+  const call = plan.calls.find(call => call.arm === 'baseline')!;
+  const answers = answersFor(JSON.stringify(call.request));
+  answers.u0_content_basis = { choice: 'original_record', probabilities: { original_record: .4, attributable_research: .2, substantive_secondary: .25, bare_assertion: .15, promotional: 0, attributed: 0, unclear: 0 } };
+  assert.equal(decode(call, answers)[0].passesContentBasis, true);
+  answers.u0_content_basis.choice = 'bare_assertion';
+  assert.equal(decode(call, answers)[0].passesContentBasis, false);
+  const summary = metrics(plan, []) as any;
+  assert.equal(summary.development.baseline.missingOrFailed, 1);
+});
+
+test('predeclared boundary labels stay outside primary metrics with explicit sensitivity', async () => {
+  const plan = await makePlan();
+  plan.labels[1].excludeFromPrimary = true;
+  const report = await executePlan(plan, output(), { apiKey: 'offline-test', fetch: fakeFetch(100) }) as any;
+  assert.equal(report.metrics.validation.candidate.planned, 0);
+  assert.equal(report.metrics.validation.candidate.falsePositive, 0);
+  assert.equal(report.metrics.validation.candidate.excludedFromPrimary, 1);
+  assert.equal(report.metrics.validation.candidate.boundaryPredictions.length, 1);
+  assert.equal(report.metrics.validation.candidate.boundarySensitivity.ifAllNonSubstantive.additionalFalsePositive, 1);
+});
+
+test('wall deadline prevents a first call and records all units missing', async () => {
+  let reads = 0;
+  const report = await executePlan(await makePlan(), output(), { apiKey: 'offline-test', fetch: fakeFetch(100), now: () => reads++ === 0 ? 0 : LIMITS.wallMs + 1 }) as any;
+  assert.equal(report.stopReason, 'wall_budget');
+  assert.equal(report.totals.attempts, 0);
+  assert.equal(report.totals.actualFetches, 0);
+  assert.equal(report.metrics.development.baseline.missingOrFailed, 1);
+});

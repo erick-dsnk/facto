@@ -1,0 +1,60 @@
+{
+  "kind": "candidate09_frozen_runtime_plan_validation",
+  "createdAt": "2026-11-14T05:09:16.017923+00:00",
+  "freezeSHA256": "f12a85c3a308882c52e9c4f271cea80ae0479ba49a29a5fc0f2951d28ea0cdf1",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8",
+  "fullManifestSHA256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+  "check": {
+    "tests": 525,
+    "files": 25,
+    "logSHA256": "d5287bea213ec4e033bc3f9986316a452b909fb8e2918711ded4d756ea7cf726"
+  },
+  "evaluate": {
+    "counts": {
+      "selected": 36,
+      "passed": 36,
+      "failed": 0,
+      "notRun": 0,
+      "heldoutReserved": 12
+    },
+    "presentation": {
+      "passed": 21,
+      "total": 21
+    },
+    "logSHA256": "0218f143934ce183f1e6bcca5efdd4148f3ce4fc3cc03a591043d6bd2676fe29"
+  },
+  "strictInputValidationArtifactSHA256": "a1f0828dd2bf5472b6fd9ecd5bf56a7d457ef4d605f2467f4f8d61c31f88df68",
+  "previews": [
+    {
+      "batch": 1,
+      "previewSHA256": "9596ce72ebb7b4a0a3a5f25fe641b236cc1b57bb27fff70b38ac6bad08cc545e",
+      "manifestSHA256": "755fcccac694f94db05743d6723e4a123e3003f79c01142d8a2d5551c5cf1e99",
+      "outputJournalAndCheckpointAbsent": true
+    },
+    {
+      "batch": 2,
+      "previewSHA256": "9699f75cd77ab5613ee792f1fa5aede54350e320c4ae5c2bd94427a8116e53a3",
+      "manifestSHA256": "65f4edaf91213073c46678babf92e65c7087b8dde51d98489dbb68e379e97fc9",
+      "outputJournalAndCheckpointAbsent": true
+    },
+    {
+      "batch": 3,
+      "previewSHA256": "8bbd59e8368166ef522f0026edd64b2943f1efb8dd2b4c2286a8737af5501056",
+      "manifestSHA256": "8c42e6eaace67ce1fa5e01a90f007509ed961096a00ec77ede075c714cae16da",
+      "outputJournalAndCheckpointAbsent": true
+    },
+    {
+      "batch": 4,
+      "previewSHA256": "ee587a1784c719ea6c5c0380397ac7be5496bc478ecf5a3aba5a5d4566ac89a6",
+      "manifestSHA256": "708232974c3357053c129c93443ddca9c81d0ce9e7580b7cafc90cba19a0e39f",
+      "outputJournalAndCheckpointAbsent": true
+    }
+  ],
+  "providerCalls": 0,
+  "planOnlyChildrenHadProviderCredentialsRemoved": true,
+  "sourceCleanAfterPlanOnlyImports": true,
+  "dispatchAuthorized": false,
+  "status": "offline_ready_pending_independent_plan_review_and_root_execution_instruction"
+}

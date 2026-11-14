@@ -1,0 +1,48 @@
+[
+  {
+    "caseLabel": "BD10",
+    "evidenceId": "ev-6a6fe886686c4d654057",
+    "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+    "excerptSHA256": "b681e556c772beaaff5e0536f2f53c50982b8fb713e2cb119674f9d93c247a93",
+    "priorReview": {
+      "caseLabel": "BD10",
+      "expectedClaimId": "BD10",
+      "evidenceId": "ev-6a6fe886686c4d654057",
+      "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+      "excerptSHA256": "b681e556c772beaaff5e0536f2f53c50982b8fb713e2cb119674f9d93c247a93",
+      "status": "verified",
+      "reviewedAt": "2026-11-14T04:19:05.217388+00:00",
+      "reviewer": "independent_agent",
+      "note": "Fresh GET returned HTTP 200 substantive FederalRegister.gov Smithsonian agency profile. The entire selected paragraph matches normalized page text and explicitly says created by an act of Congress on 10 August 1846, citing 20 U.S.C. 41 et seq.; this directly addresses and contradicts the claimed British-charter mechanism while preserving the correct year. This is an agency-description page, not the 1846 act itself. Site legal notice labels its Web 2.0 edition an unofficial informational resource; no official statutory scan was substituted or inspected."
+    },
+    "reusedOriginMetadata": {
+      "id": "6a6fe886686c4d65",
+      "requestedUrl": "https://www.federalregister.gov/agencies/smithsonian-institution",
+      "requestedAt": "2026-11-14T04:19:04.778451+00:00",
+      "method": "GET",
+      "projectKeysUsed": false,
+      "providerIndexedRetrievalUsed": false,
+      "completedAt": "2026-11-14T04:19:05.217388+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://www.federalregister.gov/agencies/smithsonian-institution",
+      "responseHeaders": {
+        "date": "Sat, 14 Nov 2026 04:19:05 GMT",
+        "content-type": "text/html; charset=utf-8",
+        "age": "0",
+        "cache-control": "no-store, no-cache, must-revalidate, private",
+        "server": "envoy"
+      },
+      "redirects": [],
+      "responseBodyFile": "6a6fe886686c4d65.body",
+      "responseBodyBytes": 41198,
+      "responseBodySHA256": "8058d402ee3bac7ff8e51ca0ca85d3cd725da98ac962f6c739cf0e6061501011",
+      "bodyEncoding": "utf-8",
+      "bodyTruncated": false,
+      "responseBodyNote": "HTTP entity bytes read by urllib; transport headers/TLS wire bytes not included.",
+      "extractedTextFile": "6a6fe886686c4d65.text.txt",
+      "extractedTextSHA256": "1bff2fa0f581774e5074da3e39ac5d68cdc3ad670b3786337e2574fc31831588",
+      "extractedTextCodepoints": 7517
+    },
+    "reason": "Exact selected URL and exact excerpt SHA256 match previously verified proof. Old fetch timing preserved; no candidate-time origin freshness claim."
+  }
+]

@@ -1,0 +1,56 @@
+import{test}from'node:test';import assert from'node:assert/strict';
+import{createRetriever}from'/workspace/exa-envelope-guard/services/api/src/providers/exa/retrieval.ts';
+import{AttemptBudget}from'/workspace/exa-envelope-guard/services/api/src/runtime/budget.ts';
+import{PipelineError}from'/workspace/exa-envelope-guard/packages/contracts/src/index.ts';
+import{parseExaResponse,parseExaContentsResponse}from'/workspace/exa-envelope-guard/services/api/src/evidence/normalize.ts';
+globalThis.fetch=async()=>{throw Error('independent_review_network_forbidden');};
+const checkedText='The Aster bridge opened in 1890.',prefix='Private synthetic personal note. ',url='https://archive.example.org/aster';
+const excerpt='The Aster bridge opened in 1890. The municipal record describes the opening date and construction account.';
+const claim:any={id:'review-claim',originalText:prefix+checkedText,checkedText,sourceSpan:{start:Array.from(prefix).length,end:Array.from(prefix+checkedText).length},admission:{assertionStatus:'asserted',admissionAction:'check',hasPracticalConsequence:null,matchedSelectedTopic:null,reasonCode:'synthetic_public_fixture'}};
+let totalHTTP=0;
+const reply=(value:any)=>new Response(JSON.stringify(value),{status:200});
+async function exercise(variant:string){
+ const budget=new AttemptBudget(),controller=new AbortController();let clock=0;const context=budget.context(controller.signal,()=>clock,10000);const wires:any[]=[];
+ if(variant==='precancel')controller.abort(new PipelineError('cancelled'));
+ const retrieve=createRetriever({apiKey:'OFFLINE_INDEPENDENT_DUMMY',queryStrategy:'balanced_evidence',fetch:async(input,init)=>{
+  totalHTTP++;const kind=String(input).endsWith('/search')?'search':'contents',body=JSON.parse(String(init?.body));wires.push({kind,body});
+  assert.equal(init?.signal,controller.signal);assert.equal(String(init?.body).includes('Private synthetic'),false);
+  if(kind==='search'){
+   const base:any={results:[{url,highlights:[excerpt]}]};
+   if(variant==='search_failure')base.status='error';
+   if(variant==='search_malformed')base.results[0].status=['success'];
+   if(variant==='late_search')clock=10000;
+   return reply(base);
+  }
+  assert.deepEqual(body.urls,[url]);
+  const base:any={status:'success',results:[{url,text:'Failed payload must not become retained material.',status:'error',error:{tag:'SOURCE_NOT_AVAILABLE'}}],statuses:[{id:url,status:'error',error:{tag:'SOURCE_NOT_AVAILABLE',httpStatusCode:403}}]};
+  if(variant==='root_failure')base.error={tag:'SERVICE_OVERLOADED'};
+  if(variant==='unknown_failure')base.statuses[0].error.tag='UNKNOWN_PROVIDER_ERROR';
+  if(variant==='contradiction')base.statuses[0].status='success';
+  if(variant==='eligible_result_failure'){base.statuses=[{id:url,status:'success'}];}
+  if(variant==='transport_retry'&&wires.filter(x=>x.kind==='contents').length===1)return new Response('',{status:503,headers:{'retry-after':'0'}});
+  if(variant==='legacy_success')return reply({results:[{url,text:excerpt+' The public record is reproduced in this archive.'}],requestId:'extension',future:{ok:true}});
+  return reply(base);
+ }});
+ let result:any,error:any;try{result=await retrieve(claim,context);}catch(e){error=e;}
+ return{budget,wires,result,error};
+}
+for(const[variant,code,searches,contents]of [['search_failure','exa_content_failed',1,0],['search_malformed','malformed_exa_response',1,0],['root_failure','exa_content_failed',1,1],['unknown_failure','exa_content_failed',1,1],['contradiction','malformed_exa_response',1,1],['eligible_result_failure','exa_content_failed',1,1],['late_search','timeout',1,0],['precancel','cancelled',0,0]]as const)test(`actual SDK fail-closed accounting: ${variant}`,async()=>{
+ const x=await exercise(variant);assert.equal(x.error?.code,code);assert.equal(x.result,undefined);assert.equal(x.wires.length,searches+contents);assert.equal(x.budget.searches.get(claim.id)??0,searches);assert.equal(x.budget.contents.get(claim.id)??0,contents);assert.equal(x.budget.jev,0);
+});
+for(const variant of ['known_failure','transport_retry']as const)test(`known target fallback retains only separate indexed text: ${variant}`,async()=>{
+ const x=await exercise(variant);assert.equal(x.error,undefined);assert.equal(x.result.length,1);assert.equal(x.result[0].excerpt,excerpt);assert.equal(x.result[0].contentBasis,'highlight');assert.equal(x.result[0].stance,'unrelated');assert.equal(x.result[0].directlyAddressesClaim,false);
+ assert.equal(x.budget.searches.get(claim.id),1);assert.equal(x.budget.contents.get(claim.id),variant==='transport_retry'?2:1);assert.equal(x.wires.length,variant==='transport_retry'?3:2);
+});
+test('successful legacy envelope and unknown extension remain usable with fresh unassessed fields',async()=>{
+ const x=await exercise('legacy_success');assert.equal(x.error,undefined);assert.equal(x.result.length,1);assert.equal(x.result[0].contentBasis,'page_text');assert.equal(x.result[0].stance,'unrelated');assert.equal(x.result[0].directlyAddressesClaim,false);
+ assert.equal(x.budget.searches.get(claim.id),1);assert.equal(x.budget.contents.get(claim.id),1);
+});
+test('typed operational metadata is validated before stripping, unknown extensions never become returned fields',()=>{
+ const page={url,text:excerpt};
+ for(const parse of [(x:any)=>parseExaResponse(x),(x:any)=>parseExaContentsResponse(x,[url]).pages]){
+  for(const status of [null,['success'],200,{}])assert.throws(()=>parse({results:[page],status}),/malformed_exa_response/);
+  assert.deepEqual(parse({status:'success',error:null,tag:null,extension:{anything:true},results:[{...page,status:'success',error:null,tag:null,extra:'unrelated'}]}),[page]);
+ }
+});
+test('report actual injected HTTP count',()=>{process.stdout.write(JSON.stringify({injectedHTTP:totalHTTP,providerCalls:0,networkCalls:0,productionEdits:0})+'\n');});

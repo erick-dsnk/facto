@@ -1,6 +1,6 @@
 # Demo deck working outline
 
-This is draft content, not a final results claim. A bounded live provider smoke test supplements the fixture results below. Human citation review, integrated live transport and real-device measurements remain pending before submission. Keep the deck to eight slides.
+This is draft content, not a final results claim. Authenticated HTTP/WebSocket campaigns supplement the fixture results below. Useful factual coverage remains below the proposed readiness bar. Agent citation audits are complete to their stated access/scope limits, while real-device measurements remain deferred; no extra human sign-off gate is imposed. Keep the deck to eight slides.
 
 ## 1. Public information while hands and attention are occupied
 
@@ -22,7 +22,7 @@ Pending evidence: A6 recording of successful OCR capture and the exact route/dev
 
 ## 4. What is working
 
-Current backend branch provides versioned text/event interfaces, mockable provider seams, deterministic admission/verdict/presentation evaluation and a bounded direct-adapter Jev/Exa smoke test. A separate iOS workstream owns camera, audio, display, permissions and the ASR adapter.
+The backend provides authenticated HTTP/WebSocket transport, versioned text/event interfaces, bounded Jev/Exa adapters, deterministic admission/verdict/presentation policy, and a durable live evaluation harness. A separate iOS workstream owns camera, audio, display, permissions and the ASR adapter.
 
 Before submission, fill in a small table of actual OCR, audio, spoken output and display routes with `live`, `recorded` or `preview` status. Device integration is not established by the backend fixture tests.
 
@@ -40,11 +40,33 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-The fresh development-only rerun reproduced the initial deterministic result: 34 of 36 development scenarios passed, with 0 failures and 2 explicitly not executed by this harness; 12 held-outs remain reserved. Stage coverage is 33 admission, 17 verdict, 17 presentation and 1 malformed-provider check. The shared action suite passes 21/21. These are scripted control-flow tests, not model accuracy or hardware reliability.
+Current integration passes lint/typecheck and **580 tests across 29 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; later runtime/cache/selector changes are outside that freeze and have no live credit here.
 
-Live adapter smoke test on 14 November 2026: three synthetic typed inputs; three admission calls, two judgments and two Exa searches. Two public-only queries were inspected; a personal anecdote skipped retrieval. Of two checked public claims, one abstained under conservative source gates and one returned a cited supported result. The agent opened the definitive result’s selected source and confirmed its historical scope; human demo review remains pending. One deliberate HTTP 401 per provider stayed an operational error. Direct-adapter case times were 288, 1,894 and 2,086 ms, without an application cache; these are not capture-to-output statistics. See [evaluation](evaluation.md) and the [smoke record](live-smoke-2026-11-14.md).
+The [Exa cleanup integration](../fixtures/evaluation/live/exa-cleanup-integration-01/validation.json), tested clean at `d5dcde2`, also passed a fresh 36/36 development evaluation and 21/21 presentation fixtures. It preserves known provider/status/size errors when response cleanup rejects or remains pending. A native local HTTP peer-reset reproduction and separate injected-stream regressions support the fix; retries, actual charges and deadlines remain unchanged. The runtime branch passed 533 tests, and the source-quality branch 341; these are separate from the 580-test root gate.
 
-Real-device and integrated live transport sample sizes remain zero. Total provider cost and false alerts per listening minute are unmeasured. Add end-to-end/cached measurements and human citation review before presenting them. Do not use PRD/vendor/FactNudger scores as this prototype’s results.
+The [first experimental applicability study](../fixtures/verdicts/typed-applicability-calibration-01/README.md) completed 84 Jev calls over 42 paired cases but issued no eligibility grants: 0/18 positives passed .85, and both arms abstained on every case. Exact ternary matches were 27/42 declared cases (27/37 asked); five current-status exclusions remain in the denominator. Later vendor documentation established that the added question lacked its own explicit evidence/descriptor reference: question IDs are hidden and sibling questions cannot supply that binding. The archive preserves the failed run and corrected review inference. That failed first run remains unchanged.
+
+The separate [corrected-binding observation](../fixtures/verdicts/typed-applicability-calibration-02/README.md) completed 42/42 candidate-only Jev calls. Only **1/18 positives** passed .85 (0/15 original cases, 1/3 identity cases); no negative (0/18) or uncertain control (0/6) passed. One internal semantic eligibility token was issued, but all 42 final policies abstained. Raw matches were 28/42 declared (28/37 asked), retaining five planned current-status exclusions. Usage was 438,832 known input tokens, 1,944,573 request bytes and 258,724 response bytes over 8,776 ms, with no Exa call, retry, failure or missing result. Baseline was not run (N/A); this is a distinct OPEN observation with no paired causal comparison, pooling, authority activation or factual-coverage credit. Three-facet follow-up and acquisition prototypes remain offline and unwired.
+
+The separate [record-acquisition probe](../fixtures/retrieval/record-acquisition-feasibility-01/README.md) recovered 0/4 exact canonical-URL/complete-unit targets using neutral document-identity queries: four search and five contents calls, 0 Jev and $0.038 reported Exa cost. These are acquisition diagnostics, not an actual factual-query coverage estimate. Cached content, different document versions and retained-window limits remain explicit; no current-origin proof or factual credit follows.
+
+On the repeated OPEN broader corpus, candidate09 produced **4/12 correct definitive unique facts**, **3/12 with every selected reference verified**, eight abstentions and no operational error. It admitted 13/13 eligible occurrences and delivered 16/16 terminals. The mixed BD07 repeat abstained and adds zero unique facts. An initial guard halt and reviewed artifact-only continuation preserved batch 1 and continued only unstarted batches 2–4.
+
+The separate [baseline](broader-development-2026-11-14.md) remains 3/12 raw and 2/12 fully verified. [Candidate08](broader-development-candidate08.md), frozen at `aefb9e7`, remains 6/12 raw and 4/12 fully verified, five abstentions and one operational error. These are OPEN development observations, not blind accuracy or an isolated causal improvement. Agent source review retains original proof timestamps and the inaccessible selected Olympics reference; transport completion does not establish source coverage.
+
+The [new cache/selector validation](../fixtures/evaluation/live/cache-selector-integration-01/validation.json) separates the 517/24 runtime working-tree check from the clean 564/28 root gate and fresh 36/36+21/21 fixtures. Injected tests distinguish `MW`/`mW` and quoted whitespace in cache/notification identity while exact repeats remain cached/deduplicated. Selector retained outputs match across 151 compared pools; no provenance capability is activated. The separate [scope48 study](../fixtures/verdicts/full-context-scope-study-01/README.md) had no prospective gain and two adverse BD10 cells; it is archived without prompt promotion or factual-gain credit.
+
+[Actual-provider automatic controls](automatic-development-2026-11-14.md) produced **five passes and one inconclusive** in the original six-scenario cohort. A separate AD07 followup exercised supported + silent; it does not replace AD03 or change the original score, and adds zero new facts. This is typed backend action evidence, not hardware notification delivery.
+
+### Earlier measurement context (retain distinct denominators)
+
+At the earlier 14 November 2026 executable freeze `3cfdfb1`, lint/typecheck and 429 tests passed. The development evaluator passed 36/36 scenarios: 34 scripted cases and two authenticated HTTP/WebSocket scenarios with injected providers. Shared presentation fixtures passed 21/21. The original 12 held-outs remain unchanged and unrun; their blindness cannot be certified because earlier text exposure may have occurred. These checks establish control-flow behavior, not live model accuracy or hardware reliability.
+
+Public live development run 07 completed nine authenticated requests, including cache, personal/opinion and wait-expiry controls. Among five unique factual propositions, two received correct definitive results and three abstained; none received a wrong definitive result. All 38 provider calls returned HTTP 200. One selected citation was inaccessible to the independent agent review, so the definitive count is not a count of fully verified source sets. Separate deliberately invalid Jev and Exa keys each produced a non-retryable HTTP 401 operational error. See [evaluation](evaluation.md) and the [live campaign](live-campaign-2026-11-14.md).
+
+Three independent sealed campaigns ran once each on different frozen implementations and different inputs. Their correct definitive counts were 2/8, 4/8 and 2/8; do not pool them or treat the differences as causal improvements. The third sealed campaign completed all ten input receipts, with five factual abstentions and one factual timeout in addition to its two correct definitive results. It made 56 actual provider attempts; five of six selected references were verified by an independent AI agent, while one displayed an application error. There were zero observed private-query violations or wrong definitive outputs in that campaign. Cold input median/P95 were 3,817/10,038 ms, including controls and the timeout. The known $0.116 cost subtotal excludes 24 attempts with unknown cost. See the [third independent report](blind-evaluation-2026-11-14-03.md).
+
+Real-device sample size remains zero. Agent citation inspection must retain its disclosed method and inaccessible-source limits. Complete provider costs and false alerts per listening minute remain unmeasured; no additional human sign-off gate is imposed. Broader development and release evaluation are ongoing; current factual coverage does not establish backend readiness. Do not use PRD/vendor/FactNudger scores as this prototype’s results.
 
 ## 8. Opt-in pilot and next milestone
 

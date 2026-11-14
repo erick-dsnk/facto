@@ -1,0 +1,226 @@
+{
+  "decision": "APPROVED_exact_plan_runtime_integration_only_no_execution_authority",
+  "createdAt": "2026-11-14T06:59:04.924707+00:00",
+  "planCanonicalSHA256": "699582a0b64569f73b20376521be7aa6bfc4b1439d06ae6182e5942b21ab5de3",
+  "planFileSHA256": "fd76dd23d370c777f9b5112a11efb5d786a059e7ddf1a1861c5e7a1645242d83",
+  "runnerSHA256": "a98f6cff11260bff1134b3f63ea42efa4f61fa372b3d9d3fa7a4152e403cda2f",
+  "publicationManifestSHA256": "1fe339849dbacaffb6551159d1db3c10c44883bd3207540fc930ad4f7109b511",
+  "adapter08ManifestSHA256": "0b3e0bc8c55ee89bd1fffcac915530e80ffb56ab8d948c57de2c355514300aed",
+  "all46SourcePinsAndPublicationFilesUnchanged": true,
+  "inventory": {
+    "candidateCalls": 42,
+    "baselineCalls": 0,
+    "requestBytes": 1944573,
+    "maxRequestBytes": 54307,
+    "blocks": [
+      11,
+      11,
+      10,
+      10
+    ],
+    "originalSemantic": 34,
+    "identitySemantic": 8,
+    "offlineBindingControls": 2,
+    "optionalItemsAsked": 37,
+    "unaskedKept": 5,
+    "uncertainSafetyCases": 6
+  },
+  "caps": {
+    "maxCalls": 42,
+    "maxInputTokens": 640000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 3145728,
+    "maxResponseBytesPerCall": 128000,
+    "maxTotalResponseBytes": 1048576,
+    "wallMs": 60000
+  },
+  "blockLimits": [
+    {
+      "maxCalls": 11,
+      "maxInputTokens": 160000,
+      "pendingReserve": 24000,
+      "maxTotalRequestBytes": 481303,
+      "maxTotalResponseBytes": 262144
+    },
+    {
+      "maxCalls": 11,
+      "maxInputTokens": 160000,
+      "pendingReserve": 24000,
+      "maxTotalRequestBytes": 518076,
+      "maxTotalResponseBytes": 262144
+    },
+    {
+      "maxCalls": 10,
+      "maxInputTokens": 160000,
+      "pendingReserve": 24000,
+      "maxTotalRequestBytes": 465956,
+      "maxTotalResponseBytes": 262144
+    },
+    {
+      "maxCalls": 10,
+      "maxInputTokens": 160000,
+      "pendingReserve": 24000,
+      "maxTotalRequestBytes": 479238,
+      "maxTotalResponseBytes": 262144
+    }
+  ],
+  "independentTests": 12,
+  "independentTestsPassed": 12,
+  "scenarioReports": [
+    {
+      "scenario": "block-overrun",
+      "reportSHA256": "2b583ed8881c447cc408f8138e4037acdcf636476930d0ce9542ef8dfa2b8740",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "measured_input_token_cap",
+      "measuredInputTokens": 160001,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "body-mismatch",
+      "reportSHA256": "3670f0b5532c51e4cd8f48ccf7a58aa0b416f6d3530db2f000c1917cc276232f",
+      "mockDispatches": 0,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "request_body_hash_mismatch",
+      "measuredInputTokens": 0,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "checkpoint-request_prepared",
+      "reportSHA256": "558dce9d7d69f8fe22cf98732e1d874a39701667740ff816b2ecc935b6b5cbdd",
+      "mockDispatches": 0,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "checkpoint_failed",
+      "measuredInputTokens": 0,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "checkpoint-request_started",
+      "reportSHA256": "15f8b409f642ece604062106c8a5c0cde3dfb19e81d09ef563092425618d1326",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "checkpoint_failed",
+      "measuredInputTokens": 0,
+      "unknownUsageCalls": 1,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "clock-10000",
+      "reportSHA256": "2ce3b0d67ee61f14f61cd3b4860d5e4db9929265f7348847df7d999fa7f9b5ea",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "timeout",
+      "measuredInputTokens": 0,
+      "unknownUsageCalls": 1,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "clock-60000",
+      "reportSHA256": "1fce9a2ed496ecd8991bbca27caf98612fe574a269764de0506a7a17dce0b6ec",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "absolute_wall_deadline",
+      "measuredInputTokens": 0,
+      "unknownUsageCalls": 1,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "complete42",
+      "reportSHA256": "f8b2320e3260cfe9040c4d243a5c749dfba1123bd40a61fc2be903aa7187a2fa",
+      "mockDispatches": 42,
+      "completedRows": 42,
+      "missingCalls": 0,
+      "stop": null,
+      "measuredInputTokens": 420,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 42
+    },
+    {
+      "scenario": "malformed",
+      "reportSHA256": "b23d856d017b8f477181903d647672c40339e341b209d05da414b192c4a2afd0",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "malformed_provider",
+      "measuredInputTokens": 10,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "missing_usage",
+      "reportSHA256": "a983e85857d14f170a0657b613a2f1a346a6b2648c124f3c360fadb08c5184af",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "unknown_usage",
+      "measuredInputTokens": 0,
+      "unknownUsageCalls": 1,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "post-response-source-change",
+      "reportSHA256": "54947cd70d069fed2cfe7f85ca5a3e030d49f5ebb7c5740ad32cb0e78ac6ca70",
+      "mockDispatches": 1,
+      "completedRows": 0,
+      "missingCalls": 42,
+      "stop": "provider_error",
+      "measuredInputTokens": 10,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 1
+    },
+    {
+      "scenario": "setup-failure",
+      "reportSHA256": "8f7666fd6f605b7a71da96af160e9e7d92cfe159b568b4fb0b6429a98e2b0051",
+      "mockDispatches": 1,
+      "completedRows": 1,
+      "missingCalls": 41,
+      "stop": "unknown_receipt",
+      "measuredInputTokens": 10,
+      "unknownUsageCalls": 0,
+      "runtimeConsumed": 1
+    }
+  ],
+  "zeroOutputPredispatchRejections": [
+    "missing_call",
+    "duplicate_call",
+    "baseline_arm",
+    "wrong_call_order",
+    "source_pin_mismatch"
+  ],
+  "injectedMockDispatchesAcrossReviewerRuns": 50,
+  "actualProviderCalls": 0,
+  "networkCalls": 0,
+  "productionEdits": 0,
+  "frozenPacketEdits": 0,
+  "keyEvidence": [
+    "Complete42 uses42 distinct Session/RequestRecord/AttemptBudget identities and42 distinct actual transport signals.",
+    "Every mock fetch observes a flushed matching request_prepared checkpoint before actual dispatch; all bodies match exact frozen hashes.",
+    "One actual runtime consumed attempt per accepted complete call, known usage equals observed receipts; logical/actual distinction preserved on predispatch failure.",
+    "Unknown usage and malformed answers stop first call; known usage retained on malformed response.",
+    "Checkpoint preparation failure causes0actual HTTP; started-checkpoint failure causes1actual attempt with unknown usage and late-response cleanup; final report remains byte-immutable after release.",
+    "Second-context setup failure preserves1completed prefix and41missing, closes guard, saves report and refuses output reuse.",
+    "Full160001-token block overrun recorded before stop;10srequest/60scampaign equality prevents late acceptance.",
+    "Inventory/source drift rejects before output/HTTP; body hash drift yields0HTTP despite1runtime allowance consumed; postresponse source drift retains observed output but no completed row/later dispatch.",
+    "Full42 scorer denominators remain present on every failure; no phantom baseline, paired cells, historical07 pooling or dropped guard misses.",
+    "Adapter08 owner/transport/corequestion/identity/version-reference source bytes are unchanged07; new binding instructions are explicitly pinned."
+  ],
+  "normalizationNote": "A postresponse source-pin failure inside guarded work is normalized to generic provider_error by the unchanged guard; the deliberate reviewer source mutation is local, not evidence of a provider failure. It still stops with known usage and preserved observed output.",
+  "scopeLimits": [
+    "Runtime/budget/durable-dispatch review only; semantic/material review is separate and approved at corrected08-42-independent-final-plan-review.json.",
+    "Mocks establish no actual-model accuracy, factual coverage or current public-origin availability.",
+    "Root must authorize the exact plan SHA and one absent output path; no execution is authorized by this review.",
+    "No rerun/resume/budget reuse; prepared-only crash records remain dispatch/usage indeterminate.",
+    "Arbitrary trusted-host JS mutation remains outside scope; no signal freezing or authority activation.",
+    "Any future definitive/expanded selected-source result requires independent whole-qualifier and lineage review before source-verified credit."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "kind": "candidate09_artifact_only_continuation_authorization",
+  "at": "2026-11-14T05:12:24.221413+00:00",
+  "action": "Continue only previously unstarted batches2-4 once each using revision03 read-only preflight. Never rerun batch1.",
+  "reason": "Original guard misread valid issue:null diagnostic rows as unsafe. Its halt and all first-batch results are preserved.",
+  "guardSHA256": "29366ed02b7911301dc0a5947341091d3136caf283e48bace5617d09a4dde349",
+  "revisionManifestSHA256": "1c3c494c6082eacbcd5c4c7c58f1d8b6067a7cc5909d0b1b594ab86b632e7bac",
+  "independentReviewSHA256": "161c581e3431cb41108dcb0e8d2c2d7dbc0dae231ec13c783db9f3134a5f2f82",
+  "firstBatchReportSHA256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "freezeSHA256": "f12a85c3a308882c52e9c4f271cea80ae0479ba49a29a5fc0f2951d28ea0cdf1",
+  "unchanged": [
+    "source",
+    "input manifests",
+    "wrapper",
+    "expected labels",
+    "per-batch budgets",
+    "output paths",
+    "stop rules for actual safety/provider/transport/accounting errors"
+  ],
+  "tests": "11 offline guard mutation checks passed; independent and root before-batch2 require-preview passed",
+  "limitations": "A separate offline replay found a material retention regression; frozen09 remains immutable and no improvement is presumed."
+}

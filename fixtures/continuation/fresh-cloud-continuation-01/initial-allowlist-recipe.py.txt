@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Author-time, explicit OPEN-root inventory only. Does not export or execute sources."""
+from pathlib import Path
+import hashlib,json,re
+BASE=Path('/workspace/task-evidence'); OUT=Path(__file__).parent
+ROOTS='''record-capability-prototype-03 capability-selection-seam-03 typed-applicability-adapter-10 owned-runtime-acquisition-producer-01 owned-validated-assessment-producer-01 acquisition-record-witness-seam-03 private-acquisition-witness-bridge-01 primary-record-policy-consumer-contract-01 lease-native-adapter11-integration-design-01 lease-native-adapter11-subquote-clarification-01 lease-native-adapter11-wire-validation-clarification-01 facet-contrasts-v1 facet24-analysis-contract-02 facet24-installed-records-01 source-bound-locator-prototype-01 historical-discovery-catalog-02 canonical-target-availability-plan-01 locator-material-runner-04 canonical-target-metric-02 record-acquisition-feasibility-01 new24-passage-grounding-adjudication-01'''.split()
+FILES='''backend-new-session-handoff-2026-11-14.md active-backend-handoff.md unwired-provenance-handoff-01/HANDOFF.md facet24-installation-plan-01/six-receipt-pin-ledger.json facet24-installation-root-authorization.json new24-semantic-run-01-root-authorization.json typed-applicability-calibration-01/study-guard.ts typed-applicability-calibration-02/contexts.08.json record-capability-design/annotation-inputs.json record-capability-design/annotation-adjudicated.json record-capability-design/manifest.json record-capability-prototype-02/installed-manifest.sha256 highlight-alignment-feasibility-01/factual-replay.json selector-seam-implementation-01/legacy-oracle.ts'''.split()
+paths={}; reasons={}
+def add(p,why):
+ if not p.is_file(): raise ValueError(f'missing explicit file: {p}')
+ if p.is_symlink(): raise ValueError(f'symlink: {p}')
+ rel=str(p.relative_to(BASE))
+ if any(q in p.parts for q in ['node_modules','__pycache__','.git']) or p.name.startswith('.env') or any(q in rel.lower() for q in ['sealed','heldout']):raise ValueError(f'forbidden path: {rel}')
+ paths[str(p)]=p;reasons.setdefault(str(p),set()).add(why)
+for n in ROOTS:
+ for p in sorted((BASE/n).rglob('*')):
+  if p.is_file() and not any(q in p.parts for q in ['__pycache__','node_modules','.git']):add(p,'current OPEN package '+n)
+for n in FILES:add(BASE/n,'explicit continuation dependency')
+# Exact NEW24 source closure: application files only; Git/npm handled separately.
+plan=json.loads((BASE/'new24-semantic-plan-01/plan.json').read_text())
+for name,pin in plan['sourceHashes'].items():
+ p=Path(name)
+ if name.startswith(str(BASE)+'/'):
+  add(p,'frozen NEW24 source closure')
+  assert hashlib.sha256(p.read_bytes()).hexdigest()==pin,name
+for p in (BASE/'new24-semantic-plan-01').iterdir():
+ if p.is_file() and (p.suffix in ['.mts','.md'] or p.name in ['plan.json','plan.sha256','plan-file.sha256','OFFLINE-FREEZE-01.json','neutral-inventory.json','interpretation.json']):add(p,'current NEW24 source/plan')
+for p in (BASE/'record-capability-prototype-02/installed').rglob('*'):
+ if p.is_file():add(p,'legacy installed fixture required by current witness tests; deduplicated')
+# Legacy modules required by current cross-brand tests, not entire archived experiments.
+for folder,pattern in [('record-capability-prototype-02/src','*.ts'),('typed-applicability-adapter-09','*.ts')]:
+ for p in (BASE/folder).glob(pattern):add(p,'current cross-brand test dependency')
+for n in ['capability-selection-seam-02/material.ts','acquisition-record-witness-seam-02/seam.ts','acquisition-record-witness-seam-02/envelope.ts','acquisition-record-witness-seam-02/fixtures.ts','acquisition-record-witness-seam-02/replay.ts','typed-applicability-adapter-08/version-reference.ts']:add(BASE/n,'current cross-brand/runtime import')
+# Resolve literal TS/JS imports only. No arbitrary files referenced by JSON are followed.
+pat=re.compile(r'''(?:from\s*|import\s*\(|require\s*\()\s*['"]([^'"]+)['"]''')
+missing=[];changed=True
+while changed:
+ changed=False
+ for p in list(paths.values()):
+  if p.suffix not in ['.ts','.mts','.js','.mjs']:continue
+  for spec in pat.findall(p.read_text()):
+   if not spec.startswith(('./','../','/workspace/task-evidence/')):continue
+   q=Path(spec) if spec.startswith('/') else p.parent/spec
+   q=Path(__import__('os').path.normpath(q))
+   if not str(q).startswith(str(BASE)+'/'):continue
+   cand=[q,q.with_suffix('.ts'),q.with_suffix('.mts')] if q.suffix in ['.js','.mjs'] else [q]
+   found=next((v for v in cand if v.is_file()),None)
+   if found and str(found) not in paths:add(found,'literal import closure');changed=True
+   elif not found:missing.append({'from':str(p),'import':spec})
+rows=[{'originalPath':s,'restorePath':s.lstrip('/'),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size,'reasons':sorted(reasons[s])} for s,p in sorted(paths.items())]
+(OUT/'allowlist.json').write_text(json.dumps({'schemaVersion':1,'scope':'explicit OPEN paths; post-run corpus labels copied as opaque bytes, never interpreted during preparation','files':rows},indent=2)+'\n')
+(OUT/'unmaterialized-references.json').write_text(json.dumps({'literalImportsNotFound':list({json.dumps(x,sort_keys=True):x for x in missing}.values()),'limitations':['Historical manifests and reviews may refer to predecessor logs or whole prior trees deliberately omitted. They remain evidence pointers, not a claim every old verifier is runnable.','Current production imports require separate exact Git compatibility checkouts and fresh npm ci.','Historical shadow/reinstall scripts and parity drivers may require omitted old replay inputs. Do not execute live runners or reinstall receipts. Current installed receipts and source are preserved.']},indent=2)+'\n')
+print(json.dumps({'files':len(rows),'bytes':sum(x['bytes'] for x in rows),'unresolvedLiteralImports':len(missing)}))

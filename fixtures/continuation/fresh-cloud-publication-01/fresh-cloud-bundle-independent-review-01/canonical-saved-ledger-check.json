@@ -1,0 +1,26 @@
+{
+  "kind": "read_only_canonical_saved_ledger_check",
+  "captureManifestSHA256": "ac7499d338e6a3edb037c8cc0e598ba6003c0640ce7dfb3f20903cdce6df939a",
+  "filesVerified": 6,
+  "journalPhases": [
+    "declared",
+    "dispatch_reserved",
+    "settled_or_unknown",
+    "terminal"
+  ],
+  "preparedLower": 0,
+  "preparedUpper": 1,
+  "preparedCost": null,
+  "terminalContents": 1,
+  "terminalCostUSD": 0.001,
+  "pending": 0,
+  "unknownCost": 0,
+  "requestBytes": 134,
+  "responseBytes": 5923,
+  "exactDecodedRawFieldBytes": 5323,
+  "reportedSource": "crawled (provider metadata only, not independent current-origin/version proof)",
+  "metricNotRecomputed": "Root owns metric02 application; no new inference made here.",
+  "newProviderCalls": 0,
+  "newNetworkCalls": 0,
+  "keyReads": 0
+}

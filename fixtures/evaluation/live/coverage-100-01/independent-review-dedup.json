@@ -1,0 +1,24 @@
+{
+  "method": "Explicit allowlisted OPEN manifest publicallowlists and developmentexpectedpublicspans only; Unicode/space/outer-I-think/casefold candidate dedup. No sealed/private/heldout bodies opened.",
+  "historicalPaths": [
+    "fixtures/evaluation/live/broader-development-01/corpus/v2/live-manifest.json",
+    "fixtures/evaluation/live/ordinary-reference-coverage-01/plan-public.json",
+    "fixtures/evaluation/live/complete-coverage-02/plan-public.json",
+    "fixtures/evaluation/cases-development.json"
+  ],
+  "oldPublicSpansChecked": 47,
+  "newAcceptedSpanVariantsChecked": 92,
+  "historicalMatches": [],
+  "withinCohortDuplicates": {},
+  "prefreezeReplacements": [
+    "HA01GreatFire1666 exactBD01 replacedbyChernobyldisaster1986.",
+    "GB07KilimanjaroTanzania exactBD03 replacedbyEtnaSicily."
+  ],
+  "finalPartHashes": {
+    "part-a.json": "a0b8d12cbbf203b2ca366cd7abd829c31b9d26e96f5be8362ec95145566cc19b",
+    "part-b.json": "d1cff6c4f1b87c96bf431be37d56195740af7fb8850e9849d598caf56e67e074",
+    "part-c.json": "b97ed6c444cfdb387498e885d753d9ae7ef2c90458e03a25235e94f3ac6c980e",
+    "part-d.json": "edd273bb51eb270416693373576cf40066681514c05860439665b6e3d462f7d1"
+  },
+  "limitations": "This targetedOPENdedup is not exhaustive proof of no historical semantic overlap or unseenheldout overlap; authoring is notblind."
+}

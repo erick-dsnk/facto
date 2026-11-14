@@ -1,0 +1,248 @@
+
+ RUN  v5.1.0 /workspace/exa-envelope-guard
+
+ ❯ services/api/src/evidence/normalize-envelope.test.ts (33 tests | 27 failed) 37ms
+   ❯ Exa operational envelope validation before metadata stripping (33)
+     × search rejects failed root metadata accompanying plausible text: {"error":"upstream unavailable"} 11ms
+     × search rejects failed root metadata accompanying plausible text: {"tag":"SERVICE_OVERLOADED"} 1ms
+     × search rejects failed root metadata accompanying plausible text: {"status":"error"} 1ms
+     × search rejects failed root metadata accompanying plausible text: {"status":"success","error":{"message":"failed"}} 1ms
+     × search rejects failed root metadata accompanying plausible text: {"status":"pending"} 1ms
+     × search rejects failed result metadata accompanying plausible text: {"error":"upstream unavailable"} 1ms
+     × search rejects failed result metadata accompanying plausible text: {"tag":"SERVICE_OVERLOADED"} 1ms
+     × search rejects failed result metadata accompanying plausible text: {"status":"error"} 1ms
+     × search rejects failed result metadata accompanying plausible text: {"status":"success","error":{"message":"failed"}} 1ms
+     × search rejects failed result metadata accompanying plausible text: {"status":"pending"} 1ms
+     × search rejects a nonstring root or result status: null 1ms
+     × search rejects a nonstring root or result status: 200 1ms
+     × search rejects a nonstring root or result status: {} 1ms
+     × search rejects a nonstring root or result status: true 1ms
+     × contents rejects failed root metadata accompanying plausible text: {"status":"error"} 1ms
+     × contents rejects failed root metadata accompanying plausible text: {"status":"pending"} 1ms
+     × contents rejects failed result metadata accompanying plausible text: {"error":"upstream unavailable"} 1ms
+     × contents rejects failed result metadata accompanying plausible text: {"tag":"SERVICE_OVERLOADED"} 1ms
+     × contents rejects failed result metadata accompanying plausible text: {"status":"error"} 1ms
+     × contents rejects failed result metadata accompanying plausible text: {"status":"success","error":{"message":"failed"}} 1ms
+     × contents rejects failed result metadata accompanying plausible text: {"status":"pending"} 1ms
+     × contents rejects a nonstring root or result status: null 0ms
+     × contents rejects a nonstring root or result status: 200 1ms
+     × contents rejects a nonstring root or result status: {} 1ms
+     × contents rejects a nonstring root or result status: true 1ms
+     × search rejects contradictory success statuses and non-success status entries 1ms
+     × known per-target contents failure cannot erase a failed root or separately eligible failed result 1ms
+ ❯ services/api/src/providers/exa/retrieval.test.ts (38 tests | 6 failed) 269ms
+   ❯ production SDK operational envelope admission (8)
+     × rejects HTTP200 search failure metadata without contents calls: {"error":"upstream failed"} 5ms
+     × rejects HTTP200 search failure metadata without contents calls: {"tag":"SERVICE_OVERLOADED"} 1ms
+     × rejects HTTP200 search failure metadata without contents calls: {"status":"error"} 1ms
+     × rejects HTTP200 search failure metadata without contents calls: {"status":"success","error":{"tag":"failure"}} 1ms
+     × rejects root failure metadata through actual SDK contents serialization 1ms
+     × rejects result failure metadata through actual SDK contents serialization 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed root metadata accompanying plausible text: {"error":"upstream unavailable"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed root metadata accompanying plausible text: {"tag":"SERVICE_OVERLOADED"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed root metadata accompanying plausible text: {"status":"error"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed root metadata accompanying plausible text: {"status":"success","error":{"message":"failed"}}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed root metadata accompanying plausible text: {"status":"pending"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed root metadata accompanying plausible text: {"status":"error"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed root metadata accompanying plausible text: {"status":"pending"}
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ services/api/src/evidence/normalize-envelope.test.ts:16:61
+     14|   for (const [name, parse] of parsers) {
+     15|     it.each(failures)(`${name} rejects failed root metadata accompanyi…
+     16|       expect(() => parse({ results: [page], ...metadata })).toThrow('e…
+       |                                                             ^
+     17|     });
+     18|     it.each(failures)(`${name} rejects failed result metadata accompan…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed result metadata accompanying plausible text: {"error":"upstream unavailable"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed result metadata accompanying plausible text: {"tag":"SERVICE_OVERLOADED"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed result metadata accompanying plausible text: {"status":"error"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed result metadata accompanying plausible text: {"status":"success","error":{"message":"failed"}}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects failed result metadata accompanying plausible text: {"status":"pending"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed result metadata accompanying plausible text: {"error":"upstream unavailable"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed result metadata accompanying plausible text: {"tag":"SERVICE_OVERLOADED"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed result metadata accompanying plausible text: {"status":"error"}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed result metadata accompanying plausible text: {"status":"success","error":{"message":"failed"}}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects failed result metadata accompanying plausible text: {"status":"pending"}
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ services/api/src/evidence/normalize-envelope.test.ts:19:68
+     17|     });
+     18|     it.each(failures)(`${name} rejects failed result metadata accompan…
+     19|       expect(() => parse({ results: [{ ...page, ...metadata }] })).toT…
+       |                                                                    ^
+     20|     });
+     21|     it.each([null, 200, {}, true])(`${name} rejects a nonstring root o…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects a nonstring root or result status: null
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects a nonstring root or result status: 200
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects a nonstring root or result status: {}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects a nonstring root or result status: true
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects a nonstring root or result status: null
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects a nonstring root or result status: 200
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects a nonstring root or result status: {}
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > contents rejects a nonstring root or result status: true
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ services/api/src/evidence/normalize-envelope.test.ts:22:56
+     20|     });
+     21|     it.each([null, 200, {}, true])(`${name} rejects a nonstring root o…
+     22|       expect(() => parse({ status, results: [page] })).toThrow('malfor…
+       |                                                        ^
+     23|       expect(() => parse({ results: [{ ...page, status }] })).toThrow(…
+     24|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > search rejects contradictory success statuses and non-success status entries
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ services/api/src/evidence/normalize-envelope.test.ts:34:97
+     32|     for (const metadata of [{ status: 'success', error: { tag: 'CRAWL_…
+     33|       { status: 'success', tag: 'SERVICE_OVERLOADED' }, { status: 'pen…
+     34|       expect(() => parseExaResponse({ results: [page], statuses: [{ id…
+       |                                                                                                 ^
+     35|     }
+     36|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  services/api/src/evidence/normalize-envelope.test.ts > Exa operational envelope validation before metadata stripping > known per-target contents failure cannot erase a failed root or separately eligible failed result
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ services/api/src/evidence/normalize-envelope.test.ts:46:64
+     44|     const base = { results: [{ ...page, status: 'error' }, { ...page, …
+     45|       statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_…
+     46|     expect(() => parseExaContentsResponse(base, [url, other])).toThrow…
+       |                                                                ^
+     47|     expect(() => parseExaContentsResponse({ ...base, results: [page], …
+     48|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  services/api/src/providers/exa/retrieval.test.ts > production SDK operational envelope admission > rejects HTTP200 search failure metadata without contents calls: {"error":"upstream failed"}
+ FAIL  services/api/src/providers/exa/retrieval.test.ts > production SDK operational envelope admission > rejects HTTP200 search failure metadata without contents calls: {"tag":"SERVICE_OVERLOADED"}
+ FAIL  services/api/src/providers/exa/retrieval.test.ts > production SDK operational envelope admission > rejects HTTP200 search failure metadata without contents calls: {"status":"error"}
+ FAIL  services/api/src/providers/exa/retrieval.test.ts > production SDK operational envelope admission > rejects HTTP200 search failure metadata without contents calls: {"status":"success","error":{"tag":"failure"}}
+AssertionError: promise resolved "[ { …(15) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "contentBasis": "highlight",
+    "directlyAddressesClaim": false,
+    "echoGroup": null,
+    "excerpt": "The Eiffel Tower officially opened in 1889. The retained historical page describes the inauguration and its date.",
+    "id": "ev-867d67e37fd81314ccb7",
+    "matchesTimePlaceAndPopulation": false,
+    "publishedAt": null,
+    "publisher": null,
+    "retrievedAt": "2026-11-14T10:00:00.000Z",
+    "sourceGroup": "tower.org",
+    "sourceRole": "unknown",
+    "stance": "unrelated",
+    "stanceProbability": null,
+    "title": "",
+    "url": "https://tower.org/history",
+  },
+]
+
+ ❯ services/api/src/providers/exa/retrieval.test.ts:346:98
+    344|     const fetcher = vi.fn<typeof fetch>(async () => new Response(JSON.…
+    345|       results: [{ url: 'https://tower.org/history', highlights: [excer…
+    346|     await expect(createRetriever({ apiKey: 'offline-test-key', fetch: …
+       |                                                                                                  ^
+    347|     expect(fetcher).toHaveBeenCalledTimes(1);
+    348|     expect(calls).toEqual(['search']);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  services/api/src/providers/exa/retrieval.test.ts > production SDK operational envelope admission > rejects root failure metadata through actual SDK contents serialization
+ FAIL  services/api/src/providers/exa/retrieval.test.ts > production SDK operational envelope admission > rejects result failure metadata through actual SDK contents serialization
+AssertionError: promise resolved "[ { …(15) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "contentBasis": "page_text",
+    "directlyAddressesClaim": false,
+    "echoGroup": null,
+    "excerpt": "The Eiffel Tower officially opened in 1889. The retained historical page describes the inauguration and its date. Full archival context.",
+    "id": "ev-867d67e37fd81314ccb7",
+    "matchesTimePlaceAndPopulation": false,
+    "publishedAt": null,
+    "publisher": null,
+    "retrievedAt": "2026-11-14T10:00:00.000Z",
+    "sourceGroup": "tower.org",
+    "sourceRole": "unknown",
+    "stance": "unrelated",
+    "stanceProbability": null,
+    "title": "",
+    "url": "https://tower.org/history",
+  },
+]
+
+ ❯ services/api/src/providers/exa/retrieval.test.ts:357:134
+    355|         results: [{ url: 'https://tower.org/history', text: `${excerpt…
+    356|         ...(location === 'status_entry' ? { statuses: [{ id: 'https://…
+    357|     await expect(createRetriever({ apiKey: 'offline-test-key', fetch: …
+       |                                                                                                                                      ^
+    358|     expect(fetcher).toHaveBeenCalledTimes(2);
+    359|     expect(calls).toEqual(['search', 'contents']);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  33 failed | 38 passed (71)
+   Start at  08:03:58
+   Duration  972ms (transform 36%, import 34%, tests 29%, worker 1%)
+

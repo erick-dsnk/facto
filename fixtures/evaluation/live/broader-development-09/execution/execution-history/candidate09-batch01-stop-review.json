@@ -1,0 +1,71 @@
+{
+  "kind": "candidate09_batch01_stop_review",
+  "at": "2026-11-14T05:11:32.756792+00:00",
+  "reportSHA256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367",
+  "journalSHA256": "9b545966724133d475a33b1bf336fa0eee45f424cadeb7b913ddb288ebc7da17",
+  "freezeSHA256": "f12a85c3a308882c52e9c4f271cea80ae0479ba49a29a5fc0f2951d28ea0cdf1",
+  "fixedAuthorizedCommit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "fixedAuthorizedSourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "initialPreflightSHA256": "90de787f4e62ce65eaefcdea2bf7fb9d386e044f5f73b3d41645454bc108681b",
+  "batch1Counts": {
+    "declared": 4,
+    "observed": 4,
+    "terminalReceipts": 4,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "batch1Totals": {
+    "attempts": 25,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 10,
+      "search": 6,
+      "contents": 9
+    },
+    "requestBytes": 356194,
+    "measuredInputTokens": 84751,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 84751,
+    "knownCostUSD": 0.06000000000000001,
+    "attemptsWithUnknownCost": 10,
+    "elapsedMs": 11475
+  },
+  "diagnosticRows": [
+    {
+      "label": "BD01",
+      "mismatch": [],
+      "localStops": [],
+      "rows": 1,
+      "nonNullIssues": 0
+    },
+    {
+      "label": "BD02",
+      "mismatch": [],
+      "localStops": [],
+      "rows": 1,
+      "nonNullIssues": 0
+    },
+    {
+      "label": "BD03",
+      "mismatch": [],
+      "localStops": [],
+      "rows": 1,
+      "nonNullIssues": 0
+    },
+    {
+      "label": "BDC01",
+      "mismatch": [],
+      "localStops": [],
+      "rows": 0,
+      "nonNullIssues": 0
+    }
+  ],
+  "stopReason": "The prospective guard expected deterministicPublicIssues to be empty, but the existing report schema includes rows with issue:null for public spans. All three factual rows have issue:null.",
+  "batch2Started": false,
+  "batch3Started": false,
+  "batch4Started": false,
+  "providerReruns": 0,
+  "status": "paused_pending_versioned_guard_correction_and_root_continuation",
+  "sourceAuditsStarted": false
+}

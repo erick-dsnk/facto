@@ -1,0 +1,21 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { Session, type RequestRecord } from '../../stack-20/services/api/src/runtime/session.js';
+import { AttemptBudget } from '../../stack-20/services/api/src/runtime/budget.js';
+import type { AcceptedClaim, Evidence } from '../../stack-20/packages/contracts/src/index.js';
+import { loadInstalledManifest, resolveReceipt } from '../record-capability-prototype-02/src/manifest.js';
+import { loadSnapshot, snapshotState } from '../record-capability-prototype-02/src/snapshot.js';
+import { captureSelectionMaterial, inspectMaterial } from '../capability-selection-seam-01/material.js';
+import { captureDispatchOwner } from '../typed-applicability-adapter-03/runtime-owner.js';
+import { createApplicabilityAdapter } from '../typed-applicability-adapter-03/adapter.js';
+async function setup(fetcher:typeof fetch){
+ const manifest=await loadInstalledManifest('/workspace/task-evidence/record-capability-prototype-02/installed','7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4');const receipt=resolveReceipt(manifest,'RA03').receipt;const artifact=await loadSnapshot(manifest,receipt.proofId);const unit=receipt.units[0]!;const excerpt=snapshotState(artifact,manifest).text.slice(unit.start,unit.end);const text='The 2021 Pulitzer Prize in Fiction winner was The Night Watchman by Louise Erdrich.';
+ const source:Evidence={id:'target',url:receipt.canonicalURL,title:'Award record',publisher:null,publishedAt:null,retrievedAt:'2026-11-14T10:00:00Z',contentBasis:'page_text',excerpt,sourceGroup:'pulitzer.org',echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated',stanceProbability:null};const material=captureSelectionMaterial({existing:[source],incoming:[],checkedText:text});const now=()=>Date.parse('2026-11-14T10:00:00Z');const session=new Session(now);const record:RequestRecord={input:{schemaVersion:1,sessionId:session.id,sessionEpoch:1,requestId:'req',revision:1,text,context:[],mode:'typed',language:'en',capturedAt:new Date(now()).toISOString(),capture:{source:'typed_fixture',segmentId:'seg',confidence:1},userInitiated:true},fingerprint:'synthetic',budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:now(),acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map()};session.requests.set('req',record);
+ const claim:AcceptedClaim={id:'req-claim-0',originalText:text,checkedText:text,sourceSpan:{start:0,end:Array.from(text).length},admission:{assertionStatus:'asserted',admissionAction:'check',hasPracticalConsequence:null,matchedSelectedTopic:null,reasonCode:'offline'}};const dispatchOwner=captureDispatchOwner(material,{session,record,claimSlot:0,admittedClaim:claim,reservedJev:0,readMaterialGeneration:()=>inspectMaterial(material).materialGeneration,readInstallGeneration:()=> 'installation1'});const execute=()=>createApplicabilityAdapter({manifest,dispatchOwner,bindings:[{receiptAlias:'RA03',artifact,evidenceId:'target'}],apiKey:'offline-only',fetch:fetcher})(claim);return{session,record,execute};
+}
+test('cancelled adapter settles before an injected signal-ignoring transport is released',async()=>{
+ let announce!:()=>void, release!:(r:Response)=>void;const started=new Promise<void>(r=>{announce=r});const transport=new Promise<Response>(r=>{release=r});const s=await setup(async()=>{announce();return transport});let settled=false;const outcome=s.execute().then(()=>{settled=true},()=>{settled=true});await started;s.session.cancel('req');for(let i=0;i<40;i++)await Promise.resolve();const beforeRelease=settled;release(Response.json({}));await outcome;console.log(JSON.stringify({cancelSettledBeforeTransportRelease:beforeRelease,attempts:s.record.budget.jev,cache:s.session.cache.size}));assert.equal(beforeRelease,true);
+});
+test('replacing the current record budget after capture rejects before dispatch',async()=>{
+ let calls=0;const s=await setup(async()=>{calls++;return new Response('offline unavailable',{status:429})});const captured=s.record.budget;s.record.budget=new AttemptBudget();await assert.rejects(s.execute());console.log(JSON.stringify({fetches:calls,capturedBudgetAttempts:captured.jev,currentRecordAttempts:s.record.budget.jev}));assert.equal(calls,0);assert.equal(captured.jev,0);
+});

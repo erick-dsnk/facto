@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "final_stack_review",
+  "createdAt": "2026-11-14T04:42:51.538005+00:00",
+  "verdict": "approved_for_root_authorized_once_only_AD07_diagnostic",
+  "preExecutionReview": true,
+  "providerCallsByReviewer": 0,
+  "sourceOrCaseEditsByReviewer": 0,
+  "filesSHA256": {
+    "plan.json": "7b487010647df3d388ad75784fa57d17c2582e1d834393764aa20cfc71df0637",
+    "live-manifest.json": "cb3e436d23bc45afa11f8df188dc962a518432c4195aa3c2e6d4efba1c27fa68",
+    "run-ad07.mts": "35ffa46d0dff5e8af021a0785110da90434b1d891ed99f80fd71b198c1be5035",
+    "run-ad07.test.mts": "2df7a403e62abaeded658a46a4c669147fb42eca28e90ec116c45b2e49d69572",
+    "preview-plan08.json": "c87a9887f88f22ac650bdb8e16edba47152ed5c0b890c7cc087c1f0453e92fb6"
+  },
+  "findings": [
+    "Plan and wrapper bind the clean exact frozen08 commit/source hash and fixed one-case manifest hash. Later status-diagnostic code is excluded.",
+    "One new runLiveCampaign invocation creates a fresh authenticated server/session/cache. Cold result cached:false is required.",
+    "Exact accepted public Panama Canal span, HTTP202 acceptance, one correlated claim.result and check admission are required.",
+    "Only supported plus silent/automatic_noncontradiction passes; a silent insufficient-evidence result is inconclusive, while unexpected notify or other verdict/presentation mismatches fail.",
+    "The same fixed request, total byte, input-token reservation, call and wall limits are passed to the existing bounded harness; no attempt budget reset or repeat exists in this wrapper.",
+    "Fresh exclusive output/journal paths preserve original automatic08 artifacts. Per-attempt and per-case checkpoints precede final report publication.",
+    "Explicit selection disclosure makes this an outcome-informed purposive development branch probe, separate from AD03. It adds no factual accuracy denominator and cannot replace the original five-pass/one-inconclusive record.",
+    "Live-selected citation verification remains pending independently; prior BD07 source labels do not pre-verify this output."
+  ],
+  "limitsReviewed": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 300000,
+    "inputTokens": 80000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 6,
+      "search": 2,
+      "contents": 3
+    },
+    "wallMs": 30000
+  },
+  "blockingFindings": [],
+  "limitations": [
+    "Static code and plan/scorer review only; author-reported tests inspected, not rerun by this reviewer.",
+    "This diagnostic cannot establish general automatic action quality, population factual accuracy or wearable delivery."
+  ]
+}

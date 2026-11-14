@@ -1,0 +1,53 @@
+{
+  "caseLabel": "BD10",
+  "evidenceId": "ev-9ba7133657edfc20c794",
+  "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+  "excerptSHA256": "4713e30bff6c89cf11a86ef051600e20e3f3443806e56e2c6ccc651396bc0d1d",
+  "mode": "exact_prior_proof_reuse",
+  "reuseDecisionAt": "2026-11-14T05:15:38.129983+00:00",
+  "originalReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+  "originalOriginCompletedAt": "2026-11-14T04:35:25.865344+00:00",
+  "priorReviewPath": "/workspace/task-evidence/broader-candidate08-citation-review.json",
+  "originMetadataPath": "/workspace/task-evidence/broader-candidate08-citation-work/origin-fetches/9ba7133657edfc20.json",
+  "originalOriginMetadata": {
+    "id": "9ba7133657edfc20",
+    "requestedUrl": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+    "requestedAt": "2026-11-14T04:35:25.562880+00:00",
+    "method": "GET",
+    "projectKeysUsed": false,
+    "providerIndexedRetrievalUsed": false,
+    "completedAt": "2026-11-14T04:35:25.865344+00:00",
+    "httpStatus": 200,
+    "finalUrl": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+    "responseHeaders": {
+      "date": "Sat, 14 Nov 2026 04:35:25 GMT",
+      "content-type": "text/html; charset=UTF-8",
+      "cache-control": "max-age=3600, public",
+      "last-modified": "Sat, 14 Nov 2026 03:22:29 GMT",
+      "cf-cache-status": "BYPASS",
+      "server": "envoy"
+    },
+    "redirects": [],
+    "responseBodyFile": "9ba7133657edfc20.body",
+    "responseBodyBytes": 75922,
+    "responseBodySHA256": "a194c9bbb880fe495b5ddcb4d2953232cfde2526b6f2d6059384c1d11387005d",
+    "bodyTruncated": false,
+    "textExtraction": "stdlib HTMLParser excluding script/style/noscript",
+    "extractedTextFile": "9ba7133657edfc20.text.txt",
+    "extractedTextSHA256": "8117ef4a8387edc32df47926aa718461bdf7f55283931c5801fb11671a0dda48",
+    "extractedTextCodepoints": 8329
+  },
+  "selectedExcerpt": "In 1826, British scientist James Smithson drew up his last will and testament, naming his nephew as beneficiary. Smithson stipulated that, should the nephew die without heirs (as he would in 1835), the estate should go \u201cto the United States of America, to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.\u201d\n\n...\n\nThe United States government was soon notified of this extraordinary bequest, and President Andrew Jackson announced the bequest to Congress, which accepted the legacy bequeathed to the nation and pledged the faith of the United States to the charitable trust July 1, 1836. The estate was awarded to the United States May 9, 1838. In September 1838, Smithson\u2019s legacy, which amounted to more than 100,000 gold sovereigns, was delivered to the mint at Philadelphia. Recoined in U.S. currency, the gift amounted to more than $500,000.\n\nThe motives behind Smithson\u2019s bequest remain mysterious. He never traveled to the United States and seems to have had no correspondence with anyone here. Some have suggested that his bequest was motivated in part by revenge against the rigidities of British society, which had denied Smithson, who was illegitimate, the right to use his father\u2019s name. Others have suggested it reflected his interest in the Enlightenment ideals of democracy and universal education.\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, the Smithsonian has become the world\u2019s largest museum, education and research complex, with 21 museums, the National Zoo and nine research facilities.\n\nIn 1865, only a decade after the completion of the Smithsonian\u2019s first building, the \u201cCastle,\u201d the building\u2019s top floor was destroyed in a fire; among the losses were Smithson\u2019s diar",
+  "status": "verified",
+  "priorReview": {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-9ba7133657edfc20c794",
+    "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+    "excerptSHA256": "4713e30bff6c89cf11a86ef051600e20e3f3443806e56e2c6ccc651396bc0d1d",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh exact-URL GET returned HTTP 200 Smithsonian Brief History factsheet, current body identifier SI-120-2026. Selected passages occur and explicitly give Act of Congress signed by Polk 10 August 1846 after donor/bequest history. Directly contradicts British-charter mechanism while preserving British donor distinction. Same-publisher institutional history and overlapping prose with Our History count as one institutional family, not extra independent corroboration. No original 1846 act inspected."
+  }
+}

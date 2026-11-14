@@ -1,0 +1,63 @@
+{
+  "kind": "independent_final_compiled_dataset_csv_plan_review",
+  "decision": "PASS exact100case transfer/80researchedlabels/20controls/proof-pins/CSV/source-closure",
+  "datasetSHA256": "740a2a049a0c2ea36c611fcafcdf96d838e7205847e54a5c1e0375de3d4ab690",
+  "datasetCSVSHA256": "af819ae239cd3c5a39666f5dd357d1c62bf41b81c81713ac7603130a2b6807b1",
+  "planSHA256": "06173d42b28595e2deb4f38216a35defad031008b0d82e38c0b1afb814ec83b5",
+  "executorSHA256": "0664c8bd128964965bf3c513d777d64b7abbb66fe123f27eef010a9af7974c6c",
+  "assemblerSHA256": "b1e598ce19f8941741e00ccd8554633d912e3ffb863e97f81325cf771b3879c2",
+  "inputs": 100,
+  "facts": 80,
+  "true": 40,
+  "false": 40,
+  "controls": 20,
+  "styleCounts": {
+    "mixed_private_public": 12,
+    "standalone": 56,
+    "first_person_public": 12,
+    "control": 20
+  },
+  "domains": {
+    "civics": {
+      "true": 5,
+      "false": 5
+    },
+    "computing_technology": {
+      "true": 5,
+      "false": 5
+    },
+    "culture_arts": {
+      "true": 5,
+      "false": 5
+    },
+    "earth_science": {
+      "true": 5,
+      "false": 5
+    },
+    "geography": {
+      "true": 5,
+      "false": 5
+    },
+    "history": {
+      "true": 5,
+      "false": 5
+    },
+    "natural_science": {
+      "true": 5,
+      "false": 5
+    },
+    "sport": {
+      "true": 5,
+      "false": 5
+    }
+  },
+  "curatedSourceQuotesBoundAndHashed": 80,
+  "exactCSVRowsVerified": 100,
+  "sourceFilesPinned": 9,
+  "providerCalls": 0,
+  "limitations": [
+    "OPEN authored purposive dataset; no blind or representative conversation claim.",
+    "Truth grounding follows author-inspected source context, scope notes and bound quotes; individual short quote need not repeat every referent identified by its source document.",
+    "No neworiginGETs or independent authentication of underlying source origins during this review."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "kind": "offline_native_material_seam02_preedit_oracle_parity",
+  "providerCalls": 0,
+  "modelCalls": 0,
+  "publicPools": 11,
+  "syntheticAndPermutationPools": 140,
+  "comparedPools": 151,
+  "exactRetainedParity": true,
+  "retainedVersionBindings": true,
+  "exactNativeGraphProjection": true,
+  "reasons": {
+    "selected": 113,
+    "conflict_preserved": 36,
+    "unchanged": 2
+  },
+  "inputReports": [
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-01.json",
+      "bytes": 338176,
+      "sha256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-02.json",
+      "bytes": 301377,
+      "sha256": "c41785a39098a7485cd13e865e52f663ab6539cc3fcfff6d8f90dabdde1bef42"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-03.json",
+      "bytes": 300187,
+      "sha256": "28152cdc24eba9c605304b94bb3deb0caf99fa57681387844790f941753c7f26"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-04.json",
+      "bytes": 382941,
+      "sha256": "ef3b4c3e3e4a5dd23abc4ec9fc16d8d7b14f087bc3bcb5f6a6facec7d6a5fc89"
+    }
+  ],
+  "maxTwelveVersionTimingSamples": [
+    {
+      "baselineMs": 25.09602100000029,
+      "siblingMs": 25.45303899999999
+    },
+    {
+      "baselineMs": 26.851238000000194,
+      "siblingMs": 24.854327000000012
+    },
+    {
+      "baselineMs": 26.00896700000021,
+      "siblingMs": 25.555504999999812
+    },
+    {
+      "baselineMs": 25.572679999999764,
+      "siblingMs": 25.396072999999888
+    },
+    {
+      "baselineMs": 24.894998999999643,
+      "siblingMs": 25.34446600000001
+    }
+  ],
+  "limitations": [
+    "Same saved normalized public pools; no new semantic judgment or factual coverage inference.",
+    "Timing is local diagnostic observation, not a latency SLA or causal production measurement."
+  ]
+}

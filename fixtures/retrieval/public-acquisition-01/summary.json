@@ -1,0 +1,34 @@
+{
+  "completed": false,
+  "durationMs": 1698.8097869999997,
+  "totals": {
+    "search": 1,
+    "contents": 0,
+    "jev": 0,
+    "requestBytes": 940,
+    "responseBytes": 20935
+  },
+  "attempts": [
+    {
+      "ordinal": 1,
+      "label": "L2-lightning",
+      "kind": "search",
+      "startedMs": 2.066404000000034,
+      "requestBytes": 940,
+      "requestSHA256": "33176765023f743f9f30b4d86acf54656e80e87fc3e542997cfbae5d694c5a4d",
+      "requestFile": "01-search-request.json",
+      "outcome": "response",
+      "httpStatus": 200,
+      "responseBytes": 20935,
+      "responseSHA256": "e98614064b3a7517294dc1439b4dac1e61220d7499a91d6d832cfb8e6d06cc4b",
+      "responseFile": "01-search-response.json",
+      "durationMs": 1688.0667289999997
+    }
+  ],
+  "outcomes": [
+    {
+      "status": "stopped",
+      "reason": "diagnostic_failure"
+    }
+  ]
+}

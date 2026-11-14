@@ -1,0 +1,25 @@
+{"verified":true,"cases":32,"facts":24,"controls":8,"source":{"commit":"c68952bf070464b8aefe7f593bc0b669bf43a3b6","dirty":false,"sourceSHA256":"0cd4c543694983f81eee24f6ec6174e6139a7907491ce086823a4f565bf6989a"},"limits":{"requestBytes":524288,"totalRequestBytes":134217728,"inputTokens":16000000,"unknownInputTokensPerAttempt":128000,"calls":{"jev":96,"search":48,"contents":72},"wallMs":600000},"perBatchLimits":{"requestBytes":524288,"totalRequestBytes":67108864,"inputTokens":8000000,"unknownInputTokensPerAttempt":128000,"calls":{"jev":48,"search":24,"contents":36},"wallMs":300000}}
+✔ complete executor rejects valid drift before any dispatch (519.93348ms)
+✔ complete executor rejects commit drift before any dispatch (53.360729ms)
+✔ complete executor rejects source drift before any dispatch (47.453328ms)
+✔ complete executor rejects plan drift before any dispatch (59.970229ms)
+✔ complete executor rejects executor drift before any dispatch (49.32399ms)
+✔ complete executor rejects preflight drift before any dispatch (57.765871ms)
+✔ complete executor rejects dirty drift before any dispatch (67.768883ms)
+✔ complete executor rejects batch_count drift before any dispatch (49.721292ms)
+✔ complete executor rejects batch_size drift before any dispatch (48.886663ms)
+✔ complete executor rejects duplicate drift before any dispatch (52.367916ms)
+✔ complete executor rejects fact_count drift before any dispatch (44.274024ms)
+✔ complete executor rejects request_cap drift before any dispatch (44.868177ms)
+✔ complete executor rejects total_bytes drift before any dispatch (49.641373ms)
+✔ complete executor rejects input_tokens drift before any dispatch (45.70178ms)
+✔ complete executor rejects call_cap drift before any dispatch (44.998113ms)
+✔ complete executor rejects wall_cap drift before any dispatch (46.209955ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1543.311313

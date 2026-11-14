@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "validatedAt": "2026-11-14T05:24:04.864746+00:00",
+  "sourceCorpusManifestSHA256": "61d06043365be55ad91b8f85e01d336b82c481d83585fdcba4906604471cda4e",
+  "originalCorpusFilesUnchanged": 70,
+  "installedManifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+  "independentReviewSHA256": "c8fa1c23729e0b51eb80f3b76206877ea588c96d2ccdcb35fd632aac38e26ab4",
+  "independentReviewPinnedFilesMatch": {
+    "src/applicability.ts": true,
+    "src/bind.ts": true,
+    "src/evaluate.ts": true,
+    "src/files.ts": true,
+    "src/install.ts": true,
+    "src/manifest.ts": true,
+    "src/shadow.ts": true,
+    "src/snapshot.ts": true,
+    "src/types.ts": true,
+    "tests/trust-boundary.test.ts": true,
+    "results/shadow-report.json": true
+  },
+  "typecheck": {
+    "command": "/workspace/junction-2026/node_modules/.bin/tsc -p /workspace/task-evidence/record-capability-prototype-01/tsconfig.json",
+    "exitCode": 0
+  },
+  "tests": {
+    "tests": 32,
+    "pass": 32,
+    "fail": 0,
+    "tapSHA256": "b78a2bd7971e49e478d42f3b91257c3b1ffce88ff51596385ea03866eda89830"
+  },
+  "frozenShadowCounts": {
+    "requests": 22,
+    "applicable": 10,
+    "positiveExpected": 10,
+    "falseCapabilities": 0,
+    "missedCapabilities": 0,
+    "matches": 22,
+    "recordFamilies": 4
+  },
+  "pairs": [
+    {
+      "receiptId": "RA01",
+      "originFamily": "RFC8174",
+      "ids": [
+        "RC16",
+        "RC19"
+      ],
+      "identicalExcerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "allSameApplicability": true
+    },
+    {
+      "receiptId": "RA02",
+      "originFamily": "CA-RSC1985-H5",
+      "ids": [
+        "RC05",
+        "RC08"
+      ],
+      "identicalExcerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "allSameApplicability": true
+    },
+    {
+      "receiptId": "RA03",
+      "originFamily": "Pulitzer-2021-Fiction-winner",
+      "ids": [
+        "RC02",
+        "RC17"
+      ],
+      "identicalExcerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "allSameApplicability": true
+    },
+    {
+      "receiptId": "RA04",
+      "originFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "ids": [
+        "RC15",
+        "RC20"
+      ],
+      "identicalExcerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "allSameApplicability": true
+    }
+  ],
+  "coreImportInventory": {
+    "applicability.ts": [
+      "./manifest.js",
+      "./types.js"
+    ],
+    "bind.ts": [
+      "./types.js"
+    ],
+    "evaluate.ts": [
+      "./manifest.js",
+      "./snapshot.js",
+      "./applicability.js",
+      "./bind.js",
+      "./types.js"
+    ],
+    "files.ts": [
+      "node:fs",
+      "node:fs/promises",
+      "node:path",
+      "./types.js"
+    ],
+    "install.ts": [
+      "node:fs/promises",
+      "node:path",
+      "node:url",
+      "./types.js"
+    ],
+    "manifest.ts": [
+      "./files.js",
+      "./types.js"
+    ],
+    "shadow.ts": [
+      "node:fs/promises",
+      "node:url",
+      "./install.js",
+      "./manifest.js",
+      "./snapshot.js",
+      "./applicability.js",
+      "./evaluate.js",
+      "./types.js"
+    ],
+    "snapshot.ts": [
+      "./manifest.js",
+      "./files.js",
+      "./types.js"
+    ],
+    "types.ts": [
+      "node:crypto"
+    ]
+  },
+  "projectProviderCalls": 0,
+  "networkCalls": 0,
+  "newDependencies": 0,
+  "productionImports": 0,
+  "productionFilesChanged": false,
+  "runtimeHookAuthorized": false,
+  "factualCoverageEvaluated": false,
+  "rawEnglishFramingImplemented": false,
+  "currentVersionAuthenticationImplemented": false,
+  "companionRecordMaterialBindingImplemented": false,
+  "integrationBlockers": [
+    "Full retained material identity must be bound before a runtime hook; current contextSHA covers IDs and graph metadata only.",
+    "Generic claim-frame routing and current-version authentication remain unimplemented."
+  ],
+  "sourceDesignReferences": {
+    "design-review.md": "af6da19b387e2ca319ba46a89b6b8bc044375f1b26ddfdaaf6c2bf25aecd4e8b",
+    "prototype-api-spec.md": "5c1c6cd44a48b31d9ac79089d1be3a2f74048c035f1cdfc0d8e2bd47c5240802",
+    "mechanism.md": "e51cfaaa438a40d8258c4f86b0fe6fa70d932c5449f8befbbff483b245d6f11c"
+  }
+}

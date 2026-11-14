@@ -1,0 +1,546 @@
+{
+  "callId": "AC-V06:baseline_anchor",
+  "judgment": {
+    "label": "insufficient_evidence",
+    "probabilities": {
+      "supported": 0.05,
+      "contradicted": 0.16,
+      "misleading": 0.37,
+      "insufficient_evidence": 0.42
+    },
+    "evidence": [
+      {
+        "id": "receipt-RA01",
+        "url": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:34.462385+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document.",
+        "sourceGroup": "rfc-editor.org",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      },
+      {
+        "id": "receipt-RA02",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:36.004097+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "Canada Day Marginal note: Canada Day 2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". Marginal note: When July 1 is a Sunday (2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". R.S., c. H-7, s. 2",
+        "sourceGroup": "justice.gc.ca",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      },
+      {
+        "id": "receipt-RA04",
+        "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:38.230237+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "Population and household estimates, England and Wales: Census 2021 Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. This is not the latest release. View latest release Contact: Email Michael Roskams Release date: 28 June 2022 Next release: To be announced Table of contents Main points Population growth of England and Wales between 2011 and 2021 Population sizes and changes for regions and local authorities Age and sex of the population Population and land area Number of households Future publications Population and household estimates, England and Wales: data Glossary Measuring the data Strengths and limitations Related links Print this Statistical bulletin Download as PDF View all data used in this Statistical bulletin 1. Main points This page is also available in Welsh (Cymraeg). On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300 (56,489,800 in England and 3,107,500 in Wales); this was the largest population ever recorded through a census in England and Wales.",
+        "sourceGroup": "ons.gov.uk",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      },
+      {
+        "id": "record-c06",
+        "url": "https://www.pulitzer.org/page/administration-prizes",
+        "title": "Administration of the Prizes | The Pulitzer Prizes",
+        "publisher": "Pulitzer Prize Board, administered at Columbia University",
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:37.392766+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "The announcement includes the name of the winner in each category as well as the names of the other two finalists. The three finalists in each category are the only entries in the competition that are recognized by the Pulitzer Board as nominees. The announcement also lists the Board members and the names of the jurors, which have previously been kept confidential to avoid lobbying.",
+        "sourceGroup": "pulitzer.org",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 0.98
+      },
+      {
+        "id": "AC-V06-evidence",
+        "url": "https://www.pulitzer.org/winners/louise-erdrich",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:36.908946+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "The 2021 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Night Watchman , by Louise Erdrich (Harper)",
+        "sourceGroup": "pulitzer.org",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 0.48
+      }
+    ],
+    "selectedEvidenceIds": [
+      "AC-V06-evidence"
+    ],
+    "misleadingReason": "omitted_condition",
+    "misleadingEvidenceIds": [],
+    "checkedText": "The 2021 Pulitzer Fiction entry says The Night Watchman was made in 2021.",
+    "sourceAssessments": {
+      "receipt-RA01": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "receipt-RA02": {
+        "contentBasis": "unclear",
+        "confidence": 0.11
+      },
+      "receipt-RA04": {
+        "contentBasis": "unclear",
+        "confidence": 0.12
+      },
+      "record-c06": {
+        "contentBasis": "unclear",
+        "confidence": 0.12000000000000001
+      },
+      "AC-V06-evidence": {
+        "contentBasis": "original_record",
+        "confidence": 0.52
+      }
+    },
+    "claimRisk": {
+      "level": "ordinary",
+      "confidence": 0.95
+    },
+    "originAssessments": [
+      {
+        "evidenceIds": [
+          "receipt-RA01",
+          "receipt-RA02"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.72
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA01",
+          "receipt-RA04"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.91
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA01",
+          "record-c06"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.68
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA01",
+          "AC-V06-evidence"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.85
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "receipt-RA04"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.94
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "record-c06"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.71
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "AC-V06-evidence"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.87
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA04",
+          "record-c06"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.91
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA04",
+          "AC-V06-evidence"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.97
+      },
+      {
+        "evidenceIds": [
+          "record-c06",
+          "AC-V06-evidence"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.75
+      }
+    ]
+  },
+  "answers": {
+    "verdict": {
+      "choice": "insufficient_evidence",
+      "probabilities": {
+        "supported": 0.05,
+        "contradicted": 0.16,
+        "misleading": 0.37,
+        "insufficient_evidence": 0.42
+      }
+    },
+    "selected_evidence": {
+      "choice": "e4",
+      "probabilities": {
+        "none": 0.3,
+        "e0": 0,
+        "e1": 0,
+        "e2": 0,
+        "e3": 0.01,
+        "e4": 0.69
+      }
+    },
+    "misleading_reason": {
+      "choice": "omitted_condition",
+      "probabilities": {
+        "none": 0.31,
+        "omitted_condition": 0.6,
+        "outdated_fact": 0.02,
+        "exaggeration": 0.07
+      }
+    },
+    "claim_risk": {
+      "choice": "ordinary",
+      "probabilities": {
+        "ordinary": 0.95,
+        "health_safety": 0,
+        "disputed": 0.01,
+        "unknown": 0.04
+      }
+    },
+    "e0_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e0_relevant": {
+      "noul": 0.01
+    },
+    "e0_scope": {
+      "noul": 0.01
+    },
+    "e0_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.98,
+        "omitted_condition": 0.02,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e0_context_established": {
+      "noul": 0.02
+    },
+    "e0_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.02,
+        "attributable_research": 0,
+        "substantive_secondary": 0.01,
+        "bare_assertion": 0.1,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.87
+      }
+    },
+    "e1_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e1_relevant": {
+      "noul": 0.01
+    },
+    "e1_scope": {
+      "noul": 0.01
+    },
+    "e1_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.96,
+        "omitted_condition": 0.04,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e1_context_established": {
+      "noul": 0.03
+    },
+    "e1_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.09,
+        "attributable_research": 0,
+        "substantive_secondary": 0.02,
+        "bare_assertion": 0.1,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.79
+      }
+    },
+    "e2_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e2_relevant": {
+      "noul": 0.02
+    },
+    "e2_scope": {
+      "noul": 0.01
+    },
+    "e2_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.96,
+        "omitted_condition": 0.01,
+        "outdated_fact": 0.03,
+        "exaggeration": 0
+      }
+    },
+    "e2_context_established": {
+      "noul": 0.05
+    },
+    "e2_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.09,
+        "attributable_research": 0.01,
+        "substantive_secondary": 0.02,
+        "bare_assertion": 0.09,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.79
+      }
+    },
+    "e3_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0.01,
+        "contradicts": 0.01,
+        "unrelated": 0.98
+      }
+    },
+    "e3_relevant": {
+      "noul": 0.09
+    },
+    "e3_scope": {
+      "noul": 0.2
+    },
+    "e3_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.91,
+        "omitted_condition": 0.08,
+        "outdated_fact": 0,
+        "exaggeration": 0.01
+      }
+    },
+    "e3_context_established": {
+      "noul": 0.05
+    },
+    "e3_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.05,
+        "attributable_research": 0,
+        "substantive_secondary": 0.07,
+        "bare_assertion": 0.23,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.65
+      }
+    },
+    "e4_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0.16,
+        "contradicts": 0.36,
+        "unrelated": 0.48
+      }
+    },
+    "e4_relevant": {
+      "noul": 0.43
+    },
+    "e4_scope": {
+      "noul": 0.45
+    },
+    "e4_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.51,
+        "omitted_condition": 0.37,
+        "outdated_fact": 0.01,
+        "exaggeration": 0.11
+      }
+    },
+    "e4_context_established": {
+      "noul": 0.21
+    },
+    "e4_content_basis": {
+      "choice": "original_record",
+      "probabilities": {
+        "original_record": 0.32,
+        "attributable_research": 0,
+        "substantive_secondary": 0.2,
+        "bare_assertion": 0.22,
+        "attributed": 0.01,
+        "promotional": 0,
+        "unclear": 0.25
+      }
+    },
+    "e0_e1_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.72,
+        "unclear": 0.28
+      }
+    },
+    "e0_e2_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.91,
+        "unclear": 0.09
+      }
+    },
+    "e0_e3_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.68,
+        "unclear": 0.32
+      }
+    },
+    "e0_e4_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.85,
+        "unclear": 0.15
+      }
+    },
+    "e1_e2_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.94,
+        "unclear": 0.06
+      }
+    },
+    "e1_e3_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.71,
+        "unclear": 0.29
+      }
+    },
+    "e1_e4_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.87,
+        "unclear": 0.13
+      }
+    },
+    "e2_e3_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.91,
+        "unclear": 0.09
+      }
+    },
+    "e2_e4_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.97,
+        "unclear": 0.03
+      }
+    },
+    "e3_e4_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.18,
+        "distinct_origins": 0.07,
+        "unclear": 0.75
+      }
+    }
+  },
+  "unavailable": [],
+  "dispatch": {
+    "requestSHA256": "6d72806fe5579c5ec44566a96b937013e6bbbc0760924939e858cc9b80aacebd",
+    "answersSHA256": "f23032931e0e014bea74dbb16ab1fc7eef7c92fc81407a8d4be83e5ae72c1aab",
+    "baselineBytes": 41002,
+    "augmentationBytes": 0,
+    "actualBytes": 41002,
+    "attempts": 1,
+    "questionMap": [],
+    "model": "jev-latest",
+    "productionWired": false
+  },
+  "completedActualAsk": {
+    "requestSHA256": "6d72806fe5579c5ec44566a96b937013e6bbbc0760924939e858cc9b80aacebd",
+    "answersSHA256": "f23032931e0e014bea74dbb16ab1fc7eef7c92fc81407a8d4be83e5ae72c1aab",
+    "judgmentSHA256": "a586cb5857b3289f9f699b92d57409fb0452cc225e1eb1e00050766af2bfb12f",
+    "rawGeneration": "ee66c210a03ee4428519034273484989cf01746c6345d911e37b8839759942d8",
+    "preAskMaterialGeneration": "90c08f1d4abeb5907e049a69622dfebb8d32dcb550bf4555f056076a92e20308",
+    "derivedGraphGeneration": "9d036e4453f5adcdfb46087a17ac3f2cf78cdb21079ae76d2c3ff83f4477efab",
+    "actualAskConsumed": true,
+    "authorityGranted": false
+  },
+  "eligibility": []
+}

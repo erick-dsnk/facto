@@ -1,0 +1,53 @@
+{
+  "kind": "one_authorized_execution_receipt",
+  "completedAt": "2026-11-14T06:44:38.948247+00:00",
+  "collector": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-collector-04/collector.mts",
+    "bytes": 21318,
+    "sha256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958"
+  },
+  "plan": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-plan-01/plan.json",
+    "bytes": 9337,
+    "sha256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251"
+  },
+  "authorization": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-authorization-01.json",
+    "bytes": 2006,
+    "sha256": "daf9cf86da64bf121eb88ff83d904d94b40cb0762f48db8e6ef49940d568e575"
+  },
+  "environmentSwitch": "NODE_USE_ENV_PROXY=1",
+  "keyHandling": "Existing EXA_API_KEY supplied through environment; no value/header printed or stored.",
+  "outputRoot": "/workspace/task-evidence/record-acquisition-feasibility-01",
+  "report": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-01/report.json",
+    "bytes": 70727,
+    "sha256": "29f0d47264ff863bfc05fad22c9c0fc8467cb0611fcbdc145253171a02521502"
+  },
+  "manifest": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-01/MANIFEST.json",
+    "bytes": 5940,
+    "sha256": "2dfce1983136220ff877ecff2fa7cce0845023aa5b43fb16f1baf4c4f2914c4c"
+  },
+  "totals": {
+    "httpBoundaryAttempts": 9,
+    "networkCalls": 9,
+    "jevCalls": 0,
+    "search": 4,
+    "contents": 5,
+    "consumedAllowances": {
+      "search": 4,
+      "contents": 5,
+      "jev": 0
+    },
+    "requestBytes": 6426,
+    "responseBytes": 121753,
+    "pendingDispatchReservations": 0,
+    "knownPartialCostUSD": 0.038,
+    "attemptsWithUnknownCost": 0,
+    "totalCostUSD": 0.038
+  },
+  "noResumeReplayRerun": true,
+  "sourceHeadAndCleanTreeRechecked": true,
+  "providerOrOriginDistinction": "These are Exa API calls, not fresh origin-page GET observations; Exa upstream work is unknown."
+}
