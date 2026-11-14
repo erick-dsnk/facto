@@ -87,18 +87,10 @@ struct HomeView: View {
 
   private var listeningControls: some View {
     VStack(alignment: .leading, spacing: FactoSpacing.s) {
-      Button(listenTitle) {
-        if live.isListening {
-          live.stopListening()
-        } else {
-          Task { await live.startListening() }
-        }
-      }
-      .buttonStyle(FactoPillButtonStyle(size: .large))
-      .disabled(!live.isListening && (!live.isConnected || live.isStartingStream))
-
+      // No listening and no video stream: "Hey Facto" or this button takes one photo and
+      // checks the text in it. Listening stays on the Developer screen.
       Button(checkTitle) { Task { await live.checkThis() } }
-        .buttonStyle(.factoPillSecondary)
+        .buttonStyle(FactoPillButtonStyle(size: .large))
         .disabled(!live.isConnected || live.isChecking)
 
       if GlassesSession.shared.needsGlassesAppUpdate {
@@ -116,11 +108,6 @@ struct HomeView: View {
         footnote(live.wakeState.detail.map { "\(live.wakeState.title). \($0)" } ?? live.wakeState.title)
       }
     }
-  }
-
-  private var listenTitle: String {
-    if live.isListening { return "Stop listening" }
-    return live.isStartingStream ? "Starting…" : "Start listening"
   }
 
   private var checkTitle: String {
@@ -155,7 +142,7 @@ struct HomeView: View {
           .disabled(live.isMuted || live.history.latestDelivered == nil)
       }
       if live.history.entries.isEmpty {
-        Text("No checks yet. Say “\(WakePhrase.spokenCommand)” or tap Check this.")
+        Text("No checks yet. Say “\(WakePhrase.spoken)” or tap Check this.")
           .foregroundStyle(.factoTextSecondary)
           .frame(maxWidth: .infinity, alignment: .leading)
       } else {

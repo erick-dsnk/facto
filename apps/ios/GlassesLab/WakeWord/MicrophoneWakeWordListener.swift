@@ -24,7 +24,11 @@ final class MicrophoneWakeWordListener: WakeWordListening {
 
   init(
     makeRecognizer: @escaping () throws -> WakePhraseRecognizer = {
-      WakePhraseRecognizer(wake: try SherpaKeywordDetector.wake(), command: try SherpaKeywordDetector.command())
+      WakePhraseRecognizer(
+        // "Hey Facto" and "Hey Facto, check this" both take a photo now, so there is no need
+        // to wait long for "check this" after the wake phrase.
+        wake: try SherpaKeywordDetector.wake(), command: try SherpaKeywordDetector.command(), commandWindow: 0.2
+      )
     }
   ) {
     self.makeRecognizer = makeRecognizer

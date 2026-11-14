@@ -68,6 +68,8 @@ final class CameraModel {
   @ObservationIgnored private var userStoppedStream = false
   /// Callers of `captureStillDuringStream()` waiting for the current photo.
   @ObservationIgnored private var photoWaiters: [CheckedContinuation<Data, Error>] = []
+  /// The camera was added only for one photo; it has no stream and is stopped after it.
+  @ObservationIgnored private var photoOnlyCamera = false
   /// Quality for a stream that Live mode starts (LiveModel keeps it in sync with Demo quality).
   @ObservationIgnored var liveQuality: StreamQuality = .demo
 
@@ -582,13 +584,14 @@ extension CameraModel: LiveCamera {
   func captureStillDuringStream() async throws -> Data {
     guard await ensureSessionStarted() else { throw PhotoCaptureError.noSession }
     if !isStreaming, !isCapturingPhoto {
-      // Only the first start decides whether the stream carries mic audio, and only the user
-      // stops a stream. So a stream that "Check this" starts is the listening stream; if mic
-      // audio is refused, a plain stream still gives the photo.
+      // Listening uses the Bluetooth mic now, so no stream is running: take one photo with the
+      // camera's photo capability and turn the camera off again. Faster than starting a video
+      // stream, and the Display glasses keep showing cards.
       do {
-        try await startListeningStream(quality: liveQuality)
+        return try await captureStillWithoutStream()
       } catch {
-        captureStreamAudio = false
+        plog("photo without a stream failed (\(error)); falling back to a short stream")
+        return try await captureStillWithShortStream()
       }
     }
     return try await withCheckedThrowingContinuation { continuation in
@@ -601,6 +604,63 @@ extension CameraModel: LiveCamera {
         if !self.isCapturingPhoto { self.resumePhotoWaiters(.failure(PhotoCaptureError.failed)) }
       }
     }
+  }
+
+  /// One still from the camera's photo capability, with no video stream. The camera is added
+  /// for the photo and stopped right after.
+  private func captureStillWithoutStream() async throws -> Data {
+    guard let session, session.state == .started else { throw PhotoCaptureError.noSession }
+    if try await Wearables.shared.checkPermissionStatus(.camera) != .granted {
+      guard try await Wearables.shared.requestPermission(.camera) == .granted else {
+        lastError = "Camera permission denied in Meta AI."
+        throw PhotoCaptureError.failed
+      }
+    }
+    let config = StreamConfiguration(videoCodec: .raw, audioCodec: nil, resolution: .low, frameRate: 15)
+    guard let photoCamera = try session.addCamera(config: config) else { throw PhotoCaptureError.failed }
+    camera = photoCamera
+    photoOnlyCamera = true
+    lastError = nil
+    isCapturingPhoto = true
+    photoRequestedAt = CACurrentMediaTime()
+    photoAttempt = 0
+    photoLog.removeAll()
+    plog("Take photo without a stream (\(photoResolution.rawValue)/\(photoQuality.rawValue))")
+    do {
+      let data = try await withCheckedThrowingContinuation { continuation in
+        photoWaiters.append(continuation)
+        startPhotoChild(reason: "photo only, no stream")
+      }
+      endPhotoOnlyCamera()
+      return data
+    } catch {
+      endPhotoOnlyCamera()
+      throw error
+    }
+  }
+
+  /// Fallback when the glasses refuse a photo without a stream: a plain stream (no mic audio)
+  /// just for the photo, stopped once the photo is in.
+  private func captureStillWithShortStream() async throws -> Data {
+    captureStreamAudio = false
+    let data = try await withCheckedThrowingContinuation { continuation in
+      photoWaiters.append(continuation)
+      Task { @MainActor in
+        await self.capturePhoto()
+        if !self.isCapturingPhoto { self.resumePhotoWaiters(.failure(PhotoCaptureError.failed)) }
+      }
+    }
+    stopStream()
+    return data
+  }
+
+  /// Stops the camera added for a stream-less photo, without reporting a stream stop.
+  private func endPhotoOnlyCamera() {
+    guard photoOnlyCamera else { return }
+    photoOnlyCamera = false
+    photoTokens.clear()
+    camera?.stop()
+    camera = nil
   }
 
   /// The listening stream: glasses mic audio on, at the chosen quality (decision 10). Starts the
