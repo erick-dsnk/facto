@@ -273,8 +273,6 @@ final class LiveModel {
   var isMuted: Bool {
     didSet {
       presenter.isMuted = isMuted
-    // Without a lens showing the card, overheard alerts are spoken too.
-    presenter.alertsAreSpoken = { [weak display] in !(display?.isConnected ?? false) }
       defaults.set(isMuted, forKey: Self.mutedKey)
     }
   }
@@ -561,6 +559,9 @@ final class LiveModel {
     self.relay = relay
     self.presenter = ResultPresenter(speaker: speaker, chime: chime, playback: relay, history: history, lens: lens, debugLog: debugLog)
     presenter.isMuted = isMuted
+    // Without a lens showing the card (Ray-Ban Meta, or Display glasses not connected),
+    // overheard alerts are spoken as well as chimed.
+    presenter.alertsAreSpoken = { [weak display] in !(display?.isConnected ?? false) }
 
     lens.onChange = { [weak self] card in self?.lensChanged(card) }
     display?.onReady = { [weak self] in self?.restoreNativePresentation() }

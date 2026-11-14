@@ -33,6 +33,12 @@ final class DisplayModel {
     self.defaults = defaults
     self.glasses = glasses
     self.wantsConnection = defaults.object(forKey: "nativeDisplay.restoreConnection") as? Bool ?? true
+    // The lens follows the glasses in use: it connects when a Display pair is put on and lets
+    // go when the wearer switches to Ray-Ban Meta or folds the glasses.
+    glasses.observeKind { [weak self] _ in
+      guard let self, !self.ownsPreviewSession else { return }
+      self.recoverIfEligible()
+    }
     selectorTask = Task { [weak self] in
       guard let selector = self?.deviceSelector else { return }
       for await identifier in selector.activeDeviceStream() {
@@ -50,7 +56,7 @@ final class DisplayModel {
   }
 
   private var recoveryEligible: Bool {
-    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled
+    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled && glasses.kind == .display
   }
 
   private func recoverIfEligible() {

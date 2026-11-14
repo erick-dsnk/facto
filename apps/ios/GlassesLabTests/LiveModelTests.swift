@@ -1285,6 +1285,17 @@ final class LiveModelTests: XCTestCase {
     XCTAssertEqual(lens.cards.first??.kind, .contradicted)
   }
 
+  /// Ray-Ban Meta glasses have no lens: an overheard contradiction must be spoken, not only chimed.
+  func testAutomaticContradictionIsSpokenWhenNoLensIsConnected() async {
+    lens.isConnected = false
+    let model = await connectedModel()
+    backend.emit(LiveEvents.result(requestId: "asr-1-1-nolens", action: .notify, verdict: .contradicted))
+    await waitUntil { model.history.entries.count == 1 }
+    XCTAssertEqual(model.history.entries[0].delivery, .spoken)
+    XCTAssertEqual(chime.count, 1)
+    XCTAssertEqual(speaker.spoken.count, 1)
+  }
+
   func testSilentResultStaysInHistoryOnly() async {
     let model = await connectedModel()
     backend.emit(LiveEvents.result(requestId: "asr-1-1-def", action: .silent))
