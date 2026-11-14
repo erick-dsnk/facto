@@ -17,8 +17,9 @@ const input = (requestId = 'review'): TextInput => ({ schemaVersion: 1, requestI
 function admissionResponse(init?: RequestInit, usage: unknown = 17) {
   const request = JSON.parse(String(init?.body)) as { questions: Record<string, JevQuestion> };
   const answers = Object.fromEntries(Object.entries(request.questions).map(([name, question]) => {
-    if (question.type === 'noul') return [name, { noul: name.endsWith('_private_data') ? 0 : 1, ignored: secretMarker }];
-    const selected = name.endsWith('_kind') ? 'public_fact' : name.endsWith('_assertion_status') ? 'asserted' : 'one_coherent';
+    // A complete public claim in the speaker's own voice: no private data or private life, no rumour, nothing in the future.
+    if (question.type === 'noul') return [name, { noul: /_(private_data|private_life|rumour|future|subject_private)$/.test(name) ? 0 : 1, ignored: secretMarker }];
+    const selected = name.endsWith('_kind') ? 'claim' : name.endsWith('_route') ? 'general' : name.endsWith('_claim_structure') ? 'one_coherent' : 'none';
     return [name, { choice: selected, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, Number(key === selected)])), ignored: secretMarker }];
   }));
   return Response.json({ answers, usage: { input_tokens: usage }, costDollars: { total: 0.002 }, ignored: secretMarker });

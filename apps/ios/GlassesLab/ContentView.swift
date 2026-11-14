@@ -15,6 +15,7 @@ struct ContentView: View {
     NavigationStack {
       List {
         LiveSections(live: live, camera: camera, display: display)
+        DebugLogSection()
         connectionSection
         mockSection
         cameraSection

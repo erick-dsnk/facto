@@ -400,28 +400,60 @@ describe('session HTTP and WebSocket boundary', () => {
 });
 
 describe('debug feed', () => {
-  it('does not exist unless the server enables it', async () => {
-    const server = await setup();
-    const response = await server.app.inject({ method: 'GET', url: '/v1/debug/feed', headers: { 'x-debug-key': joinCode } });
-    expect(response.statusCode).toBe(404);
+  const operatorKey = 'operator-key-0123456789';
+  const feedGet = (server: Awaited<ReturnType<typeof setup>>, key?: string, query = '') =>
+    server.app.inject({ method: 'GET', url: `/v1/debug/feed${query}`, headers: key ? { 'x-debug-key': key } : {} });
+  type Entries = { entries: { seq: number; kind: string; sessionId?: string; data: { text?: string } }[] };
+
+  it('has no route unless the server has an operator key of 16+ characters', async () => {
+    for (const overrides of [{}, { debugFeed: new DebugFeed() }, { debugFeed: new DebugFeed(), debugFeedKey: 'too-short' }, { debugFeedKey: operatorKey }]) {
+      const server = await setup(overrides);
+      expect((await feedGet(server, joinCode)).statusCode).toBe(404);
+      expect((await feedGet(server, operatorKey)).statusCode).toBe(404);
+    }
   });
 
-  it('records the check text and every session event, readable only with the join code', async () => {
+  it('records nothing when no valid operator key is configured', async () => {
     const feed = new DebugFeed();
     const server = await setup({ debugFeed: feed });
     const session = await join(server);
     expect((await submit(server, session)).statusCode).toBe(202);
+    await new Promise(resolve => setTimeout(resolve, 50));
+    expect(feed.after(0)).toEqual([]);
+  });
+
+  it('is opened by the operator key only, never by the join code or a wrong key', async () => {
+    const feed = new DebugFeed();
+    const server = await setup({ debugFeed: feed, debugFeedKey: operatorKey });
+    const first = await join(server); await join(server);
+    expect((await submit(server, first)).statusCode).toBe(202);
     await vi.waitFor(() => expect(feed.after(0).some(entry => entry.kind === 'claim.result')).toBe(true));
-    expect((await server.app.inject({ method: 'GET', url: '/v1/debug/feed', headers: { 'x-debug-key': 'wrong-key-123' } })).statusCode).toBe(401);
-    expect((await server.app.inject({ method: 'GET', url: '/v1/debug/feed' })).statusCode).toBe(401);
-    const response = await server.app.inject({ method: 'GET', url: '/v1/debug/feed?after=0', headers: { 'x-debug-key': joinCode } });
-    const entries = response.json<{ entries: { seq: number; kind: string; sessionId?: string; data: { text?: string } }[] }>().entries;
-    expect(entries[0]).toMatchObject({ kind: 'session.created', sessionId: session.sessionId });
+    expect((await feedGet(server, joinCode)).statusCode).toBe(401);
+    expect((await feedGet(server, 'operator-key-9876543210')).statusCode).toBe(401);
+    expect((await feedGet(server)).statusCode).toBe(401);
+    const response = await feedGet(server, operatorKey, '?after=0');
+    expect(response.statusCode).toBe(200);
+    const entries = response.json<Entries>().entries;
+    expect(entries[0]).toMatchObject({ kind: 'session.created', sessionId: first.sessionId });
     expect(entries.find(entry => entry.kind === 'check.request')?.data.text).toBe('Helsinki is the capital of Finland.');
     expect(entries.map(entry => entry.kind)).toContain('claim.result');
     const last = entries.at(-1)!.seq;
-    const later = await server.app.inject({ method: 'GET', url: `/v1/debug/feed?after=${last}`, headers: { 'x-debug-key': joinCode } });
-    expect(later.json<{ entries: unknown[] }>().entries).toEqual([]);
+    expect((await feedGet(server, operatorKey, `?after=${last}`)).json<Entries>().entries).toEqual([]);
+  });
+
+  it('purges a session entries when it is deleted or expires, and keeps the other session', async () => {
+    const feed = new DebugFeed();
+    const server = await setup({ debugFeed: feed, debugFeedKey: operatorKey });
+    const a = await join(server); const b = await join(server);
+    expect((await submit(server, a)).statusCode).toBe(202);
+    await vi.waitFor(() => expect(feed.after(0).some(entry => entry.sessionId === a.sessionId && entry.kind === 'claim.result')).toBe(true));
+    const removed = await server.app.inject({ method: 'DELETE', url: `/v1/sessions/${a.sessionId}`, headers: { authorization: `Bearer ${a.token}` } });
+    expect(removed.statusCode).toBe(204);
+    const entries = (await feedGet(server, operatorKey)).json<Entries>().entries;
+    expect(entries.some(entry => entry.sessionId === a.sessionId)).toBe(false);
+    expect(entries.some(entry => entry.sessionId === b.sessionId)).toBe(true);
+    server.advance(300_001); server.store.sweep();
+    expect((await feedGet(server, operatorKey)).json<Entries>().entries.some(entry => entry.sessionId === b.sessionId)).toBe(false);
   });
 
   it('keeps only the newest entries', () => {

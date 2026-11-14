@@ -46,6 +46,7 @@ final class ResultPresenter: ResultPresenting {
   private let chime: ChimePlaying
   private weak var playback: PlaybackReporting?
   private let now: () -> Date
+  private let debugLog: DebugLog
   /// Set while a line is speaking. Only the newest line's finish ends playback, so
   /// interrupting one answer with another reports a single started/ended pair.
   private var activeUtterance: UUID?
@@ -56,7 +57,8 @@ final class ResultPresenter: ResultPresenting {
     playback: PlaybackReporting?,
     history: ResultHistory,
     lens: LensCardViewModel,
-    now: @escaping () -> Date = Date.init
+    now: @escaping () -> Date = Date.init,
+    debugLog: DebugLog = .shared
   ) {
     self.speaker = speaker
     self.chime = chime
@@ -64,6 +66,7 @@ final class ResultPresenter: ResultPresenting {
     self.history = history
     self.lens = lens
     self.now = now
+    self.debugLog = debugLog
   }
 
   /// Production wiring with the system speaker and chime.
@@ -81,6 +84,10 @@ final class ResultPresenter: ResultPresenting {
   func present(_ result: ClaimResult, presentation: Presentation, userInitiated: Bool, identity: ClaimIdentity) {
     guard history.accepts(identity) else {
       Self.log.info("drop stale result claim=\(identity.claimId, privacy: .public) rev=\(identity.revision)")
+      debugLog.log("present.dropped_stale", [
+        "requestId": identity.requestId, "claimId": identity.claimId, "revision": identity.revision,
+        "verdict": result.verdict.rawValue,
+      ])
       return
     }
     let outcome = OutputOutcome.verdict(result.verdict)
@@ -99,7 +106,13 @@ final class ResultPresenter: ResultPresenting {
   /// because a failed automatic check has its own health indicator.
   /// `claimText` is the text the app sent; it appears only on the card, never in logs.
   func presentOutcome(_ outcome: OutputOutcome, userInitiated: Bool, claimText: String? = nil, identity: ClaimIdentity? = nil) {
-    if let identity, !history.accepts(identity) { return }
+    if let identity, !history.accepts(identity) {
+      debugLog.log("present.dropped_stale", [
+        "requestId": identity.requestId, "claimId": identity.claimId, "revision": identity.revision,
+        "outcome": String(describing: outcome),
+      ])
+      return
+    }
     let presentation = Presentation(
       action: userInitiated ? .respond : .silent,
       reasonCode: userInitiated ? "manual_request" : "automatic_no_alert"
@@ -117,7 +130,11 @@ final class ResultPresenter: ResultPresenting {
   /// when there is nothing to repeat or output is muted.
   @discardableResult
   func repeatLatest() -> Bool {
-    guard !isMuted, let entry = history.latestDelivered else { return false }
+    guard !isMuted, let entry = history.latestDelivered else {
+      debugLog.log("present.repeat", ["repeated": false, "muted": isMuted])
+      return false
+    }
+    debugLog.log("present.repeat", ["repeated": true, "kind": entry.card.kind.rawValue])
     lens.show(entry.card)
     speak(ResultWording.spokenLine(for: entry.outcome, sourceName: entry.card.sourceName))
     return true
@@ -131,6 +148,9 @@ final class ResultPresenter: ResultPresenting {
     guard !cards.isEmpty else { return }
     if let shown = lens.card, cards.contains(shown) { lens.clear() }
     Self.log.info("superseded req=\(requestId, privacy: .public) rev=\(revision ?? 0) entries=\(cards.count) announce=\(announce)")
+    debugLog.log("present.superseded", [
+      "requestId": requestId, "revision": revision as Any, "entries": cards.count, "announce": announce, "muted": isMuted,
+    ])
     if announce, !isMuted { speak(ResultWording.correctionLine) }
   }
 
@@ -181,6 +201,13 @@ final class ResultPresenter: ResultPresenting {
     Self.log.info(
       "present action=\(presentation.action.rawValue, privacy: .public) delivery=\(delivery.rawValue, privacy: .public) kind=\(card.kind.rawValue, privacy: .public) claim=\(identity?.claimId ?? "-", privacy: .public) rev=\(identity?.revision ?? 0)"
     )
+    debugLog.log("present", [
+      "action": presentation.action.rawValue, "delivery": delivery.rawValue, "kind": card.kind.rawValue,
+      "reason": presentation.reasonCode, "outcome": String(describing: outcome),
+      "verdict": result?.verdict.rawValue as Any, "resultReason": result?.reasonCode as Any,
+      "userInitiated": userInitiated, "muted": isMuted, "line": line,
+      "requestId": identity?.requestId as Any, "claimId": identity?.claimId as Any, "revision": identity?.revision as Any,
+    ])
   }
 
   private func speak(_ line: String) {

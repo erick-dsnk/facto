@@ -70,6 +70,39 @@ Backend sessions end 5 minutes after Connect. Live mode then opens a new session
 
 `LiveModelTests` covers the wiring with fakes. `LiveModelLiveTests` runs the same flow against a real backend and is skipped unless `TEST_RUNNER_BACKEND_LIVE_URL` and `TEST_RUNNER_BACKEND_LIVE_JOIN_CODE` are set (see `BackendClientLiveTests`). In fixture mode the backend checks only fixture sources, so a photo check comes back as "The check didn't finish".
 
+### Debug log
+
+The **Debug log** section (under the Live sections) saves what the app normally never logs, so a failed field test can be read afterwards: every raw backend event (transcripts with confidence, `claim.*` with `reasonCode`, `pipeline.error`, `capture.request`), every check request body (OCR text, chunks, capture fields), the look-and-check photos OCR ran on with the OCR result and timings, audio streamer state changes, and what the presenter did with each result. It is **off until you turn it on** (nothing is recorded on a fresh install) and the toggle is remembered.
+
+- Files stay on the phone in the app container under `Library/Application Support/DebugLog/`: one `YYYY-MM-DD.jsonl` per day (one `{"ts","kind","payload"}` object per line, `ts` in UTC with milliseconds) and `photo-<UTC time>-<id>.jpg` files referenced from `lookcheck.photo` entries. The app never uploads them, and the folder is excluded from backups.
+- Entries and photos older than 24 hours are deleted on launch and every hour. **Delete debug log** removes everything at once.
+- The join code, session token and `Authorization` header are never written; those fields read `[redacted]`.
+
+Copy the folder to the Mac with the phone plugged in:
+
+```sh
+xcrun devicectl device copy from --device <UDID> --domain-type appDataContainer \
+  --domain-identifier com.davidvasilescu.junction.glasseslab \
+  --source "Library/Application Support/DebugLog" --destination ./debuglog
+```
+
+Or tap **Share log** and AirDrop the files.
+
+### Wake phrase: “Hey Facto”
+
+**Wake on “Hey Facto”** (off by default) keeps the app idle until it is asked. With it on and the backend connected:
+
+- The glasses stream is off and no audio or text is sent to the backend. The phone listens on the glasses' Bluetooth hands-free microphone (the phone's own microphone if the glasses aren't the active headset) and runs a keyword detector on the phone. Audio is processed in memory and dropped.
+- **“Hey Facto”** plays a chime, starts the stream and listens for 60 s, then stops the stream, ends the device session and waits again. The decision takes about 1.5 s, because the detector waits to hear whether “check this” follows.
+- **“Hey Facto, check this”** takes a photo and checks what is in view, like the Check this button, then stops the stream. “Check this” on its own does nothing while waiting.
+- Starting to listen by hand, or a running stream, pauses the detector; the status row under the switch says why.
+
+The detector is [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) keyword spotting (Apache-2.0) with the open-vocabulary English model `sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01` (int8, about 5 MB, in `GlassesLab/WakeWord/Model`). The phrases are the two `*-keywords.txt` files there: the model's BPE tokens, a boost after `:` and a trigger threshold after `#`. To change a phrase, tokenise it with the model's `bpe.model` (`sherpa-onnx-cli text2token`) and retune the two numbers against recordings.
+
+The two prebuilt libraries it links (sherpa-onnx 2.0.1 and onnxruntime 1.28.2, about 47 MB) are not in git. `scripts/fetch-wake-word-libs.sh` downloads them into `Vendor/` and checks their SHA-256; `xcodegen generate` and `scripts/deploy.sh` run it for you. Use the model archive without `-mobile` in its name: the `-mobile` one fails in this runtime.
+
+`WakeWordDetectorTests` runs the real model on synthesised speech in six voices (`GlassesLabTests/Fixtures/WakeWord`). Not yet tested: real voices through the glasses microphone, noisy rooms, and waiting with the phone locked (the `audio` background mode is declared for it).
+
 ### Without glasses
 
 Section 2 pairs simulated glasses through MockDeviceKit. The phone's back camera becomes the glasses camera. Choose **Meta Ray-Ban Display** to see the rendered display screen inside the app.
