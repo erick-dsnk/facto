@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "annotator": "source_calibration independent AI agent",
+  "frozenAt": "2026-11-14T05:01:13.703845+00:00",
+  "inputSHA256": "65b461920fdc102c7250ffb783fa4e6363af3db519e4411f73a5a995168580fe",
+  "method": "Prior candidate08 output and frozen baseline-policy exposure disclosed; labels independently reasoned from retained public passages for this OPEN structural diagnostic. No new candidate prompt, alias implementation, future blind labels or diagnostic provider outputs read.",
+  "labels": [
+    {
+      "id": "T01",
+      "retainedId": "ev-eb0bdcebbd68c35e5e3a",
+      "expectedBasis": "substantive",
+      "contentBasis": "substantive_secondary",
+      "stanceDiagnostic": "contradicts",
+      "scopeDiagnostic": "matches",
+      "supportingSpan": "The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+      "labelReason": "Retained legislative process, named bill, House vote and presidential signature establish the US congressional instrument; British donor nationality is not British royal creation. Shared underlying act remains one origin.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T02",
+      "retainedId": "ev-d13ed099d4e84ec8c01d",
+      "expectedBasis": "substantive",
+      "contentBasis": "original_record",
+      "stanceDiagnostic": "supports",
+      "scopeDiagnostic": "matches",
+      "supportingSpan": "Adopted in London on 16 November 1945",
+      "labelReason": "The actual body heading, adoption statement, amendment list and constitutional preamble identify retained legal-instrument content. This is not a separate metadata title. Signed/concluded/registered elsewhere are different relations.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T03",
+      "retainedId": "ev-f00642f438bb08f87910",
+      "expectedBasis": "insufficient",
+      "contentBasis": "unclear",
+      "stanceDiagnostic": "supports",
+      "scopeDiagnostic": "matches",
+      "supportingSpan": "his reception of the first ever awarded Nobel Prize in December 1901",
+      "labelReason": "The archive chronology asserts the full ordinal, and names a keeper, but its concrete underlying first-award series basis is not retained. This is a genuine maintained-reference versus biographical-assertion boundary; do not force a positive or score it in primary metrics. The textual claim is supported, separate from qualification.",
+      "ambiguity": true,
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "T04",
+      "retainedId": "ev-68dd14f72943d0b9f377",
+      "expectedBasis": "substantive",
+      "contentBasis": "original_record",
+      "stanceDiagnostic": "supports",
+      "scopeDiagnostic": "matches",
+      "supportingSpan": "The second, symbol s, is the SI unit of time.",
+      "labelReason": "The passage identifies the SI second and explicitly defines its constant, transition and unit. Actual governing-definition content remains despite loss of heading/Brochure context. Prior score differences cannot identify a load-only cause because earlier excerpt differs.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T05",
+      "retainedId": "ev-c0111d21601a8a647c04",
+      "expectedBasis": "insufficient",
+      "contentBasis": "unclear",
+      "stanceDiagnostic": "unclear",
+      "scopeDiagnostic": "unclear",
+      "supportingSpan": "Comparative aspects of adaptive radiation and speciation in Lake Baikal and the great rift lakes of Africa",
+      "labelReason": "Only a research title, journal date, citation count and author metadata are retained. A comparison title does not retain location record fields or research findings.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "T06",
+      "retainedId": "ev-fc10664bbaa8225ad8ac",
+      "expectedBasis": "substantive",
+      "contentBasis": "substantive_secondary",
+      "stanceDiagnostic": "supports",
+      "scopeDiagnostic": "matches",
+      "supportingSpan": "The national park and forest reserve occupy the upper part of Mount",
+      "labelReason": "The in-body Tanzania nomination header, named preparer/date and LOCATION text bind the national-park/forest reserve to upper Mount Kilimanjaro. This supports the bounded country-location claim, not precise park/mountain boundary geometry. OCR is noisy; nomination/IUCN copies share origin.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    }
+  ]
+}
