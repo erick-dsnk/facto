@@ -27,15 +27,20 @@ function topicAdapters(priority: number | null = null): PipelineAdapters {
           if (!name.startsWith(candidate.id + '_')) continue;
           if (question.type === 'choice') {
             const choices = Object.keys(question.criteria);
-            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact'
+            const wanted = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact'
               : name.endsWith('_assertion_status') ? 'asserted'
                 : name.endsWith('_quote_use') ? 'name_or_title'
                 : name.endsWith('_claim_structure') ? candidate.id === 'span_0' && (request.state as { candidates: unknown[] }).candidates.length > 1 ? 'multiple_propositions' : 'one_coherent'
                     : 'asserted';
+            // The fact-check port's admission asks claim/route/attribution/source/subject choices; answer them neutrally.
+            const choice = [wanted, 'claim', 'none', 'general'].find(option => choices.includes(option)) ?? choices[0];
             answers[name] = { choice, probabilities: Object.fromEntries(choices.map(key => [key, key === choice ? .99 : .01 / (choices.length - 1)])) };
-          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') || name.endsWith('_preserves_scope') ? .99 : priority };
+          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') || name.endsWith('_preserves_scope') ? .99
+            : name.endsWith('_has_practical_consequence') || name.endsWith('_practical') ? priority : .01 };
         }
       }
+      // Input-level questions (misheard) are not tied to a candidate.
+      for (const [name, question] of Object.entries(request.questions)) if (!(name in answers) && question.type === 'noul') answers[name] = { noul: .01 };
       return answers;
     }
   }) };

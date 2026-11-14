@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PipelineError } from '../../../../packages/contracts/src/index.js';
+import { MAX_LOW_CONFIDENCE_WORDS, PipelineError, lowConfidenceWordSchema } from '../../../../packages/contracts/src/index.js';
 import { abortable } from '../runtime/budget.js';
 import { type Session } from '../runtime/session.js';
 import { AudioFrameValidator, type AsrAdapter, type AsrStream, type AsrTranscript, type AudioStart } from './audio.js';
@@ -12,7 +12,8 @@ const transcriptSchema = z.object({
   text: z.string().refine(text => Array.from(text).length <= 800), final: z.boolean(),
   segmentId: z.string().min(1).max(256),
   confidence: z.number().min(0).max(1).nullable(), captureOffsetMs: z.number().int().min(0).max(0xffffffff),
-  speaker: z.number().int().min(0).max(1000).nullable().optional()
+  speaker: z.number().int().min(0).max(1000).nullable().optional(),
+  lowConfidenceWords: z.array(lowConfidenceWordSchema).max(MAX_LOW_CONFIDENCE_WORDS).optional()
 }).strict();
 
 /** Transport-owned lifetime/backpressure; the input owner implements AsrAdapter. */
@@ -105,7 +106,9 @@ export class AudioBridge {
     const event = transcriptSchema.parse(input);
     if (event.captureOffsetMs > generation.frameEndMs) throw new PipelineError('invalid_asr_capture_time');
     if (!event.text.trim()) return;
-    this.session.emit(event.final ? 'transcript.final' : 'transcript.partial', { ...event, speaker: event.speaker ?? null, streamGeneration: generation.config.streamGeneration, source: generation.config.source });
+    // Low-confidence words go to the checker only; transcript events keep their documented payload.
+    const { lowConfidenceWords: _lowConfidenceWords, ...shown } = event;
+    this.session.emit(event.final ? 'transcript.final' : 'transcript.partial', { ...shown, speaker: event.speaker ?? null, streamGeneration: generation.config.streamGeneration, source: generation.config.source });
     if (event.final && this.current(generation)) await this.onFinalTranscript(event, generation.config, generation.startedAt + event.captureOffsetMs);
   }
 
