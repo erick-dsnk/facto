@@ -1,0 +1,80 @@
+import { strict as assert } from 'node:assert';
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import { SCOPE_QUESTION, substituteScopeQuestion } from './candidate.ts';
+import { buildPlan, captureRequest, executePlan, LIMITS, type Label, type Unit } from './runner.ts';
+
+const units: Unit[] = Array.from({ length: 16 }, (_, index) => ({ id: `offline-${index}`, proposition: `SYNTHETIC ${index < 8 ? 'MATCH' : 'MISMATCH'} proposition ${index}.`, title: 'Synthetic bounded record', url: `https://record.example/entry-${index}`, excerpt: `SYNTHETIC register R-${index} records ten measured items in period A.`, partition: 'open_development', stratum: index < 8 ? 'match' : 'mismatch', sourceFamily: `family-${index}` }));
+const labels: Label[] = units.map((unit, index) => ({ id: unit.id, expectedScope: index < 8, supportingSpan: `register R-${index}` }));
+const plan = () => buildPlan(units, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'scope-runner-test-')), 'run');
+const fakeFetch = (tokens?: number, forcedScope?: number): typeof fetch => async (_url, init) => {
+  const request = JSON.parse(String(init!.body));
+  const answers = Object.fromEntries(Object.entries(request.questions).map(([name, value]) => {
+    const question = value as { type: string; criteria?: Record<string, string> };
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_scope') ? forcedScope ?? (request.state.checked_proposition.includes('MISMATCH') ? .01 : .99) : name.endsWith('_context_established') ? 0 : .99 }];
+    const choice = name === 'verdict' ? 'supported' : name === 'selected_evidence' ? 'e0' : name === 'claim_risk' ? 'ordinary' : name.endsWith('_stance') ? 'supports' : name.endsWith('_content_basis') ? 'original_record' : 'none';
+    return [name, { choice, probabilities: Object.fromEntries(Object.keys(question.criteria!).map(key => [key, key === choice ? 1 : 0])) }];
+  }));
+  return new Response(JSON.stringify({ answers, ...(tokens === undefined ? {} : { usage: { input_tokens: tokens } }) }), { status: 200 });
+};
+
+test('full actual judge capture changes only source_scope, preserving state and every other question', async () => {
+  const baseline = await captureRequest(units[0], 'baseline'), candidate = await captureRequest(units[0], 'candidate');
+  assert.deepEqual(baseline.state, candidate.state);
+  assert.deepEqual(Object.keys(baseline.questions), Object.keys(candidate.questions));
+  assert.ok(candidate.questions.e0_scope.instructions.endsWith(SCOPE_QUESTION));
+  for (const name of Object.keys(baseline.questions)) if (name !== 'e0_scope') assert.deepEqual(baseline.questions[name], candidate.questions[name]);
+  assert.ok(baseline.questions.e0_content_basis && baseline.questions.e0_stance && baseline.questions.claim_risk && baseline.questions.verdict);
+  const frozen = await plan(); assert.equal(frozen.calls.length, 32); assert.ok(!JSON.stringify(frozen).includes('instructions'));
+});
+
+test('scope template drift and missing evidence fail closed before model calls', async () => {
+  assert.throws(() => substituteScopeQuestion({ state: {}, questions: {} }), /evidence state/);
+  const captured = await captureRequest(units[0], 'baseline'); captured.questions.e0_scope.instructions = 'changed';
+  assert.throws(() => substituteScopeQuestion(captured), /template changed/);
+});
+
+test('predeclared cohort count, balance and exact supporting spans are enforced offline', async () => {
+  await assert.rejects(buildPlan(units.slice(0, 15), labels.slice(0, 15), {}), /16-unit/);
+  await assert.rejects(buildPlan(units, labels.map((label, index) => index === 0 ? { ...label, expectedScope: false } : label), {}), /8match/);
+  await assert.rejects(buildPlan(units, labels.map((label, index) => index === 0 ? { ...label, supportingSpan: 'invented' } : label), {}), /label\/span/);
+});
+
+test('single full-judge pass meters every actual attempt and scores scope separately from policy abstention', async () => {
+  const frozen = await plan(), directory = output();
+  const report = await executePlan(frozen, units, directory, { apiKey: 'offline-only', fetch: fakeFetch(50) }) as any;
+  assert.equal(report.completedAllCalls, true); assert.equal(report.totals.actualStartedJev, 32); assert.equal(report.totals.consumedJev, 32); assert.equal(report.totals.actualStartedExa, 0); assert.equal(report.totals.measuredInputTokens, 1600);
+  assert.equal(report.totals.requestBytes, frozen.calls.reduce((sum, call) => sum + call.requestBytes, 0));
+  for (const arm of ['baseline', 'candidate']) { assert.equal(report.metrics.open_development[arm].truePositive, 8); assert.equal(report.metrics.open_development[arm].trueNegative, 8); assert.equal(report.metrics.open_development[arm].falsePositive, 0); }
+  assert.ok(report.observations.every((value: any) => value.diagnostics.policyDecision.verdict === 'insufficient_evidence'));
+  const saved = readFileSync(join(directory, 'report.json'), 'utf8'); assert.ok(!saved.includes('offline-only')); assert.ok(!saved.includes('instructions')); assert.ok(!saved.includes('Authorization'));
+  await assert.rejects(executePlan(frozen, units, directory, { apiKey: 'offline-only', fetch: fakeFetch(50) }), /EEXIST/);
+});
+
+test('actual scope threshold remains .85 without changing other source gates', async () => {
+  for (const [scope, passes] of [[.84, false], [.85, true]] as const) {
+    const report = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50, scope) }) as any;
+    assert.ok(report.observations.every((value: any) => value.scope === scope && value.scopePass === passes));
+    assert.ok(report.observations.every((value: any) => value.diagnostics.quality.confidence === 1 && value.diagnostics.claimRisk.level === 'ordinary'));
+  }
+});
+
+test('unknown usage, pending reserve and wall time stop subsequent calls without retry', async () => {
+  const unknown = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch() }) as any; assert.equal(unknown.stopReason, 'unknown_usage'); assert.equal(unknown.totals.actualStartedJev, 1);
+  const reserve = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(LIMITS.maxInputTokens - LIMITS.pendingReserve + 1) }) as any; assert.equal(reserve.stopReason, 'budget_reserve'); assert.equal(reserve.totals.actualStartedJev, 1);
+  let reads = 0; const wall = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50), now: () => reads++ ? LIMITS.wallMs + 1 : 0 }) as any; assert.equal(wall.stopReason, 'wall_budget'); assert.equal(wall.totals.actualStartedJev, 0);
+});
+
+test('terminal HTTP failure stays durable without a hidden repeat', async () => {
+  const directory = output(); const report = await executePlan(await plan(), units, directory, { apiKey: 'offline-only', fetch: async () => new Response('denied', { status: 401 }) }) as any;
+  assert.equal(report.totals.actualStartedJev, 1); assert.equal(report.observations[0].status, 'failed'); assert.ok(readFileSync(join(directory, 'events.jsonl'), 'utf8').includes('attempt_terminal'));
+});
+
+test('tampered requests and frozen sources prevent any actual fetch', async () => {
+  const frozen = await plan(); frozen.calls[0].bodyHash = 'tampered'; let calls = 0;
+  await assert.rejects(executePlan(frozen, units, output(), { apiKey: 'offline-only', fetch: async () => { calls++; throw new Error(); } }), /request hashes/); assert.equal(calls, 0);
+  const source = await plan(); source.sourceHashes['candidate.ts'] = 'tampered'; await assert.rejects(executePlan(source, units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50) }), /changed after freeze/);
+});

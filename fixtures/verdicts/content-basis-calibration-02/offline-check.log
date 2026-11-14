@@ -1,0 +1,15 @@
+✔ full actual judge changes only basis instructions; all seven criteria/state and every other question remain identical (15.19012ms)
+✔ template drift and invalid corpus labels fail closed offline (1.101872ms)
+✔ one full-judge pass measures accepted-set probability rather than emitting a new class or factual outcome (218.089803ms)
+✔ unchanged .85 and accepted-class gates reject .84 and nonaccepted genres despite high accepted mass (716.869068ms)
+✔ scripted substantive refuting evidence keeps the same quality gate while stance is separately recorded (111.018382ms)
+✔ unknown usage, reserve and wall time stop subsequent calls without retries (47.061308ms)
+✔ HTTP failure stays durable and frozen request/source tampering prevents actual fetch (26.929699ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1612.224585

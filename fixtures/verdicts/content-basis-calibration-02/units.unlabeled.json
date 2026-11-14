@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "purpose": "OPEN development content-basis calibration; six passages with opposed stance propositions and matched bounded controls. Not blind verdict evaluation.",
+  "units": [
+    {
+      "id": "CB01",
+      "proposition": "After learning pairs of flowers distinguished by sucrose concentration, the bumblebees in the described experiments preferred higher-ranking flowers over flowers with higher absolute reward in novel pairings.",
+      "title": "Bumblebees retrieve only the ordinal ranking of foraging options when comparing memories obtained in distinct settings",
+      "url": "https://api.elifesciences.org/articles/78525",
+      "excerpt": "Bumblebees retrieve only the ordinal ranking of foraging options when comparing memories obtained in distinct settings",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "category": "actual_conclusion_title_only",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF06",
+        "transform": "Exact publisher article title retained as a body heading; abstract and findings omitted.",
+        "sourceUrl": "https://api.elifesciences.org/articles/78525",
+        "syntheticWarning": null,
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB02",
+      "proposition": "Public Law 117-17 designates Juneteenth National Independence Day on June 19 as a legal public holiday.",
+      "title": "Public Law 117-17: Juneteenth National Independence Day Act",
+      "url": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+      "excerpt": "SEC. 2. JUNETEENTH NATIONAL INDEPENDENCE DAY AS A LEGAL PUBLIC HOLIDAY.",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "category": "actual_heading_without_operative_contents",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF02",
+        "transform": "Exact contiguous section heading retained; operative date and amendment omitted.",
+        "sourceUrl": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+        "syntheticWarning": null,
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB03",
+      "proposition": "The Met catalogue dates Wheat Field with Cypresses by Vincent van Gogh to 1889.",
+      "title": "Metropolitan Museum of Art collection object 436535",
+      "url": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+      "excerpt": "\"department\":\"European Paintings\",\"objectName\":\"Painting\",\"title\":\"Wheat Field with Cypresses\",\"culture\":\"\",\"period\":\"\",\"dynasty\":\"\",\"reign\":\"\",\"portfolio\":\"\",\"artistRole\":\"Artist\",\"artistPrefix\":\"\",\"artistDisplayName\":\"Vincent van Gogh\",\"artistDisplayBio\":\"Dutch, Zundert 1853–1890 Auvers-sur-Oise\",\"artistSuffix\":\"\",\"artistAlphaSort\":\"Gogh, Vincent van\",\"artistNationality\":\"Dutch\",\"artistBeginDate\":\"1853\",\"artistEndDate\":\"1890\",\"artistGender\":\"\",\"artistWikidata_URL\":\"https://www.wikidata.org/wiki/Q5582\",\"artistULAN_URL\":\"http://vocab.getty.edu/page/ulan/500115588\",\"objectDate\":\"1889\",\"objectBeginDate\":1889,\"objectEndDate\":1889,\"medium\":\"Oil on canvas\"",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "category": "catalogue_record_fields",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF03",
+        "transform": "none",
+        "sourceUrl": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+        "syntheticWarning": null,
+        "passageId": "CBF03-P01"
+      }
+    },
+    {
+      "id": "CB04",
+      "proposition": "Public Law 117-17 designates Juneteenth National Independence Day on June 20 as a legal public holiday.",
+      "title": "Public Law 117-17: Juneteenth National Independence Day Act",
+      "url": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+      "excerpt": "Public Law 117-17 117th Congress An Act To amend title 5, United States Code, to designate Juneteenth National Independence Day as a legal public holiday. <<NOTE: June 17, 2021 - [S. 475]>> Be it enacted by the Senate and House of Representatives of the United States of America in Congress assembled, <<NOTE: Juneteenth National Independence Day Act. 5 USC 101 note.>> SECTION 1. SHORT TITLE. This Act may be cited as the ``Juneteenth National Independence Day Act''. SEC. 2. JUNETEENTH NATIONAL INDEPENDENCE DAY AS A LEGAL PUBLIC HOLIDAY. Section 6103(a) of title 5, United States Code, is amended by inserting after the item relating to Memorial Day the following: ``Juneteenth National Independence Day, June 19.''. Approved June 17, 2021.",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "category": "formal_enactment_date",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF02",
+        "transform": "none",
+        "sourceUrl": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+        "syntheticWarning": null,
+        "passageId": "CBF02-P01"
+      }
+    },
+    {
+      "id": "CB05",
+      "proposition": "The Hunting Act 2004 has reduced illegal hunting.",
+      "title": "Hunting Act 2004, section 1",
+      "url": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+      "excerpt": "Legal commentators agree that the Hunting Act 2004 has reduced illegal hunting. This landmark success shows that the law works.",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "category": "synthetic_attribution_without_basis",
+      "synthetic": true,
+      "provenance": {
+        "sourceFamily": "CBF01",
+        "transform": "Synthetic attributed efficacy claim; no genuine source quotation.",
+        "sourceUrl": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+        "syntheticWarning": "Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.",
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB06",
+      "proposition": "In the described honeybee experiments, reducing the local geomagnetic field to 2% and shifting its declination both reduced recruitment to the feeding station 200 m north of the hive.",
+      "title": "Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance?",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+      "excerpt": "We tested the effect of the LGMF on the recruitment success of forager bees by placing observation hives inside large Helmholtz coils, and then either reducing the LGMF to 2% or shifting its apparent declination. Neither of these treatments reduced the number of nest mates that waggle dancing forager bees recruited to a feeding station located 200 m north of the hive. These results indicate that the LGMF does not act as the reference for the alignment of waggle-dancing bees.",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "category": "experimental_null_finding",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF05",
+        "transform": "none",
+        "sourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+        "syntheticWarning": null,
+        "passageId": "CBF05-P01"
+      }
+    },
+    {
+      "id": "CB07",
+      "proposition": "Under section 1 of the Hunting Act 2004, hunting a wild mammal with a dog is an offence unless the hunting is exempt.",
+      "title": "Hunting Act 2004, section 1",
+      "url": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+      "excerpt": "1 Hunting wild mammals with dogs E+W This section has no associated Explanatory Notes",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "category": "actual_heading_without_operative_contents",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF01",
+        "transform": "Exact contiguous heading/context retained; operative sentence removed.",
+        "sourceUrl": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+        "syntheticWarning": null,
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB08",
+      "proposition": "The local geomagnetic field acts as the reference for alignment of honeybee waggle dances.",
+      "title": "Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance?",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+      "excerpt": "Yet, there is tantalizing evidence that the local (ambient) geomagnetic field (LGMF) could play a role.",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "category": "actual_research_sounding_assertion_without_evidence",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF05",
+        "transform": "Exact single speculative sentence retained; all alleged evidence, methods and subsequent tests omitted.",
+        "sourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+        "syntheticWarning": null,
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB09",
+      "proposition": "In the described honeybee experiments, neither reducing the local geomagnetic field to 2% nor shifting its declination reduced recruitment to the feeding station 200 m north of the hive.",
+      "title": "Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance?",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+      "excerpt": "Citation: Lambinet V, Hayden ME, Bieri M, Gries G (2014) Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance? PLoS ONE 9(12): e115665. https://doi.org/10.1371/journal.pone.0115665",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "category": "actual_research_citation_only",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF05",
+        "transform": "Exact bibliographic citation retained; abstract methods/results omitted.",
+        "sourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+        "syntheticWarning": null,
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB10",
+      "proposition": "The Met catalogue dates Wheat Field with Cypresses by Vincent van Gogh to 1888.",
+      "title": "Wheat Field with Cypresses, Vincent van Gogh, 1888",
+      "url": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+      "excerpt": "\"title\":\"Wheat Field with Cypresses\"",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "category": "metadata_overclaim_with_record_title_only",
+      "synthetic": true,
+      "provenance": {
+        "sourceFamily": "CBF03",
+        "transform": "Exact catalogue title field only; separate metadata title deliberately overclaims a false date. Artist/date fields omitted.",
+        "sourceUrl": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+        "syntheticWarning": "Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.",
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB11",
+      "proposition": "Public Law 117-17 designates Juneteenth National Independence Day on June 19 as a legal public holiday.",
+      "title": "Juneteenth National Independence Day is a legal public holiday on June 19",
+      "url": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+      "excerpt": "Public Law 117-17 117th Congress",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "category": "metadata_overclaim_with_identifier_only",
+      "synthetic": true,
+      "provenance": {
+        "sourceFamily": "CBF02",
+        "transform": "Body is an exact source identifier; separate retrieval title is a synthetic assertive metadata control. Operative contents omitted.",
+        "sourceUrl": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+        "syntheticWarning": "Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.",
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB12",
+      "proposition": "After learning pairs of flowers distinguished by sucrose concentration, the bumblebees in the described experiments preferred higher-ranking flowers over flowers with higher absolute reward in novel pairings.",
+      "title": "Bumblebees retrieve only the ordinal ranking of foraging options when comparing memories obtained in distinct settings",
+      "url": "https://api.elifesciences.org/articles/78525",
+      "excerpt": "Are animals’ preferences determined by absolute memories for options (e.g. reward sizes) or by their remembered ranking (better/worse)? The only studies examining this question suggest humans and starlings utilise memories for both absolute and relative information. We show that bumblebees’ learned preferences are based only on memories of ordinal comparisons. A series of experiments showed that after learning to discriminate pairs of different flowers by sucrose concentration, bumblebees preferred flowers (in novel pairings) with (1) higher ranking over equal absolute reward, (2) higher ranking over higher absolute reward, and (3) identical qualitative ranking but different quantitative ranking equally. Bumblebees used absolute information in order to rank different flowers. However, additional experiments revealed that, even when ranking information was absent (i.e. bees learned one flower at a time), memories for absolute information were lost or could no longer be retrieved after at most 1 hr. Our results illuminate a divergent mechanism for bees (compared to starlings and humans) of learned preferences that may have arisen from different adaptations to their natural environment.",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "category": "experimental_preference_finding",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF06",
+        "transform": "none",
+        "sourceUrl": "https://api.elifesciences.org/articles/78525",
+        "syntheticWarning": null,
+        "passageId": "CBF06-P01"
+      }
+    },
+    {
+      "id": "CB13",
+      "proposition": "Training with the advertised bumblebee learning system makes every bee choose the best reward in every setting.",
+      "title": "Bumblebees retrieve only the ordinal ranking of foraging options when comparing memories obtained in distinct settings",
+      "url": "https://api.elifesciences.org/articles/78525",
+      "excerpt": "Controlled research confirms flawless decisions. Our revolutionary bumblebee learning system makes every bee choose the best reward in every setting.",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "category": "synthetic_research_sounding_promotion",
+      "synthetic": true,
+      "provenance": {
+        "sourceFamily": "CBF06",
+        "transform": "Synthetic research-sounding product promotion; no genuine research quotation.",
+        "sourceUrl": "https://api.elifesciences.org/articles/78525",
+        "syntheticWarning": "Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.",
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB14",
+      "proposition": "The Met catalogue dates Wheat Field with Cypresses by Vincent van Gogh to 1888.",
+      "title": "Metropolitan Museum of Art collection object 436535",
+      "url": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+      "excerpt": "\"department\":\"European Paintings\",\"objectName\":\"Painting\",\"title\":\"Wheat Field with Cypresses\",\"culture\":\"\",\"period\":\"\",\"dynasty\":\"\",\"reign\":\"\",\"portfolio\":\"\",\"artistRole\":\"Artist\",\"artistPrefix\":\"\",\"artistDisplayName\":\"Vincent van Gogh\",\"artistDisplayBio\":\"Dutch, Zundert 1853–1890 Auvers-sur-Oise\",\"artistSuffix\":\"\",\"artistAlphaSort\":\"Gogh, Vincent van\",\"artistNationality\":\"Dutch\",\"artistBeginDate\":\"1853\",\"artistEndDate\":\"1890\",\"artistGender\":\"\",\"artistWikidata_URL\":\"https://www.wikidata.org/wiki/Q5582\",\"artistULAN_URL\":\"http://vocab.getty.edu/page/ulan/500115588\",\"objectDate\":\"1889\",\"objectBeginDate\":1889,\"objectEndDate\":1889,\"medium\":\"Oil on canvas\"",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "category": "catalogue_record_fields",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF03",
+        "transform": "none",
+        "sourceUrl": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+        "syntheticWarning": null,
+        "passageId": "CBF03-P01"
+      }
+    },
+    {
+      "id": "CB15",
+      "proposition": "The 2020 Pulitzer Prize in Fiction was awarded to The Nickel Boys by Colson Whitehead.",
+      "title": "Colson Whitehead | The Pulitzer Prizes",
+      "url": "https://www.pulitzer.org/winners/colson-whitehead-0",
+      "excerpt": "The 2020 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Nickel Boys , by Colson Whitehead (Doubleday)",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "category": "award_register_heading_and_contents",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF04",
+        "transform": "none",
+        "sourceUrl": "https://www.pulitzer.org/winners/colson-whitehead-0",
+        "syntheticWarning": null,
+        "passageId": "CBF04-P01"
+      }
+    },
+    {
+      "id": "CB16",
+      "proposition": "The 2020 Pulitzer Prize in Fiction was awarded to The Nickel Boys by Colson Whitehead.",
+      "title": "Colson Whitehead | The Pulitzer Prizes",
+      "url": "https://www.pulitzer.org/winners/colson-whitehead-0",
+      "excerpt": "Winning Work",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "category": "actual_body_heading_without_record",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF04",
+        "transform": "Exact award-page body heading retained; winning-work contents and category/year heading omitted.",
+        "sourceUrl": "https://www.pulitzer.org/winners/colson-whitehead-0",
+        "syntheticWarning": null,
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB17",
+      "proposition": "In the described honeybee experiments, neither reducing the local geomagnetic field to 2% nor shifting its declination reduced recruitment to the feeding station 200 m north of the hive.",
+      "title": "Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance?",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+      "excerpt": "We tested the effect of the LGMF on the recruitment success of forager bees by placing observation hives inside large Helmholtz coils, and then either reducing the LGMF to 2% or shifting its apparent declination. Neither of these treatments reduced the number of nest mates that waggle dancing forager bees recruited to a feeding station located 200 m north of the hive. These results indicate that the LGMF does not act as the reference for the alignment of waggle-dancing bees.",
+      "partition": "development",
+      "sourceFamily": "CBF05",
+      "category": "experimental_null_finding",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF05",
+        "transform": "none",
+        "sourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115665",
+        "syntheticWarning": null,
+        "passageId": "CBF05-P01"
+      }
+    },
+    {
+      "id": "CB18",
+      "proposition": "Public Law 117-17 designates Juneteenth National Independence Day on June 19 as a legal public holiday.",
+      "title": "Public Law 117-17: Juneteenth National Independence Day Act",
+      "url": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+      "excerpt": "Public Law 117-17 117th Congress An Act To amend title 5, United States Code, to designate Juneteenth National Independence Day as a legal public holiday. <<NOTE: June 17, 2021 - [S. 475]>> Be it enacted by the Senate and House of Representatives of the United States of America in Congress assembled, <<NOTE: Juneteenth National Independence Day Act. 5 USC 101 note.>> SECTION 1. SHORT TITLE. This Act may be cited as the ``Juneteenth National Independence Day Act''. SEC. 2. JUNETEENTH NATIONAL INDEPENDENCE DAY AS A LEGAL PUBLIC HOLIDAY. Section 6103(a) of title 5, United States Code, is amended by inserting after the item relating to Memorial Day the following: ``Juneteenth National Independence Day, June 19.''. Approved June 17, 2021.",
+      "partition": "validation",
+      "sourceFamily": "CBF02",
+      "category": "formal_enactment_date",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF02",
+        "transform": "none",
+        "sourceUrl": "https://www.govinfo.gov/content/pkg/PLAW-117publ17/html/PLAW-117publ17.htm",
+        "syntheticWarning": null,
+        "passageId": "CBF02-P01"
+      }
+    },
+    {
+      "id": "CB19",
+      "proposition": "The Met catalogue dates Wheat Field with Cypresses by Vincent van Gogh to 1889.",
+      "title": "Metropolitan Museum of Art collection object 436535",
+      "url": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+      "excerpt": "Experts agree that Wheat Field with Cypresses dates to 1889. Our definitive art guide brings you the most accurate scholarship on this masterpiece.",
+      "partition": "development",
+      "sourceFamily": "CBF03",
+      "category": "synthetic_promotion_with_factual_assertion",
+      "synthetic": true,
+      "provenance": {
+        "sourceFamily": "CBF03",
+        "transform": "Synthetic guide promotion and unsupported attribution; not actual museum text.",
+        "sourceUrl": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436535",
+        "syntheticWarning": "Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.",
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB20",
+      "proposition": "The 2020 Pulitzer Prize in Fiction was awarded to The Underground Railroad by Colson Whitehead.",
+      "title": "Colson Whitehead | The Pulitzer Prizes",
+      "url": "https://www.pulitzer.org/winners/colson-whitehead-0",
+      "excerpt": "The 2020 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Nickel Boys , by Colson Whitehead (Doubleday)",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "category": "award_register_heading_and_contents",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF04",
+        "transform": "none",
+        "sourceUrl": "https://www.pulitzer.org/winners/colson-whitehead-0",
+        "syntheticWarning": null,
+        "passageId": "CBF04-P01"
+      }
+    },
+    {
+      "id": "CB21",
+      "proposition": "After learning pairs of flowers distinguished by sucrose concentration, the bumblebees in the described experiments preferred flowers with higher absolute reward over higher-ranking flowers in novel pairings.",
+      "title": "Bumblebees retrieve only the ordinal ranking of foraging options when comparing memories obtained in distinct settings",
+      "url": "https://api.elifesciences.org/articles/78525",
+      "excerpt": "Are animals’ preferences determined by absolute memories for options (e.g. reward sizes) or by their remembered ranking (better/worse)? The only studies examining this question suggest humans and starlings utilise memories for both absolute and relative information. We show that bumblebees’ learned preferences are based only on memories of ordinal comparisons. A series of experiments showed that after learning to discriminate pairs of different flowers by sucrose concentration, bumblebees preferred flowers (in novel pairings) with (1) higher ranking over equal absolute reward, (2) higher ranking over higher absolute reward, and (3) identical qualitative ranking but different quantitative ranking equally. Bumblebees used absolute information in order to rank different flowers. However, additional experiments revealed that, even when ranking information was absent (i.e. bees learned one flower at a time), memories for absolute information were lost or could no longer be retrieved after at most 1 hr. Our results illuminate a divergent mechanism for bees (compared to starlings and humans) of learned preferences that may have arisen from different adaptations to their natural environment.",
+      "partition": "validation",
+      "sourceFamily": "CBF06",
+      "category": "experimental_preference_finding",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF06",
+        "transform": "none",
+        "sourceUrl": "https://api.elifesciences.org/articles/78525",
+        "syntheticWarning": null,
+        "passageId": "CBF06-P01"
+      }
+    },
+    {
+      "id": "CB22",
+      "proposition": "Under section 1 of the Hunting Act 2004, hunting a wild mammal with a dog is an offence unless the hunting is exempt.",
+      "title": "Hunting Act 2004, section 1",
+      "url": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+      "excerpt": "1 Hunting wild mammals with dogs E+W This section has no associated Explanatory Notes A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "category": "legal_operative_rule",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF01",
+        "transform": "none",
+        "sourceUrl": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+        "syntheticWarning": null,
+        "passageId": "CBF01-P01"
+      }
+    },
+    {
+      "id": "CB23",
+      "proposition": "The 2020 Pulitzer Prize in Fiction was awarded to The Nickel Boys by Colson Whitehead.",
+      "title": "Colson Whitehead | The Pulitzer Prizes",
+      "url": "https://www.pulitzer.org/winners/colson-whitehead-0",
+      "excerpt": "A reading-club host says, “The Nickel Boys won the 2020 Pulitzer Prize in Fiction.” Join our discussion and discover the award-winning novel everyone is talking about.",
+      "partition": "validation",
+      "sourceFamily": "CBF04",
+      "category": "synthetic_attributed_award_assertion",
+      "synthetic": true,
+      "provenance": {
+        "sourceFamily": "CBF04",
+        "transform": "Synthetic promotion quoting an unsubstantiated award assertion; not actual award-register content.",
+        "sourceUrl": "https://www.pulitzer.org/winners/colson-whitehead-0",
+        "syntheticWarning": "Constructed control; this excerpt/title combination must never be represented as a quotation from the URL.",
+        "passageId": null
+      }
+    },
+    {
+      "id": "CB24",
+      "proposition": "Under section 1 of the Hunting Act 2004, hunting a wild mammal with a dog is not an offence even when the hunting is not exempt.",
+      "title": "Hunting Act 2004, section 1",
+      "url": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+      "excerpt": "1 Hunting wild mammals with dogs E+W This section has no associated Explanatory Notes A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.",
+      "partition": "development",
+      "sourceFamily": "CBF01",
+      "category": "legal_operative_rule",
+      "synthetic": false,
+      "provenance": {
+        "sourceFamily": "CBF01",
+        "transform": "none",
+        "sourceUrl": "https://www.legislation.gov.uk/ukpga/2004/37/section/1",
+        "syntheticWarning": null,
+        "passageId": "CBF01-P01"
+      }
+    }
+  ]
+}
