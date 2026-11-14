@@ -27,6 +27,9 @@ enum ResultWording {
   /// Source names longer than this are shortened before they are spoken or shown.
   static let maxSourceNameCodePoints = 40
 
+  /// Brief update when a spoken result was corrected (plan: "late correction").
+  static let correctionLine = "That statement was corrected."
+
   /// The plan's wearable wording for each outcome.
   static func line(for outcome: OutputOutcome) -> String {
     switch outcome {

@@ -229,17 +229,27 @@ final class ContractsV1Tests: XCTestCase {
     let suite = "ContractsV1Tests-\(UUID().uuidString)"
     let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
     defer { defaults.removePersistentDomain(forName: suite) }
-    XCTAssertEqual(BackendConfig.load(from: defaults), BackendConfig())
-    XCTAssertEqual(BackendConfig.load(from: defaults).joinCode, "")
+    let secrets = MemorySecretStore()
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets), BackendConfig())
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).joinCode, "")
 
-    BackendConfig(baseURL: URL(string: "https://api.example.com")!, joinCode: "demo-code").save(to: defaults)
-    let loaded = BackendConfig.load(from: defaults)
+    BackendConfig(baseURL: URL(string: "https://api.example.com")!, joinCode: "demo-code").save(to: defaults, secrets: secrets)
+    let loaded = BackendConfig.load(from: defaults, secrets: secrets)
     XCTAssertEqual(loaded.joinCode, "demo-code")
+    XCTAssertNil(defaults.string(forKey: BackendConfig.joinCodeKey), "the join code stays out of UserDefaults")
+    XCTAssertEqual(secrets.read(BackendConfig.joinCodeKey), "demo-code")
     XCTAssertEqual(loaded.streamURL(sessionId: "abc")?.absoluteString, "wss://api.example.com/v1/sessions/abc/stream")
     XCTAssertEqual(loaded.checksURL(sessionId: "abc").absoluteString, "https://api.example.com/v1/sessions/abc/checks")
     XCTAssertEqual(BackendConfig().streamURL(sessionId: "abc")?.absoluteString, "ws://localhost:3000/v1/sessions/abc/stream")
 
     defaults.set("ftp://nope", forKey: BackendConfig.baseURLKey)
-    XCTAssertEqual(BackendConfig.load(from: defaults).baseURL, BackendConfig.defaultBaseURL)
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).baseURL, BackendConfig.defaultBaseURL)
+
+    // A join code left in UserDefaults by an older build moves to the secret store once.
+    let fresh = MemorySecretStore()
+    defaults.set("old-code", forKey: BackendConfig.joinCodeKey)
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: fresh).joinCode, "old-code")
+    XCTAssertNil(defaults.string(forKey: BackendConfig.joinCodeKey))
+    XCTAssertEqual(fresh.read(BackendConfig.joinCodeKey), "old-code")
   }
 }

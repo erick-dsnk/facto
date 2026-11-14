@@ -66,6 +66,20 @@ final class MockURLProtocol: URLProtocol {
   }
 }
 
+// MARK: - Secrets
+
+/// In-memory stand-in for the Keychain.
+final class MemorySecretStore: SecretStoring, @unchecked Sendable {
+  private let lock = NSLock()
+  private var values: [String: String] = [:]
+
+  func read(_ key: String) -> String? { lock.withLock { values[key] } }
+
+  func write(_ value: String?, for key: String) {
+    lock.withLock { values[key] = (value?.isEmpty ?? true) ? nil : value }
+  }
+}
+
 // MARK: - WebSocket
 
 /// In-memory socket. Push frames or failures; a pending `receive()` resumes in order.
@@ -76,6 +90,8 @@ final class FakeWebSocket: WebSocketConnection, @unchecked Sendable {
   private var _sent: [WebSocketFrame] = []
   private var _cancelled = false
   private var _resumed = false
+  private var _pings = 0
+  private var _answersPings = true
   let handshakeStatusCode: Int?
 
   init(handshakeStatusCode: Int? = nil) {
@@ -85,6 +101,12 @@ final class FakeWebSocket: WebSocketConnection, @unchecked Sendable {
   var sent: [WebSocketFrame] { lock.withLock { _sent } }
   var cancelled: Bool { lock.withLock { _cancelled } }
   var resumed: Bool { lock.withLock { _resumed } }
+  var pings: Int { lock.withLock { _pings } }
+  /// False makes the socket half-open: pings time out.
+  var answersPings: Bool {
+    get { lock.withLock { _answersPings } }
+    set { lock.withLock { _answersPings = newValue } }
+  }
 
   func push(_ frame: WebSocketFrame) { deliver(.success(frame)) }
   func push(json: String) { push(.text(json)) }
@@ -126,6 +148,16 @@ final class FakeWebSocket: WebSocketConnection, @unchecked Sendable {
         lock.unlock()
       }
     }
+  }
+
+  func sendPing(timeout: TimeInterval) async throws {
+    let answers = lock.withLock { () -> Bool in
+      _pings += 1
+      return _answersPings && !_cancelled
+    }
+    guard !answers else { return }
+    try await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
+    throw URLError(.timedOut)
   }
 
   func cancel(with code: URLSessionWebSocketTask.CloseCode) {

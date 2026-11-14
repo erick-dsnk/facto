@@ -33,7 +33,7 @@ final class LookAndCheckCoordinator {
     /// No usable text. Show or speak `message` ("Move closer and try again").
     case unreadable(message: String)
     /// `reason` is a short code, safe to log: no_session, photo_failed, ocr_failed,
-    /// invalid_input, submit_failed.
+    /// session_paused, invalid_input, submit_failed.
     case failed(reason: String)
 
     var submittedCount: Int {
@@ -56,6 +56,10 @@ final class LookAndCheckCoordinator {
   private(set) var lastOutcome: Outcome?
   /// Called on the main actor after every finished check, for the UI or speech.
   @ObservationIgnored var onOutcome: ((Outcome) -> Void)?
+  /// Runs after OCR, before the first chunk is submitted. Return false when the session
+  /// can't take checks (the check fails with "session_paused"). LiveModel resumes a session
+  /// the server paused after a reconnect here, for voice and button triggers alike.
+  @ObservationIgnored var prepareSubmit: (@MainActor () async -> Bool)?
 
   @ObservationIgnored private let channel: SessionChannel
   @ObservationIgnored private let photo: PhotoCapturing
@@ -146,9 +150,21 @@ final class LookAndCheckCoordinator {
     return outcome
   }
 
+  /// Chunks of one photo share a request id base: "ocr-<uuid>-1", "ocr-<uuid>-2". Returns
+  /// "ocr-<uuid>" so outcomes can be grouped per photo, even when a result overtakes the 202.
+  nonisolated static func photoKey(forRequestId requestId: String) -> String? {
+    guard requestId.hasPrefix("ocr-"), let dash = requestId.lastIndex(of: "-"),
+          dash > requestId.index(requestId.startIndex, offsetBy: 3)
+    else { return nil }
+    // A chunk number has one or two digits; a UUID group never that few.
+    let suffix = requestId[requestId.index(after: dash)...]
+    guard (1...2).contains(suffix.count), Int(suffix) != nil else { return nil }
+    return String(requestId[..<dash])
+  }
+
   private func pipeline(source: TriggerSource) async -> Outcome {
     log.info("look-and-check start source=\(source.rawValue, privacy: .public)")
-    guard let sessionId = channel.sessionId, let sessionEpoch = channel.sessionEpoch else {
+    guard channel.sessionId != nil, channel.sessionEpoch != nil else {
       return .failed(reason: "no_session")
     }
 
@@ -186,42 +202,71 @@ final class LookAndCheckCoordinator {
     }
 
     phase = .submitting
+    if let prepareSubmit, !(await prepareSubmit()) {
+      return .failed(reason: "session_paused")
+    }
     let photoSegment = WireID.makeSegmentId(prefix: "photo")
+    let requestBase = WireID.makeRequestId(prefix: "ocr")
     var submitted: [String] = []
     for (index, chunk) in split.chunks.enumerated() {
-      let envelope = TextInputEnvelope(
-        requestId: WireID.makeRequestId(prefix: "ocr"),
-        sessionId: sessionId,
-        sessionEpoch: sessionEpoch,
-        revision: 1,
-        mode: .ocr,
-        text: chunk,
-        capturedAt: capturedAt,
-        capture: .init(
-          source: .glassesCamera,
-          segmentId: "\(photoSegment)-\(index + 1)",
-          confidence: min(max(ocr.meanConfidence, 0), 1),
-          final: true
-        ),
-        context: [],
-        userInitiated: true
-      )
+      let requestId = "\(requestBase)-\(index + 1)"
+      let segmentId = "\(photoSegment)-\(index + 1)"
+      let confidence = min(max(ocr.meanConfidence, 0), 1)
+      // The session and epoch are read now, not before the photo: a reconnect during the
+      // capture raises the epoch, and a renewed session has a new id.
+      func envelope() -> TextInputEnvelope? {
+        guard let sessionId = channel.sessionId, let sessionEpoch = channel.sessionEpoch else { return nil }
+        return TextInputEnvelope(
+          requestId: requestId,
+          sessionId: sessionId,
+          sessionEpoch: sessionEpoch,
+          revision: 1,
+          mode: .ocr,
+          text: chunk,
+          capturedAt: capturedAt,
+          capture: .init(source: .glassesCamera, segmentId: segmentId, confidence: confidence, final: true),
+          context: [],
+          userInitiated: true
+        )
+      }
+      guard let first = envelope() else {
+        return finish(submitted, chunks: split, failedAt: index, reason: "no_session")
+      }
       do {
-        try envelope.validate()
+        try first.validate()
       } catch {
         log.error("ocr chunk \(index + 1, privacy: .public) invalid: \(String(describing: error), privacy: .public)")
         return finish(submitted, chunks: split, failedAt: index, reason: "invalid_input")
       }
       do {
-        try await submitter.submit(envelope)
-        submitted.append(envelope.requestId)
-        log.info("ocr chunk submitted requestId=\(envelope.requestId, privacy: .public) codePoints=\(CodePoints.count(chunk), privacy: .public)")
+        do {
+          try await submitter.submit(first)
+        } catch where Self.isStaleSession(error) {
+          // The session moved on while this chunk was in flight (a reconnect raised the
+          // epoch): once it is active again, one retry with the current ids.
+          if let prepareSubmit, !(await prepareSubmit()) { throw error }
+          guard let retry = envelope(), retry != first else { throw error }
+          log.info("ocr chunk \(index + 1, privacy: .public) retrying with epoch \(retry.sessionEpoch, privacy: .public)")
+          try await submitter.submit(retry)
+        }
+        submitted.append(requestId)
+        log.info("ocr chunk submitted requestId=\(requestId, privacy: .public) codePoints=\(CodePoints.count(chunk), privacy: .public)")
       } catch {
         log.error("ocr chunk \(index + 1, privacy: .public) submit failed: \(String(describing: type(of: error)), privacy: .public)")
         return finish(submitted, chunks: split, failedAt: index, reason: "submit_failed")
       }
     }
     return .submitted(requestIds: submitted, droppedCodePoints: split.droppedCodePoints)
+  }
+
+  /// The request named an epoch or session the server has moved past: the client noticed
+  /// first (`staleEpoch`, `wrongSession`) or the server answered 409.
+  nonisolated static func isStaleSession(_ error: Error) -> Bool {
+    switch error as? BackendClientError {
+    case .staleEpoch, .wrongSession: return true
+    case .http(409, let code): return code == "old_epoch" || code == "wrong_session"
+    default: return false
+    }
   }
 
   /// A failure partway through: report what was sent, counting unsent chunks as dropped.

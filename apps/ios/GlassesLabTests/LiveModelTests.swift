@@ -14,7 +14,9 @@ private final class FakeLiveBackend: LiveBackend {
   var sessionId: String?
   var sessionEpoch: Int?
   var connectionState: ChannelConnectionState = .idle
+  var onUnreadableEvent: (@MainActor (String?) -> Void)?
   var failConnect = false
+  private(set) var connectCount = 0
   var readyActive = true
   var readyAudio: Bool? = true
   private(set) var submitted: [TextInputEnvelope] = []
@@ -29,17 +31,34 @@ private final class FakeLiveBackend: LiveBackend {
   }
 
   var controlTypes: [String] { controls.compactMap { $0["type"] as? String } }
+  /// Control types other than `session.preferences`, which goes out on every session.ready.
+  var audioControlTypes: [String] { controlTypes.filter { $0 != "session.preferences" } }
 
   func connect() async throws {
+    connectCount += 1
     setState(.connecting)
     if failConnect {
       setState(.disconnected(reason: "unauthorized"))
       throw ConnectFailure()
     }
-    sessionId = "sess-live"
+    // Each session has its own id, like services/api.
+    sessionId = connectCount == 1 ? "sess-live" : "sess-live-\(connectCount)"
     sessionEpoch = 1
     setState(.connected)
-    emit(LiveEvents.sessionReady(active: readyActive, audio: readyAudio, epoch: 1))
+    emit(LiveEvents.sessionReady(active: readyActive, audio: readyAudio, epoch: 1, session: sessionId!))
+  }
+
+  /// The server deletes the session (its 5 minute lifetime ran out): `session.ended` with the
+  /// raised epoch, then the socket closes and the client forgets the session.
+  func endSession(reason: String) {
+    guard let sessionId, let sessionEpoch else { return }
+    emit(LiveEvents.event(
+      .sessionEnded, epoch: sessionEpoch + 1, session: sessionId,
+      payload: .sessionEnded(SessionEndedPayload(reasonCode: reason, active: false))
+    ))
+    self.sessionId = nil
+    self.sessionEpoch = nil
+    setState(.disconnected(reason: reason))
   }
 
   func close() async {
@@ -69,8 +88,8 @@ private final class FakeLiveBackend: LiveBackend {
   func sendControl<Message: Encodable & Sendable>(_ message: Message) async throws {
     let object = (try JSONSerialization.jsonObject(with: try JSONEncoder().encode(message))) as? [String: Any] ?? [:]
     controls.append(object)
-    if object["type"] as? String == "session.resume", let epoch = sessionEpoch {
-      emit(LiveEvents.sessionReady(active: true, audio: readyAudio, epoch: epoch))
+    if object["type"] as? String == "session.resume", let epoch = sessionEpoch, let sessionId {
+      emit(LiveEvents.sessionReady(active: true, audio: readyAudio, epoch: epoch, session: sessionId))
     }
   }
 
@@ -91,6 +110,7 @@ private final class FakeLiveBackend: LiveBackend {
 @MainActor
 private final class FakeLiveCamera: LiveCamera {
   var isStreaming = false
+  var liveQuality: StreamQuality = .demo
   var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)?
   var onStreamStopped: (@MainActor (_ byUser: Bool) -> Void)?
   var startError: Error?
@@ -147,18 +167,40 @@ private enum LiveEvents {
   private static var seq = 0
 
   static func event(
-    _ type: ServerEventType, epoch: Int = 1, requestId: String? = nil, claimId: String? = nil, revision: Int? = nil,
-    payload: ServerEventPayload
+    _ type: ServerEventType, epoch: Int = 1, session: String = "sess-live", requestId: String? = nil, claimId: String? = nil,
+    revision: Int? = nil, payload: ServerEventPayload
   ) -> ServerEvent {
     seq += 1
     return ServerEvent(
-      eventId: "live-evt-\(seq)", eventSeq: seq, sessionId: "sess-live", sessionEpoch: epoch, requestId: requestId,
+      eventId: "live-evt-\(seq)", eventSeq: seq, sessionId: session, sessionEpoch: epoch, requestId: requestId,
       claimId: claimId, revision: revision, type: type, serverAt: "2026-11-14T10:00:00.000Z", payload: payload
     )
   }
 
-  static func sessionReady(active: Bool, audio: Bool?, epoch: Int) -> ServerEvent {
-    event(.sessionReady, epoch: epoch, payload: .sessionReady(SessionReadyPayload(active: active, expiresAt: nil, mode: "fixture", audio: audio)))
+  static func sessionReady(active: Bool, audio: Bool?, epoch: Int, session: String = "sess-live") -> ServerEvent {
+    event(
+      .sessionReady, epoch: epoch, session: session,
+      payload: .sessionReady(SessionReadyPayload(active: active, expiresAt: nil, mode: "fixture", audio: audio))
+    )
+  }
+
+  static func admission(_ type: ServerEventType, requestId: String) -> ServerEvent {
+    let payload = AdmissionPayload(admissionAction: .skip, reasonCode: "fixture", presentation: nil)
+    return event(
+      type, requestId: requestId, revision: 1,
+      payload: type == .claimSkipped ? .claimSkipped(payload) : .claimNeedsConfirmation(payload)
+    )
+  }
+
+  static func superseded(requestId: String, revision: Int, action: PresentationAction) -> ServerEvent {
+    event(
+      .claimSuperseded, requestId: requestId, revision: revision,
+      payload: .claimSuperseded(SupersededPayload(reasonCode: "corrected", presentation: Presentation(action: action, reasonCode: "correction_status")))
+    )
+  }
+
+  static func error(_ code: String, requestId: String? = nil) -> ServerEvent {
+    event(.pipelineError, requestId: requestId, payload: .pipelineError(PipelineErrorPayload(reasonCode: code)))
   }
 
   static func audioReady(generation: Int, epoch: Int = 1) -> ServerEvent {
@@ -171,7 +213,7 @@ private enum LiveEvents {
     event(.captureRequest, payload: .captureRequest)
   }
 
-  static func result(requestId: String, action: PresentationAction, verdict: Verdict = .supported) -> ServerEvent {
+  static func result(requestId: String, action: PresentationAction, verdict: Verdict = .supported, withIds: Bool = true) -> ServerEvent {
     let text = "Helsinki is the capital of Finland."
     let evidence = Evidence(
       id: "ev-1", url: "https://en.wikipedia.org/wiki/Helsinki", title: "Helsinki", publisher: "Wikipedia",
@@ -185,7 +227,10 @@ private enum LiveEvents {
       checkedAt: "2026-11-14T10:00:02Z", expiresAt: "2026-11-14T10:01:02Z", durationMs: 900, cached: false,
       policyVersion: "glasses-p0.1", modelVersion: "fixture", presentation: Presentation(action: action, reasonCode: "fixture")
     )
-    return event(.claimResult, requestId: requestId, claimId: "\(requestId)-c1", revision: 1, payload: .claimResult(result))
+    return event(
+      .claimResult, requestId: requestId, claimId: withIds ? "\(requestId)-c1" : nil, revision: withIds ? 1 : nil,
+      payload: .claimResult(result)
+    )
   }
 }
 
@@ -241,6 +286,9 @@ final class LiveModelTests: XCTestCase {
   private var clock: ManualClock!
   private var backends: [FakeLiveBackend] = []
   private var configureBackend: ((FakeLiveBackend) -> Void)?
+  private var keepAwake: [Bool] = []
+  private var secrets: MemorySecretStore!
+  private var now: TimeInterval = 1_000
 
   override func setUp() async throws {
     suiteName = "LiveModelTests-\(UUID().uuidString)"
@@ -253,6 +301,9 @@ final class LiveModelTests: XCTestCase {
     clock = ManualClock()
     backends = []
     configureBackend = nil
+    keepAwake = []
+    now = 1_000
+    secrets = MemorySecretStore()
   }
 
   override func tearDown() async throws {
@@ -263,8 +314,10 @@ final class LiveModelTests: XCTestCase {
 
   private func makeModel(checkTimeout: TimeInterval = 15) -> LiveModel {
     LiveModel(
-      camera: camera, display: lens, defaults: defaults, speaker: speaker, chime: chime, recognizer: recognizer,
+      camera: camera, display: lens, defaults: defaults, secrets: secrets, speaker: speaker, chime: chime, recognizer: recognizer,
       audioClock: clock, checkTimeout: checkTimeout, configureAudioSession: {},
+      idleTimer: { [unowned self] in self.keepAwake.append($0) },
+      uptime: { [unowned self] in self.now },
       makeBackend: { [unowned self] config in
         let backend = FakeLiveBackend(config: config)
         self.configureBackend?(backend)
@@ -297,7 +350,8 @@ final class LiveModelTests: XCTestCase {
   func testConnectSavesSettingsAndConnects() async {
     let model = await connectedModel()
     XCTAssertEqual(backend.config, BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "demo-code"))
-    XCTAssertEqual(BackendConfig.load(from: defaults), backend.config)
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets), backend.config)
+    XCTAssertNil(defaults.string(forKey: BackendConfig.joinCodeKey))
     XCTAssertTrue(model.isConnected)
     XCTAssertFalse(model.canEditBackend)
   }
@@ -318,7 +372,79 @@ final class LiveModelTests: XCTestCase {
     model.joinCode = "wrong"
     await model.connect()
     XCTAssertEqual(model.status, .backendError(code: "unauthorized"))
+    XCTAssertEqual(model.notice, LiveModel.connectFailureNotice("unauthorized"))
     XCTAssertTrue(model.canEditBackend)
+  }
+
+  func testPlainHttpIsRefusedForPublicHosts() async {
+    let model = makeModel()
+    model.baseURLText = "http://api.example.test"
+    model.joinCode = "demo-code"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "insecure_url"))
+    XCTAssertNotNil(model.notice)
+    XCTAssertTrue(backends.isEmpty, "the join code never goes out over http")
+
+    for host in ["localhost", "127.0.0.1", "10.0.0.5", "192.168.1.20", "172.20.1.1", "davids-mac.local"] {
+      XCTAssertTrue(LiveModel.allowsCleartext(host: host), host)
+    }
+    for host in ["api.example.test", "8.8.8.8", "172.32.0.1", "192.169.0.1", "10.0.0.5.example.com"] {
+      XCTAssertFalse(LiveModel.allowsCleartext(host: host), host)
+    }
+  }
+
+  func testUnreadableEventShowsANotice() async {
+    let model = await connectedModel()
+    backend.onUnreadableEvent?("claim.result")
+    XCTAssertEqual(model.notice, "The backend sent an update this app can't read. Check that the app and backend versions match.")
+  }
+
+  // MARK: Preferences and session lifetime
+
+  func testPreferencesGoOutOnEachSessionReadyAndWhenToggled() async {
+    let model = await connectedModel()
+    await waitUntil { self.backend.controlTypes.contains("session.preferences") }
+    let first = backend.controls.first { $0["type"] as? String == "session.preferences" }
+    XCTAssertEqual(first?["sessionEpoch"] as? Int, 1)
+    let preferences = first?["preferences"] as? [String: Any]
+    XCTAssertEqual(preferences?["automaticNotifications"] as? Bool, true, "on for the demo")
+    XCTAssertEqual(preferences?["muted"] as? Bool, false, "local mute keeps cards, so the server is never muted")
+    XCTAssertEqual((preferences?["selectedTopics"] as? [String])?.count, 0)
+
+    model.automaticAlerts = false
+    await waitUntil { self.backend.controlTypes.filter { $0 == "session.preferences" }.count == 2 }
+    let last = backend.controls.last { $0["type"] as? String == "session.preferences" }
+    XCTAssertEqual((last?["preferences"] as? [String: Any])?["automaticNotifications"] as? Bool, false)
+    XCTAssertEqual(defaults.object(forKey: LiveModel.automaticAlertsKey) as? Bool, false)
+  }
+
+  func testExpiredSessionIsRenewedAndListeningResumes() async {
+    let model = await listeningModel()
+    backend.endSession(reason: "deleted")
+
+    await waitUntil { self.backend.connectCount == 2 }
+    await waitUntil { self.backend.controlTypes.filter { $0 == "audio.start" }.count == 2 }
+    let starts = backend.controls.filter { $0["type"] as? String == "audio.start" }
+    XCTAssertEqual(starts.last?["sessionEpoch"] as? Int, 1, "the new session's epoch, not the old one's")
+    XCTAssertEqual(starts.last?["streamGeneration"] as? Int, 2)
+    await waitUntil { self.chime.count == 1 }
+    XCTAssertEqual(model.notice, "The session expired, so a new one started. Listening resumed.")
+    XCTAssertFalse(speaker.spoken.contains(AudioStreamerStopReason.sessionEnded(reasonCode: "deleted").spokenMessage!))
+    await waitUntil { self.backend.controlTypes.filter { $0 == "session.preferences" }.count == 2 }
+  }
+
+  func testRenewalIsLimitedToOncePerMinute() async {
+    let model = await listeningModel()
+    backend.endSession(reason: "deleted")
+    await waitUntil { self.backend.controlTypes.filter { $0 == "audio.start" }.count == 2 }
+    backend.emit(LiveEvents.audioReady(generation: 2))
+    await waitUntil { model.status == .listening }
+
+    now += 10
+    backend.endSession(reason: "deleted")
+    await waitUntil { model.notice == "The backend ended the session (deleted). Tap Connect for a new one." }
+    XCTAssertEqual(backend.connectCount, 2)
+    XCTAssertEqual(speaker.spoken.last, AudioStreamerStopReason.sessionEnded(reasonCode: "deleted").spokenMessage)
   }
 
   func testPausedSessionIsResumedWhenNotListening() async {
@@ -340,10 +466,12 @@ final class LiveModelTests: XCTestCase {
 
   func testStartListeningStartsTheStreamThenAudio() async {
     let model = await connectedModel()
+    XCTAssertEqual(camera.liveQuality, .demo)
     model.demoQuality = false
+    XCTAssertEqual(camera.liveQuality, .listening, "a stream Check this starts uses the same quality")
     await model.startListening()
     XCTAssertEqual(camera.startedQualities, [.listening])
-    await waitUntil { self.backend.controlTypes == ["audio.start"] }
+    await waitUntil { self.backend.audioControlTypes == ["audio.start"] }
     XCTAssertEqual(model.status, .startingToListen)
     backend.emit(LiveEvents.audioReady(generation: 1))
     await waitUntil { model.status == .listening }
@@ -356,7 +484,7 @@ final class LiveModelTests: XCTestCase {
     await model.startListening()
     XCTAssertEqual(model.notice, LiveStreamError.streamWithoutAudio.message)
     XCTAssertFalse(model.isListening)
-    XCTAssertEqual(backend.controlTypes, [])
+    XCTAssertEqual(backend.audioControlTypes, [])
   }
 
   func testNoSpeechRecognitionBlocksListening() async {
@@ -381,6 +509,7 @@ final class LiveModelTests: XCTestCase {
     model.stopListening()
     XCTAssertEqual(model.status, .connected)
     XCTAssertTrue(speaker.spoken.isEmpty)
+    XCTAssertEqual(keepAwake, [true, false], "the phone stays awake only while listening")
   }
 
   func testShortDropResumesWithAChime() async {
@@ -431,6 +560,28 @@ final class LiveModelTests: XCTestCase {
     XCTAssertTrue(lens.cards.isEmpty)
   }
 
+  func testRoutineBackendCodesStayOffTheScreen() async {
+    let model = await connectedModel()
+    for code in ["automatic_cooldown", "queue_full", "stale_capture", "audio_not_ready"] {
+      backend.emit(LiveEvents.error(code))
+    }
+    try? await Task.sleep(nanoseconds: 100_000_000)
+    XCTAssertNil(model.notice)
+    backend.emit(LiveEvents.error("internal_error"))
+    await waitUntil { model.notice == "Backend error: internal_error" }
+  }
+
+  func testCorrectionTakesTheCardOffAndIsSpokenWhileListening() async {
+    let model = await listeningModel()
+    backend.emit(LiveEvents.result(requestId: "asr-1-1-abc", action: .notify, verdict: .contradicted))
+    await waitUntil { model.lens.card?.kind == .contradicted }
+    backend.emit(LiveEvents.superseded(requestId: "asr-1-1-abc", revision: 1, action: .respond))
+    await waitUntil { model.lens.card == nil }
+    XCTAssertEqual(model.history.entries.first?.superseded, true)
+    XCTAssertEqual(speaker.spoken.last, ResultWording.correctionLine)
+    await waitUntil { self.lens.cards.last == .some(nil) }
+  }
+
   func testMuteKeepsTheCardButNoSound() async {
     let model = await connectedModel()
     model.isMuted = true
@@ -467,6 +618,50 @@ final class LiveModelTests: XCTestCase {
     await waitUntil { self.backend.submitted.count == 1 }
     XCTAssertEqual(camera.photoCount, 1)
     await waitUntil { model.checkMessage == "Sent for checking." }
+  }
+
+  func testManualResultWithoutIdsStillGetsAnAnswer() async throws {
+    let model = await connectedModel()
+    await model.checkThis()
+    await waitUntil { self.backend.submitted.count == 1 }
+    let requestId = try XCTUnwrap(backend.submitted.first?.requestId)
+    await waitUntil { model.checkMessage == "Sent for checking." }
+    backend.emit(LiveEvents.result(requestId: requestId, action: .respond, withIds: false))
+    await waitUntil { model.history.entries.first?.outcome == .checkFailed }
+    XCTAssertEqual(speaker.spoken.last, ResultWording.line(for: .checkFailed))
+    XCTAssertTrue(model.pendingChecks.isEmpty)
+  }
+
+  func testASkippedChunkNeverTalksOverAnotherChunksVerdict() async throws {
+    let sentence = "Helsinki " + String(repeating: "is a city ", count: 50) + "in Finland."
+    recognizer.result = OCRResult(text: "\(sentence) \(sentence)", meanConfidence: 0.9, lineCount: 4, droppedLineCount: 0)
+    let model = await connectedModel()
+    await model.checkThis()
+    await waitUntil { model.checkMessage == "Sent 2 parts for checking." }
+    let ids = backend.submitted.map(\.requestId)
+    XCTAssertEqual(ids.count, 2)
+
+    backend.emit(LiveEvents.result(requestId: ids[1], action: .respond, verdict: .contradicted))
+    backend.emit(LiveEvents.admission(.claimSkipped, requestId: ids[0]))
+    await waitUntil { model.pendingChecks.isEmpty }
+    try await Task.sleep(nanoseconds: 50_000_000)
+    XCTAssertEqual(model.history.entries.map(\.outcome), [.verdict(.contradicted)])
+    XCTAssertEqual(speaker.spoken.count, 1)
+  }
+
+  func testAPhotoWithNoVerdictAnswersOnce() async throws {
+    let sentence = "Helsinki " + String(repeating: "is a city ", count: 50) + "in Finland."
+    recognizer.result = OCRResult(text: "\(sentence) \(sentence)", meanConfidence: 0.9, lineCount: 4, droppedLineCount: 0)
+    let model = await connectedModel()
+    await model.checkThis()
+    await waitUntil { model.checkMessage == "Sent 2 parts for checking." }
+    let ids = backend.submitted.map(\.requestId)
+    backend.emit(LiveEvents.admission(.claimSkipped, requestId: ids[0]))
+    backend.emit(LiveEvents.admission(.claimNeedsConfirmation, requestId: ids[1]))
+    await waitUntil { model.history.entries.count == 1 }
+    try await Task.sleep(nanoseconds: 50_000_000)
+    XCTAssertEqual(model.history.entries.map(\.outcome), [.needsConfirmation(heard: false)])
+    XCTAssertEqual(speaker.spoken, [ResultWording.line(for: .needsConfirmation(heard: false))])
   }
 
   func testManualCheckWithoutAnOutcomeReportsCheckFailed() async {
@@ -525,7 +720,7 @@ final class LiveModelLiveTests: XCTestCase {
     let camera = FakeLiveCamera()
     let speaker = RecordingSpeaker()
     let model = LiveModel(
-      camera: camera, display: nil, defaults: defaults, speaker: speaker, chime: CountingChime(),
+      camera: camera, display: nil, defaults: defaults, secrets: MemorySecretStore(), speaker: speaker, chime: CountingChime(),
       recognizer: FakeTextRecognizer(), configureAudioSession: {}
     )
     model.baseURLText = base
