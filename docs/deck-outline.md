@@ -40,7 +40,7 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-Current integration passes lint/typecheck and **504 tests across 23 files**. Later per-target extraction fallback/status diagnostics are not present in the completed frozen08 live cohorts; green checks do not establish their provider behavior or readiness.
+Current integration passes lint/typecheck and **525 tests across 25 files**. Later per-target extraction fallback/status diagnostics are not present in the completed frozen08 live cohorts; green checks do not establish their provider behavior or readiness.
 
 On the repeated OPEN broader corpus, [baseline](broader-development-2026-11-14.md) produced 3/12 correct definitive unique facts and 2/12 with all selected sources verified. [Candidate08](broader-development-candidate08.md), frozen at `aefb9e7`, produced **6/12 correct definitive**, **4/12 fully source-verified**, five abstentions and one operational error; it admitted 13/13 eligible occurrences and delivered all 16 terminals. The mixed repeat adds no fact credit. These are development observations, not blind accuracy or an isolated causal improvement.
 
