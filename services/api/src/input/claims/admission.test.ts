@@ -186,6 +186,13 @@ describe('admission decisions', () => {
     expect(result.claims[0]).toMatchObject({ checkedText: 'He was born in Ulm in 1879.', subject: 'Albert Einstein', subjectMissing: false });
   });
 
+  it('A5: a picked subject completes the claim even when Jev answered completeness low on its own', async () => {
+    const eiffel = (asked: boolean, subject?: string) => classify(jev(() => ({ subject, self: 0.2 })), input('It opened in 1889.', asked, { context: ['The Eiffel Tower is in Paris.'] }));
+    expect((await eiffel(false, 'Eiffel Tower')).claims).toMatchObject([{ subject: 'Eiffel Tower', subjectMissing: false }]);
+    expect(await eiffel(false)).toEqual({ action: 'skip', reasonCode: 'subject_missing', claims: [] });
+    expect((await eiffel(true)).claims).toMatchObject([{ subject: null, subjectMissing: true }]);
+  });
+
   it('A6: a missing subject answers Can\'t verify when asked and stays silent when overheard', async () => {
     const client = jev(() => ({ self: 0.2 }));
     const asked = await classify(client, input('It opened in 1889.', true));
