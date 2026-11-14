@@ -66,6 +66,26 @@ describe('evidence normalization', () => {
     expect(selected.excerpt).toContain('Eiffel Tower');
   });
 
+  it('keeps a relevant highlight when bounded fetched text omits its passage', () => {
+    const selected = selectExcerpt({
+      url: 'https://museum.org/history', highlights: [quote],
+      text: 'Museum navigation. Exhibitions, tickets, accessibility and visitor information.',
+    }, 'The Eiffel Tower opened in 1889.');
+    expect(selected).toEqual({ excerpt: quote, contentBasis: 'highlight' });
+  });
+
+  it('prefers matching fetched page context over an equally relevant highlight', () => {
+    const text = `${quote} However, that is the date of the ceremony; public access began later.`;
+    expect(selectExcerpt({ url: 'https://museum.org/history', highlights: [quote], text }, 'The Eiffel Tower opened in 1889.'))
+      .toEqual({ excerpt: text, contentBasis: 'page_text' });
+  });
+
+  it('keeps fetched subject context that refutes the highlight using different words and dates', () => {
+    const text = 'The Eiffel Tower began welcoming the public several years later; the early ceremony date is often confused with public access.';
+    expect(selectExcerpt({ url: 'https://museum.org/history', highlights: [quote], text }, 'The Eiffel Tower opened in 1889.'))
+      .toEqual({ excerpt: text, contentBasis: 'page_text' });
+  });
+
   it('prefers a later contiguous passage carrying a claim negation over an earlier matching positive statement', () => {
     const checked = 'The Eiffel Tower did not open in 1889.';
     const before = 'The Eiffel Tower opened in 1889. ';
