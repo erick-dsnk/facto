@@ -52,7 +52,13 @@ export class AudioBridge {
           await this.stop('invalid_transcript').catch(() => undefined);
           this.session.emit('pipeline.error', { reasonCode: 'invalid_asr_transcript', message: 'Audio transcription could not be completed.' });
         });
-      }, generation.controller.signal);
+      }, generation.controller.signal, reasonCode => {
+        // A failure while opening rejects start() instead; after audio.ready, stop listening visibly right away.
+        if (!generation.ready || !this.current(generation)) return;
+        void this.stop('asr_failed').catch(() => undefined).then(() => {
+          this.session.emit('pipeline.error', { reasonCode: /^[a-z_]{1,64}$/.test(reasonCode) ? reasonCode : 'asr_unavailable', message: 'Audio transcription could not be completed.' });
+        });
+      });
       // An adapter may ignore abort while opening. Close its late resource as soon as it exists.
       void opening.then(stream => { if (!this.current(generation)) return this.closeStream(stream); }).catch(() => undefined);
       const stream = await abortable(opening, generation.controller.signal);
