@@ -1,0 +1,6018 @@
+{
+  "planHash": "b6954db90b464e47845cde7ea5f81d7cbee974af6c91f0ca7f5928737414a0a3",
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "candidateSha256": "56150ef437b709b749d5c6e76af4dd1422f3c124ef87fd3bc88c863792978d6d",
+  "productionChanged": false,
+  "primaryTargetMetrics": {
+    "original_full": {
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 4,
+        "negativeFalseAccept": 0,
+        "negativeCount": 1,
+        "excludedSentinels": 1
+      },
+      "candidate": {
+        "positivePass": 3,
+        "positiveCount": 4,
+        "negativeFalseAccept": 0,
+        "negativeCount": 1,
+        "excludedSentinels": 1
+      }
+    },
+    "reversed_full": {
+      "baseline": {
+        "positivePass": 2,
+        "positiveCount": 4,
+        "negativeFalseAccept": 0,
+        "negativeCount": 1,
+        "excludedSentinels": 1
+      },
+      "candidate": {
+        "positivePass": 3,
+        "positiveCount": 4,
+        "negativeFalseAccept": 0,
+        "negativeCount": 1,
+        "excludedSentinels": 1
+      }
+    }
+  },
+  "targetRows": [
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "labelId": "T02",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-d13ed099d4e84ec8c01d",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.35
+      },
+      "candidate": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.56
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "labelId": "T02",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-d13ed099d4e84ec8c01d",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.47
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.7
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "labelId": "T04",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-68dd14f72943d0b9f377",
+      "baseline": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8
+      },
+      "candidate": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.88
+      },
+      "baselinePass": false,
+      "candidatePass": true
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "labelId": "T04",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-68dd14f72943d0b9f377",
+      "baseline": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.8999999999999999
+      },
+      "baselinePass": false,
+      "candidatePass": true
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "labelId": "T03",
+      "expectedBasis": "ambiguous",
+      "excludeFromPrimary": true,
+      "targetId": "ev-f00642f438bb08f87910",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "candidate": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.35
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "labelId": "T03",
+      "expectedBasis": "ambiguous",
+      "excludeFromPrimary": true,
+      "targetId": "ev-f00642f438bb08f87910",
+      "baseline": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.21000000000000002
+      },
+      "candidate": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.39
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "labelId": "T06",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-fc10664bbaa8225ad8ac",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.8699999999999999
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.9
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "labelId": "T06",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-fc10664bbaa8225ad8ac",
+      "baseline": {
+        "contentBasis": "original_record",
+        "confidence": 0.85
+      },
+      "candidate": {
+        "contentBasis": "original_record",
+        "confidence": 0.88
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "labelId": "T01",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-eb0bdcebbd68c35e5e3a",
+      "baseline": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9299999999999999
+      },
+      "candidate": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "labelId": "T01",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "targetId": "ev-eb0bdcebbd68c35e5e3a",
+      "baseline": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.93
+      },
+      "candidate": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "labelId": "T05",
+      "expectedBasis": "insufficient",
+      "excludeFromPrimary": false,
+      "targetId": "ev-c0111d21601a8a647c04",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "labelId": "T05",
+      "expectedBasis": "insufficient",
+      "excludeFromPrimary": false,
+      "targetId": "ev-c0111d21601a8a647c04",
+      "baseline": {
+        "contentBasis": "unclear",
+        "confidence": 0.05
+      },
+      "candidate": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "baselinePass": false,
+      "candidatePass": false
+    }
+  ],
+  "allCanonicalSourceComparisons": [
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "id": "ev-113dde7acdef51bd111e",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.22000000000000003
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.25
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.97,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.98,
+      "candidateScopeProbability": 0.98,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "id": "ev-6016ba9631faf63f9073",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.77,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.81,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.8,
+      "candidateRelevantProbability": 0.86,
+      "baselineScopeProbability": 0.9,
+      "candidateScopeProbability": 0.88,
+      "gateChanges": [
+        "stance_probability",
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "id": "ev-47332ac6f44138688f51",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.25
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.28
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.57,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.93,
+      "candidateRelevantProbability": 0.91,
+      "baselineScopeProbability": 0.95,
+      "candidateScopeProbability": 0.94,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "id": "ev-62417e5ef3eb18382aec",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.88
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.47,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.49,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.67,
+      "candidateRelevantProbability": 0.68,
+      "baselineScopeProbability": 0.72,
+      "candidateScopeProbability": 0.71,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "id": "ev-ad1b812f1c20db711567",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.29000000000000004
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.17
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.5,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.51,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.59,
+      "candidateRelevantProbability": 0.64,
+      "baselineScopeProbability": 0.83,
+      "candidateScopeProbability": 0.82,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "id": "ev-d13ed099d4e84ec8c01d",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.35
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.56
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.98,
+      "candidateScopeProbability": 0.98,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "id": "ev-113dde7acdef51bd111e",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.15
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.12
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.97,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.97,
+      "candidateScopeProbability": 0.97,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "id": "ev-6016ba9631faf63f9073",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9500000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.86,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.89,
+        "relevance": false,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.8,
+      "candidateRelevantProbability": 0.82,
+      "baselineScopeProbability": 0.86,
+      "candidateScopeProbability": 0.86,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "id": "ev-47332ac6f44138688f51",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.24
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.21
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.63,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.62,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.83,
+      "candidateRelevantProbability": 0.85,
+      "baselineScopeProbability": 0.88,
+      "candidateScopeProbability": 0.91,
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "id": "ev-62417e5ef3eb18382aec",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.94
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.74,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.76,
+        "relevance": false,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.83,
+      "candidateRelevantProbability": 0.84,
+      "baselineScopeProbability": 0.88,
+      "candidateScopeProbability": 0.87,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "id": "ev-ad1b812f1c20db711567",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.33
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.22999999999999998
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.52,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.51,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.6,
+      "candidateRelevantProbability": 0.62,
+      "baselineScopeProbability": 0.85,
+      "candidateScopeProbability": 0.82,
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "id": "ev-d13ed099d4e84ec8c01d",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.47
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.7
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.99,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.98,
+      "candidateScopeProbability": 0.98,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "id": "ev-ff82db4df607a864dd53",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.99,
+      "baselineScopeProbability": 0.96,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "id": "ev-68dd14f72943d0b9f377",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.88
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.99,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.95,
+      "candidateScopeProbability": 0.95,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "id": "ev-9a0f5f732a8afaebbc98",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.73
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.83
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.89,
+        "relevance": true,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.88,
+        "relevance": true,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.92,
+      "candidateRelevantProbability": 0.89,
+      "baselineScopeProbability": 0.59,
+      "candidateScopeProbability": 0.58,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "id": "ev-2da3cc3a428073c92eaf",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.94,
+      "candidateRelevantProbability": 0.94,
+      "baselineScopeProbability": 0.59,
+      "candidateScopeProbability": 0.53,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "id": "ev-ff82db4df607a864dd53",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.99,
+      "candidateRelevantProbability": 0.99,
+      "baselineScopeProbability": 0.91,
+      "candidateScopeProbability": 0.9,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "id": "ev-68dd14f72943d0b9f377",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8999999999999999
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.99,
+      "candidateRelevantProbability": 0.99,
+      "baselineScopeProbability": 0.95,
+      "candidateScopeProbability": 0.95,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "id": "ev-9a0f5f732a8afaebbc98",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8400000000000001
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.92,
+        "relevance": true,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.91,
+        "relevance": true,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.94,
+      "candidateRelevantProbability": 0.94,
+      "baselineScopeProbability": 0.76,
+      "candidateScopeProbability": 0.76,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "id": "ev-2da3cc3a428073c92eaf",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.96,
+      "candidateRelevantProbability": 0.95,
+      "baselineScopeProbability": 0.52,
+      "candidateScopeProbability": 0.56,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "id": "ev-e31747a5310036c8ce8b",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.97,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.9,
+      "candidateRelevantProbability": 0.91,
+      "baselineScopeProbability": 0.96,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "id": "ev-51e7a6599fda42f659b0",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.5
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.6
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.94,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.91,
+        "relevance": false,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.79,
+      "candidateRelevantProbability": 0.82,
+      "baselineScopeProbability": 0.93,
+      "candidateScopeProbability": 0.94,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "id": "ev-f00642f438bb08f87910",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.35
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.97,
+      "candidateRelevantProbability": 0.97,
+      "baselineScopeProbability": 0.96,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "id": "ev-1a8bf8bf3840cff4658d",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.59
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.7
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.98,
+      "candidateScopeProbability": 0.97,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "id": "ev-86a0029d5e1900ce9901",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.13
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.97,
+      "candidateRelevantProbability": 0.97,
+      "baselineScopeProbability": 0.96,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "id": "ev-e31747a5310036c8ce8b",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.96,
+      "candidateRelevantProbability": 0.96,
+      "baselineScopeProbability": 0.95,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "id": "ev-51e7a6599fda42f659b0",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.54
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.62
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.94,
+      "candidateRelevantProbability": 0.95,
+      "baselineScopeProbability": 0.95,
+      "candidateScopeProbability": 0.94,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "id": "ev-f00642f438bb08f87910",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.21000000000000002
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.39
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.96,
+      "candidateRelevantProbability": 0.96,
+      "baselineScopeProbability": 0.96,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "id": "ev-1a8bf8bf3840cff4658d",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.97,
+      "candidateScopeProbability": 0.97,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "id": "ev-86a0029d5e1900ce9901",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.1
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.97,
+      "candidateRelevantProbability": 0.97,
+      "baselineScopeProbability": 0.96,
+      "candidateScopeProbability": 0.96,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "id": "ev-fdcab82cba190710f6f1",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.94
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.97,
+      "candidateRelevantProbability": 0.97,
+      "baselineScopeProbability": 0.9,
+      "candidateScopeProbability": 0.9,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "id": "ev-fc10664bbaa8225ad8ac",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8699999999999999
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.91,
+      "candidateRelevantProbability": 0.88,
+      "baselineScopeProbability": 0.86,
+      "candidateScopeProbability": 0.86,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "id": "ev-a99a80f163ee420d3c54",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.15000000000000002
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.47
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.83,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.83,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.82,
+      "candidateRelevantProbability": 0.78,
+      "baselineScopeProbability": 0.81,
+      "candidateScopeProbability": 0.77,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "id": "ev-1519bfd6f08c0cf6d8f0",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.29
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.35
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.77,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.8,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.14,
+      "candidateRelevantProbability": 0.13,
+      "baselineScopeProbability": 0.4,
+      "candidateScopeProbability": 0.4,
+      "gateChanges": [
+        "stance_probability"
+      ]
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "id": "ev-8cabcd0e009700e9fb3b",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9800000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.92,
+      "candidateRelevantProbability": 0.9,
+      "baselineScopeProbability": 0.86,
+      "candidateScopeProbability": 0.86,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "id": "ev-ca40cfa600400c2bb442",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.07
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.11000000000000001
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.94,
+      "candidateScopeProbability": 0.94,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "id": "ev-fdcab82cba190710f6f1",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.83
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.92
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.97,
+      "baselineScopeProbability": 0.91,
+      "candidateScopeProbability": 0.9,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "id": "ev-fc10664bbaa8225ad8ac",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.85
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.88
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.97,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.94,
+      "candidateRelevantProbability": 0.94,
+      "baselineScopeProbability": 0.88,
+      "candidateScopeProbability": 0.87,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "id": "ev-a99a80f163ee420d3c54",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.2
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.44
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.85,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.86,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.82,
+      "candidateRelevantProbability": 0.82,
+      "baselineScopeProbability": 0.8,
+      "candidateScopeProbability": 0.81,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "id": "ev-1519bfd6f08c0cf6d8f0",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.32
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.37
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.77,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.79,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.13,
+      "candidateRelevantProbability": 0.12,
+      "baselineScopeProbability": 0.42,
+      "candidateScopeProbability": 0.41,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "id": "ev-8cabcd0e009700e9fb3b",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9900000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.94,
+      "candidateRelevantProbability": 0.95,
+      "baselineScopeProbability": 0.88,
+      "candidateScopeProbability": 0.86,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "id": "ev-ca40cfa600400c2bb442",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.2
+      },
+      "candidateQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.23
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.98,
+      "candidateRelevantProbability": 0.98,
+      "baselineScopeProbability": 0.95,
+      "candidateScopeProbability": 0.95,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "id": "ev-0731d2680f6821d2a03e",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.86
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.96
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.93,
+      "candidateRelevantProbability": 0.93,
+      "baselineScopeProbability": 0.91,
+      "candidateScopeProbability": 0.91,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "id": "ev-6a6fe886686c4d654057",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9299999999999999
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.94,
+      "candidateRelevantProbability": 0.95,
+      "baselineScopeProbability": 0.93,
+      "candidateScopeProbability": 0.92,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "id": "ev-9ba7133657edfc20c794",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8600000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.93,
+      "candidateRelevantProbability": 0.93,
+      "baselineScopeProbability": 0.92,
+      "candidateScopeProbability": 0.93,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "id": "ev-eb0bdcebbd68c35e5e3a",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9299999999999999
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.88,
+      "candidateRelevantProbability": 0.89,
+      "baselineScopeProbability": 0.92,
+      "candidateScopeProbability": 0.92,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "id": "ev-0731d2680f6821d2a03e",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8200000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.89
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.9,
+      "candidateRelevantProbability": 0.9,
+      "baselineScopeProbability": 0.91,
+      "candidateScopeProbability": 0.91,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "id": "ev-6a6fe886686c4d654057",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.96,
+      "candidateRelevantProbability": 0.96,
+      "baselineScopeProbability": 0.9,
+      "candidateScopeProbability": 0.93,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "id": "ev-9ba7133657edfc20c794",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8300000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.96
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.9,
+      "candidateRelevantProbability": 0.9,
+      "baselineScopeProbability": 0.91,
+      "candidateScopeProbability": 0.93,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "id": "ev-eb0bdcebbd68c35e5e3a",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.93
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.87,
+      "candidateRelevantProbability": 0.88,
+      "baselineScopeProbability": 0.89,
+      "candidateScopeProbability": 0.91,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "id": "ev-82570980f26c34b7d138",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.5700000000000001
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.78
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.8,
+      "candidateRelevantProbability": 0.82,
+      "baselineScopeProbability": 0.86,
+      "candidateScopeProbability": 0.86,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "id": "ev-c0111d21601a8a647c04",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.51,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.54,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.24,
+      "candidateRelevantProbability": 0.23,
+      "baselineScopeProbability": 0.45,
+      "candidateScopeProbability": 0.38,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "id": "ev-8a24057c524a95d58b34",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.42
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.32
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.86,
+      "candidateRelevantProbability": 0.81,
+      "baselineScopeProbability": 0.79,
+      "candidateScopeProbability": 0.75,
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "id": "ev-8d8e57597f36a9992ee5",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9099999999999999
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.98
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.93,
+      "candidateRelevantProbability": 0.93,
+      "baselineScopeProbability": 0.92,
+      "candidateScopeProbability": 0.91,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "id": "ev-5c571cb3cf9d01295d66",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.64
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8200000000000001
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.84,
+      "candidateRelevantProbability": 0.85,
+      "baselineScopeProbability": 0.88,
+      "candidateScopeProbability": 0.89,
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "id": "ev-566051bb4c4b0e20f045",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.7
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.93
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.88,
+      "candidateRelevantProbability": 0.89,
+      "baselineScopeProbability": 0.9,
+      "candidateScopeProbability": 0.93,
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "id": "ev-82570980f26c34b7d138",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.55
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.97,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.47,
+      "candidateRelevantProbability": 0.51,
+      "baselineScopeProbability": 0.66,
+      "candidateScopeProbability": 0.78,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "id": "ev-c0111d21601a8a647c04",
+      "target": true,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.05
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.54,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.57,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.3,
+      "candidateRelevantProbability": 0.31,
+      "baselineScopeProbability": 0.54,
+      "candidateScopeProbability": 0.5,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "id": "ev-8a24057c524a95d58b34",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.31
+      },
+      "candidateQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.11
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.92,
+        "relevance": false,
+        "scope": false
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.92,
+        "relevance": false,
+        "scope": false
+      },
+      "baselineRelevantProbability": 0.78,
+      "candidateRelevantProbability": 0.81,
+      "baselineScopeProbability": 0.74,
+      "candidateScopeProbability": 0.71,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "id": "ev-8d8e57597f36a9992ee5",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.87
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "baselinePass": true,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.86,
+      "candidateRelevantProbability": 0.9,
+      "baselineScopeProbability": 0.93,
+      "candidateScopeProbability": 0.92,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "id": "ev-5c571cb3cf9d01295d66",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.71
+      },
+      "candidateQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8300000000000001
+      },
+      "baselinePass": false,
+      "candidatePass": false,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.84,
+      "candidateRelevantProbability": 0.83,
+      "baselineScopeProbability": 0.89,
+      "candidateScopeProbability": 0.88,
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "id": "ev-566051bb4c4b0e20f045",
+      "target": false,
+      "baselineQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.84
+      },
+      "candidateQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9600000000000001
+      },
+      "baselinePass": false,
+      "candidatePass": true,
+      "baselineSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "candidateSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "baselineRelevantProbability": 0.92,
+      "candidateRelevantProbability": 0.93,
+      "baselineScopeProbability": 0.91,
+      "candidateScopeProbability": 0.92,
+      "gateChanges": [
+        "quality"
+      ]
+    }
+  ],
+  "nonTargetComparisonCount": 50,
+  "fullPolicyAndContextSpillovers": [
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 0.97
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.97
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.49
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.39
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.41
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.49
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.4
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.67
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.39
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.75
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.42
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.58
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.54
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.43
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.41
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-113dde7acdef51bd111e",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.39
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.8
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.48
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.41
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.7
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.79
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.44
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-d13ed099d4e84ec8c01d"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.93,
+        "contradicted": 0.02,
+        "misleading": 0.03,
+        "insufficient_evidence": 0.02
+      },
+      "candidateProbabilities": {
+        "supported": 0.9,
+        "contradicted": 0.02,
+        "misleading": 0.05,
+        "insufficient_evidence": 0.03
+      },
+      "baselineRawSelectedIds": [
+        "ev-d13ed099d4e84ec8c01d"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-d13ed099d4e84ec8c01d"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      }
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.45
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.49
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.49
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.64
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.67
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.57
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.35
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.41
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.39
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.39
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.51
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-ad1b812f1c20db711567"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.4
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.42
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.41
+        },
+        {
+          "evidenceIds": [
+            "ev-d13ed099d4e84ec8c01d",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.5
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-62417e5ef3eb18382aec"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-ad1b812f1c20db711567",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.54
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-47332ac6f44138688f51"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.36
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-62417e5ef3eb18382aec",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.4
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-6016ba9631faf63f9073"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.38
+        },
+        {
+          "evidenceIds": [
+            "ev-47332ac6f44138688f51",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.39
+        },
+        {
+          "evidenceIds": [
+            "ev-6016ba9631faf63f9073",
+            "ev-113dde7acdef51bd111e"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.55
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.93,
+        "contradicted": 0.01,
+        "misleading": 0.04,
+        "insufficient_evidence": 0.02
+      },
+      "candidateProbabilities": {
+        "supported": 0.95,
+        "contradicted": 0,
+        "misleading": 0.03,
+        "insufficient_evidence": 0.02
+      },
+      "baselineRawSelectedIds": [
+        "ev-d13ed099d4e84ec8c01d"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-d13ed099d4e84ec8c01d"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      }
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 0.98
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-ff82db4df607a864dd53",
+            "ev-68dd14f72943d0b9f377"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-ff82db4df607a864dd53",
+            "ev-9a0f5f732a8afaebbc98"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.56
+        },
+        {
+          "evidenceIds": [
+            "ev-ff82db4df607a864dd53",
+            "ev-2da3cc3a428073c92eaf"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-68dd14f72943d0b9f377",
+            "ev-9a0f5f732a8afaebbc98"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-68dd14f72943d0b9f377",
+            "ev-2da3cc3a428073c92eaf"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-9a0f5f732a8afaebbc98",
+            "ev-2da3cc3a428073c92eaf"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-ff82db4df607a864dd53",
+            "ev-68dd14f72943d0b9f377"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-ff82db4df607a864dd53",
+            "ev-9a0f5f732a8afaebbc98"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.58
+        },
+        {
+          "evidenceIds": [
+            "ev-ff82db4df607a864dd53",
+            "ev-2da3cc3a428073c92eaf"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-68dd14f72943d0b9f377",
+            "ev-9a0f5f732a8afaebbc98"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.58
+        },
+        {
+          "evidenceIds": [
+            "ev-68dd14f72943d0b9f377",
+            "ev-2da3cc3a428073c92eaf"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-9a0f5f732a8afaebbc98",
+            "ev-2da3cc3a428073c92eaf"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.71
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.94,
+        "contradicted": 0,
+        "misleading": 0.05,
+        "insufficient_evidence": 0.01
+      },
+      "candidateProbabilities": {
+        "supported": 0.94,
+        "contradicted": 0,
+        "misleading": 0.05,
+        "insufficient_evidence": 0.01
+      },
+      "baselineRawSelectedIds": [
+        "ev-ff82db4df607a864dd53"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-ff82db4df607a864dd53"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      }
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-2da3cc3a428073c92eaf",
+            "ev-9a0f5f732a8afaebbc98"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.56
+        },
+        {
+          "evidenceIds": [
+            "ev-2da3cc3a428073c92eaf",
+            "ev-68dd14f72943d0b9f377"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.56
+        },
+        {
+          "evidenceIds": [
+            "ev-2da3cc3a428073c92eaf",
+            "ev-ff82db4df607a864dd53"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-9a0f5f732a8afaebbc98",
+            "ev-68dd14f72943d0b9f377"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.62
+        },
+        {
+          "evidenceIds": [
+            "ev-9a0f5f732a8afaebbc98",
+            "ev-ff82db4df607a864dd53"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.72
+        },
+        {
+          "evidenceIds": [
+            "ev-68dd14f72943d0b9f377",
+            "ev-ff82db4df607a864dd53"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.6
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-2da3cc3a428073c92eaf",
+            "ev-9a0f5f732a8afaebbc98"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.58
+        },
+        {
+          "evidenceIds": [
+            "ev-2da3cc3a428073c92eaf",
+            "ev-68dd14f72943d0b9f377"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.54
+        },
+        {
+          "evidenceIds": [
+            "ev-2da3cc3a428073c92eaf",
+            "ev-ff82db4df607a864dd53"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.56
+        },
+        {
+          "evidenceIds": [
+            "ev-9a0f5f732a8afaebbc98",
+            "ev-68dd14f72943d0b9f377"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-9a0f5f732a8afaebbc98",
+            "ev-ff82db4df607a864dd53"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-68dd14f72943d0b9f377",
+            "ev-ff82db4df607a864dd53"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.54
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.94,
+        "contradicted": 0,
+        "misleading": 0.05,
+        "insufficient_evidence": 0.01
+      },
+      "candidateProbabilities": {
+        "supported": 0.94,
+        "contradicted": 0.01,
+        "misleading": 0.05,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-68dd14f72943d0b9f377"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-68dd14f72943d0b9f377"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      }
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.47
+        },
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.48
+        },
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.55
+        },
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.5
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.81
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.72
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.45
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.44
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.36
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-e31747a5310036c8ce8b",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.82
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.71
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.43
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.45
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-86a0029d5e1900ce9901"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.37
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "candidateProbabilities": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "baselineRawSelectedIds": [
+        "ev-e31747a5310036c8ce8b"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-1a8bf8bf3840cff4658d"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      }
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.57
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.46
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.73
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.7
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.76
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.43
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.74
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.76
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.52
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.99,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 1,
+        "contradicted": 0,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-e31747a5310036c8ce8b"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-e31747a5310036c8ce8b"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-e31747a5310036c8ce8b",
+          "ev-1a8bf8bf3840cff4658d"
+        ],
+        "summary": "Supported by the sources I found."
+      },
+      "selectedPassageCompleteness": [
+        {
+          "id": "ev-e31747a5310036c8ce8b",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "first Nobel Prize in Physics"
+          ],
+          "lineage": "NobelPrize.org reproduction of the 10 December 1901 C. T. Odhner presentation speech for the Royal Swedish Academy of Sciences; page identifies Nobel Lectures, Physics 1901\u20131921, Elsevier, 1967 and Nobel Foundation copyright1901. Institutional reproduction of an award announcement. It corroborates recipient/category/year but does not independently establish the ordinal."
+        },
+        {
+          "id": "ev-1a8bf8bf3840cff4658d",
+          "completeSelectedProposition": true,
+          "missingQualifiers": [],
+          "lineage": "R\u00f6ntgen Memorial W\u00fcrzburg institutional biography; no named author or cited historical source for the first-Physics statement appears in the retrieved body. Different publisher from NobelPrize.org; no copying is demonstrated, but independent underlying evidence for the ordinal is not established. A certificate image is linked, not fetched or transcribed in this audit."
+        }
+      ],
+      "fullySourceVerifiedGainCredit": false
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 0.97
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.97
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.85
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.8
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.71
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.82
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.52
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.96
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.64
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.76
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.67
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.92
+        },
+        {
+          "evidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.58
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.81
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.77
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.54
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.64
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-ca40cfa600400c2bb442"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.77
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.96,
+        "contradicted": 0,
+        "misleading": 0.02,
+        "insufficient_evidence": 0.02
+      },
+      "candidateProbabilities": {
+        "supported": 0.96,
+        "contradicted": 0,
+        "misleading": 0.02,
+        "insufficient_evidence": 0.02
+      },
+      "baselineRawSelectedIds": [
+        "ev-ca40cfa600400c2bb442"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-ca40cfa600400c2bb442"
+      ],
+      "baselinePolicy": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-fdcab82cba190710f6f1",
+          "ev-fc10664bbaa8225ad8ac",
+          "ev-8cabcd0e009700e9fb3b"
+        ],
+        "summary": "Supported by the sources I found."
+      },
+      "candidatePolicy": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-fdcab82cba190710f6f1",
+          "ev-fc10664bbaa8225ad8ac",
+          "ev-8cabcd0e009700e9fb3b"
+        ],
+        "summary": "Supported by the sources I found."
+      }
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.78
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.56
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.58
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.84
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.84
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.81
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.8
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.74
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.77
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.8
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.48
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-8cabcd0e009700e9fb3b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.82
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-ca40cfa600400c2bb442",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-1519bfd6f08c0cf6d8f0"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.89
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.79
+        },
+        {
+          "evidenceIds": [
+            "ev-8cabcd0e009700e9fb3b",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.8
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-a99a80f163ee420d3c54"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.85
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.77
+        },
+        {
+          "evidenceIds": [
+            "ev-1519bfd6f08c0cf6d8f0",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-fc10664bbaa8225ad8ac"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.82
+        },
+        {
+          "evidenceIds": [
+            "ev-a99a80f163ee420d3c54",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.76
+        },
+        {
+          "evidenceIds": [
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-fdcab82cba190710f6f1"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.4
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "candidateProbabilities": {
+        "supported": 0.99,
+        "contradicted": 0,
+        "misleading": 0,
+        "insufficient_evidence": 0.01
+      },
+      "baselineRawSelectedIds": [
+        "ev-ca40cfa600400c2bb442"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-ca40cfa600400c2bb442"
+      ],
+      "baselinePolicy": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-8cabcd0e009700e9fb3b",
+          "ev-fc10664bbaa8225ad8ac"
+        ],
+        "summary": "Supported by the sources I found."
+      },
+      "candidatePolicy": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-8cabcd0e009700e9fb3b",
+          "ev-fc10664bbaa8225ad8ac",
+          "ev-fdcab82cba190710f6f1"
+        ],
+        "summary": "Supported by the sources I found."
+      }
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-0731d2680f6821d2a03e",
+            "ev-6a6fe886686c4d654057"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-0731d2680f6821d2a03e",
+            "ev-9ba7133657edfc20c794"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-0731d2680f6821d2a03e",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-9ba7133657edfc20c794"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.46
+        },
+        {
+          "evidenceIds": [
+            "ev-9ba7133657edfc20c794",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.76
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-0731d2680f6821d2a03e",
+            "ev-6a6fe886686c4d654057"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.47
+        },
+        {
+          "evidenceIds": [
+            "ev-0731d2680f6821d2a03e",
+            "ev-9ba7133657edfc20c794"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-0731d2680f6821d2a03e",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-9ba7133657edfc20c794"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.5
+        },
+        {
+          "evidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.48
+        },
+        {
+          "evidenceIds": [
+            "ev-9ba7133657edfc20c794",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.81
+        }
+      ],
+      "baselineModelLabel": "contradicted",
+      "candidateModelLabel": "contradicted",
+      "baselineProbabilities": {
+        "supported": 0,
+        "contradicted": 0.99,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 0,
+        "contradicted": 0.99,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-6a6fe886686c4d654057"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-6a6fe886686c4d654057"
+      ],
+      "baselinePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-6a6fe886686c4d654057",
+          "ev-0731d2680f6821d2a03e",
+          "ev-9ba7133657edfc20c794",
+          "ev-eb0bdcebbd68c35e5e3a"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "candidatePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-6a6fe886686c4d654057",
+          "ev-0731d2680f6821d2a03e",
+          "ev-9ba7133657edfc20c794",
+          "ev-eb0bdcebbd68c35e5e3a"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      }
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-eb0bdcebbd68c35e5e3a",
+            "ev-9ba7133657edfc20c794"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-eb0bdcebbd68c35e5e3a",
+            "ev-6a6fe886686c4d654057"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.57
+        },
+        {
+          "evidenceIds": [
+            "ev-eb0bdcebbd68c35e5e3a",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.7
+        },
+        {
+          "evidenceIds": [
+            "ev-9ba7133657edfc20c794",
+            "ev-6a6fe886686c4d654057"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.52
+        },
+        {
+          "evidenceIds": [
+            "ev-9ba7133657edfc20c794",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.71
+        },
+        {
+          "evidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.52
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-eb0bdcebbd68c35e5e3a",
+            "ev-9ba7133657edfc20c794"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-eb0bdcebbd68c35e5e3a",
+            "ev-6a6fe886686c4d654057"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-eb0bdcebbd68c35e5e3a",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.77
+        },
+        {
+          "evidenceIds": [
+            "ev-9ba7133657edfc20c794",
+            "ev-6a6fe886686c4d654057"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.45
+        },
+        {
+          "evidenceIds": [
+            "ev-9ba7133657edfc20c794",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.72
+        },
+        {
+          "evidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.5
+        }
+      ],
+      "baselineModelLabel": "contradicted",
+      "candidateModelLabel": "contradicted",
+      "baselineProbabilities": {
+        "supported": 0,
+        "contradicted": 0.99,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 0,
+        "contradicted": 0.99,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-6a6fe886686c4d654057"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-6a6fe886686c4d654057"
+      ],
+      "baselinePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-6a6fe886686c4d654057",
+          "ev-eb0bdcebbd68c35e5e3a"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "candidatePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-6a6fe886686c4d654057",
+          "ev-eb0bdcebbd68c35e5e3a",
+          "ev-9ba7133657edfc20c794",
+          "ev-0731d2680f6821d2a03e"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      }
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.87
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.35
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.57
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.83
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.71
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.78
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.53
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.84
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.44
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.85
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.79
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.77
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.9
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.57
+        }
+      ],
+      "baselineModelLabel": "contradicted",
+      "candidateModelLabel": "contradicted",
+      "baselineProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-8d8e57597f36a9992ee5"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-8d8e57597f36a9992ee5"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-8d8e57597f36a9992ee5",
+          "ev-566051bb4c4b0e20f045"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "selectedPassageCompleteness": [
+        {
+          "id": "ev-8d8e57597f36a9992ee5",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "World Heritage Centre-hosted State Party periodic report, generated13October2014; StateParty RussianFederation and responsible national bodies named on page1. This is a conservation/heritage report, not a continent gazetteer. Location fields are substantive but not an explicit continent assertion."
+        },
+        {
+          "id": "ev-566051bb4c4b0e20f045",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "International Lake Environment Committee Foundation database compilation; full body lists older limnological and Siberian sources from1963\u20131988 including1979 Academy ofSciences LakeBaikal guidebook. Selected A.LOCATION field has no per-field citation. Different compilation from UNESCO; no direct copy/common-origin link is proven, and independent continent evidence is not established."
+        }
+      ],
+      "fullySourceVerifiedGainCredit": false
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.67
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.61
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.83
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.87
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.92
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.55
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.75
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.9
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.52
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.96
+        }
+      ],
+      "baselineModelLabel": "contradicted",
+      "candidateModelLabel": "contradicted",
+      "baselineProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-566051bb4c4b0e20f045"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-566051bb4c4b0e20f045"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-566051bb4c4b0e20f045",
+          "ev-8d8e57597f36a9992ee5"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "selectedPassageCompleteness": [
+        {
+          "id": "ev-566051bb4c4b0e20f045",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "International Lake Environment Committee Foundation database compilation; full body lists older limnological and Siberian sources from1963\u20131988 including1979 Academy ofSciences LakeBaikal guidebook. Selected A.LOCATION field has no per-field citation. Different compilation from UNESCO; no direct copy/common-origin link is proven, and independent continent evidence is not established."
+        },
+        {
+          "id": "ev-8d8e57597f36a9992ee5",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "World Heritage Centre-hosted State Party periodic report, generated13October2014; StateParty RussianFederation and responsible national bodies named on page1. This is a conservation/heritage report, not a continent gazetteer. Location fields are substantive but not an explicit continent assertion."
+        }
+      ],
+      "fullySourceVerifiedGainCredit": false
+    }
+  ],
+  "newDefinitiveOutputs": [
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.57
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.46
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.73
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.7
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.76
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.43
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-1a8bf8bf3840cff4658d"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.51
+        },
+        {
+          "evidenceIds": [
+            "ev-86a0029d5e1900ce9901",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-f00642f438bb08f87910"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.74
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.69
+        },
+        {
+          "evidenceIds": [
+            "ev-1a8bf8bf3840cff4658d",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.65
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-51e7a6599fda42f659b0"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.76
+        },
+        {
+          "evidenceIds": [
+            "ev-f00642f438bb08f87910",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.68
+        },
+        {
+          "evidenceIds": [
+            "ev-51e7a6599fda42f659b0",
+            "ev-e31747a5310036c8ce8b"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.52
+        }
+      ],
+      "baselineModelLabel": "supported",
+      "candidateModelLabel": "supported",
+      "baselineProbabilities": {
+        "supported": 0.99,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 1,
+        "contradicted": 0,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-e31747a5310036c8ce8b"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-e31747a5310036c8ce8b"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-e31747a5310036c8ce8b",
+          "ev-1a8bf8bf3840cff4658d"
+        ],
+        "summary": "Supported by the sources I found."
+      },
+      "selectedPassageCompleteness": [
+        {
+          "id": "ev-e31747a5310036c8ce8b",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "first Nobel Prize in Physics"
+          ],
+          "lineage": "NobelPrize.org reproduction of the 10 December 1901 C. T. Odhner presentation speech for the Royal Swedish Academy of Sciences; page identifies Nobel Lectures, Physics 1901\u20131921, Elsevier, 1967 and Nobel Foundation copyright1901. Institutional reproduction of an award announcement. It corroborates recipient/category/year but does not independently establish the ordinal."
+        },
+        {
+          "id": "ev-1a8bf8bf3840cff4658d",
+          "completeSelectedProposition": true,
+          "missingQualifiers": [],
+          "lineage": "R\u00f6ntgen Memorial W\u00fcrzburg institutional biography; no named author or cited historical source for the first-Physics statement appears in the retrieved body. Different publisher from NobelPrize.org; no copying is demonstrated, but independent underlying evidence for the ordinal is not established. A certificate image is linked, not fetched or transcribed in this audit."
+        }
+      ],
+      "fullySourceVerifiedGainCredit": false
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.87
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.35
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.57
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.83
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.71
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.78
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.53
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.84
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.91
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "common_origin",
+          "confidence": 0.44
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.85
+        },
+        {
+          "evidenceIds": [
+            "ev-82570980f26c34b7d138",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.6
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.79
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.63
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.77
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.9
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "unclear",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-566051bb4c4b0e20f045"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.57
+        }
+      ],
+      "baselineModelLabel": "contradicted",
+      "candidateModelLabel": "contradicted",
+      "baselineProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-8d8e57597f36a9992ee5"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-8d8e57597f36a9992ee5"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-8d8e57597f36a9992ee5",
+          "ev-566051bb4c4b0e20f045"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "selectedPassageCompleteness": [
+        {
+          "id": "ev-8d8e57597f36a9992ee5",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "World Heritage Centre-hosted State Party periodic report, generated13October2014; StateParty RussianFederation and responsible national bodies named on page1. This is a conservation/heritage report, not a continent gazetteer. Location fields are substantive but not an explicit continent assertion."
+        },
+        {
+          "id": "ev-566051bb4c4b0e20f045",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "International Lake Environment Committee Foundation database compilation; full body lists older limnological and Siberian sources from1963\u20131988 including1979 Academy ofSciences LakeBaikal guidebook. Selected A.LOCATION field has no per-field citation. Different compilation from UNESCO; no direct copy/common-origin link is proven, and independent continent evidence is not established."
+        }
+      ],
+      "fullySourceVerifiedGainCredit": false
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "baselineRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "candidateRisk": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "baselineOrigins": [
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.67
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.61
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.83
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.53
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.87
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.92
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.55
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.93
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        }
+      ],
+      "candidateOrigins": [
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-5c571cb3cf9d01295d66"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.75
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.59
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.88
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-566051bb4c4b0e20f045",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.66
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8d8e57597f36a9992ee5"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.86
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.97
+        },
+        {
+          "evidenceIds": [
+            "ev-5c571cb3cf9d01295d66",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.9
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-8a24057c524a95d58b34"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-8d8e57597f36a9992ee5",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.52
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-c0111d21601a8a647c04"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.94
+        },
+        {
+          "evidenceIds": [
+            "ev-8a24057c524a95d58b34",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.95
+        },
+        {
+          "evidenceIds": [
+            "ev-c0111d21601a8a647c04",
+            "ev-82570980f26c34b7d138"
+          ],
+          "relationship": "distinct_origins",
+          "confidence": 0.96
+        }
+      ],
+      "baselineModelLabel": "contradicted",
+      "candidateModelLabel": "contradicted",
+      "baselineProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "candidateProbabilities": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "baselineRawSelectedIds": [
+        "ev-566051bb4c4b0e20f045"
+      ],
+      "candidateRawSelectedIds": [
+        "ev-566051bb4c4b0e20f045"
+      ],
+      "baselinePolicy": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "candidatePolicy": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-566051bb4c4b0e20f045",
+          "ev-8d8e57597f36a9992ee5"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "selectedPassageCompleteness": [
+        {
+          "id": "ev-566051bb4c4b0e20f045",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "International Lake Environment Committee Foundation database compilation; full body lists older limnological and Siberian sources from1963\u20131988 including1979 Academy ofSciences LakeBaikal guidebook. Selected A.LOCATION field has no per-field citation. Different compilation from UNESCO; no direct copy/common-origin link is proven, and independent continent evidence is not established."
+        },
+        {
+          "id": "ev-8d8e57597f36a9992ee5",
+          "completeSelectedProposition": false,
+          "missingQualifiers": [
+            "explicit Baikal continent or explicit not-in-Africa relation"
+          ],
+          "lineage": "World Heritage Centre-hosted State Party periodic report, generated13October2014; StateParty RussianFederation and responsible national bodies named on page1. This is a conservation/heritage report, not a continent gazetteer. Location fields are substantive but not an explicit continent assertion."
+        }
+      ],
+      "fullySourceVerifiedGainCredit": false
+    }
+  ],
+  "auditDetailsPath": "/workspace/task-evidence/comparison24-independent-source-audit/audit-details.json",
+  "auditDetailsSHA256": "06e5c48f8915c4595fa596026cd52d6ee206212f302d6db1c7557c48fbbefa66",
+  "auditCounts": {
+    "uniqueSelectedRecords": 11,
+    "inspectableMatchingSources": 11,
+    "freshExactTargets": 4,
+    "reusedExactProofs": 7,
+    "inaccessible": 0,
+    "completeSelectedPropositionRecords": 8,
+    "partialSelectedPropositionRecords": 3
+  },
+  "sourceHashesUnchangedAfterRun": true,
+  "recommendation": "Do not promote. Target basis gain does not produce fully source-verified factual coverage; three new policy definitives include partial-scope selected passages."
+}
