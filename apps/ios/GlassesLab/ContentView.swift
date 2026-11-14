@@ -23,11 +23,10 @@ struct ContentView: View {
     .sheet(isPresented: $isShowingSettings, onDismiss: settingsClosed) {
       SettingsView(live: live, wearables: wearables, camera: camera, display: display, audioLab: audioLab)
     }
+    // Launch only. Coming back to the foreground is LiveModel.setAppActive's job: it lifts the
+    // background suspension and resumes the session. Connecting here at the same moment raced
+    // it and failed with "suspended".
     .task { await live.connectIfConfigured() }
-    .onChange(of: scenePhase) { _, phase in
-      guard phase == .active else { return }
-      Task { await live.connectIfConfigured() }
-    }
   }
 
   private func openSettings() {
