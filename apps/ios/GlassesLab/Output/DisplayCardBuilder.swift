@@ -28,8 +28,6 @@ enum DisplayCardBuilder {
   /// Spacing inside the card and between the swatch and the verdict word.
   static let rowSpacing: CGFloat = 8
   static let cardPadding: CGFloat = 16
-  /// LensMirrorView still reads this; it goes when that view does.
-  static let excerptPadding: CGFloat = cardPadding
 
   /// Swatch bitmap side and corner radius, in pixels.
   static let swatchPixels: CGFloat = 64
