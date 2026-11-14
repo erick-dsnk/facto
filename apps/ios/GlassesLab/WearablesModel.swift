@@ -32,6 +32,59 @@ final class WearablesModel {
   /// The simulated display surface, for the in-app preview.
   var mockDisplay: (any MockDisplayKit)?
 
+  #if DEBUG
+  var mockDisplayDeviceIdentifier: DeviceIdentifier? {
+    mockModel == .display ? mockDevice?.deviceIdentifier : nil
+  }
+  private(set) var nativePreviewServerPort: UInt16?
+  private(set) var nativePreviewServerBusy = false
+  @ObservationIgnored private var nativePreviewServerOperation: Task<Void, Never>?
+  @ObservationIgnored private var nativePreviewServerGeneration = UUID()
+
+  /// The SDK's own HTTP preview server, as used by Meta's DisplayAccess sample.
+  /// Operations serialize so stopping/re-pairing cannot leave an old start alive.
+  func startNativePreviewServer() async {
+    guard mockModel == .display, nativePreviewServerPort == nil, !nativePreviewServerBusy else { return }
+    let previous = nativePreviewServerOperation
+    let generation = UUID()
+    nativePreviewServerGeneration = generation
+    nativePreviewServerBusy = true
+    let operation = Task { [weak self] in
+      await previous?.value
+      guard let self, self.nativePreviewServerGeneration == generation, self.mockModel == .display else { return }
+      do {
+        let port = try await MockDeviceKit.shared.startTestServer(port: 9000)
+        guard self.nativePreviewServerGeneration == generation, self.mockModel == .display else {
+          await MockDeviceKit.shared.stopTestServer()
+          return
+        }
+        self.nativePreviewServerPort = port
+      } catch {
+        if self.nativePreviewServerGeneration == generation {
+          self.lastError = "Native preview server: \(error.localizedDescription)"
+        }
+      }
+      if self.nativePreviewServerGeneration == generation { self.nativePreviewServerBusy = false }
+    }
+    nativePreviewServerOperation = operation
+    await operation.value
+  }
+
+  func stopNativePreviewServer() {
+    guard nativePreviewServerOperation != nil || nativePreviewServerPort != nil else { return }
+    let previous = nativePreviewServerOperation
+    let generation = UUID()
+    nativePreviewServerGeneration = generation
+    nativePreviewServerPort = nil
+    nativePreviewServerBusy = true
+    nativePreviewServerOperation = Task { [weak self] in
+      await previous?.value
+      await MockDeviceKit.shared.stopTestServer()
+      if self?.nativePreviewServerGeneration == generation { self?.nativePreviewServerBusy = false }
+    }
+  }
+  #endif
+
   /// Newest first: registration, device and link changes with timestamps.
   var log: [String] = []
 
@@ -183,6 +236,9 @@ final class WearablesModel {
   }
 
   func stopMock() {
+    #if DEBUG
+    stopNativePreviewServer()
+    #endif
     if let mockDevice {
       MockDeviceKit.shared.unpairDevice(mockDevice)
       MockDeviceKit.shared.disable()

@@ -89,6 +89,60 @@ The two prebuilt libraries it links (sherpa-onnx 2.0.1 and onnxruntime 1.28.2, a
 
 Section 2 pairs simulated glasses through MockDeviceKit. The phone's back camera becomes the glasses camera. Choose **Meta Ray-Ban Display** to see the rendered display screen inside the app.
 
+### Native DAT card comparison (Debug builds)
+
+This opt-in experiment uses `MWDATDisplay.FlexBox`, `Text`, `Image` and `.card`
+backgrounds. It keeps the React Web App implementation and its animations intact.
+It does not change the production result-card builder. No backend or glasses are
+needed for these fixtures.
+
+1. On a Mac with the Xcode version above, run `xcodegen generate` from `apps/ios`,
+   open `GlassesLab.xcodeproj`, select the **GlassesLab** scheme and an **iPhone
+   Simulator**, and Run with the **Debug** configuration.
+2. In the app, leave Live disconnected, camera capture stopped and **Native
+   display** selected. Disconnect the regular display if it is already connected.
+3. Under **2. Simulated glasses**, tap **Simulate Meta Ray-Ban Display**. Wait for
+   its device row to show **Connected**. The native fixture uses that mock's exact
+   device identifier, so it cannot select nearby physical glasses.
+4. In **Native DAT card comparison**, choose **Searching**, **True** or **False**,
+   then tap **Show native fixture**. The existing embedded preview above the
+   controls is the SDK's `MockDisplayKit.createPreviewView()` rendering of actual
+   `Display.send` output. **Replay native fixture** restarts it.
+5. For Meta's Chrome simulator, tap **Start native simulator server**, then open
+   **http://127.0.0.1:9000/** in Chrome on the **same Mac** running iOS Simulator.
+   Enable the [Meta Ray-Ban Display Simulator extension](https://chromewebstore.google.com/detail/jpjlmmodokemlepklkdbimceggpbjcll)
+   on that tab. This invokes the SDK's `startTestServer(port: 9000)` API, following
+   Meta's DisplayAccess sample; it is a different rendering path from the React
+   preview at port 3030. Keep this development server local to your Mac.
+6. Capture True, False and the source-arrival sequence for comparison. **Stop
+   native fixture** ends its DAT session; **Stop native simulator server** stops
+   the SDK server. Stopping/replacing the simulated glasses also stops the server.
+
+Searching initially sends zero icons, adds T/B/W/S at 700 ms intervals, and sends
+the True result at 4.2 seconds. Every stage is a complete native component layout;
+the only images are small immutable source badges and verdict dots. Replay,
+disconnect, Web display selection, and leaving the mock preview cancel the
+sequence. Starting Live or capture cancels and disconnects the fixture; reconnect
+the regular display to resume native live cards.
+
+The fixture preserves the caption → claim → verdict/metadata → explanation →
+publisher hierarchy and supplied Eiffel Tower/goldfish copy. Native text styles,
+colors and rounded backgrounds are SDK presets, so exact font sizes, colored
+verdict text, CSS blur, custom card radius and overlapping icons are not exposed
+here. Source arrivals and the result change are discrete updates; there is no
+invented fade/spring API or stream of card images. The React app retains its
+smooth source/card transitions.
+
+**Validation boundary:** this prototype was prepared on Linux without Xcode or an
+iOS runtime. Its native compilation and rendered appearance still require the Mac
+steps above. The phone's existing Live lens mirror and a browser rendering the
+React app are not evidence of native DAT appearance. Native preset font metrics
+may need a spacing adjustment after the first SDK-rendered capture.
+
+References: [Meta's native display simulation guide](https://wearables.developer.meta.com/docs/develop/dat/display-simulation/),
+[DisplayAccess mock/server sample](https://github.com/meta/meta-wearables-dat-ios/blob/main/samples/DisplayAccess/DisplayAccess/ViewModels/WearablesViewModel.swift),
+[native display components](https://wearables.developer.meta.com/docs/develop/dat/display-overview/).
+
 ## Stream quality: Wi-Fi, not Bluetooth
 
 The SDK picks the video link from Info.plist. With the External Accessory keys (`UISupportedExternalAccessoryProtocols`, `external-accessory` background mode) it streams over Bluetooth Classic, which is heavily compressed and mostly stuck at 504×896. Without them it streams over a Wi-Fi network the glasses create, and holds 720×1280 at 30 fps. `project.yml` leaves the External Accessory keys out on purpose; don't add them back. Sources: Meta's replies in [issue #376](https://github.com/meta/meta-wearables-dat-ios/issues/376) and [discussion #297](https://github.com/meta/meta-wearables-dat-ios/discussions/297).

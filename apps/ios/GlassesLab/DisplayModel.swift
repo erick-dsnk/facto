@@ -1,3 +1,4 @@
+import Foundation
 import MWDATCore
 import MWDATDisplay
 import Observation
@@ -30,27 +31,102 @@ final class DisplayModel {
   @ObservationIgnored private var display: Display?
   @ObservationIgnored private let tokens = ListenerTokenBag()
 
+  #if DEBUG
+  private(set) var nativePreviewFixture: NativeCardPreviewFixture?
+  private(set) var nativePreviewSourceCount = 0
+  @ObservationIgnored private var nativePreviewTask: Task<Void, Never>?
+  @ObservationIgnored private var nativePreviewGeneration = UUID()
+
+  /// A mock-specific session keeps this experiment away from physical glasses.
+  func startNativePreview(_ fixture: NativeCardPreviewFixture, device: DeviceIdentifier) {
+    guard !webDisplayEnabled, session == nil || nativePreviewFixture != nil else { return }
+    nativePreviewFixture = fixture
+    nativePreviewSourceCount = 0
+    lastError = nil
+    if session == nil {
+      do {
+        let newSession = try Wearables.shared.createSession(deviceSelector: SpecificDeviceSelector(device: device))
+        try observeAndStart(newSession)
+      } catch {
+        lastError = "Native preview: \(error.localizedDescription)"
+        clear()
+      }
+    } else if displayState == .started {
+      sendNativePreview()
+    }
+  }
+
+  /// Serialized sends: replacing/replaying a demo cannot let its old result arrive later.
+  private func sendNativePreview() {
+    guard let fixture = nativePreviewFixture, let display, !webDisplayEnabled else { return }
+    let previous = nativePreviewTask
+    previous?.cancel()
+    let generation = UUID()
+    nativePreviewGeneration = generation
+    nativePreviewTask = Task { [weak self] in
+      await previous?.value
+      guard let self, !Task.isCancelled, self.nativePreviewGeneration == generation else { return }
+      do {
+        try await display.send(NativeCardPreviewBuilder.build(fixture))
+        if fixture == .searching {
+          for count in 1...4 {
+            try await Task.sleep(for: .milliseconds(700))
+            guard !Task.isCancelled, self.nativePreviewGeneration == generation, !self.webDisplayEnabled else { return }
+            self.nativePreviewSourceCount = count
+            try await display.send(NativeCardPreviewBuilder.build(.searching, sourceCount: count))
+          }
+          try await Task.sleep(for: .milliseconds(1400))
+          guard !Task.isCancelled, self.nativePreviewGeneration == generation, !self.webDisplayEnabled else { return }
+          self.nativePreviewFixture = .supported
+          try await display.send(NativeCardPreviewBuilder.build(.supported))
+        }
+      } catch is CancellationError {
+        // Replay, mode switching and disconnect cancel the fixture sequence.
+      } catch {
+        if self.nativePreviewGeneration == generation, !Task.isCancelled {
+          self.lastError = "Native preview send: \(error.localizedDescription)"
+        }
+      }
+    }
+  }
+
+  private func cancelNativePreview() {
+    nativePreviewGeneration = UUID()
+    nativePreviewTask?.cancel()
+    nativePreviewTask = nil
+    nativePreviewFixture = nil
+    nativePreviewSourceCount = 0
+  }
+  #endif
+
   func connect() {
     guard !webDisplayEnabled, session == nil else { return }
     lastError = nil
     do {
       // Only picks glasses that have a display.
       let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
-      session = newSession
-      newSession.statePublisher.listen { [weak self] state in
-        Task { @MainActor in self?.handleSession(state) }
-      }.store(in: tokens)
-      newSession.errorPublisher.listen { [weak self] error in
-        Task { @MainActor in self?.lastError = "Session: \(error.localizedDescription)" }
-      }.store(in: tokens)
-      try newSession.start()
+      try observeAndStart(newSession)
     } catch {
       lastError = "Session: \(error.localizedDescription)"
       clear()
     }
   }
 
+  private func observeAndStart(_ newSession: DeviceSession) throws {
+    session = newSession
+    newSession.statePublisher.listen { [weak self] state in
+      Task { @MainActor in self?.handleSession(state) }
+    }.store(in: tokens)
+    newSession.errorPublisher.listen { [weak self] error in
+      Task { @MainActor in self?.lastError = "Session: \(error.localizedDescription)" }
+    }.store(in: tokens)
+    try newSession.start()
+  }
+
   func disconnect() {
+    #if DEBUG
+    cancelNativePreview()
+    #endif
     if let display {
       display.stop()
     } else {
@@ -92,6 +168,12 @@ final class DisplayModel {
     displayState = state
     switch state {
     case .started:
+      #if DEBUG
+      if nativePreviewFixture != nil {
+        sendNativePreview()
+        return
+      }
+      #endif
       Task { await sendHome() }
     case .stopped:
       // Stopping the display detaches it; end the session too.
@@ -103,6 +185,9 @@ final class DisplayModel {
   }
 
   private func clear() {
+    #if DEBUG
+    cancelNativePreview()
+    #endif
     tokens.clear()
     display = nil
     session = nil
@@ -113,6 +198,9 @@ final class DisplayModel {
   /// Each send replaces the whole screen, so always send the full layout.
   func sendHome() async {
     guard !webDisplayEnabled, let display else { return }
+    #if DEBUG
+    guard nativePreviewFixture == nil else { return }
+    #endif
     let taps = self.taps
     let view = FlexBox(direction: .column, spacing: 12) {
       Text("Glasses Lab", style: .heading)
@@ -142,6 +230,9 @@ extension DisplayModel: LensDisplaying {
   /// Live mode: the result card on the lens, or a cleared lens when `card` is nil.
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
     guard !webDisplayEnabled, let display else { return }
+    #if DEBUG
+    guard nativePreviewFixture == nil else { return }
+    #endif
     do {
       if let card {
         try await display.send(DisplayCardBuilder.build(card, onRepeat: onRepeat, onDismiss: onDismiss))
