@@ -1,0 +1,200 @@
+{
+  "method": "Exact ASCII-only appendix plus one separating space added to each existing JSON instruction string; unchanged bodies/questions otherwise. Offline arithmetic, not executed requests.",
+  "bytesPerScopeQuestion": 667,
+  "same64KiBPerRequestLimit": 65536,
+  "maximumProjectedBytes": 65759,
+  "rows": [
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "baseArm": "baseline",
+      "sources": 6,
+      "oldRequestBytes": 56408,
+      "calculatedNewRequestBytes": 60410
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "baseArm": "frozen_clarification",
+      "sources": 6,
+      "oldRequestBytes": 59960,
+      "calculatedNewRequestBytes": 63962
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "baseArm": "frozen_clarification",
+      "sources": 6,
+      "oldRequestBytes": 59960,
+      "calculatedNewRequestBytes": 63962
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "baseArm": "baseline",
+      "sources": 6,
+      "oldRequestBytes": 56408,
+      "calculatedNewRequestBytes": 60410
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "baseArm": "baseline",
+      "sources": 6,
+      "oldRequestBytes": 58205,
+      "calculatedNewRequestBytes": 62207
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "baseArm": "frozen_clarification",
+      "sources": 6,
+      "oldRequestBytes": 61757,
+      "calculatedNewRequestBytes": 65759
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "baseArm": "frozen_clarification",
+      "sources": 6,
+      "oldRequestBytes": 61757,
+      "calculatedNewRequestBytes": 65759
+    },
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "baseArm": "baseline",
+      "sources": 6,
+      "oldRequestBytes": 58205,
+      "calculatedNewRequestBytes": 62207
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "baseArm": "baseline",
+      "sources": 4,
+      "oldRequestBytes": 36668,
+      "calculatedNewRequestBytes": 39336
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "baseArm": "frozen_clarification",
+      "sources": 4,
+      "oldRequestBytes": 39036,
+      "calculatedNewRequestBytes": 41704
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "baseArm": "frozen_clarification",
+      "sources": 4,
+      "oldRequestBytes": 39036,
+      "calculatedNewRequestBytes": 41704
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "baseArm": "baseline",
+      "sources": 4,
+      "oldRequestBytes": 36668,
+      "calculatedNewRequestBytes": 39336
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "baseArm": "baseline",
+      "sources": 6,
+      "oldRequestBytes": 56457,
+      "calculatedNewRequestBytes": 60459
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "baseArm": "frozen_clarification",
+      "sources": 6,
+      "oldRequestBytes": 60009,
+      "calculatedNewRequestBytes": 64011
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "baseArm": "frozen_clarification",
+      "sources": 6,
+      "oldRequestBytes": 60009,
+      "calculatedNewRequestBytes": 64011
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "baseArm": "baseline",
+      "sources": 6,
+      "oldRequestBytes": 56457,
+      "calculatedNewRequestBytes": 60459
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "baseArm": "baseline",
+      "sources": 5,
+      "oldRequestBytes": 49081,
+      "calculatedNewRequestBytes": 52416
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "baseArm": "frozen_clarification",
+      "sources": 5,
+      "oldRequestBytes": 52041,
+      "calculatedNewRequestBytes": 55376
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "baseArm": "frozen_clarification",
+      "sources": 5,
+      "oldRequestBytes": 52041,
+      "calculatedNewRequestBytes": 55376
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "baseArm": "baseline",
+      "sources": 5,
+      "oldRequestBytes": 49081,
+      "calculatedNewRequestBytes": 52416
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "baseArm": "baseline",
+      "sources": 4,
+      "oldRequestBytes": 36512,
+      "calculatedNewRequestBytes": 39180
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "baseArm": "frozen_clarification",
+      "sources": 4,
+      "oldRequestBytes": 38880,
+      "calculatedNewRequestBytes": 41548
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "baseArm": "frozen_clarification",
+      "sources": 4,
+      "oldRequestBytes": 38880,
+      "calculatedNewRequestBytes": 41548
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "baseArm": "baseline",
+      "sources": 4,
+      "oldRequestBytes": 36512,
+      "calculatedNewRequestBytes": 39180
+    }
+  ]
+}

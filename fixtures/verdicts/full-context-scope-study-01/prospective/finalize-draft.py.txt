@@ -1,0 +1,25 @@
+from pathlib import Path
+import json,hashlib
+b=Path('/workspace/task-evidence/scope-stance-contrasts-v1')
+assert not (b/'MANIFEST.json').exists(), 'Frozen folder: use a new version.'
+p=b/'annotation-inputs.json';packet=json.loads(p.read_text());lpath=b/'labels-author.json';labs=json.loads(lpath.read_text())
+changes={
+ 'SC01-target':('Award: Bellwether Medal. Year: 1984. Recipient: Mira Vale.','Recipient: Mira Vale'),
+ 'ordinal-decoy':('Award: Harbor Ribbon. Recipient: Mira Vale. Year: 1984. This was her first Harbor Ribbon.','Award: Harbor Ribbon'),
+ 'SC03-target':('Site: Ferry Museum. Locality: Harbor Ward.','Locality: Harbor Ward'),
+ 'geo-region-only':('Ferry Museum is in Renwick Province. Renwick Province includes Port Vale City and Dunley Town.','Renwick Province includes Port Vale City and Dunley Town'),
+ 'SC05-target':('The Westbank town charter was signed on 1 May 1910.','was signed on 1 May 1910'),
+ 'event-ceremony':('A commemorative ceremony for the Westbank town charter was held on 1 May 1910.','commemorative ceremony'),
+ 'SC07-target':('Northfield Observatory 2024 Visitor Code, rule 7: School groups may use the east door when','School groups may use the east door when'),
+ 'condition-staff':('Northfield Observatory 2024 Visitor Code, rule 9: Staff may use the east door on closed days.','Staff may use the east door on closed days'),
+ 'SC09-target':('Catalog entry LH17. Anniversary booklet, 16 pages. Main sections: local celebrations and harbor festivals.','Anniversary booklet, 16 pages'),
+ 'metadata-decoy':('Entity: Lark Harbor municipality. Event: annual harbor festival. Festival year: 1890.','annual harbor festival'),
+}
+for c in packet['contexts']:
+ for r in c['records']:
+  if r['id'] in changes:r['excerpt']=changes[r['id']][0]
+for l in labs['labels']:
+ c=next(c for c in packet['contexts'] if c['caseId']==l['caseId']);r=next(r for r in c['records'] if r['id']==l['evidenceId'])
+ if r['id'] in changes:l['supportingSpan']=changes[r['id']][1]
+ assert l['supportingSpan'] in r['excerpt'];start=r['excerpt'].index(l['supportingSpan']);l['supportingSpanCodepoints']={'start':start,'end':start+len(l['supportingSpan'])};l['excerptSHA256']=hashlib.sha256(r['excerpt'].encode()).hexdigest();l['propositionSHA256']=hashlib.sha256(c['proposition'].encode()).hexdigest()
+p.write_text(json.dumps(packet,indent=2)+'\n');labs['inputSHA256']=hashlib.sha256(p.read_bytes()).hexdigest();lpath.write_text(json.dumps(labs,indent=2)+'\n')
