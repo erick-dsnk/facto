@@ -23,9 +23,48 @@ final class WearablesModel {
     var id: String { rawValue }
   }
 
+  /// How far the glasses are from being usable, for the home screen.
+  enum GlassesLink: Equatable {
+    /// Facto isn't registered with Meta AI yet.
+    case notRegistered
+    /// Registration is open in Meta AI.
+    case registering
+    /// Registered, but no pair is connected or connecting.
+    case noGlasses
+    case connecting
+    case connected
+  }
+
   var registration: RegistrationState
   var devices: [DeviceRow] = []
   var lastError: String?
+
+  var glassesLink: GlassesLink {
+    if mockModel != nil || devices.contains(where: { $0.link == Self.connectedLink }) { return .connected }
+    switch registration {
+    case .registered: return devices.contains { $0.link == Self.connectingLink } ? .connecting : .noGlasses
+    case .registering: return .registering
+    case .available, .unavailable: return .notRegistered
+    }
+  }
+
+  /// A simulated Display, or connected glasses with a display (Meta Ray-Ban Display).
+  var hasDisplayGlasses: Bool {
+    mockModel == .display || devices.contains { $0.link == Self.connectedLink && $0.hasDisplay }
+  }
+
+  /// False when Meta AI can't take a registration, for example when it isn't installed.
+  var canRegister: Bool {
+    registration != .unavailable
+  }
+
+  /// Some pair needs a firmware update before it can connect.
+  var needsFirmwareUpdate: Bool {
+    devices.contains(where: \.needsUpdate)
+  }
+
+  private static let connectedLink = "Connected"
+  private static let connectingLink = "Connecting"
 
   /// Non-nil while a simulated pair of glasses is active.
   var mockModel: MockModel?
@@ -127,8 +166,8 @@ final class WearablesModel {
       guard let device = Wearables.shared.deviceForIdentifier(id) else { return nil }
       let link: String
       switch device.linkState {
-      case .connected: link = "Connected"
-      case .connecting: link = "Connecting"
+      case .connected: link = Self.connectedLink
+      case .connecting: link = Self.connectingLink
       case .disconnected: link = "Disconnected"
       @unknown default: link = "Unknown"
       }

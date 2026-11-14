@@ -16,6 +16,8 @@ private final class FakeLiveBackend: LiveBackend {
   var connectionState: ChannelConnectionState = .idle
   var onUnreadableEvent: (@MainActor (String?) -> Void)?
   var failConnect = false
+  /// The client's reason code for a failed connect.
+  var failReason = "unauthorized"
   private(set) var connectCount = 0
   var readyActive = true
   var readyAudio: Bool? = true
@@ -38,7 +40,7 @@ private final class FakeLiveBackend: LiveBackend {
     connectCount += 1
     setState(.connecting)
     if failConnect {
-      setState(.disconnected(reason: "unauthorized"))
+      setState(.disconnected(reason: failReason))
       throw ConnectFailure()
     }
     // Each session has its own id, like services/api.
@@ -266,9 +268,50 @@ final class LiveStatusTests: XCTestCase {
     XCTAssertEqual(Set(states.map(\.title)).count, states.count)
     XCTAssertEqual(LiveStatus.listening.tone, .good)
     XCTAssertNotEqual(LiveStatus.connected.title, LiveStatus.listening.title)
-    for failure in states where failure.title.hasPrefix("Stopped") || failure.title.contains("Connection lost") {
+    for failure in states where failure.title.hasPrefix("Listening stopped") || failure.title.contains("Connection lost") {
       XCTAssertEqual(failure.tone, .bad, failure.title)
     }
+  }
+
+  func testTitlesAndDetailsUseTheHomeScreenCopy() {
+    XCTAssertEqual(LiveStatus.offline.title, "Offline")
+    XCTAssertEqual(LiveStatus.offline.detail, "Tap Reconnect to go online.")
+    XCTAssertEqual(LiveStatus.connecting.title, "Connecting…")
+    XCTAssertEqual(LiveStatus.connecting.detail, "Opening a session.")
+    XCTAssertEqual(LiveStatus.connected.title, "Online")
+    XCTAssertEqual(LiveStatus.connected.detail, "Tap Start listening, or Check this to read what’s in front of you.")
+    XCTAssertEqual(LiveStatus.startingToListen.title, "Starting to listen…")
+    XCTAssertEqual(LiveStatus.startingToListen.detail, "Waiting for the glasses stream and the backend.")
+    XCTAssertEqual(LiveStatus.listening.title, "Listening")
+    XCTAssertEqual(LiveStatus.listening.detail, "No alert doesn’t mean a claim is true.")
+    XCTAssertEqual(LiveStatus.reconnecting(attempt: 2).title, "Reconnecting…")
+    XCTAssertEqual(LiveStatus.reconnecting(attempt: 2).detail, "Connection dropped. Attempt 2 of 3.")
+    XCTAssertEqual(LiveStatus.reconnecting(attempt: 0).detail, "Connection dropped.")
+
+    let stopped: [(AudioStreamerStopReason, String)] = [
+      (.glassesDisconnected, "Listening stopped: glasses disconnected"),
+      (.noConnection, "Listening stopped: no connection"),
+      (.sessionEnded(reasonCode: "deleted"), "Listening stopped: session ended"),
+      (.audioUnavailable(reasonCode: "asr_failed"), "Listening stopped: mic unavailable"),
+    ]
+    for (reason, title) in stopped {
+      XCTAssertEqual(LiveStatus.listeningStopped(reason).title, title)
+      XCTAssertEqual(LiveStatus.listeningStopped(reason).detail, "Tap Start listening to try again.")
+    }
+
+    let errors: [(String, String)] = [
+      ("network_lost", "Connection lost"), ("connect_failed", "Connection lost"),
+      ("unauthorized", "Join code rejected"), ("http_401", "Join code rejected"), ("http_403", "Join code rejected"),
+      ("deleted", "Session ended"), ("expired", "Session ended"),
+      ("connect_timeout", "Backend not responding"), ("timed_out", "Backend not responding"),
+      ("invalid_url", "Backend URL not valid"), ("insecure_url", "Backend URL needs https"),
+      ("missing_join_code", "Join code needed"), ("something_new", "Backend error"),
+    ]
+    for (code, title) in errors {
+      XCTAssertEqual(LiveStatus.backendError(code: code).title, title, code)
+    }
+    XCTAssertEqual(LiveStatus.backendError(code: "network_lost").detail, "Reason: network_lost.")
+    XCTAssertEqual(LiveStatus.backendError(code: "missing_join_code").detail, "Add your join code in Settings.")
   }
 }
 
@@ -393,6 +436,87 @@ final class LiveModelTests: XCTestCase {
     }
   }
 
+  // MARK: Automatic connect
+
+  func testConnectIfConfiguredConnectsWithASavedJoinCode() async {
+    BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "demo-code").save(to: defaults, secrets: secrets)
+    let model = makeModel()
+    await model.connectIfConfigured()
+    await waitUntil { model.status == .connected }
+    XCTAssertEqual(backends.count, 1)
+    XCTAssertEqual(backend.config.joinCode, "demo-code")
+
+    // The app coming back to the foreground while connected changes nothing.
+    await model.connectIfConfigured()
+    XCTAssertEqual(backends.count, 1)
+    XCTAssertEqual(backend.connectCount, 1)
+  }
+
+  func testConnectIfConfiguredStaysOfflineWithoutAJoinCode() async {
+    let model = makeModel()
+    await model.connectIfConfigured()
+    XCTAssertTrue(backends.isEmpty)
+    XCTAssertEqual(model.status, .offline)
+
+    model.joinCode = "   "
+    await model.connectIfConfigured()
+    XCTAssertTrue(backends.isEmpty)
+  }
+
+  func testConnectIfConfiguredDoesNotRetryARejectedJoinCode() async {
+    configureBackend = { $0.failConnect = true }
+    let model = makeModel()
+    model.baseURLText = "https://api.example.test"
+    model.joinCode = "wrong"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "unauthorized"))
+
+    await model.connectIfConfigured()
+    XCTAssertEqual(backend.connectCount, 1, "only a new join code in Settings can fix this")
+  }
+
+  func testConnectIfConfiguredDoesNotRetryABadURL() async {
+    let model = makeModel()
+    model.baseURLText = "http://api.example.test"
+    model.joinCode = "demo-code"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "insecure_url"))
+
+    await model.connectIfConfigured()
+    XCTAssertTrue(backends.isEmpty)
+  }
+
+  func testConnectIfConfiguredRetriesAfterANetworkError() async {
+    configureBackend = { $0.failConnect = true; $0.failReason = "network_lost" }
+    let model = makeModel()
+    model.baseURLText = "https://api.example.test"
+    model.joinCode = "demo-code"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "network_lost"))
+
+    backend.failConnect = false
+    await model.connectIfConfigured()
+    await waitUntil { model.status == .connected }
+    XCTAssertEqual(backend.connectCount, 2)
+  }
+
+  func testReconnectClosesAndOpensASession() async {
+    let model = await connectedModel()
+    await model.reconnect()
+    await waitUntil { model.status == .connected }
+    XCTAssertEqual(backend.closeCount, 1)
+    XCTAssertEqual(backend.connectCount, 2)
+  }
+
+  func testForgetJoinCodeDisconnectsAndClearsTheKeychain() async {
+    let model = await connectedModel()
+    await model.forgetJoinCode()
+    XCTAssertEqual(model.status, .offline)
+    XCTAssertEqual(model.joinCode, "")
+    XCTAssertNil(secrets.read(BackendConfig.joinCodeKey))
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).joinCode, "")
+  }
+
   func testUnreadableEventShowsANotice() async {
     let model = await connectedModel()
     backend.onUnreadableEvent?("claim.result")
@@ -442,7 +566,7 @@ final class LiveModelTests: XCTestCase {
 
     now += 10
     backend.endSession(reason: "deleted")
-    await waitUntil { model.notice == "The backend ended the session (deleted). Tap Connect for a new one." }
+    await waitUntil { model.notice == "The backend ended the session (deleted). Tap Reconnect for a new one." }
     XCTAssertEqual(backend.connectCount, 2)
     XCTAssertEqual(speaker.spoken.last, AudioStreamerStopReason.sessionEnded(reasonCode: "deleted").spokenMessage)
   }
@@ -697,8 +821,15 @@ final class LiveModelTests: XCTestCase {
   func testCheckThisNeedsAConnection() async {
     let model = makeModel()
     await model.checkThis()
-    XCTAssertEqual(model.checkMessage, "Connect to the backend first.")
+    XCTAssertEqual(model.checkMessage, "Facto is offline. Tap Reconnect.")
     XCTAssertEqual(camera.photoCount, 0)
+  }
+
+  func testStartListeningOfflineSaysHowToFixIt() async {
+    let model = makeModel()
+    await model.startListening()
+    XCTAssertEqual(model.notice, "Facto is offline. Tap Reconnect.")
+    XCTAssertTrue(camera.startedQualities.isEmpty)
   }
 }
 
