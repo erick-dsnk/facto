@@ -105,6 +105,24 @@ describe('typed joint judgment adapter', () => {
     expect(result.sourceAssessments[evidence[0].id].confidence).toBeCloseTo(expected);
     expect(decideVerdict(result).verdict).toBe(expected >= .85 ? 'contradicted' : 'insufficient_evidence');
   });
+  it.each([
+    ['structured record', 'SYNTHETIC named event register R-17: the marked tower received three lightning impacts during the observed storm on 14 November 2026.', 'original_record', .99, 'contradicted'],
+    ['definitional reporting', 'SYNTHETIC technical standard S-2 defines repeat impact as two or more measured discharges at one marked structure; its field report records two impacts at tower T during one storm.', 'substantive_secondary', .99, 'contradicted'],
+    ['attributed belief', 'SYNTHETIC interview: a visitor says they believe lightning strikes a place repeatedly. No observation or record is supplied.', 'attributed', .99, 'insufficient_evidence'],
+    ['marketing efficacy', 'SYNTHETIC advertisement: our premium product guarantees that lightning cannot strike the same place twice. Buy it now.', 'promotional', .99, 'insufficient_evidence'],
+    ['unrelated table', 'SYNTHETIC weather register: place | temperature. Tower T | 12 degrees. No lightning observations are recorded.', 'original_record', .1, 'insufficient_evidence'],
+    ['isolated assertion', 'Lightning definitely strikes the same place repeatedly. Everyone knows it.', 'bare_assertion', .99, 'insufficient_evidence'],
+  ] as const)('keeps source-quality and relevance gates for %s after semantic separation', async (_name, excerpt, basis, relevance, expected) => {
+    const retained = [{ ...evidence[0], excerpt }];
+    // Scripted provider assessments exercise the boundary and policy, not live
+    // semantic accuracy; the bounded live campaign evaluates the instructions.
+    const client: JevClient = { ask: async request => ({
+      ...answer(request), e0_relevant: { noul: relevance },
+      e0_content_basis: { choice: basis, probabilities: Object.fromEntries(['original_record', 'attributable_research', 'substantive_secondary', 'bare_assertion', 'attributed', 'promotional', 'unclear'].map(key => [key, key === basis ? 1 : 0])) },
+    }) };
+    const result = await createJudge(client)(claim, retained, context);
+    expect(decideVerdict(result).verdict).toBe(expected);
+  });
   it('handles retained IDs that coincide with object prototype names as ordinary own keys', async () => {
     const retained = [{ ...evidence[0], id: '__proto__' }];
     const result = await createJudge({ ask: async request => answer(request) })(claim, retained, context);
