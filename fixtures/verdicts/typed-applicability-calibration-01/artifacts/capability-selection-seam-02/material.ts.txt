@@ -1,0 +1,280 @@
+// UNWIRED, outside Git. This captures material identity; it grants no source trust.
+import { createHash, randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
+import { sliceSpan, type AcceptedClaim, type Evidence, type Judgment } from '/workspace/stack-20/packages/contracts/src/index.js';
+import { selectAlternateEvidenceWithContext, type AlternateEvidenceSelection, type SelectorInputVersion } from '/workspace/stack-20/services/api/src/runtime/alternate-evidence.js';
+import { normalizeUrl } from '/workspace/stack-20/services/api/src/evidence/normalize.js';
+import type { RequestRecord, Session } from '/workspace/stack-20/services/api/src/runtime/session.js';
+import { abortable, assertWithinDeadline } from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import type { RetainedRecord, OriginNode, Context } from '../record-capability-prototype-02/src/types.js';
+import { parseRetainedRecord, canonical, deepFreeze, ValidationError } from '../record-capability-prototype-02/src/types.js';
+
+const digest = (value: unknown) => createHash('sha256').update(canonical(value)).digest('hex');
+const getDomain: (hostname: string, options: { allowPrivateDomains: boolean }) => string | null = createRequire('/workspace/stack-20/package.json')('tldts').getDomain;
+const fail = (code: string): never => { throw new Error(code); };
+export interface MaterialSnapshot {
+  exactCheckedText: string;
+  retainedEvidence: Evidence[];
+  retainedRecords: RetainedRecord[];
+  retainedNodeKeys: string[];
+  originNodes: OriginNode[];
+  originLinks: Context['originLinks'];
+  originGraphState: Context['originGraphState'];
+  materialGeneration: string;
+  rawGeneration: string;
+  graphGeneration: string;
+}
+export interface MaterialHandle { readonly kind: 'unwired_material_handle' }
+const materials = new WeakMap<object, MaterialSnapshot>();
+const materialInputs = new WeakMap<object, { original: Evidence[]; incoming: Evidence[] }>();
+const get = (handle: MaterialHandle) => materials.get(handle) ?? fail('untrusted_material_handle');
+const materialFields = ['id', 'url', 'title', 'publisher', 'publishedAt', 'retrievedAt', 'contentBasis', 'excerpt', 'sourceGroup', 'echoGroup'] as const;
+function copyEvidence(record: Evidence): Evidence {
+  // Material is primitive data. Reject accessors before reading, including ones
+  // that could alter another input during synchronous snapshot capture.
+  const descriptors = Object.getOwnPropertyDescriptors(record);
+  const keys = [...materialFields, 'sourceRole', 'directlyAddressesClaim', 'matchesTimePlaceAndPopulation', 'stance', 'stanceProbability'];
+  if (![Object.prototype, null].includes(Object.getPrototypeOf(record)) || Reflect.ownKeys(record).some(key => typeof key !== 'string' || !keys.includes(key))) fail('unknown_material_field');
+  if (Object.values(descriptors).some(d => !('value' in d))) fail('record_accessor');
+  for (const field of materialFields) if (!Object.hasOwn(record, field)) fail('missing_material_field');
+  const widths = { id: 128, url: 4096, title: 4000, publisher: 1000, publishedAt: 100, retrievedAt: 100,
+    contentBasis: 32, excerpt: 8000, sourceGroup: 253, echoGroup: 128 };
+  for (const field of materialFields) {
+    const value = record[field];
+    if (value === null && ['publisher', 'publishedAt', 'echoGroup'].includes(field)) continue;
+    if (typeof value !== 'string' || value.length > widths[field]) fail('material_string_bound');
+  }
+  if (!['highlight', 'page_text'].includes(record.contentBasis) || !['primary', 'secondary', 'unknown'].includes(record.sourceRole)
+    || typeof record.directlyAddressesClaim !== 'boolean' || typeof record.matchesTimePlaceAndPopulation !== 'boolean'
+    || !['supports', 'contradicts', 'unrelated'].includes(record.stance)
+    || (record.stanceProbability !== null && (typeof record.stanceProbability !== 'number' || !Number.isFinite(record.stanceProbability)
+      || record.stanceProbability < 0 || record.stanceProbability > 1))) fail('invalid_record_annotation');
+  if (Array.from(record.excerpt).length > 2000) fail('excerpt_bound');
+  return structuredClone(record);
+}
+function recordProjection(record: Evidence): RetainedRecord {
+  // Preserve production strings exactly. The prototype's narrower title bounds
+  // are checked separately; never truncate or coerce empty strings to null.
+  return { id: record.id, url: normalizeUrl(record.url) ?? fail('invalid_url'), excerpt: record.excerpt,
+    title: record.title, publisher: record.publisher, publishedAt: record.publishedAt,
+    retrievedAt: record.retrievedAt, textBasis: record.contentBasis,
+    metadata: { sourceGroup: record.sourceGroup, echoGroup: record.echoGroup } };
+}
+const versionIdentity = (record: Evidence) => JSON.stringify([record.id, normalizeUrl(record.url), record.title, record.publisher,
+  record.publishedAt, record.retrievedAt, record.contentBasis, record.excerpt]);
+
+/** All selector inputs, including unselected versions, must enter this factory.
+ * Completeness is only relative to these normalized selector pools; it does not
+ * assert that the provider's full result bodies or earlier acquisitions exist. */
+export function captureSelectionMaterial(input: { existing: Evidence[]; incoming: Evidence[]; checkedText: string; priorJudgment?: Judgment }): MaterialHandle {
+  if (input.existing.length > 6 || input.incoming.length > 6 || input.existing.length + input.incoming.length > 12) fail('raw_inventory_bound');
+  if (!input.checkedText || input.checkedText.length > 4000) fail('claim_bound');
+  const original = input.existing.map(copyEvidence), incoming = input.incoming.map(copyEvidence);
+  const prior = input.priorJudgment;
+  if (prior && prior.checkedText !== input.checkedText) fail('prior_claim_mismatch');
+  if (!prior && incoming.length) fail('prior_judgment_required_for_alternate');
+  // Native selection keeps the last same-ID occurrence within each pass. A
+  // genuine prior judgment covers that deduplicated record set, not discarded
+  // duplicate occurrences; every supplied judgment record must match it.
+  const latestOriginal = new Map(original.map(record => [record.id, record]));
+  if (prior && (new Set(prior.evidence.map(record => record.id)).size !== latestOriginal.size
+    || prior.evidence.some(previous => {
+      const record = latestOriginal.get(previous.id);
+      return !record || versionIdentity(previous) !== versionIdentity(record)
+        || previous.sourceGroup !== record.sourceGroup || previous.echoGroup !== record.echoGroup;
+    }))) fail('stale_prior_material');
+  let native: AlternateEvidenceSelection | undefined;
+  let retained: Evidence[], rows: readonly SelectorInputVersion[], retainedKeys: readonly string[];
+  if (prior) {
+    native = selectAlternateEvidenceWithContext(original, incoming, input.checkedText, prior);
+    retained = native.retained; rows = native.inputVersions; retainedKeys = native.retainedVersionKeys;
+  } else {
+    // No fake completed Judgment to satisfy the alternate selector. These are
+    // exact pre-ask normalized records; native graph state is explicitly pending.
+    if (original.some(record => normalizeUrl(record.url) !== record.url || record.sourceGroup !==
+      getDomain(new URL(record.url).hostname, { allowPrivateDomains: true }))) fail('initial_material_not_normalized');
+    retained = original;
+    rows = original.map((record, ordinal) => ({ key: `original:${ordinal}`, phase: 'original' as const, ordinal, record,
+      supplied: { url: record.url, sourceGroup: record.sourceGroup, echoGroup: record.echoGroup },
+      usedForDependence: false, dependenceEchoGroup: null }));
+    retainedKeys = rows.map(row => row.key);
+  }
+  if (!rows.length) fail('empty_material');
+  if (rows.length !== original.length + incoming.length || rows.length > 12) fail('incomplete_native_inventory');
+  const retainedRecords = retained.map(recordProjection);
+  const positions = new Map(rows.map((row, index) => [row.key, index]));
+  if (positions.size !== rows.length || retainedKeys.length !== retainedRecords.length) fail('invalid_native_version_binding');
+  const nodes: OriginNode[] = rows.map(row => {
+    const outputIndex = retainedKeys.indexOf(row.key);
+    const projected = outputIndex >= 0 ? retainedRecords[outputIndex]! : recordProjection(row.record as Evidence);
+    const state = { phase: row.phase, ordinal: row.ordinal, suppliedURL: row.supplied.url,
+      suppliedSourceGroup: row.supplied.sourceGroup, suppliedEchoGroup: row.supplied.echoGroup,
+      canonicalInputURL: row.record.url, canonicalInputSourceGroup: row.record.sourceGroup, canonicalInputEchoGroup: row.record.echoGroup,
+      canonicalInputMaterialSHA256: digest(Object.fromEntries(materialFields.map(field => [field, row.record[field]]))),
+      usedForDependence: row.usedForDependence, dependenceEchoGroup: row.dependenceEchoGroup,
+      selectorProjectionApplied: outputIndex >= 0, selectedVersionIsNative: native !== undefined };
+    return { key: row.key, revision: digest({ record: projected, state }), record: projected, state };
+  });
+  for (const [index, key] of retainedKeys.entries()) {
+    const row = rows[positions.get(key) ?? fail('retained_not_in_native_inventory')];
+    if (versionIdentity(row.record as Evidence) !== versionIdentity(retained[index])) fail('native_retained_material_mismatch');
+  }
+  const edgeKey = (left: string, right: string) => {
+    if (!positions.has(left) || !positions.has(right) || left === right) fail('invalid_native_link');
+    return JSON.stringify(positions.get(left)! < positions.get(right)! ? [left, right] : [right, left]);
+  };
+  const nativeEdges = new Map((native?.dependenceLinks ?? []).map(link => [edgeKey(link.leftKey, link.rightKey), link]));
+  const links: Context['originLinks'] = [];
+  for (let left = 0; left < rows.length; left++) for (let right = left + 1; right < rows.length; right++) {
+    const edge = nativeEdges.get(edgeKey(rows[left].key, rows[right].key));
+    const staticReasons: string[] = [];
+    if (!native) {
+      if (rows[left].record.id === rows[right].record.id) staticReasons.push('initial_same_evidence_id');
+      if (rows[left].record.sourceGroup === rows[right].record.sourceGroup) staticReasons.push('initial_supplied_source_group');
+      if (rows[left].record.echoGroup !== null && rows[left].record.echoGroup === rows[right].record.echoGroup) staticReasons.push('initial_supplied_echo_group');
+    }
+    // Expand native edge inventory to a complete bounded pair matrix. Absence
+    // means unclear, never independent. No source/family predicate runs here.
+    links.push({ left: rows[left].key, right: rows[right].key,
+      relationship: edge || staticReasons.length ? 'common_origin' : 'unclear',
+      state: { nativeReasons: [...(edge?.reasons ?? [])], staticInputReasons: staticReasons, nativeContextAvailable: native !== undefined,
+        priorAnswersAreSchedulingOnly: true } });
+  }
+  const graphState = { schemaVersion: 2, rawNodeCount: nodes.length, pairCount: links.length,
+    mode: native ? 'native_selection' : 'initial_pending_judgment', nativeContextAvailable: native !== undefined,
+    completeAtSelectorInputBoundary: native !== undefined, boundary: 'normalized_selector_inputs',
+    initialInventoryComplete: true, upstreamProviderBodiesComplete: false,
+    nativeReason: native?.reason ?? null,
+    nativeFamilyById: (native?.familyById ?? []).map(row => ({ ...row })),
+    nativePriorOriginAssessments: (native?.priorOriginAssessments ?? []).map(origin => ({ ...origin, evidenceIds: [...origin.evidenceIds] })),
+    priorOriginsAreSchedulingOnly: true,
+    nativeCompleteness: native ? { ...native.completeness } : null };
+  const base = { exactCheckedText: input.checkedText, retainedEvidence: structuredClone(retained), retainedRecords,
+    retainedNodeKeys: [...retainedKeys], originNodes: nodes, originLinks: links, originGraphState: graphState };
+  const rawGeneration = digest({ exactCheckedText: input.checkedText, versions: rows.map(row => ({ key: row.key,
+    phase: row.phase, ordinal: row.ordinal, record: Object.fromEntries(materialFields.map(field => [field, row.record[field]])),
+    supplied: { ...row.supplied } })) });
+  const graphGeneration = digest({ retainedRecords, retainedNodeKeys: retainedKeys, originNodes: nodes, originLinks: links, originGraphState: graphState });
+  const snapshot: MaterialSnapshot = { ...base, rawGeneration, graphGeneration,
+    materialGeneration: digest({ rawGeneration, graphGeneration }) };
+  if (Buffer.byteLength(canonical(snapshot)) > 262144) fail('material_byte_bound');
+  deepFreeze(snapshot);
+  const handle = Object.freeze({ kind: 'unwired_material_handle' as const });
+  materials.set(handle, snapshot);
+  materialInputs.set(handle, deepFreeze({ original, incoming }));
+  return handle;
+}
+
+// Every nested value is frozen at runtime; shallow readonly avoids recursively
+// instantiating the prototype's intentionally recursive JSON type in consumers.
+export function inspectMaterial(handle: MaterialHandle): Readonly<MaterialSnapshot> { return get(handle); }
+
+/** Pending initial inventory binds a real first ask, but cannot issue a receipt.
+ * A post-judgment transition needs a new native snapshot/owner generation and a
+ * separately reviewed assessment binding; no old response is silently rebound. */
+export function assertCompleteNativeGraph(handle: MaterialHandle): void {
+  const s = get(handle);
+  if (s.originGraphState.nativeContextAvailable !== true || s.originGraphState.completeAtSelectorInputBoundary !== true) fail('native_graph_unavailable');
+}
+
+/** Prototype compatibility is not a complete context or capability assessment. */
+export function assertPrototypeCompatible(handle: MaterialHandle): void {
+  assertCompleteNativeGraph(handle);
+  const s = get(handle);
+  try {
+    for (const record of [...s.retainedRecords, ...s.originNodes.map(node => node.record)]) parseRetainedRecord(record);
+  } catch (error) {
+    if (!(error instanceof ValidationError)) throw error;
+    fail(`prototype_material_unavailable:${error.code}`);
+  }
+}
+
+export interface UntrustedInitialGraphDerivation {
+  readonly kind: 'untrusted_initial_graph_derivation';
+  readonly authorityGranted: false;
+  readonly actualDispatchBinding: false;
+  readonly rawGeneration: string;
+  readonly preAskMaterialGeneration: string;
+  readonly derivedGraphGeneration: string;
+  readonly judgmentSHA256: string;
+  readonly sameRawGeneration: true;
+  readonly sameRetainedMaterialAndOrder: true;
+  readonly completedSnapshot: Readonly<MaterialSnapshot>;
+}
+
+/** PURE derived data, never a trusted completed-assessment or execution handle.
+ * Only an adapter's private actual-ask/validated-response closure may bind this
+ * derivation to its dispatch receipt. Caller-supplied Judgment alone proves no
+ * rerun, source authority, ordinary risk, applicable scope or factual verdict. */
+export function deriveInitialGraph(pending: MaterialHandle, judgment: Judgment): UntrustedInitialGraphDerivation {
+  const before = get(pending), inputs = materialInputs.get(pending) ?? fail('missing_material_inputs');
+  if (before.originGraphState.mode !== 'initial_pending_judgment' || inputs.incoming.length) fail('not_pending_initial_material');
+  const identity = (record: Evidence) => JSON.stringify(materialFields.map(field => record[field]));
+  if (judgment.checkedText !== before.exactCheckedText || judgment.evidence.length !== before.retainedEvidence.length
+    || judgment.evidence.some((record, index) => identity(record) !== identity(before.retainedEvidence[index]))) fail('initial_judgment_material_or_order_mismatch');
+  const derivedHandle = captureSelectionMaterial({ existing: inputs.original, incoming: [], checkedText: before.exactCheckedText, priorJudgment: judgment });
+  const after = get(derivedHandle);
+  if (after.rawGeneration !== before.rawGeneration || after.retainedEvidence.length !== before.retainedEvidence.length
+    || after.retainedEvidence.some((record, index) => identity(record) !== identity(before.retainedEvidence[index]))) fail('initial_completion_material_or_order_mismatch');
+  assertCompleteNativeGraph(derivedHandle);
+  return deepFreeze({ kind: 'untrusted_initial_graph_derivation', authorityGranted: false, actualDispatchBinding: false,
+    rawGeneration: before.rawGeneration, preAskMaterialGeneration: before.materialGeneration,
+    derivedGraphGeneration: after.graphGeneration, judgmentSHA256: digest(judgment),
+    sameRawGeneration: true, sameRetainedMaterialAndOrder: true, completedSnapshot: after });
+}
+
+export interface RuntimeOwnerHandle { readonly kind: 'unwired_runtime_material_owner' }
+interface OwnerState {
+  material: MaterialHandle; session: Session; record: RequestRecord; sessionId: string; epoch: number;
+  requestId: string; revision: number; claimSlot: number; claimId: string; ownerIdentity: string;
+  deadlineAt: number; materialGeneration: string; installGeneration: string;
+  readMaterialGeneration: () => string; readInstallGeneration: () => string;
+  admittedClaim: AcceptedClaim; claimSpan: AcceptedClaim['sourceSpan'];
+}
+const owners = new WeakMap<object, OwnerState>();
+export function captureRuntimeOwner(material: MaterialHandle, input: { session: Session; record: RequestRecord; claimSlot: number; admittedClaim: AcceptedClaim;
+  readMaterialGeneration: () => string; readInstallGeneration: () => string }): RuntimeOwnerHandle {
+  const snapshot = get(material);
+  if (!Number.isInteger(input.claimSlot) || input.claimSlot < 0 || input.claimSlot > 1) fail('invalid_claim_slot');
+  const { session, record } = input;
+  const state: OwnerState = { ...input, material, sessionId: session.id, epoch: session.epoch,
+    requestId: record.input.requestId, revision: record.input.revision, claimSlot: input.claimSlot,
+    claimId: `${record.input.requestId}-claim-${input.claimSlot}`, ownerIdentity: randomUUID(),
+    claimSpan: { ...input.admittedClaim.sourceSpan },
+    deadlineAt: record.acceptedAt + 10000, materialGeneration: snapshot.materialGeneration,
+    installGeneration: input.readInstallGeneration() };
+  const owner = Object.freeze({ kind: 'unwired_runtime_material_owner' as const });
+  owners.set(owner, state); assertCurrentOwner(owner); return owner;
+}
+export function assertCurrentOwner(owner: RuntimeOwnerHandle): void {
+  const s = owners.get(owner) ?? fail('untrusted_runtime_owner');
+  if (s.session.id !== s.sessionId || s.session.epoch !== s.epoch || !s.session.current(s.record)
+    || s.record.input.sessionId !== s.sessionId || s.record.input.sessionEpoch !== s.epoch
+    || s.record.input.requestId !== s.requestId || s.record.input.revision !== s.revision || s.record.state !== 'running') fail('stale_runtime_owner');
+  assertWithinDeadline({ signal: s.record.controller.signal, now: s.session.now, deadlineAt: s.deadlineAt });
+  const claim = s.admittedClaim;
+  if (claim.id !== s.claimId || claim.originalText !== s.record.input.text || claim.checkedText !== get(s.material).exactCheckedText
+    || claim.admission.admissionAction !== 'check' || claim.admission.assertionStatus !== 'asserted'
+    || !Number.isSafeInteger(claim.sourceSpan.start) || !Number.isSafeInteger(claim.sourceSpan.end)
+    || claim.sourceSpan.start < 0 || claim.sourceSpan.end <= claim.sourceSpan.start || claim.sourceSpan.end > Array.from(s.record.input.text).length
+    || claim.sourceSpan.start !== s.claimSpan.start || claim.sourceSpan.end !== s.claimSpan.end
+    || sliceSpan(s.record.input.text, claim.sourceSpan) !== claim.checkedText) fail('admitted_claim_mismatch');
+  if (s.readMaterialGeneration() !== s.materialGeneration || get(s.material).materialGeneration !== s.materialGeneration) fail('stale_material_generation');
+  if (s.readInstallGeneration() !== s.installGeneration) fail('stale_install_generation');
+}
+/** Trusted local dispatch seal inputs only. Never source metadata or a wire DTO. */
+export function inspectOwnerBinding(owner: RuntimeOwnerHandle) {
+  assertCurrentOwner(owner);
+  const s = owners.get(owner)!;
+  return Object.freeze({ ownerIdentity: s.ownerIdentity, sessionId: s.sessionId, epoch: s.epoch,
+    requestId: s.requestId, revision: s.revision, claimSlot: s.claimSlot, claimId: s.claimId,
+    deadlineAt: s.deadlineAt, materialGeneration: s.materialGeneration, installGeneration: s.installGeneration });
+}
+
+/** Demonstrates the required pre/post-await owner gate. No assessment is minted. */
+export async function awaitCurrentMaterial<T>(owner: RuntimeOwnerHandle, work: () => Promise<T>): Promise<T> {
+  assertCurrentOwner(owner);
+  const result = await abortable(work(), owners.get(owner)!.record.controller.signal);
+  assertCurrentOwner(owner);
+  return result;
+}

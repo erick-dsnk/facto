@@ -1,0 +1,23 @@
+from pathlib import Path
+import hashlib
+import json
+
+base = Path(__file__).parent
+before = (base / "client.lower.before.ts").read_text()
+after = (base / "client.lower.after.ts").read_text()
+helper = after.split("const MAX_RESPONSE_BYTES = 256 * 1024;\n\n", 1)[1].split("async function boundedJson(", 1)[0]
+assert helper == """/** Cleanup must not replace or delay an already established provider error. */
+function discardBody(body: ReadableStream<Uint8Array> | ReadableStreamDefaultReader<Uint8Array> | null): void {
+  void body?.cancel().catch(() => undefined);
+}
+
+"""
+def patch(source):
+    source = source.replace("async function boundedJson(", helper + "async function boundedJson(", 1)
+    return source.replace("await response.body?.cancel();", "discardBody(response.body);").replace("await response.body?.cancel().catch(() => undefined);", "discardBody(response.body);").replace("await reader.cancel().catch(() => undefined);", "discardBody(reader);")
+assert patch(before) == after
+combined = (base / "client.combined.before.ts").read_text()
+assert hashlib.sha256(combined.encode()).hexdigest() == json.loads((base / "projection.json").read_text())["originalSHA256"]
+projected = patch(combined).replace("'exa-js'", "'/workspace/stack-20/node_modules/exa-js/dist/index.js'").replace("'../../../../../packages/contracts/src/index.js'", "'/workspace/stack-20/packages/contracts/src/index.ts'").replace("'../../runtime/provider-retry.js'", "'/workspace/stack-20/services/api/src/runtime/provider-retry.ts'")
+assert projected == (base / "combined-client.ts").read_text()
+print("Verified exact same helper/three replacements in lower-branch and integrated-client projection; only import resolution differs.")

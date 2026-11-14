@@ -1,0 +1,65 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { CORPUS_ROOT, CORPUS_MANIFEST_SHA256, INSTALL_ROOT } from './install.js';
+import { loadInstalledManifest, resolveProof, installedSummary } from './manifest.js';
+import { loadSnapshot } from './snapshot.js';
+import { loadFrozenClaimFrame } from './applicability.js';
+import { evaluate, verifyCapability, type EvaluateInput } from './evaluate.js';
+import { digest, type Context } from './types.js';
+export async function runShadow() {
+    const originalManifest = await readFile(CORPUS_ROOT + '/manifest.json');
+    if (digest(originalManifest) !== CORPUS_MANIFEST_SHA256)
+        throw new Error('original corpus changed');
+    const packetBytes = await readFile(CORPUS_ROOT + '/annotation-inputs.json');
+    const original = JSON.parse(originalManifest.toString());
+    if (digest(packetBytes) !== original.files['annotation-inputs.json'].sha256)
+        throw new Error('packet changed');
+    const packet = JSON.parse(packetBytes.toString());
+    const installedSHA = (await readFile('/workspace/task-evidence/record-capability-prototype-01/installed-manifest.sha256', 'utf8')).trim();
+    const manifest = await loadInstalledManifest(INSTALL_ROOT, installedSHA);
+    const now = new Date().toISOString();
+    const rows: any[] = [];
+    // Only immutable fixture provenance routes test artifacts; these strings are NOT a public authorization API.
+    for (const u of packet.units) {
+        let artifact: unknown = { sourceControlled: true };
+        let evidenceURL = u.observedArtifact.url;
+        const observed = u.observedArtifact;
+        if (['trusted_public_GET_capture', 'trusted_local_hash_of_preserved_canonical_body'].includes(observed.digestOrigin) && observed.proofRef) {
+            artifact = await loadSnapshot(manifest, observed.proofRef);
+            const proof = resolveProof(manifest, observed.proofRef);
+            if (observed.bodySHA256 !== proof.rawBodySHA256)
+                throw new Error('frozen observation/proof mismatch');
+            if (observed.digestOrigin === 'trusted_local_hash_of_preserved_canonical_body')
+                evidenceURL = proof.requestedURL;
+        }
+        const frame = loadFrozenClaimFrame(manifest, u.id, u.proposition);
+        const context: Context = { risk: 'ordinary', credibleConflictPresent: u.externalContext.credibleConflictPresent, retainedEvidenceIds: u.externalContext.credibleConflictPresent ? [u.id, 'synthetic-conflict-witness'] : [u.id], originLinks: [] };
+        const input: EvaluateInput = { manifest, artifact, receiptAlias: u.receiptId, evidence: { id: u.id, url: evidenceURL, excerpt: u.excerpt }, frame, exactClaimText: u.proposition, context, now };
+        const result = evaluate(input);
+        rows.push({ id: u.id, receiptId: u.receiptId, synthetic: u.synthetic, inputExcerptSHA256: digest(u.excerpt), result: result.kind === 'capability' ? { kind: result.kind, audit: result.audit, privateTokenRoundTrip: verifyCapability(result.token, { manifest, evidence: input.evidence, frame, exactClaimText: u.proposition, context }) } : result });
+    }
+    // Expected labels are read only after every applicability evaluation; they never enter the mechanism.
+    const labelBytes = await readFile(CORPUS_ROOT + '/annotation-adjudicated.json');
+    if (digest(labelBytes) !== original.files['annotation-adjudicated.json'].sha256)
+        throw new Error('labels changed');
+    const labels = JSON.parse(labelBytes.toString()).labels;
+    for (const row of rows) {
+        const label = labels.find((l: any) => l.id === row.id);
+        row.expectedApplicable = label.expectedCapabilityApplicable;
+        row.actualApplicable = row.result.kind === 'capability';
+        row.matches = row.actualApplicable === row.expectedApplicable;
+        row.conflictControlPreserved = row.result.kind !== 'capability' || (row.result.audit.conflictVetoMustRemain === true && row.result.audit.credibleConflictPresent === label.credibleConflictPresentInControl);
+        row.provenanceLimitation = label.provenanceLimitation;
+    }
+    const pairs = packet.attestations.map((r: any) => { const members = packet.units.filter((u: any) => u.receiptId === r.attestationId && !u.synthetic && u.observedArtifact.digestOrigin === 'trusted_public_GET_capture' && u.requestedRelationClass === r.capability.relationClasses[0] && JSON.stringify(u.requestedScope) === JSON.stringify(r.document.versionScope) && u.excerpt === r.recordUnits[0].content); return { receiptId: r.attestationId, originFamily: r.originFamily, ids: members.map((u: any) => u.id), identicalExcerptSHA256: digest(r.recordUnits[0].content), allSameApplicability: new Set(members.map((u: any) => rows.find(x => x.id === u.id).actualApplicable)).size === 1 }; });
+    const report = { schemaVersion: 1, kind: 'offline_unwired_record_capability_shadow', createdAt: now, sourceCorpusManifestSHA256: CORPUS_MANIFEST_SHA256, installed: installedSummary(manifest), projectProviderCalls: 0, networkCalls: 0, productionImports: 0, productionChanged: false, rawEnglishFramingImplemented: false, currentVersionAuthenticationImplemented: false, verdictsAssigned: 0, counts: { requests: rows.length, applicable: rows.filter(r => r.actualApplicable).length, positiveExpected: rows.filter(r => r.expectedApplicable).length, falseCapabilities: rows.filter(r => r.actualApplicable && !r.expectedApplicable).length, missedCapabilities: rows.filter(r => !r.actualApplicable && r.expectedApplicable).length, matches: rows.filter(r => r.matches).length, recordFamilies: packet.attestations.length }, pairs, rows, limitations: ['Only independently frozen structured claim frames; this is not a solution for raw-English production routing.', 'Historical snapshots do not authenticate current/latest versions or fresh origin accessibility.', 'Whole audited record units are required because the frozen receipt did not separately annotate minimal field spans; no inferred relaxation.', 'Opposite values reuse four passages; they are correlated and not new factual samples.', 'No final verdict policy or source-quality model is executed; no factual coverage or backend-readiness claim.'] };
+    await mkdir('/workspace/task-evidence/record-capability-prototype-01/results', { recursive: true });
+    await writeFile('/workspace/task-evidence/record-capability-prototype-01/results/shadow-report.json', JSON.stringify(report, null, 2) + '\n');
+    return report;
+}
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+    const r = await runShadow();
+    console.log(JSON.stringify({ counts: r.counts, pairs: r.pairs }, null, 2));
+    if (r.counts.falseCapabilities || r.counts.missedCapabilities || r.rows.some(x => !x.conflictControlPreserved))
+        process.exitCode = 1;
+}

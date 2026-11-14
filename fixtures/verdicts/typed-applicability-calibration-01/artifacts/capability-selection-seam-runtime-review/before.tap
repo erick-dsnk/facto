@@ -1,0 +1,49 @@
+TAP version 13
+# {"acceptedOwner":{"ownerIdentity":"aa76cb7f-b13c-4c07-9553-d2c8e2589526","sessionId":"54be6c5f-d988-45f5-9441-a84c00a81529","epoch":1,"requestId":"other","revision":1,"claimSlot":0,"claimId":"other-claim-0","deadlineAt":1794650410000,"materialGeneration":"2cc6528585e30161b85759786732d232a34209e21d493acef57e6dd6903b46b3","installGeneration":"install1"},"materialClaim":"The Meridian bridge opened in 1889.","requestText":"Helsinki is the capital of Finland."}
+# Subtest: prior assessment of another exact claim must not be accepted merely because evidence bytes match
+not ok 1 - prior assessment of another exact claim must not be accepted merely because evidence bytes match
+  ---
+  duration_ms: 10.928547
+  type: 'test'
+  location: '/workspace/task-evidence/capability-selection-seam-runtime-review/claim-binding-repro.test.ts:1:1286'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (/workspace/task-evidence/capability-selection-seam-runtime-review/claim-binding-repro.test.ts:12:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: material for another claim must not become owned by an unrelated current request slot
+not ok 2 - material for another claim must not become owned by an unrelated current request slot
+  ---
+  duration_ms: 2.806118
+  type: 'test'
+  location: '/workspace/task-evidence/capability-selection-seam-runtime-review/claim-binding-repro.test.ts:1:1572'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (/workspace/task-evidence/capability-selection-seam-runtime-review/claim-binding-repro.test.ts:17:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 499.923272

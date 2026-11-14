@@ -1,0 +1,107 @@
+{
+  "kind": "independent_second_document_identity_annotation",
+  "createdAt": "2026-11-14T06:00:33.320891+00:00",
+  "inputSHA256": {
+    "annotation-inputs.json": "17edb0a1eef8b6aba555e5daeae7a15d0d771cf172b842fa30e24d96149221b3",
+    "sources.json": "2b6ef503f71d91d15743fd19ccfc7d9480025e7fa093c5b959e4b4559c340a02",
+    "rubric.md": "a24bffedee8eef6acf13afacaecd190c2e71dc1fdb7d4b2f7ef6c54ff82fd23b"
+  },
+  "method": "Read only neutral inputs,sources and rubric for these labels. Prior generic identity-contract/question/code review is disclosed: second annotator is not prompt-blind. No author labels/build/README or model outcomes read. Author first labels were created without adapter wording/code. Trusted identity is assumed only from independently installed receipt+private snapshot; it never supplies operative facts.",
+  "labels": [
+    {
+      "id": "DI08",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "the size of the usual resident population in England and Wales was 59,597,300",
+      "rationale": "The retained unit gives the aggregate usual-resident estimate and broad age-group navigation, not an exactly-seven population/count. The release identity cannot supply the missing population restriction or age-specific value.",
+      "temporalReading": "same historical release but different age-specific population/measure",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI05",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF",
+      "rationale": "Formal adoption is a different event relation not stated by the quoted unit. Neither normative class nor a dated version label establishes that the IETF adopted it on that date.",
+      "temporalReading": "adoption event outside permitted normative relation",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI04",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "This document defines how those words are interpreted in IETF",
+      "rationale": "The operative unit covers keyword interpretation, not publication history. May2017 in a version label identifies a reviewed version and cannot establish the publication event/date.",
+      "temporalReading": "publication event outside permitted normative relation",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI06",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "When July 1 is a Sunday",
+      "rationale": "The request explicitly concerns current legal force on14November2026. A dated consolidation current-to19October does not prove later effective/current status, even when its text states the holiday condition.",
+      "temporalReading": "current legal force at later asOf; independent current-version proof absent",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "temporal_applicability_and_missing_current_proof",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI03",
+      "expectedApplicability": "covered",
+      "supportingSpan": "On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300",
+      "rationale": "The trusted descriptor identifies the historical release, while the quoted contents themselves retain reference date, geography, usual-resident population and reported rounded estimate. Identity supplies no omitted answer.",
+      "temporalReading": "explicit historical first rounded release/reference date",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI02",
+      "expectedApplicability": "covered",
+      "supportingSpan": "When these words are not capitalized, they have their normal",
+      "rationale": "This is the same identified normative rule with a counterfactual compared capitalization condition. The operative unit explicitly supplies the lowercase/normal-meaning condition, so it can refute the claim without losing applicability.",
+      "temporalReading": "explicit immutable RFC version; compared rule condition differs",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI01",
+      "expectedApplicability": "covered",
+      "supportingSpan": "The words have the meanings specified herein only when they are in",
+      "rationale": "Trusted canonical identity resolves which document this operative clause belongs to. The quoted unit itself supplies the all-capitals interpretation rule; no factual field is borrowed from metadata.",
+      "temporalReading": "explicit immutable RFC version",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    },
+    {
+      "id": "DI07",
+      "expectedApplicability": "not_covered",
+      "supportingSpan": "The 2021 Pulitzer Prize Winner in Fiction",
+      "rationale": "An award edition/outcome entry does not supply a career-wide first ordinal. The quoted work/recipient/year fields and identity label do not establish earlier award history.",
+      "temporalReading": "historical award edition plus uncovered career ordinal",
+      "ambiguity": false,
+      "excludeFromPrimary": false,
+      "gatingLayer": "semantic_relation_and_material_scope",
+      "semanticQuestionEligible": true
+    }
+  ],
+  "limitations": [
+    "Separate8-unit denominator; no pooling with applicability36 or scope12.",
+    "Four saved record families and three repeated RFC-unit variants are correlated, not new factual coverage.",
+    "All8unit texts exactly match full audited source units; no deterministic clipping/forgery success is credited as learned semantics.",
+    "Current-provenance availability and authority/quality/scope/stance/conflict/lifecycle requirements remain independent."
+  ],
+  "providerCalls": 0
+}

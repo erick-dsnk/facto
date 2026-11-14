@@ -1,0 +1,43 @@
+{
+  "kind": "independent_adapter06_trust_and_historical_reference_review",
+  "createdAt": "2026-11-14T06:19:32.695918+00:00",
+  "manifestSHA256": "99cd08e960ebe2e1318fa85428819ebe2bb88fcc1fe57a62596259492cf652c3",
+  "actualProviderCalls": 0,
+  "independentOfflineTestsPassed": 72,
+  "all14FilesAnd6DependencyPinsMatch": true,
+  "trustBoundaryVerdict": "approved_unwired_token_repairs",
+  "semanticGuardVerdict": "hold_for_present_force_predicate_gap",
+  "verified": [
+    "Context parsed and recursively frozen before shared return/storage; both private verifiers compare captured immutable context digest. Direct returned-object mutation throws; detached changed material plus refreshed input digest rejected.",
+    "Actual response graph completion is privately sealed inside actual full judge path, separate from caller-derived native data. No authority/core capability/current proof/independence/verdict issued.",
+    "Unconditional current-owner/deadline guards before completion issuance and final return include uncertain/no-bound paths.",
+    "Identity descriptors remain exact installed canonical document/version identities from privately verified receipt and aligned complete unit, not operative factual values.",
+    "Narrow historical noun phrase requires strict valid date and exact sole trusted current-to version segment after full proof/unit binding; masks only that span and preserves checked claim."
+  ],
+  "finding": {
+    "code": "present_force_predicate_gap",
+    "severity": "prestudy_semantic_guard_hold",
+    "module": "version-reference.ts",
+    "examples": [
+      {
+        "claim": "The consolidation current to 2028-02-29 is still in effect.",
+        "observedAllowed": true
+      },
+      {
+        "claim": "The consolidation current to 2028-02-29 continues in force.",
+        "observedAllowed": true
+      },
+      {
+        "claim": "The consolidation current to 2028-02-29 is legally operative.",
+        "observedAllowed": true
+      }
+    ],
+    "trustedVersion": "consolidation-current-to-2028-02-29",
+    "impact": "These direct present-force clauses bypass the new historical-version exception veto advertised in README; no temporal authorization or production verdict is issued, but optional question availability contradicts the declared guard.",
+    "next": "Preserve06; add bounded generic predicate tests/extension in a separate revision, or obtain root acceptance of an explicitly narrowed limitation before frozen study. A general temporal parser is not required."
+  },
+  "limits": [
+    "No production activation or final84-call plan approval.",
+    "No semantic provider outputs or efficacy evidence reviewed or generated here."
+  ]
+}
