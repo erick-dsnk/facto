@@ -130,15 +130,20 @@ export class SentenceAssembler {
     this.previous.clear();
   }
 
-  /** Reconciles sentences emitted from interim results with the locked words that now cover them. */
+  /**
+   * Reconciles sentences emitted from interim results with the locked words that now cover them.
+   * `force` (UtteranceEnd) settles every pending sentence, but only a final that reaches a sentence's end
+   * may correct it: a final that stops mid-sentence would otherwise replace it with a truncated revision.
+   */
   private confirm(force: boolean): void {
     while (this.pending.length) {
       const sentence = this.pending[0];
-      if (!force && this.finalUntil < sentence.endTime) return;
+      const reached = this.finalUntil >= sentence.endTime;
+      if (!force && !reached) return;
       const covered = this.locked.filter(word => middle(word) < sentence.endTime);
       this.locked = this.locked.filter(word => middle(word) >= sentence.endTime);
       const text = join(covered);
-      if (text && text !== sentence.text) this.send(covered, false, sentence.segmentId);
+      if (reached && text && text !== sentence.text) this.send(covered, false, sentence.segmentId);
       this.pending.shift();
     }
   }
