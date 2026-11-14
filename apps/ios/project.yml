@@ -24,7 +24,13 @@ targets:
     type: application
     platform: iOS
     sources:
-      - GlassesLab
+      - path: GlassesLab
+        # Placeholder files that keep empty module folders in git.
+        excludes:
+          - "**/.keep"
+    scheme:
+      testTargets:
+        - GlassesLabTests
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.davidvasilescu.junction.glasseslab
@@ -66,3 +72,21 @@ targets:
         NSBonjourServices: [_bonjour._tcp]
         NSCameraUsageDescription: The simulated glasses use the phone camera as their video feed.
         NSMicrophoneUsageDescription: Listens through the glasses microphone only while you run an audio check.
+
+  GlassesLabTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: GlassesLabTests
+        excludes:
+          - "Fixtures/**"
+      # Folder reference: the JSON files land in the test bundle under Fixtures/.
+      - path: GlassesLabTests/Fixtures
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - target: GlassesLab
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.davidvasilescu.junction.glasseslab.tests
+        GENERATE_INFOPLIST_FILE: YES
