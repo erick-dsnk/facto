@@ -35,12 +35,30 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
   }
   const original = canonicalize(existing);
   const additions = canonicalize(incoming);
+  const originalById = new Map(original.map(record => [record.id, record]));
+  const suppliedOriginal = new Map(existing.map(record => [record.id, record]));
+  const suppliedIncoming = new Map(incoming.map(record => [record.id, record]));
+  for (const addition of additions) {
+    const previous = originalById.get(addition.id);
+    // A shorter indexed highlight cannot supersede the surrounding page text
+    // when it is literally contained in that same unchanged source record.
+    // Preserve the old retrieval timestamp: this is not a new page fetch.
+    // Exact string containment deliberately does no whitespace/Unicode folding.
+    if (previous?.contentBasis === 'page_text' && addition.contentBasis === 'highlight'
+      && addition.excerpt.length > 0 && previous.excerpt.length > addition.excerpt.length
+      && previous.excerpt.includes(addition.excerpt) && previous.url === addition.url
+      && previous.title === addition.title && previous.publisher === addition.publisher
+      && previous.publishedAt === addition.publishedAt
+      && suppliedOriginal.get(addition.id)?.sourceGroup === suppliedIncoming.get(addition.id)?.sourceGroup) {
+      byId.set(addition.id, previous);
+    }
+  }
   if (additions.every(record => original.some(previous => material(previous) === material(record)))) return original;
-  // A later passage for the same URL replaces its old version. In particular,
-  // the old stance/content assessment never attaches to a changed excerpt.
+  // Other later passages replace their old version. Both raw versions below
+  // remain dependence evidence even when the richer old quote is selected.
+  // Old stance/content assessments never attach to changed material.
   const pool = groupEchoes([...byId.values()]);
   const candidates = new Map(pool.map(record => [record.id, record]));
-  const originalById = new Map(original.map(record => [record.id, record]));
   const unchanged = new Set(original.filter(record => material(record) === material(candidates.get(record.id)!)).map(record => record.id));
   const judged = new Map(judgment.evidence.filter(record => unchanged.has(record.id)
     && material(record) === material(candidates.get(record.id)!)).map(record => [record.id, record]));
@@ -51,7 +69,7 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
       ? source.confidence : undefined;
   };
   const substantive = (id: string) => (substantiveConfidence(id) ?? -1) >= ASSESSMENT_THRESHOLD;
-  const rank = (records: Evidence[]) => mergeRetainedEvidence([], records, checkedText).map(record => candidates.get(record.id)!);
+  const rank = (records: Evidence[]) => mergeRetainedEvidence([], records.map(record => candidates.get(record.id)!), checkedText).map(record => candidates.get(record.id)!);
   const rankedOld = rank(original.map(record => candidates.get(record.id)!));
   const directOld = rankedOld.filter(record => judged.has(record.id) && isDirectEvidence(judged.get(record.id)!));
   // Known dependence remains conservative selection context even when a quoted
