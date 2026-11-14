@@ -1,0 +1,267 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import type { Evidence } from '/workspace/live-frozen-08/packages/contracts/src/index.ts';
+import { buildPlan, captureRequest, executePlan, hash, LIMITS, STRATUM_LIMITS, summarizeObservations, type Context, type Label } from './runner.ts';
+const root = mkdtempSync(join(tmpdir(), 'scope-study-offline-')), source = join(root, 'synthetic.json');
+writeFileSync(source, JSON.stringify({ kind: 'synthetic offline guard test only' }));
+const record = (caseIndex: number, index: number): Evidence => ({ id: `source-${caseIndex}-${index}`, url: `https://source-${caseIndex}-${index}.example/record`, title: 'Synthetic record heading', publisher: null, publishedAt: null, retrievedAt: '2026-11-14T00:00:00Z', contentBasis: 'page_text', excerpt: `SYNTHETIC public-record fixture ${caseIndex}/${index}. Explicit dated role and material condition.`, sourceGroup: `source-${caseIndex}-${index}.example`, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+const contexts: Context[] = Array.from({ length: 18 }, (_, n) => ({ stratum: n < 12 ? 'prospective' : 'existing_safety_diagnostic', caseId: `CASE-${n}`, targetId: `source-${n}-0`, contrastFamily: `paired-family-${Math.floor(n / 2)}`, synthetic: true, proposition: `SYNTHETIC exact checked proposition ${n}.`, records: [record(n, 0), record(n, 1), record(n, 2)], reportPath: source, reportSha256: hash(readFileSync(source)), evidenceStageIndex: 0, judgmentOrdinal: 0, staleJudgment: { sourceAssessments: {} } }));
+const labels: Label[] = contexts.slice(0, 12).flatMap((c, n) => c.records.map(r => ({ caseId: c.caseId, retainedId: r.id, expectedScope: n % 2 === 0, expectedStance: 'supports' as const, excludeFromPrimary: false, labelReason: 'Synthetic guard test expected label; never send to model.' })));
+const plan = () => buildPlan(contexts, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'scope-study-output-')), 'run');
+function fakeFetch(tokens: number | undefined = 100): typeof fetch {
+    return async (_url, init) => {
+        const req = JSON.parse(String(init!.body));
+        const answers = Object.fromEntries(Object.entries(req.questions).map(([name, raw]) => {
+            const q = raw as {
+                type: string;
+                instructions: string;
+                criteria?: Record<string, string>;
+            };
+            if (q.type === 'noul') {
+                let noul = name.endsWith('_context_established') ? 0 : .94;
+                const p = /^e(\d+)_scope$/.exec(name);
+                if (p && q.instructions.includes('This asks coverage, not agreement or a verdict.')) {
+                    const id = req.state.evidence[Number(p[1])].id;
+                    const n = Number(/^source-(\d+)-/.exec(id)![1]);
+                    noul = n % 2 === 0 ? .96 : .1;
+                }
+                return [name, { noul }];
+            }
+            const choice = name === 'verdict' ? 'supported' : name === 'selected_evidence' ? 'e0' : name === 'claim_risk' ? 'ordinary' : name.endsWith('_stance') ? 'supports' : name.endsWith('_origin') ? 'distinct_origins' : name.endsWith('_content_basis') ? 'original_record' : 'none';
+            return [name, { choice, probabilities: Object.fromEntries(Object.keys(q.criteria!).map(k => [k, k === choice ? 1 : 0])) }];
+        }));
+        return new Response(JSON.stringify({ answers, ...(tokens === undefined ? {} : { usage: { input_tokens: tokens } }) }), { status: 200 });
+    };
+}
+test('only scope instructions change; exact full state, source count and every other question remain identical', async () => {
+    const a = await captureRequest(contexts[0]!, 'original_full', 'baseline'), b = await captureRequest(contexts[0]!, 'original_full', 'scope_candidate');
+    assert.deepEqual(a.state, b.state);
+    assert.deepEqual(Object.keys(a.questions), Object.keys(b.questions));
+    for (const [name, q] of Object.entries(a.questions)) {
+        if (/^e\d+_scope$/.test(name)) {
+            assert.equal(b.questions[name]!.type, 'noul');
+            assert(b.questions[name]!.instructions.startsWith(q.instructions + ' '));
+        }
+        else
+            assert.deepEqual(b.questions[name], q);
+    }
+    assert(!JSON.stringify(b).includes('expectedScope'));
+    assert(!JSON.stringify(b).includes('labelReason'));
+    assert(!JSON.stringify(b).includes('questionKey'));
+});
+test('48 requests keep separate balanced strata, all companions, one prospective order and both existing orders', async () => {
+    const p = await plan();
+    assert.equal(p.calls.length, 48);
+    assert.deepEqual(p.deferredCohorts, ['scope16_live_rerun']);
+    for (const stratum of ['prospective', 'existing_safety_diagnostic']) {
+        const calls = p.calls.filter(c => c.stratum === stratum);
+        assert.equal(calls.length, 24);
+        const pairs = Array.from({ length: 12 }, (_, n) => calls.slice(n * 2, n * 2 + 2));
+        assert.equal(pairs.filter(x => x[0]!.arm === 'baseline').length, 6);
+        assert.equal(pairs.filter(x => x[0]!.arm === 'scope_candidate').length, 6);
+        for (const pair of pairs) {
+            assert.equal(pair[0]!.caseId, pair[1]!.caseId);
+            assert.equal(pair[0]!.condition, pair[1]!.condition);
+            assert.deepEqual(pair[0]!.evidenceOrder, pair[1]!.evidenceOrder);
+            assert.notEqual(pair[0]!.arm, pair[1]!.arm);
+        }
+    }
+    assert(p.calls.filter(c => c.stratum === 'prospective').every(c => c.condition === 'original_full'));
+    for (const c of contexts) {
+        const calls = p.calls.filter(x => x.caseId === c.caseId);
+        assert.equal(calls.length, c.stratum === 'prospective' ? 2 : 4);
+        for (const call of calls)
+            assert.deepEqual([...call.evidenceOrder].sort(), c.records.map(x => x.id).sort());
+    }
+});
+test('offline actual-client replay preserves all outputs and scores prospective scope separately from existing diagnostics', async () => {
+    const dir = output(), r: any = await executePlan(await plan(), contexts, dir, { apiKey: 'offline-fake-key', fetch: fakeFetch() });
+    assert.equal(r.completedAllCalls, true);
+    assert.equal(r.totals.actualStartedJev, 48);
+    assert.equal(r.totals.consumedJev, 48);
+    assert.equal(r.totals.actualStartedExa, 0);
+    assert.equal(r.perStratum.prospective.actualStartedJev, 24);
+    assert.equal(r.perStratum.existing_safety_diagnostic.actualStartedJev, 24);
+    assert.equal(r.analysis.prospective.baseline.targetPrimary.falseAccept, 6);
+    assert.equal(r.analysis.prospective.scope_candidate.targetPrimary.falseAccept, 0);
+    assert.equal(r.analysis.prospective.scope_candidate.targetPrimary.trueAccept, 6);
+    assert.equal(r.analysis.existingSafetyDiagnostics.scopeAccuracyNotComputed, true);
+    assert.equal(r.pooledAccuracy, false);
+    assert.equal(r.analysis.spillovers.length, 24);
+    assert(r.observations.every((o: any) => Object.keys(o.sourceDiagnostics).length === 3 && Object.keys(o.assessments).length === 3 && o.originAssessments && o.policyDecision && o.claimRisk && o.answers));
+    const saved = readFileSync(join(dir, 'report.json'), 'utf8');
+    for (const secret of ['offline-fake-key', 'Authorization', 'instructions'])
+        assert(!saved.includes(secret));
+    await assert.rejects(executePlan(await plan(), contexts, dir, { apiKey: 'offline-fake-key', fetch: fakeFetch() }), /EEXIST/);
+});
+test('unknown usage stops after one attempt without retries or changing declared denominators', async () => {
+    const unknown: typeof fetch = async (url, init) => { const response = await fakeFetch()(url, init); const body = await response.json() as any; delete body.usage; return new Response(JSON.stringify(body), { status: 200 }); };
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: unknown });
+    assert.equal(r.stopReason, 'unknown_usage');
+    assert.equal(r.totals.actualStartedJev, 1);
+    assert.equal(r.analysis.prospective.baseline.targetPrimary.declaredLabels, 12);
+    assert(r.analysis.prospective.scope_candidate.targetPrimary.missing >= 11);
+});
+test('a stratum token reserve stops the campaign before starting a second request', async () => {
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: fakeFetch(STRATUM_LIMITS.maxInputTokens - STRATUM_LIMITS.pendingReserve + 1) });
+    assert.equal(r.stopReason, 'budget_reserve');
+    assert.equal(r.totals.actualStartedJev, 1);
+    assert.equal(r.perStratum.existing_safety_diagnostic.actualStartedJev, 0);
+});
+test('429 consumes exactly one actual attempt and never retries', async () => {
+    let count = 0;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: async () => { count++; return new Response('limited', { status: 429 }); } });
+    assert.equal(count, 1);
+    assert.equal(r.totals.consumedJev, 1);
+    assert.equal(r.observations[0].status, 'failed');
+});
+test('source/report drift and request tampering reject before any HTTP dispatch', async () => {
+    await assert.rejects(buildPlan(contexts.map((c, n) => n ? c : { ...c, reportSha256: 'bad' }), labels, {}), /report changed/);
+    const a = await plan();
+    a.calls[0]!.bodyHash = 'bad';
+    let sent = 0;
+    await assert.rejects(executePlan(a, contexts, output(), { apiKey: 'offline-fake-key', fetch: async () => { sent++; throw Error(); } }), /request hashes/);
+    assert.equal(sent, 0);
+    const b = await plan();
+    b.sourceHashes['scope-runner.ts'] = 'bad';
+    await assert.rejects(executePlan(b, contexts, output(), { apiKey: 'offline-fake-key', fetch: fakeFetch() }), /source\/runner changed/);
+});
+test('candidate over64KiB fails preparation instead of truncating evidence or dropping companions', async () => {
+    const huge = contexts.map((c, n) => c.stratum === 'prospective' ? c : ({ ...c, records: Array.from({ length: 6 }, (_, index) => ({ ...record(n, index), excerpt: '😀'.repeat(2000) })) }));
+    await assert.rejects(buildPlan(huge, labels, {}), /request byte cap/);
+});
+test('deadline expiry before dispatch starts no fetch', async () => {
+    let clocks = 0, sent = 0;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', now: () => clocks++ ? LIMITS.wallMs + 1 : 0, fetch: async () => { sent++; throw Error(); } });
+    assert.equal(sent, 0);
+    assert.equal(r.stopReason, 'wall_budget');
+    assert.equal(r.totals.actualStartedJev, 0);
+});
+test('late headers and late complete answers cannot produce a completed observation or policy result', async () => {
+    let clock = 0;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', now: () => clock, fetch: async (url, init) => { const response = await fakeFetch()(url, init); clock = LIMITS.wallMs + 1; return response; } });
+    assert.equal(r.totals.actualStartedJev, 1);
+    assert.equal(r.observations[0].status, 'failed');
+    assert.equal(r.observations[0].policyDecision, undefined);
+});
+test('late body chunks are rejected before result acceptance', async () => {
+    let clock = 0;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', now: () => clock, fetch: async (url, init) => { const bytes = new Uint8Array(await (await fakeFetch()(url, init)).arrayBuffer()); return new Response(new ReadableStream({ pull(controller) { clock = LIMITS.wallMs + 1; controller.enqueue(bytes); controller.close(); } }), { status: 200 }); } });
+    assert.equal(r.observations[0].status, 'failed');
+    assert.equal(r.observations[0].policyDecision, undefined);
+    assert.equal(r.totals.actualStartedJev, 1);
+});
+test('oversized provider responses fail closed without accepting or repeating results', async () => {
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: async () => new Response('x'.repeat(1048577), { status: 200 }) });
+    assert.equal(r.observations[0].status, 'failed');
+    assert.equal(r.totals.actualStartedJev, 1);
+});
+test('all36 prospective source labels are mandatory, not just twelve target labels', async () => {
+    await assert.rejects(buildPlan(contexts, labels.filter(l => contexts.find(c => c.caseId === l.caseId)!.targetId === l.retainedId), {}), /all36/);
+    const wrong = structuredClone(labels);
+    wrong[1]!.retainedId = 'missing-companion';
+    await assert.rejects(buildPlan(contexts, wrong, {}), /every one of the36/);
+});
+test('declared positive/negative denominators remain fixed when contexts are missing', () => {
+    const empty = summarizeObservations([], labels, contexts) as any;
+    for (const arm of ['baseline', 'scope_candidate']) {
+        const r = empty.prospective[arm];
+        assert.equal(r.completeStratum, false);
+        assert.equal(r.accuracyClaimPermitted, false);
+        assert.equal(r.targetPrimary.declaredPositive, 6);
+        assert.equal(r.targetPrimary.declaredNegative, 6);
+        assert.equal(r.targetPrimary.missingPositive, 6);
+        assert.equal(r.targetPrimary.missingNegative, 6);
+        assert.equal(r.allIndependentlyLabeledSources.declaredPositive, 18);
+        assert.equal(r.allIndependentlyLabeledSources.missingNegative, 18);
+        assert.equal(r.targetPrimary.declaredStanceLabels, 12);
+        assert.equal(r.targetPrimary.missingStanceLabels, 12);
+    }
+});
+test('request body guard remains local after client normalization and missing usage does not overwrite it', async () => {
+    let sent = 0;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: async () => { sent++; throw Error('must not dispatch'); }, testTransportMutator: init => ({ ...init, body: String(init.body) + ' ' }) });
+    assert.equal(sent, 0);
+    assert.equal(r.totals.actualStartedJev, 0);
+    assert.equal(r.totals.consumedJev, 1);
+    assert.equal(r.stopReason, 'terminal_failure');
+    assert.equal(r.unknownUsage, true);
+    assert.equal(r.primaryFailure.kind, 'local_guard');
+    assert.equal(r.primaryFailure.reason, 'request_body_hash_mismatch');
+    assert.equal(r.observations[0].localGuardFailure, 'request_body_hash_mismatch');
+    assert.equal(r.observations[0].unknownUsage, true);
+});
+test('provider failure stays distinct from a local guard despite absent usage', async () => {
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: async () => new Response('unavailable', { status: 503 }) });
+    assert.equal(r.stopReason, 'terminal_failure');
+    assert.equal(r.unknownUsage, true);
+    assert.equal(r.primaryFailure.kind, 'provider');
+    assert.equal(r.observations[0].localGuardFailure, null);
+});
+test('late headers cancel the unread body and abort the shared signal', async () => {
+    let clock = 0, canceled = false, signal: AbortSignal | undefined;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', now: () => clock, fetch: async (_url, init) => { signal = init!.signal as AbortSignal; clock = LIMITS.wallMs + 1; return new Response(new ReadableStream({ cancel() { canceled = true; } }), { status: 200 }); } });
+    assert.equal(canceled, true);
+    assert.equal(signal!.aborted, true);
+    assert.equal(r.primaryFailure.reason, 'absolute_wall_deadline');
+    assert.equal(r.stopReason, 'terminal_failure');
+});
+test('oversized received chunks are accounted and the underlying open reader is canceled', async () => {
+    let canceled = false, signal: AbortSignal | undefined;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', fetch: async (_url, init) => { signal = init!.signal as AbortSignal; return new Response(new ReadableStream({ start(controller) { controller.enqueue(new Uint8Array(1048577)); }, cancel() { canceled = true; } }), { status: 200 }); } });
+    assert.equal(r.totals.responseBytes, 1048577);
+    assert.equal(r.perStratum.prospective.responseBytes, 1048577);
+    assert.equal(canceled, true);
+    assert.equal(signal!.aborted, true);
+    assert.equal(r.primaryFailure.reason, 'response_byte_cap');
+    assert.equal(r.unknownUsage, true);
+});
+test('a received late chunk is counted before deadline rejection and underlying cancellation', async () => {
+    let clock = 0, canceled = false, signal: AbortSignal | undefined;
+    const r: any = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-fake-key', now: () => clock, fetch: async (_url, init) => { signal = init!.signal as AbortSignal; return new Response(new ReadableStream({ async pull(controller) { await new Promise(resolve => setTimeout(resolve, 1)); clock = LIMITS.wallMs + 1; controller.enqueue(new Uint8Array(137)); }, cancel() { canceled = true; } }), { status: 200 }); } });
+    assert.equal(r.totals.responseBytes, 137);
+    assert.equal(canceled, true);
+    assert.equal(signal!.aborted, true);
+    assert.equal(r.primaryFailure.reason, 'absolute_wall_deadline');
+    assert.equal(r.observations[0].status, 'failed');
+});
+test('wall abort settles despite an abort-ignoring reader and never-settling cancellation', async () => {
+    const frozen = await plan(), realSetTimeout = globalThis.setTimeout;
+    let canceled = false;
+    globalThis.setTimeout = ((callback: any, delay?: number, ...args: any[]) => realSetTimeout(callback, delay === LIMITS.wallMs ? 1 : delay, ...args)) as typeof setTimeout;
+    try {
+        const r: any = await Promise.race([executePlan(frozen, contexts, output(), { apiKey: 'offline-fake-key', now: () => 0, fetch: async () => new Response(new ReadableStream({ pull: () => new Promise(() => { }), cancel: () => { canceled = true; return new Promise(() => { }); } }), { status: 200 }) }), new Promise((_, reject) => realSetTimeout(() => reject(Error('runner failed to settle')), 150))]);
+        assert.equal(r.stopReason, 'terminal_failure');
+        assert.equal(r.primaryFailure.reason, 'absolute_wall_deadline');
+        assert.equal(r.unknownUsage, true);
+        assert.equal(canceled, true);
+    }
+    finally {
+        globalThis.setTimeout = realSetTimeout;
+    }
+});
+test('late abort-ignoring success cannot mutate finalized totals, answers, observations or report', async () => {
+    const frozen = await plan(), realSetTimeout = globalThis.setTimeout;
+    let resolveLate!: (response: Response) => void;
+    let capturedUrl: any, capturedInit: RequestInit | undefined;
+    globalThis.setTimeout = ((callback: any, delay?: number, ...args: any[]) => realSetTimeout(callback, delay === LIMITS.wallMs ? 1 : delay, ...args)) as typeof setTimeout;
+    try {
+        const dir = output();
+        const r: any = await Promise.race([executePlan(frozen, contexts, dir, { apiKey: 'offline-fake-key', now: () => 0, fetch: async (url, init) => { capturedUrl = url; capturedInit = init; return new Promise(resolve => resolveLate = resolve); } }), new Promise((_, reject) => realSetTimeout(() => reject(Error('runner failed to settle')), 150))]);
+        const returned = JSON.stringify(r), saved = readFileSync(join(dir, 'report.json'), 'utf8');
+        resolveLate(await fakeFetch(9999)(capturedUrl, capturedInit));
+        await new Promise(resolve => realSetTimeout(resolve, 10));
+        assert.equal(JSON.stringify(r), returned);
+        assert.equal(readFileSync(join(dir, 'report.json'), 'utf8'), saved);
+        assert.equal(r.totals.measuredInputTokens, 0);
+        assert.equal(r.observations[0].answers, undefined);
+        assert.equal(r.observations[0].policyDecision, undefined);
+    }
+    finally {
+        globalThis.setTimeout = realSetTimeout;
+    }
+});
