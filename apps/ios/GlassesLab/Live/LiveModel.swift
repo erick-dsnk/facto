@@ -273,6 +273,8 @@ final class LiveModel {
   var isMuted: Bool {
     didSet {
       presenter.isMuted = isMuted
+    // Without a lens showing the card, overheard alerts are spoken too.
+    presenter.alertsAreSpoken = { [weak display] in !(display?.isConnected ?? false) }
       defaults.set(isMuted, forKey: Self.mutedKey)
     }
   }
