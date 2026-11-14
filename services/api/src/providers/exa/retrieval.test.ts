@@ -31,6 +31,16 @@ describe('Exa retrieval boundary', () => {
     expect(result[0].excerpt).toBe(excerpt);
   });
 
+  it('uses only the exact public span in the alternate query and keeps span validation', async () => {
+    const { fake, context } = setup();
+    const retrieve = createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' });
+    await retrieve(claim, context);
+    expect(fake.search).toHaveBeenCalledWith(buildAlternateQuery(checkedText, 'balanced_evidence'), { type: 'auto', numResults: 5, contents: { highlights: true } });
+    expect(JSON.stringify(vi.mocked(fake.search).mock.calls)).not.toContain('salary');
+    await expect(retrieve({ ...claim, checkedText: 'Rewritten.' }, context)).rejects.toThrow('claim_not_admitted');
+    expect(fake.search).toHaveBeenCalledTimes(1);
+  });
+
   it('rejects non-admitted or rewritten text before a provider call', async () => {
     const { retrieve, fake, context } = setup();
     await expect(retrieve({ ...claim, checkedText: 'Different claim.' }, context)).rejects.toThrow('claim_not_admitted');

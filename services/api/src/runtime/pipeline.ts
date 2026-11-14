@@ -1,5 +1,7 @@
 import { performance } from 'node:perf_hooks';
-import { MODEL_VERSION, POLICY_VERSION, PipelineError, type ClaimResult, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { MODEL_VERSION, POLICY_VERSION, PipelineError, type ClaimResult, type TextInput } from '../../../../packages/contracts/src/index.js';
+import type { RuntimeAdapters } from './adapters.js';
+import { mergeRetainedEvidence } from '../evidence/normalize.js';
 import { decideVerdict } from '../policy/verdict.js';
 import { decidePresentation, matchSelectedTopic } from '../policy/notifications.js';
 import { AttemptBudget, abortable } from './budget.js';
@@ -16,7 +18,7 @@ export class PipelineRuntime {
   private running = 0;
   /** Bounded sanitized diagnostics; deliberately excludes input, queries, tokens and IDs. */
   readonly metrics: RuntimeMetric[] = [];
-  constructor(private adapters: PipelineAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string) {}
+  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string) {}
 
   submit(session: Session, input: TextInput) {
     if (!session.active || input.sessionEpoch !== session.epoch) throw new PipelineError('old_epoch');
@@ -73,8 +75,8 @@ export class PipelineRuntime {
     }
   }
 
-  private error(session: Session, record: RequestRecord, reasonCode: string) {
-    if (session.current(record)) session.emit('pipeline.error', { reasonCode, message: 'The check didn’t finish.', presentation: { action: record.input.userInitiated && !session.preferences.muted ? 'respond' : 'silent', reasonCode: 'service_status' } }, record.input);
+  private error(session: Session, record: RequestRecord, reasonCode: string, claimId?: string) {
+    if (session.current(record)) session.emit('pipeline.error', { reasonCode, message: 'The check didn’t finish.', presentation: { action: record.input.userInitiated && !session.preferences.muted ? 'respond' : 'silent', reasonCode: 'service_status' } }, record.input, claimId);
   }
 
   private async run({ session, record }: Job) {
@@ -85,6 +87,12 @@ export class PipelineRuntime {
     const timed = async <T>(stage: keyof typeof stageMs, call: () => Promise<T>): Promise<T> => {
       const start = this.monotonic();
       try { return await abortable(call(), ctx.signal); } finally { stageMs[stage] += this.monotonic() - start; }
+    };
+    let currentClaimId: string | undefined;
+    const stopIfStale = () => {
+      if (input.userInitiated || this.now() - Date.parse(input.capturedAt) <= 15_000) return false;
+      session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input, currentClaimId);
+      record.state = 'done'; return true;
     };
     try {
       if (!session.current(record)) return;
@@ -111,9 +119,11 @@ export class PipelineRuntime {
         record.state = 'done'; return;
       }
       if (admission.claims.length < 1 || admission.claims.length > 2) throw new PipelineError('malformed_admission');
+      const cacheKey = (text: string) => JSON.stringify([text.replace(/\s+/g, ' ').trim().toLowerCase(), input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
       for (const [index, candidate] of admission.claims.entries()) {
         // A correction must not mint fresh provider allowances through a new ID.
         const claim = { ...candidate, id: `${input.requestId}-claim-${index}` };
+        currentClaimId = claim.id;
         if (!session.current(record)) return;
         if (!input.userInitiated && this.now() - Date.parse(input.capturedAt) > 15_000) {
           session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input, claim.id);
@@ -121,7 +131,7 @@ export class PipelineRuntime {
         }
         session.emit('claim.checking', { admissionAction: 'check', reasonCode: 'eligible_public_claim' }, input, claim.id);
         const normalizedClaim = claim.checkedText.replace(/\s+/g, ' ').trim().toLowerCase();
-        const key = JSON.stringify([normalizedClaim, input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
+        const key = cacheKey(claim.checkedText);
         // Notification identity is the complete admitted proposition, independent of
         // capture mode/context. Keep factual cache identity context-sensitive above.
         const notificationKey = normalizedClaim;
@@ -130,13 +140,39 @@ export class PipelineRuntime {
         if (stored && stored.expiresAt > this.now()) {
           result = { ...stored.result, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, cached: true, durationMs: this.monotonic() - started };
         } else {
-          const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, ctx));
-          if (!session.current(record)) return;
-          const judgment = evidence.length ? await timed('judgment', () => this.adapters.judge(claim, evidence, ctx)) : {
+          // Spend remaining capacity on useful current work, while protecting a
+          // later span's first judgment whenever there is capacity for both.
+          if (!ctx.canConsume('jev')) throw new PipelineError('jev_budget_exhausted');
+          const laterUncached = admission.claims.slice(index + 1).filter(later => {
+            const cached = session.cache.get(cacheKey(later.checkedText));
+            // A near-expiry cache entry may disappear while this claim runs.
+            return !cached || cached.expiresAt <= record.acceptedAt + 10_000;
+          }).length;
+          const reserved = Math.min(laterUncached, Math.max(0, 3 - record.budget.jev - 1));
+          const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+          const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, claimContext));
+          if (!session.current(record) || stopIfStale()) return;
+          let judgment = evidence.length ? await timed('judgment', () => this.adapters.judge(claim, evidence, claimContext)) : {
             label: 'insufficient_evidence' as const, probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 1 }, evidence: [], selectedEvidenceIds: [], misleadingReason: null
           };
-          if (!session.current(record)) return;
-          const decision = decideVerdict(judgment);
+          if (!session.current(record) || stopIfStale()) return;
+          let decision = decideVerdict(judgment);
+          if (decision.verdict === 'insufficient_evidence' && this.adapters.retrieveAlternate && !laterUncached
+            && claimContext.canConsume('jev') && claimContext.canConsume('search', claim.id)
+            && record.acceptedAt + 10_000 - this.now() >= 3_000) {
+            const additional = await timed('retrieval', () => this.adapters.retrieveAlternate!(claim, claimContext));
+            if (!session.current(record) || stopIfStale()) return;
+            const combined = mergeRetainedEvidence(evidence, additional, claim.checkedText);
+            const identity = (records: typeof evidence) => JSON.stringify(records.map(source => [source.id, source.url, source.title, source.excerpt, source.publishedAt, source.contentBasis, source.sourceGroup, source.echoGroup]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
+            if (combined.length && identity(combined) !== identity(evidence)) {
+              // Never carry first-pass model assessments into a new evidence set.
+              const raw = combined.map(source => ({ ...source, sourceRole: 'unknown' as const, directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' as const, stanceProbability: 0 }));
+              judgment = await timed('judgment', () => this.adapters.judge(claim, raw, claimContext));
+              if (!session.current(record)) return;
+              decision = decideVerdict(judgment);
+            }
+          }
+          if (stopIfStale()) return;
           result = { ...decision, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, evidence: judgment.evidence,
             checkedAt: new Date(this.now()).toISOString(), expiresAt: new Date(Math.min(this.now() + 60_000, session.expiresAt)).toISOString(), durationMs: this.monotonic() - started,
             cached: false, policyVersion: POLICY_VERSION, modelVersion: this.modelVersion, presentation: { action: 'silent', reasonCode: 'pending' } };
@@ -159,7 +195,7 @@ export class PipelineRuntime {
       }
       record.state = 'done';
     } catch (error) {
-      if (session.current(record)) this.error(session, record, error instanceof PipelineError ? error.code : 'provider_unavailable');
+      if (session.current(record)) this.error(session, record, error instanceof PipelineError ? error.code : 'provider_unavailable', currentClaimId);
       if (record.state !== 'cancelled') record.state = 'done';
     } finally {
       if (record.state !== 'waiting') clearTimeout(record.timer);

@@ -16,9 +16,9 @@ export class AttemptBudget {
     if ((map.get(claimId) ?? 0) >= limit) throw new PipelineError(`${kind}_budget_exhausted`);
     map.set(claimId, (map.get(claimId) ?? 0) + 1);
   }
-  context(signal: AbortSignal, now: () => number, deadlineAt?: number): ProviderContext & { deadlineAt?: number; canConsume(kind: ProviderKind, claimId?: string): boolean } {
-    return { signal, now, deadlineAt, canConsume: (kind, claimId = 'request') => kind === 'jev' ? this.jev < 3 : ((kind === 'search' ? this.searches : this.contents).get(claimId) ?? 0) < (kind === 'search' ? 2 : 3),
-      consume: (kind, claimId) => { signal.throwIfAborted(); this.consume(kind, claimId); },
+  context(signal: AbortSignal, now: () => number, deadlineAt?: number, reservedJev = 0): ProviderContext & { deadlineAt?: number; canConsume(kind: ProviderKind, claimId?: string): boolean } {
+    return { signal, now, deadlineAt, canConsume: (kind, claimId = 'request') => kind === 'jev' ? this.jev < 3 - reservedJev : ((kind === 'search' ? this.searches : this.contents).get(claimId) ?? 0) < (kind === 'search' ? 2 : 3),
+      consume: (kind, claimId) => { signal.throwIfAborted(); if (kind === 'jev' && this.jev >= 3 - reservedJev) throw new PipelineError('jev_budget_exhausted'); this.consume(kind, claimId); },
       recordUsage: usage => { if (Number.isSafeInteger(usage.inputTokens) && usage.inputTokens! >= 0) this.inputTokens += usage.inputTokens!; } };
   }
 }

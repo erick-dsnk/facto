@@ -1,5 +1,5 @@
 import { PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../packages/contracts/src/index.js';
-import { needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse } from '../../evidence/normalize.js';
+import { buildAlternateQuery, needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse } from '../../evidence/normalize.js';
 import { AbortableExa } from './client.js';
 
 type BudgetAwareContext = Parameters<PipelineAdapters['retrieve']>[1] & { canConsume?(kind: 'contents', claimId?: string): boolean };
@@ -8,7 +8,7 @@ export interface ExaClient {
   search(query: string, options: { type: 'auto'; numResults: number; contents: { highlights: true } }): Promise<unknown>;
   getContents(urls: string[], options: { text: { maxCharacters: number }; livecrawl: 'preferred'; livecrawlTimeout: number }): Promise<unknown>;
 }
-export type RetrieverOptions = { apiKey?: string; fetch?: typeof fetch; clientFactory?: (signal: AbortSignal) => ExaClient };
+export type RetrieverOptions = { queryStrategy?: 'balanced_evidence'; apiKey?: string; fetch?: typeof fetch; clientFactory?: (signal: AbortSignal) => ExaClient };
 
 export function createRetriever(options: RetrieverOptions): PipelineAdapters['retrieve'] {
   return async (claim, context) => {
@@ -21,7 +21,7 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
     if (!options.clientFactory && !options.apiKey) throw new PipelineError('missing_exa_key');
     const client = options.clientFactory?.(context.signal) ?? new AbortableExa(options.apiKey!, context.signal, options.fetch, context, claim.id);
     if (options.clientFactory) context.consume('search', claim.id);
-    const pages = parseExaResponse(await client.search(claim.checkedText, { type: 'auto', numResults: 5, contents: { highlights: true } }));
+    const pages = parseExaResponse(await client.search(options.queryStrategy ? buildAlternateQuery(claim.checkedText, options.queryStrategy) : claim.checkedText, { type: 'auto', numResults: 5, contents: { highlights: true } }));
     context.signal.throwIfAborted();
     const seen = new Set<string>();
     const candidates = pages.filter(page => {
