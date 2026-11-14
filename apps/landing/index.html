@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Facto for Meta Ray-Ban Display</title>
+    <meta name="description" content="Facto checks claims against real sources and shows the answer in your Meta Ray-Ban Display." />
+    <meta name="theme-color" content="#380C00" />
+    <meta property="og:title" content="Facto for Meta Ray-Ban Display" />
+    <meta property="og:description" content="Get facts, not hunches. Facto checks claims against real sources and shows the answer in your glasses." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="bar bar--dark">
+      <a class="wordmark" href="#top" aria-label="Facto, back to top">facto</a>
+      <a class="pill pill--small" href="https://github.com/erick-dsnk/junction-2026" aria-label="Facto on GitHub">GitHub</a>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- Pinned stage: hero, orbit and the lens share one canvas. -->
+      <section class="stage" id="top" aria-labelledby="hero-title">
+        <div class="stage__sticky">
+          <video class="stage__canvas" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
+
+          <div class="hero">
+            <h1 class="hero__title" id="hero-title">Get facts, not&nbsp;hunches.</h1>
+            <p class="hero__sub">Facto checks claims against real sources and shows the answer in your Meta Ray-Ban&nbsp;Display.</p>
+            <a class="pill" href="https://github.com/erick-dsnk/junction-2026">View on GitHub</a>
+          </div>
+
+          <p class="stage__caption" data-caption="orbit" aria-hidden="true">Your glasses already hear what you&nbsp;hear.</p>
+          <p class="stage__caption" data-caption="lens" aria-hidden="true">Facto answers in the right&nbsp;lens.</p>
+
+          <!-- The display, inside the right lens. Driven by popup.ts; the card follows
+               docs/design/card-mockups.html: sweep, pill with stages, then the card. -->
+          <div class="hud" aria-hidden="true">
+            <div class="hud__plane">
+              <div class="lensui">
+                <p class="lensui__ctx"><span class="lensui__live"></span><span class="lensui__mode"></span></p>
+                <div class="lensui__claim"><p class="lensui__text"></p><span class="lensui__band"></span></div>
+                <div class="pop">
+                  <div class="pop__edge"></div>
+                  <div class="pop__fill"></div>
+                  <div class="pop__pill">
+                    <span class="pop__dot"></span>
+                    <span class="pop__stage" data-k="read">Reading…</span>
+                    <span class="pop__stage" data-k="search">Searching…</span>
+                    <span class="pop__stage" data-k="weigh">Weighing sources…</span>
+                    <span class="pop__icons"><i></i><i></i><i></i></span>
+                  </div>
+                  <div class="pop__card">
+                    <p class="pop__head"><span class="pop__dot pop__dot--v"></span><span class="pop__label"></span><span class="pop__after"></span></p>
+                    <p class="pop__quote"></p>
+                    <p class="pop__pub"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- What the display shows, for screen readers; shown as text in the static layout. -->
+          <div class="stage__text">
+            <h2 class="sr-only">Two checks, in the lens</h2>
+            <p>Someone nearby says “Goldfish only remember things for three seconds.” Facto checks three sources and shows: False. Live Science, 3 of 3 sources contradict this.</p>
+            <p>You say “Facto, can you check this?” while looking at a post claiming the Eiffel Tower grows up to 15 cm taller in summer. Facto reads the screen and shows: True. Source: toureiffel.paris, the official site.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="band-title">
+        <h2 class="sr-only" id="band-title">Two ways to check</h2>
+        <img class="band__glasses" src="/img/glasses-inside.webp" alt="The glasses seen from the wearer’s side, both temples open" width="1600" height="907" loading="lazy" decoding="async" />
+        <div class="band__beats">
+          <div class="beat">
+            <h3 class="beat__title">It listens.</h3>
+            <p class="beat__body">When someone near you states a fact, Facto checks it on its&nbsp;own.</p>
+          </div>
+          <div class="beat">
+            <h3 class="beat__title">You ask.</h3>
+            <p class="beat__body">Say “Facto, can you check this?” and it reads what you’re looking at: a phone, a screen, a&nbsp;poster.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="verdicts" aria-labelledby="verdicts-title">
+        <h2 class="verdicts__title" id="verdicts-title">Four answers, each with a&nbsp;source.</h2>
+        <dl class="verdicts__list">
+          <div class="verdict" data-verdict="true">
+            <dt><span class="verdict__swatch"></span>True</dt>
+            <dd>Sources agree with the&nbsp;claim.</dd>
+          </div>
+          <div class="verdict" data-verdict="false">
+            <dt><span class="verdict__swatch"></span>False</dt>
+            <dd>Sources contradict&nbsp;it.</dd>
+          </div>
+          <div class="verdict" data-verdict="misleading">
+            <dt><span class="verdict__swatch"></span>Misleading</dt>
+            <dd>True in part, wrong in what it&nbsp;implies.</dd>
+          </div>
+          <div class="verdict" data-verdict="unverified">
+            <dt><span class="verdict__swatch"></span>Can’t verify</dt>
+            <dd>Not enough reliable sources&nbsp;yet.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="close" aria-labelledby="close-title">
+        <div class="close__text">
+          <h2 class="close__line" id="close-title">Built at Junction 2026 for Meta by Eric Tabacaru, David Vasilescu and Ciprian&nbsp;Nitipir.</h2>
+          <a class="pill" href="https://github.com/erick-dsnk/junction-2026">View on GitHub</a>
+        </div>
+        <img class="close__glasses" src="/img/glasses-product.webp" alt="The glasses in glossy black, front three-quarter view" width="1600" height="751" loading="lazy" decoding="async" />
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span class="wordmark wordmark--small">facto</span>
+      <span>Concept app for Meta Ray-Ban Display. Not affiliated with Meta or Ray-Ban.</span>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
