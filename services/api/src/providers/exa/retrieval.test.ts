@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
+import { PipelineError, type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
 import { AttemptBudget } from '../../runtime/budget.js';
@@ -212,6 +212,65 @@ describe('Exa retrieval boundary', () => {
     await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, sharedContext);
     expect(fake.getContents).toHaveBeenCalledTimes(3);
     expect(fake.search).toHaveBeenCalledTimes(2);
+  });
+
+  it('retains explicitly indexed evidence after a target failure and enriches other pages within three charged attempts', async () => {
+    const urls = Array.from({ length: 5 }, (_, i) => `https://source${i}.org/history`);
+    const fake = {
+      search: vi.fn(async () => ({ results: urls.map(url => ({ url, highlights: [excerpt] })) })),
+      getContents: vi.fn(async ([url]: string[]) => url === urls[0]
+        ? { results: [{ url, text: 'The failed extraction must never become page-text evidence.' }], statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 403 } }] }
+        : { results: [{ url, text: `${excerpt} Full archival context.` }], statuses: [{ id: url, status: 'success', source: 'cached' }] }),
+    };
+    const { calls, context } = setup(fake);
+    const result = await createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(fake.getContents.mock.calls.map(([urls]) => urls[0])).toEqual(urls.slice(0, 3));
+    expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
+    expect(result.find(item => item.url === urls[0])).toMatchObject({ excerpt, contentBasis: 'highlight', sourceRole: 'unknown',
+      directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+    expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(2);
+  });
+
+  it('keeps zero surviving evidence after recognized page failures operational', async () => {
+    const fake = {
+      search: vi.fn(async () => ({ results: Array.from({ length: 5 }, (_, i) => ({ url: `https://source${i}.org/record`, title: 'Eiffel Tower history' })) })),
+      getContents: vi.fn(async ([url]: string[]) => ({ results: [], statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 404 } }] })),
+    };
+    const { retrieve, context, calls } = setup(fake);
+    await expect(retrieve(claim, context)).rejects.toThrow('exa_content_failed');
+    expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
+  });
+
+  it('does not turn overall search failures or unknown content failures into optional fallback', async () => {
+    const search = setup({ search: vi.fn(async () => ({ results: [], statuses: [{ id: 'https://source.org/record', status: 'error', error: { tag: 'CRAWL_NOT_FOUND' } }] })) });
+    await expect(search.retrieve(claim, search.context)).rejects.toThrow('exa_content_failed');
+    expect(search.fake.getContents).not.toHaveBeenCalled();
+    const contents = setup({ getContents: vi.fn(async ([url]: string[]) => ({ results: [], statuses: [{ id: url, status: 'error', error: { tag: 'SERVICE_OVERLOADED' } }] })) });
+    await expect(createRetriever({ clientFactory: () => contents.fake, queryStrategy: 'balanced_evidence' })(claim, contents.context)).rejects.toThrow('exa_content_failed');
+    const thrown = setup({ getContents: vi.fn(async () => { throw new PipelineError('exa_unavailable', true); }) });
+    await expect(createRetriever({ clientFactory: () => thrown.fake, queryStrategy: 'balanced_evidence' })(claim, thrown.context)).rejects.toThrow('exa_unavailable');
+  });
+
+  it.each([[401, 'exa_authentication_failed'], [429, 'exa_rate_limited'], [503, 'exa_unavailable']] as const)('preserves actual HTTP %s contents failures as operational errors', async (status, code) => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async url => String(url).endsWith('/search')
+      ? new Response(JSON.stringify({ results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }))
+      : new Response('Provider unavailable', { status }));
+    await expect(createRetriever({ apiKey: 'test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow(code);
+    // Runtime transport retries transient provider failures once; target-page
+    // fallback must neither absorb that error nor hide the extra paid attempt.
+    expect(fetcher).toHaveBeenCalledTimes(status === 401 ? 2 : 3);
+    expect(calls).toEqual(status === 401 ? ['search', 'contents'] : ['search', 'contents', 'contents']);
+  });
+
+  it('propagates request cancellation even when a provider returns a recognized target timeout', async () => {
+    const { controller, context, calls, fake } = setup();
+    fake.getContents = vi.fn(async ([url]: string[]) => {
+      controller.abort(new Error('request_deadline'));
+      return { results: [], statuses: [{ id: url, status: 'error', error: { tag: 'CRAWL_TIMEOUT' } }] };
+    });
+    await expect(createRetriever({ clientFactory: () => fake, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow('request_deadline');
+    expect(calls).toEqual(['search', 'contents']);
   });
 
   it('distinguishes successful empty retrieval from malformed provider responses', async () => {
