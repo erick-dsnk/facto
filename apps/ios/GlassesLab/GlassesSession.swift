@@ -12,6 +12,25 @@ import Observation
 final class GlassesSession {
   enum Holder: Hashable { case camera, display }
 
+  /// Which glasses the wearer is using. Each kind runs a different setup:
+  /// - `display` (Meta Ray-Ban Display): result cards on the lens, listening through the
+  ///   glasses' Bluetooth mic, photos from a stream that runs only for the photo (a running
+  ///   camera stream holds back the lens and draws a viewfinder).
+  /// - `rayBanMeta`: no lens, so answers are spoken; listening and photos go through a quiet
+  ///   camera stream, whose mic hears nearby voices best.
+  /// - `none`: no pair is worn or unfolded; nothing opens a session on its own.
+  enum Kind: String {
+    case none, rayBanMeta, display
+
+    var label: String {
+      switch self {
+      case .none: "No glasses on"
+      case .rayBanMeta: "Ray-Ban Meta: answers are spoken"
+      case .display: "Meta Ray-Ban Display: answers show on the lens"
+      }
+    }
+  }
+
   /// Shared by the camera and the display. Created on first use, which is after
   /// `Wearables.configure()` (the models are built after it).
   static let shared = GlassesSession()
@@ -26,6 +45,13 @@ final class GlassesSession {
   /// offers "Update in Meta AI" (`Wearables.openDATGlassesAppUpdate()`). Cleared once a
   /// session starts.
   private(set) var needsGlassesAppUpdate = false
+  /// The glasses in use, kept current from each pair's wear, hinge and link state.
+  private(set) var kind: Kind = .none
+  @ObservationIgnored private var kindObservers: [@MainActor (Kind) -> Void] = []
+  /// One state listener per registered pair, kept here rather than in a ListenerTokenBag: the
+  /// bag's clear and insert are separate actor hops, so a late clear could drop new listeners.
+  @ObservationIgnored private var deviceListeners: [DeviceIdentifier: any AnyListenerToken] = [:]
+  @ObservationIgnored private var devicesTask: Task<Void, Never>?
 
   @ObservationIgnored private var holders: [Holder: Handlers] = [:]
   @ObservationIgnored private let tokens = ListenerTokenBag()
@@ -33,6 +59,63 @@ final class GlassesSession {
   private struct Handlers {
     let onState: (DeviceSessionState) -> Void
     let onError: (String) -> Void
+  }
+
+  private init() {
+    watch(Wearables.shared.devices)
+    devicesTask = Task { [weak self] in
+      for await identifiers in Wearables.shared.devicesStream() {
+        guard let self else { return }
+        self.watch(identifiers)
+      }
+    }
+  }
+
+  /// Calls `handler` whenever `kind` changes (the wearer swaps, folds or takes off glasses).
+  func observeKind(_ handler: @escaping @MainActor (Kind) -> Void) {
+    kindObservers.append(handler)
+  }
+
+  /// Follows every registered pair: putting glasses on, taking them off or folding them changes
+  /// which pair is in use.
+  private func watch(_ identifiers: [DeviceIdentifier]) {
+    let current = Set(identifiers)
+    for (identifier, token) in deviceListeners where !current.contains(identifier) {
+      deviceListeners[identifier] = nil
+      Task { await token.cancel() }
+    }
+    for identifier in identifiers where deviceListeners[identifier] == nil {
+      guard let device = Wearables.shared.deviceForIdentifier(identifier) else { continue }
+      deviceListeners[identifier] = device.addDeviceStateListener { [weak self] _ in
+        Task { @MainActor in self?.refreshKind() }
+      }
+    }
+    refreshKind()
+  }
+
+  private func refreshKind() {
+    let pick = Self.pairInUse(Self.pairs())
+    let newKind: Kind = pick.map { $0.supportsDisplay() ? .display : .rayBanMeta } ?? .none
+    guard newKind != kind else { return }
+    kind = newKind
+    NSLog("[glasses] in use: %@ (%@)", newKind.rawValue, pick?.nameOrId() ?? "none")
+    DebugLog.shared.log("glasses.kind", ["kind": newKind.rawValue, "device": pick?.nameOrId() ?? "none"])
+    kindObservers.forEach { $0(newKind) }
+  }
+
+  private static func pairs() -> [Device] {
+    Wearables.shared.devices.compactMap { Wearables.shared.deviceForIdentifier($0) }
+  }
+
+  /// The pair the wearer is using: a worn, connected pair (a Display pair first among them), or
+  /// when none reports being worn, a connected pair that is unfolded. The pair on the face wins,
+  /// so a Display pair left on and charging never takes the photo while Ray-Ban Meta are worn.
+  /// Folded glasses refuse sessions with "Device unavailable", so they never count unless worn.
+  private static func pairInUse(_ pairs: [Device]) -> Device? {
+    let connected = pairs.filter { $0.linkState == .connected }
+    let worn = connected.filter { $0.donState == .donned }
+    let pool = worn.isEmpty ? connected.filter { $0.hingeState != .closed } : worn
+    return pool.first(where: { $0.supportsDisplay() }) ?? pool.first
   }
 
   /// Joins the running session, or creates and starts one. The holder hears every later state
@@ -90,20 +173,19 @@ final class GlassesSession {
     return newSession
   }
 
-  /// The pair to open the session on: a worn, connected pair first (a Display pair among them
-  /// first), then a connected Display pair, then any connected pair. With two registered
-  /// pairs, AutoDeviceSelector can pick one that isn't nearby, and the session then fails
-  /// with "device unavailable". Logs every pair's
-  /// state, since a pair that is folded, not worn or too hot also refuses sessions.
   /// True when the open session runs on glasses with a display (Meta Ray-Ban Display).
   var sessionHasDisplay: Bool { session?.device?.supportsDisplay() ?? false }
 
-  /// Whether the pair a new session would open on has a display, without logging. Nil when no
-  /// pair is connected.
-  var preferredPairHasDisplay: Bool? { preferredPair(for: .camera, log: false)?.supportsDisplay() }
+  /// Whether photos and listening should follow the Display setup: the open session's pair when
+  /// there is one, otherwise the pair in use.
+  var usesDisplaySetup: Bool { session?.device.map { $0.supportsDisplay() } ?? (kind == .display) }
 
+  /// The pair to open the session on (`pairInUse`). With two registered pairs,
+  /// AutoDeviceSelector can pick one that isn't nearby, and the session then fails with
+  /// "device unavailable". Logs every pair's state, since a pair that is folded, not worn or
+  /// too hot also refuses sessions.
   private func preferredPair(for holder: Holder, log: Bool = true) -> Device? {
-    let pairs = Wearables.shared.devices.compactMap { Wearables.shared.deviceForIdentifier($0) }
+    let pairs = Self.pairs()
     for device in pairs where log {
       let row = "name=\(device.nameOrId()) link=\(device.linkState) display=\(device.supportsDisplay()) "
         + "don=\(device.donState) hinge=\(device.hingeState) thermal=\(device.thermalLevel) "
@@ -111,13 +193,7 @@ final class GlassesSession {
       NSLog("[glasses] pair %@", row)
       DebugLog.shared.log("glasses.pair", ["state": row])
     }
-    let connected = pairs.filter { $0.linkState == .connected }
-    // The pair on the wearer's face wins: a Display pair left on and charging must not take
-    // the photo while the wearer has Ray-Ban Meta on. Among the worn pairs (or all connected
-    // ones when none reports being worn), a Display pair goes first.
-    let worn = connected.filter { $0.donState == .donned }
-    let pool = worn.isEmpty ? connected : worn
-    guard let pick = pool.first(where: { $0.supportsDisplay() }) ?? pool.first else {
+    guard let pick = Self.pairInUse(pairs) else {
       if log { NSLog("[glasses] %@: no connected pair, letting the SDK choose", "\(holder)") }
       return nil
     }

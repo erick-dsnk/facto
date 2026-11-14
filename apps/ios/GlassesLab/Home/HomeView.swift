@@ -103,6 +103,8 @@ struct HomeView: View {
         .buttonStyle(.factoPillSecondary)
         .disabled(!live.isConnected || live.isChecking)
 
+      // Which glasses the app detected, since Ray-Ban Meta and Display glasses work differently.
+      footnote(GlassesSession.shared.kind.label)
       if GlassesSession.shared.needsGlassesAppUpdate {
         Button("Update in Meta AI") { Task { await wearables.openGlassesAppUpdate() } }
           .buttonStyle(.factoPillSecondary)
