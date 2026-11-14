@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "sessionEpoch": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "revision": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "ocr",
+        "audio",
+        "typed"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 800
+    },
+    "language": {
+      "type": "string",
+      "const": "en"
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "capture": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "glasses_hfp",
+            "glasses_stream_audio",
+            "glasses_camera",
+            "phone_mic",
+            "phone_camera",
+            "typed_fixture",
+            "recorded_fixture"
+          ]
+        },
+        "segmentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "final": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source",
+        "segmentId",
+        "confidence"
+      ],
+      "additionalProperties": false
+    },
+    "context": {
+      "maxItems": 2,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 1200
+      },
+      "description": "At most two utterances; combined length <= 1200 Unicode code points. Server enforces the combined limit."
+    },
+    "userInitiated": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "requestId",
+    "sessionId",
+    "sessionEpoch",
+    "revision",
+    "mode",
+    "text",
+    "language",
+    "capturedAt",
+    "capture",
+    "context",
+    "userInitiated"
+  ],
+  "additionalProperties": false,
+  "description": "Version 1 text input. Lengths and spans use Unicode code points (Swift unicodeScalars). Blank text is rejected."
+}
