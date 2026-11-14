@@ -1,0 +1,945 @@
+{
+  "kind": "independent_actual_capture_ledger_and_literal_interval_reconciliation",
+  "networkCalls": 0,
+  "modelCalls": 0,
+  "captureManifestFilesVerified": 21,
+  "journalRows": 24,
+  "uniqueReservationAndSettlementPairs": 9,
+  "authorizationSHA256": "daf9cf86da64bf121eb88ff83d904d94b40cb0762f48db8e6ef49940d568e575",
+  "resourceCounts": {
+    "attempts": 9,
+    "search": 4,
+    "contents": 5,
+    "jev": 0,
+    "requestBytes": 6426,
+    "observedResponseBytes": 121753,
+    "storedResponseBytes": 121753,
+    "pending": 0,
+    "returnedCostUSD": 0.038,
+    "missingCostFields": 0
+  },
+  "perFamily": [
+    {
+      "id": "AQ01",
+      "search": 1,
+      "contents": 3,
+      "retainedRecords": 4,
+      "elapsedMs": 1697
+    },
+    {
+      "id": "AQ02",
+      "search": 1,
+      "contents": 0,
+      "retainedRecords": 5,
+      "elapsedMs": 1408
+    },
+    {
+      "id": "AQ03",
+      "search": 1,
+      "contents": 1,
+      "retainedRecords": 4,
+      "elapsedMs": 2977
+    },
+    {
+      "id": "AQ04",
+      "search": 1,
+      "contents": 1,
+      "retainedRecords": 4,
+      "elapsedMs": 1521
+    }
+  ],
+  "contentsStatusSources": [
+    "cached",
+    "cached",
+    "cached",
+    "cached",
+    "cached"
+  ],
+  "highlightLengthsAboveRequested4000": [
+    {
+      "attemptId": "attempt-01",
+      "familyId": "AQ01",
+      "responseFile": "sdk-responses/attempt-01-response.json",
+      "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+      "resultIndex": 3,
+      "url": "https://www.oasis-open.org/policies-guidelines/keyword-guidelines-for-oasis-specifications-and-standards/",
+      "fieldPath": "results[3].highlights[0]",
+      "textSHA256": "de5ba7fb8dd46e2e9ca96b940f82cfe9923b13c9e3bd6d706b197f9eb31b0016",
+      "actualCodepoints": 7985
+    },
+    {
+      "attemptId": "attempt-01",
+      "familyId": "AQ01",
+      "responseFile": "sdk-responses/attempt-01-response.json",
+      "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+      "resultIndex": 4,
+      "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+      "fieldPath": "results[4].highlights[0]",
+      "textSHA256": "2949184dae2c05d8e94842479351d8376097d1b8f0e8717ff534f4a0978b0e1e",
+      "actualCodepoints": 5011
+    },
+    {
+      "attemptId": "attempt-05",
+      "familyId": "AQ02",
+      "responseFile": "sdk-responses/attempt-05-response.json",
+      "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+      "resultIndex": 1,
+      "url": "https://ehlaw.ca/july-1st-a-sunday-holidays-act-bumps-canada-day-to-july-2nd/",
+      "fieldPath": "results[1].highlights[0]",
+      "textSHA256": "9930dcf44f75268b8daf46a8161fbcc7d3639724e3a682230bfe9de6b8c04b19",
+      "actualCodepoints": 5881
+    },
+    {
+      "attemptId": "attempt-06",
+      "familyId": "AQ03",
+      "responseFile": "sdk-responses/attempt-06-response.json",
+      "responseSHA256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e",
+      "resultIndex": 1,
+      "url": "https://www.pulitzer.org/winners/louise-erdrich",
+      "fieldPath": "results[1].highlights[0]",
+      "textSHA256": "02d2dea482da0fbbff22d9de702a3f5fc3aae38f0f404eb3c78ced0493009419",
+      "actualCodepoints": 5505
+    },
+    {
+      "attemptId": "attempt-08",
+      "familyId": "AQ04",
+      "responseFile": "sdk-responses/attempt-08-response.json",
+      "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+      "resultIndex": 1,
+      "url": "https://www.gov.uk/government/publications/census-2021-first-results-england-and-wales/population-and-household-estimates-england-and-wales-census-2021",
+      "fieldPath": "results[1].highlights[0]",
+      "textSHA256": "3ab09670c56143acfc7a7ae4d973f6201696da013ef62a155cf4a2f8d5028276",
+      "actualCodepoints": 8702
+    },
+    {
+      "attemptId": "attempt-08",
+      "familyId": "AQ04",
+      "responseFile": "sdk-responses/attempt-08-response.json",
+      "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+      "resultIndex": 3,
+      "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+      "fieldPath": "results[3].highlights[0]",
+      "textSHA256": "77feb417741e44d18cefdf9f66ddc1ba478c09d6b1f65a17063a44eb8bf7e7d4",
+      "actualCodepoints": 4415
+    }
+  ],
+  "literalAttribution": [
+    {
+      "id": "AQ01",
+      "familyAlias": "RA01",
+      "canonicalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+      "canonicalURLRetained": false,
+      "exactFullUnitRawOccurrences": [
+        {
+          "attemptId": "attempt-01",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-01-response.json",
+          "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+          "resultIndex": 0,
+          "url": "https://www.rfc-editor.org/info/rfc8174/",
+          "fieldPath": "results[0].highlights[0]",
+          "textSHA256": "57e55a0b27ab25e0a6893c51a811dbe0e5677879c73577b937cd22058b19b27e",
+          "unitStartCodepoint": 1367,
+          "unitEndCodepoint": 2320,
+          "ownCanonicalURL": false
+        },
+        {
+          "attemptId": "attempt-02",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-02-response.json",
+          "responseSHA256": "215e1539e1157ab7f4a0eae785ba0b2f3497d722c1630eae49e5554b0e303370",
+          "resultIndex": 0,
+          "url": "https://www.rfc-editor.org/info/rfc8174/",
+          "fieldPath": "results[0].text",
+          "textSHA256": "de72d84fd17fdac5a09821fdc7c7aeae06f2928cb8607a1b0d51560d32c03495",
+          "unitStartCodepoint": 3953,
+          "unitEndCodepoint": 4906,
+          "ownCanonicalURL": false
+        },
+        {
+          "attemptId": "attempt-02",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-02-response.json",
+          "responseSHA256": "215e1539e1157ab7f4a0eae785ba0b2f3497d722c1630eae49e5554b0e303370",
+          "resultIndex": 0,
+          "url": "https://www.rfc-editor.org/info/rfc8174/",
+          "fieldPath": "results[0].highlights[0]",
+          "textSHA256": "6a0f2bdd3f4f727c05bc259e10598786c02c37d6c477ba80b9255e6ce2325ead",
+          "unitStartCodepoint": 2121,
+          "unitEndCodepoint": 3074,
+          "ownCanonicalURL": false
+        }
+      ],
+      "retainedSameRawFieldEvidence": [
+        {
+          "attemptId": "attempt-01",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-01-response.json",
+          "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+          "resultIndex": 2,
+          "url": "https://www.rfc-editor.org/info/bcp14/",
+          "fieldPath": "results[2].highlights[0]",
+          "textSHA256": "a27d5150c5b414d99fea781de21389523fe354f7c94ae1f5784b71697d6f99d5",
+          "retainedEvidenceId": "ev-68d2d12d5fa4c62b2261",
+          "retainedExcerptSHA256": "a27d5150c5b414d99fea781de21389523fe354f7c94ae1f5784b71697d6f99d5",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "## RFC 8174: BCP 14: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## RFC 2119: BCP 14: Key words for use in RFCs to Indicate Requirement Levels",
+              "rawCodepointStart": 318,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 2
+        },
+        {
+          "attemptId": "attempt-01",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-01-response.json",
+          "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+          "resultIndex": 3,
+          "url": "https://www.oasis-open.org/policies-guidelines/keyword-guidelines-for-oasis-specifications-and-standards/",
+          "fieldPath": "results[3].highlights[0]",
+          "textSHA256": "de5ba7fb8dd46e2e9ca96b940f82cfe9923b13c9e3bd6d706b197f9eb31b0016",
+          "retainedEvidenceId": "ev-9f03e92e40a681514fd3",
+          "retainedExcerptSHA256": "1a9dd338da730bc70197be690505b7b9b4ad7b5549ba133ff9d4eeaa04be598e",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "### 1.1 Changes from earlier OASIS guidelines – IETF keywords",
+              "rawCodepointStart": 595,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### 2.3.1 Introduction to IETF BCP14 rules",
+              "rawCodepointStart": 2791,
+              "inRetainedExcerpt": false
+            }
+          ],
+          "headingCount": 2
+        },
+        {
+          "attemptId": "attempt-01",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-01-response.json",
+          "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+          "resultIndex": 4,
+          "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+          "fieldPath": "results[4].highlights[0]",
+          "textSHA256": "2949184dae2c05d8e94842479351d8376097d1b8f0e8717ff534f4a0978b0e1e",
+          "retainedEvidenceId": "ev-cfaa9eec4884811379d5",
+          "retainedExcerptSHA256": "b09f16b124e73eaf47646c2977dd3fd0f1165ffee614e6ac52a35e290299d5e4",
+          "retainedStartCodepoint": 93,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "## Key words not required for normative guidance",
+              "rawCodepointStart": 858,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Common Additional Uses of Key Words",
+              "rawCodepointStart": 1286,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## On the use of “SHOULD” and “RECOMMENDED”",
+              "rawCodepointStart": 2149,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Inappropriate Uses of Key Words",
+              "rawCodepointStart": 3469,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Role of RFC Editor",
+              "rawCodepointStart": 4912,
+              "inRetainedExcerpt": false
+            }
+          ],
+          "headingCount": 5
+        },
+        {
+          "attemptId": "attempt-02",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-02-response.json",
+          "responseSHA256": "215e1539e1157ab7f4a0eae785ba0b2f3497d722c1630eae49e5554b0e303370",
+          "resultIndex": 0,
+          "url": "https://www.rfc-editor.org/info/rfc8174/",
+          "fieldPath": "results[0].text",
+          "textSHA256": "de72d84fd17fdac5a09821fdc7c7aeae06f2928cb8607a1b0d51560d32c03495",
+          "retainedEvidenceId": "ev-8f3e84ea0541e881ec1d",
+          "retainedExcerptSHA256": "d76c5db4761f9ab4db6fd3ea1120cb3c2043111cdcae5af8463103ed7ba23be8",
+          "retainedStartCodepoint": 4210,
+          "registeredUnitInterval": {
+            "unitRawCodepointRange": [
+              3953,
+              4906
+            ],
+            "retainedRawCodepointRange": [
+              4210,
+              6210
+            ],
+            "overlapWithinUnitCodepointRange": [
+              257,
+              953
+            ],
+            "missingUnitRangesUTF16": [
+              [
+                0,
+                257
+              ]
+            ],
+            "entireRegisteredUnitCovered": false,
+            "exactSubstringProofOnly": true,
+            "quoteChanged": false
+          },
+          "rawHeadings": [
+            {
+              "literal": "# RFC 8174: BCP 14: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words",
+              "rawCodepointStart": 82,
+              "inRetainedExcerpt": false
+            }
+          ],
+          "headingCount": 1
+        },
+        {
+          "attemptId": "attempt-04",
+          "familyId": "AQ01",
+          "responseFile": "sdk-responses/attempt-04-response.json",
+          "responseSHA256": "a18ae8eb75a29c36329a80d123dd5e018534dae0f43904c456d2180bf26cc6a4",
+          "resultIndex": 0,
+          "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+          "fieldPath": "results[0].text",
+          "textSHA256": "8e84b04b469c307c8fcb11bff63ae133a4e29597be1a7f2cd8c5a47a7e9db1e6",
+          "retainedEvidenceId": "ev-cfaa9eec4884811379d5",
+          "retainedExcerptSHA256": "b09f16b124e73eaf47646c2977dd3fd0f1165ffee614e6ac52a35e290299d5e4",
+          "retainedStartCodepoint": 594,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# IESG Statement on Clarifying the Use of BCP 14 Key Words statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words-01 ",
+              "rawCodepointStart": 59,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "# IESG Statement on Clarifying the Use of BCP 14 Key Words",
+              "rawCodepointStart": 441,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Key words not required for normative guidance",
+              "rawCodepointStart": 1359,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Common Additional Uses of Key Words",
+              "rawCodepointStart": 1787,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## On the use of “SHOULD” and “RECOMMENDED”",
+              "rawCodepointStart": 2650,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Inappropriate Uses of Key Words",
+              "rawCodepointStart": 3970,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Role of RFC Editor",
+              "rawCodepointStart": 5413,
+              "inRetainedExcerpt": false
+            }
+          ],
+          "headingCount": 7
+        }
+      ]
+    },
+    {
+      "id": "AQ02",
+      "familyAlias": "RA02",
+      "canonicalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+      "canonicalURLRetained": false,
+      "exactFullUnitRawOccurrences": [],
+      "retainedSameRawFieldEvidence": [
+        {
+          "attemptId": "attempt-05",
+          "familyId": "AQ02",
+          "responseFile": "sdk-responses/attempt-05-response.json",
+          "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+          "resultIndex": 0,
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/section-2.html",
+          "fieldPath": "results[0].highlights[0]",
+          "textSHA256": "4ecf80ad81be8789ef9c67d4144874a20ab4d1c35cc2fa4dfd262caeb589d82f",
+          "retainedEvidenceId": "ev-5aed7db0b2ea3075df25",
+          "retainedExcerptSHA256": "4ecf80ad81be8789ef9c67d4144874a20ab4d1c35cc2fa4dfd262caeb589d82f",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# Holidays Act (R.S.C., 1985, c. H-5)",
+              "rawCodepointStart": 14,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 1
+        },
+        {
+          "attemptId": "attempt-05",
+          "familyId": "AQ02",
+          "responseFile": "sdk-responses/attempt-05-response.json",
+          "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+          "resultIndex": 1,
+          "url": "https://ehlaw.ca/july-1st-a-sunday-holidays-act-bumps-canada-day-to-july-2nd/",
+          "fieldPath": "results[1].highlights[0]",
+          "textSHA256": "9930dcf44f75268b8daf46a8161fbcc7d3639724e3a682230bfe9de6b8c04b19",
+          "retainedEvidenceId": "ev-47e6eb26a484c3acd717",
+          "retainedExcerptSHA256": "388f2f78c88fa44603155dd593fe4fbb20556d8c06749e7bce3cc4f0012694af",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# July 1st a Sunday? Holidays Act “Bumps” Canada Day to July 2nd",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### In our view",
+              "rawCodepointStart": 5357,
+              "inRetainedExcerpt": false
+            }
+          ],
+          "headingCount": 2
+        },
+        {
+          "attemptId": "attempt-05",
+          "familyId": "AQ02",
+          "responseFile": "sdk-responses/attempt-05-response.json",
+          "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+          "resultIndex": 2,
+          "url": "https://gowlingwlg.com/en/insights-resources/articles/2018/canada-day-and-the-holidays-act",
+          "fieldPath": "results[2].highlights[0]",
+          "textSHA256": "b730e9f1f8507b1a77a7f725d2a2e5013ff0b886276ae8da3400f9204faf34b0",
+          "retainedEvidenceId": "ev-ac4f043ef658d650cc8c",
+          "retainedExcerptSHA256": "51c06e5179d78bfb16c6ed877321b2333d2b15d37bdec5f242227d27992f2973",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [],
+          "headingCount": 0
+        },
+        {
+          "attemptId": "attempt-05",
+          "familyId": "AQ02",
+          "responseFile": "sdk-responses/attempt-05-response.json",
+          "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+          "resultIndex": 3,
+          "url": "https://www.canlii.org/en/ca/laws/stat/rsc-1985-c-h-5/latest/rsc-1985-c-h-5.html",
+          "fieldPath": "results[3].highlights[0]",
+          "textSHA256": "d4a0be43287415e38175014b44d2cbe1c882c4f7c942199d395315b1b2d4b9dd",
+          "retainedEvidenceId": "ev-25dceba815a86f80aa23",
+          "retainedExcerptSHA256": "d4a0be43287415e38175014b44d2cbe1c882c4f7c942199d395315b1b2d4b9dd",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# Holidays Act, RSC 1985, c H-5",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Short Title",
+              "rawCodepointStart": 441,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Canada Day",
+              "rawCodepointStart": 538,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Remembrance Day",
+              "rawCodepointStart": 930,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Victoria Day",
+              "rawCodepointStart": 1241,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 5
+        },
+        {
+          "attemptId": "attempt-05",
+          "familyId": "AQ02",
+          "responseFile": "sdk-responses/attempt-05-response.json",
+          "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+          "resultIndex": 4,
+          "url": "https://www.ottawaemploymentlaw.com/2018/07/holidays-on-sunday.html",
+          "fieldPath": "results[4].highlights[0]",
+          "textSHA256": "35dbfd132cfbd9b3c98916730004955649551c9be544ad5d4308f802205e96de",
+          "retainedEvidenceId": "ev-ff73123fdb3afe75eb77",
+          "retainedExcerptSHA256": "aa0d6a2d73999e329094b7d0f215cdafdb33cc560a05cb238b84a47091e99246",
+          "retainedStartCodepoint": 612,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "### Holidays on Sunday ",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### Legislation Act, 2006",
+              "rawCodepointStart": 730,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 2
+        }
+      ]
+    },
+    {
+      "id": "AQ03",
+      "familyAlias": "RA03",
+      "canonicalURL": "https://www.pulitzer.org/winners/louise-erdrich",
+      "canonicalURLRetained": true,
+      "exactFullUnitRawOccurrences": [],
+      "retainedSameRawFieldEvidence": [
+        {
+          "attemptId": "attempt-06",
+          "familyId": "AQ03",
+          "responseFile": "sdk-responses/attempt-06-response.json",
+          "responseSHA256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e",
+          "resultIndex": 1,
+          "url": "https://www.pulitzer.org/winners/louise-erdrich",
+          "fieldPath": "results[1].highlights[0]",
+          "textSHA256": "02d2dea482da0fbbff22d9de702a3f5fc3aae38f0f404eb3c78ced0493009419",
+          "retainedEvidenceId": "ev-5d3676cd31a09dface5f",
+          "retainedExcerptSHA256": "3b1bfe458fe6e64175df95dda7fc90f25fa3da74b2be2adc0089d44a165716a3",
+          "retainedStartCodepoint": 3505,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# The Night Watchman, by Louise Erdrich (Harper) ",
+              "rawCodepointStart": 189,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Winning Work",
+              "rawCodepointStart": 437,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Biography",
+              "rawCodepointStart": 3298,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Finalists",
+              "rawCodepointStart": 3928,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Daniel Mason",
+              "rawCodepointStart": 3986,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Percival Everett",
+              "rawCodepointStart": 4196,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Oscar Villalon(Chair)",
+              "rawCodepointStart": 4387,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Edwidge Danticat",
+              "rawCodepointStart": 4457,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Hernan Diaz*",
+              "rawCodepointStart": 4496,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### C. E. Morgan",
+              "rawCodepointStart": 4625,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Kenneth Warren",
+              "rawCodepointStart": 4686,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Winners in Fiction",
+              "rawCodepointStart": 4821,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## 2021 Prize Winners",
+              "rawCodepointStart": 5484,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 13
+        },
+        {
+          "attemptId": "attempt-06",
+          "familyId": "AQ03",
+          "responseFile": "sdk-responses/attempt-06-response.json",
+          "responseSHA256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e",
+          "resultIndex": 2,
+          "url": "https://www.pulitzer.org/prize-winners-by-year/2021",
+          "fieldPath": "results[2].highlights[0]",
+          "textSHA256": "49c6215df7ff7a7798f5f72b004636a545bb1af9694c48e888e3d74dcffbf12d",
+          "retainedEvidenceId": "ev-0f776367c786db46391c",
+          "retainedExcerptSHA256": "49c6215df7ff7a7798f5f72b004636a545bb1af9694c48e888e3d74dcffbf12d",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# 2021 Pulitzer Prizes",
+              "rawCodepointStart": 56,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Journalism",
+              "rawCodepointStart": 80,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Robert Greene of the Los Angeles Times",
+              "rawCodepointStart": 135,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Books, Drama & Music",
+              "rawCodepointStart": 237,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### The Night Watchman, by Louise Erdrich (Harper)",
+              "rawCodepointStart": 320,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### The Hot Wing King, by Katori Hall",
+              "rawCodepointStart": 736,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 6
+        },
+        {
+          "attemptId": "attempt-06",
+          "familyId": "AQ03",
+          "responseFile": "sdk-responses/attempt-06-response.json",
+          "responseSHA256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e",
+          "resultIndex": 3,
+          "url": "https://news.columbia.edu/index%2Ephp/pulitzer-prizes-2021",
+          "fieldPath": "results[3].highlights[0]",
+          "textSHA256": "a796e6abcf6638501528649886db1e9e6ac087225fd11e3aa9df4b96503f0486",
+          "retainedEvidenceId": "ev-dcb4243cf807184deaf2",
+          "retainedExcerptSHA256": "a796e6abcf6638501528649886db1e9e6ac087225fd11e3aa9df4b96503f0486",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# 2021 Pulitzer Prize Winners ",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Letters and Drama",
+              "rawCodepointStart": 908,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Special Citation",
+              "rawCodepointStart": 1441,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 3
+        },
+        {
+          "attemptId": "attempt-07",
+          "familyId": "AQ03",
+          "responseFile": "sdk-responses/attempt-07-response.json",
+          "responseSHA256": "e82b3032932e6313e2692b048af14381a9084aa97b50f447cd7c90efd02a5436",
+          "resultIndex": 0,
+          "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+          "fieldPath": "results[0].text",
+          "textSHA256": "0b2ed59d4560c94c9dc99dc48ba555e84eeb8330c29c3b9f3d1906246cb1127d",
+          "retainedEvidenceId": "ev-40dacc2ecdf00d9a3bfa",
+          "retainedExcerptSHA256": "9e74bb7f5701a63d94ff0a55f9a8961bc48787fe0e3136397429acdd6ec457cc",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "## ‘The Night Watchman,’ by Louise Erdrich (Harper/HarperCollins Publishers)",
+              "rawCodepointStart": 453,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 1
+        },
+        {
+          "attemptId": "attempt-07",
+          "familyId": "AQ03",
+          "responseFile": "sdk-responses/attempt-07-response.json",
+          "responseSHA256": "e82b3032932e6313e2692b048af14381a9084aa97b50f447cd7c90efd02a5436",
+          "resultIndex": 0,
+          "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+          "fieldPath": "results[0].highlights[0]",
+          "textSHA256": "9e74bb7f5701a63d94ff0a55f9a8961bc48787fe0e3136397429acdd6ec457cc",
+          "retainedEvidenceId": "ev-40dacc2ecdf00d9a3bfa",
+          "retainedExcerptSHA256": "9e74bb7f5701a63d94ff0a55f9a8961bc48787fe0e3136397429acdd6ec457cc",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "## ‘The Night Watchman,’ by Louise Erdrich (Harper/HarperCollins Publishers)",
+              "rawCodepointStart": 453,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 1
+        }
+      ]
+    },
+    {
+      "id": "AQ04",
+      "familyAlias": "RA04",
+      "canonicalURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+      "canonicalURLRetained": false,
+      "exactFullUnitRawOccurrences": [],
+      "retainedSameRawFieldEvidence": [
+        {
+          "attemptId": "attempt-08",
+          "familyId": "AQ04",
+          "responseFile": "sdk-responses/attempt-08-response.json",
+          "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+          "resultIndex": 0,
+          "url": "https://www.ons.gov.uk/releases/initialfindingsfromthe2021censusinenglandandwales",
+          "fieldPath": "results[0].highlights[0]",
+          "textSHA256": "8b18b4e60611fe5e102062e4c007c2c6638084c0c04f8c3a1ab6124244297c70",
+          "retainedEvidenceId": "ev-3199da3e77accbfda420",
+          "retainedExcerptSHA256": "4a5b600a29f1496ff03976212edf0126d1bbb33fac406a75196e636703f7ade9",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# First results from Census 2021 in England and Wales ",
+              "rawCodepointStart": 87,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Summary",
+              "rawCodepointStart": 181,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Publications",
+              "rawCodepointStart": 277,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Data",
+              "rawCodepointStart": 679,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Methodology",
+              "rawCodepointStart": 1073,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## About the data",
+              "rawCodepointStart": 1688,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 6
+        },
+        {
+          "attemptId": "attempt-08",
+          "familyId": "AQ04",
+          "responseFile": "sdk-responses/attempt-08-response.json",
+          "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+          "resultIndex": 1,
+          "url": "https://www.gov.uk/government/publications/census-2021-first-results-england-and-wales/population-and-household-estimates-england-and-wales-census-2021",
+          "fieldPath": "results[1].highlights[0]",
+          "textSHA256": "3ab09670c56143acfc7a7ae4d973f6201696da013ef62a155cf4a2f8d5028276",
+          "retainedEvidenceId": "ev-add19264a458a9d68f0e",
+          "retainedExcerptSHA256": "a527659b00e64d870b0e40165115caaf6302c79e25481740cb82f4d89f4438d3",
+          "retainedStartCodepoint": 2164,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# Population and household estimates, England and Wales: Census 2021 ",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Applies to England and Wales ",
+              "rawCodepointStart": 95,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## Main points",
+              "rawCodepointStart": 320,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### Reference date",
+              "rawCodepointStart": 2606,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Response rate",
+              "rawCodepointStart": 3461,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Parliamentary requirements",
+              "rawCodepointStart": 3945,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### Strengths",
+              "rawCodepointStart": 4279,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### Limitations and mitigations",
+              "rawCodepointStart": 6439,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### National Statistics status for Census 2021",
+              "rawCodepointStart": 8198,
+              "inRetainedExcerpt": false
+            }
+          ],
+          "headingCount": 9
+        },
+        {
+          "attemptId": "attempt-08",
+          "familyId": "AQ04",
+          "responseFile": "sdk-responses/attempt-08-response.json",
+          "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+          "resultIndex": 2,
+          "url": "https://www.data.gov.uk/dataset/ada77bff-b6d8-4702-a990-8630c3674465/2021-census-first-release1",
+          "fieldPath": "results[2].highlights[0]",
+          "textSHA256": "b08a0c075492fa45dfbabc624b4da14b882113307f55cecad8f1c970507e1381",
+          "retainedEvidenceId": "ev-b5b2de61530a9005f89e",
+          "retainedExcerptSHA256": "b08a0c075492fa45dfbabc624b4da14b882113307f55cecad8f1c970507e1381",
+          "retainedStartCodepoint": 0,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "# 2021 census first release ",
+              "rawCodepointStart": 0,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Summary",
+              "rawCodepointStart": 107,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "## Data links",
+              "rawCodepointStart": 620,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 3
+        },
+        {
+          "attemptId": "attempt-09",
+          "familyId": "AQ04",
+          "responseFile": "sdk-responses/attempt-09-response.json",
+          "responseSHA256": "591078d4496c8a342941fb7e1939bf0a832f3525f5c9e368d64b6b30372dc889",
+          "resultIndex": 0,
+          "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+          "fieldPath": "results[0].text",
+          "textSHA256": "ac4c80d9356fe3b75fe894897cf9285daa026fc515f12f56749e78b361028aae",
+          "retainedEvidenceId": "ev-998ff05e37b4e9cde619",
+          "retainedExcerptSHA256": "e6461a4ff63e36456d589e660a1b740a5ea5777b0c6d7bb0cad4b30bc6806a2f",
+          "retainedStartCodepoint": 5832,
+          "registeredUnitInterval": null,
+          "rawHeadings": [
+            {
+              "literal": "## Population and household estimates,",
+              "rawCodepointStart": 168,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## England and Wales: Census 2021, unrounded",
+              "rawCodepointStart": 208,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "## data",
+              "rawCodepointStart": 254,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### Table of contents",
+              "rawCodepointStart": 381,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### 1 . Main points",
+              "rawCodepointStart": 572,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### 2 . Population and household estimates, England and Wales: data",
+              "rawCodepointStart": 3303,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### 3 . Measuring the data",
+              "rawCodepointStart": 4471,
+              "inRetainedExcerpt": false
+            },
+            {
+              "literal": "### 4 . Related links",
+              "rawCodepointStart": 6423,
+              "inRetainedExcerpt": true
+            },
+            {
+              "literal": "### 5 . Cite this statistical bulletin",
+              "rawCodepointStart": 7611,
+              "inRetainedExcerpt": true
+            }
+          ],
+          "headingCount": 9
+        }
+      ]
+    }
+  ],
+  "primaryBindingCreditFromSupplement": 0,
+  "limitations": [
+    "Exact same-field substring positions only; no fuzzy matching, joining, text repair, unit/URL alias redefinition or truth inference.",
+    "Raw headings omitted from a retained window prove only literal heading loss, not complete registered unit availability.",
+    "Requested highlight maxCharacters4000 is an option, not an assumed returned-text bound; actual accepted bodies remain bounded.",
+    "Cached SDK content is not a new canonical-origin observation or current-version proof."
+  ]
+}

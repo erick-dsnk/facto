@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "kind": "answer_free_public_lookup_queries",
+  "queries": [
+    {
+      "id": "AQ01",
+      "familyAlias": "RA01",
+      "publicQuery": "RFC 8174 BCP 14 requirement keyword interpretation"
+    },
+    {
+      "id": "AQ02",
+      "familyAlias": "RA02",
+      "publicQuery": "Canada Holidays Act section 2 Canada Day Sunday"
+    },
+    {
+      "id": "AQ03",
+      "familyAlias": "RA03",
+      "publicQuery": "2021 Pulitzer Prize Fiction winner record"
+    },
+    {
+      "id": "AQ04",
+      "familyAlias": "RA04",
+      "publicQuery": "ONS Census 2021 England and Wales population first release"
+    }
+  ],
+  "rules": [
+    "No asserted answer, expectedtruth label, recorded value, privatecontext or sourceexcerpts inqueries.",
+    "One exact query per family; no domain filters, directcontents URLsubstitution, alternate wording or adaptive reranking.",
+    "These are manually approved public lookupqueries carried through exactspan structural checks, not classifier eligibility successes."
+  ]
+}

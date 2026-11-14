@@ -1,0 +1,75 @@
+{
+  "kind": "independent_readonly_bounded_collector_review",
+  "decision": "approved_for_root_authorized_declared_diagnostic_only",
+  "networkAuthorizationGranted": false,
+  "projectProviderCalls": 0,
+  "networkCalls": 0,
+  "filesEditedByReviewer": 0,
+  "reviewedCollector": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-collector-04/collector.mts",
+    "sha256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958"
+  },
+  "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+  "preservedVersions": [
+    {
+      "version": "01",
+      "manifestSHA256": "466a97712520f3f6fee1ecbc2c1604f9ac8ecb3c9ebe103f5e317be22c241ab7",
+      "listedFilesVerified": 170
+    },
+    {
+      "version": "02",
+      "manifestSHA256": "c8e27550f48cc045440c967493dcac5a132b591a8927cfac64683284caf19f40",
+      "listedFilesVerified": 119
+    },
+    {
+      "version": "03",
+      "manifestSHA256": "16d2a596660f459aab69450a34bbbce84c77633a5c601638981cdb9c82bd3e25",
+      "listedFilesVerified": 148
+    },
+    {
+      "version": "04",
+      "manifestSHA256": "ba1f98a732a2c3792d082b10f3c0cd90e3ce0ee9f85ab5921cd61762330b7b15",
+      "listedFilesVerified": 131
+    }
+  ],
+  "independentProbes": {
+    "collector01RejectedCancelGap": "rejected-cancel.tap",
+    "collector02ContentsRetryGap": "contents-rejected-cancel-02.tap",
+    "collector03DoubleCancelLedgerGap": "revision03.tap",
+    "collector04CriticalCorrectionsPassed": "revision04.tap",
+    "collector04IndependentTestsPassed": 2
+  },
+  "authorChecksInspected": {
+    "offlineTestsPassed": 16,
+    "strictTypecheck": "passed",
+    "readOnlyPreflight": "passed",
+    "notRerunByReviewer": true
+  },
+  "confirmed": [
+    "Actual createRetriever/AbortableExa/SDK serialization; search body hash pins and contents urls/options bound to returned search URLs.",
+    "One search/three contents per family and four/twelve total at context+HTTP boundary; Jev forbidden; same absolute10s windows.",
+    "Durable request bytes/reservation before transport; bounded response capture; partial/unread/overflow/unknown states not presented as full bodies.",
+    "Unknown cleanup fatal set before returning non-ok responses; fatal denies consume/canConsume and every actual HTTP boundary.",
+    "Oversized-header cleanup occurs once; rejected underlying cancellation remains unsettled and stops remaining work.",
+    "No receipt-aware query/ranking or target URL forcing; all four families retained in denominator; exact canonicalURL+wholeunit primary.",
+    "Fresh output reservation and exact plan/collector-bound root authorization required before any live key read/transport."
+  ],
+  "limits": {
+    "searchActual": 4,
+    "contentsActual": 12,
+    "jev": 0,
+    "perFamilyMs": 10000,
+    "requestBytes": 65536,
+    "totalRequestBytes": 1048576,
+    "acceptedStoredResponseBytes": 262144,
+    "totalAcceptedStoredResponseBytes": 4194304
+  },
+  "limitations": [
+    "Injected local fetches only; no live acquisition/usefulness claim.",
+    "Response cap controls accepted/stored bytes; an overflow chunk is observed/counts before cancellation, not hidden.",
+    "Observer bounds/drains original response then replays bounded identical bytes through the SDK; no extra HTTP or unbounded clone.",
+    "sourceStatuses contains bounded raw provider status objects; it is not an authenticated source-origin or current-version proof.",
+    "Collector approval is not network authorization, source authority, factual correctness or production promotion."
+  ],
+  "liveOutputAbsentAtReview": true
+}
