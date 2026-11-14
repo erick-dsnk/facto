@@ -1,0 +1,173 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { loadInstalledManifest, resolveReceipt, resolveFrozenFrame } from '../src/manifest.js';
+import { loadSnapshot } from '../src/snapshot.js';
+import { loadFrozenClaimFrame } from '../src/applicability.js';
+import { evaluate, verifyCapability, type EvaluateInput } from '../src/evaluate.js';
+import { fixtureContext, fixtureRecord, refreshFixtureAssessment } from '../src/fixture-context.js';
+import { canonical, digest, parseContext, parseJsonObject, type Context, type RetainedRecord } from '../src/types.js';
+import { INSTALL_ROOT } from '../src/install.js';
+const manifest = await loadInstalledManifest(INSTALL_ROOT, (await readFile(INSTALL_ROOT + '/../installed-manifest.sha256', 'utf8')).trim());
+const receipt = resolveReceipt(manifest, 'RA02').receipt;
+const frameData = resolveFrozenFrame(manifest, 'RC08');
+const artifact = await loadSnapshot(manifest, receipt.proofId);
+const frame = loadFrozenClaimFrame(manifest, 'RC08', frameData.exactText);
+const targetText = (await readFile(INSTALL_ROOT + '/artifacts/' + receipt.extractionSHA256, 'utf8')).slice(receipt.units[0]!.start, receipt.units[0]!.end);
+function scenario(): EvaluateInput {
+    const evidence = { id: 'RC08', url: receipt.canonicalURL, excerpt: targetText };
+    const companion = fixtureRecord({ id: 'companion', url: 'https://example.invalid/companion', excerpt: 'Synthetic companion passage with a material qualifier.' }, { sourceRevision: 'capture-1', transport: { status: 200 } });
+    companion.title = 'Synthetic companion title';
+    companion.publisher = 'Synthetic publisher';
+    companion.publishedAt = '2024-05-03';
+    companion.retrievedAt = '2026-11-14T00:00:00Z';
+    companion.textBasis = 'page_text';
+    const context = fixtureContext(frameData.exactText, [fixtureRecord(evidence), companion], true);
+    context.originNodes.push({ key: 'companion@prior', revision: 'capture-0', record: { ...structuredClone(companion), excerpt: 'Synthetic earlier version with different material.' }, state: { retained: false, reason: 'prior-version' } });
+    context.originNodes.push({ key: 'bridge@raw', revision: 'incoming-v1', record: fixtureRecord({ id: 'bridge', url: 'https://example.invalid/raw-bridge', excerpt: 'Synthetic raw origin bridge not selected among the final records.' }), state: { retained: false, reason: 'origin-bridge' } });
+    context.originLinks = [
+        { left: 'RC08@retained-v1', right: 'bridge@raw', relationship: 'common_origin', state: { confidence: 0.91 } },
+        { left: 'bridge@raw', right: 'companion@retained-v1', relationship: 'unclear', state: { confidence: 0.68 } },
+        { left: 'companion@prior', right: 'companion@retained-v1', relationship: 'common_origin', state: { sameDocument: true } }
+    ];
+    context.originGraphState = { schemaVersion: 1, rawPoolRevision: 'raw-17', componentAssessment: { id: 'origin-analysis-3', decision: 'unresolved' } };
+    context.assessment = { id: 'synthetic-assessment-17', revision: 'assessment-rev-1', inputSHA256: '0'.repeat(64), state: { synthetic: true, model: 'none', promptIdentity: 'synthetic-test-template-v1', sourceAssessments: [{ id: 'RC08', answer: 'fixture-only', probability: 0.95 }, { id: 'companion', answer: 'fixture-only', probability: 0.77 }], riskAssessment: { label: 'ordinary' }, conflictAssessment: { credibleConflictPresent: true } } };
+    refreshFixtureAssessment(context);
+    return { manifest, artifact, receiptAlias: 'RA02', evidence, frame, exactClaimText: frameData.exactText, context, now: '2026-11-15T00:00:00Z' };
+}
+function getCapability(input: EvaluateInput) { const r = evaluate(input); assert.equal(r.kind, 'capability', JSON.stringify(r)); if (r.kind !== 'capability')
+    throw Error('expected capability'); return r; }
+function verify(token: unknown, input: EvaluateInput, context = input.context) { return verifyCapability(token, { manifest: input.manifest, evidence: input.evidence, frame: input.frame as typeof frame, exactClaimText: input.exactClaimText, context }); }
+function editCompanion(context: Context, mutate: (record: RetainedRecord) => void): Context {
+    const c = structuredClone(context);
+    mutate(c.retainedRecords[1]!);
+    c.originNodes.find(n => n.key === c.retainedNodeKeys[1])!.record = structuredClone(c.retainedRecords[1]!);
+    return refreshFixtureAssessment(c);
+}
+function assertChangedBinding(input: EvaluateInput, context: Context): void {
+    const capability = getCapability(input);
+    assert.equal(verify(capability.token, input), true);
+    assert.doesNotThrow(() => parseContext(context), 'replacement is a valid complete snapshot, not just a malformed hash');
+    assert.equal(verify(capability.token, input, context), false);
+    const replacement = getCapability({ ...input, context });
+    assert.notEqual(replacement.audit.contextSHA256, capability.audit.contextSHA256);
+    assert.equal(replacement.audit.verdictAssigned, false);
+    assert.equal(replacement.audit.allOtherPolicyGatesRequired, true);
+    assert.equal(replacement.audit.conflictVetoMustRemain, true);
+}
+test('v2 audit binds supplied full retained material, raw graph and actual assessment state separately', () => {
+    const i = scenario(), r = getCapability(i);
+    assert.equal(r.audit.contextSchemaVersion, 2);
+    assert.equal(r.audit.contextSHA256, digest(canonical(parseContext(i.context))));
+    assert.equal(r.audit.retainedMaterialSHA256, digest(canonical(i.context.retainedRecords)));
+    assert.equal(r.audit.assessmentSHA256, digest(canonical(i.context.assessment)));
+    assert.deepEqual(r.audit.originNodeKeys, ['RC08@retained-v1', 'companion@retained-v1', 'companion@prior', 'bridge@raw']);
+    assert.equal(r.audit.claimRevision, 'offline-claim-v1');
+});
+for (const [field, mutate] of Object.entries({
+    excerpt: (r: RetainedRecord) => { r.excerpt = 'Synthetic changed companion text with the same stable ID.'; },
+    URL: (r: RetainedRecord) => { r.url = 'https://example.invalid/changed-canonical-page'; },
+    title: (r: RetainedRecord) => { r.title = 'A changed title that changes the claimed scope'; },
+    publisher: (r: RetainedRecord) => { r.publisher = 'Different publisher'; },
+    publicationDate: (r: RetainedRecord) => { r.publishedAt = '2025-05-03'; },
+    retrievalDate: (r: RetainedRecord) => { r.retrievedAt = '2026-11-14T01:00:00Z'; },
+    textBasis: (r: RetainedRecord) => { r.textBasis = 'search_highlight'; },
+    provenanceMetadata: (r: RetainedRecord) => { r.metadata.sourceRevision = 'capture-2'; },
+    nestedTransportMetadata: (r: RetainedRecord) => { r.metadata.transport = { status: 206, partial: true }; }
+}))
+    test('same-ID companion ' + field + ' replacement invalidates the old token despite recomputed input digest', () => { const i = scenario(); assertChangedBinding(i, editCompanion(i.context, mutate)); });
+test('same-ID companion mutation cannot reuse an assessment bound to previous material', () => {
+    const i = scenario(), r = getCapability(i), c = editCompanion(i.context, x => { x.excerpt = 'Synthetic changed body'; });
+    c.assessment.inputSHA256 = i.context.assessment.inputSHA256;
+    assert.equal(verify(r.token, i, c), false);
+    assert.deepEqual(evaluate({ ...i, context: c }), { kind: 'unavailable', reason: 'stale_assessment_input', verdictAssigned: false, allOtherPolicyGatesRequired: true, productionWired: false });
+});
+test('target evidence must match the exact target material in the full snapshot', () => { const i = scenario(); const r = evaluate({ ...i, evidence: { ...i.evidence, excerpt: i.evidence.excerpt + ' altered' } }); assert.equal(r.kind, 'unavailable'); if (r.kind === 'unavailable')
+    assert.equal(r.reason, 'target_material_mismatch'); });
+test('same-ID prior version body is bound even when the final retained material is unchanged', () => { const i = scenario(), c = structuredClone(i.context); c.originNodes.find(n => n.key === 'companion@prior')!.record.excerpt = 'Changed prior version can alter the origin bridge.'; assertChangedBinding(i, refreshFixtureAssessment(c)); });
+test('removing a nonretained bridge and its links changes the binding instead of silently filtering it away', () => { const i = scenario(), c = structuredClone(i.context); c.originNodes = c.originNodes.filter(n => n.key !== 'bridge@raw'); c.originLinks = c.originLinks.filter(e => e.left !== 'bridge@raw' && e.right !== 'bridge@raw'); assertChangedBinding(i, refreshFixtureAssessment(c)); });
+test('graph edge direction, relation and assessment metadata remain material', () => {
+    const i = scenario();
+    for (const change of [(c: Context) => { [c.originLinks[0]!.left, c.originLinks[0]!.right] = [c.originLinks[0]!.right, c.originLinks[0]!.left]; }, (c: Context) => { c.originLinks[0]!.relationship = 'distinct_origin'; }, (c: Context) => { c.originLinks[0]!.state.confidence = 0.51; }, (c: Context) => { c.originGraphState.rawPoolRevision = 'raw-18'; }, (c: Context) => { c.originNodes[3]!.state.reason = 'changed-selection-reason'; }]) {
+        const c = structuredClone(i.context);
+        change(c);
+        assertChangedBinding(i, refreshFixtureAssessment(c));
+    }
+});
+test('assessment-only result, identity, revision and question changes invalidate the token', () => {
+    const i = scenario();
+    for (const change of [(c: Context) => { c.assessment.id = 'synthetic-assessment-18'; }, (c: Context) => { c.assessment.revision = 'assessment-rev-2'; }, (c: Context) => { c.assessment.state.sourceAssessments = [{ id: 'companion', answer: 'different-output', probability: 0.49 }]; }, (c: Context) => { c.assessment.state.promptIdentity = 'different-template'; }]) {
+        const c = structuredClone(i.context);
+        change(c);
+        assertChangedBinding(i, c);
+    }
+});
+test('same text under a new claim revision invalidates the token and stale assessment input', () => { const i = scenario(), c = structuredClone(i.context); c.claim.revision = 'offline-claim-v2'; assert.throws(() => parseContext(c), /stale_assessment_input/); assertChangedBinding(i, refreshFixtureAssessment(c)); });
+test('changed exact claim cannot borrow a context or frozen frame from the previous claim', () => { const i = scenario(), c = structuredClone(i.context); c.claim.exactText += ' Synthetic qualification.'; refreshFixtureAssessment(c); const r = evaluate({ ...i, context: c }); assert.equal(r.kind, 'unavailable'); if (r.kind === 'unavailable')
+    assert.equal(r.reason, 'context_claim_mismatch'); });
+test('up to12 raw graph versions survive although only two records are selected;13 is rejected without truncation', () => {
+    const i = scenario(), c = structuredClone(i.context);
+    for (let n = 4; n < 12; n++)
+        c.originNodes.push({ key: 'companion@raw-' + n, revision: 'raw-' + n, record: { ...structuredClone(c.retainedRecords[1]!), excerpt: 'Synthetic prior body ' + n }, state: { raw: true } });
+    refreshFixtureAssessment(c);
+    assert.equal(parseContext(c).originNodes.length, 12);
+    assert.equal(getCapability({ ...i, context: c }).audit.originNodeKeys.length, 12);
+    c.originNodes.push({ ...structuredClone(c.originNodes[11]!), key: 'extra-13' });
+    refreshFixtureAssessment(c);
+    assert.throws(() => parseContext(c), /invalid_array/);
+});
+test('missing version nodes, duplicate keys, wrong retained mapping and dangling graph links reject', () => {
+    const i = scenario();
+    for (const change of [(c: Context) => { c.originNodes = c.originNodes.filter(n => n.key !== c.retainedNodeKeys[0]); }, (c: Context) => { c.originNodes.push(structuredClone(c.originNodes[0]!)); }, (c: Context) => { c.originNodes[0]!.record.excerpt = 'different material'; }, (c: Context) => { c.originLinks[0]!.right = 'not-in-graph'; }]) {
+        const c = structuredClone(i.context);
+        change(c);
+        refreshFixtureAssessment(c);
+        assert.throws(() => parseContext(c));
+    }
+});
+test('snapshot data is copied before hashing so post-issuance caller mutation cannot alter the stored binding', () => { const i = scenario(), r = getCapability(i), before = r.audit.contextSHA256; i.context.retainedRecords[1]!.excerpt = 'mutated after issuance'; assert.equal(r.audit.contextSHA256, before); assert.equal(verify(r.token, i), false); assert.equal(Object.isFrozen(r.audit), true); });
+test('caller digest alone and legacy IDs-only context cannot stand in for complete bounded state', () => { const i = scenario(); const legacy = { risk: 'ordinary', credibleConflictPresent: true, retainedEvidenceIds: i.context.retainedEvidenceIds, originLinks: [], contextSHA256: digest(canonical(i.context)) }; assert.throws(() => parseContext(legacy), /unknown_field_or_accessor/); const c = structuredClone(i.context) as any; c.retainedRecords = [{ id: 'RC08', materialSHA256: '0'.repeat(64) }]; assert.throws(() => parseContext(c), /unknown_field_or_accessor/); });
+test('record and graph arrays reject sparse entries, accessors and custom prototypes before traversal', () => {
+    const i = scenario();
+    let touched = false;
+    const c = structuredClone(i.context);
+    Object.defineProperty(c.retainedRecords, '0', { enumerable: true, get() { touched = true; return i.context.retainedRecords[0]; } });
+    assert.throws(() => parseContext(c), /invalid_array_structure/);
+    assert.equal(touched, false);
+    const sparse = structuredClone(i.context);
+    delete (sparse.originNodes as any)[1];
+    assert.throws(() => parseContext(sparse), /invalid_array_structure/);
+    const inherited = structuredClone(i.context);
+    Object.setPrototypeOf(inherited.originLinks, { ...Array.prototype });
+    assert.throws(() => parseContext(inherited), /invalid_array/);
+});
+test('bounded JSON rejects accessors, prototypes, cycles, undefined, nonfinite numbers and negative zero', () => {
+    let touched = false;
+    const accessor = {};
+    Object.defineProperty(accessor, 'secret', { enumerable: true, get() { touched = true; return 'x'; } });
+    const cyclic: any = {};
+    cyclic.self = cyclic;
+    for (const bad of [accessor, new Date(), cyclic, { x: undefined }, { x: Infinity }, { x: NaN }, { x: -0 }, JSON.parse('{"__proto__":{}}')])
+        assert.throws(() => parseJsonObject(bad));
+    assert.equal(touched, false);
+    const array: any[] = [];
+    Object.defineProperty(array, '0', { enumerable: true, get() { touched = true; return 'x'; } });
+    assert.throws(() => parseJsonObject({ array }));
+    assert.equal(touched, false);
+});
+test('bounded JSON rejects excessive depth, key count, string bytes and aggregate context bytes', () => {
+    let deep: any = {};
+    for (let n = 0; n < 10; n++)
+        deep = { child: deep };
+    assert.throws(() => parseJsonObject(deep), /json_structure_limit/);
+    assert.throws(() => parseJsonObject(Object.fromEntries(Array.from({ length: 129 }, (_, n) => ['key' + n, n]))), /invalid_json_keys/);
+    assert.throws(() => parseJsonObject({ long: 'x'.repeat(4097) }), /json_string_limit/);
+    assert.throws(() => parseJsonObject(Object.fromEntries(Array.from({ length: 20 }, (_, n) => ['key' + n, 'x'.repeat(4000)]))), /json_byte_limit/);
+    const i = scenario(), c = structuredClone(i.context), large = Object.fromEntries(Array.from({ length: 15 }, (_, n) => ['key' + n, 'x'.repeat(4000)]));
+    c.retainedRecords.forEach(r => r.metadata = structuredClone(large));
+    c.originNodes[0]!.record = structuredClone(c.retainedRecords[0]!);
+    c.originNodes[1]!.record = structuredClone(c.retainedRecords[1]!);
+    c.originNodes[2]!.record.metadata = structuredClone(large);
+    refreshFixtureAssessment(c);
+    assert.throws(() => parseContext(c), /context_byte_limit/);
+});

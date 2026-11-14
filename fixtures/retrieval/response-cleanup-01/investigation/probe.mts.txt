@@ -1,0 +1,136 @@
+import { createServer } from 'node:http';
+import { once } from 'node:events';
+import { writeFileSync } from 'node:fs';
+import { performance } from 'node:perf_hooks';
+import { createJevClient } from '/workspace/stack-20/services/api/src/providers/jev/client.ts';
+import { AbortableExa } from '/workspace/stack-20/services/api/src/providers/exa/client.ts';
+import { AttemptBudget, abortable } from '/workspace/stack-20/services/api/src/runtime/budget.ts';
+import { PipelineError } from '/workspace/stack-20/packages/contracts/src/index.ts';
+
+const out = '/workspace/task-evidence/production-response-cleanup-review';
+const rows: unknown[] = [];
+const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+const deferred = <T,>() => { let resolve!: (value: T) => void; const promise = new Promise<T>(r => { resolve = r; }); return { promise, resolve }; };
+const errorCode = (error: unknown) => error instanceof PipelineError ? error.code : error instanceof Error ? error.name : String(error);
+const capture = <T,>(promise: Promise<T>) => promise.then(() => ({ outcome: 'success' }), error => ({ outcome: 'error', code: errorCode(error) }));
+const request = { state: { public: 'Synthetic public response cleanup control.' }, questions: { answer: { type: 'noul' as const, instructions: 'Return a probability.' } } };
+const bytes = (size: number) => new Uint8Array(size).fill(120);
+function runtime(provider: 'jev' | 'exa', fetcher: typeof fetch, clock = Date.now) {
+  const controller = new AbortController();
+  const budget = new AttemptBudget();
+  const context = budget.context(controller.signal, clock, clock() + 10_000);
+  return { controller, budget, run: () => provider === 'jev'
+    ? createJevClient({ apiKey: 'local-dummy-key', fetch: fetcher }).ask(request, context)
+    : new AbortableExa('local-dummy-key', controller.signal, fetcher, context, 'local-claim').request('/search', 'POST', { query: 'Synthetic public control' }),
+    charges: () => provider === 'jev' ? budget.jev : budget.searches.get('local-claim') ?? 0 };
+}
+
+let connectionCount = 0;
+const closed = new Map<string, ReturnType<typeof deferred<void>>>();
+const server = createServer((req, res) => {
+  const route = req.url!;
+  const signal = closed.get(route)!;
+  connectionCount++;
+  res.on('close', () => signal.resolve());
+  if (route.startsWith('/late-')) { const timer = setTimeout(() => res.end('{}'), 500); res.on('close', () => clearTimeout(timer)); return; }
+  if (route.startsWith('/declared-reset-')) {
+    res.writeHead(200, { 'content-length': String(300_000), 'content-type': 'application/json' });
+    res.write('x');
+    setTimeout(() => res.destroy(), 10);
+    return;
+  }
+  const status = route.includes('401') ? 401 : route.includes('403') ? 403 : 200;
+  res.writeHead(status, route.includes('declared') ? { 'content-length': '300000' } : {});
+  res.write(route.includes('oversize') ? bytes(300_000) : 'x');
+  const timer = setInterval(() => res.write('x'), 100);
+  res.on('close', () => clearInterval(timer));
+});
+server.listen(0, '127.0.0.1');
+await once(server, 'listening');
+const address = server.address();
+if (!address || typeof address === 'string') throw new Error('local server unavailable');
+const base = `http://127.0.0.1:${address.port}`;
+const nativeFetch = globalThis.fetch;
+// Every network call below is explicitly rewritten to the local server. No provider URL or key is dispatched.
+try {
+  for (const provider of ['jev', 'exa'] as const) {
+    for (const scenario of ['401', '403', 'oversize', ...(provider === 'exa' ? ['declared'] : [])]) {
+      const route = `/${scenario}-${provider}`;
+      const close = deferred<void>(); closed.set(route, close);
+      const state = runtime(provider, ((_url, init) => nativeFetch(base + route, init)) as typeof fetch);
+      const started = performance.now();
+      const result = await capture(state.run());
+      const closedPromptly = await Promise.race([close.promise.then(() => true), delay(150).then(() => false)]);
+      rows.push({ group: 'native-http', provider, scenario, result, charges: state.charges(), elapsedMs: performance.now() - started, closedPromptly });
+    }
+    for (const scenario of ['before-headers', 'during-body']) {
+      const route = scenario === 'before-headers' ? `/late-${provider}` : `/body-${provider}`;
+      const close = deferred<void>(); closed.set(route, close);
+      const headers = deferred<void>();
+      const state = runtime(provider, (async (_url, init) => {
+        const response = await nativeFetch(base + route, init); headers.resolve(); return response;
+      }) as typeof fetch);
+      const result = capture(state.run());
+      if (scenario === 'during-body') await headers.promise; else await delay(20);
+      state.controller.abort(new PipelineError('cancelled'));
+      const observed = await result;
+      const closedPromptly = await Promise.race([close.promise.then(() => true), delay(150).then(() => false)]);
+      rows.push({ group: 'native-http', provider, scenario, result: observed, charges: state.charges(), closedPromptly });
+    }
+  }
+
+  // A native Response whose body transport fails after valid oversized headers.
+  // The delivery barrier makes the otherwise timing-dependent reset deterministic; it never suppresses AbortSignal.
+  {
+    const route = '/declared-reset-exa'; const close = deferred<void>(); closed.set(route, close);
+    let calls = 0;
+    const state = runtime('exa', (async (_url, init) => {
+      calls++;
+      const response = await nativeFetch(base + route, init);
+      await close.promise;
+      await delay(20);
+      return response;
+    }) as typeof fetch);
+    rows.push({ group: 'native-http-with-delivery-barrier', provider: 'exa', scenario: 'known-oversized-content-length-and-peer-reset', result: await capture(state.run()), charges: state.charges(), actualLocalCalls: calls, expectedPrimary: 'malformed_exa_response' });
+  }
+
+  // These are legal custom ReadableStreams behind the supported injected-fetch seam, NOT default native-fetch behavior.
+  for (const provider of ['jev', 'exa'] as const) {
+    for (const scenario of ['401', '403', 'oversize', ...(provider === 'exa' ? ['declared'] : [])]) {
+      let now = 0, cancelCalls = 0, settled = false;
+      const cleanup = deferred<void>(); const cancelEntered = deferred<void>();
+      const body = new ReadableStream<Uint8Array>({ start(controller) { if (scenario === 'oversize') controller.enqueue(bytes(300_000)); }, cancel() { cancelCalls++; cancelEntered.resolve(); return cleanup.promise; } });
+      const response = new Response(body, { status: scenario === '401' ? 401 : scenario === '403' ? 403 : 200, headers: scenario === 'declared' ? { 'content-length': '300000' } : {} });
+      const state = runtime(provider, (async () => response) as typeof fetch, () => now);
+      const raw = capture(state.run()).then(result => { settled = true; return result; });
+      const bounded = capture(abortable(raw, state.controller.signal));
+      await cancelEntered.promise; await delay(20);
+      const settledBeforeDeadline = settled;
+      now = 10_000; state.controller.abort(new PipelineError('timeout'));
+      const stageResult = await bounded;
+      const settledAfterAbortBeforeCleanup = settled;
+      cleanup.resolve();
+      rows.push({ group: 'injected-stream', provider, scenario, cancelCalls, settledBeforeDeadline, settledAfterAbortBeforeCleanup, stageResult, rawResultAfterCleanup: await raw, charges: state.charges(), expectedPrimary: scenario === '401' || scenario === '403' ? (provider === 'jev' ? 'jev_authentication' : 'exa_authentication_failed') : provider === 'jev' ? 'malformed_provider' : 'malformed_exa_response' });
+    }
+  }
+
+  // Transport explicitly violates cancellation by resolving headers after its supplied signal is aborted.
+  for (const provider of ['jev', 'exa'] as const) {
+    let cancelCalls = 0, readPulls = 0;
+    const responseReady = deferred<Response>(); let stream!: ReadableStreamDefaultController<Uint8Array>;
+    const body = new ReadableStream<Uint8Array>({ start(c) { stream = c; }, pull() { readPulls++; }, cancel() { cancelCalls++; } });
+    const state = runtime(provider, (async () => responseReady.promise) as typeof fetch);
+    const raw = capture(state.run());
+    state.controller.abort(new PipelineError('cancelled'));
+    responseReady.resolve(new Response(body));
+    await delay(25);
+    const beforeManualRelease = { cancelCalls, readPulls, bodyLocked: body.locked };
+    stream.enqueue(new TextEncoder().encode(provider === 'jev' ? '{"answers":{"answer":{"noul":0.5}}}' : '{}')); stream.close();
+    rows.push({ group: 'injected-signal-ignoring-transport', provider, scenario: 'response-after-cancel', beforeManualRelease, result: await raw, charges: state.charges(), cancelCalls });
+  }
+} finally {
+  server.closeAllConnections();
+  await new Promise<void>(resolve => server.close(() => resolve()));
+}
+writeFileSync(`${out}/observations.json`, JSON.stringify({ node: process.version, network: 'localhost only; zero provider calls', connectionCount, rows }, null, 2) + '\n', { flag: 'wx' });
+console.log(JSON.stringify({ rows: rows.length, connectionCount, artifact: `${out}/observations.json` }));

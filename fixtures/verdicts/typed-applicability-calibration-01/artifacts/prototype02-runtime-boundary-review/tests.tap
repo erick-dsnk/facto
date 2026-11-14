@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: token validity is not request cancellation validity; actual Session.current rejects cancelled owner
+ok 1 - token validity is not request cancellation validity; actual Session.current rejects cancelled owner
+  ---
+  duration_ms: 4.205497
+  type: 'test'
+  ...
+# Subtest: same snapshot survives pause/epoch change in primitive, but old runtime request is stale
+ok 2 - same snapshot survives pause/epoch change in primitive, but old runtime request is stale
+  ---
+  duration_ms: 1.10202
+  type: 'test'
+  ...
+# Subtest: same claim revision text cannot replace actual request-record ownership
+ok 3 - same claim revision text cannot replace actual request-record ownership
+  ---
+  duration_ms: 0.877653
+  type: 'test'
+  ...
+# Subtest: late asynchronous completion after cancellation cannot win abortable; token still needs lifecycle gate
+ok 4 - late asynchronous completion after cancellation cannot win abortable; token still needs lifecycle gate
+  ---
+  duration_ms: 2.312944
+  type: 'test'
+  ...
+# Subtest: request deadline requires explicit gate if timer has not run; current and budget checks alone do not enforce it
+ok 5 - request deadline requires explicit gate if timer has not run; current and budget checks alone do not enforce it
+  ---
+  duration_ms: 0.44507
+  type: 'test'
+  ...
+# Subtest: revisions share one request allowance and reserved later-claim judgment cannot be spent on another applicability call
+ok 6 - revisions share one request allowance and reserved later-claim judgment cannot be spent on another applicability call
+  ---
+  duration_ms: 0.508216
+  type: 'test'
+  ...
+# Subtest: cancelled request cannot consume fresh provider allowance
+ok 7 - cancelled request cannot consume fresh provider allowance
+  ---
+  duration_ms: 0.327934
+  type: 'test'
+  ...
+# Subtest: fresh input digest does not prove an actual assessment rerun; old output can be rebound by trusted caller
+ok 8 - fresh input digest does not prove an actual assessment rerun; old output can be rebound by trusted caller
+  ---
+  duration_ms: 2.817825
+  type: 'test'
+  ...
+# Subtest: valid offline context can exceed live request byte cap; context bound is not a provider allowance
+ok 9 - valid offline context can exceed live request byte cap; context bound is not a provider allowance
+  ---
+  duration_ms: 12.681096
+  type: 'test'
+  ...
+# Subtest: installation retirement invalidates token but does not itself evict an independent factual cache
+ok 10 - installation retirement invalidates token but does not itself evict an independent factual cache
+  ---
+  duration_ms: 135.443139
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 614.870554
