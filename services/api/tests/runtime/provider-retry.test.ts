@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PipelineError, type ProviderContext, type ProviderKind } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, PROVIDER_LIMITS, type ProviderContext, type ProviderKind } from '../../../../packages/contracts/src/index.js';
 import { createJevClient } from '../../src/providers/jev/client.js';
 import { AbortableExa } from '../../src/providers/exa/client.js';
 import { RetryableProviderError, retryAfterDelay, withProviderRetry } from '../../src/runtime/provider-retry.js';
@@ -139,6 +139,7 @@ describe('provider clients use the shared retry budget', () => {
   it('shares the hard Jev and per-claim search limits across separate provider calls', async () => {
     vi.useFakeTimers(); vi.setSystemTime(NOW);
     const budget = new AttemptBudget(); const controller = new AbortController();
+    budget.jev = PROVIDER_LIMITS.jev - 3; // three attempts left in the request allowance
     const shared = budget.context(controller.signal, () => Date.now(), NOW + 10_000);
     let jevCalls = 0;
     const jev = createJevClient({ apiKey: 'key', fetch: async () => {
@@ -151,7 +152,7 @@ describe('provider clients use the shared retry budget', () => {
     const first = jev.ask(request, shared); await vi.advanceTimersByTimeAsync(0); await expect(first).resolves.toBeTruthy();
     const second = expect(jev.ask(request, shared)).rejects.toThrow('jev_unavailable');
     await vi.advanceTimersByTimeAsync(0); await second;
-    expect(jevCalls).toBe(3); expect(budget.jev).toBe(3);
+    expect(jevCalls).toBe(3); expect(budget.jev).toBe(PROVIDER_LIMITS.jev);
 
     const searchBudget = new AttemptBudget(); const searchCtx = searchBudget.context(controller.signal, () => Date.now(), NOW + 10_000);
     let searchCalls = 0;
