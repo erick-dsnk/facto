@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import { textInputSchema } from './src/index.js';
-import { claimResultSchema, eventEnvelopeSchema } from './src/wire.js';
+import { claimResultSchema, eventEnvelopeSchema, displaySnapshotSchema, displayGrantSchema, claimSourcesSchema } from './src/wire.js';
 
 const directory = fileURLToPath(new URL('./schemas/', import.meta.url));
 await mkdir(directory, { recursive: true });
@@ -17,8 +17,15 @@ if (context && typeof context === 'object') {
 input.description = 'Version 1 text input. Lengths and spans use Unicode code points (Swift unicodeScalars). Blank text is rejected.';
 const result = z.toJSONSchema(claimResultSchema);
 result.description = 'Version 1 result. Additional semantic invariants: checkedText equals the code-point sourceSpan of originalText; selectedEvidenceIds exist in unique retained evidence; definitive verdicts have a citation; expiry >= checkedAt. Validated by wire.ts.';
+const snapshot = z.toJSONSchema(displaySnapshotSchema);
+const displayState = snapshot.properties?.state;
+if (displayState && typeof displayState === 'object' && Array.isArray(displayState.anyOf)) {
+  const object = displayState.anyOf.find(value => typeof value === 'object' && value.properties?.claimText);
+  if (object && typeof object === 'object' && object.properties?.claimText && typeof object.properties.claimText === 'object') object.properties.claimText.maxLength = 800;
+}
+snapshot.description = 'Read-only display reconnect snapshot. claimText is bounded to 800 Unicode code points. Checking state is manual; result state requires a non-silent result. Epoch and event sequence replace prior state without replay.';
 const envelope = z.toJSONSchema(eventEnvelopeSchema);
-envelope.description = 'Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR.';
-for (const [name, schema] of Object.entries({ 'text-input': input, 'claim-result': result, 'event-envelope': envelope })) {
+envelope.description = 'Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. claim.sources carries up to four safe source-site progress entries and requires requestId/claimId/revision. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR.';
+for (const [name, schema] of Object.entries({ 'text-input': input, 'claim-result': result, 'event-envelope': envelope, 'display-snapshot': snapshot, 'display-grant': z.toJSONSchema(displayGrantSchema), 'claim-sources': z.toJSONSchema(claimSourcesSchema) })) {
   await writeFile(`${directory}/${name}.schema.json`, `${JSON.stringify(schema, null, 2)}\n`);
 }

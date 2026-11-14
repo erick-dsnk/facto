@@ -32,7 +32,7 @@ Last updated: 14 November 2026, 03:45 EET. Tests run by A on the hardware below.
 | Ambient PCM (DAT stream audio) | **Proven** | Delivered **16000 Hz · 1 ch · Float32**, buffers flowing (418 at −32 dBFS while speaking). The level rose for the wearer and for a consenting non-wearer at ~1 m (values not logged) | Needs DAT `.microphone` permission (granted in Meta AI). Rides on the camera stream, so the camera and its LED stay on. Beta/development channel |
 | HFP microphone (wearer dictation) | **Proven** | With the glasses as the only Bluetooth headset, the HFP level responded to speech, format 16000 Hz · 1 ch · Float32 | First attempt routed to connected AirPods Max and stayed at −160 dBFS: other headsets must be disconnected, or the app must pick the glasses port by name |
 | Spoken output (TTS) | **Proven** | "Speak a sample result" played the sample verdict line | Plays on whatever Bluetooth output is active; the glasses must be the active output for the demo |
-| Native display card | Simulated only | MockDeviceKit Ray-Ban Display preview shows the card; Tap me increments | Meta Ray-Ban Display loaners arrive later today: run the Display checklist below |
+| Native display card | Fixture verified by teammate in simulator; production wiring pending Mac/device validation | The native True/False/Searching fixture was reported visually verified on Mac; production now shares that component hierarchy and real backend source updates | No physical MRBD validation is established by the fixture report |
 | Background behaviour | Not tested in A1 | Moved to A5 (#22): background the app mid-stream, expect the raw stream to stop, explicit Start session/stream restores it | Foreground-only P0, as in CameraAccess |
 | Simulated glasses | **Proven** | Section 2: MockDeviceKit Ray-Ban Meta and Ray-Ban Display, phone camera as feed | Always labelled simulated |
 
@@ -59,3 +59,65 @@ Meta Ray-Ban Display is the target device for the demo and the product. Not test
 
 - Glasses link showed "Connecting"/"Disconnected" after restarts; a power-switch cycle plus re-registration restored it. Matches Meta's firmware-129 workaround in issue #292.
 - The constantly animating latency clock made list buttons hard to tap; it now runs only while streaming at 30 Hz.
+
+
+## Native association and connection recovery (#64)
+
+The native display is the default lens path. The React Web App display remains available
+as an optional companion-selected output. Its cards and animations are preserved.
+
+Meta owns DAT registration and paired-device persistence. The app reads the SDK's current
+registration state/device stream and never stores a second Meta credential or automatically
+opens a new registration flow. A registered, eligible display device can reconnect output
+without an extra web display link. Physical force-quit/relaunch, revocation, unpairing and
+link-recovery behavior still need the supported-device checklist below; SDK state observation
+alone is not proof of persistent association on hardware.
+
+The backend URL is in UserDefaults; the join code stays in the device-only Keychain. A
+persisted connection-intent flag enables foreground restoration after a successful explicit
+Connect (and migrates an existing saved configuration). Explicit Disconnect disables it
+across relaunch. Session IDs and short-lived bearer tokens stay in memory. The transport
+recreates five-minute sessions with the existing authorized join code; it does not extend
+server TTLs. If that join code has expired or is revoked, automatic attempts stop and the
+companion asks for a valid code. Temporary failures use bounded attempt bursts and cooldown,
+cancelled on suspension/disconnect, with foreground/network recovery opportunities.
+
+Foreground restoration, backend renewal and native display reconnection do not call camera
+or microphone start. Live mode requires explicit Start listening after a connection loss or
+session expiry, including a short loss; its AudioStreamer opts out of the lower-level legacy
+five-second automatic sender-resume behavior. Backgrounding stops the active capture stream and
+suspends the transport. A previously opted-in wake detector retains its setting and may re-arm
+after an eligible foreground/session restoration; it remains gated by foreground,
+registration/device availability and backend eligibility. Unpair/revocation blocks it and
+active capture until eligibility returns. Reconnecting output never supplies new capture or wake
+consent.
+
+Only a current in-memory live result with the same backend session/epoch and an unexpired
+result deadline may be replayed after a DAT-only link loss. Relaunch, session renewal,
+backgrounding, cancellation, supersession, explicit disconnect and authorization loss clear
+that eligibility. History is not a native replay queue. Manual checking/source updates are
+scoped to the current request; older results or failures cannot replace a newer manual search.
+The native lens is clear while idle and has no conventional action buttons.
+
+### Native validation still required on Mac and physical glasses
+
+The Linux workspace checks Swift syntax but cannot compile the iOS app or execute XCTest.
+Run the new BackendClient, LiveModel, NativeConnectionRecovery and LookAndCheckCoordinator
+regressions in Xcode, then record the Xcode/iOS/DAT/Meta AI/glasses firmware versions for:
+
+1. Pair once, force-quit and relaunch; confirm whether SDK registration/device association is
+   restored without registration prompts. If Meta requires reauthorization, record it plainly.
+2. Start with a configured backend, relaunch/foreground and verify transport/native output
+   restoration with no camera LED, ambient stream or microphone start from recovery alone.
+3. Disconnect/reconnect network and glasses independently; verify deterministic status,
+   recovery, current-card deadline handling and explicit Start listening after transport loss.
+4. Let the five-minute session expire; confirm one new authorized session, no stale card and
+   no resumed recording. Revoke/expire the join code; confirm attempts stop until manual repair.
+5. Suspend during camera permission/startup and photo/OCR. Resume and verify delayed work
+   cannot submit old input or stop a later user-started stream. Repeat explicit Disconnect
+   across foreground/relaunch and confirm the connection stays disconnected.
+6. Revoke/unpair in Meta AI, then reauthorize; verify output eligibility, wake gating and
+   voice/button check readiness without automatically starting the main capture stream.
+
+Background transport or DAT execution is not guaranteed: this implementation restores when
+foreground execution and SDK/device availability permit it.

@@ -114,6 +114,12 @@ struct ContentView: View {
           MockDisplayPreview(display: mockDisplay)
             .frame(height: 300)
             .clipShape(RoundedRectangle(cornerRadius: 12))
+          #if DEBUG
+          NativeCardPreviewControls(
+            wearables: wearables, display: display,
+            captureOrLiveActive: camera.hasSession || live.isConnected
+          )
+          #endif
         }
       } else {
         ForEach(WearablesModel.MockModel.allCases) { model in
@@ -138,7 +144,9 @@ struct ContentView: View {
       if camera.hasSession {
         SwiftUI.Button("End session", role: .destructive) { camera.endSession() }
       } else {
-        SwiftUI.Button("Start session") { camera.startSession() }
+        SwiftUI.Button("Start session") {
+          Task { await live.performManualCapture { camera.startSession() } }
+        }
       }
 
       Picker("Resolution", selection: $camera.resolution) {
@@ -157,7 +165,7 @@ struct ContentView: View {
       if camera.isStreaming {
         SwiftUI.Button("Stop stream", role: .destructive) { camera.stopStream() }
       } else {
-        SwiftUI.Button("Start stream") { Task { await camera.startStream() } }
+        SwiftUI.Button("Start stream") { Task { await live.performManualCapture { await camera.startStream() } } }
           .disabled(camera.sessionState != .started)
       }
 
@@ -211,7 +219,7 @@ struct ContentView: View {
       }
       .disabled(camera.isCapturingPhoto)
       SwiftUI.Button(camera.isCapturingPhoto ? "Taking photo…" : "Take photo") {
-        Task { await camera.capturePhoto() }
+        Task { await live.performManualCapture { await camera.capturePhoto() } }
       }
       .disabled(camera.sessionState != .started || camera.isCapturingPhoto)
       if let status = camera.photoStatus {
@@ -278,6 +286,7 @@ struct ContentView: View {
       LabeledContent("Taps from glasses", value: "\(display.taps)")
       if display.sessionState == .idle {
         SwiftUI.Button("Connect display") { display.connect() }
+          .disabled(display.webDisplayEnabled)
       } else {
         SwiftUI.Button("Resend screen") { Task { await display.sendHome() } }
           .disabled(!display.isConnected)
@@ -289,7 +298,7 @@ struct ContentView: View {
     } header: {
       Text("4. Display (Meta Ray-Ban Display only)")
     } footer: {
-      Text("Needs real Display glasses or the simulated Display above. Gen 2 has no display.")
+      Text(display.webDisplayEnabled ? "Native DAT display output is disabled while Web display is selected above. Camera and microphone capture remain available." : "Needs real Display glasses or the simulated Display above. Gen 2 has no display.")
     }
   }
 }

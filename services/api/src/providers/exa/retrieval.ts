@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../packages/contracts/src/index.js';
 import { getDomain } from 'tldts';
 import { buildAlternateQuery, buildHighlightQuery, needsPageText, normalizeEvidence, normalizeUrl, parseExaContentsResponse, parseExaResponse, RETRIEVAL_OBJECTIVE } from '../../evidence/normalize.js';
@@ -40,6 +41,17 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       perDomain.set(domain, (perDomain.get(domain) ?? 0) + 1);
       return true;
     }).slice(0, 3);
+    // These are actual returned sites, never search-provider logos or timer-generated arrivals.
+    const sourcePages = pages.filter(page => { const url = normalizeUrl(page.url); return url && /^[a-z0-9.-]{1,253}$/i.test(new URL(url).hostname); }).filter((page, index, all) => all.findIndex(other => new URL(other.url).hostname === new URL(page.url).hostname) === index).slice(0, 4);
+    const stages = new Map<string, 'found' | 'reading' | 'ready'>();
+    const progress = () => {
+      context.signal.throwIfAborted();
+      context.reportSources?.(sourcePages.map(page => {
+        const hostname = new URL(page.url).hostname.toLowerCase();
+        return { id: createHash('sha256').update(hostname).digest('hex').slice(0, 24), hostname, title: (page.title ?? hostname).slice(0, 160), stage: stages.get(hostname) ?? 'found', provider: 'exa' as const };
+      }));
+    };
+    progress();
     let pageFailures = 0;
     for (const page of candidates) {
       context.signal.throwIfAborted();
@@ -47,6 +59,7 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       // so stop before beginning another page when no attempt remains; keep
       // the original search results and any page text already obtained.
       if (budget.canConsume && !budget.canConsume('contents', claim.id)) break;
+      stages.set(new URL(page.url).hostname.toLowerCase(), 'reading'); progress();
       if (options.clientFactory) context.consume('contents', claim.id);
       const contents = parseExaContentsResponse(await client.getContents([page.url], { text: { maxCharacters: 12000 }, highlights, livecrawl: 'preferred', livecrawlTimeout: 1500 }), [page.url]);
       context.signal.throwIfAborted();
@@ -55,7 +68,10 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       if (match) Object.assign(page, { text: match.text?.trim() ? match.text : page.text,
         highlights: [...new Set([...(match.highlights ?? []), ...(page.highlights ?? [])])].slice(0, 20),
         publishedDate: match.publishedDate ?? page.publishedDate });
+      stages.set(new URL(page.url).hostname.toLowerCase(), 'ready'); progress();
     }
+    for (const page of sourcePages) stages.set(new URL(page.url).hostname.toLowerCase(), 'ready');
+    progress();
     const evidence = normalizeEvidence(pages, claim.checkedText, new Date(context.now()).toISOString());
     // An empty result caused by unavailable pages is an unfinished acquisition,
     // not a successful search proving an absence of qualifying evidence.

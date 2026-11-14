@@ -62,6 +62,8 @@ final class CameraModel {
 
   // Live mode hooks (LiveModel). Set once; both run on the main actor.
   /// Glasses-mic buffers, copied off the SDK thread. Only while "Glasses mic audio" is on.
+  @ObservationIgnored var onCaptureStarting: (@MainActor () -> Void)?
+  @ObservationIgnored var onCaptureSessionEnded: (@MainActor () -> Void)?
   @ObservationIgnored var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)?
   /// The stream stopped. `byUser` is false when the glasses or the session dropped it.
   @ObservationIgnored var onStreamStopped: (@MainActor (_ byUser: Bool) -> Void)?
@@ -100,6 +102,7 @@ final class CameraModel {
 
   func startSession() {
     guard session == nil else { return }
+    onCaptureStarting?()
     lastError = nil
     do {
       let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
@@ -137,11 +140,13 @@ final class CameraModel {
     sessionTokens.clear()
     session = nil
     sessionState = .idle
+    onCaptureSessionEnded?()
   }
 
   // MARK: Step 2: camera stream
 
   func startStream() async {
+    onCaptureStarting?()
     guard let session, session.state == .started else {
       lastError = "Start a session first."
       return

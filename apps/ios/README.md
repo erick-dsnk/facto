@@ -64,9 +64,9 @@ The **Live** sections at the top run the product flow against services/api. The 
 4. **Check this**, or saying "check this" (the backend's `capture.request`), takes a photo from the running stream with `stream.capturePhoto(format: .jpeg)`. The phone reads it with Vision and sends the text. The stream never pauses.
 5. Results speak (`respond`), chime (`notify`) or go to history only (`silent`). The **lens mirror** shows the same card the Display glasses get when the display is connected (section 4). **Mute** silences speech and chimes but keeps cards and history.
 
-The status line has its own state for listening, reconnecting, stopped with a reason (glasses disconnected, no connection, session ended) and backend errors, so a broken connection never looks like "no alerts". A drop under 5 s resumes with a quiet chime; a ping every 2 s catches a connection that died without an error. Longer drops stop listening with a spoken reason. A check the user asked for always gets an answer: a verdict, "I'm not sure what was read", or after 15 s with no result, "The check didn't finish". A photo split into several requests gets one answer.
+The status line has its own state for listening, reconnecting, stopped with a reason (glasses disconnected, no connection, session ended) and backend errors, so a broken connection never looks like "no alerts". A ping every 2 s catches a connection that died without an error. If transport drops, the app stops the active sensor stream; restoring the connection alone does not restart capture or listening. Longer drops also speak a reason. A check the user asked for always gets an answer: a verdict, "I'm not sure what was read", or after 15 s with no result, "The check didn't finish". A photo split into several requests gets one answer.
 
-Backend sessions end 5 minutes after Connect. Live mode then opens a new session with the same join code and resumes listening (at most once a minute). **Automatic alerts** (on by default) sends `session.preferences` so the backend may chime for a contradicted claim it hears. The phone stays awake while listening: keep Glasses Lab in the foreground, because iOS suspends the socket and audio pipeline of a locked or backgrounded app.
+The backend session is short lived. Live mode retains the join code in Keychain and recreates the backend session when an eligible foreground/network recovery occurs; the short-lived session bearer remains in memory only. Connection recovery does not resume camera capture or ordinary ambient listening. After transport loss, app relaunch, or session expiry, tap **Start listening** again. A separately opted-in **Hey Facto** detector may re-arm after an eligible foreground/session restoration, according to its saved setting and device/backend authorization gates. **Automatic alerts** (on by default) sends `session.preferences` so the backend may chime for a contradicted claim it hears. The phone stays awake while listening: keep Glasses Lab in the foreground, because iOS suspends the socket and audio pipeline of a locked or backgrounded app.
 
 `LiveModelTests` covers the wiring with fakes. `LiveModelLiveTests` runs the same flow against a real backend and is skipped unless `TEST_RUNNER_BACKEND_LIVE_URL` and `TEST_RUNNER_BACKEND_LIVE_JOIN_CODE` are set (see `BackendClientLiveTests`). In fixture mode the backend checks only fixture sources, so a photo check comes back as "The check didn't finish".
 
@@ -107,6 +107,86 @@ The two prebuilt libraries it links (sherpa-onnx 2.0.1 and onnxruntime 1.28.2, a
 
 Section 2 pairs simulated glasses through MockDeviceKit. The phone's back camera becomes the glasses camera. Choose **Meta Ray-Ban Display** to see the rendered display screen inside the app.
 
+### Native DAT glasses display
+
+The normal product display path is Meta's native Device Access Toolkit (DAT).
+`DisplayCardBuilder` sends sourced result cards, live searching/source progress and
+brief trigger acknowledgements as native display components. The React Web App is
+an optional alternative display route; its CSS animations remain available there.
+Native DAT uses preset text/card styling and discrete layout updates, so its source
+and card changes do not use the Web App's fade/spring animations.
+Meta owns DAT registration and authorization. When its SDK reports an already
+authorized display device, the app restores its native display connection while
+foregrounded; a new or revoked Meta association still follows Meta AI's developer
+authorization flow and is not silently re-paired by the app.
+
+The phone-only fixture controls below exercise the native card and action
+acknowledgement builders without starting a backend check or recording. They are
+available in Debug builds for comparing SDK rendering.
+
+1. On a Mac with the Xcode version above, run `xcodegen generate` from `apps/ios`,
+   open `GlassesLab.xcodeproj`, select the **GlassesLab** scheme and an **iPhone
+   Simulator**, and Run with the **Debug** configuration.
+2. In the app, leave Live disconnected, camera capture stopped and **Native
+   display** selected. Disconnect the regular display if it is already connected.
+3. Under **2. Simulated glasses**, tap **Simulate Meta Ray-Ban Display**. Wait for
+   its device row to show **Connected**. The native fixture uses that mock's exact
+   device identifier, so it cannot select nearby physical glasses.
+4. In **Native DAT card comparison**, choose **Searching**, **True** or **False**,
+   then tap **Show native fixture**. The existing embedded preview above the
+   controls is the SDK's `MockDisplayKit.createPreviewView()` rendering of actual
+   `Display.send` output. **Replay native fixture** restarts it.
+5. For Meta's Chrome simulator, tap **Start native simulator server**, then open
+   **http://127.0.0.1:9000/** in Chrome on the **same Mac** running iOS Simulator.
+   Enable the [Meta Ray-Ban Display Simulator extension](https://chromewebstore.google.com/detail/jpjlmmodokemlepklkdbimceggpbjcll)
+   on that tab. This invokes the SDK's `startTestServer(port: 9000)` API, following
+   Meta's DisplayAccess sample; it is a different rendering path from the React
+   preview at port 3030. Keep this development server local to your Mac.
+   If port 9000 is already taken on the Mac (Docker often holds it), the app falls
+   back to a free port and shows the exact URL under the button.
+6. Capture True, False and the source-arrival sequence for comparison. **Stop
+   native fixture** ends its DAT session; **Stop native simulator server** stops
+   the SDK server. Stopping/replacing the simulated glasses also stops the server.
+
+Searching initially sends zero icons, adds T/B/W/S at 700 ms intervals, and sends
+the True result at 4.2 seconds. Every stage is a complete native component layout;
+the only images are small immutable source badges and verdict dots. The fixture's
+**Listening** and **Checking** options show the short acknowledgements used when
+those user actions are accepted. Listening appears after audio is ready and lasts
+about 1.4 s. Checking appears after a photo request passes capture/busy checks and
+lasts about 1.1 s; rejected requests do not produce an acknowledgement. Replay,
+disconnect, Web display selection, and leaving the mock preview
+cancel the sequence. Starting Live or capture cancels and disconnects the fixture.
+
+In Live mode, the card builder consumes actual backend results, selected evidence,
+and source-progress events. Source marks update as evidence is found/read; a new
+claim or session clears the prior card. A displayed result is recoverable only for
+its originating backend session and epoch and only until the result's expiry. DAT
+display reconnect re-sends that still-eligible card after the display is usable; it
+does not replay expired or old-session content.
+
+The fixture preserves the caption → claim → verdict/metadata → explanation →
+publisher hierarchy and supplied Eiffel Tower/goldfish copy. Native text styles,
+colors and rounded backgrounds are SDK presets, so exact font sizes, colored
+verdict text, CSS blur, custom card radius and overlapping icons are not exposed
+here. Source arrivals and the result change are discrete updates; there is no
+invented fade/spring API or stream of card images. The React app retains its
+smooth source/card transitions.
+
+The native fixture was rendered and visually checked by a teammate on a Mac before
+this follow-up. The current lifecycle and acknowledgement changes were made later
+in a Linux workspace; they still need an Xcode build and XCTest run, followed by
+simulator/device verification. On supported hardware, also trigger a real photo
+check and confirm its brief Checking acknowledgement appears at the expected time:
+Meta documents that capture transfer can hold DAT display updates in Dev/Beta.
+The phone's Live lens mirror and a browser rendering
+the React app are not evidence of native DAT appearance. Native preset font metrics
+may need a spacing adjustment after the SDK-rendered capture.
+
+References: [Meta's native display simulation guide](https://wearables.developer.meta.com/docs/develop/dat/display-simulation/),
+[DisplayAccess mock/server sample](https://github.com/meta/meta-wearables-dat-ios/blob/main/samples/DisplayAccess/DisplayAccess/ViewModels/WearablesViewModel.swift),
+[native display components](https://wearables.developer.meta.com/docs/develop/dat/display-overview/).
+
 ## Stream quality: Wi-Fi, not Bluetooth
 
 The SDK picks the video link from Info.plist. With the External Accessory keys (`UISupportedExternalAccessoryProtocols`, `external-accessory` background mode) it streams over Bluetooth Classic, which is heavily compressed and mostly stuck at 504×896. Without them it streams over a Wi-Fi network the glasses create, and holds 720×1280 at 30 fps. `project.yml` leaves the External Accessory keys out on purpose; don't add them back. Sources: Meta's replies in [issue #376](https://github.com/meta/meta-wearables-dat-ios/issues/376) and [discussion #297](https://github.com/meta/meta-wearables-dat-ios/discussions/297).
@@ -123,3 +203,39 @@ The SDK picks the video link from Info.plist. With the External Accessory keys (
 - Bluetooth bandwidth limits the stream. The SDK lowers resolution first, then frame rate, never below 15 fps. Lower settings give cleaner frames.
 
 Docs: <https://wearables.developer.meta.com/docs/develop/> · SDK and samples: <https://github.com/facebook/meta-wearables-dat-ios> (a copy with the CameraAccess and DisplayAccess samples is in `~/Desktop/meta-wearables-dat-ios`).
+
+## Optional React Web App display with the native companion
+
+The companion remains the capture/controller app. Wake phrase listening, “Hey Facto, check this”,
+spoken “check this” while streaming, and the phone Check this button all use the same existing
+camera/OCR/backend pipeline. The web app only observes the current session and cannot request a
+photo, upload audio, change preferences, pause, or delete the session.
+
+1. Connect Live to the hosted backend with the join code on the phone.
+2. In **Glasses display**, choose **Web display**. This releases only the native DAT display
+   session; the camera/microphone pipeline and phone mirror continue normally.
+3. Tap **Create temporary display link**. The default app URL is the backend URL plus `/display/`,
+   which serves the built web UI. Override it with an HTTPS UI deployment if needed.
+4. Use **Share display link** with your Meta Web Apps launcher/device workflow to open the link
+   on Meta Ray-Ban Display. **Preview on this phone** opens a phone preview; it does not launch
+   a web app on the glasses. There is no undocumented native auto-launch API in this app.
+5. Run a trigger on the companion. The web UI receives the same check, source progress, and
+   result over the reader stream. Phone Dismiss cancels the current displayed request through
+   the owner API, which also clears the web HUD. Repeat speaks on the companion; history replay
+   renders on the phone mirror only.
+
+The link contains a dedicated read-only display token in its URL fragment, never the owner
+bearer token or join code. It expires within five minutes (or when its parent session expires),
+is kept in memory only, and is cleared by the companion on disconnect/reconnect or epoch change.
+Generate a fresh link after session renewal. Switching back to Native display first revokes all
+web readers; if revocation fails the companion stays in Web display mode with native output
+blocked, preserving capture and listening until you retry. Native DAT is the default
+display path and reconnects when the app is active, Meta authorization remains valid,
+and a supported display becomes available. Web display is optional and is connected
+using the companion's Web display controls. A web app URL and API URL must use HTTPS; loopback HTTP is allowed only for local dev
+(`localhost:3030` UI and `localhost:3000` API). A phone's localhost points to that phone, so use a
+reachable HTTPS host for real glasses/phone testing.
+
+Native unit coverage is in `WebDisplayConnectionTests`, the display-grant cases in
+`BackendClientTests`, and output-mode/source-progress cases in `LiveModelTests`. Run these with
+the Xcode test command above; Linux TypeScript checks do not compile or run the iOS app.

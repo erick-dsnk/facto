@@ -23,7 +23,7 @@ export type AdmissionMetadata = {
 export type AcceptedClaim = { id: string; originalText: string; checkedText: string; sourceSpan: SourceSpan; admission: AdmissionMetadata };
 export type AdmissionResult = { action: 'wait' | 'skip' | 'check' | 'needs_confirmation'; reasonCode: string; claims: AcceptedClaim[] };
 export type ProviderKind = 'jev' | 'search' | 'contents';
-export interface ProviderContext { signal: AbortSignal; consume(kind: ProviderKind, claimId?: string): void; now(): number; recordUsage?(usage: { inputTokens?: number }): void; }
+export interface ProviderContext { signal: AbortSignal; consume(kind: ProviderKind, claimId?: string): void; now(): number; recordUsage?(usage: { inputTokens?: number }): void; reportSources?(sources: DisplaySource[]): void; }
 export class PipelineError extends Error {
   constructor(public code: string, public retryable = false) { super(code); this.name = 'PipelineError'; }
 }
@@ -49,7 +49,7 @@ export type ClaimResult = VerdictDecision & {
   originalText: string; checkedText: string; sourceSpan: SourceSpan; evidence: Evidence[]; checkedAt: string; expiresAt: string;
   durationMs: number; cached: boolean; policyVersion: string; modelVersion: string; presentation: Presentation;
 };
-export type EventType = 'session.ready' | 'session.ended' | 'claim.detected' | 'claim.waiting' | 'claim.skipped' | 'claim.needs_confirmation' | 'claim.checking' | 'claim.result' | 'claim.superseded' | 'check.cancelled' | 'pipeline.error' | 'audio.ready' | 'audio.stopped' | 'transcript.partial' | 'transcript.final' | 'capture.request';
+export type EventType = 'session.ready' | 'session.ended' | 'claim.detected' | 'claim.waiting' | 'claim.skipped' | 'claim.needs_confirmation' | 'claim.checking' | 'claim.result' | 'claim.sources' | 'claim.superseded' | 'check.cancelled' | 'pipeline.error' | 'audio.ready' | 'audio.stopped' | 'transcript.partial' | 'transcript.final' | 'capture.request';
 export type EventEnvelope = {
   schemaVersion: 1; eventId: string; eventSeq: number; sessionId: string; sessionEpoch: number; requestId?: string; claimId?: string; revision?: number;
   type: EventType; serverAt: string; payload: unknown;
@@ -59,3 +59,13 @@ export interface PipelineAdapters {
   retrieve(claim: AcceptedClaim, context: ProviderContext): Promise<Evidence[]>;
   judge(claim: AcceptedClaim, evidence: Evidence[], context: ProviderContext): Promise<Judgment>;
 }
+
+/** Source-site progress, not a claim that the search provider is evidence. */
+export type DisplaySource = { id: string; hostname: string; title: string; stage: 'found' | 'reading' | 'ready'; provider: 'exa' };
+export type DisplayState = {
+  requestId: string; claimId: string; revision: number; claimText: string;
+  mode: TextInput['mode']; userInitiated: boolean; phase: 'checking' | 'result';
+  sources: DisplaySource[]; result?: ClaimResult;
+};
+export type DisplayGrant = { schemaVersion: 1; sessionId: string; sessionEpoch: number; displayToken: string; expiresAt: string; streamPath: string };
+export type DisplaySnapshot = { schemaVersion: 1; type: 'display.snapshot'; sessionId: string; sessionEpoch: number; eventSeq: number; active: boolean; expiresAt: string; state: DisplayState | null };

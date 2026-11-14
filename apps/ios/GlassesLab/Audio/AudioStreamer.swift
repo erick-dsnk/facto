@@ -180,6 +180,7 @@ final class AudioStreamer: PlaybackReporting {
   private let source: CaptureSource
   private let clock: AudioStreamerClock
   private let reconnectGrace: TimeInterval
+  private let resumesAfterReconnect: Bool
   private let maxBufferedFrames: Int
   private let converter = PCM16Converter()
   private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "audio-streamer")
@@ -208,12 +209,14 @@ final class AudioStreamer: PlaybackReporting {
     clock: AudioStreamerClock? = nil,
     reconnectGrace: TimeInterval = AudioStreamer.reconnectGrace,
     maxBufferedFrames: Int = AudioWireFormat.maxBufferedFrames,
+    resumesAfterReconnect: Bool = true,
     debugLog: DebugLog = .shared
   ) {
     self.channel = channel
     self.source = source
     self.clock = clock ?? SystemAudioStreamerClock()
     self.reconnectGrace = reconnectGrace
+    self.resumesAfterReconnect = resumesAfterReconnect
     self.maxBufferedFrames = maxBufferedFrames
     self.debugLog = debugLog
   }
@@ -325,7 +328,11 @@ final class AudioStreamer: PlaybackReporting {
       }
     case .idle, .connecting, .reconnecting, .disconnected:
       if phase.hasOpenGeneration || phase == .pausedForPlayback {
-        enterReconnecting()
+        if resumesAfterReconnect {
+          enterReconnecting()
+        } else {
+          finish(.noConnection, sendAudioStop: false)
+        }
       }
     }
   }
