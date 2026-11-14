@@ -58,6 +58,8 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
     let hasIncomplete = false;
     let hasPrivate = false;
     let hasNonliteral = false;
+    let wholeInputIsConfidentOpinion = false;
+    let everyCandidateIsConfidentOpinion = true;
     for (const candidate of candidates) {
       const kind = answers[`${candidate.id}_kind`];
       const selfContained = answers[`${candidate.id}_self_contained`].noul;
@@ -77,6 +79,21 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
       hasNonliteral ||= issue === 'nonliteral' || assertionStatus === 'nonliteral_or_quoted' || quoteUseChoice === 'quoted_proposition';
       hasIncomplete ||= issue === 'incomplete' || kind.choice === 'incomplete_or_unclear' || assertionStatus === 'unclear' || quoteUseChoice === 'unclear' || structure === 'unclear' || (kind.choice === 'public_fact' && selfContained < 0.85);
       const structureEligible = structure === 'one_coherent';
+      const confidentCompleteOpinion = issue === null
+        && kind.choice === 'opinion'
+        && (kind.probabilities?.opinion ?? 0) >= 0.8
+        && selfContained >= 0.85
+        && privateData < 0.1
+        && assertionStatus === 'asserted'
+        && (!hasQuote || quoteUseChoice === 'name_or_title')
+        && (!isProperSubspan || (typeof preservesScope === 'number' && preservesScope >= 0.85))
+        && structureEligible;
+      everyCandidateIsConfidentOpinion &&= confidentCompleteOpinion;
+      if (candidate.id === candidates[0]?.id
+        && candidate.span.start === wholeSpan?.start
+        && candidate.span.end === wholeSpan?.end) {
+        wholeInputIsConfidentOpinion = confidentCompleteOpinion;
+      }
       if (issue || kind.choice !== 'public_fact' || (kind.probabilities?.public_fact ?? 0) < 0.8 || selfContained < 0.85 || privateData >= 0.1 || assertionStatus !== 'asserted' || (hasQuote && quoteUseChoice !== 'name_or_title') || (isProperSubspan && (typeof preservesScope !== 'number' || preservesScope < 0.85)) || !structureEligible) continue;
       admitted.push({
         id: `${input.requestId}-r${input.revision}-${candidate.id}`, originalText: input.text, checkedText: candidate.text, sourceSpan: candidate.span,
@@ -91,6 +108,7 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
     ));
     const claims = privacySafe.filter((claim, index) => !privacySafe.slice(0, index).some(prior => claim.sourceSpan.start < prior.sourceSpan.end && claim.sourceSpan.end > prior.sourceSpan.start)).slice(0, 2);
     if (claims.length) return { action: 'check', reasonCode: 'eligible_public_claim', claims };
+    if (wholeInputIsConfidentOpinion && everyCandidateIsConfidentOpinion) return { action: 'skip', reasonCode: 'not_eligible_public_fact', claims: [] };
     if (hasIncomplete && !hasPrivate && !hasNonliteral) return unresolved('incomplete_or_unclear');
     const reasonCode = hasPrivate ? 'private_or_personal' : hasNonliteral ? 'nonliteral_or_quoted' : 'not_eligible_public_fact';
     return { action: input.userInitiated && !hasPrivate && !hasNonliteral ? 'needs_confirmation' : 'skip', reasonCode, claims: [] };
