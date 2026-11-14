@@ -49,7 +49,7 @@ export type ClaimResult = VerdictDecision & {
   originalText: string; checkedText: string; sourceSpan: SourceSpan; evidence: Evidence[]; checkedAt: string; expiresAt: string;
   durationMs: number; cached: boolean; policyVersion: string; modelVersion: string; presentation: Presentation;
 };
-export type EventType = 'session.ready' | 'session.ended' | 'claim.detected' | 'claim.waiting' | 'claim.skipped' | 'claim.needs_confirmation' | 'claim.checking' | 'claim.result' | 'claim.superseded' | 'check.cancelled' | 'pipeline.error' | 'audio.ready' | 'audio.stopped' | 'transcript.partial' | 'transcript.final';
+export type EventType = 'session.ready' | 'session.ended' | 'claim.detected' | 'claim.waiting' | 'claim.skipped' | 'claim.needs_confirmation' | 'claim.checking' | 'claim.result' | 'claim.superseded' | 'check.cancelled' | 'pipeline.error' | 'audio.ready' | 'audio.stopped' | 'transcript.partial' | 'transcript.final' | 'capture.request';
 export type EventEnvelope = {
   schemaVersion: 1; eventId: string; eventSeq: number; sessionId: string; sessionEpoch: number; requestId?: string; claimId?: string; revision?: number;
   type: EventType; serverAt: string; payload: unknown;
