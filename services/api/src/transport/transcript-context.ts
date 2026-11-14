@@ -49,14 +49,21 @@ export const VOICE_TRIGGER_PHRASES = ['check this', 'can you check this', 'could
 const LEADING_FILLER = '(?:hey|ok|okay|um|uh|so|please|alright)';
 // A short bounded tail ("check this one", "check this photo for me"); open-ended continuations stay claims.
 const TRAILING_FILLER = '(?:please|now|for me|one|photo|picture|image|sign)';
-const triggerPattern = new RegExp(`^(?:${LEADING_FILLER} )*(?:${VOICE_TRIGGER_PHRASES.join('|')})(?: ${TRAILING_FILLER})*$`);
+// Optional app name before the command ("Facto, check this", "Hey Facto, is this true?"); "hey" comes from LEADING_FILLER.
+// Deepgram writes the name as "Facto", "Facto." or "Fact o", which normalize to "facto" and "fact o".
+// "Factor" and "Fakto" are accepted too, as likely mishearings (issue #44). The rest of the sentence must still be a
+// trigger phrase, so they only count in front of a real command and add no new false triggers.
+export const VOICE_WAKE_WORDS = ['facto', 'fact o', 'factor', 'fakto'];
+const triggerPattern = new RegExp(`^(?:${LEADING_FILLER} )*(?:(?:${VOICE_WAKE_WORDS.join('|')}) (?:${LEADING_FILLER} )*)?`
+  + `(?:${VOICE_TRIGGER_PHRASES.join('|')})(?: ${TRAILING_FILLER})*$`);
 
 /** Lowercase, hyphens to spaces, punctuation removed, whitespace collapsed. */
 export const normalizeUtterance = (text: string) => text.normalize('NFKC').toLowerCase()
   .replace(/[-‐-―]/g, ' ').replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, ' ').trim();
 
 /**
- * True when the whole sentence is a "check this" command, optionally wrapped in filler words or followed by a short object word.
- * A claim that merely contains the phrase ("I need to check this report") is not a trigger.
+ * True when the whole sentence is a "check this" command, optionally wrapped in filler words, led by the wake word "Facto",
+ * or followed by a short object word.
+ * A claim that merely contains the phrase ("I need to check this report", "Facto is a great app") is not a trigger.
  */
 export const isVoiceTrigger = (text: string) => triggerPattern.test(normalizeUtterance(text));
