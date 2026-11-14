@@ -7,6 +7,7 @@ struct GlassesLabApp: App {
   @State private var camera: CameraModel
   @State private var display: DisplayModel
   @State private var audioLab = AudioLabModel()
+  @State private var live: LiveModel
 
   init() {
     do {
@@ -15,14 +16,17 @@ struct GlassesLabApp: App {
       NSLog("[GlassesLab] Wearables.configure failed: \(error)")
     }
     // The models use Wearables.shared, so they are created after configure().
+    let camera = CameraModel()
+    let display = DisplayModel()
     _wearables = State(initialValue: WearablesModel())
-    _camera = State(initialValue: CameraModel())
-    _display = State(initialValue: DisplayModel())
+    _camera = State(initialValue: camera)
+    _display = State(initialValue: display)
+    _live = State(initialValue: LiveModel(camera: camera, display: display))
   }
 
   var body: some Scene {
     WindowGroup {
-      ContentView(wearables: wearables, camera: camera, display: display, audioLab: audioLab)
+      ContentView(wearables: wearables, camera: camera, display: display, audioLab: audioLab, live: live)
         .onOpenURL { url in
           // Meta AI calls back here after registration and permission prompts.
           guard

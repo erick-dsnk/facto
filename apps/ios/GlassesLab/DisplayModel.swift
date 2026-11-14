@@ -127,3 +127,19 @@ final class DisplayModel {
     }
   }
 }
+
+extension DisplayModel: LensDisplaying {
+  /// Live mode: the result card on the lens, or a cleared lens when `card` is nil.
+  func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
+    guard let display else { return }
+    do {
+      if let card {
+        try await display.send(DisplayCardBuilder.build(card, onRepeat: onRepeat, onDismiss: onDismiss))
+      } else {
+        try await display.clearDisplay()
+      }
+    } catch {
+      lastError = "Send: \(error.localizedDescription)"
+    }
+  }
+}
