@@ -4,6 +4,8 @@ import { AttemptBudget } from '../../src/runtime/budget.js';
 import { fixtureAdapters } from '../../src/runtime/fixtures.js';
 import { PipelineRuntime } from '../../src/runtime/pipeline.js';
 import { Session, SessionStore } from '../../src/runtime/session.js';
+import { createClassifier } from '../../src/providers/jev/classification.js';
+import type { JevAnswer } from '../../src/providers/jev/client.js';
 
 const input = (s: Session, id = 'req', overrides: Partial<TextInput> = {}): TextInput => ({ schemaVersion: 1, requestId: id, sessionId: s.id, sessionEpoch: s.epoch, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.', language: 'en', capturedAt: new Date(Date.now()).toISOString(), capture: { source: 'typed_fixture', segmentId: 'seg', confidence: 1 }, context: [], userInitiated: true, ...overrides });
 function setup(adapters: PipelineAdapters = fixtureAdapters()) {
@@ -12,6 +14,28 @@ function setup(adapters: PipelineAdapters = fixtureAdapters()) {
   return { session, events, runtime: new PipelineRuntime(adapters), adapters };
 }
 const flush = () => vi.advanceTimersByTimeAsync(0);
+
+/** Real admission implementation with synthetic named Jev answers; no network calls. */
+function topicAdapters(priority: number | null = null): PipelineAdapters {
+  return { ...fixtureAdapters(), classify: createClassifier({
+    ask: async (request, context) => {
+      context.consume('jev');
+      const answers: Record<string, JevAnswer> = {};
+      for (const candidate of (request.state as { candidates: { id: string; text: string }[] }).candidates) {
+        const privateText = candidate.text.includes('salary');
+        for (const [name, question] of Object.entries(request.questions)) {
+          if (!name.startsWith(candidate.id + '_')) continue;
+          if (question.type === 'choice') {
+            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact' : 'asserted';
+            answers[name] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, key === choice ? .99 : .01 / (Object.keys(question.criteria).length - 1)])) };
+          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') ? .99 : priority };
+        }
+      }
+      return answers;
+    }
+  }) };
+}
+
 describe('bounded pipeline runtime', () => {
   beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date('2026-11-14T12:00:00Z')); });
   afterEach(() => vi.useRealTimers());
@@ -40,6 +64,72 @@ describe('bounded pipeline runtime', () => {
     expect(retrieve).toHaveBeenCalledTimes(2);
     expect(events.filter(e => e.type === 'claim.result').at(-1)?.payload).toMatchObject({ cached: true, presentation: { action: 'respond' } });
     session.pause(); expect(session.cache.size).toBe(0);
+  });
+
+  it.each([
+    { selectedTopics: [' LIGHTNING '], automaticNotifications: true, action: 'notify', reasonCode: 'selected_topic_contradiction' },
+    { selectedTopics: ['Lightning'], automaticNotifications: false, action: 'silent', reasonCode: 'notifications_disabled' },
+    { selectedTopics: [], automaticNotifications: true, action: 'silent', reasonCode: 'insufficient_priority' },
+    { selectedTopics: ['weather'], automaticNotifications: true, action: 'silent', reasonCode: 'insufficient_priority' },
+    { selectedTopics: ['light'], automaticNotifications: true, action: 'silent', reasonCode: 'insufficient_priority' },
+  ])('matches only enabled literal topics after actual public admission: $selectedTopics / $automaticNotifications', async ({ selectedTopics, automaticNotifications, action, reasonCode }) => {
+    const { session, runtime, events } = setup(topicAdapters());
+    session.preferences = { muted: false, automaticNotifications, selectedTopics };
+    runtime.submit(session, input(session, 'topic', { text: 'Lightning never strikes the same place twice.', context: ['Weather is the discussion topic.'], userInitiated: false })); await flush();
+    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ verdict: 'contradicted', presentation: { action, reasonCode } });
+  });
+
+  it('never matches a rejected private clause or context around an admitted public span', async () => {
+    const adapters = topicAdapters(); const retrieve = vi.spyOn(adapters, 'retrieve');
+    const { session, runtime, events } = setup(adapters);
+    session.preferences = { muted: false, automaticNotifications: true, selectedTopics: ['salary', 'weather'] };
+    runtime.submit(session, input(session, 'private-topic', {
+      text: 'My salary is €4,000 and Lightning never strikes the same place twice.', context: ['Weather is the discussion topic.'], userInitiated: false
+    })); await flush();
+    expect(retrieve).toHaveBeenCalledTimes(1);
+    expect(retrieve.mock.calls[0][0].checkedText).toBe('Lightning never strikes the same place twice.');
+    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ verdict: 'contradicted', checkedText: 'Lightning never strikes the same place twice.', presentation: { action: 'silent', reasonCode: 'insufficient_priority' } });
+  });
+
+  it('recomputes topic relevance for cached results and corrected revisions using current preferences', async () => {
+    const adapters = topicAdapters(); const retrieve = vi.spyOn(adapters, 'retrieve');
+    const { session, runtime, events } = setup(adapters);
+    const text = 'Lightning never strikes the same place twice.';
+    session.preferences = { muted: false, automaticNotifications: false, selectedTopics: ['Lightning'] };
+    runtime.submit(session, input(session, 'first', { text, userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { action: 'silent' } });
+    await vi.advanceTimersByTimeAsync(4_000);
+    session.preferences = { muted: false, automaticNotifications: true, selectedTopics: [] };
+    runtime.submit(session, input(session, 'next', { text, userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ cached: true, presentation: { action: 'silent', reasonCode: 'insufficient_priority' } });
+    session.preferences.selectedTopics = ['Lightning'];
+    runtime.submit(session, input(session, 'next', { text, revision: 2, userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)).toMatchObject({ revision: 2, payload: { cached: true, presentation: { action: 'notify', reasonCode: 'selected_topic_contradiction' } } });
+    session.preferences.selectedTopics = [];
+    runtime.submit(session, input(session, 'next', { text, revision: 3, userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)).toMatchObject({ revision: 3, payload: { cached: true, presentation: { action: 'silent' } } });
+    expect(retrieve).toHaveBeenCalledTimes(1);
+    expect(session.notifications).toHaveLength(1);
+  });
+
+  it.each([true, false])('uses preferences current at completion when a topic is enabled=%s during provider work', async enabled => {
+    const adapters = topicAdapters(); const original = adapters.retrieve;
+    let resolve!: (value: Awaited<ReturnType<PipelineAdapters['retrieve']>>) => void;
+    let pending!: Awaited<ReturnType<PipelineAdapters['retrieve']>>;
+    adapters.retrieve = async (claim, context) => { pending = await original(claim, context); return new Promise(r => { resolve = r; }); };
+    const { session, runtime, events } = setup(adapters);
+    session.preferences = { muted: false, automaticNotifications: true, selectedTopics: enabled ? [] : ['Lightning'] };
+    runtime.submit(session, input(session, 'changing-topic', { text: 'Lightning never strikes the same place twice.', userInitiated: false })); await flush();
+    session.preferences.selectedTopics = enabled ? ['Lightning'] : [];
+    resolve(pending); await flush();
+    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ presentation: { action: enabled ? 'notify' : 'silent', reasonCode: enabled ? 'selected_topic_contradiction' : 'insufficient_priority' } });
+  });
+
+  it.each([true, false])('preserves manual and practical-consequence behavior without topic matches: manual=%s', async userInitiated => {
+    const { session, runtime, events } = setup(topicAdapters(userInitiated ? null : .99));
+    session.preferences = { muted: false, automaticNotifications: true, selectedTopics: [] };
+    runtime.submit(session, input(session, 'normal', { text: 'Lightning never strikes the same place twice.', userInitiated })); await flush();
+    expect(events.find(event => event.type === 'claim.result')?.payload).toMatchObject({ presentation: { action: userInitiated ? 'respond' : 'notify', reasonCode: userInitiated ? 'explicit_request' : 'practical_contradiction' } });
   });
 
   it('cancels an uncooperative provider at ten seconds, never emitting a late result', async () => {

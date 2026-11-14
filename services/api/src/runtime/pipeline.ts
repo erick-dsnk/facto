@@ -1,7 +1,7 @@
 import { performance } from 'node:perf_hooks';
 import { MODEL_VERSION, POLICY_VERSION, PipelineError, type ClaimResult, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
 import { decideVerdict } from '../policy/verdict.js';
-import { decidePresentation } from '../policy/notifications.js';
+import { decidePresentation, matchSelectedTopic } from '../policy/notifications.js';
 import { AttemptBudget, abortable } from './budget.js';
 import { fingerprint, type RequestRecord, type Session } from './session.js';
 import { claimResultSchema } from '../../../../packages/contracts/src/wire.js';
@@ -141,7 +141,10 @@ export class PipelineRuntime {
         }
         session.notifications = session.notifications.filter(t => this.now() - t < 60_000);
         for (const [k, expires] of session.recentClaims) if (expires <= this.now()) session.recentClaims.delete(k);
-        result = { ...result, presentation: decidePresentation({ ...result, admission: claim.admission }, input.userInitiated ? 'manual' : 'automatic', {
+        // Preferences may change while providers run or between factual cache hits.
+        // Match only the admitted span at delivery time; never reuse topic metadata.
+        const currentAdmission = { ...claim.admission, matchedSelectedTopic: matchSelectedTopic(claim.checkedText, session.preferences.selectedTopics) };
+        result = { ...result, presentation: decidePresentation({ ...result, admission: currentAdmission }, input.userInitiated ? 'manual' : 'automatic', {
           active: session.active, healthy: true, current: session.current(record), expired: Date.parse(result.expiresAt) <= this.now(),
           duplicate: !input.userInitiated && session.recentClaims.has(key), notificationCount: session.notifications.length
         }, session.preferences) };
