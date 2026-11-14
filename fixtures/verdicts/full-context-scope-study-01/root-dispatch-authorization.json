@@ -1,0 +1,31 @@
+{
+  "authorizedAt": "2026-11-14T05:51:13.098107+00:00",
+  "planCanonicalSHA256": "ad0842adae30a8dd51abe03df7cfe938b31b2fbe94caf0cafe57012e827dea07",
+  "planFileSHA256": "d4914f6590f098de3a24939686ed4c95df858b1b5cf20a0e4d814e63f26f13a1",
+  "independentReviewSHA256": "2c572d44650082594152742159f33faf7e9abc6a37f850a74c35c5da59732179",
+  "authorizedExecutionCount": 1,
+  "output": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01",
+  "limits": {
+    "maxAttempts": 48,
+    "maxInputTokens": 640000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 3145728,
+    "wallMs": 120000
+  },
+  "stratumLimits": {
+    "maxAttempts": 24,
+    "maxInputTokens": 320000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 1572864
+  },
+  "conditions": [
+    "All48exactpredeclaredrequests once; no retries or completed-request reruns.",
+    "Separate prospective and outcome-informed existing strata; no pooled factualaccuracy.",
+    "Scope16 remains deferred; all thresholds/full companion pools unchanged.",
+    "No production promotion authorized by execution.",
+    "Some synthetic non-target identifiers are descriptive (including decoy); report this limitation on supplementary all-source metrics. Primary target identifiers do not encode expected scope.",
+    "Preserve first-run failures and unknown usage."
+  ]
+}
