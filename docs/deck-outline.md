@@ -40,11 +40,13 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-Current integration passes lint/typecheck and **547 tests across 26 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; later evidence-retention and absolute-deadline fixes are outside that freeze and have no live credit here.
+Current integration passes lint/typecheck and **564 tests across 28 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; later runtime/cache/selector changes are outside that freeze and have no live credit here.
 
 On the repeated OPEN broader corpus, candidate09 produced **4/12 correct definitive unique facts**, **3/12 with every selected reference verified**, eight abstentions and no operational error. It admitted 13/13 eligible occurrences and delivered 16/16 terminals. The mixed BD07 repeat abstained and adds zero unique facts. An initial guard halt and reviewed artifact-only continuation preserved batch 1 and continued only unstarted batches 2–4.
 
 The separate [baseline](broader-development-2026-11-14.md) remains 3/12 raw and 2/12 fully verified. [Candidate08](broader-development-candidate08.md), frozen at `aefb9e7`, remains 6/12 raw and 4/12 fully verified, five abstentions and one operational error. These are OPEN development observations, not blind accuracy or an isolated causal improvement. Agent source review retains original proof timestamps and the inaccessible selected Olympics reference; transport completion does not establish source coverage.
+
+The [new cache/selector validation](../fixtures/evaluation/live/cache-selector-integration-01/validation.json) separates the 517/24 runtime working-tree check from the clean 564/28 root gate and fresh 36/36+21/21 fixtures. Injected tests distinguish `MW`/`mW` and quoted whitespace in cache/notification identity while exact repeats remain cached/deduplicated. Selector retained outputs match across 151 compared pools; no provenance capability is activated. The separate [scope48 study](../fixtures/verdicts/full-context-scope-study-01/README.md) had no prospective gain and two adverse BD10 cells; it is archived without prompt promotion or factual-gain credit.
 
 [Actual-provider automatic controls](automatic-development-2026-11-14.md) produced **five passes and one inconclusive** in the original six-scenario cohort. A separate AD07 followup exercised supported + silent; it does not replace AD03 or change the original score, and adds zero new facts. This is typed backend action evidence, not hardware notification delivery.
 
