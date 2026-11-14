@@ -1,0 +1,22 @@
+✔ actual SDK fail-closed accounting: search_failure (10.931943ms)
+✔ actual SDK fail-closed accounting: search_malformed (0.662739ms)
+✔ actual SDK fail-closed accounting: root_failure (7.152509ms)
+✔ actual SDK fail-closed accounting: unknown_failure (0.998335ms)
+✔ actual SDK fail-closed accounting: contradiction (0.863431ms)
+✔ actual SDK fail-closed accounting: eligible_result_failure (1.084254ms)
+✔ actual SDK fail-closed accounting: late_search (0.428847ms)
+✔ actual SDK fail-closed accounting: precancel (0.163977ms)
+✔ known target fallback retains only separate indexed text: known_failure (2.91276ms)
+{"injectedHTTP":18,"providerCalls":0,"networkCalls":0,"productionEdits":0}
+✔ known target fallback retains only separate indexed text: transport_retry (7.329335ms)
+✔ successful legacy envelope and unknown extension remain usable with fresh unassessed fields (1.213779ms)
+✔ typed operational metadata is validated before stripping, unknown extensions never become returned fields (0.806486ms)
+✔ report actual injected HTTP count (0.206421ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 471.192247

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 2,
+  "validatedAt": "2026-11-14T05:30:20.676988+00:00",
+  "preservedOriginals": [
+    {
+      "directory": "/workspace/task-evidence/record-capability-design",
+      "manifestSHA256": "61d06043365be55ad91b8f85e01d336b82c481d83585fdcba4906604471cda4e",
+      "filesVerifiedUnchanged": 70
+    },
+    {
+      "directory": "/workspace/task-evidence/record-capability-prototype-01",
+      "manifestSHA256": "4366f1fb62a4eee5180a6a719c817a4a819364d8fa72fba9efbf50db48b2e574",
+      "filesVerifiedUnchanged": 48
+    }
+  ],
+  "installedManifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+  "independentReviewSHA256": "eafb68f915d8f17374bd9db4307ac6775d85c499099465b26cf1029c5dd53171",
+  "reviewPinsAllMatch": true,
+  "typecheckExitCode": 0,
+  "tests": {
+    "total": 57,
+    "pass": 57,
+    "fail": 0,
+    "independentFullContextTestsPassed": 25,
+    "tapSHA256": "a2a859346f897b88ec1635697ec6035db6c989ff15c5fd3c2580e8434ef8a9bf"
+  },
+  "frozenShadowCounts": {
+    "requests": 22,
+    "applicable": 10,
+    "positiveExpected": 10,
+    "falseCapabilities": 0,
+    "missedCapabilities": 0,
+    "matches": 22,
+    "recordFamilies": 4
+  },
+  "fullSuppliedContextBindingImplemented": true,
+  "priorContextBindingBlockerClosed": true,
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "productionChanges": false,
+  "productionImports": 0,
+  "newDependencies": 0,
+  "rawEnglishAdapterImplemented": false,
+  "currentVersionAuthenticationImplemented": false,
+  "finalVerdictOrCoverageEvaluated": false,
+  "runtimeHookAuthorized": false,
+  "coreImportInventory": {
+    "applicability.ts": [
+      "./manifest.js",
+      "./types.js"
+    ],
+    "bind.ts": [
+      "./types.js"
+    ],
+    "evaluate.ts": [
+      "./manifest.js",
+      "./snapshot.js",
+      "./applicability.js",
+      "./bind.js",
+      "./types.js"
+    ],
+    "files.ts": [
+      "node:fs",
+      "node:fs/promises",
+      "node:path",
+      "./types.js"
+    ],
+    "fixture-context.ts": [
+      "./types.js"
+    ],
+    "install.ts": [
+      "node:fs/promises",
+      "node:path",
+      "node:url",
+      "./types.js"
+    ],
+    "manifest.ts": [
+      "./files.js",
+      "./types.js"
+    ],
+    "shadow.ts": [
+      "node:fs/promises",
+      "node:url",
+      "./install.js",
+      "./manifest.js",
+      "./snapshot.js",
+      "./applicability.js",
+      "./evaluate.js",
+      "./types.js",
+      "./fixture-context.js"
+    ],
+    "snapshot.ts": [
+      "./manifest.js",
+      "./files.js",
+      "./types.js"
+    ],
+    "types.ts": [
+      "node:crypto"
+    ]
+  }
+}

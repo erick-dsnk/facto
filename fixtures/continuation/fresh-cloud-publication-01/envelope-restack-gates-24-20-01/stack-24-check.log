@@ -1,0 +1,25 @@
+
+> check
+> npm run lint && npm run typecheck && npm test
+
+
+> lint
+> eslint packages services apps --no-warn-ignored
+
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> vitest run
+
+
+ RUN  v5.1.0 /workspace/stack-24
+
+
+ Test Files  15 passed (15)
+      Tests  416 passed (416)
+   Start at  09:46:53
+   Duration  10.70s (tests 85%, import 12%, transform 2%)
+

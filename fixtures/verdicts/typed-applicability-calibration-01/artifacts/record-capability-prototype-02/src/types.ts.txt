@@ -1,0 +1,352 @@
+import { createHash } from 'node:crypto';
+export const LIMITS = Object.freeze({ fileBytes: 2097152, totalArtifactBytes: 12582912, receipts: 8, proofs: 24, frames: 64, units: 8, evidence: 6, excerptCodepoints: 2000 });
+export class ValidationError extends Error {
+    constructor(public readonly code: string) { super(code); }
+}
+export const fail = (code: string): never => { throw new ValidationError(code); };
+export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex');
+export function object(value: unknown, keys: readonly string[]): Record<string, unknown> {
+    if (!value || typeof value !== 'object' || Array.isArray(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value)))
+        return fail('invalid_object');
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    if (Reflect.ownKeys(value).some(key => typeof key !== 'string' || !keys.includes(key)) || Object.values(descriptors).some(d => !('value' in d)))
+        return fail('unknown_field_or_accessor');
+    if (keys.some(key => !Object.hasOwn(value, key)))
+        return fail('missing_field');
+    return value as Record<string, unknown>;
+}
+export function string(value: unknown, max = 4096): string {
+    if (typeof value !== 'string' || !value.length || value.length > max)
+        return fail('invalid_string');
+    return value;
+}
+export function hash(value: unknown): string {
+    const v = string(value, 64);
+    if (!/^[a-f0-9]{64}$/.test(v))
+        return fail('invalid_digest');
+    return v;
+}
+export function integer(value: unknown, max = 10000000): number {
+    if (!Number.isSafeInteger(value) || (value as number) < 0 || (value as number) > max)
+        return fail('invalid_integer');
+    return value as number;
+}
+export function bool(value: unknown): boolean {
+    if (typeof value !== 'boolean')
+        return fail('invalid_boolean');
+    return value;
+}
+export function array<T>(value: unknown, max: number, parse: (item: unknown) => T, min = 0): T[] {
+    if (!Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || value.length < min || value.length > max)
+        return fail('invalid_array');
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    if (Reflect.ownKeys(value).length !== value.length + 1 || Object.values(descriptors).some(d => !('value' in d)) ||
+        Array.from({ length: value.length }, (_, index) => index).some(index => !Object.hasOwn(value, index)))
+        return fail('invalid_array_structure');
+    return value.map(parse);
+}
+export function unique<T>(values: T[]): T[] {
+    if (new Set(values).size !== values.length)
+        return fail('duplicate_identifier');
+    return values;
+}
+export function oneOf<T extends string>(value: unknown, allowed: readonly T[]): T {
+    if (typeof value !== 'string' || !allowed.includes(value as T))
+        return fail('invalid_enum');
+    return value as T;
+}
+export function url(value: unknown): string {
+    const v = string(value);
+    let parsed: URL;
+    try {
+        parsed = new URL(v);
+    }
+    catch {
+        return fail('invalid_url');
+    }
+    if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password || parsed.hash || parsed.href !== v)
+        return fail('invalid_url');
+    return v;
+}
+export function time(value: unknown): string {
+    const v = string(value, 40);
+    if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,6})?(?:Z|[+-]\d\d:\d\d)$/.test(v) || !Number.isFinite(Date.parse(v)))
+        return fail('invalid_time');
+    return v;
+}
+export function stringMap(value: unknown): Record<string, string> {
+    if (!value || typeof value !== 'object' || Array.isArray(value))
+        return fail('invalid_scope');
+    const keys = Object.keys(value);
+    if (keys.length > 12 || keys.some(k => !/^[a-z][a-zA-Z0-9]{0,31}$/.test(k) || ['constructor', 'prototype'].includes(k)))
+        return fail('invalid_scope');
+    const checked = object(value, keys);
+    return Object.fromEntries(Object.entries(checked).map(([k, v]) => [k, string(v, 512)]));
+}
+export function deepFreeze<T>(value: T): T {
+    if (value && typeof value === 'object') {
+        Object.values(value).forEach(deepFreeze);
+        Object.freeze(value);
+    }
+    return value;
+}
+export function canonical(value: unknown): string {
+    if (value === null || typeof value !== 'object')
+        return JSON.stringify(value);
+    if (Array.isArray(value))
+        return '[' + value.map(canonical).join(',') + ']';
+    return '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + canonical((value as Record<string, unknown>)[k])).join(',') + '}';
+}
+export interface Proof {
+    id: string;
+    requestedURL: string;
+    finalURL: string;
+    redirects: string[];
+    acquiredAt: string;
+    httpStatus: 200;
+    complete: true;
+    rawBodySHA256: string;
+    extractionSHA256: string;
+}
+export interface MaterialSpan {
+    role: string;
+    start: number;
+    end: number;
+}
+export interface Unit {
+    locator: string;
+    start: number;
+    end: number;
+    contentSHA256: string;
+    materialSpans: MaterialSpan[];
+}
+export interface Receipt {
+    schemaVersion: 1;
+    sourceReceiptSHA256: string;
+    issuerId: string;
+    issuerProofIds: string[];
+    canonicalDocumentId: string;
+    canonicalURL: string;
+    versionId: string;
+    documentClass: string;
+    relation: string;
+    scope: Record<string, string>;
+    proofId: string;
+    rawBodySHA256: string;
+    extractionSHA256: string;
+    units: Unit[];
+    originFamily: string;
+    temporalMode: 'immutable_version' | 'historical_release';
+    materialSpanPolicy: 'entire_reviewed_unit_required';
+    limitations: string[];
+}
+export interface Frame {
+    id: string;
+    exactText: string;
+    exactTextSHA256: string;
+    relation: string;
+    materialContext: Record<string, string>;
+    timeMeaning: 'explicit_version' | 'explicit_historical' | 'current' | 'unresolved';
+}
+export interface InstalledData {
+    schemaVersion: 1;
+    corpusManifestSHA256: string;
+    productionAuthorized: false;
+    receipts: {
+        alias: string;
+        sha256: string;
+    }[];
+    proofs: Proof[];
+    frames: Frame[];
+    revokedReceipts: string[];
+}
+export interface Evidence {
+    id: string;
+    url: string;
+    excerpt: string;
+}
+export type JsonValue = null | boolean | number | string | JsonValue[] | {
+    [key: string]: JsonValue;
+};
+export type JsonObject = {
+    [key: string]: JsonValue;
+};
+export interface RetainedRecord extends Evidence {
+    title: string | null;
+    publisher: string | null;
+    publishedAt: string | null;
+    retrievedAt: string | null;
+    textBasis: string;
+    metadata: JsonObject;
+}
+export interface OriginNode {
+    key: string;
+    revision: string;
+    record: RetainedRecord;
+    state: JsonObject;
+}
+export interface Context {
+    claim: {
+        exactText: string;
+        revision: string;
+    };
+    risk: 'ordinary' | 'health_safety' | 'disputed' | 'unknown';
+    credibleConflictPresent: boolean;
+    retainedEvidenceIds: string[];
+    retainedRecords: RetainedRecord[];
+    retainedNodeKeys: string[];
+    originNodes: OriginNode[];
+    originLinks: {
+        left: string;
+        right: string;
+        relationship: 'common_origin' | 'distinct_origin' | 'unclear';
+        state: JsonObject;
+    }[];
+    originGraphState: JsonObject;
+    assessment: {
+        id: string;
+        revision: string;
+        inputSHA256: string;
+        state: JsonObject;
+    };
+}
+export function parseProof(value: unknown): Proof {
+    const v = object(value, ['id', 'requestedURL', 'finalURL', 'redirects', 'acquiredAt', 'httpStatus', 'complete', 'rawBodySHA256', 'extractionSHA256']);
+    if (v.httpStatus !== 200 || v.complete !== true)
+        return fail('incomplete_proof');
+    return { id: string(v.id, 64), requestedURL: url(v.requestedURL), finalURL: url(v.finalURL), redirects: array(v.redirects, 3, url), acquiredAt: time(v.acquiredAt), httpStatus: 200, complete: true, rawBodySHA256: hash(v.rawBodySHA256), extractionSHA256: hash(v.extractionSHA256) };
+}
+export function parseFrame(value: unknown): Frame {
+    const v = object(value, ['id', 'exactText', 'exactTextSHA256', 'relation', 'materialContext', 'timeMeaning']);
+    const exactText = string(v.exactText, 4000), exactTextSHA256 = hash(v.exactTextSHA256);
+    if (digest(exactText) !== exactTextSHA256)
+        return fail('claim_hash_mismatch');
+    return { id: string(v.id, 64), exactText, exactTextSHA256, relation: string(v.relation, 100), materialContext: stringMap(v.materialContext), timeMeaning: oneOf(v.timeMeaning, ['explicit_version', 'explicit_historical', 'current', 'unresolved']) };
+}
+export function parseReceipt(value: unknown): Receipt {
+    const v = object(value, ['schemaVersion', 'sourceReceiptSHA256', 'issuerId', 'issuerProofIds', 'canonicalDocumentId', 'canonicalURL', 'versionId', 'documentClass', 'relation', 'scope', 'proofId', 'rawBodySHA256', 'extractionSHA256', 'units', 'originFamily', 'temporalMode', 'materialSpanPolicy', 'limitations']);
+    if (v.schemaVersion !== 1 || v.materialSpanPolicy !== 'entire_reviewed_unit_required')
+        return fail('invalid_receipt_schema');
+    const units = array(v.units, LIMITS.units, item => {
+        const u = object(item, ['locator', 'start', 'end', 'contentSHA256', 'materialSpans']);
+        const start = integer(u.start), end = integer(u.end);
+        if (end <= start)
+            return fail('invalid_span');
+        const materialSpans = array(u.materialSpans, 16, item => {
+            const s = object(item, ['role', 'start', 'end']);
+            const a = integer(s.start), z = integer(s.end);
+            if (z <= a || z > end - start)
+                return fail('invalid_material_span');
+            return { role: string(s.role, 64), start: a, end: z };
+        }, 1);
+        return { locator: string(u.locator, 256), start, end, contentSHA256: hash(u.contentSHA256), materialSpans };
+    }, 1);
+    return { schemaVersion: 1, sourceReceiptSHA256: hash(v.sourceReceiptSHA256), issuerId: string(v.issuerId, 128), issuerProofIds: unique(array(v.issuerProofIds, 8, x => string(x, 64), 1)), canonicalDocumentId: string(v.canonicalDocumentId, 256), canonicalURL: url(v.canonicalURL), versionId: string(v.versionId, 512), documentClass: oneOf(v.documentClass, ['normative_definition', 'operative_legal_text', 'award_register', 'official_statistical_report']), relation: string(v.relation, 100), scope: stringMap(v.scope), proofId: string(v.proofId, 64), rawBodySHA256: hash(v.rawBodySHA256), extractionSHA256: hash(v.extractionSHA256), units, originFamily: string(v.originFamily, 256), temporalMode: oneOf(v.temporalMode, ['immutable_version', 'historical_release']), materialSpanPolicy: 'entire_reviewed_unit_required', limitations: array(v.limitations, 12, x => string(x, 2000)) };
+}
+export function parseInstalledData(value: unknown): InstalledData {
+    const v = object(value, ['schemaVersion', 'corpusManifestSHA256', 'productionAuthorized', 'receipts', 'proofs', 'frames', 'revokedReceipts']);
+    if (v.schemaVersion !== 1 || v.productionAuthorized !== false)
+        return fail('invalid_install_schema');
+    const receipts = array(v.receipts, LIMITS.receipts, item => { const r = object(item, ['alias', 'sha256']); return { alias: string(r.alias, 64), sha256: hash(r.sha256) }; }, 1), proofs = array(v.proofs, LIMITS.proofs, parseProof, 1), frames = array(v.frames, LIMITS.frames, parseFrame, 1);
+    unique(receipts.map(r => r.alias));
+    unique(receipts.map(r => r.sha256));
+    unique(proofs.map(p => p.id));
+    unique(frames.map(f => f.id));
+    const revokedReceipts = unique(array(v.revokedReceipts, LIMITS.receipts, hash));
+    if (revokedReceipts.some(d => !receipts.some(r => r.sha256 === d)))
+        return fail('unknown_revocation');
+    return { schemaVersion: 1, corpusManifestSHA256: hash(v.corpusManifestSHA256), productionAuthorized: false, receipts, proofs, frames, revokedReceipts };
+}
+export function parseEvidence(value: unknown): Evidence {
+    const v = object(value, ['id', 'url', 'excerpt']);
+    const excerpt = string(v.excerpt, 8000);
+    if (Array.from(excerpt).length > LIMITS.excerptCodepoints)
+        return fail('excerpt_too_long');
+    return { id: string(v.id, 128), url: url(v.url), excerpt };
+}
+/** Validate and copy JSON before hashing. No getters, class instances, cycles or lossy values. */
+export function parseJsonObject(value: unknown): JsonObject {
+    const active = new Set<object>();
+    let visited = 0;
+    function visit(v: unknown, depth: number): JsonValue {
+        if (++visited > 4096 || depth > 8)
+            return fail('json_structure_limit');
+        if (v === null || typeof v === 'boolean')
+            return v;
+        if (typeof v === 'number') {
+            if (!Number.isFinite(v) || Object.is(v, -0))
+                return fail('invalid_json_number');
+            return v;
+        }
+        if (typeof v === 'string') {
+            if (v.length > 4096)
+                return fail('json_string_limit');
+            return v;
+        }
+        if (!v || typeof v !== 'object')
+            return fail('invalid_json_value');
+        if (active.has(v))
+            return fail('json_cycle');
+        active.add(v);
+        let out: JsonValue;
+        if (Array.isArray(v)) {
+            out = array(v, 256, x => visit(x, depth + 1));
+        }
+        else {
+            const keys = Object.keys(v);
+            if (keys.length > 128 || keys.some(k => k.length > 128 || ['__proto__', 'constructor', 'prototype'].includes(k)))
+                return fail('invalid_json_keys');
+            const checked = object(v, keys);
+            out = Object.fromEntries(keys.map(k => [k, visit(checked[k], depth + 1)]));
+        }
+        active.delete(v);
+        return out;
+    }
+    const parsed = visit(value, 0);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
+        return fail('invalid_json_object');
+    if (Buffer.byteLength(canonical(parsed), 'utf8') > 65536)
+        return fail('json_byte_limit');
+    return parsed;
+}
+const nullableText = (v: unknown, max: number): string | null => v === null ? null : string(v, max);
+export function parseRetainedRecord(value: unknown): RetainedRecord {
+    const v = object(value, ['id', 'url', 'excerpt', 'title', 'publisher', 'publishedAt', 'retrievedAt', 'textBasis', 'metadata']);
+    const evidence = parseEvidence({ id: v.id, url: v.url, excerpt: v.excerpt });
+    return { ...evidence, title: nullableText(v.title, 1000), publisher: nullableText(v.publisher, 500), publishedAt: nullableText(v.publishedAt, 100), retrievedAt: v.retrievedAt === null ? null : time(v.retrievedAt), textBasis: string(v.textBasis, 64), metadata: parseJsonObject(v.metadata) };
+}
+/** Hash the actual pre-assessment claim, material, raw graph and risk/conflict state, not an asserted digest. */
+export function contextInputDigest(context: Omit<Context, 'assessment'> | Context): string {
+    const { claim, risk, credibleConflictPresent, retainedEvidenceIds, retainedRecords, retainedNodeKeys, originNodes, originLinks, originGraphState } = context;
+    return digest(canonical({ claim, risk, credibleConflictPresent, retainedEvidenceIds, retainedRecords, retainedNodeKeys, originNodes, originLinks, originGraphState }));
+}
+export function parseContext(value: unknown): Context {
+    const v = object(value, ['claim', 'risk', 'credibleConflictPresent', 'retainedEvidenceIds', 'retainedRecords', 'retainedNodeKeys', 'originNodes', 'originLinks', 'originGraphState', 'assessment']);
+    const claimValue = object(v.claim, ['exactText', 'revision']);
+    const claim = { exactText: string(claimValue.exactText, 4000), revision: string(claimValue.revision, 128) };
+    const retainedEvidenceIds = unique(array(v.retainedEvidenceIds, LIMITS.evidence, x => string(x, 128), 1));
+    const retainedRecords = array(v.retainedRecords, LIMITS.evidence, parseRetainedRecord, 1);
+    const retainedNodeKeys = unique(array(v.retainedNodeKeys, LIMITS.evidence, x => string(x, 128), 1));
+    if (canonical(retainedRecords.map(r => r.id)) !== canonical(retainedEvidenceIds) || retainedNodeKeys.length !== retainedRecords.length)
+        return fail('retained_material_inventory_mismatch');
+    // Raw graph retains incoming and prior versions/bridges beyond the final six selected records.
+    const originNodes = array(v.originNodes, 12, item => { const n = object(item, ['key', 'revision', 'record', 'state']); return { key: string(n.key, 128), revision: string(n.revision, 128), record: parseRetainedRecord(n.record), state: parseJsonObject(n.state) }; }, 1);
+    unique(originNodes.map(n => n.key));
+    retainedNodeKeys.forEach((key, index) => { const node = originNodes.find(n => n.key === key); if (!node || canonical(node.record) !== canonical(retainedRecords[index]))
+        return fail('retained_node_material_mismatch'); });
+    const originLinks = array(v.originLinks, 132, item => {
+        const p = object(item, ['left', 'right', 'relationship', 'state']);
+        const left = string(p.left, 128), right = string(p.right, 128);
+        if (left === right || ![left, right].every(key => originNodes.some(n => n.key === key)))
+            return fail('invalid_origin_link');
+        return { left, right, relationship: oneOf(p.relationship, ['common_origin', 'distinct_origin', 'unclear']), state: parseJsonObject(p.state) };
+    });
+    unique(originLinks.map(p => p.left + '\u0000' + p.right));
+    const a = object(v.assessment, ['id', 'revision', 'inputSHA256', 'state']);
+    const context: Context = { claim, risk: oneOf(v.risk, ['ordinary', 'health_safety', 'disputed', 'unknown']), credibleConflictPresent: bool(v.credibleConflictPresent), retainedEvidenceIds, retainedRecords, retainedNodeKeys, originNodes, originLinks, originGraphState: parseJsonObject(v.originGraphState), assessment: { id: string(a.id, 128), revision: string(a.revision, 128), inputSHA256: hash(a.inputSHA256), state: parseJsonObject(a.state) } };
+    if (Buffer.byteLength(canonical(context), 'utf8') > 262144)
+        return fail('context_byte_limit');
+    if (context.assessment.inputSHA256 !== contextInputDigest(context))
+        return fail('stale_assessment_input');
+    return context;
+}

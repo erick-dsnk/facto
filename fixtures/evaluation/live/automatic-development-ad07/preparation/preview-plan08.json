@@ -1,0 +1,53 @@
+{
+  "kind": "automatic_supported_silence_followup_ad07",
+  "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+  "manifestSHA256": "cb3e436d23bc45afa11f8df188dc962a518432c4195aa3c2e6d4efba1c27fa68",
+  "wrapperSHA256": "35ffa46d0dff5e8af021a0785110da90434b1d891ed99f80fd71b198c1be5035",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 300000,
+    "inputTokens": 80000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 6,
+      "search": 2,
+      "contents": 3
+    },
+    "wallMs": 30000
+  },
+  "freshSession": true,
+  "newFactualAccuracyFacts": 0,
+  "cases": [
+    {
+      "label": "AD07-supported-silence-followup",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": []
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    }
+  ]
+}

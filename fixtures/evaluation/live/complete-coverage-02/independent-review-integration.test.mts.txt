@@ -1,0 +1,38 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {execFileSync} from 'node:child_process';import {mkdtemp,mkdir,readFile,writeFile,rm} from 'node:fs/promises';import {pathToFileURL} from 'node:url';
+const owned='/workspace/task-evidence/complete-coverage-02';const sha=(x:string|Buffer)=>createHash('sha256').update(x).digest('hex');
+let fetchCalls=0;const originalFetch=globalThis.fetch;globalThis.fetch=(async()=>{fetchCalls++;throw new Error('external_network_forbidden');}) as typeof fetch;
+const globals=globalThis as any;
+const limits={requestBytes:524288,totalRequestBytes:134217728,inputTokens:16000000,unknownInputTokensPerAttempt:128000,calls:{jev:96,search:48,contents:72},wallMs:600000};
+const per={...limits,totalRequestBytes:67108864,inputTokens:8000000,calls:{jev:48,search:24,contents:36},wallMs:300000};
+const facts=Array.from({length:24},(_,i)=>{const text=`Synthetic public artifact ${i} opened in 1812.`;return{label:`F${i}`,text,allowedPublic:[text],automatic:false,final:true,expected:{claims:[{id:`F${i}`,acceptedTexts:[text],verdict:i%2?'contradicted':'supported',domain:'synthetic'}],admissionAction:'check',presentationActions:['respond']}};});
+const controls=Array.from({length:8},(_,i)=>({label:`CT${i}`,text:'I prefer morning walks.',allowedPublic:[],automatic:false,final:true,expected:{claims:[],admissionAction:'skip',presentationActions:['respond']}}));const all=[...facts,...controls];
+for(const mode of ['complete','wrong_continue','incomplete','unknown_usage','auth','wall','rerun'] as const){test(`offline complete executor integration: ${mode}`,async()=>{
+ const sandbox=await mkdtemp(`${owned}/independent-review-integration-`);const saved={jev:process.env.JEV_API_KEY,exa:process.env.EXA_API_KEY,proxy:process.env.NODE_USE_ENV_PROXY,exit:process.exitCode};
+ try{const root=`${sandbox}/repo`,directory=`${sandbox}/campaign`;await mkdir(root);await mkdir(directory);const git=(...args:string[])=>execFileSync('git',args,{cwd:root,stdio:['ignore','pipe','pipe']}).toString();git('init','-q');git('config','user.email','offline-validator@example.invalid');git('config','user.name','Offline validator');await writeFile(`${root}/package.json`,'{"private":true}\n');git('add','package.json');git('commit','-qm','Synthetic offline source');
+ let clock=0,calls=0;globals.__offlineClock=()=>clock;globals.__offlineCampaignStub=async(options:any)=>{
+  calls++;const records:any[]=[];let failed=false;const total=()=>({calls:{jev:records.length,search:0,contents:0},attempts:records.length,pendingDispatchReservations:0,requestBytes:records.length*100,measuredInputTokens:records.length*50,unknownInputTokenReservations:0,chargedInputTokens:records.length*50,knownCostUSD:null,attemptsWithUnknownCost:records.length,elapsedMs:0});
+  for(const sample of options.cases){
+   try{if(mode==='wall')clock=600000;await options.onProgress({phase:'dispatch_reserved',label:sample.label,attempts:[],localStops:[],totals:total()});}catch{failed=true;break;}
+   const expected=sample.expected.claims[0];const auth=mode==='auth';const verdict=expected?(mode==='wrong_continue'&&records.length===0&&calls===1?(expected.verdict==='supported'?'contradicted':'supported'):expected.verdict):undefined;
+   const event=auth?{type:'pipeline.error',reasonCode:'jev_authentication',presentation:{action:'respond',reasonCode:'provider_error'}}:expected?{type:'claim.result',claimId:expected.id,checkedPublicText:sample.text,verdict,cached:false,selectedEvidenceIds:[],evidence:[],presentation:{action:'respond',reasonCode:'explicit_request'}}:{type:'claim.skipped',presentation:{action:'respond',reasonCode:'explicit_request'}};
+   const record={label:sample.label,status:'observed',terminalReceived:true,admittedPublic:expected?[sample.text]:[],rejectedAdmissionCount:0,admission:{action:sample.expected.admissionAction},events:[event]};records.push(record);
+   try{await options.onCase(record);}catch{failed=true;break;}
+   if(mode==='incomplete'){failed=true;break;}
+  }
+  const totals=total();if(mode==='unknown_usage'){totals.unknownInputTokenReservations=128000;totals.chargedInputTokens+=128000;}
+  return{completed:!failed&&records.length===options.cases.length,counts:{providerErrors:mode==='auth'?1:0},totals,cases:records};
+ };
+ const raw=await readFile(`${owned}/execute.mts`,'utf8');const source=raw.replace("import {runLiveCampaign} from '/workspace/junction-2026-current/apps/console/src/live/run.ts';","const runLiveCampaign=(globalThis as any).__offlineCampaignStub;").replace("const root='/workspace/junction-2026-current';",`const root=${JSON.stringify(root)};`).replace("const directory='/workspace/task-evidence/complete-coverage-02';",`const directory=${JSON.stringify(directory)};`).replaceAll('performance.now()','(globalThis as any).__offlineClock()');
+ assert.notEqual(source,raw);const modulePath=`${sandbox}/executor.mts`;await writeFile(modulePath,source);const module=await import(pathToFileURL(modulePath).href);const snapshot=await module.sourceSnapshot();const plan=JSON.stringify({name:'offline_synthetic_complete',limits,perBatchLimits:per,batches:[all.slice(0,16),all.slice(16)]}),preflight='{"networkCalls":0}\n';await writeFile(`${directory}/plan.json`,plan);await writeFile(`${directory}/preflight.json`,preflight);await writeFile(`${directory}/freeze.json`,JSON.stringify({...snapshot,planSHA256:sha(plan),executorSHA256:sha(source),preflightSHA256:sha(preflight)}));
+ process.env.JEV_API_KEY='synthetic-offline-key';process.env.EXA_API_KEY='synthetic-offline-key';process.env.NODE_USE_ENV_PROXY='1';
+ await module.execute(true);const report=JSON.parse(await readFile(`${directory}/run/report.json`,'utf8'));
+ if(['complete','wrong_continue','rerun'].includes(mode)){assert.equal(calls,2);assert.equal(report.completed,true);assert.equal(report.counts.observed,32);assert.equal(report.counts.terminalReceipts,32);assert.equal(report.totals.calls.jev,32);assert.equal(report.totals.attempts,32);assert.equal(report.totals.requestBytes,3200);assert.equal(report.totals.measuredInputTokens,1600);assert.equal(report.evaluation.factual.expected,24);assert.equal(report.evaluation.factual.wrongDefinitive,mode==='wrong_continue'?1:0);assert.equal(report.evaluation.factual.correctDefinitive,mode==='wrong_continue'?23:24);}
+ else{assert.equal(calls,1);assert.equal(report.completed,false);assert.ok(report.counts.observed<32);}
+ if(mode==='auth'){assert.equal(JSON.parse(await readFile(`${directory}/run/stop.json`,'utf8')).reason,'provider_authentication_failed');assert.equal(report.counts.observed,1);}
+ if(mode==='wall'){assert.equal(report.counts.observed,0);assert.equal(report.totals.attempts,0);}
+ if(mode==='unknown_usage')assert.equal(report.totals.unknownInputTokenReservations,128000);
+ if(mode==='rerun'){const before=await readFile(`${directory}/run/report.json`);await assert.rejects(module.execute(true),/EEXIST/);assert.equal(calls,2);assert.deepEqual(await readFile(`${directory}/run/report.json`),before);}
+ assert.equal(fetchCalls,0);
+ }finally{for(const [key,value] of [['JEV_API_KEY',saved.jev],['EXA_API_KEY',saved.exa],['NODE_USE_ENV_PROXY',saved.proxy]] as const){if(value===undefined)delete process.env[key];else process.env[key]=value;}process.exitCode=saved.exit;await rm(sandbox,{recursive:true,force:true});delete globals.__offlineClock;delete globals.__offlineCampaignStub;}
+});}
+test.after(()=>{globalThis.fetch=originalFetch;assert.equal(fetchCalls,0);});

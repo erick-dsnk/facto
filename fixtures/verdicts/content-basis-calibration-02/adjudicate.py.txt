@@ -1,0 +1,28 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,hashlib
+b=Path('/workspace/task-evidence/content-basis-calibration-02')
+def load(n):return json.loads((b/n).read_text())
+def sha(n):return hashlib.sha256((b/n).read_bytes()).hexdigest()
+def dump(n,v):(b/n).write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+u=load('units.unlabeled.json')['units'];f=load('annotation-first.json')['labels'];second=load('annotation-second.json');s=second['annotations'];ff=load('first-label-freeze.json');sf=load('second-label-freeze.json')
+assert all(sha(n)==h for n,h in ff['files'].items())
+assert sf['annotationSecondSHA256']==sha('annotation-second.json')
+assert sf['inputSHA256']==sha('annotation-inputs.json') and sf['rubricSHA256']==sha('rubric.md')
+assert len(u)==len(f)==len(s)==24
+assert not second['firstLabelsViewed'] and not second['candidatePromptViewed'] and not second['candidateCodeViewed'] and not second['providerOutputsViewed']
+comparison=[];labels=[]
+for x in u:
+ a=next(v for v in f if v['id']==x['id']);c=next(v for v in s if v['id']==x['id'])
+ assert a['supportingSpan'] in x['excerpt'] and c['supportingSpan'] in x['excerpt']
+ agree=a['expectedBasis']==c['expectedBasis'];assert agree and not a['ambiguity'] and not c['ambiguity']
+ comparison.append({'id':x['id'],'firstExpectedBasis':a['expectedBasis'],'secondExpectedBasis':c['expectedBasis'],'basisAgreement':agree,'firstStanceDiagnostic':a['stanceDiagnostic'],'secondStanceDiagnostic':c['stanceDiagnostic'],'stanceDiagnosticsUsedForPrimaryBasisMetric':False})
+ labels.append({**a,'expectedStanceDiagnostic':a['stanceDiagnostic'],'supportingOffsets':{'start':x['excerpt'].index(a['supportingSpan']),'end':x['excerpt'].index(a['supportingSpan'])+len(a['supportingSpan']),'unit':'unicode_code_points'},'adjudication':'Independent labels agree on substantive basis; no label or source text changed. Stance is a separate diagnostic.'})
+pairs=[]
+for family in sorted(set(x['sourceFamily']for x in u)):
+ members=[x for x in u if x['sourceFamily']==family and next(z['expectedBasis']for z in labels if z['id']==x['id'])=='substantive'];assert len(members)==2;assert members[0]['excerpt']==members[1]['excerpt'];stances=[next(z['stanceDiagnostic']for z in labels if z['id']==x['id'])for x in members];assert sorted(stances)==['contradicts','supports'];pairs.append({'sourceFamily':family,'partition':members[0]['partition'],'ids':[x['id']for x in members],'stanceDiagnostics':stances,'sharedPassageSHA256':hashlib.sha256(members[0]['excerpt'].encode()).hexdigest()})
+dump('annotation-adjudicated.json',{'schemaVersion':1,'labels':labels,'basisAgreement':{'agreed':24,'total':24},'unresolvedIds':[],'providerOutputsViewed':False})
+dump('adjudication.json',{'schemaVersion':1,'frozen':True,'independentReviewComplete':True,'createdAt':datetime.now(timezone.utc).isoformat(),'firstLabelFreezeSHA256':sha('first-label-freeze.json'),'secondLabelFreezeSHA256':sha('second-label-freeze.json'),'inputSHA256':sha('units.unlabeled.json'),'annotationInputSHA256':sha('annotation-inputs.json'),'finalLabelsSHA256':sha('annotation-adjudicated.json'),'providerOutputsViewed':False,'projectProviderCalls':0,'candidatePromptOrCodeReadForThisStudy':False,'firstLabelsChanged':False,'basisAgreement':{'agreed':24,'total':24},'counts':{'substantive':12,'non_substantive':4,'insufficient':8,'excludedFromPrimary':0,'uniquePositivePassages':6,'sourceFamilies':6},'unresolvedIds':[],'comparison':comparison,'positiveStancePairs':pairs,'limitations':['Independent AI annotations, not human labels.','Open development with predeclared source-family split, not blind final evaluation.','Opposite-stance positives reuse six exact passages; count them as paired observations, not twelve independent source families.','Source authenticity/truth, independence, retrieval completeness and definitive-verdict sufficiency are not established by content-basis labels.','Author previously saw general baseline evidence policy and earlier calibration results; no new candidate prompt/code or this-study provider output was viewed.']})
+files=['units.unlabeled.json','annotation-inputs.json','source-records.json','annotation-first.json','first-label-freeze.json','annotation-second.json','second-label-freeze.json','annotation-adjudicated.json','adjudication.json','rubric.md','README.md','origin-fetches/legal-introduction-date.json']
+dump('manifest.json',{'schemaVersion':1,'createdAt':datetime.now(timezone.utc).isoformat(),'frozen':True,'independentReviewComplete':True,'projectProviderCalls':0,'providerOutputsViewed':False,'units':24,'primaryMetricUnits':24,'sourceFamilies':6,'uniquePositivePassages':6,'syntheticOrMetadataAlteredControls':6,'developmentUnits':12,'validationUnits':12,'files':{n:sha(n)for n in files}})
+print(json.dumps({'agreement':'24/24','manifestSHA256':sha('manifest.json'),'positivePairs':pairs},indent=2))

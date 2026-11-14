@@ -1,0 +1,99 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { writeFile, readFile } from 'node:fs/promises';
+import { MODEL_VERSION, textInputSchema, type AcceptedClaim, type Evidence } from '/workspace/junction-2026-current/packages/contracts/src/index.ts';
+import { evidenceSchema } from '/workspace/junction-2026-current/packages/contracts/src/wire.ts';
+import { createJudge } from '/workspace/junction-2026-current/services/api/src/providers/jev/judgment.ts';
+import { validateLiveCases } from '/workspace/junction-2026-current/apps/console/src/live/cases.ts';
+import { createClassifier } from '/workspace/junction-2026-current/services/api/src/providers/jev/classification.ts';
+import { normalizeUrl } from '/workspace/junction-2026-current/services/api/src/evidence/normalize.ts';
+import { CampaignBudget } from '/workspace/junction-2026-current/apps/console/src/live/budget.ts';
+import type { JevRequest } from '/workspace/junction-2026-current/services/api/src/providers/jev/client.ts';
+
+const directory = '/workspace/task-evidence/complete-coverage-02';
+const context = { signal: new AbortController().signal, consume: () => {}, now: () => Date.parse('2026-11-14T10:00:00.000Z') };
+const stop = new Error('offline_capture_only');
+let networkCalls = 0;
+globalThis.fetch = async () => { networkCalls++; throw new Error('offline_network_forbidden'); };
+const variants = { ascii: 'x', astralUnicode: '\u{10ffff}', jsonEscapedControl: '\u0000' };
+const observations: Record<string, unknown>[] = [];
+let maximumBytes = 0;
+let capturedEvidence!: Evidence[];
+let capturedClaim!: AcceptedClaim;
+function inspect(kind: string, variant: string, request: JevRequest, details: Record<string, unknown> = {}) {
+  const bytes = Buffer.byteLength(JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions }));
+  maximumBytes = Math.max(maximumBytes, bytes);
+  observations.push({ kind, variant, requestBytes: bytes, questions: Object.keys(request.questions).length, ...details });
+}
+async function capture(invoke: (client: { ask: (request: JevRequest) => Promise<never> }) => Promise<unknown>) {
+  let captured!: JevRequest;
+  try { await invoke({ ask: async request => { captured = request; throw stop; } }); }
+  catch (error) { if (error !== stop) throw error; }
+  assert.ok(captured);
+  return captured;
+}
+for (const [variant, char] of Object.entries(variants)) {
+  const checkedText = `The ${char.repeat(795)}.`;
+  assert.equal([...checkedText].length, 800);
+  const claim: AcceptedClaim = { id: 'synthetic-claim', originalText: checkedText, checkedText, sourceSpan: { start: 0, end: 800 }, admission: { assertionStatus: 'asserted', hasPracticalConsequence: null, matchedSelectedTopic: null, admissionAction: 'check', reasonCode: 'public_fact' } };
+  const evidence: Evidence[] = Array.from({ length: 6 }, (_, i) => {
+    const prefix = `https://source${i}.example.org/`;
+    const url = prefix + 'a'.repeat(4096 - prefix.length);
+    return evidenceSchema.parse({ id: `ev-${String(i).repeat(20)}`, url, title: char.repeat(300), publisher: null, publishedAt: '2026-11-14', retrievedAt: '2026-11-14T10:00:00.000Z', contentBasis: 'page_text', excerpt: char.repeat(2000), sourceGroup: `source${i}.example.org`, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+  });
+  const judgment = await capture(client => createJudge(client)(claim, evidence, context));
+  if (variant === 'jsonEscapedControl') { capturedEvidence = evidence; capturedClaim = claim; }
+  const state = judgment.state as { checked_proposition: string; evidence: { excerpt: string; title: string; url: string }[] };
+  assert.equal(Object.keys(judgment.questions).length, 55);
+  assert.equal(state.checked_proposition, checkedText);
+  state.evidence.forEach((record, i) => { assert.equal(record.excerpt, evidence[i].excerpt); assert.equal(record.title, evidence[i].title); assert.equal(record.url, evidence[i].url); });
+  inspect('actual_six_source_judgment', variant, judgment, { excerptCodePointsPerSource: 2000, titleCodePointsPerSource: 300, urlCharactersPerSource: 4096, fieldsPreserved: true });
+  const sentence = (index: number) => `The title “${char.repeat(174)}” has ${index} public entries. `;
+  let text = [0, 1, 2, 3].map(sentence).join('');
+  text = [...text].slice(0, 800).join('');
+  if ([...text].length < 800) text += char.repeat(800 - [...text].length);
+  const input = textInputSchema.parse({ schemaVersion: 1, requestId: 'offline-maximal', sessionId: 'offline-session', sessionEpoch: 1, revision: 1, mode: 'typed', text, language: 'en', capturedAt: '2026-11-14T10:00:00.000Z', capture: { source: 'typed_fixture', segmentId: 'offline-segment', confidence: 1, final: true }, context: [char.repeat(600), char.repeat(600)], userInitiated: true });
+  const classification = await capture(client => createClassifier(client)(input, context));
+  const cs = classification.state as { originalText: string; candidates: { id: string; text: string; span: { start: number; end: number } }[]; context: string[] };
+  assert.equal(cs.originalText, input.text); assert.deepEqual(cs.context, input.context); assert.equal(cs.candidates.length, 4);
+  inspect('actual_max_four_candidate_classification', variant, classification, { inputCodePoints: 800, contextCodePoints: 1200, contextEntries: 2, candidates: cs.candidates.length, fieldsPreserved: true });
+  // Deliberately conservative hypothetical eight-candidate envelope, not a source capability.
+  const questions = structuredClone(classification.questions);
+  const template = Object.entries(classification.questions).filter(([key]) => key.startsWith('span_1_'));
+  for (let i = 4; i < 8; i++) for (const [key, value] of template) questions[key.replace('span_1_', `span_${i}_`)] = JSON.parse(JSON.stringify(value).replaceAll('candidates[1]', `candidates[${i}]`).replaceAll('span_1', `span_${i}`));
+  const hypothetical = { state: { ...cs, candidates: Array.from({ length: 8 }, (_, i) => ({ id: `span_${i}`, text: input.text, span: { start: 0, end: 800 } })) }, questions };
+  inspect('hypothetical_eight_candidate_upper_envelope', variant, hypothetical, { inputCodePoints: 800, contextCodePoints: 1200, contextEntries: 2, candidates: 8, notCurrentProduction: true });
+}
+// Upstream raw URL max is 4096 UTF-16 units, but normalization can percent-expand it.
+const prefix = 'https://expanded.example.org/';
+const rawURL = prefix + '\uffff'.repeat(4096 - prefix.length);
+const normalizedURL = normalizeUrl(rawURL)!;
+assert.equal(rawURL.length, 4096); assert.ok(normalizedURL.length > 4096);
+const maxJudgment = observations.filter(o => o.kind === 'actual_six_source_judgment').sort((a,b) => Number(b.requestBytes)-Number(a.requestBytes))[0];
+const expandedURLConservativeBytes = Number(maxJudgment.requestBytes) + 6 * (normalizedURL.length - 4096);
+const expandedEvidence = capturedEvidence.map((source, i) => evidenceSchema.parse({ ...source, url: normalizeUrl(rawURL.replace('expanded', `expanded${i}`))! }));
+const expandedJudgment = await capture(client => createJudge(client)(capturedClaim, expandedEvidence, context));
+const expandedBytes = Buffer.byteLength(JSON.stringify({ model: MODEL_VERSION, state: expandedJudgment.state, questions: expandedJudgment.questions }));
+const limits = { requestBytes: 512 * 1024, totalRequestBytes: 128 * 1024 * 1024, inputTokens: 16_000_000, unknownInputTokensPerAttempt: 128_000, calls: { jev: 96, search: 48, contents: 72 }, wallMs: 600_000 };
+const perBatchLimits = { ...limits, totalRequestBytes: 64 * 1024 * 1024, inputTokens: 8_000_000, calls: { jev: 48, search: 24, contents: 36 }, wallMs: 300_000 };
+new CampaignBudget(limits); new CampaignBudget(perBatchLimits);
+assert.ok(expandedBytes < limits.requestBytes);
+for (const key of ['totalRequestBytes', 'inputTokens', 'wallMs'] as const) assert.ok(perBatchLimits[key] * 2 <= limits[key]);
+for (const key of ['jev', 'search', 'contents'] as const) assert.ok(perBatchLimits.calls[key] * 2 <= limits.calls[key]);
+let planCoverage: unknown = null;
+try {
+  const plan = JSON.parse(await readFile(`${directory}/plan.json`, 'utf8'));
+  assert.deepEqual(plan.limits, limits); assert.deepEqual(plan.perBatchLimits, perBatchLimits);
+  assert.equal(plan.batches.length, 2);
+  const batches = plan.batches.map((batch: unknown) => validateLiveCases(batch));
+  batches.forEach((batch: unknown[]) => assert.equal(batch.length, 16));
+  const all = batches.flat();
+  assert.equal(new Set(all.map((item: any) => item.label)).size, 32);
+  assert.equal(all.filter((item: any) => item.expected.claims.length === 1).length, 24);
+  assert.equal(all.filter((item: any) => item.expected.claims.length === 0).length, 8);
+  planCoverage = { batches: 2, casesPerBatch: 16, labels: 32, facts: 24, controls: 8, limitsMatchPreflight: true };
+} catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+const report = { kind: 'offline_request_size_and_budget_preflight', networkCalls, planCoverage, observations, maximumMeasuredRequestBytes: maximumBytes, proposedLimits: limits, perBatchLimits, actualMaxExpandedPayloadCovered: expandedBytes < limits.requestBytes, capExceedsMeasured4096NormalizedURLPayloads: maximumBytes < limits.requestBytes, upstreamNormalizedURLExpansion: { rawURLCodeUnits: rawURL.length, normalizedURLCharacters: normalizedURL.length, conservativeSixSourceEscapedPayloadBytes: expandedURLConservativeBytes, actualSixSourceRequestBytes: expandedBytes, exceedsProposedCap: expandedURLConservativeBytes > limits.requestBytes }, perInputAllowances: { inputs: 32, jev: 3, search: 1.5, contents: 2.25 }, caveats: ['Actual generator has four candidates, not eight. Eight-candidate envelope is synthetic upper-bound stress only.', '128000 token reservation is a declared uncertainty allowance, not a tokenizer or hard upper bound. Actual usage remains charged; completed unknown usage halts future dispatch.', 'Request cap is a local guard; no source, excerpt, context or title truncation was added.', 'Production-normalized evidence IDs are23characters; custom adapter evidence IDs are unbounded in shared contract so no universal bound for arbitrary injected adapters is claimed.', 'Current normalized URLs can expand beyond raw4096character bound; see expansion diagnostic.'] };
+assert.equal(networkCalls, 0);
+await writeFile(`${directory}/preflight.json`, JSON.stringify(report, null, 2) + '\n');
+console.log(JSON.stringify(report, null, 2));

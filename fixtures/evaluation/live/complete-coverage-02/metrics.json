@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "kind": "post_run_false_alarm_and_false_support_analysis",
+  "analysisTiming": "Post-run user-requested metrics; not predeclared prospective endpoints and no frozen plan change.",
+  "reportSHA256": "a227f9a968e32031e39d2a14eb570045435152753a7e122199879bb3777331d6",
+  "originalPlanSHA256": "2ef968ffc05b3859791417da853a219bdc015250faea43251103891c2f12789c",
+  "createdAt": "2026-11-14T10:38:37.295116+00:00",
+  "truthPreparation": "Exact frozen per-case expected supported/contradicted labels; 12 known true and 12 known false ordinary propositions.",
+  "multiclassTruthConfusion": {
+    "known_true": {
+      "supported": 11,
+      "contradicted": 0,
+      "misleading": 0,
+      "insufficient_evidence": 1,
+      "no_verdict": 0
+    },
+    "known_false": {
+      "supported": 0,
+      "contradicted": 9,
+      "misleading": 0,
+      "insufficient_evidence": 3,
+      "no_verdict": 0
+    }
+  },
+  "falseAlarmRate": {
+    "numerator": 0,
+    "denominator": 12,
+    "rate": 0.0,
+    "definition": "Known-true claims predicted contradicted or misleading / all12 known-true claims. Supported11 and abstention1 are shown separately; abstention is not counted as a correct definitive decision."
+  },
+  "falseSupportRate": {
+    "numerator": 0,
+    "denominator": 12,
+    "rate": 0.0,
+    "definition": "Known-false claims predicted supported / all12 known-false claims. Contradicted9 and abstentions3 are shown separately; abstention is not counted as a correct definitive decision."
+  },
+  "conditionalFalseAlarmAmongAnsweredTrue": {
+    "numerator": 0,
+    "denominator": 11,
+    "rate": 0.0,
+    "definition": "Known-true contradicted/misleading / known-true claims receiving any definitive result."
+  },
+  "conditionalFalseSupportAmongAnsweredFalse": {
+    "numerator": 0,
+    "denominator": 9,
+    "rate": 0.0,
+    "definition": "Known-false supported / known-false claims receiving any definitive result."
+  },
+  "falsePositiveControlAdmission": {
+    "numerator": 0,
+    "denominator": 8,
+    "rate": 0.0,
+    "definition": "Controls with any public-claim admission / all8 privacy/personal/opinion/ambiguity controls."
+  },
+  "correctTrueSupport": {
+    "numerator": 11,
+    "denominator": 12,
+    "rate": 0.9166666666666666,
+    "definition": "Supported known-true claims / all12 known-true claims."
+  },
+  "correctFalseContradiction": {
+    "numerator": 9,
+    "denominator": 12,
+    "rate": 0.75,
+    "definition": "Contradicted known-false claims / all12 known-false claims."
+  },
+  "controlActionConfusion": {
+    "expected_skip": {
+      "skip": 6,
+      "needs_confirmation": 0,
+      "check": 0
+    },
+    "expected_needs_confirmation": {
+      "skip": 0,
+      "needs_confirmation": 2,
+      "check": 0
+    }
+  },
+  "controls": {
+    "allManualRespond": 8,
+    "noRetrieval": 8,
+    "factualVerdict": 0
+  },
+  "limitations": [
+    "These multiclass definitions are explicitly chosen post-run at user request. They are not a retrospectively predeclared endpoint or binary true-negative count.",
+    "Abstentions remain separate:1 of12true and3 of12false; they are not scored as correct definitive decisions.",
+    "Zero observed errors in this small purposive OPEN cohort is not a zero population false-positive rate or readiness evidence.",
+    "Correct labels and content verification do not authenticate independent source origins. No causal comparison or pooling with older cohorts."
+  ]
+}

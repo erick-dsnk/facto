@@ -1,0 +1,25 @@
+{
+  "networkCalls": 0,
+  "results": [
+    {
+      "label": "L2-lightning",
+      "matches": true,
+      "replayedResponses": 5
+    },
+    {
+      "label": "L4-mixed",
+      "matches": true,
+      "replayedResponses": 5
+    },
+    {
+      "label": "L8-first-person",
+      "matches": true,
+      "replayedResponses": 5
+    }
+  ],
+  "sourceHashes": {
+    "services/api/src/providers/exa/retrieval.ts": "20594f6151b82f8aea3dae8a7fb1b3c73453b6afe5355f80a39d49e7965d4cb3",
+    "services/api/src/providers/exa/client.ts": "9d399fd5c8b3c8abad3847c76dbbc17204c59b05ee9a337287ea31f2bbc5de6e",
+    "services/api/src/evidence/normalize.ts": "4332144ffcfcf3faeeade715eb60adfe41e41472984b2a257cd789eeba16db02"
+  }
+}

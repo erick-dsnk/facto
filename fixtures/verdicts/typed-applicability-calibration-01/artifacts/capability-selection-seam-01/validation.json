@@ -1,0 +1,118 @@
+{
+  "kind": "unwired_material_seam_offline_validation",
+  "providerCalls": 0,
+  "modelCalls": 0,
+  "productionSourceChanges": 0,
+  "sourceBytesStableAcrossChecks": true,
+  "headBefore": "ffea541e688d371230112f9a632054c7a2b541a0",
+  "headAfter": "ffea541e688d371230112f9a632054c7a2b541a0",
+  "sourcePins": [
+    {
+      "path": "/workspace/task-evidence/capability-selection-seam-01/material.ts",
+      "bytes": 15340,
+      "sha256": "2bb9266824beb12cb5029250f0b71f84497fdbe4c4b2e2b8f6486b2e3048008a"
+    },
+    {
+      "path": "/workspace/task-evidence/capability-selection-seam-01/material.test.ts",
+      "bytes": 19749,
+      "sha256": "1d6172523f755ed00159c4e5f0e61e46b8a7a90f5e4760122c9cb90cc1a446bb"
+    },
+    {
+      "path": "/workspace/task-evidence/capability-selection-seam-01/tsconfig.json",
+      "bytes": 230,
+      "sha256": "8010f037413463a1cd53de1169c8d232bc1c8f80f1f96fb24aeb109055989d72"
+    },
+    {
+      "path": "/workspace/task-evidence/capability-selection-seam-01/package.json",
+      "bytes": 33,
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+    },
+    {
+      "path": "/workspace/stack-20/services/api/src/runtime/alternate-evidence.ts",
+      "bytes": 11487,
+      "sha256": "dbfc1722f92cf5c97707997fb9febafc77fc40dec4fa758f0038c62d435acac6"
+    },
+    {
+      "path": "/workspace/stack-20/services/api/src/runtime/session.ts",
+      "bytes": 4465,
+      "sha256": "762635a33a608baecc3709aaa76bc81bba0a532758d374ad099be3d74a802e2c"
+    },
+    {
+      "path": "/workspace/stack-20/services/api/src/runtime/budget.ts",
+      "bytes": 2500,
+      "sha256": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b"
+    },
+    {
+      "path": "/workspace/stack-20/services/api/src/evidence/normalize.ts",
+      "bytes": 19611,
+      "sha256": "e7f9e5663a07011107bb44d912b1d28175e2b60e1427c81820ae5d7a129d7ae9"
+    },
+    {
+      "path": "/workspace/stack-20/services/api/src/policy/sources.ts",
+      "bytes": 9102,
+      "sha256": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5"
+    },
+    {
+      "path": "/workspace/stack-20/services/api/src/policy/assessment.ts",
+      "bytes": 3056,
+      "sha256": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14"
+    },
+    {
+      "path": "/workspace/stack-20/packages/contracts/src/index.ts",
+      "bytes": 4891,
+      "sha256": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32"
+    },
+    {
+      "path": "/workspace/stack-20/package-lock.json",
+      "bytes": 149136,
+      "sha256": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/types.ts",
+      "bytes": 18260,
+      "sha256": "bb4f27979d9442c7a15f5f8c217bd1f06621bbb12941086865910d13fdbbbc09"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-01.json",
+      "bytes": 338176,
+      "sha256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-02.json",
+      "bytes": 301377,
+      "sha256": "c41785a39098a7485cd13e865e52f663ab6539cc3fcfff6d8f90dabdde1bef42"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-03.json",
+      "bytes": 300187,
+      "sha256": "28152cdc24eba9c605304b94bb3deb0caf99fa57681387844790f941753c7f26"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-04.json",
+      "bytes": 382941,
+      "sha256": "ef3b4c3e3e4a5dd23abc4ec9fc16d8d7b14f087bc3bcb5f6a6facec7d6a5fc89"
+    }
+  ],
+  "runs": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "error": null,
+      "elapsedMs": 1605.618488,
+      "log": "typecheck.log"
+    },
+    {
+      "name": "tests",
+      "exitCode": 0,
+      "error": null,
+      "elapsedMs": 2749.306856,
+      "log": "tests.tap"
+    }
+  ],
+  "testsPassed": 23,
+  "savedPublicAlternatePools": 11,
+  "limitations": [
+    "Not a production integration or complete backend gate.",
+    "No capability, source trust, factual verdict, assessment freshness proof or provider dispatch is produced."
+  ]
+}

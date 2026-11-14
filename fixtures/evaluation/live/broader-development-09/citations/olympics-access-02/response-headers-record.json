@@ -1,0 +1,27 @@
+{
+  "kind": "preserved_raw_http_header_reference",
+  "externalRawFile": "/workspace/task-evidence/broader-candidate09-olympics-access-02/response-headers.txt",
+  "rawBytes": 184,
+  "rawSHA256": "94e92057058beb449e719952d61217f07bd3b9ad06741e542c1fa862c9a70271",
+  "rawLineEndings": "CRLF, preserved externally without normalization",
+  "headerBlocks": [
+    {
+      "statusLine": "HTTP/1.1 200 OK",
+      "meaning": "Proxy connection tunnel, not substantive article success",
+      "headers": {
+        "date": "Sat, 14 Nov 2026 05:17:22 GMT",
+        "server": "envoy"
+      }
+    },
+    {
+      "statusLine": "HTTP/2 503",
+      "meaning": "Final selected URL response",
+      "headers": {
+        "content-length": "85",
+        "content-type": "text/plain",
+        "date": "Sat, 14 Nov 2026 05:17:22 GMT",
+        "server": "envoy"
+      }
+    }
+  ]
+}

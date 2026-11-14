@@ -1,0 +1,176 @@
+{
+  "kind": "independent100citation_bindings_content_units_and_result_review",
+  "decision": "PASS exactbinding/hash/arithmetic; full-selected citation coverage target FAILED31of80",
+  "firstReportSHA256": "e6cefc9877f271a231b4fd1834df0a9d6609a6dc7b03bed7846667b555a1111d",
+  "citationAuditSHA256": "7edcee32de6c28961bbad128b5093d05305b593ea295cbba1eb889d4ebb919b5",
+  "rawFactualResultsUnchanged": {
+    "declared": 80,
+    "correctDefinitive": 69,
+    "wrongDefinitiveObserved": 0,
+    "abstentions": 10,
+    "noFactualVerdict": 1
+  },
+  "selectedReferences": {
+    "originalOccurrences": 246,
+    "inspectionOccurrences": 246,
+    "exactIDURLExcerptBindingsChecked": 246,
+    "contentVerifiedPerAgentInspections": 198,
+    "accessOrContentFailures": 41,
+    "accessibleMaterialScopeGaps": 7,
+    "bodyHashesChecked": 240,
+    "textHashesChecked": 239,
+    "proofPassageHashesChecked": 217,
+    "groupCounts": {
+      "a": {
+        "occurrences": 62,
+        "verified": 52
+      },
+      "b": {
+        "occurrences": 61,
+        "verified": 49
+      },
+      "c": {
+        "occurrences": 61,
+        "verified": 48
+      },
+      "d": {
+        "occurrences": 62,
+        "verified": 49
+      }
+    }
+  },
+  "caseCoverage": {
+    "fullySelectedContentVerified": {
+      "numerator": 31,
+      "denominator": 80
+    },
+    "fullySelectedAmongDefinitives": {
+      "numerator": 31,
+      "denominator": 69
+    },
+    "atLeastOneContentVerifiedSelected": {
+      "numerator": 68,
+      "denominator": 80
+    },
+    "atLeastTwoVerifiedRetainedSourceGroups": {
+      "numerator": 62,
+      "denominator": 80,
+      "interpretation": "Retained registrable-domain/sourceGroup diversity only; NOT authenticated independent underlying origins."
+    },
+    "noExternallyVerifiedSelectedContent": [
+      "HA04"
+    ],
+    "fullSelectedCases": [
+      "AD04",
+      "SC18",
+      "GB11",
+      "HA18",
+      "AD11",
+      "SC08",
+      "GB16",
+      "SC03",
+      "HA09",
+      "SC02",
+      "AD18",
+      "SC10",
+      "GB18",
+      "HA19",
+      "SC17",
+      "SC05",
+      "GB10",
+      "SC19",
+      "GB13",
+      "SC14",
+      "GB05",
+      "HA17",
+      "AD01",
+      "HA14",
+      "HA12",
+      "AD16",
+      "GB15",
+      "SC09",
+      "AD13",
+      "GB03",
+      "AD09"
+    ]
+  },
+  "publicInspectionResources": {
+    "uniqueSelectedURLs": 245,
+    "publicGETFetchAttempts": 251,
+    "followedRedirectGETs": 6,
+    "retainedResponseBodyBytes": 58380923,
+    "observedResponseBodyBytes": 58388826,
+    "bodyTruncations": 2,
+    "noResponseTransportAttempts": 6
+  },
+  "partialPDFs": {
+    "verifiedMaterialUnit": [
+      {
+        "caseId": "HA13",
+        "evidenceId": "ev-6fbabf67bf9be14932fc",
+        "url": "https://www.echr.coe.int/documents/d/echr/court_in_brief_eng",
+        "fullDocumentRetrieved": false,
+        "bodyTruncated": true,
+        "contentVerified": true
+      }
+    ],
+    "unverifiedPartial": [
+      {
+        "caseId": "AD03",
+        "evidenceId": "ev-41ea5366f19bb2d5cbab",
+        "url": "https://escholarship.org/content/qt0d30n44c/qt0d30n44c_noSplash_be71874ba823a1932bacdc07a4838cff.pdf",
+        "fullDocumentRetrieved": false,
+        "bodyTruncated": true,
+        "contentVerified": false
+      }
+    ],
+    "interpretation": "ECHRcomplete relevantinstitution/Strasbourg unit and identity/context were independently read in savedlayouttext; body/filepartial explicitly recorded. No whole-document reading or origin-authentication credit. Monetunparsablepartial remains unverified."
+  },
+  "scopeGapOccurrences": [
+    {
+      "caseId": "GB12",
+      "evidenceId": "ev-101c19968b87cba7f8d5",
+      "url": "https://australian.museum/learn/minerals/gemstones/quartz/"
+    },
+    {
+      "caseId": "HA08",
+      "evidenceId": "ev-316ad7c64289e137a71f",
+      "url": "https://www.history.com/this-day-in-history/april-15/titanic-sinks"
+    },
+    {
+      "caseId": "AD05",
+      "evidenceId": "ev-2c06ff2431175396a9ca",
+      "url": "https://www.alhambra-patronato.es/en/discover/alhambra-y-generalife"
+    },
+    {
+      "caseId": "SC11",
+      "evidenceId": "ev-4956f40de58bc8ea2964",
+      "url": "https://en.wikipedia.org/wiki/Java_(programming_language)"
+    },
+    {
+      "caseId": "HA13",
+      "evidenceId": "ev-bee122da60efde0239d1",
+      "url": "https://www.anci.ch/articles/ancilla2008_32_bruinsma.pdf"
+    },
+    {
+      "caseId": "AD05",
+      "evidenceId": "ev-5ad4fed1df1a40e78445",
+      "url": "https://www.juntadeandalucia.es/organismos/culturapatrimoniohistoricoydeporte/servicios/directorio-instituciones/detalle/2590.html"
+    },
+    {
+      "caseId": "SC04",
+      "evidenceId": "ev-f1cde6d913c08e92a9c0",
+      "url": "https://spaceplace.nasa.gov/saturn-rings/en/"
+    }
+  ],
+  "semanticReviewScope": "Independent exactbinding/count/artifacthash checks across246 plus independentECHRpartialmaterial-unit applicability reading; doesnotclaim repeatingall246semantic reviews.",
+  "providerCallsByReviewer": 0,
+  "publicGETsByReviewer": 0,
+  "frozenFilesModified": false,
+  "limitations": [
+    "All80fact/20control denominators preserved; no label relabeling aftercitation failures.",
+    "198verifiedreferences is not198independent sources or69fullygroundedoutputs; source-complete casecredit is31/80.",
+    "69correct labels remain rawtruth-label observations. HA04haszeroexternallyverifiedselectedreferences in thisaudit.",
+    "Purposive OPEN cohort; no blind/population/causal/readiness inference."
+  ]
+}

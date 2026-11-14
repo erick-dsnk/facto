@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "role": "independent_second_annotation",
+  "annotator": "final_stack_review",
+  "createdAt": "2026-11-14T04:49:22.224040+00:00",
+  "inputSHA256": "9ec335a07125664a162925caff20e1de81e1527454df8a20e8b46ec49353b53f",
+  "rubricSHA256": "4914a9144216a087ff28b9ac8fb72ad78d9673bbaba84a90d8b36746b3db5c75",
+  "firstLabelsViewed": false,
+  "candidatePromptViewed": false,
+  "candidateCodeViewed": false,
+  "providerOutputsViewed": false,
+  "sourceBrowsingCalls": 0,
+  "keyedCalls": 0,
+  "method": "Manual independent reasoning from shuffled exact proposition/title/URL/excerpt packet and rubric only. Body content determines basis; identifying metadata cannot add omitted facts.",
+  "stanceDiagnosticMeaning": "Textual relation to the proposition, separate from content qualification or final factual verdict. Supports on a non-substantive unit records only its unsupported or attributed assertion; unclear means insufficient operative relation.",
+  "annotations": [
+    {
+      "id": "CB01",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Bumblebees retrieve only the ordinal ranking",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 44,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "Only the paper title is retained. It does not retain the described experiments, sucrose training, novel pairings or measured comparison needed for this proposition.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB02",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "SEC. 2. JUNETEENTH NATIONAL INDEPENDENCE DAY AS A LEGAL PUBLIC HOLIDAY.",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 71,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "This is a section heading without the operative amendment or June19 date. A heading cannot supply the omitted legal contents.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB03",
+      "expectedBasis": "substantive",
+      "supportingSpan": "\"objectDate\":\"1889\"",
+      "supportingOffsets": {
+        "start": 571,
+        "end": 590,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "Actual catalogue fields bind the work title, named artist and object date. This is an identifiable record entry supporting the stated catalogue date; the metadata publisher alone is not the basis.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB04",
+      "expectedBasis": "substantive",
+      "supportingSpan": "Juneteenth National Independence Day, June 19.",
+      "supportingOffsets": {
+        "start": 670,
+        "end": 716,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The retained law identifies the enactment and actually inserts the holiday/date into the statutory list. Its operative June19 value contradicts June20 while preserving substantive content basis.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB05",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "Legal commentators agree",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 24,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "The claimed social outcome is supported only by unnamed commentators and success language. No evaluation, observations, comparison or identifiable empirical result is retained; the statute title cannot establish a reduction in illegal hunting.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB06",
+      "expectedBasis": "substantive",
+      "supportingSpan": "Neither of these treatments reduced the number of nest mates",
+      "supportingOffsets": {
+        "start": 213,
+        "end": 273,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The body retains the coil intervention, field treatments, measured recruitment outcome and station location. These actual methods/findings contradict the claim that both treatments reduced recruitment.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB07",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "This section has no associated Explanatory Notes",
+      "supportingOffsets": {
+        "start": 37,
+        "end": 85,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "The section heading and explanatory-note notice do not retain an offence rule or its exception. No operative legal content may be inferred from the URL or title.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB08",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "there is tantalizing evidence",
+      "supportingOffsets": {
+        "start": 5,
+        "end": 34,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "Speculative allusion does not identify the evidence, methods or result; could-play-a-role language does not establish the specific alignment-reference proposition.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB09",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Citation: Lambinet V, Hayden ME, Bieri M, Gries G (2014)",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 56,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "Only a bibliographic reference and question-form title are retained. They identify a work but do not supply the recruitment interventions or findings.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB10",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "\"title\":\"Wheat Field with Cypresses\"",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 36,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "Only the object-title field is retained. The artist and object date are absent from the body, and the separate metadata title cannot supply1888.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB11",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Public Law 117-17 117th Congress",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 32,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "This identifies a law and legislature, without its holiday/date contents. The separate title assertion cannot fill the missing body.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB12",
+      "expectedBasis": "substantive",
+      "supportingSpan": "higher ranking over higher absolute reward",
+      "supportingOffsets": {
+        "start": 588,
+        "end": 630,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "The passage retains the training design, novel-pairing comparisons, observed preferences and later memory experiments. It directly reports the described ordinal-over-absolute finding.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB13",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "Controlled research confirms flawless decisions.",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 48,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "An unnamed research appeal and promotional universal-benefit assertion provide no identifiable experiment, method or observed result. Scientific language and a genuine-looking paper URL do not supply the missing basis.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB14",
+      "expectedBasis": "substantive",
+      "supportingSpan": "\"objectDate\":\"1889\"",
+      "supportingOffsets": {
+        "start": 571,
+        "end": 590,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The actual catalogue entry preserves title, artist and the date field. It is substantive evidence against the claimed1888 catalogue date, independent of agreement.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB15",
+      "expectedBasis": "substantive",
+      "supportingSpan": "The Nickel Boys , by Colson Whitehead (Doubleday)",
+      "supportingOffsets": {
+        "start": 192,
+        "end": 241,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "A winner-record heading supplies2020 and the Fiction category, followed by the winning work and author. These retained fields form the award record; no separate study is required.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB16",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Winning Work",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 12,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "A field heading alone contains no work, author, award category or year. The URL and metadata title cannot supply those missing values.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB17",
+      "expectedBasis": "substantive",
+      "supportingSpan": "Neither of these treatments reduced the number of nest mates",
+      "supportingOffsets": {
+        "start": 213,
+        "end": 273,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "Actual intervention methods and recruitment findings are retained, including2percent field manipulation and200meter north feeding station. The null recruitment effect supports the bounded experimental proposition.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB18",
+      "expectedBasis": "substantive",
+      "supportingSpan": "Juneteenth National Independence Day, June 19.",
+      "supportingOffsets": {
+        "start": 670,
+        "end": 716,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "The identified act retains its operative statutory amendment and exact holiday date, rather than merely a title or commentary.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB19",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "Experts agree that Wheat Field with Cypresses dates to 1889.",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 60,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "unclear",
+      "labelReason": "Unnamed expert consensus and art-guide promotion do not retain the Met catalogue entry or another identifiable evidentiary basis. Agreement on a date is not proof of what the specified catalogue records.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB20",
+      "expectedBasis": "substantive",
+      "supportingSpan": "The Nickel Boys , by Colson Whitehead (Doubleday)",
+      "supportingOffsets": {
+        "start": 192,
+        "end": 241,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The actual2020 Fiction winner record supplies The Nickel Boys, rather than the claimed The Underground Railroad. An incompatible winning value does not remove the substantive award-record basis.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB21",
+      "expectedBasis": "substantive",
+      "supportingSpan": "higher ranking over higher absolute reward",
+      "supportingOffsets": {
+        "start": 588,
+        "end": 630,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The retained experiments explicitly report ordinal ranking preferred over higher absolute reward in novel pairings, the reverse of the claim. Training, comparisons and further tests identify an actual research basis.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB22",
+      "expectedBasis": "substantive",
+      "supportingSpan": "A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.",
+      "supportingOffsets": {
+        "start": 86,
+        "end": 181,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "The operative legal sentence identifies the regulated act, offence and exemption. This short complete rule is substantive content, unlike a heading alone.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB23",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "A reading-club host says",
+      "supportingOffsets": {
+        "start": 0,
+        "end": 24,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "supports",
+      "labelReason": "The retained award assertion is merely a club host quotation surrounded by promotion. It can evidence what the host said, but the checked proposition is the actual award outcome, not that speech act.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB24",
+      "expectedBasis": "substantive",
+      "supportingSpan": "A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.",
+      "supportingOffsets": {
+        "start": 86,
+        "end": 181,
+        "unit": "unicode_code_points"
+      },
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The operative offence rule and exemption directly contradict the claim of no offence when not exempt. The same retained statute is substantive for either polarity.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    }
+  ],
+  "limitations": [
+    "Supported/refuted pairs reuse the same passages and are not independent source observations.",
+    "No source truth/authenticity, provenance independence, risk, probability threshold or final verdict sufficiency was evaluated.",
+    "Headings and citations identify subjects but cannot supply missing operative contents, field values or methods/findings.",
+    "Promotional framing does not automatically negate a retained actual record; these negative promotional units lack a demonstrated basis for their checked relation."
+  ]
+}

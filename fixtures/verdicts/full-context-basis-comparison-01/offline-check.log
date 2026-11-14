@@ -1,0 +1,14 @@
+✔ exact frozen clarification changes only instructions; full state, seven criteria and other questions remain identical (8.924776ms)
+✔ 24 calls are interleaved and arm-balanced within original/reverse full contexts without dropping companions (19.765489ms)
+✔ full-context outputs record target gate effects and all sentinel/non-target outputs without claiming factual gain (184.243283ms)
+✔ frozen retry-capable client sends only one actual request on429 (55.60859ms)
+✔ unknown usage, realistic reserve and wall deadline stop without repeats (61.453296ms)
+✔ report/request/source drift fails before any actual fetch (21.313442ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 893.953795

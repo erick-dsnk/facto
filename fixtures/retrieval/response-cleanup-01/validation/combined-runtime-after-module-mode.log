@@ -1,0 +1,28 @@
+✔ combined actual HTTP seam: 401, pending cleanup, 1 charged attempt(s) (11.093501ms)
+✔ combined actual HTTP seam: 403, pending cleanup, 1 charged attempt(s) (0.446082ms)
+✔ combined actual HTTP seam: 400, pending cleanup, 1 charged attempt(s) (0.472752ms)
+✔ combined actual HTTP seam: 429, pending cleanup, 2 charged attempt(s) (5.546227ms)
+✔ combined actual HTTP seam: 503, pending cleanup, 2 charged attempt(s) (4.066287ms)
+✔ combined actual HTTP seam: declared oversize, pending cleanup, no retry (0.890662ms)
+✔ combined actual HTTP seam: streamed oversize, pending cleanup, no retry (8.343122ms)
+✔ combined actual HTTP seam: 401, rejected cleanup, 1 charged attempt(s) (0.500454ms)
+✔ combined actual HTTP seam: 403, rejected cleanup, 1 charged attempt(s) (0.413323ms)
+✔ combined actual HTTP seam: 400, rejected cleanup, 1 charged attempt(s) (0.397349ms)
+✔ combined actual HTTP seam: 429, rejected cleanup, 2 charged attempt(s) (1.575224ms)
+✔ combined actual HTTP seam: 503, rejected cleanup, 2 charged attempt(s) (1.644178ms)
+✔ combined actual HTTP seam: declared oversize, rejected cleanup, no retry (0.234884ms)
+✔ combined actual HTTP seam: streamed oversize, rejected cleanup, no retry (0.257377ms)
+✔ remaining shared allowance retains provider failure without a suppressed retry charge (1.306118ms)
+✔ known error at absolute deadline still normalizes timeout, without retry or extra charge (0.33818ms)
+✔ cancellation during cleanup remains the primary terminal reason (0.341625ms)
+✔ pre-dispatch absolute deadline consumes no attempt and performs no HTTP (0.182345ms)
+✔ retry success still consumes exactly the two actual HTTP attempts (2.125663ms)
+✔ combined native HTTP response reset preserves malformed classification and one charge (46.97271ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 543.7192

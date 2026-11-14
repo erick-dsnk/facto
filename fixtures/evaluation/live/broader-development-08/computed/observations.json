@@ -1,0 +1,957 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline_candidate08_observations",
+  "createdAt": "2026-11-14T04:48:15.605Z",
+  "metricSourceSHA256": "db4affadf2b9868024f5148c1fb6877a3af211ac784dabae0143b69641b6ee21",
+  "totals": {
+    "declared": 16,
+    "observed": 16,
+    "terminals": 16,
+    "providerErrors": 1,
+    "transportFailures": 0,
+    "localStops": 0,
+    "terminalTypes": {
+      "claim.result": 12,
+      "claim.skipped": 2,
+      "pipeline.error": 1,
+      "claim.needs_confirmation": 1
+    },
+    "definitiveOccurrences": 7,
+    "resultOccurrencesFlaggedCached": 0
+  },
+  "operationalErrors": [
+    {
+      "label": "BD06",
+      "type": "pipeline.error",
+      "reasonCode": "exa_content_failed"
+    }
+  ],
+  "usage": {
+    "dispatchedAttempts": 89,
+    "calls": {
+      "jev": 38,
+      "search": 23,
+      "contents": 28
+    },
+    "requestBytes": 1193356,
+    "measuredJevInputTokens": 284863,
+    "chargedInputTokens": 284863,
+    "unknownInputTokenReservationsAtEnd": 0,
+    "knownCostUSD": 0.21500000000000014,
+    "attemptsWithUnknownCost": 38,
+    "unknownCostByKind": {
+      "jev": 38,
+      "search": 0,
+      "contents": 0
+    },
+    "totalCostUSD": null,
+    "outputTokens": null,
+    "sumBatchElapsedMs": 44785,
+    "costLimitation": "Known cost is a partial returned amount; all Jev attempt costs and total cost are unknown. Output token counts are not retained. No price inferred."
+  },
+  "latencyMs": {
+    "convention": "Client-observed per-input durationMs; median uses average of middle pair; P95 uses nearest rank ceil(0.95*n), without interpolation.",
+    "allInputTerminals": {
+      "n": 16,
+      "min": 88,
+      "median": 2668.5,
+      "p95NearestRank": 7260,
+      "max": 7260
+    },
+    "uniqueExpectedFactTerminalsIncludingError": {
+      "n": 12,
+      "min": 745,
+      "median": 3617.5,
+      "p95NearestRank": 7260,
+      "max": 7260
+    },
+    "allEligibleOccurrenceTerminalsIncludingError": {
+      "n": 13,
+      "min": 466,
+      "median": 3480,
+      "p95NearestRank": 7260,
+      "max": 7260
+    },
+    "claimResultOccurrences": {
+      "n": 12,
+      "min": 466,
+      "median": 3617.5,
+      "p95NearestRank": 7260,
+      "max": 7260
+    },
+    "measurementLimits": "Typed authenticated HTTP/WebSocket inputs; no glasses/OCR/ASR/audio latency. cached:false means no reported application result-cache hit, not proof of uncached provider retrieval. Mixed repeat is not an independent factual or latency sample."
+  },
+  "batchReconciliation": [
+    {
+      "batch": 1,
+      "reportCounts": {
+        "declared": 4,
+        "observed": 4,
+        "terminalReceipts": 4,
+        "localStops": 0,
+        "transportFailures": 0,
+        "providerErrors": 0
+      },
+      "totals": {
+        "attempts": 25,
+        "pendingDispatchReservations": 0,
+        "calls": {
+          "jev": 10,
+          "search": 6,
+          "contents": 9
+        },
+        "requestBytes": 353912,
+        "measuredInputTokens": 84260,
+        "unknownInputTokenReservations": 0,
+        "chargedInputTokens": 84260,
+        "knownCostUSD": 0.06000000000000001,
+        "attemptsWithUnknownCost": 10,
+        "elapsedMs": 12306
+      },
+      "limits": {
+        "requestBytes": 65536,
+        "totalRequestBytes": 650000,
+        "inputTokens": 140000,
+        "unknownInputTokensPerAttempt": 24000,
+        "calls": {
+          "jev": 16,
+          "search": 8,
+          "contents": 12
+        },
+        "wallMs": 90000
+      },
+      "journalRecords": 50,
+      "journalFirstPhase": "dispatch_reserved",
+      "reconcilesWithFinalJournalAndPerCaseAttempts": true,
+      "largestRequestBytes": 60431,
+      "allRecordedLimitsRespected": true,
+      "peakJournalChargedInputTokens": 106575,
+      "batchManifestSHA256": "755fcccac694f94db05743d6723e4a123e3003f79c01142d8a2d5551c5cf1e99",
+      "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8"
+    },
+    {
+      "batch": 2,
+      "reportCounts": {
+        "declared": 4,
+        "observed": 4,
+        "terminalReceipts": 4,
+        "localStops": 0,
+        "transportFailures": 0,
+        "providerErrors": 1
+      },
+      "totals": {
+        "attempts": 22,
+        "pendingDispatchReservations": 0,
+        "calls": {
+          "jev": 9,
+          "search": 6,
+          "contents": 7
+        },
+        "requestBytes": 259791,
+        "measuredInputTokens": 62602,
+        "unknownInputTokenReservations": 0,
+        "chargedInputTokens": 62602,
+        "knownCostUSD": 0.054000000000000006,
+        "attemptsWithUnknownCost": 9,
+        "elapsedMs": 11027
+      },
+      "limits": {
+        "requestBytes": 65536,
+        "totalRequestBytes": 650000,
+        "inputTokens": 140000,
+        "unknownInputTokensPerAttempt": 24000,
+        "calls": {
+          "jev": 16,
+          "search": 8,
+          "contents": 12
+        },
+        "wallMs": 90000
+      },
+      "journalRecords": 44,
+      "journalFirstPhase": "dispatch_reserved",
+      "reconcilesWithFinalJournalAndPerCaseAttempts": true,
+      "largestRequestBytes": 56457,
+      "allRecordedLimitsRespected": true,
+      "peakJournalChargedInputTokens": 84913,
+      "batchManifestSHA256": "65f4edaf91213073c46678babf92e65c7087b8dde51d98489dbb68e379e97fc9",
+      "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8"
+    },
+    {
+      "batch": 3,
+      "reportCounts": {
+        "declared": 4,
+        "observed": 4,
+        "terminalReceipts": 4,
+        "localStops": 0,
+        "transportFailures": 0,
+        "providerErrors": 0
+      },
+      "totals": {
+        "attempts": 20,
+        "pendingDispatchReservations": 0,
+        "calls": {
+          "jev": 9,
+          "search": 5,
+          "contents": 6
+        },
+        "requestBytes": 252284,
+        "measuredInputTokens": 60467,
+        "unknownInputTokenReservations": 0,
+        "chargedInputTokens": 60467,
+        "knownCostUSD": 0.04700000000000001,
+        "attemptsWithUnknownCost": 9,
+        "elapsedMs": 13064
+      },
+      "limits": {
+        "requestBytes": 65536,
+        "totalRequestBytes": 650000,
+        "inputTokens": 140000,
+        "unknownInputTokensPerAttempt": 24000,
+        "calls": {
+          "jev": 16,
+          "search": 8,
+          "contents": 12
+        },
+        "wallMs": 90000
+      },
+      "journalRecords": 40,
+      "journalFirstPhase": "dispatch_reserved",
+      "reconcilesWithFinalJournalAndPerCaseAttempts": true,
+      "largestRequestBytes": 58439,
+      "allRecordedLimitsRespected": true,
+      "peakJournalChargedInputTokens": 82792,
+      "batchManifestSHA256": "8c42e6eaace67ce1fa5e01a90f007509ed961096a00ec77ede075c714cae16da",
+      "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8"
+    },
+    {
+      "batch": 4,
+      "reportCounts": {
+        "declared": 4,
+        "observed": 4,
+        "terminalReceipts": 4,
+        "localStops": 0,
+        "transportFailures": 0,
+        "providerErrors": 0
+      },
+      "totals": {
+        "attempts": 22,
+        "pendingDispatchReservations": 0,
+        "calls": {
+          "jev": 10,
+          "search": 6,
+          "contents": 6
+        },
+        "requestBytes": 327369,
+        "measuredInputTokens": 77534,
+        "unknownInputTokenReservations": 0,
+        "chargedInputTokens": 77534,
+        "knownCostUSD": 0.054000000000000006,
+        "attemptsWithUnknownCost": 10,
+        "elapsedMs": 8388
+      },
+      "limits": {
+        "requestBytes": 65536,
+        "totalRequestBytes": 650000,
+        "inputTokens": 140000,
+        "unknownInputTokensPerAttempt": 24000,
+        "calls": {
+          "jev": 16,
+          "search": 8,
+          "contents": 12
+        },
+        "wallMs": 90000
+      },
+      "journalRecords": 44,
+      "journalFirstPhase": "dispatch_reserved",
+      "reconcilesWithFinalJournalAndPerCaseAttempts": true,
+      "largestRequestBytes": 59852,
+      "allRecordedLimitsRespected": true,
+      "peakJournalChargedInputTokens": 89984,
+      "batchManifestSHA256": "708232974c3357053c129c93443ddca9c81d0ce9e7580b7cafc90cba19a0e39f",
+      "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8"
+    }
+  ],
+  "caseObservations": [
+    {
+      "label": "BD01",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 4711,
+      "stageMs": {
+        "admission": 191.180429,
+        "retrieval": 4056.935682,
+        "judgment": 383.8189910000001
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 27149
+      },
+      "usage": {
+        "measuredInputTokens": 27149,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 115881,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "The Great Fire of London occurred in 1666.",
+          "verdict": "supported",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-bfca57518607509819d2",
+            "ev-a4b4fd6a40ebe7d6eb6c"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "The Great Fire of London occurred in 1666.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The Great Fire of London occurred in 1666."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD02",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 3480,
+      "stageMs": {
+        "admission": 204.84074899999996,
+        "retrieval": 2818.25,
+        "judgment": 370.5106339999993
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 28322
+      },
+      "usage": {
+        "measuredInputTokens": 28322,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 118495,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "Magna Carta was first issued in 1216.",
+          "verdict": "insufficient_evidence",
+          "cached": false,
+          "selectedEvidenceIds": []
+        }
+      ],
+      "searchQueries": [
+        "Magna Carta was first issued in 1216.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Magna Carta was first issued in 1216."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD03",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 3755,
+      "stageMs": {
+        "admission": 78.25678900000094,
+        "retrieval": 3239.227318000001,
+        "judgment": 380.76274399999966
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 27104
+      },
+      "usage": {
+        "measuredInputTokens": 27104,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 113031,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "Mount Kilimanjaro is located in Tanzania.",
+          "verdict": "supported",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-fdcab82cba190710f6f1",
+            "ev-fc10664bbaa8225ad8ac",
+            "ev-8cabcd0e009700e9fb3b"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "Mount Kilimanjaro is located in Tanzania.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Mount Kilimanjaro is located in Tanzania."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BDC01",
+      "terminalReceived": true,
+      "terminalType": "claim.skipped",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": 0
+      },
+      "durationMs": 175,
+      "stageMs": {
+        "admission": 171.05929099999958,
+        "retrieval": 0,
+        "judgment": 0
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 1,
+        "searchConsumed": 0,
+        "contentsConsumed": 0,
+        "inputTokens": 1685
+      },
+      "usage": {
+        "measuredInputTokens": 1685,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 6505,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 1
+      },
+      "result": [],
+      "searchQueries": [],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD04",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 3802,
+      "stageMs": {
+        "admission": 142.20536300000003,
+        "retrieval": 3271.2720499999996,
+        "judgment": 316.64210100000014
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 27417
+      },
+      "usage": {
+        "measuredInputTokens": 27417,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 112380,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "Lake Baikal is in Africa.",
+          "verdict": "insufficient_evidence",
+          "cached": false,
+          "selectedEvidenceIds": []
+        }
+      ],
+      "searchQueries": [
+        "Lake Baikal is in Africa.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Lake Baikal is in Africa."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD05",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 4378,
+      "stageMs": {
+        "admission": 105.73346000000038,
+        "retrieval": 3964.5128729999997,
+        "judgment": 260.986711999999
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 20003
+      },
+      "usage": {
+        "measuredInputTokens": 20003,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 84480,
+        "knownCostUSD": 0.02,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz.",
+          "verdict": "insufficient_evidence",
+          "cached": false,
+          "selectedEvidenceIds": []
+        }
+      ],
+      "searchQueries": [
+        "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD06",
+      "terminalReceived": true,
+      "terminalType": "pipeline.error",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 2553,
+      "stageMs": {
+        "admission": 92.1778149999991,
+        "retrieval": 2300.296115000001,
+        "judgment": 154.31755300000077
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 2,
+        "contentsConsumed": 1,
+        "inputTokens": 13493
+      },
+      "usage": {
+        "measuredInputTokens": 13493,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 56406,
+        "knownCostUSD": 0.014,
+        "attemptsWithUnknownCost": 2
+      },
+      "result": [],
+      "searchQueries": [
+        "The chemical symbol for gold is Ag.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The chemical symbol for gold is Ag."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BDC02",
+      "terminalReceived": true,
+      "terminalType": "claim.skipped",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "not_eligible_public_fact",
+        "claims": 0
+      },
+      "durationMs": 88,
+      "stageMs": {
+        "admission": 84.49692800000048,
+        "retrieval": 0,
+        "judgment": 0
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 1,
+        "searchConsumed": 0,
+        "contentsConsumed": 0,
+        "inputTokens": 1689
+      },
+      "usage": {
+        "measuredInputTokens": 1689,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 6525,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 1
+      },
+      "result": [],
+      "searchQueries": [],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD07",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 745,
+      "stageMs": {
+        "admission": 169.91680600000007,
+        "retrieval": 364.591188,
+        "judgment": 193.24917600000003
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 13243
+      },
+      "usage": {
+        "measuredInputTokens": 13243,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 55046,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      },
+      "result": [
+        {
+          "checkedPublicText": "The Panama Canal opened to world trade in 1914.",
+          "verdict": "supported",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-f72fcf7616e02e44a3fd",
+            "ev-9f6b071f258ff2a1591d"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD08",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 7260,
+      "stageMs": {
+        "admission": 98.77784999999994,
+        "retrieval": 6791.255733,
+        "judgment": 316.35882800000036
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 22515
+      },
+      "usage": {
+        "measuredInputTokens": 22515,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 95424,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "The first modern Olympic Games were held in Paris in 1896.",
+          "verdict": "contradicted",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-6280e6fe9e9d162a80e3",
+            "ev-b0521ce99264614043b9",
+            "ev-dcf9b3ab8fe83d349b4b"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "The first modern Olympic Games were held in Paris in 1896.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The first modern Olympic Games were held in Paris in 1896."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD09",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 4795,
+      "stageMs": {
+        "admission": 109.20051699999931,
+        "retrieval": 4304.398841,
+        "judgment": 346.972987000001
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 23034
+      },
+      "usage": {
+        "measuredInputTokens": 23034,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 95365,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+          "verdict": "insufficient_evidence",
+          "cached": false,
+          "selectedEvidenceIds": []
+        }
+      ],
+      "searchQueries": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BDC03",
+      "terminalReceived": true,
+      "terminalType": "claim.needs_confirmation",
+      "admission": {
+        "action": "needs_confirmation",
+        "reasonCode": "incomplete_or_unclear",
+        "claims": 0
+      },
+      "durationMs": 96,
+      "stageMs": {
+        "admission": 92.86339200000111,
+        "retrieval": 0,
+        "judgment": 0
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 1,
+        "searchConsumed": 0,
+        "contentsConsumed": 0,
+        "inputTokens": 1675
+      },
+      "usage": {
+        "measuredInputTokens": 1675,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 6449,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 1
+      },
+      "result": [],
+      "searchQueries": [],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD10",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 2383,
+      "stageMs": {
+        "admission": 257.326049,
+        "retrieval": 1467.1943280000003,
+        "judgment": 642.6832139999997
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 10436
+      },
+      "usage": {
+        "measuredInputTokens": 10436,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 44063,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      },
+      "result": [
+        {
+          "checkedPublicText": "The Smithsonian Institution was created by a British royal charter in 1846.",
+          "verdict": "contradicted",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-0731d2680f6821d2a03e",
+            "ev-9ba7133657edfc20c794",
+            "ev-eb0bdcebbd68c35e5e3a"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD11",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 2533,
+      "stageMs": {
+        "admission": 134.218437,
+        "retrieval": 1935.930922,
+        "judgment": 401.1106089999994
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 23212
+      },
+      "usage": {
+        "measuredInputTokens": 23212,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 97388,
+        "knownCostUSD": 0.02,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+          "verdict": "insufficient_evidence",
+          "cached": false,
+          "selectedEvidenceIds": []
+        }
+      ],
+      "searchQueries": [
+        "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BD12",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 2784,
+      "stageMs": {
+        "admission": 132.01641999999993,
+        "retrieval": 2127.0130799999997,
+        "judgment": 454.43613900000037
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 27558
+      },
+      "usage": {
+        "measuredInputTokens": 27558,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 116450,
+        "knownCostUSD": 0.020000000000000004,
+        "attemptsWithUnknownCost": 3
+      },
+      "result": [
+        {
+          "checkedPublicText": "The Great Barrier Reef lies off the west coast of Australia.",
+          "verdict": "contradicted",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-452ef8a8d24d7ead2666",
+            "ev-0b9cf7ed303720fd46fa",
+            "ev-1c70e710e2db867cc790"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "The Great Barrier Reef lies off the west coast of Australia.",
+        "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The Great Barrier Reef lies off the west coast of Australia."
+      ],
+      "reportedMismatchCount": 0
+    },
+    {
+      "label": "BDC04",
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "durationMs": 466,
+      "stageMs": {
+        "admission": 145.1972939999996,
+        "retrieval": 124.80964700000004,
+        "judgment": 188.77127199999995
+      },
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 16328
+      },
+      "usage": {
+        "measuredInputTokens": 16328,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 69468,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      },
+      "result": [
+        {
+          "checkedPublicText": "The Panama Canal opened to world trade in 1914.",
+          "verdict": "supported",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-f72fcf7616e02e44a3fd",
+            "ev-9f6b071f258ff2a1591d"
+          ]
+        }
+      ],
+      "searchQueries": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "reportedMismatchCount": 0
+    }
+  ],
+  "limitations": [
+    "The observed 100% terminal receipt rate is not an accuracy metric.",
+    "BD06 no_result is pipeline.error / exa_content_failed, an operational error rather than an abstention. All provider HTTP responses were200; raw per-URL failure status/tag was not retained.",
+    "Known costs are partial; total cost and output tokens are unknown.",
+    "Source-verified coverage requires every selected reference verified; BD01/Bartleby403 and BD08/Olympics503 fail full-selected-set credit. One exact baseline Federal Register proof is reused with old fetch time disclosed.",
+    "Twelve unique facts are BD01–BD12; BDC04 repeats BD07 and adds no unique factual credit."
+  ]
+}

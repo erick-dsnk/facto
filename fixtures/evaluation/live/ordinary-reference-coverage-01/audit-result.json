@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_read_only_completed_campaign_accounting_audit",
+  "auditedAt": "2026-11-14T10:13:29.701807+00:00",
+  "result": "PASS accounting and first-run preservation; prospective factual target FAILED",
+  "reportSHA256": "20171d2763a9a9e93873352845b28f4f36543ddc35e63f768f36558b91e82241",
+  "freeze": {
+    "commit": "7f029154970d62f9f8024fb9849bbd8a56daf8ec",
+    "dirty": false,
+    "sourceSHA256": "d81de5984903f607d4e6b8342f1777b3dc105f893f27e2739c98308d86f57147",
+    "planSHA256": "d2ee6dff85beafb136efe8eebfaadb0dcee5048b614c66b1d659b029d5cee937",
+    "executorSHA256": "20e93ecb578d434ad22c08818c29f0e7b02bf538fad726b52103b22179ce050c"
+  },
+  "checks": {
+    "planBytesMatchFreeze": true,
+    "executorBytesMatchFreeze": true,
+    "cleanFrozenCommitAndSource": true,
+    "reportMetadataMatchesFreeze": true,
+    "exactProspectiveLimits": true,
+    "allAttemptsDispatchedAndCompleted": true,
+    "uniqueConsecutiveAttemptOrdinals": true,
+    "accountingMatchesRecordedTotals": true,
+    "actualAttemptsWithinLimits": true,
+    "allJevUsageKnown": true,
+    "perCaseUsageMatchesActualAttempts": true,
+    "fourRawCorrectZeroWrongDefinitive": true,
+    "noDuplicateDefinitiveResults": true,
+    "stoppedAfterFifthCaseWithoutLaterDispatch": true,
+    "allFiveObservedCasesHaveTerminals": true,
+    "noObservedProviderOrTransportFailures": true,
+    "declaredDenominatorsPreserved": true,
+    "historicalPortableFilesUnchanged": true,
+    "reportUnmodifiedByAudit": true
+  },
+  "accounting": {
+    "actualAttempts": 22,
+    "actualProviderCalls": {
+      "jev": 10,
+      "search": 6,
+      "contents": 6
+    },
+    "measuredInputTokens": 74761,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 74761,
+    "pendingDispatchReservations": 0,
+    "requestBytes": 324666,
+    "responseByteAggregate": null,
+    "knownPartialCostUSD": 0.054,
+    "attemptsWithUnknownCost": 10,
+    "elapsedMs": 10495,
+    "chargesAreProviderReportedNotIndependentBilling": true
+  },
+  "outcomes": {
+    "declaredEligibleFacts": 8,
+    "correctDefinitive": 4,
+    "wrongDefinitiveObserved": 0,
+    "finalAbstentions": 0,
+    "factualNoResultLocalStop": 1,
+    "unexecutedEligibleFacts": 3,
+    "declaredControls": 4,
+    "executedControls": 0,
+    "unexecutedControls": 4,
+    "terminalReceipts": 5,
+    "declaredInputs": 12,
+    "rawCorrectDefinitiveCoverage": 0.5,
+    "prospectiveTargetCorrectDefinitive": 6,
+    "targetMet": false,
+    "fullySelectedSetVerifiedCorrect": null,
+    "citationAuditStatus": "separate independent selected-source audit pending; no source-verified credit inferred from accounting",
+    "correctByExpectedPolarity": {
+      "supported": 3,
+      "contradicted": 1
+    },
+    "domainRawCorrect": {
+      "history": {
+        "correct": 2,
+        "declared": 2
+      },
+      "geography": {
+        "correct": 2,
+        "declared": 3
+      },
+      "science": {
+        "correct": 0,
+        "declared": 3
+      }
+    }
+  },
+  "localStop": {
+    "label": "OR05-gibraltar",
+    "reason": "harness_request_byte_limit",
+    "blockedAdditionalJevRequestWasDispatched": false,
+    "actualJevForCase": 2,
+    "runtimeJevAllowanceConsumedForCase": 3,
+    "note": "Runtime consumed its third Jev allowance before wire guard rejected oversized body. Actual dispatch accounting correctly retains only two Jev attempts for case5, ten across campaign. No usage or paid charge is invented for the undispatched rejection."
+  },
+  "historicalVerification": {
+    "command": "python3 fixtures/continuation/fresh-cloud-continuation-01/restore.py --target-root / --verify-restored",
+    "verifiedFiles": 1120,
+    "verifiedRawBytes": 18865046,
+    "network": false,
+    "codeExecutedFromArchive": false,
+    "liveCallsAuthorized": false
+  },
+  "limitations": [
+    "No provider request or rerun/resumption performed by this audit.",
+    "Four correct labels out of eight declared fail the prospective six-of-eight target.",
+    "Zero observed wrong labels does not imply precision or safety on unexecuted cases; all four privacy/opinion/ambiguity controls were unrun.",
+    "Citation completeness/grounding/access and source independence remain a separate audit; accounting success is not source verification.",
+    "No baseline arm or causal improvement inference; no blind accuracy or readiness claim.",
+    "Known cost is partial: ten attempts have unknown cost. Response-byte aggregate is unmeasured.",
+    "Elapsed time is campaign wall time over this incomplete run, not full-cohort or population latency."
+  ]
+}

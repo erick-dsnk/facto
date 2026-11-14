@@ -1,0 +1,3008 @@
+{
+  "schemaVersion": 1,
+  "planHash": "f010dee47cb4aabbfe31a39f9f9518bfbcadd67373a314f8e999bf5068e11647",
+  "stopReason": "completed",
+  "completedAllCalls": true,
+  "durationMs": 2053,
+  "totals": {
+    "attempts": 16,
+    "actualFetches": 16,
+    "requestBytes": 387860,
+    "responseBytes": 32800,
+    "measuredInputTokens": 89200,
+    "unknownUsage": false,
+    "usageMissingCalls": 0,
+    "usageKnownCalls": 16,
+    "exaActualCalls": 0
+  },
+  "providerAccounting": {
+    "consumedJev": 16,
+    "actualStartedJev": 16,
+    "actualStartedExa": 0,
+    "jevUsageKnownCalls": 16,
+    "jevUsageUnknownCalls": 0
+  },
+  "cost": {
+    "exaUsd": 0,
+    "jevUsd": null,
+    "measuredJevInputTokens": 89200,
+    "unknownJevUsageCalls": 0,
+    "reason": "Jev price/output-token cost unavailable; no invented total cost."
+  },
+  "plannedCalls": 16,
+  "metrics": {
+    "development": {
+      "baseline": {
+        "scheduled": 16,
+        "allObserved": 16,
+        "planned": 16,
+        "observed": 16,
+        "missingOrFailed": 0,
+        "truePositive": 7,
+        "falseNegative": 3,
+        "falsePositive": 0,
+        "trueNegative": 6,
+        "excludedFromPrimary": 0,
+        "boundaryPredictions": [],
+        "boundarySensitivity": {
+          "ifAllSubstantive": {
+            "additionalTruePositive": 0,
+            "additionalFalseNegative": 0
+          },
+          "ifAllNonSubstantive": {
+            "additionalFalsePositive": 0,
+            "additionalTrueNegative": 0
+          }
+        },
+        "strata": {
+          "research": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 2,
+            "passed": 2,
+            "falsePositive": 0
+          },
+          "promotional": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "attributed": {
+            "planned": 4,
+            "observed": 4,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "record": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 2,
+            "passed": 2,
+            "falsePositive": 0
+          },
+          "minimal_named_formal_record_description": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "secondary": {
+            "planned": 4,
+            "observed": 4,
+            "labelledPositive": 4,
+            "passed": 3,
+            "falsePositive": 0
+          },
+          "minimal_named_record_description_in_promotion": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          }
+        },
+        "probabilityBins": [
+          {
+            "lower": 0,
+            "upper": 0.7,
+            "count": 8,
+            "labelledPositive": 2
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.85,
+            "count": 1,
+            "labelledPositive": 1
+          },
+          {
+            "lower": 0.85,
+            "upper": 0.9,
+            "count": 0,
+            "labelledPositive": 0
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 7,
+            "labelledPositive": 7
+          }
+        ]
+      },
+      "candidate": {
+        "scheduled": 16,
+        "allObserved": 16,
+        "planned": 16,
+        "observed": 16,
+        "missingOrFailed": 0,
+        "truePositive": 5,
+        "falseNegative": 5,
+        "falsePositive": 0,
+        "trueNegative": 6,
+        "excludedFromPrimary": 0,
+        "boundaryPredictions": [],
+        "boundarySensitivity": {
+          "ifAllSubstantive": {
+            "additionalTruePositive": 0,
+            "additionalFalseNegative": 0
+          },
+          "ifAllNonSubstantive": {
+            "additionalFalsePositive": 0,
+            "additionalTrueNegative": 0
+          }
+        },
+        "strata": {
+          "research": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 2,
+            "passed": 1,
+            "falsePositive": 0
+          },
+          "promotional": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "attributed": {
+            "planned": 4,
+            "observed": 4,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "record": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 2,
+            "passed": 2,
+            "falsePositive": 0
+          },
+          "minimal_named_formal_record_description": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "secondary": {
+            "planned": 4,
+            "observed": 4,
+            "labelledPositive": 4,
+            "passed": 2,
+            "falsePositive": 0
+          },
+          "minimal_named_record_description_in_promotion": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          }
+        },
+        "probabilityBins": [
+          {
+            "lower": 0,
+            "upper": 0.7,
+            "count": 9,
+            "labelledPositive": 3
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.85,
+            "count": 2,
+            "labelledPositive": 2
+          },
+          {
+            "lower": 0.85,
+            "upper": 0.9,
+            "count": 0,
+            "labelledPositive": 0
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 5,
+            "labelledPositive": 5
+          }
+        ]
+      }
+    },
+    "validation": {
+      "baseline": {
+        "scheduled": 32,
+        "allObserved": 32,
+        "planned": 29,
+        "observed": 29,
+        "missingOrFailed": 0,
+        "truePositive": 13,
+        "falseNegative": 7,
+        "falsePositive": 0,
+        "trueNegative": 9,
+        "excludedFromPrimary": 3,
+        "boundaryPredictions": [
+          {
+            "id": "Q23",
+            "decision": "bare_assertion",
+            "confidence": 0,
+            "passesContentBasis": false,
+            "provisionalExpected": "non_substantive",
+            "firstLabel": "non_substantive",
+            "secondLabel": "non_substantive"
+          },
+          {
+            "id": "Q39",
+            "decision": "bare_assertion",
+            "confidence": 0.01,
+            "passesContentBasis": false,
+            "provisionalExpected": "non_substantive",
+            "firstLabel": "non_substantive",
+            "secondLabel": "non_substantive"
+          },
+          {
+            "id": "Q47",
+            "decision": "bare_assertion",
+            "confidence": 0,
+            "passesContentBasis": false,
+            "provisionalExpected": "non_substantive",
+            "firstLabel": "non_substantive",
+            "secondLabel": "non_substantive"
+          }
+        ],
+        "boundarySensitivity": {
+          "ifAllSubstantive": {
+            "additionalTruePositive": 0,
+            "additionalFalseNegative": 3
+          },
+          "ifAllNonSubstantive": {
+            "additionalFalsePositive": 0,
+            "additionalTrueNegative": 3
+          }
+        },
+        "strata": {
+          "research": {
+            "planned": 6,
+            "observed": 6,
+            "labelledPositive": 6,
+            "passed": 5,
+            "falsePositive": 0
+          },
+          "minimal_attributed_research_method": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 2,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "title_only": {
+            "planned": 6,
+            "observed": 6,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "minimal_named_research_finding_in_promotion": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "attributed": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "record": {
+            "planned": 6,
+            "observed": 6,
+            "labelledPositive": 6,
+            "passed": 5,
+            "falsePositive": 0
+          },
+          "promotional": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "minimal_named_formal_record_description": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "secondary": {
+            "planned": 4,
+            "observed": 4,
+            "labelledPositive": 4,
+            "passed": 3,
+            "falsePositive": 0
+          }
+        },
+        "probabilityBins": [
+          {
+            "lower": 0,
+            "upper": 0.7,
+            "count": 15,
+            "labelledPositive": 6
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.85,
+            "count": 1,
+            "labelledPositive": 1
+          },
+          {
+            "lower": 0.85,
+            "upper": 0.9,
+            "count": 1,
+            "labelledPositive": 1
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 12,
+            "labelledPositive": 12
+          }
+        ]
+      },
+      "candidate": {
+        "scheduled": 32,
+        "allObserved": 32,
+        "planned": 29,
+        "observed": 29,
+        "missingOrFailed": 0,
+        "truePositive": 9,
+        "falseNegative": 11,
+        "falsePositive": 0,
+        "trueNegative": 9,
+        "excludedFromPrimary": 3,
+        "boundaryPredictions": [
+          {
+            "id": "Q23",
+            "decision": "non_substantive",
+            "confidence": 0,
+            "passesContentBasis": false,
+            "diagnosticGenre": "bare_assertion",
+            "provisionalExpected": "non_substantive",
+            "firstLabel": "non_substantive",
+            "secondLabel": "non_substantive"
+          },
+          {
+            "id": "Q39",
+            "decision": "non_substantive",
+            "confidence": 0.02,
+            "passesContentBasis": false,
+            "diagnosticGenre": "bare_assertion",
+            "provisionalExpected": "non_substantive",
+            "firstLabel": "non_substantive",
+            "secondLabel": "non_substantive"
+          },
+          {
+            "id": "Q47",
+            "decision": "non_substantive",
+            "confidence": 0,
+            "passesContentBasis": false,
+            "diagnosticGenre": "bare_assertion",
+            "provisionalExpected": "non_substantive",
+            "firstLabel": "non_substantive",
+            "secondLabel": "non_substantive"
+          }
+        ],
+        "boundarySensitivity": {
+          "ifAllSubstantive": {
+            "additionalTruePositive": 0,
+            "additionalFalseNegative": 3
+          },
+          "ifAllNonSubstantive": {
+            "additionalFalsePositive": 0,
+            "additionalTrueNegative": 3
+          }
+        },
+        "strata": {
+          "research": {
+            "planned": 6,
+            "observed": 6,
+            "labelledPositive": 6,
+            "passed": 5,
+            "falsePositive": 0
+          },
+          "minimal_attributed_research_method": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 2,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "title_only": {
+            "planned": 6,
+            "observed": 6,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "minimal_named_research_finding_in_promotion": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "attributed": {
+            "planned": 2,
+            "observed": 2,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "record": {
+            "planned": 6,
+            "observed": 6,
+            "labelledPositive": 6,
+            "passed": 3,
+            "falsePositive": 0
+          },
+          "promotional": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 0,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "minimal_named_formal_record_description": {
+            "planned": 1,
+            "observed": 1,
+            "labelledPositive": 1,
+            "passed": 0,
+            "falsePositive": 0
+          },
+          "secondary": {
+            "planned": 4,
+            "observed": 4,
+            "labelledPositive": 4,
+            "passed": 1,
+            "falsePositive": 0
+          }
+        },
+        "probabilityBins": [
+          {
+            "lower": 0,
+            "upper": 0.7,
+            "count": 17,
+            "labelledPositive": 8
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.85,
+            "count": 3,
+            "labelledPositive": 3
+          },
+          {
+            "lower": 0.85,
+            "upper": 0.9,
+            "count": 3,
+            "labelledPositive": 3
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 6,
+            "labelledPositive": 6
+          }
+        ]
+      }
+    }
+  },
+  "outcomes": [
+    {
+      "sequence": 0,
+      "arm": "baseline",
+      "ids": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06"
+      ],
+      "status": "completed",
+      "inputTokens": 5590,
+      "durationMs": 153,
+      "responseBytes": 1599,
+      "results": [
+        {
+          "id": "Q01",
+          "decision": "original_record",
+          "confidence": 1,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q02",
+          "decision": "attributable_research",
+          "confidence": 0.9199999999999999,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q03",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q04",
+          "decision": "attributed",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q05",
+          "decision": "attributable_research",
+          "confidence": 0.99,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q06",
+          "decision": "attributable_research",
+          "confidence": 0.9999999999999999,
+          "passesContentBasis": true
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.44,
+            "attributable_research": 0.4,
+            "substantive_secondary": 0.16,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.24,
+            "attributable_research": 0.48,
+            "substantive_secondary": 0.2,
+            "bare_assertion": 0.08,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u2_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.91,
+            "attributed": 0,
+            "promotional": 0.09,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.02,
+            "attributed": 0.98,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u4_content_basis": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.28,
+            "attributable_research": 0.5,
+            "substantive_secondary": 0.21,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.19,
+            "attributable_research": 0.73,
+            "substantive_secondary": 0.08,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 1,
+      "arm": "candidate",
+      "ids": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06"
+      ],
+      "status": "completed",
+      "inputTokens": 6532,
+      "durationMs": 142,
+      "responseBytes": 2524,
+      "results": [
+        {
+          "id": "Q01",
+          "decision": "substantive",
+          "confidence": 0.99,
+          "passesContentBasis": true,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q02",
+          "decision": "substantive",
+          "confidence": 0.63,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q03",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "promotional"
+        },
+        {
+          "id": "Q04",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributed"
+        },
+        {
+          "id": "Q05",
+          "decision": "substantive",
+          "confidence": 0.98,
+          "passesContentBasis": true,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q06",
+          "decision": "substantive",
+          "confidence": 0.99,
+          "passesContentBasis": true,
+          "diagnosticGenre": "attributable_research"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.99,
+            "non_substantive": 0.01,
+            "insufficient": 0
+          }
+        },
+        "u0_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.3,
+            "attributable_research": 0.56,
+            "substantive_secondary": 0.13,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.63,
+            "non_substantive": 0.36,
+            "insufficient": 0.01
+          }
+        },
+        "u1_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.23,
+            "attributable_research": 0.39,
+            "substantive_secondary": 0.34,
+            "bare_assertion": 0.03,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u2_genre": {
+          "choice": "promotional",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0.2,
+            "attributed": 0,
+            "promotional": 0.77,
+            "unclear": 0.02
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u3_genre": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0,
+            "attributed": 1,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.98,
+            "non_substantive": 0.01,
+            "insufficient": 0.01
+          }
+        },
+        "u4_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.21,
+            "attributable_research": 0.74,
+            "substantive_secondary": 0.05,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.99,
+            "non_substantive": 0.01,
+            "insufficient": 0
+          }
+        },
+        "u5_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.27,
+            "attributable_research": 0.68,
+            "substantive_secondary": 0.05,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "arm": "candidate",
+      "ids": [
+        "Q07",
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q11",
+        "Q12"
+      ],
+      "status": "completed",
+      "inputTokens": 6027,
+      "durationMs": 122,
+      "responseBytes": 2512,
+      "results": [
+        {
+          "id": "Q07",
+          "decision": "non_substantive",
+          "confidence": 0.01,
+          "passesContentBasis": false,
+          "diagnosticGenre": "bare_assertion"
+        },
+        {
+          "id": "Q08",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "unclear"
+        },
+        {
+          "id": "Q09",
+          "decision": "substantive",
+          "confidence": 0.94,
+          "passesContentBasis": true,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q10",
+          "decision": "substantive",
+          "confidence": 0.86,
+          "passesContentBasis": true,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q11",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "promotional"
+        },
+        {
+          "id": "Q12",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributed"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.01,
+            "non_substantive": 0.99,
+            "insufficient": 0
+          }
+        },
+        "u0_genre": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.02,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0.96,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 0.95,
+            "insufficient": 0.05
+          }
+        },
+        "u1_genre": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.09,
+            "attributable_research": 0.29,
+            "substantive_secondary": 0.05,
+            "bare_assertion": 0.1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.47
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.94,
+            "non_substantive": 0.06,
+            "insufficient": 0
+          }
+        },
+        "u2_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.15,
+            "attributable_research": 0.8,
+            "substantive_secondary": 0.04,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.86,
+            "non_substantive": 0.12,
+            "insufficient": 0.02
+          }
+        },
+        "u3_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.13,
+            "attributable_research": 0.84,
+            "substantive_secondary": 0.03,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u4_genre": {
+          "choice": "promotional",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0.08,
+            "attributed": 0,
+            "promotional": 0.89,
+            "unclear": 0.02
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u5_genre": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0,
+            "attributed": 1,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "arm": "baseline",
+      "ids": [
+        "Q07",
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q11",
+        "Q12"
+      ],
+      "status": "completed",
+      "inputTokens": 5085,
+      "durationMs": 108,
+      "responseBytes": 1586,
+      "results": [
+        {
+          "id": "Q07",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q08",
+          "decision": "unclear",
+          "confidence": 0.02,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q09",
+          "decision": "attributable_research",
+          "confidence": 0.98,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q10",
+          "decision": "attributable_research",
+          "confidence": 0.9199999999999999,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q11",
+          "decision": "bare_assertion",
+          "confidence": 0.01,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q12",
+          "decision": "attributed",
+          "confidence": 0,
+          "passesContentBasis": false
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.14,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.84
+          }
+        },
+        "u2_content_basis": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.28,
+            "attributable_research": 0.58,
+            "substantive_secondary": 0.12,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.26,
+            "attributable_research": 0.42,
+            "substantive_secondary": 0.24,
+            "bare_assertion": 0.05,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.03
+          }
+        },
+        "u4_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.91,
+            "attributed": 0,
+            "promotional": 0.08,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.01,
+            "attributed": 0.99,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "arm": "baseline",
+      "ids": [
+        "Q13",
+        "Q14",
+        "Q15",
+        "Q16",
+        "Q17",
+        "Q18"
+      ],
+      "status": "completed",
+      "inputTokens": 5112,
+      "durationMs": 177,
+      "responseBytes": 1587,
+      "results": [
+        {
+          "id": "Q13",
+          "decision": "attributable_research",
+          "confidence": 0.95,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q14",
+          "decision": "original_record",
+          "confidence": 0.54,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q15",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q16",
+          "decision": "unclear",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q17",
+          "decision": "original_record",
+          "confidence": 0.99,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q18",
+          "decision": "original_record",
+          "confidence": 1,
+          "passesContentBasis": true
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.09,
+            "attributable_research": 0.71,
+            "substantive_secondary": 0.15,
+            "bare_assertion": 0.04,
+            "attributed": 0.01,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.22,
+            "attributable_research": 0.13,
+            "substantive_secondary": 0.19,
+            "bare_assertion": 0.17,
+            "attributed": 0.15,
+            "promotional": 0.02,
+            "unclear": 0.12
+          }
+        },
+        "u2_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.13,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.87
+          }
+        },
+        "u4_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.93,
+            "attributable_research": 0,
+            "substantive_secondary": 0.06,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.91,
+            "attributable_research": 0,
+            "substantive_secondary": 0.09,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "arm": "candidate",
+      "ids": [
+        "Q13",
+        "Q14",
+        "Q15",
+        "Q16",
+        "Q17",
+        "Q18"
+      ],
+      "status": "completed",
+      "inputTokens": 6054,
+      "durationMs": 124,
+      "responseBytes": 2526,
+      "results": [
+        {
+          "id": "Q13",
+          "decision": "substantive",
+          "confidence": 0.94,
+          "passesContentBasis": true,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q14",
+          "decision": "non_substantive",
+          "confidence": 0.24,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributable_research"
+        },
+        {
+          "id": "Q15",
+          "decision": "non_substantive",
+          "confidence": 0.01,
+          "passesContentBasis": false,
+          "diagnosticGenre": "bare_assertion"
+        },
+        {
+          "id": "Q16",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "unclear"
+        },
+        {
+          "id": "Q17",
+          "decision": "substantive",
+          "confidence": 0.95,
+          "passesContentBasis": true,
+          "diagnosticGenre": "original_record"
+        },
+        {
+          "id": "Q18",
+          "decision": "substantive",
+          "confidence": 0.97,
+          "passesContentBasis": true,
+          "diagnosticGenre": "original_record"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.94,
+            "non_substantive": 0.06,
+            "insufficient": 0
+          }
+        },
+        "u0_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0.87,
+            "substantive_secondary": 0.11,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.24,
+            "non_substantive": 0.71,
+            "insufficient": 0.05
+          }
+        },
+        "u1_genre": {
+          "choice": "attributable_research",
+          "probabilities": {
+            "original_record": 0.03,
+            "attributable_research": 0.61,
+            "substantive_secondary": 0.3,
+            "bare_assertion": 0.03,
+            "attributed": 0.02,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.01,
+            "non_substantive": 0.99,
+            "insufficient": 0
+          }
+        },
+        "u2_genre": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0.05,
+            "bare_assertion": 0.94,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 0.98,
+            "insufficient": 0.02
+          }
+        },
+        "u3_genre": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.07,
+            "attributable_research": 0.03,
+            "substantive_secondary": 0.02,
+            "bare_assertion": 0.2,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.68
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.95,
+            "non_substantive": 0.05,
+            "insufficient": 0
+          }
+        },
+        "u4_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.97,
+            "attributable_research": 0,
+            "substantive_secondary": 0.03,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.97,
+            "non_substantive": 0.03,
+            "insufficient": 0
+          }
+        },
+        "u5_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.97,
+            "attributable_research": 0,
+            "substantive_secondary": 0.03,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "arm": "candidate",
+      "ids": [
+        "Q19",
+        "Q20",
+        "Q21",
+        "Q22",
+        "Q23",
+        "Q24"
+      ],
+      "status": "completed",
+      "inputTokens": 5725,
+      "durationMs": 132,
+      "responseBytes": 2501,
+      "results": [
+        {
+          "id": "Q19",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "promotional"
+        },
+        {
+          "id": "Q20",
+          "decision": "non_substantive",
+          "confidence": 0.01,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributed"
+        },
+        {
+          "id": "Q21",
+          "decision": "substantive",
+          "confidence": 0.82,
+          "passesContentBasis": false,
+          "diagnosticGenre": "original_record"
+        },
+        {
+          "id": "Q22",
+          "decision": "non_substantive",
+          "confidence": 0.47,
+          "passesContentBasis": false,
+          "diagnosticGenre": "original_record"
+        },
+        {
+          "id": "Q23",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "bare_assertion"
+        },
+        {
+          "id": "Q24",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "unclear"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u0_genre": {
+          "choice": "promotional",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.08,
+            "attributed": 0,
+            "promotional": 0.91,
+            "unclear": 0.01
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.01,
+            "non_substantive": 0.99,
+            "insufficient": 0
+          }
+        },
+        "u1_genre": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0,
+            "attributed": 1,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.82,
+            "non_substantive": 0.16,
+            "insufficient": 0.02
+          }
+        },
+        "u2_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.81,
+            "attributable_research": 0,
+            "substantive_secondary": 0.13,
+            "bare_assertion": 0.05,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.47,
+            "non_substantive": 0.51,
+            "insufficient": 0.02
+          }
+        },
+        "u3_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.73,
+            "attributable_research": 0,
+            "substantive_secondary": 0.15,
+            "bare_assertion": 0.11,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u4_genre": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 0.85,
+            "insufficient": 0.15
+          }
+        },
+        "u5_genre": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.03,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0.04,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.92
+          }
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "arm": "baseline",
+      "ids": [
+        "Q19",
+        "Q20",
+        "Q21",
+        "Q22",
+        "Q23",
+        "Q24"
+      ],
+      "status": "completed",
+      "inputTokens": 4783,
+      "durationMs": 161,
+      "responseBytes": 1569,
+      "results": [
+        {
+          "id": "Q19",
+          "decision": "bare_assertion",
+          "confidence": 0.01,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q20",
+          "decision": "attributed",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q21",
+          "decision": "original_record",
+          "confidence": 0.94,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q22",
+          "decision": "bare_assertion",
+          "confidence": 0.46,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q23",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q24",
+          "decision": "unclear",
+          "confidence": 0,
+          "passesContentBasis": false
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.75,
+            "attributed": 0,
+            "promotional": 0.24,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.01,
+            "attributed": 0.99,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u2_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.72,
+            "attributable_research": 0,
+            "substantive_secondary": 0.22,
+            "bare_assertion": 0.06,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.28,
+            "attributable_research": 0,
+            "substantive_secondary": 0.18,
+            "bare_assertion": 0.53,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u4_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.15,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.85
+          }
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "arm": "baseline",
+      "ids": [
+        "Q25",
+        "Q26",
+        "Q27",
+        "Q28",
+        "Q29",
+        "Q30"
+      ],
+      "status": "completed",
+      "inputTokens": 5123,
+      "durationMs": 128,
+      "responseBytes": 1583,
+      "results": [
+        {
+          "id": "Q25",
+          "decision": "original_record",
+          "confidence": 0.99,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q26",
+          "decision": "original_record",
+          "confidence": 0.99,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q27",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q28",
+          "decision": "attributed",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q29",
+          "decision": "original_record",
+          "confidence": 0.99,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q30",
+          "decision": "original_record",
+          "confidence": 0.9199999999999999,
+          "passesContentBasis": true
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.92,
+            "attributable_research": 0,
+            "substantive_secondary": 0.07,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.85,
+            "attributable_research": 0,
+            "substantive_secondary": 0.14,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u2_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.91,
+            "attributed": 0,
+            "promotional": 0.09,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.02,
+            "attributed": 0.98,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u4_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.85,
+            "attributable_research": 0,
+            "substantive_secondary": 0.14,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.69,
+            "attributable_research": 0,
+            "substantive_secondary": 0.23,
+            "bare_assertion": 0.03,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.05
+          }
+        }
+      }
+    },
+    {
+      "sequence": 9,
+      "arm": "candidate",
+      "ids": [
+        "Q25",
+        "Q26",
+        "Q27",
+        "Q28",
+        "Q29",
+        "Q30"
+      ],
+      "status": "completed",
+      "inputTokens": 6065,
+      "durationMs": 111,
+      "responseBytes": 2492,
+      "results": [
+        {
+          "id": "Q25",
+          "decision": "substantive",
+          "confidence": 0.93,
+          "passesContentBasis": true,
+          "diagnosticGenre": "original_record"
+        },
+        {
+          "id": "Q26",
+          "decision": "substantive",
+          "confidence": 0.8,
+          "passesContentBasis": false,
+          "diagnosticGenre": "original_record"
+        },
+        {
+          "id": "Q27",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "promotional"
+        },
+        {
+          "id": "Q28",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributed"
+        },
+        {
+          "id": "Q29",
+          "decision": "substantive",
+          "confidence": 0.98,
+          "passesContentBasis": true,
+          "diagnosticGenre": "original_record"
+        },
+        {
+          "id": "Q30",
+          "decision": "substantive",
+          "confidence": 0.89,
+          "passesContentBasis": true,
+          "diagnosticGenre": "original_record"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.93,
+            "non_substantive": 0.07,
+            "insufficient": 0
+          }
+        },
+        "u0_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.88,
+            "attributable_research": 0,
+            "substantive_secondary": 0.1,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.8,
+            "non_substantive": 0.2,
+            "insufficient": 0
+          }
+        },
+        "u1_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.8,
+            "attributable_research": 0,
+            "substantive_secondary": 0.14,
+            "bare_assertion": 0.02,
+            "attributed": 0.03,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u2_genre": {
+          "choice": "promotional",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.3,
+            "attributed": 0,
+            "promotional": 0.68,
+            "unclear": 0.02
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u3_genre": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0,
+            "attributed": 1,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.98,
+            "non_substantive": 0.02,
+            "insufficient": 0
+          }
+        },
+        "u4_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.99,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.89,
+            "non_substantive": 0.06,
+            "insufficient": 0.05
+          }
+        },
+        "u5_genre": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.98,
+            "attributable_research": 0,
+            "substantive_secondary": 0.02,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "arm": "candidate",
+      "ids": [
+        "Q31",
+        "Q32",
+        "Q33",
+        "Q34",
+        "Q35",
+        "Q36"
+      ],
+      "status": "completed",
+      "inputTokens": 6259,
+      "durationMs": 111,
+      "responseBytes": 2511,
+      "results": [
+        {
+          "id": "Q31",
+          "decision": "non_substantive",
+          "confidence": 0.01,
+          "passesContentBasis": false,
+          "diagnosticGenre": "bare_assertion"
+        },
+        {
+          "id": "Q32",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "unclear"
+        },
+        {
+          "id": "Q33",
+          "decision": "substantive",
+          "confidence": 0.79,
+          "passesContentBasis": false,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q34",
+          "decision": "substantive",
+          "confidence": 0.9,
+          "passesContentBasis": true,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q35",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "promotional"
+        },
+        {
+          "id": "Q36",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributed"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.01,
+            "non_substantive": 0.98,
+            "insufficient": 0.01
+          }
+        },
+        "u0_genre": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.06,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0.92,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 0.93,
+            "insufficient": 0.07
+          }
+        },
+        "u1_genre": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.23,
+            "attributable_research": 0,
+            "substantive_secondary": 0.03,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.72
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.79,
+            "non_substantive": 0.21,
+            "insufficient": 0
+          }
+        },
+        "u2_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.2,
+            "attributable_research": 0,
+            "substantive_secondary": 0.77,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.9,
+            "non_substantive": 0.09,
+            "insufficient": 0.01
+          }
+        },
+        "u3_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.14,
+            "attributable_research": 0,
+            "substantive_secondary": 0.84,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u4_genre": {
+          "choice": "promotional",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.1,
+            "attributed": 0,
+            "promotional": 0.86,
+            "unclear": 0.04
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u5_genre": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0,
+            "attributed": 1,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 11,
+      "arm": "baseline",
+      "ids": [
+        "Q31",
+        "Q32",
+        "Q33",
+        "Q34",
+        "Q35",
+        "Q36"
+      ],
+      "status": "completed",
+      "inputTokens": 5317,
+      "durationMs": 124,
+      "responseBytes": 1586,
+      "results": [
+        {
+          "id": "Q31",
+          "decision": "bare_assertion",
+          "confidence": 0.03,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q32",
+          "decision": "unclear",
+          "confidence": 0.01,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q33",
+          "decision": "substantive_secondary",
+          "confidence": 0.98,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q34",
+          "decision": "substantive_secondary",
+          "confidence": 0.91,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q35",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q36",
+          "decision": "attributed",
+          "confidence": 0,
+          "passesContentBasis": false
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0.02,
+            "bare_assertion": 0.97,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.26,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.73
+          }
+        },
+        "u2_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.46,
+            "attributable_research": 0,
+            "substantive_secondary": 0.52,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.27,
+            "attributable_research": 0,
+            "substantive_secondary": 0.64,
+            "bare_assertion": 0.06,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.03
+          }
+        },
+        "u4_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.86,
+            "attributed": 0,
+            "promotional": 0.14,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.01,
+            "attributed": 0.99,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "sequence": 12,
+      "arm": "baseline",
+      "ids": [
+        "Q37",
+        "Q38",
+        "Q39",
+        "Q40",
+        "Q41",
+        "Q42"
+      ],
+      "status": "completed",
+      "inputTokens": 5095,
+      "durationMs": 105,
+      "responseBytes": 1597,
+      "results": [
+        {
+          "id": "Q37",
+          "decision": "substantive_secondary",
+          "confidence": 0.91,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q38",
+          "decision": "substantive_secondary",
+          "confidence": 0.71,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q39",
+          "decision": "bare_assertion",
+          "confidence": 0.01,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q40",
+          "decision": "unclear",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q41",
+          "decision": "original_record",
+          "confidence": 0.99,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q42",
+          "decision": "substantive_secondary",
+          "confidence": 0.84,
+          "passesContentBasis": false
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.38,
+            "attributable_research": 0,
+            "substantive_secondary": 0.53,
+            "bare_assertion": 0.09,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.22,
+            "attributable_research": 0,
+            "substantive_secondary": 0.49,
+            "bare_assertion": 0.08,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.21
+          }
+        },
+        "u2_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.99,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.31,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.69
+          }
+        },
+        "u4_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.8,
+            "attributable_research": 0,
+            "substantive_secondary": 0.19,
+            "bare_assertion": 0.01,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.22,
+            "attributable_research": 0.02,
+            "substantive_secondary": 0.6,
+            "bare_assertion": 0.07,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.09
+          }
+        }
+      }
+    },
+    {
+      "sequence": 13,
+      "arm": "candidate",
+      "ids": [
+        "Q37",
+        "Q38",
+        "Q39",
+        "Q40",
+        "Q41",
+        "Q42"
+      ],
+      "status": "completed",
+      "inputTokens": 6037,
+      "durationMs": 92,
+      "responseBytes": 2538,
+      "results": [
+        {
+          "id": "Q37",
+          "decision": "substantive",
+          "confidence": 0.85,
+          "passesContentBasis": true,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q38",
+          "decision": "substantive",
+          "confidence": 0.53,
+          "passesContentBasis": false,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q39",
+          "decision": "non_substantive",
+          "confidence": 0.02,
+          "passesContentBasis": false,
+          "diagnosticGenre": "bare_assertion"
+        },
+        {
+          "id": "Q40",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "unclear"
+        },
+        {
+          "id": "Q41",
+          "decision": "substantive",
+          "confidence": 0.94,
+          "passesContentBasis": true,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q42",
+          "decision": "substantive",
+          "confidence": 0.7,
+          "passesContentBasis": false,
+          "diagnosticGenre": "substantive_secondary"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.85,
+            "non_substantive": 0.14,
+            "insufficient": 0.01
+          }
+        },
+        "u0_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.03,
+            "attributable_research": 0.03,
+            "substantive_secondary": 0.68,
+            "bare_assertion": 0.24,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.53,
+            "non_substantive": 0.25,
+            "insufficient": 0.22
+          }
+        },
+        "u1_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.06,
+            "attributable_research": 0.03,
+            "substantive_secondary": 0.82,
+            "bare_assertion": 0.03,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.06
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.02,
+            "non_substantive": 0.98,
+            "insufficient": 0
+          }
+        },
+        "u2_genre": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.98,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 0.88,
+            "insufficient": 0.12
+          }
+        },
+        "u3_genre": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0.03,
+            "bare_assertion": 0.05,
+            "attributed": 0,
+            "promotional": 0.01,
+            "unclear": 0.9
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.94,
+            "non_substantive": 0.05,
+            "insufficient": 0.01
+          }
+        },
+        "u4_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.12,
+            "attributable_research": 0.02,
+            "substantive_secondary": 0.86,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.7,
+            "non_substantive": 0.26,
+            "insufficient": 0.04
+          }
+        },
+        "u5_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.11,
+            "attributable_research": 0.02,
+            "substantive_secondary": 0.86,
+            "bare_assertion": 0,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      }
+    },
+    {
+      "sequence": 14,
+      "arm": "candidate",
+      "ids": [
+        "Q43",
+        "Q44",
+        "Q45",
+        "Q46",
+        "Q47",
+        "Q48"
+      ],
+      "status": "completed",
+      "inputTokens": 5669,
+      "durationMs": 133,
+      "responseBytes": 2509,
+      "results": [
+        {
+          "id": "Q43",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "promotional"
+        },
+        {
+          "id": "Q44",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "attributed"
+        },
+        {
+          "id": "Q45",
+          "decision": "substantive",
+          "confidence": 0.77,
+          "passesContentBasis": false,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q46",
+          "decision": "non_substantive",
+          "confidence": 0.49,
+          "passesContentBasis": false,
+          "diagnosticGenre": "substantive_secondary"
+        },
+        {
+          "id": "Q47",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "bare_assertion"
+        },
+        {
+          "id": "Q48",
+          "decision": "non_substantive",
+          "confidence": 0,
+          "passesContentBasis": false,
+          "diagnosticGenre": "unclear"
+        }
+      ],
+      "answers": {
+        "u0_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u0_genre": {
+          "choice": "promotional",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.06,
+            "attributed": 0,
+            "promotional": 0.93,
+            "unclear": 0.01
+          }
+        },
+        "u1_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u1_genre": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0,
+            "attributed": 1,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u2_substantive_basis": {
+          "choice": "substantive",
+          "probabilities": {
+            "substantive": 0.77,
+            "non_substantive": 0.22,
+            "insufficient": 0.01
+          }
+        },
+        "u2_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.14,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.54,
+            "bare_assertion": 0.28,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.03
+          }
+        },
+        "u3_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0.49,
+            "non_substantive": 0.5,
+            "insufficient": 0.01
+          }
+        },
+        "u3_genre": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.07,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.5,
+            "bare_assertion": 0.4,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        },
+        "u4_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 1,
+            "insufficient": 0
+          }
+        },
+        "u4_genre": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_substantive_basis": {
+          "choice": "non_substantive",
+          "probabilities": {
+            "substantive": 0,
+            "non_substantive": 0.95,
+            "insufficient": 0.05
+          }
+        },
+        "u5_genre": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.02,
+            "attributable_research": 0,
+            "substantive_secondary": 0.02,
+            "bare_assertion": 0.03,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.93
+          }
+        }
+      }
+    },
+    {
+      "sequence": 15,
+      "arm": "baseline",
+      "ids": [
+        "Q43",
+        "Q44",
+        "Q45",
+        "Q46",
+        "Q47",
+        "Q48"
+      ],
+      "status": "completed",
+      "inputTokens": 4727,
+      "durationMs": 118,
+      "responseBytes": 1580,
+      "results": [
+        {
+          "id": "Q43",
+          "decision": "bare_assertion",
+          "confidence": 0.01,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q44",
+          "decision": "attributed",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q45",
+          "decision": "substantive_secondary",
+          "confidence": 0.94,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q46",
+          "decision": "substantive_secondary",
+          "confidence": 0.8900000000000001,
+          "passesContentBasis": true
+        },
+        {
+          "id": "Q47",
+          "decision": "bare_assertion",
+          "confidence": 0,
+          "passesContentBasis": false
+        },
+        {
+          "id": "Q48",
+          "decision": "unclear",
+          "confidence": 0,
+          "passesContentBasis": false
+        }
+      ],
+      "answers": {
+        "u0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.54,
+            "attributed": 0,
+            "promotional": 0.45,
+            "unclear": 0
+          }
+        },
+        "u1_content_basis": {
+          "choice": "attributed",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.01,
+            "attributed": 0.99,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u2_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.44,
+            "attributable_research": 0,
+            "substantive_secondary": 0.5,
+            "bare_assertion": 0.06,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u3_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.33,
+            "attributable_research": 0,
+            "substantive_secondary": 0.56,
+            "bare_assertion": 0.11,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u4_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 1,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        },
+        "u5_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0,
+            "attributable_research": 0,
+            "substantive_secondary": 0,
+            "bare_assertion": 0.44,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.56
+          }
+        }
+      }
+    }
+  ]
+}

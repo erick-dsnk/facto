@@ -3,7 +3,8 @@ import websocket from '@fastify/websocket';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { PipelineError, textInputSchema, type PipelineAdapters } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
+import type { RuntimeAdapters } from '../runtime/adapters.js';
 import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
 import { audioStartSchema, type AsrAdapter } from './audio.js';
@@ -11,7 +12,7 @@ import { AudioBridge } from './audio-bridge.js';
 import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
 
 export type ServerOptions = {
-  adapters: PipelineAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
+  adapters: RuntimeAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
   allowedOrigins?: string[]; now?: () => number; tls?: { cert: Buffer; key: Buffer }; asr?: AsrAdapter;
   /**
    * Proxy hops in front of every request (1 behind Railway's edge proxy). The client address then comes from the entry that hop
@@ -60,7 +61,9 @@ export async function buildServer(options: ServerOptions) {
     const status = code === 'unauthorized' ? 401 : /capacity|queue_full|cooldown|rate_limit/.test(code) ? 429 : /conflict|old_epoch|old_revision|wrong_session/.test(code) ? 409 : 400;
     reply.code(status).send({ error: code });
   });
-  const bearer = (value?: string) => value?.startsWith('Bearer ') ? value.slice(7) : undefined;
+  // RFC 6750 inherits HTTP's case-insensitive auth-scheme token. Keep the
+  // credential itself exact so malformed headers never get silently repaired.
+  const bearer = (value?: string) => /^Bearer ([^\s]+)$/i.exec(value ?? '')?.[1];
   const paramsSchema = z.object({ sessionId: z.string().min(1), requestId: z.string().optional() });
   function authenticated(params: unknown, authorization?: string) {
     const parsed = paramsSchema.parse(params); return store.authenticate(parsed.sessionId, bearer(authorization));
@@ -94,10 +97,14 @@ export async function buildServer(options: ServerOptions) {
   });
   app.get('/v1/sessions/:sessionId/stream', {
     websocket: true,
-    preValidation: async request => {
+    // Authenticate synchronously before the upgrade. A second authenticated stream is
+    // not rejected: the handler closes the older one (4000) so a client can reconnect
+    // after a half-open drop.
+    preValidation: (request, _reply, done) => {
       const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(s => s.trim());
       const token = bearer(request.headers.authorization) ?? protocols.find(p => p.startsWith('bearer.'))?.slice(7);
       store.authenticate(paramsSchema.parse(request.params).sessionId, token);
+      done();
     }
   }, (socket, request) => {
     const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(s => s.trim());
@@ -149,14 +156,6 @@ export async function buildServer(options: ServerOptions) {
       }
     }) : undefined;
     if (bridge) audioBridges.set(session.id, bridge);
-    const send: Session['listeners'] extends Set<infer T> ? T : never = event => {
-      if (event.type === 'session.ended') { forget(); recent.clear(); void bridge?.stop().catch(() => undefined); }
-      if (socket.readyState !== 1) return;
-      if (socket.bufferedAmount > 65_536) { socket.close(1008, 'Slow consumer'); return; }
-      socket.send(JSON.stringify(event));
-      if (event.type === 'session.ended' && ['deleted', 'expired'].includes((event.payload as { reasonCode: string }).reasonCode)) socket.close(1000);
-    };
-    session.listeners.add(send);
     let closed = false;
     const disconnect = (reason = 'disconnected') => {
       if (closed) return;
@@ -168,10 +167,18 @@ export async function buildServer(options: ServerOptions) {
     };
     const replace = () => { disconnect('replaced'); socket.close(4000, 'Replaced by a newer connection'); };
     connections.set(session.id, replace);
+    const send: Session['listeners'] extends Set<infer T> ? T : never = event => {
+      if (event.type === 'session.ended') { forget(); recent.clear(); void bridge?.stop().catch(() => undefined); }
+      if (socket.readyState !== 1) return;
+      if (socket.bufferedAmount > 65_536) { socket.close(1008, 'Slow consumer'); disconnect(); return; }
+      socket.send(JSON.stringify(event));
+      if (event.type === 'session.ended' && ['deleted', 'expired'].includes((event.payload as { reasonCode: string }).reasonCode)) socket.close(1000);
+    };
+    session.listeners.add(send);
     socket.on('error', () => disconnect());
     socket.on('close', () => { session.listeners.delete(send); disconnect(); });
     socket.on('message', async (data, binary) => {
-      if (closed) return;
+      if (closed || socket.readyState !== 1) return;
       try {
         store.authenticate(session.id, token);
         if (binary) {

@@ -1,0 +1,53 @@
+{
+  "kind": "open_development_candidate_freeze",
+  "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+  "sourceTreeClean": true,
+  "checkedExecutableCodeMatchesFreeze": true,
+  "check": {
+    "tests": 479,
+    "files": 23,
+    "logSHA256": "305076b5f268ae0356cc506536b1515c2aaa6ef2535be822513e8d9e78466dde"
+  },
+  "evaluate": {
+    "counts": {
+      "selected": 36,
+      "passed": 36,
+      "failed": 0,
+      "notRun": 0,
+      "heldoutReserved": 12
+    },
+    "presentation": {
+      "passed": 21,
+      "total": 21
+    },
+    "logSHA256": "247dd1704bdfed7f66ce591ba8d0e5aeb2c7b04d26f7d994a93b9f480634e16a"
+  },
+  "freshInstallLogSHA256": "df8e75cced302b86ea99d002c2a422a42f1b154116c42a118781e66d9e4dd387",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8",
+  "manifestSHA256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+  "batchLimits": {
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "inputTokens": 140000,
+    "pendingReserve": 24000,
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "wallMs": 90000
+  },
+  "changes": [
+    "bounded query-directed evidence acquisition and local contiguous excerpts",
+    "alternate query no system-added exact-phrase restriction",
+    "at most two promising prior source candidates retained for fresh judgment",
+    "independently tested public-record privacy question",
+    "strict all-text retrieval request guard and SDK content-target logging"
+  ],
+  "limitations": [
+    "Repeated OPEN development on same corpus; no blind accuracy or component-causal improvement claim.",
+    "Rejected source-quality candidate remains outside production.",
+    "All prior sealed evaluations and original heldout bodies remain untouched."
+  ]
+}

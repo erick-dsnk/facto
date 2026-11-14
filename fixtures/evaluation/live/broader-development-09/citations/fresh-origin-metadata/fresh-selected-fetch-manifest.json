@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "fresh_selected_public_origin_url_requests",
+  "packetSHA256": "9b512b4ec5bdf48bc19315a103043b28b3ad4862564fe859e5aa33f9f7961ab1",
+  "records": [
+    {
+      "id": "452ef8a8d24d7ead",
+      "requestedUrl": "https://whc.unesco.org/document/162429",
+      "requestedAt": "2026-11-14T05:14:49.339828+00:00",
+      "method": "GET",
+      "projectKeysUsed": false,
+      "providerIndexedRetrievalUsed": false,
+      "completedAt": "2026-11-14T05:14:50.288684+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://whc.unesco.org/document/162429",
+      "responseHeaders": {
+        "date": "Sat, 14 Nov 2026 05:14:50 GMT",
+        "content-type": "application/pdf",
+        "content-length": "621627",
+        "cache-control": "max-age=3600",
+        "server": "envoy",
+        "age": "2363",
+        "last-modified": "Sat, 14 Nov 2026 04:35:26 GMT",
+        "cf-cache-status": "HIT"
+      },
+      "redirects": [],
+      "responseBodyFile": "452ef8a8d24d7ead.body",
+      "responseBodyBytes": 621627,
+      "responseBodySHA256": "82580d155cfb3ba0dc92f8ef02441d1e36649c010bc40f8c5a6dc98e61b86851",
+      "bodyTruncated": false,
+      "textExtraction": "pdftotext -layout",
+      "extractedTextFile": "452ef8a8d24d7ead.text.txt",
+      "extractedTextSHA256": "9a5038edbf71df8fd85c40e8406a6f4840abfca67c420d9a70d2e8ad436f7ce8",
+      "extractedTextCodepoints": 93605
+    },
+    {
+      "id": "1c70e710e2db867c",
+      "requestedUrl": "https://www.marineregions.org/gazetteer.php?id=7579&p=details",
+      "requestedAt": "2026-11-14T05:14:49.340576+00:00",
+      "method": "GET",
+      "projectKeysUsed": false,
+      "providerIndexedRetrievalUsed": false,
+      "completedAt": "2026-11-14T05:14:51.400562+00:00",
+      "httpStatus": 200,
+      "finalUrl": "https://www.marineregions.org/gazetteer.php?id=7579&p=details",
+      "responseHeaders": {
+        "date": "Sat, 14 Nov 2026 05:14:50 GMT",
+        "server": "envoy",
+        "cache-control": "no-store, no-cache, must-revalidate",
+        "content-type": "text/html; charset=UTF-8;"
+      },
+      "redirects": [],
+      "responseBodyFile": "1c70e710e2db867c.body",
+      "responseBodyBytes": 48298,
+      "responseBodySHA256": "b589fa4ab9d6085d54ce1ca8168fd1b7fcd79131c96e5decf9f792dbbcb20d04",
+      "bodyTruncated": false,
+      "textExtraction": "stdlib HTMLParser excluding script/style/noscript",
+      "extractedTextFile": "1c70e710e2db867c.text.txt",
+      "extractedTextSHA256": "53a02dffb8cb2fcebe4dbf2d62e30e8300017a64212181f8db5f32e19764ad1d",
+      "extractedTextCodepoints": 1748
+    }
+  ],
+  "limitations": [
+    "Fresh requests can be served by CDN/proxy caches; no uncached backend-state claim.",
+    "Only selected URLs opened; no unselected source substitution; no project keys."
+  ]
+}

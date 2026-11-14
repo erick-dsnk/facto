@@ -1,0 +1,27 @@
+{
+  "kind": "independent_adapter_context_alias_review_correction",
+  "createdAt": "2026-11-14T06:15:33.813902+00:00",
+  "status": "prior_adapter_context_acceptance_superseded_pending_fix",
+  "priorReviews": {
+    "typed-applicability-v1-independent-trust-review.json": "bf955c91377ab3d437a3bbd62f4fd97bcdd657d25f4fdfb72d3f7bbc23087a90",
+    "typed-applicability-v2-independent-identity-review.json": "7385267feaf46f1ebbe3f6a65d8ed346af90e9f1c8e40f1054be738c10bd2361",
+    "typed-applicability-v3-independent-trust-review.json": "ffc5e94aba65208dc2ece30093738ce08414a9395062d102091e351543cb9920"
+  },
+  "finding": "Returned assessmentContext aliases mutable private token/completion context. In-place mutation of retained material/node plus recomputed inputSHA alters both sides of canonical equality, allowing old token verification against a context not bound to the original actual request.",
+  "scope": "Runtime reviewer reproduced in05; semantic-context pattern also exists in03 and earlier adapter revisions. Prototype02 core verifier uses captured audit digests and is a separate path. No production activation occurred.",
+  "independentReviewerCorrection": "I missed this reference-alias boundary in earlier review. Clone-only mutation tests did not exercise mutation of the actual returned reference. Prior no-context-blocker acceptance cannot be used for future activation.",
+  "evidence": {
+    "testPath": "/workspace/task-evidence/native-completion-runtime-review/context-alias-05.test.ts",
+    "testSHA256": "e6f3e8e021945d44ee65d06292a1f39e16622fda060b3e5d5b3ab01010eed25e",
+    "beforeLogSHA256": "8dbda41986d0dc6e9eaef7d039e1ff418971049e111f1ab678296fa65ee42d49"
+  },
+  "requiredRepair": [
+    "Deep-freeze complete context before private storage/public return, or store a separate immutable private copy plus captured canonical digest.",
+    "Verifier must compare against captured identity, not two aliases of a mutable object.",
+    "Test actual returned-object mutation, nested raw graph/assessment mutation and reused token checks; preserve original failing output.",
+    "Keep unconditional current-owner/deadline checks before completed-token issuance and final return, including uncertain/unavailable paths."
+  ],
+  "providerCalls": 0,
+  "originalReviewsRewritten": false,
+  "productionFilesModified": 0
+}
