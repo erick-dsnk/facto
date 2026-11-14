@@ -1,6 +1,6 @@
 # Demo deck working outline
 
-This is draft content, not a final results claim. A bounded live provider smoke test supplements the fixture results below. Human citation review, integrated live transport and real-device measurements remain pending before submission. Keep the deck to eight slides.
+This is draft content, not a final results claim. Authenticated HTTP/WebSocket campaigns supplement the fixture results below. Useful factual coverage remains below the readiness goal; human demo citation review and real-device measurements remain pending. Keep the deck to eight slides.
 
 ## 1. Public information while hands and attention are occupied
 
@@ -22,7 +22,7 @@ Pending evidence: A6 recording of successful OCR capture and the exact route/dev
 
 ## 4. What is working
 
-Current backend branch provides versioned text/event interfaces, mockable provider seams, deterministic admission/verdict/presentation evaluation and a bounded direct-adapter Jev/Exa smoke test. A separate iOS workstream owns camera, audio, display, permissions and the ASR adapter.
+The backend provides authenticated HTTP/WebSocket transport, versioned text/event interfaces, bounded Jev/Exa adapters, deterministic admission/verdict/presentation policy, and a durable live evaluation harness. A separate iOS workstream owns camera, audio, display, permissions and the ASR adapter.
 
 Before submission, fill in a small table of actual OCR, audio, spoken output and display routes with `live`, `recorded` or `preview` status. Device integration is not established by the backend fixture tests.
 
@@ -40,11 +40,13 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-The fresh development-only rerun reproduced the initial deterministic result: 34 of 36 development scenarios passed, with 0 failures and 2 explicitly not executed by this harness; 12 held-outs remain reserved. Stage coverage is 33 admission, 17 verdict, 17 presentation and 1 malformed-provider check. The shared action suite passes 21/21. These are scripted control-flow tests, not model accuracy or hardware reliability.
+At the 14 November 2026 executable freeze `3cfdfb1`, lint/typecheck and 429 tests passed. The development evaluator passed 36/36 scenarios: 34 scripted cases and two authenticated HTTP/WebSocket scenarios with injected providers. Shared presentation fixtures passed 21/21. The original 12 held-outs remain unchanged and unrun; their blindness cannot be certified because earlier text exposure may have occurred. These checks establish control-flow behavior, not live model accuracy or hardware reliability.
 
-Live adapter smoke test on 14 November 2026: three synthetic typed inputs; three admission calls, two judgments and two Exa searches. Two public-only queries were inspected; a personal anecdote skipped retrieval. Of two checked public claims, one abstained under conservative source gates and one returned a cited supported result. The agent opened the definitive result’s selected source and confirmed its historical scope; human demo review remains pending. One deliberate HTTP 401 per provider stayed an operational error. Direct-adapter case times were 288, 1,894 and 2,086 ms, without an application cache; these are not capture-to-output statistics. See [evaluation](evaluation.md) and the [smoke record](live-smoke-2026-11-14.md).
+Public live development run 07 completed nine authenticated requests, including cache, personal/opinion and wait-expiry controls. Among five unique factual propositions, two received correct definitive results and three abstained; none received a wrong definitive result. All 38 provider calls returned HTTP 200. One selected citation was inaccessible to the independent agent review, so the definitive count is not a count of fully verified source sets. Separate deliberately invalid Jev and Exa keys each produced a non-retryable HTTP 401 operational error. See [evaluation](evaluation.md) and the [live campaign](live-campaign-2026-11-14.md).
 
-Real-device and integrated live transport sample sizes remain zero. Total provider cost and false alerts per listening minute are unmeasured. Add end-to-end/cached measurements and human citation review before presenting them. Do not use PRD/vendor/FactNudger scores as this prototype’s results.
+Three independent sealed campaigns ran once each on different frozen implementations and different inputs. Their correct definitive counts were 2/8, 4/8 and 2/8; do not pool them or treat the differences as causal improvements. The latest completed all ten input receipts, with five factual abstentions and one factual timeout in addition to its two correct definitive results. It made 56 actual provider attempts; five of six selected references were verified by an independent AI agent, while one displayed an application error. There were zero observed private-query violations or wrong definitive outputs in that campaign. Cold input median/P95 were 3,817/10,038 ms, including controls and the timeout. The known $0.116 cost subtotal excludes 24 attempts with unknown cost. See the [third independent report](blind-evaluation-2026-11-14-03.md).
+
+Real-device sample size remains zero. Human demo citation sign-off, complete provider costs and false alerts per listening minute remain unmeasured. Broader development and release evaluation are ongoing; current factual coverage does not establish backend readiness. Do not use PRD/vendor/FactNudger scores as this prototype’s results.
 
 ## 8. Opt-in pilot and next milestone
 
