@@ -13,7 +13,14 @@ final class DisplayModel {
   var taps = 0
   var lastError: String?
 
-  var isConnected: Bool { displayState == .started }
+  private(set) var webDisplayEnabled = false
+  var isConnected: Bool { !webDisplayEnabled && displayState == .started }
+
+  /// Release only DAT display output; camera/microphone capture belongs to CameraModel.
+  func setWebDisplayEnabled(_ enabled: Bool) {
+    webDisplayEnabled = enabled
+    if enabled { disconnect() }
+  }
 
   /// Created once so it has already found a display-capable device when you tap Connect.
   @ObservationIgnored private let deviceSelector = AutoDeviceSelector(
@@ -24,7 +31,7 @@ final class DisplayModel {
   @ObservationIgnored private let tokens = ListenerTokenBag()
 
   func connect() {
-    guard session == nil else { return }
+    guard !webDisplayEnabled, session == nil else { return }
     lastError = nil
     do {
       // Only picks glasses that have a display.
@@ -64,7 +71,10 @@ final class DisplayModel {
   }
 
   private func attachDisplay() {
-    guard let session, display == nil else { return }
+    guard !webDisplayEnabled, let session, display == nil else {
+      if webDisplayEnabled { session?.stop() }
+      return
+    }
     do {
       let newDisplay = try session.addDisplay()
       display = newDisplay
@@ -102,7 +112,7 @@ final class DisplayModel {
 
   /// Each send replaces the whole screen, so always send the full layout.
   func sendHome() async {
-    guard let display else { return }
+    guard !webDisplayEnabled, let display else { return }
     let taps = self.taps
     let view = FlexBox(direction: .column, spacing: 12) {
       Text("Glasses Lab", style: .heading)
@@ -131,7 +141,7 @@ final class DisplayModel {
 extension DisplayModel: LensDisplaying {
   /// Live mode: the result card on the lens, or a cleared lens when `card` is nil.
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
-    guard let display else { return }
+    guard !webDisplayEnabled, let display else { return }
     do {
       if let card {
         try await display.send(DisplayCardBuilder.build(card, onRepeat: onRepeat, onDismiss: onDismiss))

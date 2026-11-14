@@ -23,6 +23,12 @@ private final class FakeLiveBackend: LiveBackend {
   private(set) var controls: [[String: Any]] = []
   private(set) var binaryCount = 0
   private(set) var closeCount = 0
+  private(set) var displayRevokeCount = 0
+  private(set) var displayGrantCount = 0
+  var failDisplayRevoke = false
+  var delayDisplayRevoke = false
+  var displayRevokeContinuation: CheckedContinuation<Void, Never>?
+  private(set) var cancelledRequestIds: [String] = []
   private var eventContinuations: [AsyncStream<ServerEvent>.Continuation] = []
   private var stateContinuations: [AsyncStream<ChannelConnectionState>.Continuation] = []
 
@@ -68,6 +74,20 @@ private final class FakeLiveBackend: LiveBackend {
     setState(.disconnected(reason: "closed"))
   }
 
+  func requestDisplayGrant() async throws -> DisplayGrant {
+    displayGrantCount += 1
+    return DisplayGrant(schemaVersion: 1, sessionId: sessionId!, sessionEpoch: sessionEpoch!,
+      displayToken: "test-reader-secret", expiresAt: ISO8601DateFormatter().string(from: Date().addingTimeInterval(180)),
+      streamPath: "/v1/sessions/\(sessionId!)/display-stream")
+  }
+
+  func revokeDisplayGrants() async throws {
+    displayRevokeCount += 1
+    if delayDisplayRevoke { await withCheckedContinuation { displayRevokeContinuation = $0 } }
+    if failDisplayRevoke { throw ConnectFailure() }
+  }
+  func cancel(requestId: String) async throws { cancelledRequestIds.append(requestId) }
+
   func submit(_ input: TextInputEnvelope) async throws {
     submitted.append(input)
   }
@@ -110,6 +130,17 @@ private final class FakeLiveBackend: LiveBackend {
 @MainActor
 private final class FakeLiveCamera: LiveCamera {
   var isStreaming = false
+  var hasSession = false
+  var onCaptureStarting: (@MainActor () -> Void)?
+  var onCaptureSessionEnded: (@MainActor () -> Void)?
+  var suspendStartup = false
+  private var startupContinuation: CheckedContinuation<Void, Never>?
+  var isStartupSuspended: Bool { startupContinuation != nil }
+
+  func releaseStartup() {
+    startupContinuation?.resume()
+    startupContinuation = nil
+  }
   var liveQuality: StreamQuality = .demo
   var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)?
   var onStreamStopped: (@MainActor (_ byUser: Bool) -> Void)?
@@ -120,11 +151,18 @@ private final class FakeLiveCamera: LiveCamera {
   func startListeningStream(quality: StreamQuality) async throws {
     if let startError { throw startError }
     startedQualities.append(quality)
+    onCaptureStarting?()
+    hasSession = true
+    if suspendStartup {
+      // Deliberately ignores task cancellation, like a pending SDK/permission operation.
+      await withCheckedContinuation { startupContinuation = $0 }
+    }
     isStreaming = true
   }
 
   func captureStillDuringStream() async throws -> Data {
     photoCount += 1
+    if !isStreaming { try await startListeningStream(quality: liveQuality) }
     return Data([0xFF, 0xD8, 0xFF])
   }
 
@@ -138,6 +176,8 @@ private final class FakeLiveCamera: LiveCamera {
   func stopLiveStream() async {
     liveStreamStops += 1
     dropStream(byUser: true)
+    hasSession = false
+    onCaptureSessionEnded?()
   }
 }
 
@@ -192,6 +232,8 @@ private final class CountingChime: ChimePlaying {
 @MainActor
 private final class FakeLens: LensDisplaying {
   var isConnected = true
+  private(set) var webDisplayEnabled = false
+  func setWebDisplayEnabled(_ enabled: Bool) { webDisplayEnabled = enabled }
   private(set) var cards: [ResultCard?] = []
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
     cards.append(card)
@@ -470,6 +512,98 @@ final class LiveModelTests: XCTestCase {
     XCTAssertFalse(defaults.bool(forKey: LiveModel.wakeWordKey))
   }
 
+  func testDisablingWakeDuringDelayedStartupCleansUpWithoutSendingAudio() async {
+    let model = await connectedModel()
+    camera.suspendStartup = true
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    wake.hear()
+    await waitUntil { self.camera.isStartupSuspended }
+
+    model.wakeWordEnabled = false
+    await Task.yield()
+    camera.releaseStartup()
+    await waitUntil { self.camera.liveStreamStops == 1 }
+    await waitUntil { model.wakeState == .off }
+    XCTAssertFalse(camera.hasSession)
+    XCTAssertFalse(camera.isStreaming)
+    XCTAssertFalse(model.isListening)
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"))
+  }
+
+  func testDisconnectDuringDelayedWakeStartupWaitsForOwnedStreamCleanup() async {
+    let model = await connectedModel()
+    camera.suspendStartup = true
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    wake.hear()
+    await waitUntil { self.camera.isStartupSuspended }
+
+    let disconnect = Task { await model.disconnect() }
+    await Task.yield()
+    camera.releaseStartup()
+    await disconnect.value
+    XCTAssertEqual(camera.liveStreamStops, 1)
+    XCTAssertFalse(camera.hasSession)
+    XCTAssertFalse(model.isListening)
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"))
+    XCTAssertFalse(wake.isRunning)
+  }
+
+  func testManualStreamStartsAfterCancelledWakeCleanupAndIsNotStoppedByIt() async {
+    let model = await connectedModel()
+    camera.suspendStartup = true
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    wake.hear()
+    await waitUntil { self.camera.isStartupSuspended }
+    model.wakeWordEnabled = false
+    let manual = Task {
+      await model.performManualCapture {
+        self.camera.suspendStartup = false
+        try? await self.camera.startListeningStream(quality: .demo)
+      }
+    }
+    await Task.yield()
+    camera.releaseStartup()
+    await manual.value
+    XCTAssertEqual(camera.liveStreamStops, 1)
+    XCTAssertEqual(camera.startedQualities.count, 2)
+    XCTAssertTrue(camera.isStreaming, "the new manual stream survives old wake cleanup")
+  }
+
+  func testDelayedWakePhotoStartupIsAlsoOwnedUntilCleanupFinishes() async {
+    let model = await connectedModel()
+    camera.suspendStartup = true
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    wake.hear(.checkThis)
+    await waitUntil { self.camera.isStartupSuspended }
+    model.wakeWordEnabled = false
+    await Task.yield()
+    camera.releaseStartup()
+    await waitUntil { self.camera.liveStreamStops == 1 }
+    XCTAssertFalse(camera.hasSession)
+    XCTAssertFalse(camera.isStreaming)
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"))
+  }
+
+  func testManualCaptureReleasesWakeMicrophoneBeforeOpeningDATSession() async {
+    let model = await connectedModel()
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    await model.performManualCapture {
+      XCTAssertFalse(self.wake.isRunning)
+      self.camera.onCaptureStarting?()
+      self.camera.hasSession = true
+    }
+    XCTAssertFalse(wake.isRunning)
+    XCTAssertEqual(model.wakeState, .blocked("Paused while the glasses session is on."))
+    camera.hasSession = false
+    camera.onCaptureSessionEnded?()
+    await waitUntil { self.wake.isRunning }
+  }
+
   func testADetectorThatCannotStartIsReportedOnce() async {
     wake.startError = .microphoneDenied
     let model = await connectedModel()
@@ -669,6 +803,80 @@ final class LiveModelTests: XCTestCase {
     clock.advance(by: 5)
     await waitUntil { model.listening == .stopped(.noConnection) }
     XCTAssertEqual(speaker.spoken.last, AudioStreamerStopReason.noConnection.spokenMessage)
+  }
+
+  func testWebDisplayKeepsCompanionOutputsWithoutNativeLensSendsAndRevokesBeforeNative() async {
+    let model = await connectedModel()
+    XCTAssertEqual(model.displayOutputMode, .native)
+    model.displayOutputMode = .web
+    XCTAssertTrue(lens.webDisplayEnabled)
+    backend.emit(LiveEvents.result(requestId: "web-check-1", action: .notify, verdict: .contradicted))
+    await waitUntil { model.history.entries.count == 1 }
+    XCTAssertNotNil(model.lens.card, "The phone mirror still receives cards")
+    XCTAssertEqual(chime.count, 1)
+    XCTAssertTrue(lens.cards.isEmpty, "Web output cannot also send DAT cards")
+    model.dismissCard()
+    await waitUntil { self.backend.cancelledRequestIds == ["web-check-1"] }
+    await waitUntil { model.lens.card == nil }
+    model.displayOutputMode = .native
+    await waitUntil { self.backend.displayRevokeCount == 1 && !self.lens.webDisplayEnabled }
+    XCTAssertEqual(backend.closeCount, 0, "Successful reader revocation leaves capture ownership intact")
+  }
+
+  func testFailedReaderRevocationKeepsCaptureAndListeningInWebMode() async {
+    let model = await listeningModel()
+    model.displayOutputMode = .web
+    backend.failDisplayRevoke = true
+    model.displayOutputMode = .native
+    await waitUntil { model.displayOutputMode == .web && !model.isSwitchingDisplay }
+    XCTAssertTrue(lens.webDisplayEnabled)
+    XCTAssertTrue(camera.isStreaming)
+    XCTAssertTrue(model.isListening)
+    XCTAssertEqual(backend.closeCount, 0)
+    XCTAssertNotNil(model.notice)
+  }
+
+  func testNewReaderWaitsForPreviousModeRevocation() async {
+    let model = await connectedModel()
+    model.webDisplay.appURLText = "https://display.example.test"
+    model.displayOutputMode = .web
+    backend.delayDisplayRevoke = true
+    model.displayOutputMode = .native
+    await waitUntil { self.backend.displayRevokeContinuation != nil }
+    model.displayOutputMode = .web
+    let prepare = Task { await model.prepareWebDisplay() }
+    await Task.yield()
+    XCTAssertEqual(backend.displayGrantCount, 0)
+    backend.displayRevokeContinuation?.resume()
+    backend.displayRevokeContinuation = nil
+    await prepare.value
+    XCTAssertEqual(backend.displayGrantCount, 1)
+    XCTAssertEqual(model.displayOutputMode, .web)
+    XCTAssertTrue(lens.webDisplayEnabled)
+    XCTAssertNotNil(model.webDisplay.link)
+  }
+
+  func testWebDisplayLinkIsInvalidatedWhenOwnerConnectionDrops() async {
+    let model = await connectedModel()
+    model.displayOutputMode = .web
+    model.webDisplay.appURLText = "https://display.example.test"
+    await model.prepareWebDisplay()
+    XCTAssertNotNil(model.webDisplay.link)
+    backend.setState(.reconnecting(attempt: 1))
+    await waitUntil { model.connection == .reconnecting(attempt: 1) }
+    XCTAssertNil(model.webDisplay.link)
+  }
+
+  func testSourceProgressNeverSpeaksOrShowsNativeCard() async {
+    let model = await connectedModel()
+    backend.emit(LiveEvents.event(.claimSources, requestId: "req-progress", claimId: "claim-progress", revision: 1,
+      payload: .claimSources(ClaimSourcesPayload(sources: [.init(id: "site", hostname: "example.org", title: "Evidence", stage: "reading", provider: "exa")]))))
+    await Task.yield()
+    await Task.yield()
+    XCTAssertTrue(model.history.entries.isEmpty)
+    XCTAssertTrue(speaker.spoken.isEmpty)
+    XCTAssertTrue(lens.cards.isEmpty)
+    XCTAssertEqual(chime.count, 0)
   }
 
   // MARK: Results

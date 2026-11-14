@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /** A publication or website found during retrieval, rather than the retrieval provider. */
 export type SearchSource = {
@@ -31,7 +31,8 @@ export function useDemoSources(searching: boolean, run: number) {
 }
 
 /** Keyed badges animate only newly received sites; earlier sites keep their position. */
-export function SearchSources({ sources }: { sources: readonly SearchSource[] }) {
+export function SearchSources({ sources, restore = false }: { sources: readonly SearchSource[]; restore?: boolean }) {
+  const restoredIds = useRef(new Set(restore ? sources.map(source => source.id) : []));
   const visible = sources.filter((source, index) => sources.findIndex(item => item.id === source.id) === index).slice(0, 4);
-  return <span className="source-badges" aria-label={visible.length ? `Sources found: ${visible.map(source => source.label).join(', ')}` : 'Finding sources'}>{visible.map((source, index) => <span className="source-badge-slot" key={source.id} style={{ zIndex: index + 1 }}><span className="source-badge" style={{ backgroundColor: source.color }} title={source.label}>{source.mark}</span></span>)}</span>;
+  return <span className="source-badges" aria-label={visible.length ? `Sources found: ${visible.map(source => source.label).join(', ')}` : 'Finding sources'}>{visible.map((source, index) => <span className={`source-badge-slot ${restoredIds.current.has(source.id) ? 'restored-source' : ''}`} key={source.id} style={{ zIndex: index + 1 }}><span className="source-badge" style={{ backgroundColor: source.color }} title={source.label}>{source.mark}</span></span>)}</span>;
 }

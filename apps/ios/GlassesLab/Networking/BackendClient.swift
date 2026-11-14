@@ -257,6 +257,32 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     }
   }
 
+  /// Mints a read-only, short-lived browser capability. The owner bearer stays native.
+  func requestDisplayGrant() async throws -> DisplayGrant {
+    let (id, bearer) = try sessionCredentials()
+    guard connectionState == .connected, let epoch = sessionEpoch else { throw BackendClientError.notConnected }
+    var request = URLRequest(url: config.sessionsURL.appending(path: id).appending(path: "display-grant"), timeoutInterval: Self.httpTimeout)
+    request.httpMethod = "POST"
+    request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+    let data = try await perform(request, label: "display.grant")
+    guard sessionId == id, sessionEpoch == epoch, token == bearer, connectionState == .connected else {
+      throw WebDisplayLinkError.staleSession
+    }
+    guard let grant = try? JSONDecoder().decode(DisplayGrant.self, from: data),
+          grant.sessionId == id, grant.sessionEpoch == epoch else { throw BackendClientError.invalidResponse }
+    _ = try WebDisplayConnection.expiry(of: grant, now: Date())
+    return grant
+  }
+
+  /// Disconnects all browser readers without ending the owner/capture session.
+  func revokeDisplayGrants() async throws {
+    let (id, bearer) = try sessionCredentials()
+    var request = URLRequest(url: config.sessionsURL.appending(path: id).appending(path: "display-grant"), timeoutInterval: Self.httpTimeout)
+    request.httpMethod = "DELETE"
+    request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+    _ = try await perform(request, label: "display.revoke")
+  }
+
   // MARK: - CheckSubmitter
 
   /// `POST /v1/sessions/{id}/checks`. Returns once the server accepts (202).

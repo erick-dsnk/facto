@@ -50,7 +50,7 @@ components:
     textColor: "{colors.quote}"
     rounded: "{rounded.searching}"
     padding: "7px 14px"
-    width: "161–269px, based on arrived sources"
+    width: "161–242px, based on arrived sources"
     height: "40px"
 ---
 
@@ -86,7 +86,7 @@ The card uses a solid fill, without border, shadow or backdrop blur. A 300ms exp
 
 ## Shapes
 
-The result is a softly rounded rectangle. Searching is a compact pill. Small filled dots convey capture and result status. The T/B letter badges retain the reference's source marks, now laid side by side with 5px gaps. W/S demonstrate further publication arrivals. The pill grows from 161 to 269px as up to four sites arrive.
+The result is a softly rounded rectangle. Searching is a compact pill. Small filled dots convey capture and result status. The T/B letter badges retain the reference's source marks, now laid side by side with a 4px overlap, newer badges above earlier ones. W/S demonstrate further publication arrivals. The pill grows from 161 to 242px as up to four sites arrive.
 
 ## Components
 
@@ -104,3 +104,7 @@ Capture label sits above the claim. The result header combines dot, verdict and 
 ## Search motion
 
 The focal sequence makes retrieval progress legible: each newly found publication takes its own place, then the compact search surface becomes the evidence result. Earlier icons stay anchored. There is no continuous icon carousel or forced wait for animations; the 4.2-second duration belongs only to the mock demo. All timers clean up on cancellation/replay/unmount, with no animation dependency added. A future event stream should supply source identities to `SearchSources` as sites are discovered, rather than replaying the mock clock.
+
+## Live projection
+
+The live observer preserves the same claim/card anchors, palette and entry motion. Backend claim and explanation text wrap with a two-line cap; selected publisher stays on one line. Actual hostnames supply neutral badge initials, without fetching favicons or inventing publication identities. Reconnected snapshots restore quietly; subsequent new sites and new results animate. Automatic checking and silent results remain invisible. Empty, disconnected and expired projection states leave the field of view clear, with a quiet companion connection status only when action is needed outside the glasses.

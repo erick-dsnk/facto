@@ -122,6 +122,39 @@ final class BackendClientTests: XCTestCase {
     XCTAssertNil(BackendClient.serverErrorCode(from: Data("<html>bad gateway</html>".utf8)))
   }
 
+  func testDisplayGrantUsesOwnerAuthorizationWithoutPuttingSecretsInURL() async throws {
+    let (client, _) = try await connectedClient()
+    let expiry = ISO8601DateFormatter().string(from: Date().addingTimeInterval(180))
+    serve { request, _ in
+      if request.httpMethod == "DELETE" { return (204, Data()) }
+      XCTAssertEqual(request.httpMethod, "POST")
+      XCTAssertEqual(request.url?.path, "/v1/sessions/session-1/display-grant")
+      XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(self.token)")
+      XCTAssertNil(request.url?.query)
+      return (201, Data("""
+      {"schemaVersion":1,"sessionId":"session-1","sessionEpoch":1,"displayToken":"read_only_token","expiresAt":"\(expiry)","streamPath":"/v1/sessions/session-1/display-stream"}
+      """.utf8))
+    }
+    let grant = try await client.requestDisplayGrant()
+    XCTAssertEqual(grant.displayToken, "read_only_token")
+    XCTAssertFalse(grant.description.contains("read_only_token"))
+    await client.close()
+  }
+
+  func testDisplayGrantRejectsAnotherSessionOrEpoch() async throws {
+    let (client, _) = try await connectedClient()
+    serve { _, _ in
+      (201, Data(#"{"schemaVersion":1,"sessionId":"other","sessionEpoch":2,"displayToken":"read_only_token","expiresAt":"2099-01-01T00:00:00Z","streamPath":"/v1/sessions/other/display-stream"}"#.utf8))
+    }
+    do {
+      _ = try await client.requestDisplayGrant()
+      XCTFail("Expected a session mismatch")
+    } catch {
+      XCTAssertEqual(error as? BackendClientError, .invalidResponse)
+    }
+    await client.close()
+  }
+
   // MARK: Stream connect
 
   func testConnectOpensTheStreamWithBearerHeaderAndNoTokenInTheURL() async throws {

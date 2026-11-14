@@ -4,6 +4,7 @@ import { App as WearablesApp } from '@wearables-ui-toolkit/mrbd/App';
 import '@wearables-ui-toolkit/mrbd/styles.css';
 import './styles.css';
 import { SearchSources, useDemoSources } from './SearchSources';
+import { LiveDisplay, consumeDisplayCredentials } from './LiveDisplay';
 
 type Stage = 'true' | 'searching' | 'false' | 'ready';
 type Environment = 'lens' | 'daylight' | 'evening' | 'black';
@@ -60,4 +61,6 @@ function Studio() {
   if (displayOnly || inspectOnly) return <main className={`device-only ${inspectOnly ? 'reference-inspection' : ''}`}>{display}</main>;
   return <main className="studio"><header className="studio-header"><span>Actually <span className="prototype-label">Display prototype</span></span><a href={`?display=1&state=${current}`}>Open display ↗</a></header><div className="studio-layout"><section className="preview-section" aria-label="Glasses display preview"><div className={`device-viewport environment-${environment}`}><div className="device-overlay">{display}</div></div><p className="preview-caption">600 × 600 · Mock search progress · {environment === 'lens' ? 'Reference lens composition' : 'Additive browser preview'}</p></section><aside className="studio-controls"><label htmlFor="state">Display state</label><select id="state" value={current} onChange={event => { setPlaying(false); change(event.target.value as Stage); }}>{stages.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select><label htmlFor="environment">Preview background</label><select id="environment" value={environment} onChange={event => setEnvironment(event.target.value as Environment)}><option value="lens">Reference · Dark lens</option><option value="black">Black · Additive display</option><option value="daylight">Light ambient test</option><option value="evening">Dark ambient test</option></select><button className="play-button" disabled={playing} onClick={() => { change('searching'); setPlaying(true); }}>{playing ? 'Searching…' : 'Replay search → True'}</button><a className="inspection-link" href={`?inspect=1&state=${current}`}>Open reference inspection</a><p className="control-help">No buttons appear on the glasses.<br/>Use these controls to preview.</p><p className="simulator-note">Source arrivals are a timed UI demo; no live search is connected. The reference lens is an external comparison surface. The display route contains only the black additive canvas and HUD.</p></aside></div></main>;
 }
-createRoot(document.getElementById('root')!).render(<Studio/>);
+const live = params.get('live') === '1';
+const credentials = live ? consumeDisplayCredentials() : null;
+createRoot(document.getElementById('root')!).render(live ? <LiveDisplay credentials={credentials}/> : <Studio/>);

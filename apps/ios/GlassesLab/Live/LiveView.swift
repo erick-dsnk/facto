@@ -11,6 +11,7 @@ struct LiveSections: View {
   var body: some View {
     Group {
       connectionSection
+      displayOutputSection
       listenSection
       lensSection
       historySection
@@ -46,6 +47,46 @@ struct LiveSections: View {
       Text("Live")
     } footer: {
       Text("Connect to Meta AI below first. On the iPhone use the Railway https URL: during a stream the phone is on the glasses' Wi-Fi and reaches the backend over mobile data.")
+    }
+  }
+
+  // MARK: Display output (phone controls only)
+
+  private var displayOutputSection: some View {
+    Section {
+      Picker("Display output", selection: $live.displayOutputMode) {
+        ForEach(DisplayOutputMode.allCases) { mode in
+          Text(mode.title).tag(mode)
+        }
+      }
+      if live.displayOutputMode == .web {
+        TextField("HTTPS glasses web app URL", text: $live.webDisplay.appURLText)
+          .keyboardType(.URL)
+          .textContentType(.URL)
+          .textInputAutocapitalization(.never)
+          .autocorrectionDisabled()
+        SwiftUI.Button(live.webDisplay.isPreparing ? "Creating link…" : "Create temporary display link") {
+          Task { await live.prepareWebDisplay() }
+        }
+        .disabled(!live.isConnected || live.webDisplay.isPreparing || live.isSwitchingDisplay)
+        if let link = live.webDisplay.link {
+          ShareLink(item: link) { Label("Share display link", systemImage: "square.and.arrow.up") }
+          Link("Preview on this phone", destination: link)
+        }
+        if let expiry = live.webDisplay.expiresAt {
+          Text("Link expires at \(expiry.formatted(date: .omitted, time: .shortened)).")
+            .font(.footnote).foregroundStyle(.secondary)
+        }
+        if let message = live.webDisplay.message {
+          Text(message).font(.footnote).foregroundStyle(.secondary)
+        }
+      }
+    } header: {
+      Text("Glasses display")
+    } footer: {
+      Text(live.displayOutputMode == .web
+        ? "Launch the hosted web app on Meta Ray-Ban Display with this temporary reader link. The companion still owns wake, photo capture, listening and spoken output. A fresh link is required after reconnect or session renewal."
+        : "Native display uses the DAT display connection below. The phone mirror and spoken output stay available in either mode.")
     }
   }
 
@@ -122,14 +163,14 @@ struct LiveSections: View {
         SwiftUI.Button("Repeat") { live.repeatLatest() }
           .disabled(live.isMuted || live.history.latestDelivered == nil)
         Spacer()
-        SwiftUI.Button("Dismiss") { live.dismissCard() }
-          .disabled(live.lens.card == nil)
+        SwiftUI.Button(live.displayOutputMode == .web ? "Dismiss glasses card" : "Dismiss") { live.dismissCard() }
+          .disabled(live.displayOutputMode == .web ? live.webDisplayRequestId == nil : live.lens.card == nil)
       }
       .buttonStyle(.borderless)
     } header: {
       Text("Lens mirror")
     } footer: {
-      Text(display.isConnected ? "Cards also go to the Display glasses." : "Connect the display below to send cards to Meta Ray-Ban Display.")
+      Text(live.displayOutputMode == .web ? "The web app renders the glasses UI. Repeat speaks on the companion; Dismiss also clears the current glasses check. Opening history shows it on this phone only." : (display.isConnected ? "Cards also go to the Display glasses." : "Connect the display below to send cards to Meta Ray-Ban Display."))
     }
   }
 
