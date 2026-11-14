@@ -8,6 +8,8 @@ Current integration passes lint/typecheck and **525 tests across 25 files**. It 
 
 The [actual-provider automatic campaign](automatic-development-2026-11-14.md) retained **five action passes and one inconclusive result**. Its separate AD07 followup exercised supported-fact silence; it does not replace the original inconclusive AD03 or alter that six-scenario score. These probes repeat existing facts and add zero unique factual claims. Agent citation inspection is disclosed as agent inspection; inaccessible references remain unverified. There is no additional human sign-off gate. Useful coverage, source access/independence and operational reliability remain insufficient for a readiness claim; native/device/ASR/deployment measurements remain deferred. See the [proposed backend readiness contract](backend-readiness.md).
 
+The auxiliary candidate08 acquisition comparator has a [separate threshold correction](broader-acquisition-comparison-correction.md): substance/common-origin confidence 0.85, stance 0.8. Its recorded-assessment yield is not independently verified coverage; primary 6/12 raw and 4/12 fully verified results are unchanged. The original hashed packages remain immutable.
+
 The later runtime fixes preserve richer previously acquired page text when a new highlight is an exact shorter substring, retain source dependence and fresh-judgment requirements, reject concurrent stream ownership, and abort checking immediately for a stalled WebSocket consumer. They passed independent review and deterministic regression checks; candidate08 does not supply live validation for them.
 
 ## Earlier combined freeze and sealed results
