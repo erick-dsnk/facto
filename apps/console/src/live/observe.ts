@@ -16,14 +16,14 @@ const safeNumber = (value: unknown): value is number => typeof value === 'number
 export type ObservedAttempt = Attempt & { query?: string; contentURLs?: string[]; answers?: Record<string, JevAnswer> };
 export type RequestObservation = {
   label: string; attempts: ObservedAttempt[]; stageMs: { admission: number; retrieval: number; judgment: number };
-  admission?: { action: string; reasonCode: string; claims: number }; admittedPublic: string[];
+  admission?: { action: string; reasonCode: string; claims: number }; admittedPublic: string[]; rejectedAdmissionCount: number;
   evidence: { stage: 'retrieval' | 'alternate' | 'judgment'; records: Evidence[]; selectedEvidenceIds?: string[];
     sourceAssessments?: AssessedJudgment['sourceAssessments']; claimRisk?: AssessedJudgment['claimRisk']; originAssessments?: AssessedJudgment['originAssessments'] }[];
   localStops: string[]; controller: AbortController;
 };
 
 export function freshObservation(label: string): RequestObservation {
-  return { label, attempts: [], stageMs: { admission: 0, retrieval: 0, judgment: 0 }, admittedPublic: [], evidence: [], localStops: [], controller: new AbortController() };
+  return { label, attempts: [], stageMs: { admission: 0, retrieval: 0, judgment: 0 }, admittedPublic: [], rejectedAdmissionCount: 0, evidence: [], localStops: [], controller: new AbortController() };
 }
 
 export function stopObservation(observation: RequestObservation, error: HarnessStop) {
@@ -146,10 +146,11 @@ export function observedProviders(options: {
       return timed(entry, context, 'admission', async ctx => {
         const admission = await raw.classify(input, ctx);
         entry!.observation.admission = { action: admission.action, reasonCode: admission.reasonCode, claims: admission.claims.length };
+        entry!.observation.rejectedAdmissionCount = admission.claims.filter(claim => !entry!.allowedPublic.includes(claim.checkedText)).length;
+        entry!.observation.admittedPublic = admission.claims.filter(claim => entry!.allowedPublic.includes(claim.checkedText)).map(claim => claim.checkedText);
+        if (entry!.observation.rejectedAdmissionCount) { const error = new HarnessStop('admitted_span_not_public'); stopObservation(entry!.observation, error); throw error; }
         for (const [index, claim] of admission.claims.entries()) {
-          if (!entry!.allowedPublic.includes(claim.checkedText)) { const error = new HarnessStop('admitted_span_not_public'); stopObservation(entry!.observation, error); throw error; }
           claims.set(`${input.requestId}-claim-${index}`, { ...entry!, allowedPublic: [claim.checkedText] });
-          entry!.observation.admittedPublic.push(claim.checkedText);
         }
         return admission;
       });

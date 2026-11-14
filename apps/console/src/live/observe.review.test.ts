@@ -52,6 +52,16 @@ describe('independent live observer accounting review', () => {
     expect(state.observation.attempts[0].answers).toBeDefined();
   });
 
+  it('counts rejected admission without retaining its text and blocks all retrieval before dispatch', async () => {
+    const state = setup(vi.fn<typeof fetch>(async (_url, init) => admissionResponse(init)));
+    const privateInput = { ...input(), text: 'The museum opened in 1800.' };
+    await expect(state.providers.adapters.classify(privateInput, state.context)).rejects.toMatchObject({ code: 'harness_admitted_span_not_public' });
+    expect(state.observation.rejectedAdmissionCount).toBe(1);
+    expect(state.observation.admittedPublic).toEqual([]);
+    expect(state.budget.summary().calls).toEqual({ jev: 1, search: 0, contents: 0 });
+    expect(JSON.stringify(state.observation)).not.toContain(privateInput.text);
+  });
+
   it('keeps failed unknown usage reserved and blocks a retry before its network dispatch', async () => {
     const fetcher = vi.fn<typeof fetch>(async () => Response.json({ error: secretMarker }, { status: 503, headers: { 'retry-after': '0' } }));
     const state = setup(fetcher);
