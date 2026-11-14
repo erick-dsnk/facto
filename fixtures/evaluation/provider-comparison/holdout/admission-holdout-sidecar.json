@@ -259,6 +259,86 @@
       "group": "variation",
       "referenceUrl": "https://www.wembleystadium.com/",
       "rationale": "Wembley capacity is 90,000, not about 60,000."
+    },
+    "t1-implicit-flu-shot": {
+      "category": "implicit_conversational",
+      "referenceUrl": "https://www.cdc.gov/flu/prevention/misconceptions.html",
+      "rationale": "CDC: flu vaccines cannot cause flu illness (inactivated or recombinant, or weakened nasal spray virus)."
+    },
+    "t1-implicit-youtube": {
+      "category": "implicit_conversational",
+      "referenceUrl": "https://googlepress.blogspot.com/2006/10/google-to-acquire-youtube-for-165_09.html",
+      "rationale": "Google press release 9 Oct 2006: acquire YouTube for $1.65 billion in stock."
+    },
+    "t1-number-mariana": {
+      "category": "number",
+      "referenceUrl": "https://oceanservice.noaa.gov/facts/oceandepth.html",
+      "rationale": "NOAA: Challenger Deep is approximately 10,935 m deep."
+    },
+    "t1-comparative-jupiter": {
+      "category": "comparative",
+      "referenceUrl": "https://science.nasa.gov/jupiter/facts/",
+      "rationale": "NASA: Jupiter has more than twice the combined material of the other bodies in the solar system."
+    },
+    "t1-superlative-monaco": {
+      "category": "superlative",
+      "referenceUrl": "https://www.cia.gov/the-world-factbook/countries/holy-see-vatican-city/",
+      "rationale": "CIA World Factbook: Holy See (Vatican City) is the world's smallest state; Monaco is larger."
+    },
+    "t1-time-euro-cash": {
+      "category": "time_qualifier",
+      "referenceUrl": "https://www.ecb.europa.eu/euro/changeover/html/index.en.html",
+      "rationale": "ECB: euro adopted 1999 as scriptural money; cash only since 2002."
+    },
+    "t1-time-hongkong": {
+      "category": "time_qualifier",
+      "referenceUrl": "https://www.gov.hk/en/about/abouthk/facts.htm",
+      "rationale": "HK Government: on 1 July 1997 Hong Kong became an SAR of the PRC."
+    },
+    "t1-time-hawaii-alaska": {
+      "category": "time_qualifier",
+      "referenceUrl": "https://www.congress.gov/crs-product/R47747",
+      "rationale": "CRS: Alaska admitted 3 Jan 1959, Hawaii 21 Aug 1959."
+    },
+    "t1-rhetorical-toronto": {
+      "category": "rhetorical_question",
+      "referenceUrl": "https://www.cia.gov/the-world-factbook/countries/canada/",
+      "rationale": "CIA World Factbook: capital of Canada is Ottawa."
+    },
+    "t1-hedged-rome": {
+      "category": "hedged_checkable",
+      "referenceUrl": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "rationale": "EU: in 1957 the Treaty of Rome established the EEC."
+    },
+    "t1-context-tereshkova": {
+      "category": "device_context_fragment",
+      "referenceUrl": "https://airandspace.si.edu/stories/editorial/valentina-tereshkova",
+      "rationale": "Smithsonian NASM: Tereshkova first woman in space (Vostok 6, 16 June 1963)."
+    },
+    "t1-context-voyager": {
+      "category": "device_context_fragment",
+      "referenceUrl": "https://science.nasa.gov/mission/voyager/voyager-1/",
+      "rationale": "NASA: Voyager 1 is the farthest spacecraft."
+    },
+    "t1-neg-heat-opinion": {
+      "category": "opinion_with_number",
+      "referenceUrl": null,
+      "rationale": "Negative: not a verifiable public factual claim (opinion_with_number)."
+    },
+    "t1-neg-plan-flight": {
+      "category": "plan",
+      "referenceUrl": null,
+      "rationale": "Negative: not a verifiable public factual claim (plan)."
+    },
+    "t1-neg-hypothetical-moon": {
+      "category": "hypothetical",
+      "referenceUrl": null,
+      "rationale": "Negative: not a verifiable public factual claim (hypothetical)."
+    },
+    "t1-neg-joke-udp": {
+      "category": "joke",
+      "referenceUrl": null,
+      "rationale": "Negative: not a verifiable public factual claim (joke)."
     }
   }
 }

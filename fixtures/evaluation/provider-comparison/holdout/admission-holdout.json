@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
-  "name": "admission-holdout-43",
+  "name": "admission-holdout-59",
   "createdDate": "2026-11-14",
   "split": "holdout",
   "notes": [
     "Generated holdout admission cases (verified subset of candidates). Same shape as the --admission-cases loader accepts: {cases:[{id,text,expected,context?,mode?,confidence?,lowConfidenceWords?}]}.",
     "References and rationales live in admission-holdout-sidecar.json and must never be sent to models. Device cases carry their original 'why' field.",
     "Not blind: authored by the same session that saw the harness. Do not tune prompts on this split.",
-    "Page-style context {title,before} from the candidates was converted to the loader's string[] form [title, before]."
+    "Page-style context {title,before} from the candidates was converted to the loader's string[] form [title, before].",
+    "Top-up round 1: 16 harder verified cases (t1-*) appended with context/mode/confidence where relevant; same loader shape."
   ],
   "cases": [
     {
@@ -252,6 +253,140 @@
       "confidence": 0.94,
       "expected": "false",
       "why": "Subject comes from the earlier sentence: Wembley seats 90,000, so the claim is false."
+    },
+    {
+      "id": "t1-implicit-flu-shot",
+      "text": "Yeah, I skipped the flu shot this year because it can actually give you the flu.",
+      "context": [],
+      "mode": "audio",
+      "confidence": 0.92,
+      "expected": "false"
+    },
+    {
+      "id": "t1-implicit-youtube",
+      "text": "Remember when Google bought YouTube for like one point six five billion dollars back in 2006?",
+      "context": [],
+      "mode": "audio",
+      "confidence": 0.9,
+      "expected": "true"
+    },
+    {
+      "id": "t1-number-mariana",
+      "text": "The Mariana Trench goes down nearly eleven thousand meters at its deepest point.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "true"
+    },
+    {
+      "id": "t1-comparative-jupiter",
+      "text": "Jupiter is more than twice as massive as all the other planets in the solar system put together.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "true"
+    },
+    {
+      "id": "t1-superlative-monaco",
+      "text": "Monaco is the smallest country in the world.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "false"
+    },
+    {
+      "id": "t1-time-euro-cash",
+      "text": "Euro banknotes and coins went into everyday circulation back in 1999.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "false"
+    },
+    {
+      "id": "t1-time-hongkong",
+      "text": "Back in the nineties Hong Kong was still under British rule until it was handed over to China in 1997.",
+      "context": [],
+      "mode": "audio",
+      "confidence": 0.91,
+      "expected": "true"
+    },
+    {
+      "id": "t1-time-hawaii-alaska",
+      "text": "Hawaii was admitted to the Union before Alaska was.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "false"
+    },
+    {
+      "id": "t1-rhetorical-toronto",
+      "text": "Come on, everybody knows Toronto is the capital of Canada, right?",
+      "context": [],
+      "mode": "audio",
+      "confidence": 0.93,
+      "expected": "false"
+    },
+    {
+      "id": "t1-hedged-rome",
+      "text": "If I remember right, the Treaty of Rome was signed in 1957, creating the European Economic Community.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "true"
+    },
+    {
+      "id": "t1-context-tereshkova",
+      "text": "She became the first woman in space in 1963.",
+      "context": [
+        "Podcast: Pioneers of the space race",
+        "Valentina Tereshkova was a Soviet cosmonaut and textile worker."
+      ],
+      "mode": "audio",
+      "confidence": 0.9,
+      "expected": "true"
+    },
+    {
+      "id": "t1-context-voyager",
+      "text": "It's now the most distant human-made object from Earth.",
+      "context": [
+        "Space podcast: the Voyager missions",
+        "Voyager 1 was launched in 1977."
+      ],
+      "mode": "audio",
+      "confidence": 0.92,
+      "expected": "true"
+    },
+    {
+      "id": "t1-neg-heat-opinion",
+      "text": "Honestly, forty degrees Celsius is way too hot for any city to be livable.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "t1-neg-plan-flight",
+      "text": "We're flying to Lisbon on the third of March and I booked the hotel for six nights.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "t1-neg-hypothetical-moon",
+      "text": "If the Moon were twice as close, the tides would probably be absolutely insane.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "t1-neg-joke-udp",
+      "text": "I'd tell you a UDP joke, but you might not get it.",
+      "context": [],
+      "mode": "typed",
+      "confidence": null,
+      "expected": "not_a_claim"
     }
   ]
 }

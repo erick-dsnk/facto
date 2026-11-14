@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
-  "name": "public-primary-reference-holdout-9",
+  "name": "public-primary-reference-holdout-24",
   "createdDate": "2026-11-14",
   "kind": "open_exploratory",
   "split": "holdout",
   "notes": [
     "Verified subset of generated candidate cohort H01-H24 (ids retained). Same format as cohort.json.",
     "References ground human expected labels only. References and rationales MUST NOT be passed to models.",
-    "Not blind; do not tune prompts on this split."
+    "Not blind; do not tune prompts on this split.",
+    "Top-up round 1: T104 and T112-T125 appended (ids retained from the top-up candidates T101-T125)."
   ],
   "cases": [
     {
@@ -123,6 +124,206 @@
       "rationale": "Yale's Beinecke Library describes the manuscript's script as undeciphered; its nature remains unresolved, not shown to be a hoax or a language.",
       "sources": [
         "https://beinecke.library.yale.edu/collections/highlights/voynich-manuscript"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T104",
+      "text": "Electric cars produce no emissions.",
+      "expected": "misleading",
+      "category": "evemissions",
+      "correlationGroup": "evemissions",
+      "rationale": "The US Department of Energy says all-electric operation has zero tailpipe emissions but upstream power-generation emissions still count. The statement omits the tailpipe versus life-cycle distinction; a life-cycle reading can reasonably be judged false.",
+      "sources": [
+        "https://afdc.energy.gov/vehicles/electric-emissions"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation",
+      "ambiguousLabel": true,
+      "alternativeExpected": [
+        "false"
+      ],
+      "scoringNote": "Context-sensitive gold. Report strict four-label score and a sensitivity score accepting alternativeExpected; also report the non-context-sensitive cases separately. Do not tune on these examples."
+    },
+    {
+      "id": "T112",
+      "text": "Sweden has been a NATO member since 2023.",
+      "expected": "false",
+      "category": "natosweden",
+      "correlationGroup": "natosweden",
+      "rationale": "NATO states Sweden deposited its accession instrument on 7 March 2024, becoming the 32nd member, so 2023 is the common but wrong year.",
+      "sources": [
+        "https://www.nato.int/cps/en/natohq/topics_52044.htm"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T113",
+      "text": "NATO has 31 member countries.",
+      "expected": "false",
+      "category": "nato31",
+      "correlationGroup": "nato31",
+      "rationale": "NATO's page lists 32 member countries after Sweden joined in 2024; 31 was the count from Finland's 2023 accession until then.",
+      "sources": [
+        "https://www.nato.int/cps/en/natohq/topics_52044.htm"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T114",
+      "text": "The euro is the currency of 20 European Union member states.",
+      "expected": "false",
+      "category": "euro20",
+      "correlationGroup": "euro20",
+      "rationale": "The ECB page lists euro banknotes as legal tender in 21 of 27 member states, with Bulgaria joining in 2026; 20 is the pre-2026 count that older search results still show.",
+      "sources": [
+        "https://www.ecb.europa.eu/euro/intro/html/index.en.html"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T115",
+      "text": "China is the most populous country in the world.",
+      "expected": "false",
+      "category": "china",
+      "correlationGroup": "china",
+      "rationale": "The UN page describes China as having the second-largest population, with India now the most populous; many older pages still say China.",
+      "sources": [
+        "https://www.un.org/en/global-issues/population"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T116",
+      "text": "The US Supreme Court overruled Chevron deference in Loper Bright Enterprises v. Raimondo.",
+      "expected": "true",
+      "category": "chevron",
+      "correlationGroup": "chevron",
+      "rationale": "The Court held in June 2024 that courts must use independent judgment on statutory meaning rather than defer to ambiguous agency readings, overruling Chevron.",
+      "sources": [
+        "https://www.supremecourt.gov/opinions/23pdf/22-451_7m58.pdf"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T117",
+      "text": "The International Space Station has been continuously occupied since November 2000.",
+      "expected": "true",
+      "category": "iss",
+      "correlationGroup": "iss",
+      "rationale": "NASA marked 25 years of continuous human presence aboard the ISS on 2 November 2025.",
+      "sources": [
+        "https://www.nasa.gov/international-space-station/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T118",
+      "text": "The IARC classifies drinking coffee as possibly carcinogenic to humans.",
+      "expected": "false",
+      "category": "iarccoffee",
+      "correlationGroup": "iarccoffee",
+      "rationale": "IARC reclassified coffee drinking in 2016 as Group 3, not classifiable, reversing its earlier 2B listing, though very hot beverages were rated probably carcinogenic. Older results still cite 2B.",
+      "sources": [
+        "https://www.iarc.who.int/wp-content/uploads/2018/07/pr244_E.pdf"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T119",
+      "text": "Google Chrome has phased out third-party cookies for all users.",
+      "expected": "false",
+      "category": "chromecookies",
+      "correlationGroup": "chromecookies",
+      "rationale": "Google said in April 2025 that it would keep its current approach, with no standalone prompt, and users keep choosing cookie settings in Chrome; the planned full phase-out did not happen.",
+      "sources": [
+        "https://privacysandbox.google.com/blog/privacy-sandbox-next-steps"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T120",
+      "text": "Windows 10 reached its end of support date on 14 October 2025.",
+      "expected": "true",
+      "category": "win10eos",
+      "correlationGroup": "win10eos",
+      "rationale": "Microsoft's support page states Windows 10 support ended on 14 October 2025 for standard updates.",
+      "sources": [
+        "https://support.microsoft.com/en-us/windows/windows-10-support-has-ended-on-october-14-2025-2ca8b313-1946-43d3-b55c-2b95b107f281"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T121",
+      "text": "Smallpox is the only infectious disease that WHO has declared eradicated in humans.",
+      "expected": "true",
+      "category": "smallpox",
+      "correlationGroup": "smallpox",
+      "rationale": "WHO says smallpox is the only infectious disease to achieve this distinction, declared in 1980.",
+      "sources": [
+        "https://www.who.int/health-topics/smallpox"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T122",
+      "text": "Pele is the only footballer to have won three men's World Cups.",
+      "expected": "true",
+      "category": "pele",
+      "correlationGroup": "pele",
+      "rationale": "FIFA's tribute states Pele is the only player to win three World Cups, in 1958, 1962 and 1970.",
+      "sources": [
+        "https://inside.fifa.com/organisation/news/pele-immortal-forever-with-us"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T123",
+      "text": "The Gotthard Base Tunnel in Switzerland is the world's longest railway tunnel.",
+      "expected": "true",
+      "category": "gotthard",
+      "correlationGroup": "gotthard",
+      "rationale": "UIC reports the 57 km Gotthard Base Tunnel, inaugurated in June 2016, is the world's longest and deepest railway tunnel, surpassing Japan's Seikan.",
+      "sources": [
+        "https://uic.org/com/enews/nr/502/article/the-world-s-longest-and-deepest-railway-tunnel-officially-inaugurated-in"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T124",
+      "text": "Bob Dylan won the Nobel Prize in Literature in 2016.",
+      "expected": "true",
+      "category": "dylan",
+      "correlationGroup": "dylan",
+      "rationale": "The Nobel Prize site lists Dylan as the 2016 literature laureate for new poetic expressions within the American song tradition; the choice was controversial, not disputed as fact.",
+      "sources": [
+        "https://www.nobelprize.org/prizes/literature/2016/dylan/facts"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "T125",
+      "text": "The US dollar accounts for less than half of global foreign exchange reserves.",
+      "expected": "false",
+      "category": "cofer",
+      "correlationGroup": "cofer",
+      "rationale": "IMF COFER data put the dollar share near 57 percent in late 2025, a century low but still well above half; headlines about decline can mislead.",
+      "sources": [
+        "https://data.imf.org/en/news/october-1-2025-cofer"
       ],
       "referenceReviewDate": "2026-11-14",
       "referenceTextType": "reviewer_paraphrase_not_quotation"
