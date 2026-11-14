@@ -5,7 +5,7 @@ import type { JevQuestion } from '../../../../services/api/src/providers/jev/cli
 import { AbortableExa } from '../../../../services/api/src/providers/exa/client.js';
 import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE } from '../../../../services/api/src/evidence/normalize.js';
 import { CampaignBudget, DEVELOPMENT_LIMITS } from './budget.js';
-import { freshObservation, observedProviders, retrievalRequestIsPublic } from './observe.js';
+import { contentStatusDiagnostics, freshObservation, observedProviders, retrievalRequestIsPublic } from './observe.js';
 
 const publicText = 'Helsinki is the capital of Finland.';
 const otherPublic = 'Oslo is the capital of Norway.';
@@ -119,6 +119,22 @@ describe('independent live observer accounting review', () => {
     } finally { patched.mockRestore(); }
   });
 
+  it('records a requested target error separately from the Exa HTTP200 transport without retaining provider messages', async () => {
+    const requestedURL = 'https://reference.example.org/capital';
+    const state = setup(vi.fn<typeof fetch>(async (url, init) => String(url).includes('typesafe.ai') ? admissionResponse(init)
+      : String(url).endsWith('/search') ? Response.json({ results: [{ url: requestedURL, title: 'Capital record', highlights: ['Helsinki'] }] })
+        : Response.json({ results: [], statuses: [{ id: requestedURL, status: 'error', source: 'crawled',
+          error: { tag: 'CRAWL_UNKNOWN_ERROR', httpStatusCode: 503, message: secretMarker }, message: secretMarker }], errorMessage: secretMarker })));
+    const admission = await state.providers.adapters.classify(input(), state.context);
+    await expect(state.providers.adapters.retrieve({ ...admission.claims[0], id: 'review-claim-0' }, state.context)).rejects.toMatchObject({ code: 'exa_content_failed' });
+    const contents = state.observation.attempts.find(attempt => attempt.kind === 'contents');
+    expect(contents).toMatchObject({ status: 200, outcome: 'response', contentURLs: [requestedURL], contentStatusDiagnostics: {
+      statusList: 'present', records: [{ requestedURL, status: 'error', source: 'crawled', errorTag: 'CRAWL_UNKNOWN_ERROR', targetHttpStatus: 503, malformedFields: [] }],
+    } });
+    expect(JSON.stringify(contents)).not.toContain(secretMarker);
+    expect(state.budget.summary().calls).toEqual({ jev: 1, search: 1, contents: 1 });
+  });
+
   it('retains actual overrun usage and blocks future calls after a provider exceeds its reservation', async () => {
     const fetcher = vi.fn<typeof fetch>(async (_url, init) => admissionResponse(init, 25_001));
     const state = setup(fetcher, new CampaignBudget({ ...DEVELOPMENT_LIMITS, inputTokens: 24_000 }));
@@ -150,6 +166,51 @@ describe('independent live observer accounting review', () => {
     expect(fetcher).not.toHaveBeenCalled();
     expect(state.budget.summary()).toMatchObject({ attempts: 0, pendingDispatchReservations: 0, unknownInputTokenReservations: 0 });
     expect(state.observation.localStops).toEqual(['harness_checkpoint_failure']);
+  });
+});
+
+describe('bounded contents status diagnostics', () => {
+  const requestedURL = 'https://reference.example.org/capital';
+
+  it('projects known fields for requested URLs and redacts arbitrary strings, messages and unrelated URLs', () => {
+    const result = contentStatusDiagnostics({ statuses: [
+      { id: requestedURL, status: 'error', source: 'cached', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 403, message: secretMarker }, secretMarker },
+      { id: `${requestedURL}#${secretMarker}`, status: secretMarker, source: secretMarker, error: { tag: secretMarker, httpStatusCode: secretMarker } },
+      { id: `https://unrequested.example.org/${secretMarker}`, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 404 } },
+    ], secretMarker }, [requestedURL]);
+    expect(result).toMatchObject({ statusList: 'present', unmatchedStatusCount: 1, duplicateStatusCount: 1, records: [
+      { requestedURL, status: 'error', source: 'cached', errorTag: 'CRAWL_HTTP_403', targetHttpStatus: 403, malformedFields: [] },
+      { requestedURL, status: 'other', source: 'other', errorTag: 'other', malformedFields: ['status', 'source', 'tag', 'httpStatusCode'] },
+    ] });
+    expect(JSON.stringify(result)).not.toContain(secretMarker);
+    expect(JSON.stringify(result)).not.toContain('unrequested.example.org');
+  });
+
+  it('distinguishes absent or malformed status lists and bounds duplicate/injected statuses', () => {
+    expect(contentStatusDiagnostics({}, [requestedURL]).statusList).toBe('absent');
+    for (const decoded of [undefined, null, [], secretMarker, { statuses: secretMarker }, { statuses: null }]) {
+      expect(contentStatusDiagnostics(decoded, [requestedURL])).toMatchObject({ statusList: 'malformed', records: [] });
+      expect(JSON.stringify(contentStatusDiagnostics(decoded, [requestedURL]))).not.toContain(secretMarker);
+    }
+    const repeated = contentStatusDiagnostics({ statuses: Array.from({ length: 150 }, () => ({ id: requestedURL, status: 'success' })) }, [requestedURL]);
+    expect(repeated.records).toHaveLength(2); expect(repeated.duplicateStatusCount).toBe(99); expect(repeated.omittedStatusCount).toBe(148);
+    const malformed = contentStatusDiagnostics({ statuses: [null, [], {}, { id: 1 }, { id: 'x'.repeat(4097) }, { id: 'file:///private' }] }, [requestedURL]);
+    expect(malformed.malformedStatusCount).toBe(6); expect(malformed.records).toEqual([]);
+  });
+
+  it('retains bounded contradictory target fields as diagnostics without treating them as a safe fallback', () => {
+    const result = contentStatusDiagnostics({ statuses: [
+      { id: requestedURL, status: 'success', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 503 } },
+      { id: requestedURL, status: 'error', error: { tag: 'CRAWL_NOT_FOUND', httpStatusCode: 500 } },
+    ] }, [requestedURL]);
+    expect(result.records[0]).toMatchObject({ inconsistentSuccessError: true, inconsistentHttpStatus: true, targetHttpStatus: 503 });
+    expect(result.records[1]).toMatchObject({ inconsistentHttpStatus: true, targetHttpStatus: 500 });
+    for (const status of [NaN, Infinity, -1, 99, 600, 403.5, '403']) {
+      const diagnostic = contentStatusDiagnostics({ statuses: [{ id: requestedURL, status: 'error', error: { tag: 'CRAWL_TIMEOUT', httpStatusCode: status } }] }, [requestedURL]);
+      expect(diagnostic.records[0]).not.toHaveProperty('targetHttpStatus');
+      expect(diagnostic.records[0].malformedFields).toContain('httpStatusCode');
+    }
+    expect(contentStatusDiagnostics({ statuses: [{ id: requestedURL, status: 'error', error: { tag: 'CRAWL_TIMEOUT', httpStatusCode: null } }] }, [requestedURL]).records[0].targetHttpStatus).toBeNull();
   });
 });
 

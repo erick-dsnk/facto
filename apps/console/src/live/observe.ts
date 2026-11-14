@@ -39,7 +39,75 @@ export function retrievalRequestIsPublic(kind: 'search' | 'contents', value: unk
   return parsed.success && parsed.data.highlights.query === buildHighlightQuery(text);
 }
 
-export type ObservedAttempt = Attempt & { query?: string; retrievalTextSHA256?: { objective?: string; highlightQuery: string }; contentURLs?: string[]; answers?: Record<string, JevAnswer> };
+const contentErrorTags = ['CRAWL_NOT_FOUND', 'CRAWL_TIMEOUT', 'CRAWL_LIVECRAWL_TIMEOUT', 'CRAWL_UNKNOWN_ERROR', 'SOURCE_NOT_AVAILABLE', 'UNSUPPORTED_URL'] as const;
+type ContentErrorTag = typeof contentErrorTags[number] | `CRAWL_HTTP_${number}` | 'other';
+export type ContentStatusDiagnostic = {
+  requestedURL: string; status: 'success' | 'error' | 'other'; source?: 'cached' | 'crawled' | 'other';
+  errorTag?: ContentErrorTag; targetHttpStatus?: number | null;
+  malformedFields: ('status' | 'source' | 'error' | 'tag' | 'httpStatusCode')[];
+  inconsistentSuccessError?: boolean; inconsistentHttpStatus?: boolean;
+};
+export type ContentsDiagnostics = { statusList: 'absent' | 'present' | 'malformed'; records: ContentStatusDiagnostic[];
+  malformedStatusCount: number; unmatchedStatusCount: number; duplicateStatusCount: number; omittedStatusCount: number };
+
+/** Diagnostic projection only: never copies provider messages, unknown tags or
+ * response IDs. URLs come from the already-validated outgoing request. */
+export function contentStatusDiagnostics(decoded: unknown, requestedURLs: string[]): ContentsDiagnostics {
+  const result: ContentsDiagnostics = { statusList: 'malformed', records: [], malformedStatusCount: 0,
+    unmatchedStatusCount: 0, duplicateStatusCount: 0, omittedStatusCount: 0 };
+  if (!object(decoded)) return result;
+  if (decoded.statuses === undefined) { result.statusList = 'absent'; return result; }
+  if (!Array.isArray(decoded.statuses)) return result;
+  result.statusList = 'present';
+  // The actual harness request permits one URL. Bound this projection as well
+  // so a malformed caller cannot amplify a provider response into a large log.
+  const requested = new Map(requestedURLs.slice(0, 16).flatMap(url => {
+    const normalized = url.length <= 4096 ? normalizeUrl(url) : null;
+    return normalized ? [[normalized, url] as const] : [];
+  }));
+  const seen = new Map<string, number>();
+  result.omittedStatusCount = Math.max(0, decoded.statuses.length - 100);
+  for (const value of decoded.statuses.slice(0, 100)) {
+    if (!object(value) || typeof value.id !== 'string' || value.id.length > 4096) { result.malformedStatusCount++; continue; }
+    const normalized = normalizeUrl(value.id);
+    if (!normalized) { result.malformedStatusCount++; continue; }
+    const requestedURL = requested.get(normalized);
+    if (!requestedURL) { result.unmatchedStatusCount++; continue; }
+    const count = (seen.get(normalized) ?? 0) + 1; seen.set(normalized, count);
+    if (count > 1) result.duplicateStatusCount++;
+    if (count > 2) { result.omittedStatusCount++; continue; }
+    const record: ContentStatusDiagnostic = { requestedURL, status: value.status === 'success' || value.status === 'error' ? value.status : 'other', malformedFields: [] };
+    if (record.status === 'other') record.malformedFields.push('status');
+    if (value.source !== undefined) {
+      record.source = value.source === 'cached' || value.source === 'crawled' ? value.source : 'other';
+      if (record.source === 'other') record.malformedFields.push('source');
+    }
+    if (value.error !== undefined && value.error !== null) {
+      if (value.status === 'success') record.inconsistentSuccessError = true;
+      if (!object(value.error)) record.malformedFields.push('error');
+      else {
+        const tag = value.error.tag;
+        if (tag !== undefined) {
+          record.errorTag = typeof tag === 'string' && tag.length <= 200 && (contentErrorTags.includes(tag as typeof contentErrorTags[number]) || /^CRAWL_HTTP_[45]\d\d$/.test(tag)) ? tag as ContentErrorTag : 'other';
+          if (record.errorTag === 'other') record.malformedFields.push('tag');
+        }
+        const httpStatus = value.error.httpStatusCode;
+        if (httpStatus !== undefined) {
+          if (httpStatus === null || (typeof httpStatus === 'number' && Number.isInteger(httpStatus) && httpStatus >= 100 && httpStatus <= 599)) record.targetHttpStatus = httpStatus;
+          else record.malformedFields.push('httpStatusCode');
+        }
+        const embeddedStatus = record.errorTag?.match(/^CRAWL_HTTP_([45]\d\d)$/);
+        const expectedStatus = record.errorTag === 'CRAWL_NOT_FOUND' ? 404 : embeddedStatus ? Number(embeddedStatus[1]) : undefined;
+        if (expectedStatus !== undefined && typeof record.targetHttpStatus === 'number' && expectedStatus !== record.targetHttpStatus) record.inconsistentHttpStatus = true;
+      }
+    }
+    result.records.push(record);
+  }
+  return result;
+}
+
+export type ObservedAttempt = Attempt & { query?: string; retrievalTextSHA256?: { objective?: string; highlightQuery: string }; contentURLs?: string[];
+  contentStatusDiagnostics?: ContentsDiagnostics; answers?: Record<string, JevAnswer> };
 export type RequestObservation = {
   label: string; attempts: ObservedAttempt[]; stageMs: { admission: number; retrieval: number; judgment: number };
   admission?: { action: string; reasonCode: string; claims: number }; admittedPublic: string[]; rejectedAdmissionCount: number;
@@ -144,6 +212,7 @@ export function observedProviders(options: {
         attempt.outcome = 'response';
         let decoded: unknown;
         try { decoded = JSON.parse(new TextDecoder().decode(bytes)); } catch { /* Provider parser reports malformed payloads. */ }
+        if (kind === 'contents') attempt.contentStatusDiagnostics = contentStatusDiagnostics(decoded, attempt.contentURLs ?? []);
         if (object(decoded)) {
           if (kind === 'jev') {
             attempt.answers = answerDiagnostics(decoded, decodedRequest as unknown as JevRequest);
