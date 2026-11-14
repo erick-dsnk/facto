@@ -211,6 +211,53 @@ describe('bounded exact public admission', () => {
     expect(result.claims).toEqual([]);
   });
 
+  it('skips a confidently classified complete whole-input preference on a manual request', async () => {
+    const text = 'I prefer coffee to tea.';
+    const result = await createClassifier(fixtureClient(() => ({ kind: 'opinion' })))(input(text, true), context());
+    expect(result).toMatchObject({ action: 'skip', reasonCode: 'not_eligible_public_fact', claims: [] });
+  });
+
+  it('keeps clarification when an opinion is paired with an unresolved public claim', async () => {
+    const text = 'I prefer coffee to tea. Unemployment is 7%.';
+    const classify = createClassifier(fixtureClient(candidate => candidate.includes('Unemployment')
+      ? { self: 0.5 }
+      : candidate === text ? { kind: 'mixed', structure: 'multiple_propositions' } : { kind: 'opinion' }));
+    expect(await classify(input(text, true), context())).toMatchObject({ action: 'needs_confirmation', reasonCode: 'incomplete_or_unclear', claims: [] });
+  });
+
+  it('admits an exact public claim beside an opinion', async () => {
+    const text = 'I prefer coffee to tea. The Eiffel Tower opened in 1889.';
+    const classify = createClassifier(fixtureClient(candidate => candidate === text
+      ? { kind: 'mixed', structure: 'multiple_propositions' }
+      : candidate.includes('Eiffel Tower') ? {} : { kind: 'opinion' }));
+    const result = await classify(input(text, true), context());
+    expect(result.action).toBe('check');
+    expect(result.claims.map(claim => claim.checkedText)).toEqual(['The Eiffel Tower opened in 1889.']);
+  });
+
+  it('keeps clarification when opinion classification confidence is below the existing threshold', async () => {
+    const base = fixtureClient(() => ({ kind: 'opinion' }));
+    const uncertain: JevClient = { ask: async (request, ctx) => {
+      const answers = await base.ask(request, ctx);
+      for (const [name, question] of Object.entries(request.questions)) {
+        if (!name.endsWith('_kind') || question.type !== 'choice') continue;
+        const otherProbability = 0.21 / (Object.keys(question.criteria).length - 1);
+        answers[name] = {
+          choice: 'opinion',
+          probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, key === 'opinion' ? 0.79 : otherProbability]))
+        };
+      }
+      return answers;
+    } };
+    const result = await createClassifier(uncertain)(input('I prefer coffee to tea.', true), context());
+    expect(result).toMatchObject({ action: 'needs_confirmation', reasonCode: 'not_eligible_public_fact', claims: [] });
+  });
+
+  it('keeps clarification for an incomplete preference', async () => {
+    const result = await createClassifier(fixtureClient(() => ({ kind: 'opinion', self: 0.84 })))(input('I prefer coffee to tea.', true), context());
+    expect(result).toMatchObject({ action: 'needs_confirmation', reasonCode: 'not_eligible_public_fact', claims: [] });
+  });
+
   it('waits for incomplete automatic input and clarifies manual input', async () => {
     const classify = createClassifier(fixtureClient(() => ({ kind: 'incomplete_or_unclear', self: 0.1 })));
     expect(await classify(input('Unemployment is 7%.'), context())).toMatchObject({ action: 'wait', claims: [] });

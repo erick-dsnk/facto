@@ -18,6 +18,18 @@ function reading(label: Verdict = 'supported'): AssessedJudgment {
   return judgment;
 }
 
+function failedPreference(label: 'supported' | 'contradicted' | 'misleading' = 'supported'): AssessedJudgment {
+  const judgment = reading(label);
+  judgment.evidence.unshift(passage('preferred', { url: 'https://preferred.example.edu/summary', excerpt: 'SYNTHETIC short summary of the same proposition.', stance: judgment.evidence[0].stance }));
+  judgment.sourceAssessments.preferred = { contentBasis: 'substantive_secondary', confidence: .84 };
+  judgment.selectedEvidenceIds = ['preferred'];
+  if (label === 'misleading') {
+    judgment.misleadingReason = 'omitted_condition';
+    judgment.misleadingEvidenceIds = ['preferred', 'a', 'b'];
+  }
+  return judgment;
+}
+
 describe('conservative deterministic verdict', () => {
   it.each(['supported', 'contradicted', 'insufficient_evidence'] as const)('returns %s from qualified reading', label => {
     expect(decideVerdict(reading(label)).verdict).toBe(label);
@@ -90,6 +102,70 @@ describe('conservative deterministic verdict', () => {
     expect(() => decideVerdict(judgment)).toThrow('invalid_citation');
     judgment.selectedEvidenceIds = [];
     expect(decideVerdict(judgment).reasonCode).toBe('no_agreeing_citation');
+  });
+  it.each(['supported', 'contradicted', 'misleading'] as const)('uses only the fully qualifying pair when the preferred citation fails substance for %s', label => {
+    const judgment = failedPreference(label);
+    const result = decideVerdict(judgment);
+    expect(result.verdict).toBe(label);
+    expect(result.selectedEvidenceIds).toEqual(['a', 'b']);
+    expect(result.selectedEvidenceIds.every(id => judgment.evidence.some(source => source.id === id))).toBe(true);
+  });
+  it('keeps misleading fallback restricted to sources establishing the specific context defect', () => {
+    const judgment = failedPreference('misleading');
+    judgment.misleadingEvidenceIds = ['preferred'];
+    expect(decideVerdict(judgment).reasonCode).toBe('insufficient_independent_evidence');
+    judgment.misleadingEvidenceIds = ['preferred', 'a'];
+    expect(decideVerdict(judgment).reasonCode).toBe('insufficient_independent_evidence');
+    judgment.misleadingEvidenceIds = ['preferred', 'a', 'b'];
+    expect(decideVerdict(judgment).selectedEvidenceIds).toEqual(['a', 'b']);
+    judgment.misleadingReason = null;
+    expect(decideVerdict(judgment).reasonCode).toBe('context_not_established');
+  });
+  it.each([{ stance: 'unrelated' as const }, { matchesTimePlaceAndPopulation: false }])('uses qualifying citations even when a valid retained preference is unrelated or out of scope', override => {
+    const judgment = failedPreference();
+    Object.assign(judgment.evidence[0], override);
+    expect(decideVerdict(judgment).selectedEvidenceIds).toEqual(['a', 'b']);
+  });
+  it('keeps a nonqualifying preferred passage in the full dependence graph', () => {
+    const judgment = failedPreference();
+    judgment.originAssessments.push(
+      { evidenceIds: ['a', 'preferred'], relationship: 'common_origin', confidence: .99 },
+      { evidenceIds: ['b', 'preferred'], relationship: 'common_origin', confidence: .99 },
+    );
+    expect(decideVerdict(judgment).reasonCode).toBe('insufficient_independent_evidence');
+  });
+  it('does not fall back when all sources are weak, scope mismatches or credible sources conflict', () => {
+    const weak = failedPreference();
+    weak.sourceAssessments.a.confidence = .84;
+    weak.sourceAssessments.b.confidence = .84;
+    expect(decideVerdict(weak).reasonCode).toBe('insufficient_independent_evidence');
+    const scope = failedPreference();
+    scope.evidence.forEach(source => { source.matchesTimePlaceAndPopulation = false; });
+    expect(decideVerdict(scope).reasonCode).toBe('no_direct_evidence');
+    const conflict = failedPreference();
+    conflict.evidence.push(passage('opposing', { url: 'https://opposing.example.net/record', stance: 'contradicts' }));
+    expect(decideVerdict(conflict).reasonCode).toBe('conflicting_sources');
+  });
+  it('does not fall back below the verdict threshold or without required high-risk provenance', () => {
+    const lowVerdict = failedPreference('contradicted');
+    lowVerdict.probabilities.contradicted = .89;
+    expect(decideVerdict(lowVerdict).reasonCode).toBe('below_threshold');
+    const highRisk = failedPreference();
+    highRisk.claimRisk = { level: 'health_safety', confidence: .99 };
+    expect(decideVerdict(highRisk).reasonCode).toBe('insufficient_independent_evidence');
+  });
+  it('preserves an explicit no-citation choice and rejects invalid or malformed preference lists', () => {
+    const judgment = failedPreference();
+    judgment.selectedEvidenceIds = [];
+    expect(decideVerdict(judgment).reasonCode).toBe('no_agreeing_citation');
+    judgment.selectedEvidenceIds = ['invented'];
+    expect(() => decideVerdict(judgment)).toThrow('invalid_citation');
+    judgment.selectedEvidenceIds = ['preferred'];
+    judgment.evidence.push({ ...judgment.evidence[0] });
+    expect(() => decideVerdict(judgment)).toThrow('invalid_citation');
+    judgment.evidence.pop();
+    judgment.selectedEvidenceIds = null as unknown as string[];
+    expect(() => decideVerdict(judgment)).toThrow('malformed_provider');
   });
   it('has separate malformed-provider errors and never accepts non-finite probabilities', () => {
     const judgment = reading();
@@ -255,6 +331,18 @@ describe('reviewed high-risk provenance with explicit test-only capabilities', (
     expect(decideVerdict(judgment, registry).selectedEvidenceIds).toEqual(['a', 'b']);
     expect(decideVerdict(judgment).verdict).toBe('insufficient_evidence');
     expect(SOURCE_REGISTRY.some(rule => rule.host === registry[0].host)).toBe(false);
+  });
+  it('allows a failed preference only while the full reviewed expert and distinct-origin pair remains qualified', () => {
+    const judgment = highRisk();
+    judgment.evidence.unshift(passage('preferred', { url: 'https://summary.example/claim', excerpt: 'SYNTHETIC brief summary of treatment observations.' }));
+    judgment.sourceAssessments.preferred = { contentBasis: 'substantive_secondary', confidence: .84 };
+    judgment.selectedEvidenceIds = ['preferred'];
+    expect(decideVerdict(judgment, registry).selectedEvidenceIds).toEqual(['a', 'b']);
+    judgment.originAssessments[0].relationship = 'unclear';
+    expect(decideVerdict(judgment, registry).reasonCode).toBe('insufficient_independent_evidence');
+    judgment.originAssessments[0].relationship = 'distinct_origins';
+    judgment.evidence[0].stance = 'contradicts';
+    expect(decideVerdict(judgment, registry).reasonCode).toBe('conflicting_sources');
   });
   it('requires positively established distinct origins, not different domains or absence of a same-origin flag', () => {
     const judgment = highRisk();
