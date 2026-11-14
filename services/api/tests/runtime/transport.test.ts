@@ -6,6 +6,7 @@ import { fixtureAdapters } from '../../src/runtime/fixtures.js';
 import { type EventEnvelope, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
 import { claimResultSchema, eventEnvelopeSchema } from '../../../../packages/contracts/src/wire.js';
 import { type AsrAdapter, type AsrTranscript } from '../../src/transport/audio.js';
+import { DebugFeed } from '../../src/runtime/debug-feed.js';
 
 type Server = Awaited<ReturnType<typeof buildServer>>;
 type Credentials = { sessionId: string; token: string; sessionEpoch: number; expiresAt: string };
@@ -360,5 +361,37 @@ describe('session HTTP and WebSocket boundary', () => {
     second.socket.send(JSON.stringify({ type: 'audio.start', sessionEpoch: 2, streamGeneration: 2, encoding: 'pcm_s16le', sampleRateHz: 16000, channels: 1, source: 'glasses_stream_audio' }));
     await eventOf(second.events, 'audio.ready');
     expect(state.active).toBe(true); expect(state.epoch).toBe(2);
+  });
+});
+
+describe('debug feed', () => {
+  it('does not exist unless the server enables it', async () => {
+    const server = await setup();
+    const response = await server.app.inject({ method: 'GET', url: '/v1/debug/feed', headers: { 'x-debug-key': joinCode } });
+    expect(response.statusCode).toBe(404);
+  });
+
+  it('records the check text and every session event, readable only with the join code', async () => {
+    const feed = new DebugFeed();
+    const server = await setup({ debugFeed: feed });
+    const session = await join(server);
+    expect((await submit(server, session)).statusCode).toBe(202);
+    await vi.waitFor(() => expect(feed.after(0).some(entry => entry.kind === 'claim.result')).toBe(true));
+    expect((await server.app.inject({ method: 'GET', url: '/v1/debug/feed', headers: { 'x-debug-key': 'wrong-key-123' } })).statusCode).toBe(401);
+    expect((await server.app.inject({ method: 'GET', url: '/v1/debug/feed' })).statusCode).toBe(401);
+    const response = await server.app.inject({ method: 'GET', url: '/v1/debug/feed?after=0', headers: { 'x-debug-key': joinCode } });
+    const entries = response.json<{ entries: { seq: number; kind: string; sessionId?: string; data: { text?: string } }[] }>().entries;
+    expect(entries[0]).toMatchObject({ kind: 'session.created', sessionId: session.sessionId });
+    expect(entries.find(entry => entry.kind === 'check.request')?.data.text).toBe('Helsinki is the capital of Finland.');
+    expect(entries.map(entry => entry.kind)).toContain('claim.result');
+    const last = entries.at(-1)!.seq;
+    const later = await server.app.inject({ method: 'GET', url: `/v1/debug/feed?after=${last}`, headers: { 'x-debug-key': joinCode } });
+    expect(later.json<{ entries: unknown[] }>().entries).toEqual([]);
+  });
+
+  it('keeps only the newest entries', () => {
+    const feed = new DebugFeed(3);
+    for (let i = 0; i < 5; i++) feed.push('n', i);
+    expect(feed.after(0).map(entry => entry.data)).toEqual([2, 3, 4]);
   });
 });
