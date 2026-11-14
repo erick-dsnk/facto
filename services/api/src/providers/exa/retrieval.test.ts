@@ -267,3 +267,40 @@ describe('official SDK abortable transport', () => {
     await expect(promise).rejects.toThrow('stopped');
   });
 });
+
+describe('production SDK operational envelope admission', () => {
+  it.each([
+    { error: 'upstream failed' }, { tag: 'SERVICE_OVERLOADED' }, { status: 'error' },
+    { status: 'success', error: { tag: 'failure' } },
+  ])('rejects HTTP200 search failure metadata without contents calls: %j', async metadata => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({ ...metadata,
+      results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }), { status: 200 }));
+    await expect(createRetriever({ apiKey: 'offline-test-key', fetch: fetcher })(claim, context)).rejects.toThrow('exa_content_failed');
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(calls).toEqual(['search']);
+  });
+  it.each(['root', 'result', 'status_entry'] as const)('rejects %s failure metadata through actual SDK contents serialization', async location => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async (input) => new Response(JSON.stringify(String(input).endsWith('/search')
+      ? { results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }
+      : { ...(location === 'root' ? { status: 'error' } : {}),
+        results: [{ url: 'https://tower.org/history', text: `${excerpt} Full archival context.`, ...(location === 'result' ? { status: 'success', error: { tag: 'failure' } } : {}) }],
+        ...(location === 'status_entry' ? { statuses: [{ id: 'https://tower.org/history', status: 'success', error: { tag: 'failure' } }] } : {}) }), { status: 200 }));
+    await expect(createRetriever({ apiKey: 'offline-test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context)).rejects.toThrow(/exa_content_failed|malformed_exa_response/);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(calls).toEqual(['search', 'contents']);
+  });
+  it('retains separately indexed search highlights when the actual SDK returns a known failed contents target with accompanying error text', async () => {
+    const { context, calls } = setup();
+    const fetcher = vi.fn<typeof fetch>(async input => new Response(JSON.stringify(String(input).endsWith('/search')
+      ? { status: 'success', future: { providerExtension: true }, results: [{ url: 'https://tower.org/history', highlights: [excerpt] }] }
+      : { status: 'success', results: [{ url: 'https://tower.org/history', status: 'error', error: 'target denied', text: 'Failed target text must not be admitted.' }],
+        statuses: [{ id: 'https://tower.org/history', status: 'error', error: { tag: 'CRAWL_HTTP_403', httpStatusCode: 403 } }] }), { status: 200 }));
+    const result = await createRetriever({ apiKey: 'offline-test-key', fetch: fetcher, queryStrategy: 'balanced_evidence' })(claim, context);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({ excerpt, contentBasis: 'highlight', directlyAddressesClaim: false, stance: 'unrelated' });
+    expect(calls).toEqual(['search', 'contents']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+});

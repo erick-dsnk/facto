@@ -8,29 +8,40 @@ const resultSchema = z.object({
   publishedDate: z.string().max(100).nullable().optional(), publisher: z.string().max(1000).nullable().optional(),
   highlights: z.array(z.string().max(50000)).max(20).optional(), text: z.string().max(100000).optional(),
 });
+// Keep operational fields until admission; z.object otherwise strips them before
+// an accompanying result's plausible text can be distinguished from a failure.
+const operationalMetadata = { status: z.unknown().optional(), error: z.unknown().optional(), tag: z.unknown().optional() };
 const responseSchema = z.object({
-  results: z.array(resultSchema).max(100),
-  statuses: z.array(z.object({ status: z.string(), id: z.string().optional() })).max(100).optional(),
+  ...operationalMetadata,
+  results: z.array(resultSchema.extend(operationalMetadata)).max(100),
+  statuses: z.array(z.object({ ...operationalMetadata, status: z.string(), id: z.string().optional() })).max(100).optional(),
 });
+function assertSuccessfulMetadata(value: { status?: unknown; error?: unknown; tag?: unknown }): void {
+  if (value.status !== undefined && typeof value.status !== 'string') throw new PipelineError('malformed_exa_response');
+  if ((value.status !== undefined && value.status !== 'success') || value.error != null || value.tag != null) {
+    throw new PipelineError('exa_content_failed', true);
+  }
+}
 const publicationDateSchema = z.union([z.iso.date(), z.iso.datetime({ offset: true })]);
 export type RetrievedPage = z.infer<typeof resultSchema>;
 
 export function parseExaResponse(value: unknown): RetrievedPage[] {
   const parsed = responseSchema.safeParse(value);
   if (!parsed.success) throw new PipelineError('malformed_exa_response');
-  if (parsed.data.statuses?.some(status => /error|failed|timeout/i.test(status.status))) {
-    throw new PipelineError('exa_content_failed', true);
-  }
-  return parsed.data.results;
+  assertSuccessfulMetadata(parsed.data);
+  for (const status of parsed.data.statuses ?? []) assertSuccessfulMetadata(status);
+  for (const page of parsed.data.results) assertSuccessfulMetadata(page);
+  return parsed.data.results.map(page => resultSchema.parse(page));
 }
 
 const contentsStatusSchema = z.object({
   id: z.string().min(1).max(4096), status: z.enum(['success', 'error']), source: z.string().max(100).optional(),
   error: z.object({ tag: z.string().max(200).optional(), httpStatusCode: z.number().int().min(100).max(599).nullable().optional() }).nullable().optional(),
+  tag: z.unknown().optional(),
 });
 const contentsResponseSchema = z.object({
+  ...operationalMetadata,
   results: responseSchema.shape.results, statuses: z.array(contentsStatusSchema).max(100).optional(),
-  error: z.unknown().optional(), tag: z.unknown().optional(),
 });
 export type ExaPageFailure = { url: string; tag: string; targetHttpStatus: number | null };
 
@@ -42,7 +53,7 @@ export type ExaPageFailure = { url: string; tag: string; targetHttpStatus: numbe
 export function parseExaContentsResponse(value: unknown, requestedURLs: string[]): { pages: RetrievedPage[]; pageFailures: ExaPageFailure[] } {
   const parsed = contentsResponseSchema.safeParse(value);
   if (!parsed.success) throw new PipelineError('malformed_exa_response');
-  if (parsed.data.error != null || parsed.data.tag != null) throw new PipelineError('exa_content_failed', true);
+  assertSuccessfulMetadata(parsed.data);
   const requested = new Set(requestedURLs.map(normalizeUrl));
   if (!requested.size || requested.has(null)) throw new PipelineError('malformed_exa_response');
   const seen = new Set<string>();
@@ -51,6 +62,7 @@ export function parseExaContentsResponse(value: unknown, requestedURLs: string[]
     const url = normalizeUrl(status.id);
     if (!url || !requested.has(url) || seen.has(url)) throw new PipelineError('malformed_exa_response');
     seen.add(url);
+    if (status.tag != null) throw new PipelineError('exa_content_failed', true);
     if (status.status === 'success') {
       if (status.error != null) throw new PipelineError('malformed_exa_response');
       continue;
@@ -70,7 +82,9 @@ export function parseExaContentsResponse(value: unknown, requestedURLs: string[]
   const failed = new Set(pageFailures.map(failure => failure.url));
   // A failed URL must never acquire page text even if an inconsistent response
   // also includes a result for it. Its original search evidence stays unchanged.
-  return { pages: parsed.data.results.filter(page => !failed.has(normalizeUrl(page.url)!)), pageFailures };
+  const pages = parsed.data.results.filter(page => !failed.has(normalizeUrl(page.url)!));
+  for (const page of pages) assertSuccessfulMetadata(page);
+  return { pages: pages.map(page => resultSchema.parse(page)), pageFailures };
 }
 
 export function normalizeUrl(value: string): string | null {

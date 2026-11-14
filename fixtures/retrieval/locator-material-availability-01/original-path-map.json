@@ -1,0 +1,2136 @@
+{
+  "kind": "exact_compact_locator_original_path_map",
+  "plannedInventorySHA256": "e007eeb4d00741c65f69298f3951b1503fe4195c015faf434c32c2cd8caeee45",
+  "sharedArchive": {
+    "repositoryRelativeRoot": "fixtures/retrieval/record-acquisition-feasibility-01",
+    "currentRoot": "/workspace/junction-2026/fixtures/retrieval/record-acquisition-feasibility-01",
+    "manifestSHA256": "ce456f11f46f8f56dd2decaaa2c037c9de894957bcf4e7a2cfb37954c8ef5a38",
+    "sourceMapSHA256": "f0e7b2536d0f5270a676e285f4bfe9c7ffbd6bee879f551622cac09df732c852",
+    "sourceMapDeclaredSHA256": "f0e7b2536d0f5270a676e285f4bfe9c7ffbd6bee879f551622cac09df732c852",
+    "portableContract": "Require explicit sibling shared-archive root. Verify its manifest/source-map and each encoded+decoded referenced blob; never dereference original workspace paths or infer compatibility by filename."
+  },
+  "files": [
+    {
+      "originalPath": "/workspace/junction-2026/node_modules/exa-js/dist/index.js",
+      "bytes": 147237,
+      "sha256": "03cf33dae9aee925a12812d540899eda66e44dd95067b635f3f0f030daa027ce",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/node_modules/exa-js/dist/index.js.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 26473,
+      "sharedEncodedSHA256": "7cb868eaddc30a1ebf917e029d332965c7bfa5226ec863c815601dc6a4d01382"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/node_modules/exa-js/dist/index.mjs",
+      "bytes": 142291,
+      "sha256": "bc4a6cb214c3a306578d444be147695a22e4aa07f8828c107d75d136f150cc5b",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/node_modules/exa-js/dist/index.mjs.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 25237,
+      "sharedEncodedSHA256": "9f6b94f2f37404163ace48bf4e102254e55b853aac7648e7bf1672369ba6b187"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/node_modules/exa-js/package.json",
+      "bytes": 2722,
+      "sha256": "b6cc9e534a20be91b2e1a91e01c6e06c9f4be526c9d4b134dbe79c927585641b",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/node_modules/exa-js/package.json",
+      "sharedEncoding": "identity",
+      "sharedEncodedBytes": 2722,
+      "sharedEncodedSHA256": "b6cc9e534a20be91b2e1a91e01c6e06c9f4be526c9d4b134dbe79c927585641b"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/package-lock.json",
+      "bytes": 149136,
+      "sha256": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/package-lock.json",
+      "sharedEncoding": "identity",
+      "sharedEncodedBytes": 149136,
+      "sharedEncodedSHA256": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/package.json",
+      "bytes": 1034,
+      "sha256": "f9a98677f10d181a6d85e6da9091e13fec69778ae356eb45b95df33d2cfa6939",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/package.json",
+      "sharedEncoding": "identity",
+      "sharedEncodedBytes": 1034,
+      "sharedEncodedSHA256": "f9a98677f10d181a6d85e6da9091e13fec69778ae356eb45b95df33d2cfa6939"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/packages/contracts/src/index.ts",
+      "bytes": 4891,
+      "sha256": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/packages/contracts/src/index.ts.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 1891,
+      "sharedEncodedSHA256": "abdf6f39d8e5b0f89dba33f6c18b90d0b01f2e4c60a3bdb51c31f1edef3d2f73"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/packages/contracts/src/wire.ts",
+      "bytes": 4191,
+      "sha256": "024ab8b2e899b4d705ee1b1b40ca89e549e0caa5dde9b498a7f1ad7c0c31aafd",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/packages/contracts/src/wire.ts.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 1483,
+      "sharedEncodedSHA256": "7828bd7abcb2a0a16bdf35991b6408cd8e2c35c3b1cb57c2839fd9477838613b"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/services/api/src/providers/exa/client.ts",
+      "bytes": 4026,
+      "sha256": "4176b72e4a7458dd32716ca46fa47eb791ba270f871ab4558dc0a5eff34a43c2",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/4176b72e4a7458dd32716ca46fa47eb791ba270f871ab4558dc0a5eff34a43c2.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 1514,
+      "encodedSHA256": "f2e52171976e131d1c041bd190dacf23459a31cc6e28d6fbc9ca941d27fe72a6",
+      "rawBytes": 4026
+    },
+    {
+      "originalPath": "/workspace/junction-2026/services/api/src/runtime/budget.ts",
+      "bytes": 2500,
+      "sha256": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/services/api/src/runtime/budget.ts.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 988,
+      "sharedEncodedSHA256": "f9c65547a8c65d948f8e69907424beefda4cf067f0ef4a49640badf051e97730"
+    },
+    {
+      "originalPath": "/workspace/junction-2026/services/api/src/runtime/provider-retry.ts",
+      "bytes": 3320,
+      "sha256": "ebb83ff0a5ce0bb469906ac4f86dead40f42fe6732939353aed11dd868b91e7f",
+      "groups": [
+        "executed-source-dependency"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "source-snapshot/services/api/src/runtime/provider-retry.ts.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 1325,
+      "sharedEncodedSHA256": "c1323772c7de9d82146b2c962f1b8499e5cbd030468f619ee72452c20395e0b7"
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/MANIFEST.json",
+      "bytes": 1771,
+      "sha256": "c3e09f92b3ba7ecf7731f1c86fccdf80da406ec65aaa00218a2f51a505ca8686",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c3e09f92b3ba7ecf7731f1c86fccdf80da406ec65aaa00218a2f51a505ca8686",
+      "encoding": "identity",
+      "encodedBytes": 1771,
+      "encodedSHA256": "c3e09f92b3ba7ecf7731f1c86fccdf80da406ec65aaa00218a2f51a505ca8686",
+      "rawBytes": 1771
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/README.md",
+      "bytes": 2848,
+      "sha256": "124cef653857c46ec695b8a91c649f3ef6c098b2a7cd3ede12b751b77d7ce070",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/124cef653857c46ec695b8a91c649f3ef6c098b2a7cd3ede12b751b77d7ce070",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "124cef653857c46ec695b8a91c649f3ef6c098b2a7cd3ede12b751b77d7ce070",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/ROUTING-PROPOSAL.md",
+      "bytes": 6434,
+      "sha256": "bcc974a7c97e78f94384d9e3eb7afcea368fea0253f59bc68482c7ee6bb34ebf",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/bcc974a7c97e78f94384d9e3eb7afcea368fea0253f59bc68482c7ee6bb34ebf",
+      "encoding": "identity",
+      "encodedBytes": 6434,
+      "encodedSHA256": "bcc974a7c97e78f94384d9e3eb7afcea368fea0253f59bc68482c7ee6bb34ebf",
+      "rawBytes": 6434
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/SHA256SUMS",
+      "bytes": 938,
+      "sha256": "c84fef28491d024e6caca9446fa96bd75f706ce937e62713a3513518601be2f6",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c84fef28491d024e6caca9446fa96bd75f706ce937e62713a3513518601be2f6",
+      "encoding": "identity",
+      "encodedBytes": 938,
+      "encodedSHA256": "c84fef28491d024e6caca9446fa96bd75f706ce937e62713a3513518601be2f6",
+      "rawBytes": 938
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/analysis.json",
+      "bytes": 2341,
+      "sha256": "f4d4e7e45a2554b996e8197fd5a3250dfe37c6bc6f4543a468ba7474fb796169",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/f4d4e7e45a2554b996e8197fd5a3250dfe37c6bc6f4543a468ba7474fb796169",
+      "encoding": "identity",
+      "encodedBytes": 2341,
+      "encodedSHA256": "f4d4e7e45a2554b996e8197fd5a3250dfe37c6bc6f4543a468ba7474fb796169",
+      "rawBytes": 2341
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/analyze.py",
+      "bytes": 9045,
+      "sha256": "17cab302104b5a3a895eb946dcf5e36dc03d4c05e3885f6379a2baaef68b304b",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/17cab302104b5a3a895eb946dcf5e36dc03d4c05e3885f6379a2baaef68b304b.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3399,
+      "encodedSHA256": "e737877063085773aa40e16c7dc4663c15f57059d2b2f4b4eeea2b43eaeff5a6",
+      "rawBytes": 9045
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/test_analysis.py",
+      "bytes": 6936,
+      "sha256": "da1cb024888067ee9bfebe105cfa0e07c2d9026bd54a0f9fa104da19107e24ff",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/da1cb024888067ee9bfebe105cfa0e07c2d9026bd54a0f9fa104da19107e24ff.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 2168,
+      "encodedSHA256": "07f0f0d2c6fe07376195b04f304219cabb24a3c595abf8894352b1fe0c76e72b",
+      "rawBytes": 6936
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/tests.log",
+      "bytes": 2020,
+      "sha256": "430e3ae9981bdbb083e81391d9ca4fbc1acb7333d16614ba5cfe3edee8e6d130",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/430e3ae9981bdbb083e81391d9ca4fbc1acb7333d16614ba5cfe3edee8e6d130",
+      "encoding": "identity",
+      "encodedBytes": 2020,
+      "encodedSHA256": "430e3ae9981bdbb083e81391d9ca4fbc1acb7333d16614ba5cfe3edee8e6d130",
+      "rawBytes": 2020
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-analysis-01/validation.json",
+      "bytes": 994,
+      "sha256": "596e76df6d2a380074d1c252954b5ed306e70495c73db12d4825adbd9ab1fdbd",
+      "groups": [
+        "offline-parser-analysis"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/596e76df6d2a380074d1c252954b5ed306e70495c73db12d4825adbd9ab1fdbd",
+      "encoding": "identity",
+      "encodedBytes": 994,
+      "encodedSHA256": "596e76df6d2a380074d1c252954b5ed306e70495c73db12d4825adbd9ab1fdbd",
+      "rawBytes": 994
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01-independent-ledger/MANIFEST.json",
+      "bytes": 282,
+      "sha256": "f6542ad02104e5bd253fc90600d4c18e1ab419f883547d273d112783dc047248",
+      "groups": [
+        "independent-live-ledger"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/f6542ad02104e5bd253fc90600d4c18e1ab419f883547d273d112783dc047248",
+      "encoding": "identity",
+      "encodedBytes": 282,
+      "encodedSHA256": "f6542ad02104e5bd253fc90600d4c18e1ab419f883547d273d112783dc047248",
+      "rawBytes": 282
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01-independent-ledger/audit-first.log",
+      "bytes": 302,
+      "sha256": "25fd5d6599e30ade255908c63917e2fc319f939a33ec8d717f3f5b2abde56d2b",
+      "groups": [
+        "independent-live-ledger"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/25fd5d6599e30ade255908c63917e2fc319f939a33ec8d717f3f5b2abde56d2b",
+      "encoding": "identity",
+      "encodedBytes": 302,
+      "encodedSHA256": "25fd5d6599e30ade255908c63917e2fc319f939a33ec8d717f3f5b2abde56d2b",
+      "rawBytes": 302
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01-independent-ledger/audit.py",
+      "bytes": 9500,
+      "sha256": "fc97c33513449affef480bd8c9363b13658910c548468bce50f94336cfc6e82b",
+      "groups": [
+        "independent-live-ledger"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/fc97c33513449affef480bd8c9363b13658910c548468bce50f94336cfc6e82b.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3445,
+      "encodedSHA256": "95ef1b3677d75afa8e9d1ddbe8ab0403b99d18000a4af41aa8fae1ed1c2c3373",
+      "rawBytes": 9500
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01-independent-ledger/review.json",
+      "bytes": 2394,
+      "sha256": "9848f90062676bf44f81b0b7ad0f15a3e71e1d963b5f92bd7d72de8af0c76e1e",
+      "groups": [
+        "independent-live-ledger"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/9848f90062676bf44f81b0b7ad0f15a3e71e1d963b5f92bd7d72de8af0c76e1e",
+      "encoding": "identity",
+      "encodedBytes": 2394,
+      "encodedSHA256": "9848f90062676bf44f81b0b7ad0f15a3e71e1d963b5f92bd7d72de8af0c76e1e",
+      "rawBytes": 2394
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01-root-authorization.json",
+      "bytes": 1440,
+      "sha256": "4e21b18baac206efe2ead2b6d4e187db6a783811ba32acf97451aa028dc276ac",
+      "groups": [
+        "exact-root-authorization"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/4e21b18baac206efe2ead2b6d4e187db6a783811ba32acf97451aa028dc276ac",
+      "encoding": "identity",
+      "encodedBytes": 1440,
+      "encodedSHA256": "4e21b18baac206efe2ead2b6d4e187db6a783811ba32acf97451aa028dc276ac",
+      "rawBytes": 1440
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/MANIFEST.json",
+      "bytes": 2428,
+      "sha256": "6df4a74e93fc6daf17ccdbc9da77a6c4dbf07cea496472814b803559b06a18ab",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/6df4a74e93fc6daf17ccdbc9da77a6c4dbf07cea496472814b803559b06a18ab",
+      "encoding": "identity",
+      "encodedBytes": 2428,
+      "encodedSHA256": "6df4a74e93fc6daf17ccdbc9da77a6c4dbf07cea496472814b803559b06a18ab",
+      "rawBytes": 2428
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/SHA256SUMS",
+      "bytes": 840,
+      "sha256": "f1ecbd08273547cb10d789383fbb16600e377c07e4753d7d56e4eb3ae70fd55f",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/f1ecbd08273547cb10d789383fbb16600e377c07e4753d7d56e4eb3ae70fd55f",
+      "encoding": "identity",
+      "encodedBytes": 840,
+      "encodedSHA256": "f1ecbd08273547cb10d789383fbb16600e377c07e4753d7d56e4eb3ae70fd55f",
+      "rawBytes": 840
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/checkpoint.json",
+      "bytes": 2849,
+      "sha256": "ee80527c4d8840928c6e3c7f5bae35190768e1ec406efe5b6585fca5c7d03f5e",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ee80527c4d8840928c6e3c7f5bae35190768e1ec406efe5b6585fca5c7d03f5e",
+      "encoding": "identity",
+      "encodedBytes": 2849,
+      "encodedSHA256": "ee80527c4d8840928c6e3c7f5bae35190768e1ec406efe5b6585fca5c7d03f5e",
+      "rawBytes": 2849
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/decoded/result-0-text.utf8",
+      "bytes": 6650,
+      "sha256": "c5ce3d9b15ac70e3c9ecc421c2f8ecbffcf67dfed5aa0d1b197ac0dda757f523",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c5ce3d9b15ac70e3c9ecc421c2f8ecbffcf67dfed5aa0d1b197ac0dda757f523",
+      "encoding": "identity",
+      "encodedBytes": 6650,
+      "encodedSHA256": "c5ce3d9b15ac70e3c9ecc421c2f8ecbffcf67dfed5aa0d1b197ac0dda757f523",
+      "rawBytes": 6650
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/journal.jsonl",
+      "bytes": 4412,
+      "sha256": "4ea544330e547d016a1cecc94b2873e160ac0290ba7a3f1830e03e4ca5bf2009",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/4ea544330e547d016a1cecc94b2873e160ac0290ba7a3f1830e03e4ca5bf2009",
+      "encoding": "identity",
+      "encodedBytes": 4412,
+      "encodedSHA256": "4ea544330e547d016a1cecc94b2873e160ac0290ba7a3f1830e03e4ca5bf2009",
+      "rawBytes": 4412
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/report.json",
+      "bytes": 4623,
+      "sha256": "30114d245a8eeaef3dea072eb3be6f3590d742c17d7abe897078da4a382f7aa1",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/30114d245a8eeaef3dea072eb3be6f3590d742c17d7abe897078da4a382f7aa1",
+      "encoding": "identity",
+      "encodedBytes": 4623,
+      "encodedSHA256": "30114d245a8eeaef3dea072eb3be6f3590d742c17d7abe897078da4a382f7aa1",
+      "rawBytes": 4623
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-availability-01/response.json",
+      "bytes": 7441,
+      "sha256": "645e813500a4f3bc6af2f78e8b9bed7586f852fa63aa2bbe244ce71e3369e551",
+      "groups": [
+        "sole-live-capture"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/645e813500a4f3bc6af2f78e8b9bed7586f852fa63aa2bbe244ce71e3369e551",
+      "encoding": "identity",
+      "encodedBytes": 7441,
+      "encodedSHA256": "645e813500a4f3bc6af2f78e8b9bed7586f852fa63aa2bbe244ce71e3369e551",
+      "rawBytes": 7441
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/MANIFEST.json",
+      "bytes": 40728,
+      "sha256": "84312c33d2993076bf3b13a34d04293fb41fe4b7a5fa7c64a1fd0a2984f49478",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/84312c33d2993076bf3b13a34d04293fb41fe4b7a5fa7c64a1fd0a2984f49478.gz",
+      "encoding": "gzip",
+      "encodedBytes": 7806,
+      "encodedSHA256": "d064ab8b06385cb5721212e9e295e7a9b39b6835f74429aa1374ea6e227712f9",
+      "rawBytes": 40728
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/README.md",
+      "bytes": 5797,
+      "sha256": "5293e57d313e7f9235f47aff70ae1527a524896daff9ffe941f1043ade7d6f46",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5293e57d313e7f9235f47aff70ae1527a524896daff9ffe941f1043ade7d6f46",
+      "encoding": "identity",
+      "encodedBytes": 5797,
+      "encodedSHA256": "5293e57d313e7f9235f47aff70ae1527a524896daff9ffe941f1043ade7d6f46",
+      "rawBytes": 5797
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/SHA256SUMS",
+      "bytes": 27041,
+      "sha256": "fc333590f918b169bbeed115b09859f3433b91215577beca14fa0bc7dd379404",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/fc333590f918b169bbeed115b09859f3433b91215577beca14fa0bc7dd379404.gz",
+      "encoding": "gzip",
+      "encodedBytes": 6875,
+      "encodedSHA256": "af49eb5b24a068071543b1962a8faa4f5704e7f33431aa6a898b4575ece1f459",
+      "rawBytes": 27041
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/offline-tests.tap",
+      "bytes": 5775,
+      "sha256": "e53613ba6d6d46e34c9fc0bb3ccc0c1102cb9675a4c5ed42f40c16db05e834c2",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e53613ba6d6d46e34c9fc0bb3ccc0c1102cb9675a4c5ed42f40c16db05e834c2",
+      "encoding": "identity",
+      "encodedBytes": 5775,
+      "encodedSHA256": "e53613ba6d6d46e34c9fc0bb3ccc0c1102cb9675a4c5ed42f40c16db05e834c2",
+      "rawBytes": 5775
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/plan-only-preview.json",
+      "bytes": 218,
+      "sha256": "e0f4b53e558f1fb6687e1615e933c1345e43ed88a893262aed24e042c10fdb5e",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e0f4b53e558f1fb6687e1615e933c1345e43ed88a893262aed24e042c10fdb5e",
+      "encoding": "identity",
+      "encodedBytes": 218,
+      "encodedSHA256": "e0f4b53e558f1fb6687e1615e933c1345e43ed88a893262aed24e042c10fdb5e",
+      "rawBytes": 218
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/plan.json",
+      "bytes": 4406,
+      "sha256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+      "encoding": "identity",
+      "encodedBytes": 4406,
+      "encodedSHA256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+      "rawBytes": 4406
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/preflight-result.json",
+      "bytes": 315,
+      "sha256": "b39ba5ae66e12a5f9855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/b39ba5ae66e12a5f9855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e",
+      "encoding": "identity",
+      "encodedBytes": 315,
+      "encodedSHA256": "b39ba5ae66e12a5f9855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e",
+      "rawBytes": 315
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/preflight.py",
+      "bytes": 1553,
+      "sha256": "833128329d1e00e3e0ff6ccdb2fa4a02bcd354bddd8badf235677f4535b7e2cd",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/833128329d1e00e3e0ff6ccdb2fa4a02bcd354bddd8badf235677f4535b7e2cd.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 872,
+      "encodedSHA256": "a7925e24697806b82813bd78dd9b5c118561beebceae1c9cacdde934e74080a6",
+      "rawBytes": 1553
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/prepared-only-checkpoint-fixture.json",
+      "bytes": 2735,
+      "sha256": "a309f061d0f39a52b8fdd56ae4ccd7c10c88008e96c2bc24ef9cf38bdccb0a90",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/a309f061d0f39a52b8fdd56ae4ccd7c10c88008e96c2bc24ef9cf38bdccb0a90",
+      "encoding": "identity",
+      "encodedBytes": 2735,
+      "encodedSHA256": "a309f061d0f39a52b8fdd56ae4ccd7c10c88008e96c2bc24ef9cf38bdccb0a90",
+      "rawBytes": 2735
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/runner.mts",
+      "bytes": 20688,
+      "sha256": "2c84d11024b1c246e9e3ca1b9e8dfd3c2b304e4db917e40bdbf88dc232b5cdb4",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/2c84d11024b1c246e9e3ca1b9e8dfd3c2b304e4db917e40bdbf88dc232b5cdb4.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 6544,
+      "encodedSHA256": "37d028f5276b1aa4fcc682bc1b4f318ec5a15e658788798976e973ce79a04658",
+      "rawBytes": 20688
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/runner.test.mts",
+      "bytes": 17042,
+      "sha256": "f779d69395d9da4ce1671fdfc423efce37d85f79c98f1ba0c7288553021c3c24",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/f779d69395d9da4ce1671fdfc423efce37d85f79c98f1ba0c7288553021c3c24.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 4300,
+      "encodedSHA256": "72ac879c74b6f81f3692652ff4cd1cc314a3798d286b832d20b0b9624606ef33",
+      "rawBytes": 17042
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/settled-result-fixture.json",
+      "bytes": 4622,
+      "sha256": "1d696e9cee4ae00dbed37a20547dbe587142eb838cedfbd4662caafa3941ca86",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/1d696e9cee4ae00dbed37a20547dbe587142eb838cedfbd4662caafa3941ca86",
+      "encoding": "identity",
+      "encodedBytes": 4622,
+      "encodedSHA256": "1d696e9cee4ae00dbed37a20547dbe587142eb838cedfbd4662caafa3941ca86",
+      "rawBytes": 4622
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/source-pins.json",
+      "bytes": 1993,
+      "sha256": "04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+      "encoding": "identity",
+      "encodedBytes": 1993,
+      "encodedSHA256": "04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+      "rawBytes": 1993
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/typecheck.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "collectors/01/typecheck.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 20,
+      "sharedEncodedSHA256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec"
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-01/validation.json",
+      "bytes": 964,
+      "sha256": "0066ff4564f088792e474cc2b3faaca6cbe8070f754cc09ac95714f24d84d916",
+      "groups": [
+        "preceding-runner01"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/0066ff4564f088792e474cc2b3faaca6cbe8070f754cc09ac95714f24d84d916",
+      "encoding": "identity",
+      "encodedBytes": 964,
+      "encodedSHA256": "0066ff4564f088792e474cc2b3faaca6cbe8070f754cc09ac95714f24d84d916",
+      "rawBytes": 964
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/MANIFEST.json",
+      "bytes": 47104,
+      "sha256": "8845f622affef00a097b6868e5e0a7cd73a8b4d1c2fa67a1aae6c8f2a397195b",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8845f622affef00a097b6868e5e0a7cd73a8b4d1c2fa67a1aae6c8f2a397195b.gz",
+      "encoding": "gzip",
+      "encodedBytes": 8829,
+      "encodedSHA256": "f809ad593c5d4499a55add2242503c2a3be7d0026335feec52847ddf337032d4",
+      "rawBytes": 47104
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/README.md",
+      "bytes": 2218,
+      "sha256": "27d5cb523d4ccc15801f6e6a3d04ed6eb1c1a986a7a3718e564c3b178f4a562c",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/27d5cb523d4ccc15801f6e6a3d04ed6eb1c1a986a7a3718e564c3b178f4a562c",
+      "encoding": "identity",
+      "encodedBytes": 2218,
+      "encodedSHA256": "27d5cb523d4ccc15801f6e6a3d04ed6eb1c1a986a7a3718e564c3b178f4a562c",
+      "rawBytes": 2218
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/SHA256SUMS",
+      "bytes": 31421,
+      "sha256": "ae098d0fe21978ede36204cf82ad8348d4ae08520052482b239495f21b98a0af",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ae098d0fe21978ede36204cf82ad8348d4ae08520052482b239495f21b98a0af.gz",
+      "encoding": "gzip",
+      "encodedBytes": 7891,
+      "encodedSHA256": "7e015daf331628eea1c43054301ae7c1196f91a229b136693427bc683471c31a",
+      "rawBytes": 31421
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/offline-tests.tap",
+      "bytes": 6055,
+      "sha256": "2a3773e4800987dfcedd2c548dfc0cc6b5aea2f676a17456af267411193ca3a8",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/2a3773e4800987dfcedd2c548dfc0cc6b5aea2f676a17456af267411193ca3a8",
+      "encoding": "identity",
+      "encodedBytes": 6055,
+      "encodedSHA256": "2a3773e4800987dfcedd2c548dfc0cc6b5aea2f676a17456af267411193ca3a8",
+      "rawBytes": 6055
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/plan-only-preview.json",
+      "bytes": 218,
+      "sha256": "9fa67feef0799ee6cc75df358e2bc521ab9d316fb371816f10845f04c9c8387c",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/9fa67feef0799ee6cc75df358e2bc521ab9d316fb371816f10845f04c9c8387c",
+      "encoding": "identity",
+      "encodedBytes": 218,
+      "encodedSHA256": "9fa67feef0799ee6cc75df358e2bc521ab9d316fb371816f10845f04c9c8387c",
+      "rawBytes": 218
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/plan.json",
+      "bytes": 4406,
+      "sha256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+      "encoding": "identity",
+      "encodedBytes": 4406,
+      "encodedSHA256": "521ac0ee9a84eaaede7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd",
+      "rawBytes": 4406
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/preflight-result.json",
+      "bytes": 315,
+      "sha256": "b39ba5ae66e12a5f9855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/b39ba5ae66e12a5f9855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e",
+      "encoding": "identity",
+      "encodedBytes": 315,
+      "encodedSHA256": "b39ba5ae66e12a5f9855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e",
+      "rawBytes": 315
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/preflight.py",
+      "bytes": 1553,
+      "sha256": "833128329d1e00e3e0ff6ccdb2fa4a02bcd354bddd8badf235677f4535b7e2cd",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/833128329d1e00e3e0ff6ccdb2fa4a02bcd354bddd8badf235677f4535b7e2cd.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 872,
+      "encodedSHA256": "a7925e24697806b82813bd78dd9b5c118561beebceae1c9cacdde934e74080a6",
+      "rawBytes": 1553
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/prepared-only-checkpoint-fixture.json",
+      "bytes": 2735,
+      "sha256": "c90749dd405182a71c8cb6f44cdb83655a2a7616766e622a96c3e5ddfab2a141",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c90749dd405182a71c8cb6f44cdb83655a2a7616766e622a96c3e5ddfab2a141",
+      "encoding": "identity",
+      "encodedBytes": 2735,
+      "encodedSHA256": "c90749dd405182a71c8cb6f44cdb83655a2a7616766e622a96c3e5ddfab2a141",
+      "rawBytes": 2735
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/runner.mts",
+      "bytes": 20853,
+      "sha256": "13f8d681fc58c75a6f5a86610581277e371404acd575075860f2983ddf9c37f8",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/13f8d681fc58c75a6f5a86610581277e371404acd575075860f2983ddf9c37f8.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 6558,
+      "encodedSHA256": "1ab3fea55fea34f09d49e3c6a383144361f77f7ee1df5cfe565e1623888bff2e",
+      "rawBytes": 20853
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/runner.test.mts",
+      "bytes": 17965,
+      "sha256": "481d39423709ce99d2948e628f125d6161dba675324912f0157d2f2ba6ade009",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/481d39423709ce99d2948e628f125d6161dba675324912f0157d2f2ba6ade009.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 4456,
+      "encodedSHA256": "7af5401acf2561ba62cc04b49dfd3c57a11058fa7ae04c9216b2fb43303c6e42",
+      "rawBytes": 17965
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/settled-result-fixture.json",
+      "bytes": 4622,
+      "sha256": "c47037879c467e93bb6d0f718d5266401038a4aba32b308a994a39ecad3f8c5b",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c47037879c467e93bb6d0f718d5266401038a4aba32b308a994a39ecad3f8c5b",
+      "encoding": "identity",
+      "encodedBytes": 4622,
+      "encodedSHA256": "c47037879c467e93bb6d0f718d5266401038a4aba32b308a994a39ecad3f8c5b",
+      "rawBytes": 4622
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/source-pins.json",
+      "bytes": 1993,
+      "sha256": "04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+      "encoding": "identity",
+      "encodedBytes": 1993,
+      "encodedSHA256": "04162621fa915dfca41c23117921912f77a4d291902a88614f4ddd6b321c1ec9",
+      "rawBytes": 1993
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/typecheck.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "existing-shared-archive-reference",
+      "sharedArchiveRelativePath": "collectors/01/typecheck.txt.gz",
+      "sharedEncoding": "gzip",
+      "sharedEncodedBytes": 20,
+      "sharedEncodedSHA256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec"
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-material-runner-02/validation.json",
+      "bytes": 846,
+      "sha256": "95317e66e6e0da0c39d62b9a7c7a1fda557d7574a0f962d32762605dd19572d8",
+      "groups": [
+        "executed-runner02"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/95317e66e6e0da0c39d62b9a7c7a1fda557d7574a0f962d32762605dd19572d8",
+      "encoding": "identity",
+      "encodedBytes": 846,
+      "encodedSHA256": "95317e66e6e0da0c39d62b9a7c7a1fda557d7574a0f962d32762605dd19572d8",
+      "rawBytes": 846
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-root-offline-review.json",
+      "bytes": 1308,
+      "sha256": "1eed6f274d9a0d1f17fda3fc7b9cd218749164d74468186b549f54acebcb47d6",
+      "groups": [
+        "root-parser-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/1eed6f274d9a0d1f17fda3fc7b9cd218749164d74468186b549f54acebcb47d6",
+      "encoding": "identity",
+      "encodedBytes": 1308,
+      "encodedSHA256": "1eed6f274d9a0d1f17fda3fc7b9cd218749164d74468186b549f54acebcb47d6",
+      "rawBytes": 1308
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-root-review-tests.log",
+      "bytes": 3413,
+      "sha256": "ea31262810d189c7afc4fc0fbac4520249a78bbdc6312b3d3339ca39372b3118",
+      "groups": [
+        "root-parser-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ea31262810d189c7afc4fc0fbac4520249a78bbdc6312b3d3339ca39372b3118",
+      "encoding": "identity",
+      "encodedBytes": 3413,
+      "encodedSHA256": "ea31262810d189c7afc4fc0fbac4520249a78bbdc6312b3d3339ca39372b3118",
+      "rawBytes": 3413
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/BEFORE-MANIFEST.json",
+      "bytes": 11167,
+      "sha256": "81d9b3fbe1343ed5f467be2fdf1441ac5e941aa12c23029cd29480933f122e56",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/81d9b3fbe1343ed5f467be2fdf1441ac5e941aa12c23029cd29480933f122e56.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3780,
+      "encodedSHA256": "6d922fa7d4abf47e980d1d5638d48fd12b687f4f1f45650cf2ea04b225e9636a",
+      "rawBytes": 11167
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/crash-child.mts",
+      "bytes": 519,
+      "sha256": "f75bb5df0038c8a386a89da0dc35c65a49040169f6d3915af28b0ac082731390",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/f75bb5df0038c8a386a89da0dc35c65a49040169f6d3915af28b0ac082731390.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 362,
+      "encodedSHA256": "95ef9a7e8d23bf43fbfe97e9e863a668ccf74af3805dabf6dc8ed07a61e981f4",
+      "rawBytes": 519
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/crash-process.json",
+      "bytes": 52,
+      "sha256": "ab066e7a9c670e6a3cb4913c4d7100cf70269a0f067ce928e210304331ec4563",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ab066e7a9c670e6a3cb4913c4d7100cf70269a0f067ce928e210304331ec4563",
+      "encoding": "identity",
+      "encodedBytes": 52,
+      "encodedSHA256": "ab066e7a9c670e6a3cb4913c4d7100cf70269a0f067ce928e210304331ec4563",
+      "rawBytes": 52
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/freeze-before.json",
+      "bytes": 399,
+      "sha256": "e9c61aa8910b98aa5a5d319071159eb7441b0d6ce4fb3acd4a0dc2278d3aec4d",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e9c61aa8910b98aa5a5d319071159eb7441b0d6ce4fb3acd4a0dc2278d3aec4d",
+      "encoding": "identity",
+      "encodedBytes": 399,
+      "encodedSHA256": "e9c61aa8910b98aa5a5d319071159eb7441b0d6ce4fb3acd4a0dc2278d3aec4d",
+      "rawBytes": 399
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/hold-review.json",
+      "bytes": 2691,
+      "sha256": "3107267a3048f3b457e5b8b4de565b91d6dd6164e36b733745a8c776dd53eac5",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/3107267a3048f3b457e5b8b4de565b91d6dd6164e36b733745a8c776dd53eac5",
+      "encoding": "identity",
+      "encodedBytes": 2691,
+      "encodedSHA256": "3107267a3048f3b457e5b8b4de565b91d6dd6164e36b733745a8c776dd53eac5",
+      "rawBytes": 2691
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/crash/checkpoint.json",
+      "bytes": 2735,
+      "sha256": "d56d5c71440d4b3346450e8f6c235b1e99f8b40b70931db0804eb53e9a80e4ce",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/d56d5c71440d4b3346450e8f6c235b1e99f8b40b70931db0804eb53e9a80e4ce",
+      "encoding": "identity",
+      "encodedBytes": 2735,
+      "encodedSHA256": "d56d5c71440d4b3346450e8f6c235b1e99f8b40b70931db0804eb53e9a80e4ce",
+      "rawBytes": 2735
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/crash/journal.jsonl",
+      "bytes": 1986,
+      "sha256": "c51f004ea6ed700b631ec32aa6d72c687b17da9c85b82cf87509e345b37cc4b7",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c51f004ea6ed700b631ec32aa6d72c687b17da9c85b82cf87509e345b37cc4b7",
+      "encoding": "identity",
+      "encodedBytes": 1986,
+      "encodedSHA256": "c51f004ea6ed700b631ec32aa6d72c687b17da9c85b82cf87509e345b37cc4b7",
+      "rawBytes": 1986
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/crash/mock-http-invoked.txt",
+      "bytes": 48,
+      "sha256": "83cae34c28a3ddf33296f9f4c39919d3958dff6fce9f7a88bba3e7fe0f9a2738",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/83cae34c28a3ddf33296f9f4c39919d3958dff6fce9f7a88bba3e7fe0f9a2738",
+      "encoding": "identity",
+      "encodedBytes": 48,
+      "encodedSHA256": "83cae34c28a3ddf33296f9f4c39919d3958dff6fce9f7a88bba3e7fe0f9a2738",
+      "rawBytes": 48
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/crash/report.json",
+      "bytes": 2696,
+      "sha256": "1262c429d1b1a5f82d730cc49c13f0dbfbfd1d7ac5a550cce82981e6e1182948",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/1262c429d1b1a5f82d730cc49c13f0dbfbfd1d7ac5a550cce82981e6e1182948",
+      "encoding": "identity",
+      "encodedBytes": 2696,
+      "encodedSHA256": "1262c429d1b1a5f82d730cc49c13f0dbfbfd1d7ac5a550cce82981e6e1182948",
+      "rawBytes": 2696
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/crash/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/root_status_error/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "5ee11fc5eef2edcfc6fd6c1da3f2bdfa37e25d503a9ebb7ec5d3a13977b83c69",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5ee11fc5eef2edcfc6fd6c1da3f2bdfa37e25d503a9ebb7ec5d3a13977b83c69",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "5ee11fc5eef2edcfc6fd6c1da3f2bdfa37e25d503a9ebb7ec5d3a13977b83c69",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/root_status_error/decoded/result-0-text.utf8",
+      "bytes": 55,
+      "sha256": "1ecbb5a5d5e10af0d41c58d63cb4898e0b5be983e0a430bcea6ed476e612370e",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/1ecbb5a5d5e10af0d41c58d63cb4898e0b5be983e0a430bcea6ed476e612370e",
+      "encoding": "identity",
+      "encodedBytes": 55,
+      "encodedSHA256": "1ecbb5a5d5e10af0d41c58d63cb4898e0b5be983e0a430bcea6ed476e612370e",
+      "rawBytes": 55
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/root_status_error/journal.jsonl",
+      "bytes": 4406,
+      "sha256": "e10e8590e41533691709c7f0aac89258a734c87a88eb16bd9164a377641e7e10",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e10e8590e41533691709c7f0aac89258a734c87a88eb16bd9164a377641e7e10",
+      "encoding": "identity",
+      "encodedBytes": 4406,
+      "encodedSHA256": "e10e8590e41533691709c7f0aac89258a734c87a88eb16bd9164a377641e7e10",
+      "rawBytes": 4406
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/root_status_error/report.json",
+      "bytes": 4619,
+      "sha256": "a28a8bcd7ef58c06cb9a85263674aa60a6fe3971e169b026ae9a06b2231583db",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/a28a8bcd7ef58c06cb9a85263674aa60a6fe3971e169b026ae9a06b2231583db",
+      "encoding": "identity",
+      "encodedBytes": 4619,
+      "encodedSHA256": "a28a8bcd7ef58c06cb9a85263674aa60a6fe3971e169b026ae9a06b2231583db",
+      "rawBytes": 4619
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/root_status_error/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/outputs/root_status_error/response.json",
+      "bytes": 344,
+      "sha256": "5747d80cbe2cf924d53b49fc70658621a5dd8004a4199e2eb120a76499faac4f",
+      "groups": [
+        "necessary-initial-failure-or-crash-output"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5747d80cbe2cf924d53b49fc70658621a5dd8004a4199e2eb120a76499faac4f",
+      "encoding": "identity",
+      "encodedBytes": 344,
+      "encodedSHA256": "5747d80cbe2cf924d53b49fc70658621a5dd8004a4199e2eb120a76499faac4f",
+      "rawBytes": 344
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/owned-pin.txt",
+      "bytes": 7,
+      "sha256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+      "encoding": "identity",
+      "encodedBytes": 7,
+      "encodedSHA256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+      "rawBytes": 7
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/owned-plan.json",
+      "bytes": 3816,
+      "sha256": "2efba3d4899ad01054f850f5e8281dbfe7de6ad4f4bfbebcf2370d7ae5963cdb",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/2efba3d4899ad01054f850f5e8281dbfe7de6ad4f4bfbebcf2370d7ae5963cdb",
+      "encoding": "identity",
+      "encodedBytes": 3816,
+      "encodedSHA256": "2efba3d4899ad01054f850f5e8281dbfe7de6ad4f4bfbebcf2370d7ae5963cdb",
+      "rawBytes": 3816
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/package.json",
+      "bytes": 33,
+      "sha256": "89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "encoding": "identity",
+      "encodedBytes": 33,
+      "encodedSHA256": "89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "rawBytes": 33
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/MANIFEST.json",
+      "bytes": 3948,
+      "sha256": "ed42235977da109bb1dea52740bbefb285678329e4033e718dfcd100c1585559",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ed42235977da109bb1dea52740bbefb285678329e4033e718dfcd100c1585559",
+      "encoding": "identity",
+      "encodedBytes": 3948,
+      "encodedSHA256": "ed42235977da109bb1dea52740bbefb285678329e4033e718dfcd100c1585559",
+      "rawBytes": 3948
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/final-review.json",
+      "bytes": 3958,
+      "sha256": "4ea7273a107e4c81e5b9e7101ce32c4e14055d88607099ca6feec6fe3a822899",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/4ea7273a107e4c81e5b9e7101ce32c4e14055d88607099ca6feec6fe3a822899",
+      "encoding": "identity",
+      "encodedBytes": 3958,
+      "encodedSHA256": "4ea7273a107e4c81e5b9e7101ce32c4e14055d88607099ca6feec6fe3a822899",
+      "rawBytes": 3958
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/freeze-pins.json",
+      "bytes": 456,
+      "sha256": "e7e9f3cd43143e6491f4d4ea9ab64f97a5d232955eed7a46ba5e2f9217ee0381",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e7e9f3cd43143e6491f4d4ea9ab64f97a5d232955eed7a46ba5e2f9217ee0381",
+      "encoding": "identity",
+      "encodedBytes": 456,
+      "encodedSHA256": "e7e9f3cd43143e6491f4d4ea9ab64f97a5d232955eed7a46ba5e2f9217ee0381",
+      "rawBytes": 456
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/absent/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "5aba5592137f84449c07fd66838fa45dfe325d919be9f677f3bd874a41d91a78",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5aba5592137f84449c07fd66838fa45dfe325d919be9f677f3bd874a41d91a78",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "5aba5592137f84449c07fd66838fa45dfe325d919be9f677f3bd874a41d91a78",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/absent/decoded/result-0-text.utf8",
+      "bytes": 20,
+      "sha256": "ce7a61ad0e75f372f291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ce7a61ad0e75f372f291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f",
+      "encoding": "identity",
+      "encodedBytes": 20,
+      "encodedSHA256": "ce7a61ad0e75f372f291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f",
+      "rawBytes": 20
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/absent/journal.jsonl",
+      "bytes": 4406,
+      "sha256": "0a277d7eca679895afc7a5d84cf8f32ef5d1e7cb381e46ecc0d9f7d15173dcb1",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/0a277d7eca679895afc7a5d84cf8f32ef5d1e7cb381e46ecc0d9f7d15173dcb1",
+      "encoding": "identity",
+      "encodedBytes": 4406,
+      "encodedSHA256": "0a277d7eca679895afc7a5d84cf8f32ef5d1e7cb381e46ecc0d9f7d15173dcb1",
+      "rawBytes": 4406
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/absent/report.json",
+      "bytes": 4619,
+      "sha256": "337f78ef675fcc74a9f9a7034ed1532127042c1210b39c66027ca9dcb9def1fc",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/337f78ef675fcc74a9f9a7034ed1532127042c1210b39c66027ca9dcb9def1fc",
+      "encoding": "identity",
+      "encodedBytes": 4619,
+      "encodedSHA256": "337f78ef675fcc74a9f9a7034ed1532127042c1210b39c66027ca9dcb9def1fc",
+      "rawBytes": 4619
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/absent/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/absent/response.json",
+      "bytes": 290,
+      "sha256": "282311a934d6478c1f5886734d930a4587520a876bdfcd131411a423990ca3f8",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/282311a934d6478c1f5886734d930a4587520a876bdfcd131411a423990ca3f8",
+      "encoding": "identity",
+      "encodedBytes": 290,
+      "encodedSHA256": "282311a934d6478c1f5886734d930a4587520a876bdfcd131411a423990ca3f8",
+      "rawBytes": 290
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/array_success/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "a06022f85a7700df02a3255a360143ca5476b9cbf08a66d4956f510a03f8b8de",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/a06022f85a7700df02a3255a360143ca5476b9cbf08a66d4956f510a03f8b8de",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "a06022f85a7700df02a3255a360143ca5476b9cbf08a66d4956f510a03f8b8de",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/array_success/journal.jsonl",
+      "bytes": 4403,
+      "sha256": "d314cf35b5ea923781cd6f58d2c6d02c78a31524d8e2b233cafd17a1df54843d",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/d314cf35b5ea923781cd6f58d2c6d02c78a31524d8e2b233cafd17a1df54843d",
+      "encoding": "identity",
+      "encodedBytes": 4403,
+      "encodedSHA256": "d314cf35b5ea923781cd6f58d2c6d02c78a31524d8e2b233cafd17a1df54843d",
+      "rawBytes": 4403
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/array_success/report.json",
+      "bytes": 3379,
+      "sha256": "8b13951266d160edb62955466e548264db0167a6593b05c6747a10de1d0a63b9",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8b13951266d160edb62955466e548264db0167a6593b05c6747a10de1d0a63b9",
+      "encoding": "identity",
+      "encodedBytes": 3379,
+      "encodedSHA256": "8b13951266d160edb62955466e548264db0167a6593b05c6747a10de1d0a63b9",
+      "rawBytes": 3379
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/array_success/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/array_success/response.json",
+      "bytes": 311,
+      "sha256": "908276feaa5728b7da6838bb14474977af89ad330ad18ffb97186a3d5d02b0e4",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/908276feaa5728b7da6838bb14474977af89ad330ad18ffb97186a3d5d02b0e4",
+      "encoding": "identity",
+      "encodedBytes": 311,
+      "encodedSHA256": "908276feaa5728b7da6838bb14474977af89ad330ad18ffb97186a3d5d02b0e4",
+      "rawBytes": 311
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_error/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "3d5dd2451038f19eefee241caa9a8e79bc44ef394bb12414b084df5e2c40b030",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/3d5dd2451038f19eefee241caa9a8e79bc44ef394bb12414b084df5e2c40b030",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "3d5dd2451038f19eefee241caa9a8e79bc44ef394bb12414b084df5e2c40b030",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_error/journal.jsonl",
+      "bytes": 4403,
+      "sha256": "a977a111286241619e99f21ec42acde002c23168768286b63098c388dc5d94d1",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/a977a111286241619e99f21ec42acde002c23168768286b63098c388dc5d94d1",
+      "encoding": "identity",
+      "encodedBytes": 4403,
+      "encodedSHA256": "a977a111286241619e99f21ec42acde002c23168768286b63098c388dc5d94d1",
+      "rawBytes": 4403
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_error/report.json",
+      "bytes": 3379,
+      "sha256": "251ecdfa026cc227dc41158f0a74d20b6c68e4a61397510c2d95e830f57efef6",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/251ecdfa026cc227dc41158f0a74d20b6c68e4a61397510c2d95e830f57efef6",
+      "encoding": "identity",
+      "encodedBytes": 3379,
+      "encodedSHA256": "251ecdfa026cc227dc41158f0a74d20b6c68e4a61397510c2d95e830f57efef6",
+      "rawBytes": 3379
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_error/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_error/response.json",
+      "bytes": 307,
+      "sha256": "cbad6e234de48dfea41028cf9362ba55acab995373149704deb8ed7f22df7e9e",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/cbad6e234de48dfea41028cf9362ba55acab995373149704deb8ed7f22df7e9e",
+      "encoding": "identity",
+      "encodedBytes": 307,
+      "encodedSHA256": "cbad6e234de48dfea41028cf9362ba55acab995373149704deb8ed7f22df7e9e",
+      "rawBytes": 307
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_success/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "331f6b02a290ea31a7ba62285b1f839eb68ba87858e388de4f2d96520ac89de9",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/331f6b02a290ea31a7ba62285b1f839eb68ba87858e388de4f2d96520ac89de9",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "331f6b02a290ea31a7ba62285b1f839eb68ba87858e388de4f2d96520ac89de9",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_success/decoded/result-0-text.utf8",
+      "bytes": 20,
+      "sha256": "ce7a61ad0e75f372f291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/ce7a61ad0e75f372f291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f",
+      "encoding": "identity",
+      "encodedBytes": 20,
+      "encodedSHA256": "ce7a61ad0e75f372f291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f",
+      "rawBytes": 20
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_success/journal.jsonl",
+      "bytes": 4406,
+      "sha256": "608712a807b284178e2a2c5f1f6714e6fe73853df205af9d628bdf9fe8fc95b0",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/608712a807b284178e2a2c5f1f6714e6fe73853df205af9d628bdf9fe8fc95b0",
+      "encoding": "identity",
+      "encodedBytes": 4406,
+      "encodedSHA256": "608712a807b284178e2a2c5f1f6714e6fe73853df205af9d628bdf9fe8fc95b0",
+      "rawBytes": 4406
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_success/report.json",
+      "bytes": 4619,
+      "sha256": "c0247941da1864c3eb67ff3e159aefbffe20b3cdc9a0a756a3ceb8cd5c67d278",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c0247941da1864c3eb67ff3e159aefbffe20b3cdc9a0a756a3ceb8cd5c67d278",
+      "encoding": "identity",
+      "encodedBytes": 4619,
+      "encodedSHA256": "c0247941da1864c3eb67ff3e159aefbffe20b3cdc9a0a756a3ceb8cd5c67d278",
+      "rawBytes": 4619
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_success/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/explicit_success/response.json",
+      "bytes": 309,
+      "sha256": "b6997bb3ca5353ac90084861d11fbf13ae6034ae9c752bf2935391995165803b",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/b6997bb3ca5353ac90084861d11fbf13ae6034ae9c752bf2935391995165803b",
+      "encoding": "identity",
+      "encodedBytes": 309,
+      "encodedSHA256": "b6997bb3ca5353ac90084861d11fbf13ae6034ae9c752bf2935391995165803b",
+      "rawBytes": 309
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/null/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "32b3f4af252be9bc504bae3449787a0baefd262c661413a37e35fcb3fff619fc",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/32b3f4af252be9bc504bae3449787a0baefd262c661413a37e35fcb3fff619fc",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "32b3f4af252be9bc504bae3449787a0baefd262c661413a37e35fcb3fff619fc",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/null/journal.jsonl",
+      "bytes": 4403,
+      "sha256": "74f09fec8ae732e0ec3abe1d995b2566d243960a31542ab072dd773e0067e2fb",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/74f09fec8ae732e0ec3abe1d995b2566d243960a31542ab072dd773e0067e2fb",
+      "encoding": "identity",
+      "encodedBytes": 4403,
+      "encodedSHA256": "74f09fec8ae732e0ec3abe1d995b2566d243960a31542ab072dd773e0067e2fb",
+      "rawBytes": 4403
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/null/report.json",
+      "bytes": 3379,
+      "sha256": "5fb43d30e29013c740129b924bd0adb8b3863f8c3dde72a2b3fa31f2a47e6e37",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5fb43d30e29013c740129b924bd0adb8b3863f8c3dde72a2b3fa31f2a47e6e37",
+      "encoding": "identity",
+      "encodedBytes": 3379,
+      "encodedSHA256": "5fb43d30e29013c740129b924bd0adb8b3863f8c3dde72a2b3fa31f2a47e6e37",
+      "rawBytes": 3379
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/null/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/null/response.json",
+      "bytes": 304,
+      "sha256": "aca9e6fd954c553aed6de356cebaf2330f2d65672afe1165dd86d7aebaa291e4",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/aca9e6fd954c553aed6de356cebaf2330f2d65672afe1165dd86d7aebaa291e4",
+      "encoding": "identity",
+      "encodedBytes": 304,
+      "encodedSHA256": "aca9e6fd954c553aed6de356cebaf2330f2d65672afe1165dd86d7aebaa291e4",
+      "rawBytes": 304
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/numeric/checkpoint.json",
+      "bytes": 2848,
+      "sha256": "6d1ac78efbad626c2fb13d3b949c4351d4de8ff0b7d2e18d93c5cf5e4448ff48",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/6d1ac78efbad626c2fb13d3b949c4351d4de8ff0b7d2e18d93c5cf5e4448ff48",
+      "encoding": "identity",
+      "encodedBytes": 2848,
+      "encodedSHA256": "6d1ac78efbad626c2fb13d3b949c4351d4de8ff0b7d2e18d93c5cf5e4448ff48",
+      "rawBytes": 2848
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/numeric/journal.jsonl",
+      "bytes": 4403,
+      "sha256": "d0dc7f98eb8174ee1890e7be3ede7cad62159993fedb05cba5051d46f27a955a",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/d0dc7f98eb8174ee1890e7be3ede7cad62159993fedb05cba5051d46f27a955a",
+      "encoding": "identity",
+      "encodedBytes": 4403,
+      "encodedSHA256": "d0dc7f98eb8174ee1890e7be3ede7cad62159993fedb05cba5051d46f27a955a",
+      "rawBytes": 4403
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/numeric/report.json",
+      "bytes": 3379,
+      "sha256": "5e0d0c6510cc57b27e54ab23b017e1c497680501564375944f0102495561b0f4",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5e0d0c6510cc57b27e54ab23b017e1c497680501564375944f0102495561b0f4",
+      "encoding": "identity",
+      "encodedBytes": 3379,
+      "encodedSHA256": "5e0d0c6510cc57b27e54ab23b017e1c497680501564375944f0102495561b0f4",
+      "rawBytes": 3379
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/numeric/request.json",
+      "bytes": 176,
+      "sha256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "encoding": "identity",
+      "encodedBytes": 176,
+      "encodedSHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd",
+      "rawBytes": 176
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/outputs/numeric/response.json",
+      "bytes": 303,
+      "sha256": "2d729b7f4357d4737b3c20af60ef997a9b53793f902561e393816ec0cc543408",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/2d729b7f4357d4737b3c20af60ef997a9b53793f902561e393816ec0cc543408",
+      "encoding": "identity",
+      "encodedBytes": 303,
+      "encodedSHA256": "2d729b7f4357d4737b3c20af60ef997a9b53793f902561e393816ec0cc543408",
+      "rawBytes": 303
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/package.json",
+      "bytes": 33,
+      "sha256": "89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "encoding": "identity",
+      "encodedBytes": 33,
+      "encodedSHA256": "89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "rawBytes": 33
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/status.log",
+      "bytes": 591,
+      "sha256": "abaa0ba4310f0a549ef77d7256a1d88f26df3d5abefc74d0ff472aa285dc0bd8",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/abaa0ba4310f0a549ef77d7256a1d88f26df3d5abefc74d0ff472aa285dc0bd8",
+      "encoding": "identity",
+      "encodedBytes": 591,
+      "encodedSHA256": "abaa0ba4310f0a549ef77d7256a1d88f26df3d5abefc74d0ff472aa285dc0bd8",
+      "rawBytes": 591
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/replay-v2/status.test.mts",
+      "bytes": 2280,
+      "sha256": "e423cc59de5dc87d73f1a6799eea75b793a895e433debfe9d0410b31364092e2",
+      "groups": [
+        "corrected-independent-review"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e423cc59de5dc87d73f1a6799eea75b793a895e433debfe9d0410b31364092e2.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 1087,
+      "encodedSHA256": "baa5f533916a26877af50fa7bb417580365afc2e8b47c640f39852f84ac40fae",
+      "rawBytes": 2280
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/review-checklist.md",
+      "bytes": 1785,
+      "sha256": "a1c5cf09fdd4f604fdb22d93b832f0cb74a2a86999d7e64befcd03a7c505e9de",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/a1c5cf09fdd4f604fdb22d93b832f0cb74a2a86999d7e64befcd03a7c505e9de",
+      "encoding": "identity",
+      "encodedBytes": 1785,
+      "encodedSHA256": "a1c5cf09fdd4f604fdb22d93b832f0cb74a2a86999d7e64befcd03a7c505e9de",
+      "rawBytes": 1785
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/runtime-first.log",
+      "bytes": 2858,
+      "sha256": "c27b546e7dbda2419189543305fdb65f1e5d0b764368637060b83e399eeb29ee",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c27b546e7dbda2419189543305fdb65f1e5d0b764368637060b83e399eeb29ee.gz",
+      "encoding": "gzip",
+      "encodedBytes": 1270,
+      "encodedSHA256": "7890277dc601f4e554250f6195f5623395ac4d49542214b89585fb20b4c66b12",
+      "rawBytes": 2858,
+      "plannedPayloadBeforeWhitespaceEncoding": "payload/c27b546e7dbda2419189543305fdb65f1e5d0b764368637060b83e399eeb29ee",
+      "archiveEncodingAdjustment": "Lossless deterministic gzip of original failed-review log with significant trailing spaces; decoded bytes unchanged."
+    },
+    {
+      "originalPath": "/workspace/task-evidence/locator-runner-independent-review/runtime.test.mts",
+      "bytes": 11599,
+      "sha256": "61d72e2c1e399d2bb84b7558ef73df0ce62bd4365ee6228324bc5b94310ef305",
+      "groups": [
+        "initial-independent-hold"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/61d72e2c1e399d2bb84b7558ef73df0ce62bd4365ee6228324bc5b94310ef305.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3709,
+      "encodedSHA256": "44f10b4dc965c375e254579ca9c03eccd5a44934db323911e58c8d7b5137e6df",
+      "rawBytes": 11599
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/MANIFEST.json",
+      "bytes": 5020,
+      "sha256": "944e0c2abffe31527df466f34acf65350b4148bc8e4271548869ce6d0f42dee8",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/944e0c2abffe31527df466f34acf65350b4148bc8e4271548869ce6d0f42dee8",
+      "encoding": "identity",
+      "encodedBytes": 5020,
+      "encodedSHA256": "944e0c2abffe31527df466f34acf65350b4148bc8e4271548869ce6d0f42dee8",
+      "rawBytes": 5020
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/README.md",
+      "bytes": 6600,
+      "sha256": "fff613c12ac055b424e51fff57b80109c61d00665679afe50f9a02ad3cda0758",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/fff613c12ac055b424e51fff57b80109c61d00665679afe50f9a02ad3cda0758",
+      "encoding": "identity",
+      "encodedBytes": 6600,
+      "encodedSHA256": "fff613c12ac055b424e51fff57b80109c61d00665679afe50f9a02ad3cda0758",
+      "rawBytes": 6600
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/controls.json",
+      "bytes": 5318,
+      "sha256": "6c4e010bc8bd2e576aca067ea5e266dc1e8f661569b3e90aabad7cd10dd5e8ca",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/6c4e010bc8bd2e576aca067ea5e266dc1e8f661569b3e90aabad7cd10dd5e8ca",
+      "encoding": "identity",
+      "encodedBytes": 5318,
+      "encodedSHA256": "6c4e010bc8bd2e576aca067ea5e266dc1e8f661569b3e90aabad7cd10dd5e8ca",
+      "rawBytes": 5318
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/fixtures/rfc-info.body.html.gz",
+      "bytes": 26687,
+      "sha256": "c2619b46fa46069fce5142ac21fbefed232a1a6e6a446c2dcd89898040953f8d",
+      "groups": [
+        "dated-historical-origin-contrast"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/c2619b46fa46069fce5142ac21fbefed232a1a6e6a446c2dcd89898040953f8d.gz",
+      "encoding": "gzip",
+      "encodedBytes": 26647,
+      "encodedSHA256": "9e23d48048371f0f2834e7d089a2570ee8b39ce26ab68acb8df0d3cc7683d90f",
+      "rawBytes": 26687
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/fixtures/rfc-info.origin.json",
+      "bytes": 1067,
+      "sha256": "e1f860dc3876f6f56316ddcf05b097405d3ca7dcdc5ea662e0497c96ecd3864c",
+      "groups": [
+        "dated-historical-origin-contrast"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/e1f860dc3876f6f56316ddcf05b097405d3ca7dcdc5ea662e0497c96ecd3864c",
+      "encoding": "identity",
+      "encodedBytes": 1067,
+      "encodedSHA256": "e1f860dc3876f6f56316ddcf05b097405d3ca7dcdc5ea662e0497c96ecd3864c",
+      "rawBytes": 1067
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/history/initial-locator.py",
+      "bytes": 10744,
+      "sha256": "3f311bf571e992a78ca4cc54c2ab232d3d811379348d41e7e63427c81268f569",
+      "groups": [
+        "parser-review-history"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/3f311bf571e992a78ca4cc54c2ab232d3d811379348d41e7e63427c81268f569.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3600,
+      "encodedSHA256": "1f44c5e0c0e84861a7a69b656879b62376306a000dff38b12a0148af5113090f",
+      "rawBytes": 10744
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/history/initial-tests.log",
+      "bytes": 59706,
+      "sha256": "7d2746a0ca6a7572e35e1b0a69d4d0d0f06f2507a4ff364cf552ff08e95774c0",
+      "groups": [
+        "parser-review-history"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/7d2746a0ca6a7572e35e1b0a69d4d0d0f06f2507a4ff364cf552ff08e95774c0.gz",
+      "encoding": "gzip",
+      "encodedBytes": 2728,
+      "encodedSHA256": "ae7343549eed6673e62d58cd62b831c0ea861f6e3da406e0ac6b0463718edbb9",
+      "rawBytes": 59706
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/history/pre-review-19tests-locator.py",
+      "bytes": 11241,
+      "sha256": "389bb92a9ba78fa720874b81012242f992c0c20cdacf7da70b5204a8a19b5318",
+      "groups": [
+        "parser-review-history"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/389bb92a9ba78fa720874b81012242f992c0c20cdacf7da70b5204a8a19b5318.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3714,
+      "encodedSHA256": "d4a1bf1ddfba538a8cc250d040ff0e77c73c950cabaf648f85eac4cf4aea8687",
+      "rawBytes": 11241
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/history/pre-review-19tests.log",
+      "bytes": 2914,
+      "sha256": "334cbfbc43d113586855ebe2eec79bab76a66229c7bf603127ec06e941df2cf7",
+      "groups": [
+        "parser-review-history"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/334cbfbc43d113586855ebe2eec79bab76a66229c7bf603127ec06e941df2cf7",
+      "encoding": "identity",
+      "encodedBytes": 2914,
+      "encodedSHA256": "334cbfbc43d113586855ebe2eec79bab76a66229c7bf603127ec06e941df2cf7",
+      "rawBytes": 2914
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/inputs.json",
+      "bytes": 3579,
+      "sha256": "b41b42b758a6fd3a305a12294488ed92b8e8f93215258444bbeb5130984740ab",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/b41b42b758a6fd3a305a12294488ed92b8e8f93215258444bbeb5130984740ab",
+      "encoding": "identity",
+      "encodedBytes": 3579,
+      "encodedSHA256": "b41b42b758a6fd3a305a12294488ed92b8e8f93215258444bbeb5130984740ab",
+      "rawBytes": 3579
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/locator.py",
+      "bytes": 12577,
+      "sha256": "3df895fb2c6de27726e91ce5b91399dbbb0ecfb88dca5ab9111e981966cc65d5",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/3df895fb2c6de27726e91ce5b91399dbbb0ecfb88dca5ab9111e981966cc65d5.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 4112,
+      "encodedSHA256": "bafffea0c432bd5524c7c829de036cdb24ca5d203931653303df6d362b9ca9ba",
+      "rawBytes": 12577
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/prospective-request-spec.json",
+      "bytes": 2382,
+      "sha256": "bf64dd4bd98ce78366114afd5aa602442bbb9c9611974cb3d407f7389d67275c",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/bf64dd4bd98ce78366114afd5aa602442bbb9c9611974cb3d407f7389d67275c",
+      "encoding": "identity",
+      "encodedBytes": 2382,
+      "encodedSHA256": "bf64dd4bd98ce78366114afd5aa602442bbb9c9611974cb3d407f7389d67275c",
+      "rawBytes": 2382
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/results.json",
+      "bytes": 117626,
+      "sha256": "5db16e7b33acea4ba0b0c0f9927c8fa8dd566e08d004bd3f94feb2cc62f536c6",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/5db16e7b33acea4ba0b0c0f9927c8fa8dd566e08d004bd3f94feb2cc62f536c6.gz",
+      "encoding": "gzip",
+      "encodedBytes": 7162,
+      "encodedSHA256": "6bcea52d98317df9ebb483145e82240cbf4f30a8133c6db6ad055753312602b8",
+      "rawBytes": 117626
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/sdk-serialization.json",
+      "bytes": 1935,
+      "sha256": "16d558911ad26d20431b72c549217e7a897d13b0b1d0b63dc49e553a900373d1",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/16d558911ad26d20431b72c549217e7a897d13b0b1d0b63dc49e553a900373d1",
+      "encoding": "identity",
+      "encodedBytes": 1935,
+      "encodedSHA256": "16d558911ad26d20431b72c549217e7a897d13b0b1d0b63dc49e553a900373d1",
+      "rawBytes": 1935
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/sdk_preview.mts",
+      "bytes": 2631,
+      "sha256": "d22c15c2edadb722191b9619c28d4ee5621fdc74a3730ca1a99008524d041acb",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/d22c15c2edadb722191b9619c28d4ee5621fdc74a3730ca1a99008524d041acb.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 1283,
+      "encodedSHA256": "0624bfd1bf9f02c6bb9aca14682b1336cab7b8dc273c8ced7de7353e5841e696",
+      "rawBytes": 2631
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/test_locator.py",
+      "bytes": 12526,
+      "sha256": "9c6c556ce0a78bc57967c55ed15fbab8dfaeb1ce08a1a84b6d8efca2abba3068",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/9c6c556ce0a78bc57967c55ed15fbab8dfaeb1ce08a1a84b6d8efca2abba3068.txt.gz",
+      "encoding": "gzip",
+      "encodedBytes": 3521,
+      "encodedSHA256": "f26354cba6fa70f5638d561ce69d301872d7481b9e9ce576ef1f30488a7784dd",
+      "rawBytes": 12526
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/tests.log",
+      "bytes": 3413,
+      "sha256": "d4d3b930ea774d1696d4a13146cc2c84aba10cd0cb67309f753b14ffb13da25f",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/d4d3b930ea774d1696d4a13146cc2c84aba10cd0cb67309f753b14ffb13da25f",
+      "encoding": "identity",
+      "encodedBytes": 3413,
+      "encodedSHA256": "d4d3b930ea774d1696d4a13146cc2c84aba10cd0cb67309f753b14ffb13da25f",
+      "rawBytes": 3413
+    },
+    {
+      "originalPath": "/workspace/task-evidence/source-bound-locator-prototype-01/validation.json",
+      "bytes": 831,
+      "sha256": "0a6e41bfe79ad51845f0b030a498b50ca8ff20c5fa0a7c97c883cb0b6b7328bf",
+      "groups": [
+        "parser-or-target-spec-proof"
+      ],
+      "required": true,
+      "resolution": "new-archive-payload",
+      "payload": "payload/0a6e41bfe79ad51845f0b030a498b50ca8ff20c5fa0a7c97c883cb0b6b7328bf",
+      "encoding": "identity",
+      "encodedBytes": 831,
+      "encodedSHA256": "0a6e41bfe79ad51845f0b030a498b50ca8ff20c5fa0a7c97c883cb0b6b7328bf",
+      "rawBytes": 831
+    }
+  ],
+  "fullPredecessorManifestsMaterialized": false
+}
