@@ -1,13 +1,17 @@
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import { performance } from 'node:perf_hooks';
+import WebSocket from 'ws';
 import {
-  MODEL_VERSION, POLICY_VERSION, PipelineError, sliceSpan, type AdmissionMetadata, type AdmissionResult, type Evidence,
-  type Judgment, type Presentation, type PresentationState, type ProviderContext, type TextInput, type Verdict,
+  MODEL_VERSION, POLICY_VERSION, PipelineError, sliceSpan, type AcceptedClaim, type AdmissionMetadata, type AdmissionResult, type Evidence,
+  type EventEnvelope, type PipelineAdapters, type Presentation, type PresentationState, type ProviderContext, type TextInput, type Verdict,
 } from '../../packages/contracts/src/index.js';
 import { createClassifier } from '../../services/api/src/providers/jev/classification.js';
 import { createJevClient, type JevAnswer, type JevRequest } from '../../services/api/src/providers/jev/client.js';
 import { decideVerdict } from '../../services/api/src/policy/verdict.js';
 import { decidePresentation } from '../../services/api/src/policy/notifications.js';
+import type { AssessedJudgment } from '../../services/api/src/policy/assessment.js';
+import { buildServer } from '../../services/api/src/transport/server.js';
 import actionFixtures from '../../fixtures/actions/presentation-cases.json' with { type: 'json' };
 
 type SemanticFixture = {
@@ -23,16 +27,29 @@ export type EvaluationCase = {
   evidenceFixture: 'none' | 'support' | 'contradict' | 'conflict' | 'echo' | 'omitted_condition'; scenario: string;
 };
 type Observation = {
-  id: string; category: string; status: 'pass' | 'fail' | 'not_run'; testedStages: string[]; mismatches: string[];
+  id: string; category: string; status: 'pass' | 'fail' | 'not_run'; method?: 'scripted_policy_fixture' | 'injected_runtime_transport'; durationMs?: number;
+  testedStages: string[]; mismatches: string[];
   admission?: AdmissionResult['action']; presentation?: Presentation['action']; verdict?: Verdict; errorCode?: string;
   expectedPresentation?: Presentation['action']; note?: string;
 };
 const FIXED_NOW = Date.parse('2026-11-14T12:00:00Z');
-const datasetUrl = new URL('../../fixtures/evaluation/cases.json', import.meta.url);
+const manifestUrl = new URL('../../fixtures/evaluation/cases.json', import.meta.url);
 
-export async function loadCases(): Promise<EvaluationCase[]> {
-  const data = JSON.parse(await readFile(datasetUrl, 'utf8')) as { cases: EvaluationCase[] };
-  return data.cases;
+type ManifestEntry = { id: string; category: EvaluationCase['category']; split: EvaluationCase['split'] };
+type EvaluationManifest = { schemaVersion: 1; cases: ManifestEntry[] };
+export async function loadManifest(): Promise<EvaluationManifest> {
+  return JSON.parse(await readFile(manifestUrl, 'utf8')) as EvaluationManifest;
+}
+
+export async function loadCases(split: 'development' | 'heldout' = 'development'): Promise<EvaluationCase[]> {
+  const manifest = await loadManifest();
+  const selected = manifest.cases.filter(entry => entry.split === split);
+  const filename = split === 'development' ? 'cases-development.json' : 'cases-heldout.json';
+  const data = JSON.parse(await readFile(new URL(`../../fixtures/evaluation/${filename}`, import.meta.url), 'utf8')) as { cases: EvaluationCase[] };
+  const selectedIds = new Set(selected.map(entry => entry.id));
+  const cases = data.cases.filter(sample => selectedIds.has(sample.id));
+  if (cases.length !== selected.length) throw new Error(`Evaluation manifest/body mismatch for ${split} split`);
+  return cases;
 }
 
 function fixtureAnswers(request: JevRequest, sample: EvaluationCase): Record<string, JevAnswer> {
@@ -61,10 +78,12 @@ function fixtureAnswers(request: JevRequest, sample: EvaluationCase): Record<str
   return answers;
 }
 
-/** Synthetic passages test policy mechanics; they are never presented as live evidence. */
-function fixtureJudgment(sample: EvaluationCase, checkedText: string): Judgment & import('../../services/api/src/policy/assessment.js').JudgmentAssessment {
-  // These predeclared development facts have substantive synthetic records.
-  // Unknown fixture propositions do not inherit a positive quality assessment.
+/** Explicitly assessed synthetic passages exercise policy mechanics; none is live evidence. */
+function fixtureJudgment(sample: EvaluationCase, checkedText: string): AssessedJudgment {
+  const recipe = sample.evidenceFixture;
+  const label: Verdict = recipe === 'none' ? 'insufficient_evidence' : recipe === 'contradict' ? 'contradicted' : recipe === 'omitted_condition' ? 'misleading' : 'supported';
+  // Only propositions with concrete, predeclared synthetic records receive
+  // substantive assessments. Unknown fixture propositions fail closed.
   const records: [string, string] | undefined = checkedText === 'Helsinki is the capital of Finland.' ? [
     'SYNTHETIC municipal register F-1 lists Helsinki as Finland’s national capital and records the national parliament and central government there.',
     'SYNTHETIC independent geographic directory G-2 identifies the capital of Finland as Helsinki and describes its administrative role.',
@@ -75,7 +94,6 @@ function fixtureJudgment(sample: EvaluationCase, checkedText: string): Judgment 
     'SYNTHETIC meteorological observation log L-1 records repeated lightning strikes at the same marked tower coordinates during separate storms.',
     'SYNTHETIC independent university field experiment U-2 used tower-mounted sensors to record two lightning impacts at the identical location in one storm.',
   ] : undefined;
-  const recipe = sample.evidenceFixture;
   const source = (index: number, stance: Evidence['stance']): Evidence => ({
     id: `synthetic-${index}`, url: index === 1 ? 'https://example.org/fixture' : 'https://example.net/fixture',
     title: `Synthetic policy passage ${index}`, publisher: null, publishedAt: null,
@@ -87,31 +105,35 @@ function fixtureJudgment(sample: EvaluationCase, checkedText: string): Judgment 
     sourceGroup: index === 1 ? 'example.org' : 'example.net', echoGroup: null, sourceRole: 'secondary',
     directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance, stanceProbability: 0.95,
   });
-  const label: Verdict = recipe === 'none' ? 'insufficient_evidence' : recipe === 'contradict' ? 'contradicted' : recipe === 'omitted_condition' ? 'misleading' : 'supported';
   const evidence = recipe === 'none' ? [] : [source(1, label === 'contradicted' ? 'contradicts' : 'supports'), source(2, label === 'contradicted' ? 'contradicts' : 'supports')];
   if (recipe === 'conflict') evidence[1].stance = 'contradicts';
   if (recipe === 'echo') {
     evidence[0].echoGroup = 'shared-release'; evidence[1].echoGroup = 'shared-release';
     evidence[1].excerpt = evidence[0].excerpt;
   }
+  // Fixture-only source quality describes the invented passages, not publisher
+  // provenance. Promotions, unknown claims and unclear origins stay inadequate.
+  const basis = records || recipe === 'conflict' ? 'original_record' as const : recipe === 'echo' ? 'promotional' as const : 'unclear' as const;
+  const relationship = recipe === 'echo' ? 'common_origin' as const : records || recipe === 'conflict' ? 'distinct_origins' as const : 'unclear' as const;
   return {
     checkedText, label, probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 0, [label]: 1 }, evidence,
     selectedEvidenceIds: evidence.map(record => record.id), misleadingReason: recipe === 'omitted_condition' ? 'omitted_condition' : null,
     misleadingEvidenceIds: recipe === 'omitted_condition' ? evidence.map(record => record.id) : [],
     sourceAssessments: Object.fromEntries(evidence.map(record => [record.id, {
-      contentBasis: records || recipe === 'conflict' ? 'original_record' as const : recipe === 'echo' ? 'promotional' as const : 'unclear' as const,
-      confidence: .99,
+      contentBasis: basis,
+      confidence: 0.99,
     }])),
-    claimRisk: { level: records ? 'ordinary' : 'unknown', confidence: .99 },
-    originAssessments: evidence.length === 2 ? [{ evidenceIds: [evidence[0].id, evidence[1].id], relationship: recipe === 'echo' ? 'common_origin' : records || recipe === 'conflict' ? 'distinct_origins' : 'unclear', confidence: .99 }] : [],
+    claimRisk: { level: records ? 'ordinary' : 'unknown', confidence: 0.99 },
+    originAssessments: evidence.length === 2 ? [{ evidenceIds: [evidence[0].id, evidence[1].id], relationship, confidence: 0.99 }] : [],
   };
 }
 
 export async function evaluateCase(sample: EvaluationCase): Promise<Observation> {
-  const result: Observation = { id: sample.id, category: sample.category, status: 'pass', testedStages: [], mismatches: [] };
-  // These need real scheduler/hardware orchestration; a pure policy result would not prove them.
-  if (['revision_correction', 'provider_timeout', 'hardware_disconnect', 'hardware_tts_feedback'].includes(sample.scenario)) {
-    return { ...result, status: 'not_run', note: 'Requires runtime or real-device scenario runner; not counted as a passing policy fixture.' };
+  if (sample.scenario === 'revision_correction' || sample.scenario === 'provider_timeout') return evaluateRuntimeCase(sample);
+  const result: Observation = { id: sample.id, category: sample.category, status: 'pass', method: 'scripted_policy_fixture', testedStages: [], mismatches: [] };
+  // These require physical input/output paths and remain unrun in this backend harness.
+  if (['hardware_disconnect', 'hardware_tts_feedback'].includes(sample.scenario)) {
+    return { ...result, status: 'not_run', note: 'Requires real-device execution; not counted as a passing fixture.' };
   }
   const context: ProviderContext = { signal: new AbortController().signal, consume: () => undefined, now: () => FIXED_NOW };
   const client = createJevClient({ apiKey: 'fixture-only-not-a-secret', fetch: async (_url, init) => {
@@ -156,7 +178,117 @@ export async function evaluateCase(sample: EvaluationCase): Promise<Observation>
   return result;
 }
 
-export async function runEvaluation(cases: EvaluationCase[], split: 'development' | 'heldout' = 'development') {
+function runtimeClaim(input: TextInput): AcceptedClaim {
+  return {
+    id: `${input.requestId}-r${input.revision}-candidate-1`, originalText: input.text, checkedText: input.text,
+    sourceSpan: { start: 0, end: Array.from(input.text).length },
+    admission: { assertionStatus: 'asserted', hasPracticalConsequence: null, matchedSelectedTopic: null, admissionAction: 'check', reasonCode: 'eligible_public_claim' },
+  };
+}
+
+function waitForEvent(events: EventEnvelope[], predicate: (event: EventEnvelope) => boolean, timeoutMs: number): Promise<EventEnvelope> {
+  const existing = events.find(predicate);
+  if (existing) return Promise.resolve(existing);
+  return new Promise((resolve, reject) => {
+    const started = performance.now();
+    const poll = () => {
+      const found = events.find(predicate);
+      if (found) { resolve(found); return; }
+      if (performance.now() - started >= timeoutMs) { reject(new Error('Timed out waiting for evaluation event')); return; }
+      setTimeout(poll, 5).unref();
+    };
+    poll();
+  });
+}
+
+async function evaluateRuntimeCase(sample: EvaluationCase): Promise<Observation> {
+  const started = performance.now();
+  const observation: Observation = { id: sample.id, category: sample.category, status: 'pass', method: 'injected_runtime_transport', testedStages: [], mismatches: [] };
+  let retrievalAborted = false;
+  let providerSignal: AbortSignal | undefined;
+  const adapters: PipelineAdapters = {
+    classify: async (input: TextInput, context: ProviderContext): Promise<AdmissionResult> => {
+      if (sample.scenario === 'provider_timeout') return new Promise((_resolve, reject) => {
+        providerSignal = context.signal;
+        context.signal.addEventListener('abort', () => reject(context.signal.reason), { once: true });
+      });
+      if (input.revision === 2) return { action: 'needs_confirmation', reasonCode: 'incomplete_or_unclear', claims: [] };
+      return { action: 'check', reasonCode: 'eligible_public_claim', claims: [runtimeClaim(input)] };
+    },
+    retrieve: async (_claim: AcceptedClaim, context: ProviderContext): Promise<Evidence[]> => {
+      if (sample.scenario === 'revision_correction') return new Promise((_resolve, reject) => {
+        context.signal.addEventListener('abort', () => { retrievalAborted = true; reject(context.signal.reason); }, { once: true });
+      });
+      return [];
+    },
+    judge: async (_claim: AcceptedClaim, _evidence: Evidence[], _context: ProviderContext): Promise<AssessedJudgment> => ({
+      label: 'insufficient_evidence', probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 1 },
+      evidence: [], selectedEvidenceIds: [], misleadingReason: null,
+      sourceAssessments: {}, claimRisk: { level: 'ordinary', confidence: 0.99 }, originAssessments: [],
+    }),
+  };
+  const server = await buildServer({ adapters, mode: 'fixture', joinCode: 'evaluation-only-code', joinExpiresAt: FIXED_NOW + 60_000, now: () => FIXED_NOW });
+  let socket: WebSocket | undefined;
+  try {
+    const address = await server.app.listen({ port: 0, host: '127.0.0.1' });
+    observation.testedStages.push('fastify_http');
+    const wsOrigin = address.replace('http://', 'ws://');
+    const health = await fetch(`${address}/health`).then(response => response.json()) as { status: string; mode: string };
+    if (health.status !== 'ok' || health.mode !== 'fixture') observation.mismatches.push('health route did not report fixture mode');
+    const wrongJoin = await fetch(`${address}/v1/sessions`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ joinCode: 'wrong-evaluation-code' }) });
+    if (wrongJoin.status !== 401) observation.mismatches.push(`unauthorized join expected HTTP 401, received ${wrongJoin.status}`);
+    const created = await fetch(`${address}/v1/sessions`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ joinCode: 'evaluation-only-code' }) });
+    if (created.status !== 201) throw new Error(`Evaluation session creation failed: ${created.status}`);
+    const session = await created.json() as { sessionId: string; token: string; sessionEpoch: number };
+    const events: EventEnvelope[] = [];
+    socket = new WebSocket(`${wsOrigin}/v1/sessions/${session.sessionId}/stream`, ['actually-v1', `bearer.${session.token}`]);
+    socket.on('message', data => { try { events.push(JSON.parse(data.toString()) as EventEnvelope); } catch { /* malformed wire events are detected by missing expected events */ } });
+    await new Promise<void>((resolve, reject) => { socket!.once('open', resolve); socket!.once('error', reject); });
+    await waitForEvent(events, event => event.type === 'session.ready', 2_000);
+    observation.testedStages.push('authenticated_websocket');
+    const headers = { authorization: `Bearer ${session.token}`, 'content-type': 'application/json' };
+    const makeInput = (revision: number, text: string) => ({ schemaVersion: 1, requestId: sample.id, sessionId: session.sessionId, sessionEpoch: session.sessionEpoch, revision,
+      mode: 'typed', text, language: 'en', capturedAt: new Date(FIXED_NOW).toISOString(), capture: { source: 'typed_fixture', segmentId: sample.id, confidence: 1, final: true }, context: [], userInitiated: true });
+    if (sample.scenario === 'revision_correction') {
+      const first = await fetch(`${address}/v1/sessions/${session.sessionId}/checks`, { method: 'POST', headers, body: JSON.stringify(makeInput(1, 'The rate was 70 percent.')) });
+      if (first.status !== 202) observation.mismatches.push(`revision 1 expected HTTP 202, received ${first.status}`);
+      await waitForEvent(events, event => event.type === 'claim.checking' && event.revision === 1, 2_000);
+      const corrected = await fetch(`${address}/v1/sessions/${session.sessionId}/checks`, { method: 'POST', headers, body: JSON.stringify(makeInput(2, sample.text)) });
+      if (corrected.status !== 202) observation.mismatches.push(`revision 2 expected HTTP 202, received ${corrected.status}`);
+      await waitForEvent(events, event => event.type === 'claim.needs_confirmation' && event.revision === 2, 2_000);
+      observation.testedStages.push('runtime_revision_cancellation', 'correction_confirmation');
+      if (!retrievalAborted) observation.mismatches.push('revision 1 provider was not cancelled when revision 2 arrived');
+      if (events.some(event => event.type === 'claim.result' && event.revision === 1)) observation.mismatches.push('stale revision 1 result was delivered after correction');
+      const checked = events.find(event => event.type === 'claim.checking' && event.revision === 1);
+      const confirmation = events.find(event => event.type === 'claim.needs_confirmation' && event.revision === 2);
+      if (!checked || !confirmation || checked.eventSeq >= confirmation.eventSeq) observation.mismatches.push('event sequence did not preserve the old check before corrected confirmation');
+      if (events.some(event => event.revision && event.revision > 2)) observation.mismatches.push('unexpected revision greater than 2 was emitted');
+    } else {
+      const response = await fetch(`${address}/v1/sessions/${session.sessionId}/checks`, { method: 'POST', headers, body: JSON.stringify(makeInput(1, sample.text)) });
+      if (response.status !== 202) observation.mismatches.push(`deadline request expected HTTP 202, received ${response.status}`);
+      const error = await waitForEvent(events, event => event.type === 'pipeline.error' && event.requestId === sample.id, 12_000);
+      observation.testedStages.push('runtime_provider_deadline', 'deadline_cancellation');
+      const payload = error.payload as { reasonCode?: string; presentation?: { action?: string } };
+      if (payload.reasonCode !== sample.expected.errorCode) observation.mismatches.push(`expected ${sample.expected.errorCode}, received ${payload.reasonCode}`);
+      if (payload.presentation?.action !== sample.expected.presentation) observation.mismatches.push(`deadline presentation expected ${sample.expected.presentation}, received ${payload.presentation?.action}`);
+      if (!providerSignal?.aborted) observation.mismatches.push('runtime did not abort the hung provider at its deadline');
+      if (events.some(event => event.type === 'claim.result' && event.requestId === sample.id)) observation.mismatches.push('deadline produced a factual result instead of an operational error');
+    }
+    const unauthed = await fetch(`${address}/v1/sessions/${session.sessionId}/checks`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(makeInput(1, sample.text)) });
+    if (unauthed.status !== 401) observation.mismatches.push(`unauthenticated check expected HTTP 401, received ${unauthed.status}`);
+    observation.testedStages.push('auth_and_operational_error_boundary');
+  } catch (error) {
+    observation.mismatches.push(error instanceof Error ? error.message : 'runtime evaluation failed');
+  } finally {
+    socket?.close();
+    await server.app.close();
+  }
+  observation.durationMs = Math.round(performance.now() - started);
+  observation.status = observation.mismatches.length ? 'fail' : 'pass';
+  return observation;
+}
+
+export async function runEvaluation(cases: EvaluationCase[], split: 'development' | 'heldout' = 'development', heldoutReserved = 12) {
   const selected = cases.filter(sample => sample.split === split);
   const observations: Observation[] = [];
   for (const sample of selected) observations.push(await evaluateCase(sample));
@@ -176,13 +308,16 @@ export async function runEvaluation(cases: EvaluationCase[], split: 'development
     return { id: fixture.id, passed: actual.action === fixture.expected && actual.reasonCode === fixture.reason, actual };
   });
   return {
-    schemaVersion: 1, mode: 'deterministic_fixture', split, policyVersion: POLICY_VERSION, modelVersion: `${MODEL_VERSION}-scripted-answers`,
-    counts: { selected: selected.length, passed: observations.filter(o => o.status === 'pass').length, failed: observations.filter(o => o.status === 'fail').length, notRun: observations.filter(o => o.status === 'not_run').length, heldoutReserved: cases.filter(c => c.split === 'heldout').length },
-    coverage: { admission: observations.filter(o => o.testedStages.includes('admission')).length, verdict: observations.filter(o => o.testedStages.includes('verdict')).length, presentation: observations.filter(o => o.testedStages.includes('presentation')).length, providerErrors: observations.filter(o => o.testedStages.includes('provider_error_validation')).length },
+    schemaVersion: 1, mode: 'scripted_fixtures_plus_injected_runtime', split, policyVersion: POLICY_VERSION, modelVersion: `${MODEL_VERSION}-scripted-answers`,
+    counts: { selected: selected.length, passed: observations.filter(o => o.status === 'pass').length, failed: observations.filter(o => o.status === 'fail').length, notRun: observations.filter(o => o.status === 'not_run').length, heldoutReserved },
+    coverage: { admission: observations.filter(o => o.testedStages.includes('admission')).length, verdict: observations.filter(o => o.testedStages.includes('verdict')).length, presentation: observations.filter(o => o.testedStages.includes('presentation')).length, providerErrors: observations.filter(o => o.testedStages.includes('provider_error_validation')).length,
+      runtimeTransport: observations.filter(o => o.method === 'injected_runtime_transport').length, runtimeDeadline: observations.filter(o => o.testedStages.includes('runtime_provider_deadline')).length, runtimeCorrections: observations.filter(o => o.testedStages.includes('runtime_revision_cancellation')).length },
+    measurement: { scriptedFixtures: observations.filter(o => o.method === 'scripted_policy_fixture').length, injectedRuntimeTransport: observations.filter(o => o.method === 'injected_runtime_transport').length,
+      runtimeDurationsMs: Object.fromEntries(observations.filter(o => o.method === 'injected_runtime_transport').map(o => [o.id, o.durationMs ?? null])) },
     presentationConfusion: confusion,
     sharedPresentationFixtures: { passed: sharedActions.filter(result => result.passed).length, total: sharedActions.length, observations: sharedActions },
     metrics: { liveAdmissionPrecision: null, liveAdmissionRecall: null, privateQueryLeakage: null, wrongDefinitiveLiveLabels: null, inspectedLiveCitations: 0, liveLatencyMedianMs: null, liveLatencyP95Ms: null, providerCost: null, falseAlertsPerListeningMinute: null, actualDuplicateSpeech: null, actualStaleSpeech: null, deliberateSourceOpens: null },
-    limitations: ['Scripted model answers test control flow, not model accuracy.', 'Synthetic evidence is not a checked live citation.', 'No provider network, wearable capture, listening duration or actual speech measurement.', 'Held-outs are excluded unless explicitly selected; do not tune thresholds on their outcomes.'],
+    limitations: ['Scripted model answers test control flow, not model accuracy.', 'Injected runtime providers exercise composed authenticated HTTP/WebSocket transport, revision cancellation and deadlines, not provider semantics or reliability.', 'Synthetic evidence is not a checked live citation.', 'No real provider network, wearable capture, listening duration or actual speech measurement.', 'The 12 held-out cases remain excluded unless explicitly selected; do not tune thresholds on their outcomes.'],
     observations,
   };
 }
@@ -190,7 +325,9 @@ export async function runEvaluation(cases: EvaluationCase[], split: 'development
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2);
   if (args.some(arg => arg !== '--heldout')) throw new Error('Usage: npm run evaluate [-- --heldout]');
-  const report = await runEvaluation(await loadCases(), args.includes('--heldout') ? 'heldout' : 'development');
+  const split = args.includes('--heldout') ? 'heldout' : 'development';
+  const manifest = await loadManifest();
+  const report = await runEvaluation(await loadCases(split), split, manifest.cases.filter(entry => entry.split === 'heldout').length);
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   if (report.counts.failed || report.sharedPresentationFixtures.passed !== report.sharedPresentationFixtures.total) process.exitCode = 1;
 }
