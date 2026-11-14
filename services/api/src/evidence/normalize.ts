@@ -81,6 +81,20 @@ function comparePassageScores(a: ReturnType<typeof passageScore>, b: ReturnType<
   return b.subject - a.subject || b.qualifiers - a.qualifiers || b.overall - a.overall;
 }
 
+/** On a relevance tie, leave context on both sides of the subject mentions.
+ * This uses positions only, never whether the surrounding text agrees. */
+function subjectMargin(text: string, querySubjects: Set<string>): number {
+  let first: number | undefined;
+  let last = 0;
+  for (const match of text.matchAll(/[\p{L}\p{N}]+/gu)) {
+    if (!querySubjects.has(match[0].toLocaleLowerCase('en'))) continue;
+    first ??= match.index;
+    last = match.index + match[0].length;
+  }
+  if (first === undefined) return -1;
+  return Math.min(codePoints(text.slice(0, first)).length, codePoints(text.slice(last)).length);
+}
+
 /** Whether a result is promising enough to spend one bounded page-text request on. */
 export function needsPageText(page: RetrievedPage, claim: string, enrichContentBasis = false): boolean {
   const highlights = (page.highlights ?? []).filter(text => text.trim().length > 0);
@@ -119,9 +133,16 @@ export function selectExcerpt(page: RetrievedPage, claim: string): { excerpt: st
   // Rank overlapping windows so relevant qualifications late in a page aren't lost to prefix truncation.
   let bestStart = 0;
   let bestScore = passageScore('', claim);
+  let bestMargin = -1;
+  const querySubjects = subjectTerms(claim);
   for (let start = 0; start < points.length; start += 250) {
-    const score = passageScore(points.slice(start, start + 2000).join(''), claim);
-    if (comparePassageScores(score, bestScore) < 0) { bestScore = score; bestStart = start; }
+    const text = points.slice(start, start + 2000).join('');
+    const score = passageScore(text, claim);
+    const margin = subjectMargin(text, querySubjects);
+    const comparison = comparePassageScores(score, bestScore);
+    if (comparison < 0 || (comparison === 0 && margin > bestMargin)) {
+      bestScore = score; bestStart = start; bestMargin = margin;
+    }
   }
   return { excerpt: points.slice(bestStart, bestStart + 2000).join(''), contentBasis: usePageText ? 'page_text' : 'highlight' };
 }
