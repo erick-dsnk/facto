@@ -11,6 +11,8 @@ interface Env {
   // vars (wrangler.jsonc)
   PIPELINE_MODE?: string;
   TRUST_PROXY?: string;
+  MIN_CAPTURE_CONFIDENCE?: string;
+  DEBUG_TRANSCRIPTS?: string;
   // secrets (wrangler secret put)
   JEV_API_KEY?: string;
   EXA_API_KEY?: string;
@@ -30,6 +32,8 @@ const READY_TIMEOUT_MS = 90_000;
 const PASSTHROUGH = [
   "PIPELINE_MODE",
   "TRUST_PROXY",
+  "MIN_CAPTURE_CONFIDENCE",
+  "DEBUG_TRANSCRIPTS",
   "JEV_API_KEY",
   "EXA_API_KEY",
   "DEEPGRAM_API_KEY",
