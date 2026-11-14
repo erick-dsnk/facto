@@ -1,0 +1,64 @@
+{
+  "kind": "isolated_issue16_envelope_integration",
+  "createdAt": "2026-11-14T09:28:51.517238+00:00",
+  "worktree": "/workspace/stack-16-envelope-integration",
+  "branch": "codex/16-envelope-integrated",
+  "base": "acb2f7bb24553340c3a128fed729534e90222639",
+  "head": "fef82b2ccae3b139f933af3cbc1e23769271ced0",
+  "safeFastForwardTargetForStack16": true,
+  "existingCheckedOutRefsUpdated": false,
+  "existingWorktreesUnchanged": 14,
+  "newWorktreeClean": true,
+  "threeRequestedCommitsOnly": true,
+  "conflicts": 0,
+  "freshInstall": {
+    "command": "npm ci",
+    "exitCode": 0,
+    "addedPackages": 239,
+    "nodeModulesRealLocalDirectory": true,
+    "logSHA256": "df8e75cced302b86ea99d002c2a422a42f1b154116c42a118781e66d9e4dd387"
+  },
+  "gate": {
+    "command": "npm run check",
+    "invocations": 1,
+    "exitCode": 0,
+    "lint": "pass",
+    "typecheck": "pass",
+    "testsPassed": 283,
+    "testFilesPassed": 14,
+    "scope": "new lower issue16 branch only; not the combined root gate",
+    "logSHA256": "1c53278c2f171d033fc3a99ec1bddc63fc3405b523877899b30f5a7e959bb667"
+  },
+  "archiveVerifiers": {
+    "envelope": {
+      "filesVerified": 52,
+      "mappedOriginals": 36,
+      "savedResponses": 10,
+      "successfulPages": 26,
+      "runtimeTests": 13,
+      "productionChangedFiles": 3,
+      "networkCalls": 0
+    },
+    "locator": {
+      "portable": true,
+      "originalPathsVerified": 142,
+      "sharedReferences": 11,
+      "liveContents": 1,
+      "literalEdges": 0,
+      "possibleTargets": 0,
+      "providerCallsByVerifier": 0,
+      "originalWorkspaceReads": 0,
+      "archivedCodeExecuted": 0,
+      "fullPredecessorMaterializationClaim": false
+    }
+  },
+  "sourceOnlyDiffCheck": "pass",
+  "changedFiles": 185,
+  "protectedPaths": "Eight explicit protected trees and every path outside exact three requested commits unchanged. Private/heldout contents not opened.",
+  "noProviderCalls": true,
+  "noExistingBranchUpdates": true,
+  "noPush": true,
+  "noPREdits": true,
+  "sourcePatchAndMapping": "integration-validation.json and source-diff.patch",
+  "laterIntegration": "Root may fast-forward original stack16 fromacb2 to this head only after pending pinned calls finish; then propagate through dependency stack under root coordination."
+}
