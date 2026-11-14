@@ -10,9 +10,6 @@ import { type JevAnswer, type JevClient, type JevQuestion, validateAnswers } fro
 export const ADMISSION_THRESHOLDS = {
   claim: 0.2, route: 0.4, privateData: 0.1, privateLife: 0.4, rumour: 0.5, future: 0.5, misheard: 0.5, selfContained: 0.5, preservesScope: 0.85
 } as const;
-export type ClassifierOptions = { /** @deprecated ignored, deleted at integration */ minCaptureConfidence?: number };
-/** @deprecated unused shim so base index.ts compiles; deleted at integration */
-export const DEFAULT_MIN_CAPTURE_CONFIDENCE = 0.8;
 
 // What a candidate is, ported from the reference app's SelectionKind with the future-claim riders. Tuned wording:
 // "whether or not it is actually true" stops Jev from turning away myths and false claims.
@@ -131,7 +128,7 @@ type Assessed = {
  * One Jev call per input decides what each candidate is (ported SelectionKind, ClaimRoute, Attribution and Subject), and code applies
  * the thresholds. Jev only answers choice and noul questions; every name it picks is a candidate built here from the captured text.
  */
-export function createClassifier(client: JevClient, _options: ClassifierOptions = {}): PipelineAdapters['classify'] {
+export function createClassifier(client: JevClient): PipelineAdapters['classify'] {
   return async (input, context) => {
     if (input.capture.final === false) return { action: input.userInitiated ? 'needs_confirmation' : 'wait', reasonCode: 'interim_capture', claims: [] };
     const candidates = generateCandidates(input.text);

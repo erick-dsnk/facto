@@ -3,7 +3,7 @@
   { "id": "automatic-supported", "verdict": "supported", "intent": "automatic", "expected": "silent", "reason": "automatic_noncontradiction" },
   { "id": "manual-insufficient", "verdict": "insufficient_evidence", "intent": "manual", "expected": "respond", "reason": "explicit_request" },
   { "id": "automatic-insufficient", "verdict": "insufficient_evidence", "intent": "automatic", "expected": "silent", "reason": "automatic_noncontradiction" },
-  { "id": "automatic-misleading", "verdict": "misleading", "intent": "automatic", "expected": "silent", "reason": "automatic_noncontradiction" },
+  { "id": "automatic-misleading", "verdict": "misleading", "intent": "automatic", "expected": "notify", "reason": "automatic_misleading" },
   { "id": "practical-contradiction", "verdict": "contradicted", "intent": "automatic", "priority": 0.8, "expected": "notify", "reason": "practical_contradiction" },
   { "id": "low-priority-contradiction", "verdict": "contradicted", "intent": "automatic", "priority": 0.79, "expected": "notify", "reason": "automatic_contradiction" },
   { "id": "missing-priority", "verdict": "contradicted", "intent": "automatic", "priority": null, "expected": "notify", "reason": "automatic_contradiction" },

@@ -5,6 +5,7 @@ import { createJevClient } from './providers/jev/client.js';
 import { createClassifier } from './providers/jev/classification.js';
 import { createJudge } from './providers/jev/judgment.js';
 import { createRetriever } from './providers/exa/retrieval.js';
+import { createLiveSources } from './sources/index.js';
 import { createDeepgramAdapter, parseKeyterms } from './input/asr/deepgram-adapter.js';
 import { DebugFeed } from './runtime/debug-feed.js';
 
@@ -15,7 +16,8 @@ const client = createJevClient({ apiKey: process.env.JEV_API_KEY ?? '' });
 // Debug only: logs every final Deepgram result, including what bystanders said. Off unless set to 1.
 const debugTranscripts = process.env.DEBUG_TRANSCRIPTS === '1';
 const debugFeed = debugTranscripts ? new DebugFeed() : undefined;
-const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(client), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client) };
+const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(client), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client),
+  sources: createLiveSources({ jev: client, exaApiKey: process.env.EXA_API_KEY!, googleFactCheckApiKey: process.env.GOOGLE_FACTCHECK_API_KEY || undefined }) };
 const cert = process.env.TLS_CERT_PATH; const key = process.env.TLS_KEY_PATH;
 if (!!cert !== !!key) throw new Error('Set both TLS_CERT_PATH and TLS_KEY_PATH.');
 // Railway routes every request through one edge proxy and needs the server on all interfaces for its healthcheck.
