@@ -1,0 +1,656 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline_captured_public_judgment_replay",
+  "generatedAt": "2026-11-14T03:28:55.523Z",
+  "code": {
+    "old": {
+      "commit": "7e278906bd20e4460c431eeef4b6dd93f76a0acb",
+      "worktree": "/workspace/live-frozen-06",
+      "policyFilesSHA256": {
+        "verdict.ts": "ab1c7320432af55b51b8c7ccb02be2e1d6c3874fd2322a35772e311274a9497c",
+        "sources.ts": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5",
+        "assessment.ts": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14"
+      }
+    },
+    "fixed": {
+      "commit": "893e95965e12a60ab3f94558b7b0806493291a3b",
+      "worktree": "/workspace/stack-17",
+      "policyFilesSHA256": {
+        "verdict.ts": "de40566ea3d59ae02b5da4a9d207e42a83c0a25fe6ebb462bebafa4504dd102b",
+        "sources.ts": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5",
+        "assessment.ts": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14"
+      }
+    },
+    "sourceQualityAndAssessmentFilesIdentical": true
+  },
+  "input": {
+    "path": "/workspace/task-evidence/live-development-06.json",
+    "sha256": "ba96ee0faafa034335183731f231464e027e040470ab25837d33474745f8e220",
+    "caseLabel": "L1-opera",
+    "stage": "first_judgment",
+    "capturedProviderCallsReplayed": 0
+  },
+  "reproduction": {
+    "scriptPath": "/workspace/task-evidence/replay-citation-fallback.ts",
+    "scriptSHA256": "67f983e421600550f96bf9ff35c612a6b1692fc7ce9a77abd89cbd1b6502ec3a",
+    "arguments": {
+      "oldRoot": "/workspace/live-frozen-06",
+      "fixedRoot": "/workspace/stack-17",
+      "inputPath": "/workspace/task-evidence/live-development-06.json",
+      "jsonOutput": "/workspace/task-evidence/citation-fallback-replay.json",
+      "markdownOutput": "/workspace/task-evidence/citation-fallback-replay.md"
+    },
+    "exactRevisionAndCleanTrackedWorktreeGuards": true
+  },
+  "capturedPublicJudgment": {
+    "label": "supported",
+    "probabilities": {
+      "supported": 0.96,
+      "contradicted": 0,
+      "misleading": 0.03,
+      "insufficient_evidence": 0.01
+    },
+    "evidence": [
+      {
+        "id": "ev-a38cbdd50b89785e9ddf",
+        "url": "https://www.nma.gov.au/defining-moments/resources/sydney-opera-house",
+        "title": "Sydney Opera House",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T03:16:54.446Z",
+        "excerpt": "1973: Sydney Opera House opens\n\n...\n\nSince its opening in 1973 it has become a symbol the world immediately associates with Sydney and Australia.\n\n...\n\nFinally, the Sydney Opera House was opened by Queen Elizabeth II on 20 October 1973. It was 10 years overdue and, at $102 million, 14 times the original budget.",
+        "contentBasis": "highlight",
+        "sourceGroup": "nma.gov.au",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true,
+        "stance": "supports",
+        "stanceProbability": 1
+      },
+      {
+        "id": "ev-58f66d31e21196604010",
+        "url": "https://mhnsw.au/opening-of-the-sydney-opera-house/",
+        "title": "Opening of the Sydney Opera House",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T03:16:54.446Z",
+        "excerpt": "Opening of the Sydney Opera House\n\n# Opening of the Sydney Opera House\n\nThe Opera House was officially opened by Her Majesty the Queen on 20 October 1973. This was followed by a two-week festival of events.\n\nThe Sydney Opera House Official Opening Committee was responsible for overall policy governing the official opening of the Sydney Opera House and associated activities, including finance.",
+        "contentBasis": "highlight",
+        "sourceGroup": "mhnsw.au",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true,
+        "stance": "supports",
+        "stanceProbability": 1
+      },
+      {
+        "id": "ev-1ace0d571aad1dc4d338",
+        "url": "https://www.sydneyoperahouse.com/our-story",
+        "title": "Our story",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T03:16:54.446Z",
+        "excerpt": "When the Opera House opened its doors in 1973, a new era of cultural discovery began. Five decades later, it is the nation’s leading tourism destination, one of the world’s busiest performing arts centres and a community meeting place that belongs to all Australians. Its programming spans many arts forms and attracts a variety of audiences in person and online.\n\n...\n\nOn 2 March 1959, a crowd gathered under umbrellas, in the rain, to watch the ceremony that marked the start of construction of the Sydney Opera House.",
+        "contentBasis": "highlight",
+        "sourceGroup": "sydneyoperahouse.com",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true,
+        "stance": "supports",
+        "stanceProbability": 1
+      },
+      {
+        "id": "ev-98bba1d289c45e2bce3a",
+        "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+        "title": "50 years of extraordinary moments | Sydney Opera House",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T03:16:54.446Z",
+        "excerpt": "Australian culture reached a remarkable milestone on 20 October 1973: the completion of one of the greatest buildings of the 20th century and the birth of a new cultural experiment on Sydney harbour. \n\n“The Sydney Opera House has captured the imagination of the world, though I understand that its construction has not been totally without problems,” Queen Elizabeth II observed, officially opening Jørn Utzon’s masterpiece on a blustery spring day. But as the Queen went on to say: “The human spirit must sometimes take wings or sails and create something that is not just utilitarian or commonplace.”\n\n...\n\nOn 28 September 1973, almost a month before its official opening by Her Majesty the Queen, the curtain in the Opera Hall rose on its first production: Prokofiev’s epic War and Peace, performed by the Australian Opera. The first performance in the Concert Hall was a program of works by Wagner performed by the Sydney Symphony Orchestra and featuring the legendary Swedish soprano Birgit Nilsson and conductor Charles Mackerras. The Music Room – now the Utzon room – was home to Musica Viva, the chamber music organisation set up in the 1940s by a Hungarian refugee to meet the burgeoning demand for classical music from European migrants. The Old Tote Theatre – later the Sydney Theatre Company – moved into the Drama Theatre.",
+        "contentBasis": "highlight",
+        "sourceGroup": "sydneyoperahouse.com",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true,
+        "stance": "supports",
+        "stanceProbability": 0.99
+      },
+      {
+        "id": "ev-c6ef4b33746b6e519887",
+        "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+        "title": "Opening of Sydney Opera House | Queen Elizabeth Digital Memorial",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T03:16:54.446Z",
+        "excerpt": "# Opening of Sydney Opera House, 20 October 1973\n\nSydney, Australia\n\n20 October 1973\n\nArrival of Royal cars for the opening ceremony at the Sydney Opera House in Australia © Keystone Pictures USA_Zuma Press_PA Images\n\nQueen Elizabeth returned to Australia 3 years after her 1970 tour. She came to open the Sydney Opera House, on a blustery day of dazzling Australian spring sunshine. The building had taken more than 14 years to complete, with soaring costs and much infighting during construction. But, as the Queen observed in her speech, the building had ‘captured the imagination of the world’ and ‘The human spirit must sometimes take wings or sails and create something that is not just utilitarian or commonplace.’ The wind was so strong that the Duke of Edinburgh steadied the Queen as she rose to speak.\n\nIn an appropriately theatrical opening, 60,000 balloons were released. There were streamers attached to the top of the shell roofs, and Ben Blakeney, playing the spirit of his ancestor. After the ceremony, the Queen walked along the harbour, where a million people enjoyed a day of joyful celebrations and an evening firework display. The Opera House has since come to symbolise Sydney, if not modern Australia.",
+        "contentBasis": "highlight",
+        "sourceGroup": "queenelizabeth.com",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true,
+        "stance": "supports",
+        "stanceProbability": 1
+      }
+    ],
+    "selectedEvidenceIds": [
+      "ev-a38cbdd50b89785e9ddf"
+    ],
+    "checkedText": "The Sydney Opera House opened in 1973.",
+    "sourceAssessments": {
+      "ev-a38cbdd50b89785e9ddf": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8400000000000001
+      },
+      "ev-58f66d31e21196604010": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.84
+      },
+      "ev-1ace0d571aad1dc4d338": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.07
+      },
+      "ev-98bba1d289c45e2bce3a": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "ev-c6ef4b33746b6e519887": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      }
+    },
+    "claimRisk": {
+      "level": "ordinary",
+      "confidence": 0.98
+    },
+    "originAssessments": [
+      {
+        "evidenceIds": [
+          "ev-a38cbdd50b89785e9ddf",
+          "ev-58f66d31e21196604010"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.97
+      },
+      {
+        "evidenceIds": [
+          "ev-a38cbdd50b89785e9ddf",
+          "ev-1ace0d571aad1dc4d338"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.92
+      },
+      {
+        "evidenceIds": [
+          "ev-a38cbdd50b89785e9ddf",
+          "ev-98bba1d289c45e2bce3a"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.87
+      },
+      {
+        "evidenceIds": [
+          "ev-a38cbdd50b89785e9ddf",
+          "ev-c6ef4b33746b6e519887"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.85
+      },
+      {
+        "evidenceIds": [
+          "ev-58f66d31e21196604010",
+          "ev-1ace0d571aad1dc4d338"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.95
+      },
+      {
+        "evidenceIds": [
+          "ev-58f66d31e21196604010",
+          "ev-98bba1d289c45e2bce3a"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.88
+      },
+      {
+        "evidenceIds": [
+          "ev-58f66d31e21196604010",
+          "ev-c6ef4b33746b6e519887"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.87
+      },
+      {
+        "evidenceIds": [
+          "ev-1ace0d571aad1dc4d338",
+          "ev-98bba1d289c45e2bce3a"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.56
+      },
+      {
+        "evidenceIds": [
+          "ev-1ace0d571aad1dc4d338",
+          "ev-c6ef4b33746b6e519887"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.76
+      },
+      {
+        "evidenceIds": [
+          "ev-98bba1d289c45e2bce3a",
+          "ev-c6ef4b33746b6e519887"
+        ],
+        "relationship": "common_origin",
+        "confidence": 0.52
+      }
+    ],
+    "misleadingReason": null,
+    "misleadingEvidenceIds": []
+  },
+  "capturedNamedProviderAnswers": {
+    "verdict": {
+      "choice": "supported",
+      "probabilities": {
+        "supported": 0.96,
+        "contradicted": 0,
+        "misleading": 0.03,
+        "insufficient_evidence": 0.01
+      }
+    },
+    "selected_evidence": {
+      "choice": "e0",
+      "probabilities": {
+        "none": 0,
+        "e0": 0.8,
+        "e1": 0.12,
+        "e2": 0.02,
+        "e3": 0.03,
+        "e4": 0.03
+      }
+    },
+    "misleading_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.83,
+        "omitted_condition": 0.17,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "claim_risk": {
+      "choice": "ordinary",
+      "probabilities": {
+        "ordinary": 0.98,
+        "health_safety": 0,
+        "disputed": 0.01,
+        "unknown": 0.01
+      }
+    },
+    "e0_stance": {
+      "choice": "supports",
+      "probabilities": {
+        "supports": 1,
+        "contradicts": 0,
+        "unrelated": 0
+      }
+    },
+    "e0_relevant": {
+      "noul": 0.99
+    },
+    "e0_scope": {
+      "noul": 0.98
+    },
+    "e0_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.93,
+        "omitted_condition": 0.07,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e0_context_established": {
+      "noul": 0.57
+    },
+    "e0_content_basis": {
+      "choice": "substantive_secondary",
+      "probabilities": {
+        "original_record": 0.29,
+        "attributable_research": 0,
+        "substantive_secondary": 0.55,
+        "bare_assertion": 0.16,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0
+      }
+    },
+    "e1_stance": {
+      "choice": "supports",
+      "probabilities": {
+        "supports": 1,
+        "contradicts": 0,
+        "unrelated": 0
+      }
+    },
+    "e1_relevant": {
+      "noul": 0.97
+    },
+    "e1_scope": {
+      "noul": 0.96
+    },
+    "e1_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.92,
+        "omitted_condition": 0.08,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e1_context_established": {
+      "noul": 0.41
+    },
+    "e1_content_basis": {
+      "choice": "substantive_secondary",
+      "probabilities": {
+        "original_record": 0.35,
+        "attributable_research": 0,
+        "substantive_secondary": 0.49,
+        "bare_assertion": 0.16,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0
+      }
+    },
+    "e2_stance": {
+      "choice": "supports",
+      "probabilities": {
+        "supports": 1,
+        "contradicts": 0,
+        "unrelated": 0
+      }
+    },
+    "e2_relevant": {
+      "noul": 0.97
+    },
+    "e2_scope": {
+      "noul": 0.96
+    },
+    "e2_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.94,
+        "omitted_condition": 0.06,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e2_context_established": {
+      "noul": 0.3
+    },
+    "e2_content_basis": {
+      "choice": "bare_assertion",
+      "probabilities": {
+        "original_record": 0.03,
+        "attributable_research": 0,
+        "substantive_secondary": 0.04,
+        "bare_assertion": 0.86,
+        "attributed": 0,
+        "promotional": 0.07,
+        "unclear": 0
+      }
+    },
+    "e3_stance": {
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.01,
+        "unrelated": 0
+      }
+    },
+    "e3_relevant": {
+      "noul": 0.96
+    },
+    "e3_scope": {
+      "noul": 0.93
+    },
+    "e3_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.74,
+        "omitted_condition": 0.25,
+        "outdated_fact": 0,
+        "exaggeration": 0.01
+      }
+    },
+    "e3_context_established": {
+      "noul": 0.43
+    },
+    "e3_content_basis": {
+      "choice": "original_record",
+      "probabilities": {
+        "original_record": 0.53,
+        "attributable_research": 0,
+        "substantive_secondary": 0.43,
+        "bare_assertion": 0.03,
+        "attributed": 0.01,
+        "promotional": 0,
+        "unclear": 0
+      }
+    },
+    "e4_stance": {
+      "choice": "supports",
+      "probabilities": {
+        "supports": 1,
+        "contradicts": 0,
+        "unrelated": 0
+      }
+    },
+    "e4_relevant": {
+      "noul": 0.97
+    },
+    "e4_scope": {
+      "noul": 0.97
+    },
+    "e4_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.92,
+        "omitted_condition": 0.05,
+        "outdated_fact": 0,
+        "exaggeration": 0.03
+      }
+    },
+    "e4_context_established": {
+      "noul": 0.36
+    },
+    "e4_content_basis": {
+      "choice": "original_record",
+      "probabilities": {
+        "original_record": 0.59,
+        "attributable_research": 0,
+        "substantive_secondary": 0.38,
+        "bare_assertion": 0.03,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0
+      }
+    },
+    "e0_e1_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.01,
+        "distinct_origins": 0.02,
+        "unclear": 0.97
+      }
+    },
+    "e0_e2_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.01,
+        "distinct_origins": 0.07,
+        "unclear": 0.92
+      }
+    },
+    "e0_e3_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.05,
+        "distinct_origins": 0.08,
+        "unclear": 0.87
+      }
+    },
+    "e0_e4_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.03,
+        "distinct_origins": 0.12,
+        "unclear": 0.85
+      }
+    },
+    "e1_e2_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.01,
+        "distinct_origins": 0.04,
+        "unclear": 0.95
+      }
+    },
+    "e1_e3_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.06,
+        "distinct_origins": 0.06,
+        "unclear": 0.88
+      }
+    },
+    "e1_e4_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.04,
+        "distinct_origins": 0.09,
+        "unclear": 0.87
+      }
+    },
+    "e2_e3_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.41,
+        "distinct_origins": 0.03,
+        "unclear": 0.56
+      }
+    },
+    "e2_e4_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.06,
+        "distinct_origins": 0.18,
+        "unclear": 0.76
+      }
+    },
+    "e3_e4_origin": {
+      "choice": "common_origin",
+      "probabilities": {
+        "common_origin": 0.52,
+        "distinct_origins": 0.15,
+        "unclear": 0.33
+      }
+    }
+  },
+  "decisions": {
+    "old": {
+      "verdict": "insufficient_evidence",
+      "reasonCode": "no_agreeing_citation",
+      "selectedEvidenceIds": [],
+      "summary": "I couldn’t verify that."
+    },
+    "fixed": {
+      "verdict": "supported",
+      "reasonCode": "qualifying_evidence",
+      "selectedEvidenceIds": [
+        "ev-98bba1d289c45e2bce3a",
+        "ev-c6ef4b33746b6e519887"
+      ],
+      "summary": "Supported by the sources I found."
+    }
+  },
+  "qualifiedCitationsSelectedByFixedPolicy": [
+    {
+      "id": "ev-98bba1d289c45e2bce3a",
+      "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+      "stance": "supports",
+      "stanceProbability": 0.99,
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "sourceAssessment": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      }
+    },
+    {
+      "id": "ev-c6ef4b33746b6e519887",
+      "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+      "stance": "supports",
+      "stanceProbability": 1,
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "sourceAssessment": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      }
+    }
+  ],
+  "syntheticNegativeSelectionMutations": {
+    "none": {
+      "syntheticMutation": true,
+      "mutation": "Only preferred selection is replaced; captured evidence and scores are unchanged.",
+      "selectedEvidenceIds": [],
+      "old": {
+        "outcome": "decision",
+        "decision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_agreeing_citation",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      },
+      "fixed": {
+        "outcome": "decision",
+        "decision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_agreeing_citation",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    "invalid": {
+      "syntheticMutation": true,
+      "mutation": "Only preferred selection is replaced; captured evidence and scores are unchanged.",
+      "selectedEvidenceIds": [
+        "synthetic-not-retained-id"
+      ],
+      "old": {
+        "outcome": "error",
+        "errorCode": "invalid_citation"
+      },
+      "fixed": {
+        "outcome": "error",
+        "errorCode": "invalid_citation"
+      }
+    }
+  },
+  "limitations": [
+    "Offline replay of one captured public development judgment; no provider or fresh end-to-end calls were made.",
+    "Provider judgments and retrieval passages are held fixed. This isolates deterministic citation selection and does not establish general provider accuracy.",
+    "The Queen Elizabeth memorial citation returned HTTP 403 in the separate prior citation review. Passing captured model/policy gates is not independent verification of that page and supplies no new citation-access evidence.",
+    "Fixed policy uses only existing retained citations after all existing evidence, conflict, source-quality and risk-specific gates pass; thresholds and source registry are unchanged.",
+    "None and invalid-selection variants are explicitly synthetic mutations, not observed provider outcomes.",
+    "No held-out or sealed evaluation material is read by this script."
+  ]
+}
