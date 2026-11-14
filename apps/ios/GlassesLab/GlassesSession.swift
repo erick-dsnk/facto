@@ -81,9 +81,10 @@ final class GlassesSession {
     return newSession
   }
 
-  /// The pair to open the session on: a connected pair with a display first (the demo device),
-  /// then any connected pair. With two registered pairs, AutoDeviceSelector can pick one that
-  /// isn't nearby, and the session then fails with "device unavailable". Logs every pair's
+  /// The pair to open the session on: a worn, connected pair first (a Display pair among them
+  /// first), then a connected Display pair, then any connected pair. With two registered
+  /// pairs, AutoDeviceSelector can pick one that isn't nearby, and the session then fails
+  /// with "device unavailable". Logs every pair's
   /// state, since a pair that is folded, not worn or too hot also refuses sessions.
   private func pickSelector(for holder: Holder) -> any DeviceSelector {
     let pairs = Wearables.shared.devices.compactMap { Wearables.shared.deviceForIdentifier($0) }
@@ -95,7 +96,12 @@ final class GlassesSession {
       DebugLog.shared.log("glasses.pair", ["state": row])
     }
     let connected = pairs.filter { $0.linkState == .connected }
-    guard let pick = connected.first(where: { $0.supportsDisplay() }) ?? connected.first else {
+    // The pair on the wearer's face wins: a Display pair left on and charging must not take
+    // the photo while the wearer has Ray-Ban Meta on. Among the worn pairs (or all connected
+    // ones when none reports being worn), a Display pair goes first.
+    let worn = connected.filter { $0.donState == .donned }
+    let pool = worn.isEmpty ? connected : worn
+    guard let pick = pool.first(where: { $0.supportsDisplay() }) ?? pool.first else {
       NSLog("[glasses] %@: no connected pair, letting the SDK choose", "\(holder)")
       return deviceSelector
     }
