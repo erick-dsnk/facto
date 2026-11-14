@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "kind": "completed_record_acquisition_feasibility_capture_freeze",
+  "frozenAt": "2026-11-14T06:44:38.948247+00:00",
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+  "collectorSHA256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958",
+  "authorization": {
+    "path": "/workspace/task-evidence/record-acquisition-feasibility-authorization-01.json",
+    "bytes": 2006,
+    "sha256": "daf9cf86da64bf121eb88ff83d904d94b40cb0762f48db8e6ef49940d568e575"
+  },
+  "independentCollectorReview": {
+    "path": "/workspace/task-evidence/record-acquisition-collector-review-01/review.json",
+    "bytes": 3581,
+    "sha256": "586d062649d6fb26a83afba53ebc7b88b2b14d2486c9abbdaf5242af27cca9bc"
+  },
+  "networkCalls": 9,
+  "providerOperations": {
+    "search": 4,
+    "contents": 5,
+    "jev": 0
+  },
+  "sourceHeadAndCleanTreeRechecked": true,
+  "completed": true,
+  "truthOrActivationCredit": 0,
+  "analysisStatus": "Independent exact-unit analyzer pending; builtin matches are convenience output only.",
+  "files": [
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/checkpoint.json",
+      "bytes": 52264,
+      "sha256": "f15c6279686d114e37d5de91a0cc9acbaa536f255c5a5eeed61d29c42aea9e7c"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/journal.jsonl",
+      "bytes": 20678,
+      "sha256": "7e1b12842fb54003e1de5122566cf92bcd39b71b9f3543b735f9a0cee80cf06f"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/report.json",
+      "bytes": 70727,
+      "sha256": "29f0d47264ff863bfc05fad22c9c0fc8467cb0611fcbdc145253171a02521502"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-01-request.json",
+      "bytes": 950,
+      "sha256": "a4d5a47e64be2052c69677b6879aaff5d62221395e8f184c5b2a4d3c4bc6d7f1"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-01-response.json",
+      "bytes": 22304,
+      "sha256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-02-request.json",
+      "bytes": 476,
+      "sha256": "c2d9b77b87cd88403ecc6fbea2d3d15c3aba13886a47948255dbfa573fb969b4"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-02-response.json",
+      "bytes": 11210,
+      "sha256": "215e1539e1157ab7f4a0eae785ba0b2f3497d722c1630eae49e5554b0e303370"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-03-request.json",
+      "bytes": 476,
+      "sha256": "7c1e611f96dfa076f8ebafba507e069ccda66285640eef1bc593079c191c8f35"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-03-response.json",
+      "bytes": 9781,
+      "sha256": "a363e4306a660180d342426d0ec930a40003ca1aa5baec72d46b0b1e2f162e7c"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-04-request.json",
+      "bytes": 539,
+      "sha256": "396d15aa43e7fe67e346a3ddfe8721dce6a65a0456dd7f98f18b562717fe4281"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-04-response.json",
+      "bytes": 10372,
+      "sha256": "a18ae8eb75a29c36329a80d123dd5e018534dae0f43904c456d2180bf26cc6a4"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-05-request.json",
+      "bytes": 944,
+      "sha256": "adff2cea031d603e7e7ce86b290f4b72be037fadf2905e5a6db00fcae4f15077"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-05-response.json",
+      "bytes": 15507,
+      "sha256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-06-request.json",
+      "bytes": 932,
+      "sha256": "3469b7af84000d526801c04d5411fe49476844c5b2cc19bab9a1e043aca02928"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-06-response.json",
+      "bytes": 14106,
+      "sha256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-07-request.json",
+      "bytes": 520,
+      "sha256": "f28924ea1d35c8a67cf336cbab135ccdde167a2b8023f898ab6c14bb63e3474d"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-07-response.json",
+      "bytes": 2969,
+      "sha256": "e82b3032932e6313e2692b048af14381a9084aa97b50f447cd7c90efd02a5436"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-08-request.json",
+      "bytes": 966,
+      "sha256": "6785c754e9ad570db8bed3e17eb2d23fda4261c5334b69cf80ff8c46c56c2647"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-08-response.json",
+      "bytes": 22538,
+      "sha256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-09-request.json",
+      "bytes": 623,
+      "sha256": "36ea37e361374e2c9f19fab610c736f773422268841397583aef5d7a45dde12f"
+    },
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses/attempt-09-response.json",
+      "bytes": 12966,
+      "sha256": "591078d4496c8a342941fb7e1939bf0a832f3525f5c9e368d64b6b30372dc889"
+    }
+  ]
+}
