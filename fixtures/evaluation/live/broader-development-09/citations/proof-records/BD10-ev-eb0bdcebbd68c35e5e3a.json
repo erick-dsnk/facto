@@ -1,0 +1,52 @@
+{
+  "caseLabel": "BD10",
+  "evidenceId": "ev-eb0bdcebbd68c35e5e3a",
+  "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+  "excerptSHA256": "56617513f2810dcab0311251e9dbed706c1c9db996f915562e24387cca1a3eba",
+  "mode": "exact_prior_proof_reuse",
+  "reuseDecisionAt": "2026-11-14T05:15:38.129983+00:00",
+  "originalReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+  "originalOriginCompletedAt": "2026-11-14T04:35:26.044712+00:00",
+  "priorReviewPath": "/workspace/task-evidence/broader-candidate08-citation-review.json",
+  "originMetadataPath": "/workspace/task-evidence/broader-candidate08-citation-work/origin-fetches/eb0bdcebbd68c35e.json",
+  "originalOriginMetadata": {
+    "id": "eb0bdcebbd68c35e",
+    "requestedUrl": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+    "requestedAt": "2026-11-14T04:35:25.597667+00:00",
+    "method": "GET",
+    "projectKeysUsed": false,
+    "providerIndexedRetrievalUsed": false,
+    "completedAt": "2026-11-14T04:35:26.044712+00:00",
+    "httpStatus": 200,
+    "finalUrl": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+    "responseHeaders": {
+      "content-type": "text/html; charset=utf-8",
+      "content-length": "44725",
+      "cache-control": "max-age=0, no-cache, no-store",
+      "date": "Sat, 14 Nov 2026 04:35:26 GMT",
+      "server": "envoy"
+    },
+    "redirects": [],
+    "responseBodyFile": "eb0bdcebbd68c35e.body",
+    "responseBodyBytes": 44725,
+    "responseBodySHA256": "1905b617f04c6134468d30ee2f6d695dd18e4bc92af9f7c290cfa7cd305043ba",
+    "bodyTruncated": false,
+    "textExtraction": "stdlib HTMLParser excluding script/style/noscript",
+    "extractedTextFile": "eb0bdcebbd68c35e.text.txt",
+    "extractedTextSHA256": "6ab0e34234c6582c3b05843636daaf54a798adedf1b67b54c72856022b19e7cb",
+    "extractedTextCodepoints": 7779
+  },
+  "selectedExcerpt": "sion of knowledge among men.\u201d \n\n On this date, the House passed legislation to establish the Smithsonian Institution, a research and cultural organization dedicated to science and the arts. Funding for the Smithsonian had come from a wealthy Englishman named James Smithson who had bequeathed his estate to the federal government with instructions to establish an institution in the nation\u2019s capital \u201cfor the increase and diffusion of knowledge among men.\u201d When word of Smithson\u2019s gift reached the United States in late 1835, the House established a select committee, chaired by Representative John Quincy Adams of Massachusetts, to consider the terms of Smithson\u2019s will. In 1836, Adams and the committee recommended that Congress pass legislation to allow President Andrew Jackson to appoint an agent to collect the bequest in London. But legal complications in England meant it took more than two years for the money to arrive in the United States. Over much of the next decade, lawmakers and everyday citizens debated what to do with the gift. Adams fought to create an astronomical observatory with the Smithsonian fund. Others petitioned to create a national university or an institute of agriculture. Some in Congress questioned the constitutionality of the gift altogether. In early 1846, the new chairman of the select committee on Smithson\u2019s gift, Representative Robert Dale Owen of Indiana, submitted a bill to establish the Smithsonian Institution. During debate, Owen said the House had no choice but to use the proceeds of Smithson\u2019s estate to charter the new institution. \u201cWe have no more right to put off . . . the appropriation of such a fund, than we have to direct it to our own private purposes,\u201d he argued. On April 29, 1846, the House took up business on the Smithsonian once more, making minor adjustments to the bill text as different Representatives reviewed it. The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+  "status": "verified",
+  "priorReview": {
+    "caseLabel": "BD10",
+    "expectedClaimId": "BD10",
+    "evidenceId": "ev-eb0bdcebbd68c35e5e3a",
+    "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+    "excerptSHA256": "56617513f2810dcab0311251e9dbed706c1c9db996f915562e24387cca1a3eba",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh exact-URL GET returned HTTP 200 US House History, Art & Archives Smithsonian Institution Established entry dated 29 April 1846. It explicitly records House passage and Polk signature 10 August 1846; selected body matches after whitespace/HTML normalization. Source is maintained by Office of Historian/Office of Art & Archives and recounts own legislative proceedings. Correct distinction: 29 April is House-passage date, 10 August enactment; not a British charter. Different publisher, shared underlying congressional event, not a separate enacting instrument."
+  }
+}

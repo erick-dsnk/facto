@@ -1,0 +1,81 @@
+{
+  "frozenCommit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+  "frozenSourceSHA256": "e6f36587593f39415f161a64a02f0946f4758b9a90b5c2c0ac40399adfb8de85",
+  "branches": [
+    {
+      "issue": 16,
+      "branch": "codex/16-retrieval-stack",
+      "commit": "c8ed43a5831e9a0e1f58fd7b6e850dcda0eb338f",
+      "lint": "passed",
+      "typecheck": "passed",
+      "testsPassed": 191
+    },
+    {
+      "issue": 17,
+      "branch": "codex/17-source-quality-stack",
+      "commit": "893e95965e12a60ab3f94558b7b0806493291a3b",
+      "lint": "passed",
+      "typecheck": "passed",
+      "testsPassed": 278
+    },
+    {
+      "issue": 15,
+      "branch": "codex/15-classification-stack",
+      "commit": "c44ae09830e440eb810fa8997de50bb9a87affbe",
+      "lint": "passed",
+      "typecheck": "passed",
+      "testsPassed": 305
+    },
+    {
+      "issue": 24,
+      "branch": "codex/24-runtime-evaluation-stack",
+      "commit": "f51cdb4d8dae259be6bbfe7727d986d0f3ad37c8",
+      "lint": "passed",
+      "typecheck": "passed",
+      "testsPassed": 305
+    },
+    {
+      "issue": 20,
+      "branch": "codex/20-runtime-stack",
+      "commit": "f350219efefa5ed3b1b7862e98b3178751f9d6de",
+      "lint": "passed",
+      "typecheck": "passed",
+      "testsPassed": 400
+    },
+    {
+      "issue": 24,
+      "branch": "codex/24-live-evaluation-stack",
+      "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+      "lint": "passed",
+      "typecheck": "passed",
+      "testsPassed": 429
+    }
+  ],
+  "development": {
+    "passed": 36,
+    "total": 36,
+    "scripted": 34,
+    "injectedRuntime": 2,
+    "presentationPassed": 21,
+    "presentationTotal": 21,
+    "runtimeDurationsMs": {
+      "E33": 258,
+      "E43": 10033
+    }
+  },
+  "nodeVersion": "v24.22.1",
+  "publicationAdjustments": [
+    {
+      "originalReportSHA256": "904ea551a336b181d3773bcdd2fc0f4698ab8469869080920a111a58f04a537d",
+      "repositoryReport": "docs/blind-evaluation-2026-11-14-03.md",
+      "repositoryReportSHA256": "207ae2089579f2f14aa8b0ab1ef64d493d9700f19f465b24ab4019667de3f6a7",
+      "change": "Adapted the aggregate link to its repository filename and clarified that citation inspection was performed by an independent AI agent; original report remains unchanged in the third private archive."
+    },
+    {
+      "originalReportSHA256": "9f9b0d081275946c630f14631d53d258edc3381b86ee7b24b6fba5cf5122318e",
+      "repositoryReport": "fixtures/evaluation/live/blind-third-run-summary.json",
+      "repositoryReportSHA256": "1898b471eac1591fb114a93d169d307d8480af8f065337ee7892393413f89482",
+      "change": "Clarified independent AI-agent source-review wording; all result values are unchanged and original aggregate remains in the third private archive."
+    }
+  ]
+}

@@ -1,0 +1,749 @@
+{
+  "schemaVersion": 1,
+  "mode": "scripted_fixtures_plus_injected_runtime",
+  "split": "development",
+  "policyVersion": "glasses-p0.1",
+  "modelVersion": "jev-latest-scripted-answers",
+  "counts": {
+    "selected": 36,
+    "passed": 36,
+    "failed": 0,
+    "notRun": 0,
+    "heldoutReserved": 12
+  },
+  "coverage": {
+    "admission": 33,
+    "verdict": 17,
+    "presentation": 17,
+    "providerErrors": 1,
+    "runtimeTransport": 2,
+    "runtimeDeadline": 1,
+    "runtimeCorrections": 1
+  },
+  "measurement": {
+    "scriptedFixtures": 34,
+    "injectedRuntimeTransport": 2,
+    "runtimeDurationsMs": {
+      "E33": 1063,
+      "E43": 10131
+    }
+  },
+  "presentationConfusion": {
+    "respond": {
+      "respond": 7
+    },
+    "silent": {
+      "silent": 9
+    },
+    "notify": {
+      "notify": 1
+    }
+  },
+  "sharedPresentationFixtures": {
+    "passed": 21,
+    "total": 21,
+    "observations": [
+      {
+        "id": "manual-supported",
+        "passed": true,
+        "actual": {
+          "action": "respond",
+          "reasonCode": "explicit_request"
+        }
+      },
+      {
+        "id": "automatic-supported",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "automatic_noncontradiction"
+        }
+      },
+      {
+        "id": "manual-insufficient",
+        "passed": true,
+        "actual": {
+          "action": "respond",
+          "reasonCode": "explicit_request"
+        }
+      },
+      {
+        "id": "automatic-insufficient",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "automatic_noncontradiction"
+        }
+      },
+      {
+        "id": "automatic-misleading",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "automatic_noncontradiction"
+        }
+      },
+      {
+        "id": "practical-contradiction",
+        "passed": true,
+        "actual": {
+          "action": "notify",
+          "reasonCode": "practical_contradiction"
+        }
+      },
+      {
+        "id": "low-priority-contradiction",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "insufficient_priority"
+        }
+      },
+      {
+        "id": "missing-priority",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "insufficient_priority"
+        }
+      },
+      {
+        "id": "stopped-session",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "session_inactive"
+        }
+      },
+      {
+        "id": "muted-manual",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "muted"
+        }
+      },
+      {
+        "id": "superseded-manual",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "superseded"
+        }
+      },
+      {
+        "id": "expired-result",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "expired"
+        }
+      },
+      {
+        "id": "duplicate-transport",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "duplicate"
+        }
+      },
+      {
+        "id": "intentional-repeat",
+        "passed": true,
+        "actual": {
+          "action": "respond",
+          "reasonCode": "explicit_repeat"
+        }
+      },
+      {
+        "id": "repeat-after-stop",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "session_inactive"
+        }
+      },
+      {
+        "id": "unhealthy-service",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "service_unhealthy"
+        }
+      },
+      {
+        "id": "notification-budget",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "notification_budget"
+        }
+      },
+      {
+        "id": "notifications-disabled",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "notifications_disabled"
+        }
+      },
+      {
+        "id": "selected-topic",
+        "passed": true,
+        "actual": {
+          "action": "notify",
+          "reasonCode": "selected_topic_contradiction"
+        }
+      },
+      {
+        "id": "unselected-topic",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "insufficient_priority"
+        }
+      },
+      {
+        "id": "waiting-candidate",
+        "passed": true,
+        "actual": {
+          "action": "silent",
+          "reasonCode": "unresolved_admission"
+        }
+      }
+    ]
+  },
+  "metrics": {
+    "liveAdmissionPrecision": null,
+    "liveAdmissionRecall": null,
+    "privateQueryLeakage": null,
+    "wrongDefinitiveLiveLabels": null,
+    "inspectedLiveCitations": 0,
+    "liveLatencyMedianMs": null,
+    "liveLatencyP95Ms": null,
+    "providerCost": null,
+    "falseAlertsPerListeningMinute": null,
+    "actualDuplicateSpeech": null,
+    "actualStaleSpeech": null,
+    "deliberateSourceOpens": null
+  },
+  "limitations": [
+    "Scripted model answers test control flow, not model accuracy.",
+    "Injected runtime providers exercise composed authenticated HTTP/WebSocket transport, revision cancellation and deadlines, not provider semantics or reliability.",
+    "Synthetic evidence is not a checked live citation.",
+    "No real provider network, wearable capture, listening duration or actual speech measurement.",
+    "The 12 held-out cases remain excluded unless explicitly selected; do not tune thresholds on their outcomes."
+  ],
+  "observations": [
+    {
+      "id": "E01",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E02",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E03",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E04",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E05",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E06",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E07",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E08",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E09",
+      "category": "personal",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E13",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "supported",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E14",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "supported",
+      "presentation": "silent",
+      "expectedPresentation": "silent"
+    },
+    {
+      "id": "E15",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E16",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "notify",
+      "expectedPresentation": "notify"
+    },
+    {
+      "id": "E17",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "silent",
+      "expectedPresentation": "silent"
+    },
+    {
+      "id": "E18",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "insufficient_evidence",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E19",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "insufficient_evidence",
+      "presentation": "silent",
+      "expectedPresentation": "silent"
+    },
+    {
+      "id": "E20",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "insufficient_evidence",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E21",
+      "category": "public",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "insufficient_evidence",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E25",
+      "category": "mixed",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "insufficient_evidence",
+      "presentation": "silent",
+      "expectedPresentation": "silent"
+    },
+    {
+      "id": "E26",
+      "category": "mixed",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "supported",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E27",
+      "category": "mixed",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "needs_confirmation",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E28",
+      "category": "mixed",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "wait",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E29",
+      "category": "mixed",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E30",
+      "category": "mixed",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "skip",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E33",
+      "category": "capture",
+      "status": "pass",
+      "method": "injected_runtime_transport",
+      "testedStages": [
+        "fastify_http",
+        "authenticated_websocket",
+        "runtime_revision_cancellation",
+        "correction_confirmation",
+        "auth_and_operational_error_boundary"
+      ],
+      "mismatches": [],
+      "durationMs": 1063
+    },
+    {
+      "id": "E34",
+      "category": "capture",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "wait",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E35",
+      "category": "capture",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "needs_confirmation",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E36",
+      "category": "capture",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission"
+      ],
+      "mismatches": [],
+      "admission": "wait",
+      "note": "Admission only; no evidence verdict or transport-delivered response was tested."
+    },
+    {
+      "id": "E37",
+      "category": "capture",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "insufficient_evidence",
+      "presentation": "respond",
+      "expectedPresentation": "respond"
+    },
+    {
+      "id": "E38",
+      "category": "capture",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "silent",
+      "expectedPresentation": "silent",
+      "note": "Pure presentation suppression tested with injected state; runtime lifecycle and actual speech were not exercised."
+    },
+    {
+      "id": "E41",
+      "category": "service",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "supported",
+      "presentation": "silent",
+      "expectedPresentation": "silent",
+      "note": "Pure presentation suppression tested with injected state; runtime lifecycle and actual speech were not exercised."
+    },
+    {
+      "id": "E42",
+      "category": "service",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "silent",
+      "expectedPresentation": "silent",
+      "note": "Pure presentation suppression tested with injected state; runtime lifecycle and actual speech were not exercised."
+    },
+    {
+      "id": "E43",
+      "category": "service",
+      "status": "pass",
+      "method": "injected_runtime_transport",
+      "testedStages": [
+        "fastify_http",
+        "authenticated_websocket",
+        "runtime_provider_deadline",
+        "deadline_cancellation",
+        "auth_and_operational_error_boundary"
+      ],
+      "mismatches": [],
+      "durationMs": 10131
+    },
+    {
+      "id": "E44",
+      "category": "service",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "provider_error_validation"
+      ],
+      "mismatches": [],
+      "errorCode": "malformed_provider"
+    },
+    {
+      "id": "E45",
+      "category": "service",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "silent",
+      "expectedPresentation": "silent",
+      "note": "Pure presentation suppression tested with injected state; runtime lifecycle and actual speech were not exercised."
+    },
+    {
+      "id": "E46",
+      "category": "service",
+      "status": "pass",
+      "method": "scripted_policy_fixture",
+      "testedStages": [
+        "admission",
+        "verdict",
+        "presentation"
+      ],
+      "mismatches": [],
+      "admission": "check",
+      "verdict": "contradicted",
+      "presentation": "silent",
+      "expectedPresentation": "silent",
+      "note": "Pure presentation suppression tested with injected state; runtime lifecycle and actual speech were not exercised."
+    }
+  ]
+}

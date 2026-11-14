@@ -1,0 +1,28 @@
+
+> check
+> npm run lint && npm run typecheck && npm test
+
+
+> lint
+> eslint packages services apps --no-warn-ignored
+
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> vitest run
+
+
+ RUN  v5.1.0 /workspace/stack-20
+
+
+ Test Files  26 passed (26)
+      Tests  574 passed (574)
+   Start at  09:47:22
+   Duration  10.93s (tests 76%, import 20%, transform 3%, worker 1%)
+
+    Isolate  26 workers spawned · ~134ms startup each (spawn + environment, per file)
+             at least ~1.03s faster with isolate: false — reuses workers across files instead of one per file
+

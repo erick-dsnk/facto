@@ -1,0 +1,1 @@
+Exact upstream map/manifest/README bytes are retained as provenance. Their original blob filenames are not duplicated; every original entry resolves by raw SHA256 through restore-map.json and blobs/. The upstream standalone archive verifier is not claimed runnable from these metadata-only copies.

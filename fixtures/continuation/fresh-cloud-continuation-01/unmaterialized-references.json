@@ -1,0 +1,31 @@
+{
+  "literalImportsNotFound": [],
+  "limitations": [
+    "Historical manifests and reviews may refer to predecessor logs or whole prior trees deliberately omitted. They remain evidence pointers, not a claim every old verifier is runnable.",
+    "Current production imports require separate exact Git compatibility checkouts and fresh npm ci.",
+    "Historical shadow/reinstall scripts and parity drivers may require omitted old replay inputs. Do not execute live runners or reinstall receipts. Current installed receipts and source are preserved."
+  ],
+  "staticImportScanNotes": "Four initial regex hits were replaceAll string literals in projection.test.ts, not import expressions. Independent current source literal-import audit found zero missing task-evidence imports.",
+  "omittedHistoricalInputs": [
+    {
+      "path": "/workspace/task-evidence/record-capability-design (full origin-fetches and reinstall corpus)",
+      "status": "Only manifest and annotations needed by current tests are included. Exact currently installed artifacts/receipts preserved; old installer/shadow replay not promised."
+    },
+    {
+      "path": "/workspace/task-evidence/selector-seam-implementation-01 (full parity saved-pool history)",
+      "status": "Legacy selector oracle source included; older parity inputs may need retrieval from existing published evaluation archives. No claim of replay completeness for that driver."
+    },
+    {
+      "path": "Historical predecessor experiment folders referenced by immutable manifests/review JSON",
+      "status": "Only source modules required by current cross-brand imports are retained, not every old log or test history."
+    },
+    {
+      "path": "/workspace/junction-2026 and /workspace/stack-20",
+      "status": "Not materialized in data extraction. Exact public commit/tree/lock/npm pins documented separately. Package-only test verifies bytes, not execution of absolute imports."
+    },
+    {
+      "path": "node_modules across compatibility roots",
+      "status": "Never bundled; fresh explicit npm ci and exact pin recheck required. Native platform reproduction is not guaranteed."
+    }
+  ]
+}
