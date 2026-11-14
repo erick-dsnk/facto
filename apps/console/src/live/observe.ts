@@ -148,7 +148,12 @@ async function responseBody(response: Response, signal: AbortSignal): Promise<Ui
       chunks.push(chunk.value);
     }
     return Buffer.concat(chunks);
-  } catch (error) { await reader.cancel().catch(() => undefined); throw error; }
+  } catch (error) {
+    // Cleanup cannot delay an established byte-limit/cancellation failure or
+    // leave the attempt ledger and campaign drain waiting on provider cleanup.
+    try { void reader.cancel().catch(() => undefined); } catch { /* Best effort for injected transports. */ }
+    throw error;
+  }
   finally { reader.releaseLock(); }
 }
 
