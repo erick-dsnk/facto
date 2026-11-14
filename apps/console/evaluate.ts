@@ -13,6 +13,7 @@ import actionFixtures from '../../fixtures/actions/presentation-cases.json' with
 type SemanticFixture = {
   kind: string; selfContained: number; privateData: number;
   assertionStatus: string; hasPracticalConsequence: number | null;
+  claimStructure?: 'one_coherent' | 'multiple_propositions' | 'unclear';
 };
 export type EvaluationCase = {
   id: string; category: 'personal' | 'public' | 'mixed' | 'capture' | 'service'; split: 'development' | 'heldout';
@@ -39,16 +40,23 @@ function fixtureAnswers(request: JevRequest, sample: EvaluationCase): Record<str
   const answers: Record<string, JevAnswer> = {};
   for (const candidate of state.candidates) {
     const semantic = sample.candidateModelFixtures?.[candidate.text] ?? sample.modelFixture;
-    for (const suffix of ['kind', 'assertion_status'] as const) {
+    for (const suffix of ['kind', 'assertion_status', 'quote_use', 'claim_structure'] as const) {
       const key = `${candidate.id}_${suffix}`;
       const question = request.questions[key];
+      if (!question) continue;
       if (question.type !== 'choice') throw new Error('Unexpected classifier question');
-      const choice = suffix === 'kind' ? semantic.kind : semantic.assertionStatus;
+      const choice = suffix === 'kind' ? semantic.kind
+        : suffix === 'assertion_status' ? semantic.assertionStatus
+        : suffix === 'quote_use' ? 'name_or_title'
+        : semantic.claimStructure ?? (candidate.id === 'span_0' && state.candidates.length > 1 ? 'multiple_propositions' : 'one_coherent');
       answers[key] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(option => [option, Number(option === choice)])) };
     }
     answers[`${candidate.id}_self_contained`] = { noul: semantic.selfContained };
     answers[`${candidate.id}_private_data`] = { noul: semantic.privateData };
     answers[`${candidate.id}_has_practical_consequence`] = { noul: semantic.hasPracticalConsequence };
+    if (request.questions[`${candidate.id}_preserves_scope`]) {
+      answers[`${candidate.id}_preserves_scope`] = { noul: 1 };
+    }
   }
   return answers;
 }
