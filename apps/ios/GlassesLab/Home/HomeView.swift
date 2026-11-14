@@ -87,10 +87,20 @@ struct HomeView: View {
 
   private var listeningControls: some View {
     VStack(alignment: .leading, spacing: FactoSpacing.s) {
-      // No listening and no video stream: "Hey Facto" or this button takes one photo and
-      // checks the text in it. Listening stays on the Developer screen.
+      // Listening checks what's said nearby (camera-stream audio on Ray-Ban Meta, the Bluetooth
+      // mic on Display glasses). Check this, by button or by saying it, takes one photo.
+      Button(listenTitle) {
+        if live.isListening {
+          live.stopListening()
+        } else {
+          Task { await live.startListening() }
+        }
+      }
+      .buttonStyle(FactoPillButtonStyle(size: .large))
+      .disabled(!live.isListening && (!live.isConnected || live.isStartingStream))
+
       Button(checkTitle) { Task { await live.checkThis() } }
-        .buttonStyle(FactoPillButtonStyle(size: .large))
+        .buttonStyle(.factoPillSecondary)
         .disabled(!live.isConnected || live.isChecking)
 
       if GlassesSession.shared.needsGlassesAppUpdate {
@@ -108,6 +118,11 @@ struct HomeView: View {
         footnote(live.wakeState.detail.map { "\(live.wakeState.title). \($0)" } ?? live.wakeState.title)
       }
     }
+  }
+
+  private var listenTitle: String {
+    if live.isListening { return "Stop listening" }
+    return live.isStartingStream ? "Starting…" : "Start listening"
   }
 
   private var checkTitle: String {

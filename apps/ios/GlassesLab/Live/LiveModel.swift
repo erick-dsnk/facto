@@ -64,6 +64,8 @@ protocol LiveCamera: PhotoCapturing {
   /// A quiet video stream (no audio) kept running on glasses without a display, only so a
   /// photo takes ~1 s instead of ~14 s. "Hey Facto" stays armed during it.
   var isWarmStandby: Bool { get }
+  /// Listening should use the camera stream's audio (glasses without a display).
+  var listensThroughStream: Bool { get }
   var onCaptureStarting: (@MainActor () -> Void)? { get set }
   var onCaptureSessionEnded: (@MainActor () -> Void)? { get set }
   /// Quality for a stream that Live mode starts, including one started by "Check this".
@@ -78,6 +80,7 @@ protocol LiveCamera: PhotoCapturing {
 
 extension LiveCamera {
   var isWarmStandby: Bool { false }
+  var listensThroughStream: Bool { false }
 }
 
 /// The glasses lens. `DisplayModel` is the real one.
@@ -440,6 +443,8 @@ final class LiveModel {
   @ObservationIgnored private let configureAudioSession: () -> Void
   /// Listening input: the glasses' Bluetooth mic. The camera only takes Check this photos.
   @ObservationIgnored private let mic: ListeningMicrophone
+  /// Current listening runs on the camera stream's audio (Ray-Ban Meta), not the mic.
+  @ObservationIgnored private var listeningViaStream = false
   @ObservationIgnored private let idleTimer: (_ keepAwake: Bool) -> Void
   @ObservationIgnored private let uptime: () -> TimeInterval
   @ObservationIgnored private let debugLog: DebugLog
@@ -843,8 +848,30 @@ final class LiveModel {
       isStartingStream = false
       refreshWake()
     }
-    // Listening uses the glasses' Bluetooth mic, not the camera stream: on Display glasses a
-    // running camera holds back the lens cards and shows a viewfinder.
+    if camera.listensThroughStream {
+      // Ray-Ban Meta: the camera stream carries the glasses' mic, which hears nearby voices
+      // best, and "check this" photos come from the same stream in ~1 s.
+      do {
+        try await camera.startListeningStream(quality: quality)
+      } catch {
+        notice = (error as? LiveStreamError)?.message ?? "The glasses stream didn't start."
+        return
+      }
+      guard current(), await ensureSessionActive(), isConnected, self.streamer === streamer, current() else {
+        if isConnected { notice = notice ?? Self.pausedMessage }
+        return
+      }
+      listeningViaStream = true
+      streamer.source = .glassesStreamAudio
+      streamer.start()
+      acknowledgeListeningOnReady = true
+      syncListening()
+      startTicker()
+      return
+    }
+    // Display glasses: the Bluetooth mic, because a running camera holds back lens cards.
+    listeningViaStream = false
+    streamer.source = .glassesHfp
     guard await mic.requestPermission() else {
       notice = MicrophoneError.denied.message
       return
@@ -890,6 +917,14 @@ final class LiveModel {
     guard let streamer, streamer.phase.isActive else { return }
     streamer.stop()
     stopMic()
+    if listeningViaStream {
+      // The listening stream goes off with listening, so the camera is idle and Hey Facto re-arms.
+      listeningViaStream = false
+      Task {
+        await self.camera.stopLiveStream()
+        self.refreshWake()
+      }
+    }
     presenter.stopOutput()
     syncListening()
     // Stopping by hand during a wake session also ends that session and its stream.
@@ -1318,9 +1353,14 @@ final class LiveModel {
 
   /// A camera stream ended. Listening runs on the Bluetooth mic, so it carries on; a stream only
   /// runs for a fallback photo or from the Developer screen.
+  /// A camera stream ended. Listening through that stream ends with it; Bluetooth-mic
+  /// listening carries on (a stream there only runs for a photo).
   private func streamStopped(byUser: Bool) {
     defer { refreshWake() }
     debugLog.log("live.stream_stopped", ["byUser": byUser, "listening": String(describing: streamer?.phase ?? .idle)])
+    guard listeningViaStream, let streamer, streamer.phase.isActive else { return }
+    if byUser { streamer.stop() } else { streamer.glassesDisconnected() }
+    syncListening()
   }
 
   private func checkFinished(_ outcome: LookAndCheckCoordinator.Outcome) {

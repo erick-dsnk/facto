@@ -98,9 +98,13 @@ final class GlassesSession {
   /// True when the open session runs on glasses with a display (Meta Ray-Ban Display).
   var sessionHasDisplay: Bool { session?.device?.supportsDisplay() ?? false }
 
-  private func preferredPair(for holder: Holder) -> Device? {
+  /// Whether the pair a new session would open on has a display, without logging. Nil when no
+  /// pair is connected.
+  var preferredPairHasDisplay: Bool? { preferredPair(for: .camera, log: false)?.supportsDisplay() }
+
+  private func preferredPair(for holder: Holder, log: Bool = true) -> Device? {
     let pairs = Wearables.shared.devices.compactMap { Wearables.shared.deviceForIdentifier($0) }
-    for device in pairs {
+    for device in pairs where log {
       let row = "name=\(device.nameOrId()) link=\(device.linkState) display=\(device.supportsDisplay()) "
         + "don=\(device.donState) hinge=\(device.hingeState) thermal=\(device.thermalLevel) "
         + "compat=\(device.compatibility()) type=\(device.deviceType())"
@@ -114,9 +118,10 @@ final class GlassesSession {
     let worn = connected.filter { $0.donState == .donned }
     let pool = worn.isEmpty ? connected : worn
     guard let pick = pool.first(where: { $0.supportsDisplay() }) ?? pool.first else {
-      NSLog("[glasses] %@: no connected pair, letting the SDK choose", "\(holder)")
+      if log { NSLog("[glasses] %@: no connected pair, letting the SDK choose", "\(holder)") }
       return nil
     }
+    guard log else { return pick }
     NSLog("[glasses] %@: opening the session on %@", "\(holder)", pick.nameOrId())
     DebugLog.shared.log("glasses.session_pick", ["holder": "\(holder)", "device": pick.nameOrId(), "display": pick.supportsDisplay()])
     return pick
