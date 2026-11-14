@@ -1,3 +1,4 @@
+import { MAX_LOW_CONFIDENCE_WORDS, type LowConfidenceWord } from '../../../../../packages/contracts/src/index.js';
 import { type AsrTranscript } from '../../transport/audio.js';
 
 /** One recognised word. Times are seconds from the start of the audio stream. */
@@ -8,6 +9,9 @@ type Piece = { words: AsrWord[]; text: string; boundary: boolean };
 type Pending = { segmentId: string; text: string; endTime: number };
 
 const TRANSCRIPT_MAX_CODE_POINTS = 800;
+/** Words below this confidence are shown to Jev, which judges whether the sentence was misheard. */
+export const LOW_CONFIDENCE_BELOW = 0.75;
+const LOW_CONFIDENCE_WORD_MAX_CODE_POINTS = 64;
 const TERMINAL = /[.?!]["'”’)\]]*$/;
 const CLOSING = /["'”’)\]]+$/;
 /** Dotted initials such as "U.S.", "e.g." or "J.". */
@@ -33,6 +37,20 @@ function averageConfidence(words: AsrWord[]): number | null {
   const values = words.map(word => word.confidence).filter((value): value is number => value !== null);
   if (!values.length) return null;
   return Math.min(1, Math.max(0, values.reduce((sum, value) => sum + value, 0) / values.length));
+}
+
+/**
+ * The words the recogniser was least sure of, in sentence order: below 0.75, at most 12 (the least confident win), punctuation
+ * around a word dropped. Bare punctuation, and a word longer than 64 code points, is left out rather than cut.
+ */
+export function lowConfidenceWords(words: AsrWord[]): LowConfidenceWord[] {
+  const unsure = words.flatMap((word, index) => {
+    const text = word.text.replace(/^["'“‘([]+|[.,!?;:"'”’)\]]+$/gu, '');
+    return word.confidence !== null && word.confidence < LOW_CONFIDENCE_BELOW && /[\p{L}\p{N}]/u.test(text) && length(text) <= LOW_CONFIDENCE_WORD_MAX_CODE_POINTS
+      ? [{ index, text, confidence: word.confidence }] : [];
+  });
+  return unsure.sort((a, b) => a.confidence - b.confidence || a.index - b.index).slice(0, MAX_LOW_CONFIDENCE_WORDS)
+    .sort((a, b) => a.index - b.index).map(({ text, confidence }) => ({ text, confidence }));
 }
 
 /**
@@ -172,7 +190,9 @@ export class SentenceAssembler {
     const text = join(words);
     if (advance) this.emittedUntil = Math.max(this.emittedUntil, words[words.length - 1].end);
     if (text && length(text) <= TRANSCRIPT_MAX_CODE_POINTS) {
-      this.emit({ text, final: true, segmentId: id, confidence: averageConfidence(words), captureOffsetMs: offsetMs(words), speaker: majoritySpeaker(words) });
+      const unsure = lowConfidenceWords(words);
+      this.emit({ text, final: true, segmentId: id, confidence: averageConfidence(words), captureOffsetMs: offsetMs(words), speaker: majoritySpeaker(words),
+        ...(unsure.length ? { lowConfidenceWords: unsure } : {}) });
     }
     return id;
   }

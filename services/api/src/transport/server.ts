@@ -3,7 +3,7 @@ import websocket from '@fastify/websocket';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
+import { PROVIDER_LIMITS, PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from '../runtime/adapters.js';
 import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
@@ -87,7 +87,7 @@ export async function buildServer(options: ServerOptions) {
       feed.push('session.created', { expiresAt: new Date(session.expiresAt).toISOString() }, session.id);
       session.listeners.add(event => feed.push(event.type, { requestId: event.requestId, revision: event.revision, claimId: event.claimId, payload: event.payload }, session.id));
     }
-    return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, token: session.token, sessionEpoch: session.epoch, expiresAt: new Date(session.expiresAt).toISOString(), capabilities: { mode: options.mode, text: true, audio: !!options.asr }, budgets: { deadlineMs: 10_000, running: 2, queued: 3, jev: 3, searchesPerClaim: 2 } });
+    return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, token: session.token, sessionEpoch: session.epoch, expiresAt: new Date(session.expiresAt).toISOString(), capabilities: { mode: options.mode, text: true, audio: !!options.asr }, budgets: { deadlineMs: 10_000, running: 2, queued: 3, jev: PROVIDER_LIMITS.jev, searchesPerClaim: PROVIDER_LIMITS.search } });
   });
   app.post('/v1/sessions/:sessionId/checks', async (request, reply) => {
     const session = authenticated(request.params, request.headers.authorization);
@@ -144,7 +144,9 @@ export async function buildServer(options: ServerOptions) {
       try {
         const segmentHash = createHash('sha256').update(event.segmentId).digest('hex').slice(0, 24);
         const requestId = `asr-${config.sessionEpoch}-${config.streamGeneration}-${segmentHash}`;
-        const hash = createHash('sha256').update(JSON.stringify([event.text, event.confidence])).digest('hex');
+        const lowConfidenceWords = event.lowConfidenceWords?.length ? event.lowConfidenceWords : undefined;
+        // A correction that only changes which words were uncertain is a new revision too.
+        const hash = createHash('sha256').update(JSON.stringify(lowConfidenceWords ? [event.text, event.confidence, lowConfidenceWords] : [event.text, event.confidence])).digest('hex');
         const previous = transcripts.get(requestId);
         if (isVoiceTrigger(event.text)) {
           // A spoken "check this" asks the app for a photo. The command itself is never fact-checked.
@@ -163,7 +165,8 @@ export async function buildServer(options: ServerOptions) {
         const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(event.segmentId) ? event.segmentId : `segment-${segmentHash}`;
         const input = textInputSchema.parse({ schemaVersion: 1, requestId, sessionId: session.id, sessionEpoch: config.sessionEpoch, revision: record.revision,
           mode: 'audio', text: event.text, language: 'en', capturedAt: record.capturedAt,
-          capture: { source: config.source, segmentId, confidence: event.confidence, final: true }, context: record.context, userInitiated: false });
+          capture: { source: config.source, segmentId, confidence: event.confidence, final: true, ...(lowConfidenceWords ? { lowConfidenceWords } : {}) },
+          context: record.context, userInitiated: false });
         // Context reflects the conversation, including sentences the runtime later declines to check.
         recent.record(requestId, event.text, event.speaker ?? null, Date.parse(record.capturedAt));
         runtime.submit(session, input); remember(transcripts, requestId, record);

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { type AsrTranscript } from '../../transport/audio.js';
-import { SentenceAssembler, majoritySpeaker, type AsrWord } from './sentence-assembler.js';
+import { MAX_LOW_CONFIDENCE_WORDS, lowConfidenceWordSchema } from '../../../../../packages/contracts/src/index.js';
+import { LOW_CONFIDENCE_BELOW, SentenceAssembler, lowConfidenceWords, majoritySpeaker, type AsrWord } from './sentence-assembler.js';
 
 /** Words 0.3 s apart from `start`, each 0.25 s long. */
 function words(text: string, start = 0, speakers: (number | null)[] = [], confidence = 0.9): AsrWord[] {
@@ -158,5 +159,37 @@ describe('sentence assembler', () => {
     const locked = words('No scores here.').map(word => ({ ...word, confidence: null }));
     assembler.final(locked, endOf(locked));
     expect(finals()[0].confidence).toBeNull();
+  });
+
+  it('attaches the words below 0.75 confidence to a final sentence, in sentence order and without punctuation', () => {
+    const { assembler, events, finals } = setup();
+    const locked = words('You heard that on Tropical IPO for $2,500,000,000,000?');
+    locked[3] = { ...locked[3], confidence: 0.42 };
+    locked[4] = { ...locked[4], confidence: 0.38 };
+    locked[7] = { ...locked[7], confidence: 0.7 };
+    locked[0] = { ...locked[0], confidence: LOW_CONFIDENCE_BELOW };
+    assembler.interim(locked);
+    expect(events[0]).not.toHaveProperty('lowConfidenceWords');
+    assembler.final(locked, endOf(locked) + 0.1);
+    expect(finals()[0].lowConfidenceWords).toEqual([{ text: 'on', confidence: 0.42 }, { text: 'Tropical', confidence: 0.38 }, { text: '$2,500,000,000,000', confidence: 0.7 }]);
+    expect(finals()[0].lowConfidenceWords!.every(word => lowConfidenceWordSchema.safeParse(word).success)).toBe(true);
+  });
+
+  it('omits low-confidence words when there are none or the provider gives no scores', () => {
+    const { assembler, finals } = setup();
+    assembler.final(words('Helsinki is the capital.'), 2);
+    assembler.final(words('No scores here.', 3).map(word => ({ ...word, confidence: null })), 5);
+    expect(finals()).toHaveLength(2);
+    expect(finals().every(event => !('lowConfidenceWords' in event))).toBe(true);
+  });
+
+  it('keeps the 12 least confident words, still in sentence order, and leaves out overlong or bare punctuation', () => {
+    const many = words(Array.from({ length: 20 }, (_, index) => `w${index}`).join(' ')).map((word, index) => ({ ...word, confidence: 0.5 + index * 0.01 }));
+    many[19] = { ...many[19], confidence: 0.1 };
+    const picked = lowConfidenceWords(many);
+    expect(picked).toHaveLength(MAX_LOW_CONFIDENCE_WORDS);
+    expect(picked.map(word => word.text)).toEqual([...Array.from({ length: 11 }, (_, index) => `w${index}`), 'w19']);
+    const odd = words(`— ${'x'.repeat(65)} fine`).map(word => ({ ...word, confidence: 0.2 }));
+    expect(lowConfidenceWords(odd)).toEqual([{ text: 'fine', confidence: 0.2 }]);
   });
 });
