@@ -12,13 +12,16 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run lint && npm run typecheck && npm test",
-    "evaluate": "tsx apps/console/evaluate.ts"
+    "evaluate": "tsx apps/console/evaluate.ts",
+    "evaluate:live": "tsx --env-file-if-exists=.env apps/console/src/live/run.ts"
   },
   "dependencies": {
     "@fastify/websocket": "11.2.0",
     "exa-js": "2.28.0",
     "fastify": "5.12.8",
     "tldts": "7.0.19",
+    "tsx": "4.20.6",
+    "ws": "8.23.0",
     "zod": "4.6.6"
   },
   "devDependencies": {
@@ -26,10 +29,8 @@
     "@types/node": "22.19.1",
     "@types/ws": "8.18.1",
     "eslint": "9.39.1",
-    "tsx": "4.20.6",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.4",
-    "vitest": "5.1.0",
-    "ws": "8.23.0"
+    "vitest": "5.1.0"
   }
 }

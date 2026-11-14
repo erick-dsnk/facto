@@ -1,0 +1,147 @@
+{
+  "planHash": "f010dee47cb4aabbfe31a39f9f9518bfbcadd67373a314f8e999bf5068e11647",
+  "sourceManifestSha256": "b68521ffe13081fe915570fe614ef85ff1d324a8bbbc091c14add8592e972695",
+  "singlePass": true,
+  "productionWired": false,
+  "sourceHashesUnchangedAfterRun": true,
+  "families": 12,
+  "pairedPassChanges": [
+    {
+      "id": "Q02",
+      "partition": "development",
+      "expectedBasis": "substantive",
+      "excludedFromPrimary": false,
+      "basisSubtype": "research",
+      "baseline": {
+        "id": "Q02",
+        "decision": "attributable_research",
+        "confidence": 0.9199999999999999,
+        "passesContentBasis": true
+      },
+      "candidate": {
+        "id": "Q02",
+        "decision": "substantive",
+        "confidence": 0.63,
+        "passesContentBasis": false,
+        "diagnosticGenre": "attributable_research"
+      }
+    },
+    {
+      "id": "Q21",
+      "partition": "validation",
+      "expectedBasis": "substantive",
+      "excludedFromPrimary": false,
+      "basisSubtype": "record",
+      "baseline": {
+        "id": "Q21",
+        "decision": "original_record",
+        "confidence": 0.94,
+        "passesContentBasis": true
+      },
+      "candidate": {
+        "id": "Q21",
+        "decision": "substantive",
+        "confidence": 0.82,
+        "passesContentBasis": false,
+        "diagnosticGenre": "original_record"
+      }
+    },
+    {
+      "id": "Q26",
+      "partition": "validation",
+      "expectedBasis": "substantive",
+      "excludedFromPrimary": false,
+      "basisSubtype": "record",
+      "baseline": {
+        "id": "Q26",
+        "decision": "original_record",
+        "confidence": 0.99,
+        "passesContentBasis": true
+      },
+      "candidate": {
+        "id": "Q26",
+        "decision": "substantive",
+        "confidence": 0.8,
+        "passesContentBasis": false,
+        "diagnosticGenre": "original_record"
+      }
+    },
+    {
+      "id": "Q33",
+      "partition": "development",
+      "expectedBasis": "substantive",
+      "excludedFromPrimary": false,
+      "basisSubtype": "secondary",
+      "baseline": {
+        "id": "Q33",
+        "decision": "substantive_secondary",
+        "confidence": 0.98,
+        "passesContentBasis": true
+      },
+      "candidate": {
+        "id": "Q33",
+        "decision": "substantive",
+        "confidence": 0.79,
+        "passesContentBasis": false,
+        "diagnosticGenre": "substantive_secondary"
+      }
+    },
+    {
+      "id": "Q45",
+      "partition": "validation",
+      "expectedBasis": "substantive",
+      "excludedFromPrimary": false,
+      "basisSubtype": "secondary",
+      "baseline": {
+        "id": "Q45",
+        "decision": "substantive_secondary",
+        "confidence": 0.94,
+        "passesContentBasis": true
+      },
+      "candidate": {
+        "id": "Q45",
+        "decision": "substantive",
+        "confidence": 0.77,
+        "passesContentBasis": false,
+        "diagnosticGenre": "substantive_secondary"
+      }
+    },
+    {
+      "id": "Q46",
+      "partition": "validation",
+      "expectedBasis": "substantive",
+      "excludedFromPrimary": false,
+      "basisSubtype": "secondary",
+      "baseline": {
+        "id": "Q46",
+        "decision": "substantive_secondary",
+        "confidence": 0.8900000000000001,
+        "passesContentBasis": true
+      },
+      "candidate": {
+        "id": "Q46",
+        "decision": "non_substantive",
+        "confidence": 0.49,
+        "passesContentBasis": false,
+        "diagnosticGenre": "substantive_secondary"
+      }
+    }
+  ],
+  "primaryCombined": {
+    "baseline": {
+      "planned": 45,
+      "truePositive": 20,
+      "falseNegative": 10,
+      "falsePositive": 0,
+      "trueNegative": 15
+    },
+    "candidate": {
+      "planned": 45,
+      "truePositive": 14,
+      "falseNegative": 16,
+      "falsePositive": 0,
+      "trueNegative": 15
+    }
+  },
+  "recommendation": "Do not promote candidate; no threshold change or rerun authorized by this report."
+}

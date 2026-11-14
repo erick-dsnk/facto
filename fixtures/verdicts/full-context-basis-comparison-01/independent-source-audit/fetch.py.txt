@@ -1,0 +1,35 @@
+import pathlib,json,hashlib,subprocess,datetime,html.parser,re
+BASE=pathlib.Path(__file__).resolve().parent
+plan=json.loads((BASE/'fetch-plan.json').read_text())
+assert hashlib.sha256((BASE/'fetch-plan.json').read_bytes()).hexdigest()=='9fe84ee18e1a9309d54331d72f1ce8a72a814e75c4ab1908d715614e4c94b717'
+out=BASE/'origin-fetches'; out.mkdir(exist_ok=False)
+class Extract(html.parser.HTMLParser):
+ def __init__(self): super().__init__(); self.skip=0; self.parts=[]
+ def handle_starttag(self,t,a):
+  if t in ['script','style','noscript']: self.skip+=1
+  if t in ['p','div','br','h1','h2','h3','h4','tr','li']: self.parts.append('\n')
+ def handle_endtag(self,t):
+  if t in ['script','style','noscript']: self.skip=max(0,self.skip-1)
+  if t in ['p','div','h1','h2','h3','h4','tr','li']: self.parts.append('\n')
+ def handle_data(self,s):
+  if not self.skip:self.parts.append(s)
+ledger=[]
+for target in plan['freshTargets']:
+ url=target['url']; key=hashlib.sha256(url.encode()).hexdigest()[:16]; body=out/(key+'.body'); headers=out/(key+'.headers.txt'); meta=out/(key+'.json'); start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ command=['curl','--silent','--show-error','--location','--max-redirs','3','--proto','=https','--proto-redir','=https','--max-time','15','--connect-timeout','10','--max-filesize','1048576','--retry','0','--user-agent','JunctionDevelopmentEvidenceAudit/1.0','--dump-header',str(headers),'--output',str(body),'--write-out','%{json}',url]
+ p=subprocess.run(command,capture_output=True,text=True,timeout=17)
+ try:wire=json.loads(p.stdout)
+ except ValueError:wire={}
+ payload=body.read_bytes() if body.exists() else b''
+ m={**target,'requestedAt':start,'completedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'method':'GET','projectKeysUsed':False,'providerIndexedRetrievalUsed':False,'curlExit':p.returncode,'error':p.stderr.strip() or None,'httpStatus':wire.get('http_code'),'finalUrl':wire.get('url_effective'),'redirectCount':wire.get('num_redirects'),'elapsedSeconds':wire.get('time_total'),'responseBodyFile':body.name if body.exists() else None,'responseBodyBytes':len(payload),'responseBodySHA256':hashlib.sha256(payload).hexdigest() if body.exists() else None,'bodyTruncated':p.returncode==63,'responseHeaderFile':headers.name,'responseHeaderSHA256':hashlib.sha256(headers.read_bytes()).hexdigest() if headers.exists() else None,'contentType':wire.get('content_type')}
+ textfile=out/(key+'.text.txt')
+ if payload.startswith(b'%PDF'):
+  q=subprocess.run(['pdftotext','-layout',str(body),str(textfile)],capture_output=True,text=True,timeout=10);m['textExtraction']='pdftotext -layout';m['extractionExit']=q.returncode
+ else:
+  ex=Extract();ex.feed(payload.decode('utf-8',errors='replace'));textfile.write_text('\n'.join(re.sub(r'[ \t\r\f\v]+',' ',line).strip() for line in ''.join(ex.parts).splitlines() if line.strip())+'\n');m['textExtraction']='stdlib HTMLParser excluding script/style/noscript'
+ if textfile.exists():m.update(extractedTextFile=textfile.name,extractedTextSHA256=hashlib.sha256(textfile.read_bytes()).hexdigest(),extractedTextCodepoints=len(textfile.read_text()))
+ meta.write_text(json.dumps(m,indent=2)+'\n');ledger.append(m)
+ with (BASE/'fetch-journal.jsonl').open('a') as f:f.write(json.dumps(m)+'\n')
+ print(json.dumps({k:m[k] for k in ['caseId','url','httpStatus','curlExit','responseBodyBytes','redirectCount','elapsedSeconds']}),flush=True)
+assert len(ledger)==4 and sum(m['responseBodyBytes'] for m in ledger)<=4194304
+(BASE/'fetch-summary.json').write_text(json.dumps({'targetChains':len(ledger),'httpRequestsIncludingRedirects':sum(1+(m['redirectCount'] or 0) for m in ledger),'responseBodyBytes':sum(m['responseBodyBytes'] for m in ledger),'projectProviderCalls':0,'results':ledger},indent=2)+'\n')

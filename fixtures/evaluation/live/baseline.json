@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-14T02:28:42.924649+00:00",
+  "commit": "2cd89adf6ddc3ecc4020227645b861bd7731256d",
+  "node": "v24.22.1",
+  "install": "npm ci passed",
+  "gate": {
+    "command": "npm run check",
+    "lint": "passed",
+    "typecheck": "passed",
+    "testsPassed": 291,
+    "testFiles": 14
+  },
+  "development": {
+    "command": "npm run evaluate",
+    "selected": 36,
+    "passed": 36,
+    "scripted": 34,
+    "injectedRuntime": 2,
+    "presentationPassed": 21,
+    "correctionDurationMs": 172,
+    "deadlineDurationMs": 10018
+  },
+  "heldout": "not opened or run"
+}

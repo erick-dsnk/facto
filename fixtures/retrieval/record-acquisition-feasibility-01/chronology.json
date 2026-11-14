@@ -1,0 +1,79 @@
+{
+  "kind": "preserved_pre_execution_failure_and_authorization_chronology",
+  "versions": [
+    {
+      "version": "01",
+      "freezeAt": "2026-11-14T06:34:12.390824+00:00",
+      "collectorSHA256": "6c726a8a53b30413522010cde6f6d84ff41290b8e1ce5f7820f09d7d8908ccc9",
+      "manifestSHA256": "466a97712520f3f6fee1ecbc2c1604f9ac8ecb3c9ebe103f5e317be22c241ab7",
+      "offlineTestsPassed": 13,
+      "interpretation": "First enforcing collector; historical ids guard/offline failures preserved before urls correction; rejected-cancel handling later found unsafe.",
+      "executedAgainstProvider": false
+    },
+    {
+      "version": "02",
+      "freezeAt": "2026-11-14T06:35:26.099624+00:00",
+      "collectorSHA256": "12b45e32d134d31c61647d31bf308e7b8936811dcb63c50608b4ed268051fee2",
+      "manifestSHA256": "c8e27550f48cc045440c967493dcac5a132b591a8927cfac64683284caf19f40",
+      "offlineTestsPassed": 14,
+      "interpretation": "Only fulfilled cancellation establishes cleanup; optional contents retry still exposed unknown-cleanup continuation.",
+      "executedAgainstProvider": false
+    },
+    {
+      "version": "03",
+      "freezeAt": "2026-11-14T06:37:36.637136+00:00",
+      "collectorSHA256": "269ed09b1e3ff83501d60693a62160c4aaa0187e5a21a59f3bfb3f596b92445f",
+      "manifestSHA256": "16d2a596660f459aab69450a34bbbce84c77633a5c601638981cdb9c82bd3e25",
+      "offlineTestsPassed": 15,
+      "interpretation": "Unknown non-2xx cleanup immediately fatal; fatal-aware allowances deny contents retry; oversized-header double-cancel accounting gap later found.",
+      "executedAgainstProvider": false
+    },
+    {
+      "version": "04",
+      "freezeAt": "2026-11-14T06:40:36.839589+00:00",
+      "collectorSHA256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958",
+      "manifestSHA256": "ba1f98a732a2c3792d082b10f3c0cd90e3ce0ee9f85ab5921cd61762330b7b15",
+      "offlineTestsPassed": 16,
+      "interpretation": "Common catch cancels oversized-header response once; rejected cleanup remains unknown and no later work dispatches.",
+      "executedAgainstProvider": true
+    }
+  ],
+  "initialSdkGuardFailure": {
+    "path": "collectors/01/initial-offline-failure/",
+    "providerCalls": 0,
+    "note": "Installed SDK2.28 uses urls, while initial guard/fixture expected ids. Collector01 final test file has13 tests; the initial12-test sources and failures are separately preserved."
+  },
+  "planCheckpointClarification": {
+    "path": "collectors/01/PLAN-CLARIFICATION.md",
+    "originalPlan": "collectors/01/initial-offline-failure/approved-plan-before-checkpoint-clarification.json",
+    "note": "Only checkpoint filename clarified before any network authorization; queries/source/units/budgets/live root unchanged."
+  },
+  "independentCollectorReview": {
+    "path": "collector-review/review.json",
+    "sha256": "586d062649d6fb26a83afba53ebc7b88b2b14d2486c9abbdaf5242af27cca9bc",
+    "networkAuthorizationGranted": false,
+    "decision": "approved_for_root_authorized_declared_diagnostic_only"
+  },
+  "rootAuthorization": {
+    "createdAt": "2026-11-14T06:43:52.565Z",
+    "path": "authorization.json",
+    "sha256": "daf9cf86da64bf121eb88ff83d904d94b40cb0762f48db8e6ef49940d568e575",
+    "soleOutput": "/workspace/task-evidence/record-acquisition-feasibility-01",
+    "collectorSHA256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958",
+    "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+    "exactOnce": true
+  },
+  "execution": {
+    "firstFamilyStartedAt": "2026-11-14T06:44:04.006Z",
+    "lastFamilyCompletedAt": "2026-11-14T06:44:11.657Z",
+    "networkCalls": 9,
+    "actualSearch": 4,
+    "actualContents": 5,
+    "actualJev": 0,
+    "resumeReplayRerun": false,
+    "allAttemptsSettled": true,
+    "liveCaptureFreezeAt": "2026-11-14T06:44:38.948247+00:00",
+    "liveReportSHA256": "29f0d47264ff863bfc05fad22c9c0fc8467cb0611fcbdc145253171a02521502"
+  },
+  "packaging": "Portable copies prepared after execution; no re-predeclaration or independent external registration claim. Later independent acquisition analysis is copied separately without changing historical pending-analysis snapshots."
+}

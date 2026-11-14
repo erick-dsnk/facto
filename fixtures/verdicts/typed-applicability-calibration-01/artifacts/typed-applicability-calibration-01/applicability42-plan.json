@@ -1,0 +1,1105 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_open_applicability42",
+  "providerExecutionAuthorized": false,
+  "sourceHashes": {
+    "/workspace/task-evidence/typed-applicability-calibration-01/contexts.07.json": "c6e5e10c63ef28ba6d80bedd4e6686f9826b399be5569343da51ab2823966fc4",
+    "/workspace/task-evidence/typed-applicability-calibration-01/requests.07.json": "fc4f854a58c25dee8f4ccc5bc08e1c4106dcb0d9c7b05d857de93bcba96c4b9b",
+    "/workspace/task-evidence/record-capability-contrasts-v1/labels-author.json": "1ce81ea4fd3a38b495d6eb6295e3f3c3d56310d50f9d30022c15eb777babf035",
+    "/workspace/task-evidence/record-capability-contrasts-v1.second-labels.json": "f826fbcc68ce7e04940034336804e2e6c072a246659c6708fecd258328ff9b49",
+    "/workspace/task-evidence/record-capability-contrasts-v1.adjudication.json": "d08282b76afb3fb0a224fd52409d7fcd9914b48c6f21cfb703d1d02375a3009c",
+    "/workspace/task-evidence/document-identity-contrasts-v1/labels-author.json": "f657bfdb5341ce1283eb827c9431755de3dc833b912932620561cca4d03e9ee7",
+    "/workspace/task-evidence/document-identity-contrasts-v1.second-labels.json": "a55f2085f18038cb9f93a583b2412d3ea4cdd5236eca28d525c1be71702ecdef",
+    "/workspace/task-evidence/document-identity-contrasts-v1.adjudication.json": "b5775e52d184b09a4f2bd703361898bad10540b3d300102702c561b06e458128",
+    "/workspace/task-evidence/record-capability-contrasts-v1/annotation-inputs.json": "0bc7d8258e871997f8f37f157670810abb5481118b2284dd5ebe418dcd2b0c0b",
+    "/workspace/task-evidence/document-identity-contrasts-v1/annotation-inputs.json": "17edb0a1eef8b6aba555e5daeae7a15d0d771cf172b842fa30e24d96149221b3",
+    "/workspace/task-evidence/record-capability-contrasts-v1/sources.json": "9821bc874361d23fccc9e7d7a887e6b803740a9d3600ca30f5c3c9699c15a33d",
+    "/workspace/task-evidence/applicability-companion-pools-01/companions.json": "e303357ec7f21a103ded5fe36fe7f82aeea36b725657154421708628cb8614e4",
+    "/workspace/task-evidence/typed-applicability-calibration-01/runner.ts": "bb2877fc891db57b58346cccabd5744c2fe423ad5b387bf898d177d576790b0c",
+    "/workspace/task-evidence/typed-applicability-calibration-01/contexts.ts": "b643d06bf20033df797bd0983f7e27d39e3f9a7404c09f19199cfe355ff4cac7",
+    "/workspace/task-evidence/typed-applicability-calibration-01/scoring.ts": "ca84901406cc0a7b77af543adb0970316e96c712d4c14330ac6e2ec12b69a301",
+    "/workspace/task-evidence/typed-applicability-calibration-01/study-guard.ts": "bea4ec95ab4c2d66546282fa01207e189fc51bb0334ba0251a0683d3645d51a0",
+    "/workspace/task-evidence/typed-applicability-calibration-01/capture-07.ts": "fa8791cf8b5e1bb2ed7d5218084d691ae03d78db80b0fd31cf1ba21ee1b07427",
+    "/workspace/task-evidence/typed-applicability-adapter-07/adapter.ts": "62c85a09461168ed1caa3cdbac7b6276230aed22f01801d3e1baf282c0acfb9f",
+    "/workspace/task-evidence/typed-applicability-adapter-07/runtime-owner.ts": "845b66da332a4949e2b1a7f173459f26bc64ab3d92a03a88636dfe74c390bcfb",
+    "/workspace/task-evidence/typed-applicability-adapter-07/transport.ts": "24a67d3d8ab5fef682d01d5dc93e988103b9e7c248c1c8d3203b839a9ee56da8",
+    "/workspace/task-evidence/typed-applicability-adapter-07/question.ts": "e980f87308bdc932bf6323344a77247cc54e90cbc90a9e9565b615811b9377b3",
+    "/workspace/task-evidence/typed-applicability-adapter-07/identity-contract.json": "4582df7c4e2393882dceabb7c718d9cc3ca2d5dff02afb59391e8858f0d134bf",
+    "/workspace/task-evidence/typed-applicability-adapter-07/version-reference.ts": "5931a6d60af23736a282d2fe5d91fca9b08398e2c8e7892f64ce1a09f0eb6e6b",
+    "/workspace/task-evidence/typed-applicability-adapter-07/manifest.json": "aecfa1cc5449aee73c2a52057fc732a8f7378f5865921cd0a9e6c9491be149a0",
+    "/workspace/task-evidence/capability-selection-seam-02/material.ts": "b3acaefd0717bd7cbcaf0d99061dd326fb7e2ed62f46a44a0309a9c5982bc980",
+    "/workspace/task-evidence/capability-selection-seam-02/manifest.json": "f1e267762bd52ef3509f1f7fed25567e43a725785a7d15198676a458e19c1e80",
+    "/workspace/task-evidence/record-capability-prototype-02/src/manifest.ts": "d5fcf8bcf0829ee1d35d6a7ac87246b6b739fe9db386d16ff6a44516547934b1",
+    "/workspace/task-evidence/record-capability-prototype-02/src/snapshot.ts": "8f7e4f0e15b3289e919a5204ae5637c95598391f81e8cd68e41ff7877ba46c66",
+    "/workspace/task-evidence/record-capability-prototype-02/src/types.ts": "bb4f27979d9442c7a15f5f8c217bd1f06621bbb12941086865910d13fdbbbc09",
+    "/workspace/task-evidence/record-capability-prototype-02/src/bind.ts": "3fb74cc1ec343de11796bea75f20d6d018d3471f693881e7bf5ee95f935a56e9",
+    "/workspace/task-evidence/record-capability-prototype-02/src/files.ts": "5e0da54b39d96550435a1fd76f92fa58a0114a7482b73aa2a6508e20e6896487",
+    "/workspace/task-evidence/record-capability-prototype-02/installed/manifest.json": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+    "/workspace/stack-20/packages/contracts/src/index.ts": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32",
+    "/workspace/stack-20/package-lock.json": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32",
+    "/workspace/stack-20/services/api/src/providers/jev/client.ts": "de12cdeb0c20075cc9798036904ddd7535b3ad15c8fc982c51ece1ecf5904efc",
+    "/workspace/stack-20/services/api/src/providers/jev/judgment.ts": "8a531805d0d4ea1e78f4d3294905b99da286bd47fa6b7e500e87d898aa88dbdb",
+    "/workspace/stack-20/services/api/src/policy/assessment.ts": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14",
+    "/workspace/stack-20/services/api/src/policy/sources.ts": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5",
+    "/workspace/stack-20/services/api/src/policy/verdict.ts": "de40566ea3d59ae02b5da4a9d207e42a83c0a25fe6ebb462bebafa4504dd102b",
+    "/workspace/stack-20/services/api/src/evidence/normalize.ts": "e7f9e5663a07011107bb44d912b1d28175e2b60e1427c81820ae5d7a129d7ae9",
+    "/workspace/stack-20/services/api/src/runtime/session.ts": "762635a33a608baecc3709aaa76bc81bba0a532758d374ad099be3d74a802e2c",
+    "/workspace/stack-20/services/api/src/runtime/budget.ts": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b",
+    "/workspace/stack-20/services/api/src/runtime/alternate-evidence.ts": "874ea11b7f7c2edc8fbb70f77da627dc2212aa923f312c366c137096aec7aea5",
+    "/workspace/stack-20/services/api/src/runtime/provider-retry.ts": "ebb83ff0a5ce0bb469906ac4f86dead40f42fe6732939353aed11dd868b91e7f"
+  },
+  "contextsPath": "/workspace/task-evidence/typed-applicability-calibration-01/contexts.07.json",
+  "requestsPath": "/workspace/task-evidence/typed-applicability-calibration-01/requests.07.json",
+  "guard": {
+    "calls": [
+      {
+        "callId": "AC-T02:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "988f51017f58da42947763fd268962970dbac57afad8d4fa745dbfddbc4b7a05",
+        "requestBytes": 40958,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-T02:applicability",
+        "blockId": "block1",
+        "requestSHA256": "8088ec663b5069c365acf82ef0f67f59f44bcad5825450bc2cda64583cac5de9",
+        "requestBytes": 43814,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-X06:applicability",
+        "blockId": "block1",
+        "requestSHA256": "00aecc007e075fb58228722846aa0055ec25f46ef97fdd4aa6cca140d3a0f369",
+        "requestBytes": 44227,
+        "denominatorClass": "original36/applicability/uncertain"
+      },
+      {
+        "callId": "AC-X06:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "a2733e7d8924728748b1912a1cedac9ca3ff90368770babf561bda439295ce07",
+        "requestBytes": 41455,
+        "denominatorClass": "original36/baseline_anchor/uncertain"
+      },
+      {
+        "callId": "AC-D06:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "4a34004ac6241f4a418211a60e81279fbc117a7a91104ded27a15b7ce5676cdf",
+        "requestBytes": 40943,
+        "denominatorClass": "original36/baseline_anchor/uncertain"
+      },
+      {
+        "callId": "AC-D06:applicability",
+        "blockId": "block1",
+        "requestSHA256": "4a34004ac6241f4a418211a60e81279fbc117a7a91104ded27a15b7ce5676cdf",
+        "requestBytes": 40943,
+        "denominatorClass": "original36/applicability/uncertain"
+      },
+      {
+        "callId": "AC-N04:applicability",
+        "blockId": "block1",
+        "requestSHA256": "d5076eb46c7e25fe54b6efdf8babf88fcd8197bc284e080ab2d0d4935993ed52",
+        "requestBytes": 43825,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-N04:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "39dac8774447177d0697f67cd1fbf565e4d75367e4ec49480a26d72c6ac82739",
+        "requestBytes": 40969,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-T05:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "cf255bd2f71f3eb4b0adf940e9c582fb4a287987476e204d0433ec3a3f38bda1",
+        "requestBytes": 41037,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-T05:applicability",
+        "blockId": "block1",
+        "requestSHA256": "1c6cad5fcc3fa2fd043c996301bc8610dfbb6a7fc2f994b819703d8cc567df0d",
+        "requestBytes": 43799,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-D03:applicability",
+        "blockId": "block1",
+        "requestSHA256": "ea088c3d58d28a0ddf54e379af70261c48566a4398719a23cc4e5de46133ea2d",
+        "requestBytes": 41431,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-D03:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "ea088c3d58d28a0ddf54e379af70261c48566a4398719a23cc4e5de46133ea2d",
+        "requestBytes": 41431,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-X03:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "97e85df13eb321a8e75d42b1b9355048f5f35accba6740c6b388759f116965a9",
+        "requestBytes": 41525,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-X03:applicability",
+        "blockId": "block1",
+        "requestSHA256": "ff404935e244151917aa34d76f2652d55d43f8228d5af538fba96bbe6925f133",
+        "requestBytes": 44297,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-T06:applicability",
+        "blockId": "block1",
+        "requestSHA256": "c6bd0e01af4fb74f3e6a8c97fb16ecdb01b6ce5b924b5f03480f7f0f2a49e94d",
+        "requestBytes": 43753,
+        "denominatorClass": "original36/applicability/uncertain"
+      },
+      {
+        "callId": "AC-T06:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "06fbdf2d690e704cefed7d79efe9a480086ad157873ec42556fe4ff435b52edc",
+        "requestBytes": 40897,
+        "denominatorClass": "original36/baseline_anchor/uncertain"
+      },
+      {
+        "callId": "AC-V05:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "2b5d30b78275b350397c400af2d0a1ad11f6d6e44726d9acf86de36a8f7b465a",
+        "requestBytes": 41022,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-V05:applicability",
+        "blockId": "block1",
+        "requestSHA256": "991f671b6401a805a3dc60e511a048800e30b6668bdac705b471b59d1ceeb1d0",
+        "requestBytes": 43784,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-T04:applicability",
+        "blockId": "block1",
+        "requestSHA256": "69b48a7ae026d3672c8178d31d26d83bbb944dc62040a24724f422cadff79f57",
+        "requestBytes": 43794,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-T04:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "35e9f1cdaca857257bb80e2598d2d62e90333bcbf1c23aa0ce6cfe2ec05990ea",
+        "requestBytes": 41032,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-X02:baseline_anchor",
+        "blockId": "block1",
+        "requestSHA256": "98c55e3c86f7a87a427e7a45ffb119d3ac6fd7f4c52f95956682a24983786630",
+        "requestBytes": 41507,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-X02:applicability",
+        "blockId": "block1",
+        "requestSHA256": "34af23eae46908e064bc584487d6ba21f2570c097cbf289e7a4b297c7aa4122a",
+        "requestBytes": 44279,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-V01:applicability",
+        "blockId": "block2",
+        "requestSHA256": "d8d63da176611be8a41a7ab1da133bea82f6f3aa55810a7450e17091e8d0ae6a",
+        "requestBytes": 53932,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-V01:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "a697e2de93f8b13b08b77ba14b65cbc5d94aecba2cf465a6167e4791fd912250",
+        "requestBytes": 51184,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-T03:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "65c7f1cf77bb9f8de4b4aa1dee1d78ea7c1cc0c07fb6530fc44fbb73020aec35",
+        "requestBytes": 40971,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-T03:applicability",
+        "blockId": "block2",
+        "requestSHA256": "0af205181047c032a2c1b4d2f342f4aaea3646aacdda4d4d67ea107ba3493a9d",
+        "requestBytes": 43827,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-O01:applicability",
+        "blockId": "block2",
+        "requestSHA256": "29d5e06733c65d92c83e42d1c094f28752d7e6d315f82f890498202d3c63e856",
+        "requestBytes": 43795,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-O01:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "36bfe247e1baa31370f91a49b53d7cade2e8f45f64201ef061e00e115362fdc9",
+        "requestBytes": 41033,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-N01:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "5cfed618d084003ff06e1b5a466c269a481898d4189d2390f230cbc8ed46d397",
+        "requestBytes": 51184,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-N01:applicability",
+        "blockId": "block2",
+        "requestSHA256": "15af404ac6ca94f10856176f9bf4de605078e19651911db322b7f5c676f4e586",
+        "requestBytes": 53932,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-X04:applicability",
+        "blockId": "block2",
+        "requestSHA256": "c804b98d06fe4fe9767de092273d5fea5b91222e73bd414d28c3595bcafe6d3f",
+        "requestBytes": 44262,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-X04:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "6124e7274d4631db421adecd61d24fee7dc1c6c1843d49768e238175edd95048",
+        "requestBytes": 41490,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-N06:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "af6a788f74df0fc484938612743049393a54a6e0db463928e750131f4dda971b",
+        "requestBytes": 40988,
+        "denominatorClass": "original36/baseline_anchor/uncertain"
+      },
+      {
+        "callId": "AC-N06:applicability",
+        "blockId": "block2",
+        "requestSHA256": "d2c41ae3fdfd8e8a9a0fca8b30f880ebcfade01081ed6362bde362f344226193",
+        "requestBytes": 43750,
+        "denominatorClass": "original36/applicability/uncertain"
+      },
+      {
+        "callId": "AC-N05:applicability",
+        "blockId": "block2",
+        "requestSHA256": "5c179a94c7cd2d8a604bb9e03a611cd5c842d22815fc32b395a98b905c04fbc3",
+        "requestBytes": 53893,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-N05:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "1c9eb32f8155f71c7b06b37313f5885a8a5cef4528cee7787dd99947901e273c",
+        "requestBytes": 51145,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-X01:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "10c388130c1566876ff7e1792925c1bb5a70e9f38bd57eb5230634fbe412dff1",
+        "requestBytes": 41507,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-X01:applicability",
+        "blockId": "block2",
+        "requestSHA256": "d9830dff4d59ecf9468bd1ff2c98b8793d9d1b94191c1d2a90fa15855c3396ca",
+        "requestBytes": 44279,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-V03:applicability",
+        "blockId": "block2",
+        "requestSHA256": "845403f08f66ca185928ec8b2bc137b433420ab1002d3c14d5ae8581d0a5b630",
+        "requestBytes": 44251,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-V03:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "871cd5242eb83c65803f4c48e21a962f5b4a16bd6cabcbfb727db68aeb39de49",
+        "requestBytes": 41479,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-O03:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "90eb1ec78153f134940f8f96a0aa6199261557abaebb4577b0b2306ae2449214",
+        "requestBytes": 41001,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-O03:applicability",
+        "blockId": "block2",
+        "requestSHA256": "74b74bdeb1e2502c812bb2095eee089b5eaecbb55ebe6351d38f18ec450fd8be",
+        "requestBytes": 43763,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-X05:applicability",
+        "blockId": "block2",
+        "requestSHA256": "a2c99fff3a5b0b7c70938e367586645c7fd15a1666e02ee1a5fabc0f9de4b471",
+        "requestBytes": 44289,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-X05:baseline_anchor",
+        "blockId": "block2",
+        "requestSHA256": "8d7dd3a08400d49217e94a344a2c03700f12a3af41b5faf6e1c7566061f6b85e",
+        "requestBytes": 41517,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-T01:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "cef5524318d1fa1ef8a9715c88b8a02fd29418854c102e585db8545a881aede4",
+        "requestBytes": 40958,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-T01:applicability",
+        "blockId": "block3",
+        "requestSHA256": "e86453ed575f88c652f5e77e49bad8997235422e23227d2c02583831e9d0224c",
+        "requestBytes": 43814,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-D05:applicability",
+        "blockId": "block3",
+        "requestSHA256": "387e890d463bd4484da20d5017b5765ad9ca5abcb1e625c230bbed9441ff766c",
+        "requestBytes": 40892,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-D05:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "387e890d463bd4484da20d5017b5765ad9ca5abcb1e625c230bbed9441ff766c",
+        "requestBytes": 40892,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-D01:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "7d51dc2a6ed07dc6ffe77ae93863ce1539bdeca586f38f1d5b9c42d1dac78cbb",
+        "requestBytes": 51186,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-D01:applicability",
+        "blockId": "block3",
+        "requestSHA256": "141fc66a7f4780d734b3b02101d85b18d0a763baa572baec6413248b3055ed12",
+        "requestBytes": 53934,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-O02:applicability",
+        "blockId": "block3",
+        "requestSHA256": "dffc8d5b4bc8d7f365302b65491ae56a6cb4626fbfa3282a070db996088f8c7b",
+        "requestBytes": 43777,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-O02:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "a5c6b4a32768d44405a26853991ab61fcd5e24ecc82071841f941c138feaed2d",
+        "requestBytes": 41015,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-V06:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "6d72806fe5579c5ec44566a96b937013e6bbbc0760924939e858cc9b80aacebd",
+        "requestBytes": 41002,
+        "denominatorClass": "original36/baseline_anchor/uncertain"
+      },
+      {
+        "callId": "AC-V06:applicability",
+        "blockId": "block3",
+        "requestSHA256": "4dddba082f88ba8c255ae922ddef8cb03d57bf36ee92c8995ff74e1df211fd54",
+        "requestBytes": 43764,
+        "denominatorClass": "original36/applicability/uncertain"
+      },
+      {
+        "callId": "AC-N02:applicability",
+        "blockId": "block3",
+        "requestSHA256": "911345efdac12b3939c326f41d255222a1577077f9918547f5316180902e4e6e",
+        "requestBytes": 53932,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-N02:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "b214eeae017a02891df63652a68484480f66b6f105681ff09f4a3567523e3671",
+        "requestBytes": 51184,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-D04:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "e208b5566b8fe48dae16600280710fb1e0f26f3251be84f1ec449bb5f62c83ff",
+        "requestBytes": 40901,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-D04:applicability",
+        "blockId": "block3",
+        "requestSHA256": "e208b5566b8fe48dae16600280710fb1e0f26f3251be84f1ec449bb5f62c83ff",
+        "requestBytes": 40901,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-D02:applicability",
+        "blockId": "block3",
+        "requestSHA256": "dd44bfdc965361bb8ad254ac647c42af37736b33a059be1eb88244660550906f",
+        "requestBytes": 44254,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-D02:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "6c4a1bde537bda4963e6f76af9b566d800fdad789eed21214ff1d055a45e2678",
+        "requestBytes": 41482,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-V02:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "1fbe66a95d05c8d2e594aa0357476d8057fb49b31ada5e2e7ad4c0c8b45580af",
+        "requestBytes": 51153,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "AC-V02:applicability",
+        "blockId": "block3",
+        "requestSHA256": "64d057fb669db03f3c8d98a44025030302aef68564ab49fc1dc942b3a1e2de2f",
+        "requestBytes": 53901,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-N03:applicability",
+        "blockId": "block3",
+        "requestSHA256": "52e7acc9a169986fb22d38e637ba53c9ea914120443fb168bd703f0e68986937",
+        "requestBytes": 43803,
+        "denominatorClass": "original36/applicability/covered"
+      },
+      {
+        "callId": "AC-N03:baseline_anchor",
+        "blockId": "block3",
+        "requestSHA256": "79e59ba2b17e61a351dd8d7a493d504e4166ad2fc450dc9a926fe67e7e91abc0",
+        "requestBytes": 41041,
+        "denominatorClass": "original36/baseline_anchor/covered"
+      },
+      {
+        "callId": "AC-O04:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "8f9630137226c75b970d2a2c05f90038310e33dc8eddb4d11829a1409beee001",
+        "requestBytes": 40996,
+        "denominatorClass": "original36/baseline_anchor/uncertain"
+      },
+      {
+        "callId": "AC-O04:applicability",
+        "blockId": "block4",
+        "requestSHA256": "4a0fb38118dd9c282b501534925936cdeeab4d48eb1ce29e5a8fb32049df158b",
+        "requestBytes": 43758,
+        "denominatorClass": "original36/applicability/uncertain"
+      },
+      {
+        "callId": "AC-V04:applicability",
+        "blockId": "block4",
+        "requestSHA256": "1826c1ca677a92816969460f16956c5178378cd647080baf2a5e2f87cf51820e",
+        "requestBytes": 43796,
+        "denominatorClass": "original36/applicability/not_covered"
+      },
+      {
+        "callId": "AC-V04:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "df03308a984ec35a25ab6a1e9bf6e310fdb743cd0717598cde147b8d4051c7e5",
+        "requestBytes": 41034,
+        "denominatorClass": "original36/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "DI08:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "14b65a4cbe7deb9acdf18d7811f7484b667e10f1ff54b3e774c7efaa99bff7dc",
+        "requestBytes": 40939,
+        "denominatorClass": "identity8/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "DI08:applicability",
+        "blockId": "block4",
+        "requestSHA256": "cf94f6b0414082980ba95b98874e921f1dbc6e9f459825764a10b5b4d351d4af",
+        "requestBytes": 43795,
+        "denominatorClass": "identity8/applicability/not_covered"
+      },
+      {
+        "callId": "DI05:applicability",
+        "blockId": "block4",
+        "requestSHA256": "d632344d7d371dabfdf790e0eb39c6b18a975e9569961dc669867c809a86efaf",
+        "requestBytes": 53845,
+        "denominatorClass": "identity8/applicability/not_covered"
+      },
+      {
+        "callId": "DI05:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "5deee584b9e9bc153cac85e473e1ffe5c92757009062b474dffb10de85196c9b",
+        "requestBytes": 51097,
+        "denominatorClass": "identity8/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "DI04:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "bee20c0d758b4b3e154bc0297f4b3429dfb83e6107ae862a583d452d7737c71a",
+        "requestBytes": 51078,
+        "denominatorClass": "identity8/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "DI04:applicability",
+        "blockId": "block4",
+        "requestSHA256": "1660a8f0cbc7a1db22d86bf9ce8969c42c8b6439c7ee54a35132857a7d7a7bba",
+        "requestBytes": 53826,
+        "denominatorClass": "identity8/applicability/not_covered"
+      },
+      {
+        "callId": "DI06:applicability",
+        "blockId": "block4",
+        "requestSHA256": "7b2a41848da1fa5a8a40f3ac4ede8eea866f89adc959bbffaf5f0baa1c880699",
+        "requestBytes": 41475,
+        "denominatorClass": "identity8/applicability/not_covered"
+      },
+      {
+        "callId": "DI06:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "7b2a41848da1fa5a8a40f3ac4ede8eea866f89adc959bbffaf5f0baa1c880699",
+        "requestBytes": 41475,
+        "denominatorClass": "identity8/baseline_anchor/not_covered"
+      },
+      {
+        "callId": "DI03:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "68b188d4d10caa066dec4da6afa0b8784995188aab7e99d99b512185c6fe06de",
+        "requestBytes": 40950,
+        "denominatorClass": "identity8/baseline_anchor/covered"
+      },
+      {
+        "callId": "DI03:applicability",
+        "blockId": "block4",
+        "requestSHA256": "a3b1d9487b07d27751a18c20d761b08e087710557592706bb6a78901ba3027ed",
+        "requestBytes": 43806,
+        "denominatorClass": "identity8/applicability/covered"
+      },
+      {
+        "callId": "DI02:applicability",
+        "blockId": "block4",
+        "requestSHA256": "ec8e2e43e51d835ee7f27720ab7ba4942fcd3479815e3958a18d9eedfeda227f",
+        "requestBytes": 53906,
+        "denominatorClass": "identity8/applicability/covered"
+      },
+      {
+        "callId": "DI02:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "67d868753fd6ae04de3b1857d4e42f42dd66dee2debdee4c35fa0fd7cb22cc31",
+        "requestBytes": 51158,
+        "denominatorClass": "identity8/baseline_anchor/covered"
+      },
+      {
+        "callId": "DI01:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "46e5a812842e8a8addb55febd164d5175497f2b3e14419a1f1f793f7e1eb039b",
+        "requestBytes": 51161,
+        "denominatorClass": "identity8/baseline_anchor/covered"
+      },
+      {
+        "callId": "DI01:applicability",
+        "blockId": "block4",
+        "requestSHA256": "c0e04c60488f940dd141c438104dc4aba4c78fe63948aa788f4a3e4ae9e21be2",
+        "requestBytes": 53909,
+        "denominatorClass": "identity8/applicability/covered"
+      },
+      {
+        "callId": "DI07:applicability",
+        "blockId": "block4",
+        "requestSHA256": "9b26f31193fc9b8c432d2753e5e94e02833d79b2452c45761fd5a03c1a9062f4",
+        "requestBytes": 43793,
+        "denominatorClass": "identity8/applicability/not_covered"
+      },
+      {
+        "callId": "DI07:baseline_anchor",
+        "blockId": "block4",
+        "requestSHA256": "c168ee9d00de063234ec570f3fa4ba981a1455b7b8cb1dc0741d096051494221",
+        "requestBytes": 41031,
+        "denominatorClass": "identity8/baseline_anchor/not_covered"
+      }
+    ],
+    "blocks": [
+      {
+        "blockId": "block1",
+        "limits": {
+          "maxCalls": 22,
+          "maxInputTokens": 320000,
+          "pendingReserve": 24000,
+          "maxTotalRequestBytes": 930722,
+          "maxTotalResponseBytes": 524288
+        }
+      },
+      {
+        "blockId": "block2",
+        "limits": {
+          "maxCalls": 22,
+          "maxInputTokens": 320000,
+          "pendingReserve": 24000,
+          "maxTotalRequestBytes": 997472,
+          "maxTotalResponseBytes": 524288
+        }
+      },
+      {
+        "blockId": "block3",
+        "limits": {
+          "maxCalls": 20,
+          "maxInputTokens": 320000,
+          "pendingReserve": 24000,
+          "maxTotalRequestBytes": 903786,
+          "maxTotalResponseBytes": 524288
+        }
+      },
+      {
+        "blockId": "block4",
+        "limits": {
+          "maxCalls": 20,
+          "maxInputTokens": 320000,
+          "pendingReserve": 24000,
+          "maxTotalRequestBytes": 926828,
+          "maxTotalResponseBytes": 524288
+        }
+      }
+    ],
+    "limits": {
+      "maxCalls": 84,
+      "maxInputTokens": 1280000,
+      "pendingReserve": 24000,
+      "maxRequestBytes": 65536,
+      "maxTotalRequestBytes": 6291456,
+      "maxResponseBytesPerCall": 128000,
+      "maxTotalResponseBytes": 2097152,
+      "wallMs": 120000
+    }
+  },
+  "thresholds": {
+    "applicability": 0.85,
+    "allProductionGates": "unchanged"
+  },
+  "labels": {
+    "originalLabels": "/workspace/task-evidence/record-capability-contrasts-v1/labels-author.json",
+    "originalSecond": "/workspace/task-evidence/record-capability-contrasts-v1.second-labels.json",
+    "originalAdjudication": "/workspace/task-evidence/record-capability-contrasts-v1.adjudication.json",
+    "identityLabels": "/workspace/task-evidence/document-identity-contrasts-v1/labels-author.json",
+    "identitySecond": "/workspace/task-evidence/document-identity-contrasts-v1.second-labels.json",
+    "identityAdjudication": "/workspace/task-evidence/document-identity-contrasts-v1.adjudication.json"
+  },
+  "denominatorLabels": [
+    {
+      "id": "AC-T02",
+      "cohort": "original36",
+      "category": "temporal",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-X06",
+      "cohort": "original36",
+      "category": "exception",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "uncertain",
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "AC-D06",
+      "cohort": "original36",
+      "category": "deictic_date",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "uncertain",
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "AC-N04",
+      "cohort": "original36",
+      "category": "negation",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-T05",
+      "cohort": "original36",
+      "category": "temporal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-D03",
+      "cohort": "original36",
+      "category": "deictic_date",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-X03",
+      "cohort": "original36",
+      "category": "exception",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-T06",
+      "cohort": "original36",
+      "category": "temporal",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "uncertain",
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "AC-V05",
+      "cohort": "original36",
+      "category": "relation_verb",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-T04",
+      "cohort": "original36",
+      "category": "temporal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-X02",
+      "cohort": "original36",
+      "category": "exception",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-V01",
+      "cohort": "original36",
+      "category": "relation_verb",
+      "sourceFamily": "RFC8174",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-T03",
+      "cohort": "original36",
+      "category": "temporal",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-O01",
+      "cohort": "original36",
+      "category": "ordinal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-N01",
+      "cohort": "original36",
+      "category": "negation",
+      "sourceFamily": "RFC8174",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-X04",
+      "cohort": "original36",
+      "category": "exception",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-N06",
+      "cohort": "original36",
+      "category": "negation",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "uncertain",
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "AC-N05",
+      "cohort": "original36",
+      "category": "negation",
+      "sourceFamily": "RFC8174",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-X01",
+      "cohort": "original36",
+      "category": "exception",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-V03",
+      "cohort": "original36",
+      "category": "relation_verb",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-O03",
+      "cohort": "original36",
+      "category": "ordinal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-X05",
+      "cohort": "original36",
+      "category": "exception",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-T01",
+      "cohort": "original36",
+      "category": "temporal",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-D05",
+      "cohort": "original36",
+      "category": "deictic_date",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-D01",
+      "cohort": "original36",
+      "category": "deictic_date",
+      "sourceFamily": "RFC8174",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-O02",
+      "cohort": "original36",
+      "category": "ordinal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-V06",
+      "cohort": "original36",
+      "category": "relation_verb",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "uncertain",
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "AC-N02",
+      "cohort": "original36",
+      "category": "negation",
+      "sourceFamily": "RFC8174",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-D04",
+      "cohort": "original36",
+      "category": "deictic_date",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-D02",
+      "cohort": "original36",
+      "category": "deictic_date",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-V02",
+      "cohort": "original36",
+      "category": "relation_verb",
+      "sourceFamily": "RFC8174",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-N03",
+      "cohort": "original36",
+      "category": "negation",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "AC-O04",
+      "cohort": "original36",
+      "category": "ordinal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "uncertain",
+      "excludeFromPrimary": true
+    },
+    {
+      "id": "AC-V04",
+      "cohort": "original36",
+      "category": "relation_verb",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI08",
+      "cohort": "identity8",
+      "category": "recorded_value_missing",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI05",
+      "cohort": "identity8",
+      "category": "adoption_date",
+      "sourceFamily": "RFC8174",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI04",
+      "cohort": "identity8",
+      "category": "publication_date",
+      "sourceFamily": "RFC8174",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI06",
+      "cohort": "identity8",
+      "category": "current_force",
+      "sourceFamily": "CA-RSC1985-H5",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI03",
+      "cohort": "identity8",
+      "category": "referent_binding",
+      "sourceFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI02",
+      "cohort": "identity8",
+      "category": "referent_binding",
+      "sourceFamily": "RFC8174",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI01",
+      "cohort": "identity8",
+      "category": "referent_binding",
+      "sourceFamily": "RFC8174",
+      "expected": "covered",
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "DI07",
+      "cohort": "identity8",
+      "category": "first_ordinal",
+      "sourceFamily": "Pulitzer-2021-Fiction-winner",
+      "expected": "not_covered",
+      "excludeFromPrimary": false
+    }
+  ],
+  "bindingIds": [
+    "AC-B02",
+    "AC-B01"
+  ],
+  "semanticIds": [
+    "AC-T02",
+    "AC-X06",
+    "AC-D06",
+    "AC-N04",
+    "AC-T05",
+    "AC-D03",
+    "AC-X03",
+    "AC-T06",
+    "AC-V05",
+    "AC-T04",
+    "AC-X02",
+    "AC-V01",
+    "AC-T03",
+    "AC-O01",
+    "AC-N01",
+    "AC-X04",
+    "AC-N06",
+    "AC-N05",
+    "AC-X01",
+    "AC-V03",
+    "AC-O03",
+    "AC-X05",
+    "AC-T01",
+    "AC-D05",
+    "AC-D01",
+    "AC-O02",
+    "AC-V06",
+    "AC-N02",
+    "AC-D04",
+    "AC-D02",
+    "AC-V02",
+    "AC-N03",
+    "AC-O04",
+    "AC-V04",
+    "DI08",
+    "DI05",
+    "DI04",
+    "DI06",
+    "DI03",
+    "DI02",
+    "DI01",
+    "DI07"
+  ],
+  "limitations": [
+    "OPEN development only;42semantic cases reuse4underlying record families; no population calibration, factual coverage or promotion claim.",
+    "Original34semantic and new8identity contrasts have separate denominators;6original uncertain cases remain mandatory safety sentinels;2binding controls offline only.",
+    "Baseline is full judgment WITH declared semantic_as_of, not untouched production baseline; anchor never supplies runtime time/freshness/currentproof.",
+    "Unique current URL pools:6RFC/5other families; same-URL companion snippets archived only, not fabricated current sources. Exact pools/order same within pair; source order rotated prospectively across units.",
+    "5current-marker guard misses remain in full denominators; no item/missing result guessed as model answer. No repeats, no failed-unit rerun, no block borrowing.",
+    "All full-output spillovers and every new definitive/selected-citation expansion require independent exact source/qualifier/lineage audit. Semantic recall alone is not factual coverage.",
+    "Pendingraw generation is unchanged; nativegraph completion is privately bound to actual request/answers/judgment; no coreRecordCapability or authority bridge is active.",
+    "No calls authorized by plan file; root must explicitly dispatch exact SHA once in a fresh directory."
+  ]
+}

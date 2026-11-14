@@ -1,0 +1,35 @@
+{
+  "kind": "independent_candidate09_citation_consistency_review",
+  "reviewedAt": "2026-11-14T05:21:30.145140+00:00",
+  "verdict": "no_P1_consistency_or_provenance_issue_found",
+  "reviewSHA256": "787fef61a0c2251a755a89c076bc0f9ff8f83559ac83ff615d13c4222f66f92b",
+  "selectedPacketSHA256": "aa0a15a650de37d1267f8fe5eac7f917a39efeaf937d192cbb2982561b49d96d",
+  "checks": {
+    "manifestEntries": 38,
+    "selectedRowsExactlyMatchActualResults": 11,
+    "rawBodyAndTextHashes": 22,
+    "uniqueRawDefinitiveLabels": [
+      "BD03",
+      "BD08",
+      "BD10",
+      "BD12"
+    ],
+    "fullySelectedVerifiedLabels": [
+      "BD03",
+      "BD10",
+      "BD12"
+    ],
+    "uniqueAbstentions": 8,
+    "selectedVerified": 10,
+    "selectedInaccessible": 1
+  },
+  "limits": [
+    "Read-only saved public artifacts; no fresh fetch by this reviewer.",
+    "Reused proof times retained; final v2 changes only Olympics access timestamp/note and preserves inaccessible status.",
+    "Source-verified selected sets do not establish independent origin families or complete policy eligibility.",
+    "09 repeated OPEN4/12 raw3/12 verified versus08 6/12 raw4/12 verified is not a component-causal comparison; it does not meet useful-coverage readiness.",
+    "Original audit-summary.json records v1 historical proof reuse; final publication must clearly link v2 and its separate fresh503 supplement rather than present v1 reuse as the latest Olympics observation."
+  ],
+  "providerCalls": 0,
+  "filesModifiedOutsideOwnReview": 0
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "root_independent_predispatch_review",
+  "reviewedAt": "2026-11-14T05:09:53.879765+00:00",
+  "planSHA256": "3cd7905bebf8edd7cc8f9b5f1dce52dacb43a0941e8bd6655f31e22a15ffea47",
+  "planManifestSHA256": "3dae919d0e8c297d15d3d79aa1458f4612771ecb09ce82dc0f7da54eade8dfe4",
+  "freezeSHA256": "f12a85c3a308882c52e9c4f271cea80ae0479ba49a29a5fc0f2951d28ea0cdf1",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "scope": "Four immutable OPEN-development batches once each, under unchanged per-batch limits and continuation stops. No blind evaluation or production-readiness claim.",
+  "preflightBeforeBatch1RequirePreview": "passed",
+  "reviewed": [
+    "immutable inputs and exact spans",
+    "no private text or labels in plan-only requests",
+    "fresh clean exact freeze and full gates",
+    "absent outputs and immutable old reports",
+    "actual attempt/byte/token caps and stop conditions",
+    "source-verification and repeated-cohort limitations"
+  ],
+  "implementationLimitations": [
+    "Offline containment replay has not demonstrated a richer retained public source or factual coverage gain; no such gain is presumed.",
+    "Optional target failure recovery does not prove original-source access.",
+    "Current quality prompts and all verdict gates remain unchanged."
+  ],
+  "decision": "authorize_single_declared_execution_by_runtime_evaluation",
+  "providerCallsByReviewer": 0
+}

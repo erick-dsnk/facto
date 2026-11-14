@@ -1,0 +1,68 @@
+{
+  "kind": "fresh_cloud_publication_validation",
+  "bundleManifestSHA256": "a065c49bcd6a07328685c41daf4c1514de227274b8f26a49051e2e4a80daf157",
+  "stackGates": [
+    {
+      "branch": "codex/16-retrieval-stack",
+      "testedHead": "fef82b2ccae3b139f933af3cbc1e23769271ced0",
+      "testsPassed": 283,
+      "testFilesPassed": 14,
+      "lint": "passed",
+      "typecheck": "passed"
+    },
+    {
+      "branch": "codex/17-source-quality-stack",
+      "testedHead": "610b735864cd1b2b238136ae11130d42ccd5a122",
+      "testsPassed": 382,
+      "testFilesPassed": 15,
+      "lint": "passed",
+      "typecheck": "passed"
+    },
+    {
+      "branch": "codex/15-classification-stack",
+      "testedHead": "baaa95bf15d3551ad7370da9f6f3cbcd28da8830",
+      "testsPassed": 416,
+      "testFilesPassed": 15,
+      "lint": "passed",
+      "typecheck": "passed"
+    },
+    {
+      "branch": "codex/24-runtime-evaluation-stack",
+      "testedHead": "d9882f12731e353ae2363eaaf32e452c15351b10",
+      "testsPassed": 416,
+      "testFilesPassed": 15,
+      "lint": "passed",
+      "typecheck": "passed"
+    },
+    {
+      "branch": "codex/20-runtime-stack",
+      "testedHead": "03c1ed07b74b2c4f733ae9ce2ec7eb387f8f8ac5",
+      "testsPassed": 574,
+      "testFilesPassed": 26,
+      "lint": "passed",
+      "typecheck": "passed"
+    },
+    {
+      "branch": "codex/24-live-evaluation-stack",
+      "testedHead": "7333f57c2da7c757014472194e8a5efcb4f707b4",
+      "testsPassed": 621,
+      "testFilesPassed": 30,
+      "lint": "passed",
+      "typecheck": "passed"
+    }
+  ],
+  "rootDevelopment": {
+    "passed": 36,
+    "total": 36,
+    "heldoutReservedAndUnrun": 12
+  },
+  "rootPresentation": {
+    "passed": 21,
+    "total": 21
+  },
+  "runtimeSourceEqualsReviewedGuardCommit": "0adf93bee86a2d5312bf3a35a11103e09ee87c56",
+  "protectedPathsUnchangedAgainst": "2cd89adf6ddc3ecc4020227645b861bd7731256d",
+  "productionProviderCallsDuringPublication": 0,
+  "readiness": "not_ready",
+  "remoteCI": "check actual published commit separately"
+}

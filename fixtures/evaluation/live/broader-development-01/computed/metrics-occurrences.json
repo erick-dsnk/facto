@@ -1,0 +1,265 @@
+{
+  "labeledCases": 16,
+  "unlabeledCases": 0,
+  "admission": {
+    "unit": "final admitted exact proposition, matched once per expected claim; unsafe attempts counted without retaining their text",
+    "truePositives": 12,
+    "falsePositives": 0,
+    "falseNegatives": 1,
+    "unobservedExpected": 0,
+    "precision": 1,
+    "recall": 0.9230769230769231
+  },
+  "factual": {
+    "expected": 13,
+    "correctDefinitive": 4,
+    "wrongDefinitive": 0,
+    "abstained": 8,
+    "noResult": 1,
+    "notObserved": 0,
+    "sourceVerifiedCorrect": 3,
+    "coldCorrect": 4,
+    "cachedResults": 0,
+    "definitiveCoverage": 0.3076923076923077,
+    "sourceVerifiedCoverage": 0.23076923076923078
+  },
+  "byDomain": {
+    "history": {
+      "expected": 5,
+      "correctDefinitive": 2,
+      "wrongDefinitive": 0,
+      "abstained": 3,
+      "noResult": 0,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 2,
+      "coldCorrect": 2,
+      "cachedResults": 0,
+      "definitiveCoverage": 0.4,
+      "sourceVerifiedCoverage": 0.4
+    },
+    "geography": {
+      "expected": 3,
+      "correctDefinitive": 0,
+      "wrongDefinitive": 0,
+      "abstained": 3,
+      "noResult": 0,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 0,
+      "coldCorrect": 0,
+      "cachedResults": 0,
+      "definitiveCoverage": 0,
+      "sourceVerifiedCoverage": 0
+    },
+    "science": {
+      "expected": 2,
+      "correctDefinitive": 0,
+      "wrongDefinitive": 0,
+      "abstained": 2,
+      "noResult": 0,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 0,
+      "coldCorrect": 0,
+      "cachedResults": 0,
+      "definitiveCoverage": 0,
+      "sourceVerifiedCoverage": 0
+    },
+    "institutional_record": {
+      "expected": 3,
+      "correctDefinitive": 2,
+      "wrongDefinitive": 0,
+      "abstained": 0,
+      "noResult": 1,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 1,
+      "coldCorrect": 2,
+      "cachedResults": 0,
+      "definitiveCoverage": 0.6666666666666666,
+      "sourceVerifiedCoverage": 0.3333333333333333
+    }
+  },
+  "byExpectedVerdict": {
+    "supported": {
+      "expected": 7,
+      "correctDefinitive": 3,
+      "wrongDefinitive": 0,
+      "abstained": 3,
+      "noResult": 1,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 2,
+      "coldCorrect": 3,
+      "cachedResults": 0,
+      "definitiveCoverage": 0.42857142857142855,
+      "sourceVerifiedCoverage": 0.2857142857142857
+    },
+    "contradicted": {
+      "expected": 6,
+      "correctDefinitive": 1,
+      "wrongDefinitive": 0,
+      "abstained": 5,
+      "noResult": 0,
+      "notObserved": 0,
+      "sourceVerifiedCorrect": 1,
+      "coldCorrect": 1,
+      "cachedResults": 0,
+      "definitiveCoverage": 0.16666666666666666,
+      "sourceVerifiedCoverage": 0.16666666666666666
+    }
+  },
+  "actions": {
+    "admissionActionChecks": 16,
+    "admissionActionMatches": 15,
+    "presentationChecks": 0,
+    "presentationMatches": 0
+  },
+  "claimOutcomes": [
+    {
+      "caseLabel": "BD01",
+      "expectedClaimId": "BD01",
+      "domain": "history",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD02",
+      "expectedClaimId": "BD02",
+      "domain": "history",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD03",
+      "expectedClaimId": "BD03",
+      "domain": "geography",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD04",
+      "expectedClaimId": "BD04",
+      "domain": "geography",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD05",
+      "expectedClaimId": "BD05",
+      "domain": "science",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD06",
+      "expectedClaimId": "BD06",
+      "domain": "science",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD07",
+      "expectedClaimId": "BD07",
+      "domain": "history",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 2
+    },
+    {
+      "caseLabel": "BD08",
+      "expectedClaimId": "BD08",
+      "domain": "history",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD09",
+      "expectedClaimId": "BD09",
+      "domain": "institutional_record",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "failed",
+      "selectedReferences": 2
+    },
+    {
+      "caseLabel": "BD10",
+      "expectedClaimId": "BD10",
+      "domain": "institutional_record",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 2
+    },
+    {
+      "caseLabel": "BD11",
+      "expectedClaimId": "BD11",
+      "domain": "institutional_record",
+      "expectedVerdict": "supported",
+      "verdict": null,
+      "result": "no_result",
+      "cached": null,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BD12",
+      "expectedClaimId": "BD12",
+      "domain": "geography",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "BDC04",
+      "expectedClaimId": "BD07",
+      "domain": "history",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 2
+    }
+  ],
+  "limitations": [
+    "Admission metrics score final admitted propositions, not every overlapping internal candidate or model probability.",
+    "Not-observed expected claims remain misses in declared-cohort recall and coverage; report unobservedExpected separately.",
+    "Correct verdicts receive no source-verified coverage credit until every selected retained reference has explicit external review.",
+    "Cache results and duplicate public propositions require separate cohort accounting; they are not independent cold factual samples."
+  ]
+}

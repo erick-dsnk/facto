@@ -1,0 +1,11 @@
+# Post-run interface correction — 14 November 2026
+
+The first-run result and all old reviews remain unchanged. A subsequent vendor-document review supersedes the claim that an explicit eN map somewhere in the complete wire necessarily binds an independently evaluated added question.
+
+Typesafe `primitives.md` says question IDs are not sent to the model and recommends naming exact dot/index paths. `concepts/state.md` confirms that questions independently see the common state. The bounded public receipts are archived with original hashes. In 07, each added question used the same generic instructions and criteria; the code-only aN name was not a model-visible selector. Its state descriptor used source eN and a question-ID key, while eN→actual-ID resolution lived in another question's criteria/instructions. Whole-wire bookkeeping remained consistent, but that cross-question mapping is not available inside the target question's model-visible input.
+
+With multiple intended targets, the documented visible payload `{state, instructions, criteria}` is identical for 07's added items, despite different hidden question IDs. This proves a structural interface omission; it does not prove why every first-run probability was below .85 or retrospectively replace the results. Baseline source questions already name actual source IDs. The observed first study remains 0/18 positive grants, 27/42 exact raw labels (27/37 asked), zero definitive verdicts and zero authority activation.
+
+The proposed separately preserved 08 correction names exact `evidence[i]`, the actual retained ID, and matching `record_applicability[j]` in each item's own instructions, and adds real evidenceId to its descriptor. Core applicability semantics, criteria, thresholds and full source material remain unchanged. Offline multiple-binding/reordered-source tests must establish unique resolution using only that question's own visible payload. No rerun or efficacy/promotion claim is authorized by this correction. The first84 archive is separate from 08.
+
+Independent correction: c1ff1afe5b1d4b1acd9e79ec0828a838c321309e729dda53c71aeb1f7011f5b5. Root vendor receipt: 960fe23ff87914fc12b03c451c4c17087d3d287a5146d39f571e90731b375e97. Earlier alias audit remains archived with its original narrower whole-wire findings.

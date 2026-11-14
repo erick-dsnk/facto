@@ -1,0 +1,147 @@
+// Planning/explicit execution only. No default network action.
+import {appendFileSync,mkdirSync,readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import type {AcceptedClaim} from '/workspace/stack-20/packages/contracts/src/index.js';
+import {Session,type RequestRecord} from '/workspace/stack-20/services/api/src/runtime/session.js';
+import {AttemptBudget} from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import {decideVerdict} from '/workspace/stack-20/services/api/src/policy/verdict.js';
+import {loadInstalledManifest,resolveReceipt} from '../record-capability-prototype-02/src/manifest.js';
+import {loadSnapshot,snapshotState} from '../record-capability-prototype-02/src/snapshot.js';
+import {bindExcerpt} from '../record-capability-prototype-02/src/bind.js';
+import {captureSelectionMaterial,inspectMaterial} from '../capability-selection-seam-02/material.js';
+import {captureDispatchOwner} from '../typed-applicability-adapter-06/runtime-owner.js';
+import {createApplicabilityAdapter,verifyCompletedJudgment,verifySemanticEligibility} from '../typed-applicability-adapter-06/adapter.js';
+import {createStudyGuard,type StudyGuardPlan,type StudyGuardSnapshot} from './study-guard.js';
+import {type StudyContext} from './contexts.js';
+const hash=(value:string|Uint8Array)=>createHash('sha256').update(value).digest('hex');
+const check=(value:unknown,code:string):asserts value=>{if(!value)throw Error(code);};
+const inputPaths={
+ originalLabels:'/workspace/task-evidence/record-capability-contrasts-v1/labels-author.json',originalSecond:'/workspace/task-evidence/record-capability-contrasts-v1.second-labels.json',originalAdjudication:'/workspace/task-evidence/record-capability-contrasts-v1.adjudication.json',
+ identityLabels:'/workspace/task-evidence/document-identity-contrasts-v1/labels-author.json',identitySecond:'/workspace/task-evidence/document-identity-contrasts-v1.second-labels.json',identityAdjudication:'/workspace/task-evidence/document-identity-contrasts-v1.adjudication.json',
+};
+const here=(name:string)=>new URL(name,import.meta.url);
+const json=<T>(path:string|URL):T=>JSON.parse(readFileSync(path,'utf8')) as T;
+export interface Plan {
+ schemaVersion:1;kind:'prospective_open_applicability42';providerExecutionAuthorized:false;
+ sourceHashes:Record<string,string>;contextsPath:string;requestsPath:string;
+ guard:StudyGuardPlan;thresholds:{applicability:.85;allProductionGates:'unchanged'};
+ labels:typeof inputPaths;bindingIds:string[];semanticIds:string[];
+ limitations:string[];
+}
+export function validatePlan(plan:Plan){
+ check(plan.schemaVersion===1&&plan.kind==='prospective_open_applicability42','wrong_plan');
+ check(plan.guard.calls.length===84&&plan.guard.limits.maxCalls===84,'requires_complete84');
+ check(plan.guard.blocks.map(b=>b.limits.maxCalls).join(',')==='22,22,20,20','requires_four_blocks');
+ check(plan.semanticIds.length===42&&new Set(plan.semanticIds).size===42&&plan.bindingIds.slice().sort().join(',')==='AC-B01,AC-B02','wrong_denominators');
+ check(plan.guard.limits.maxInputTokens===1280000&&plan.guard.limits.pendingReserve===24000&&plan.guard.limits.maxRequestBytes===65536&&plan.guard.limits.maxTotalRequestBytes===6291456&&plan.guard.limits.wallMs===120000,'campaign_cap_changed');
+ for(const b of plan.guard.blocks)check(b.limits.maxInputTokens===320000&&b.limits.pendingReserve===24000,'block_token_cap_changed');
+ check(plan.thresholds.applicability===.85&&plan.thresholds.allProductionGates==='unchanged','threshold_changed');
+ for(let i=0;i<42;i++){
+  const pair=plan.guard.calls.slice(i*2,i*2+2),id=plan.semanticIds[i]!;
+  check(pair.length===2&&pair.every(c=>c.callId.startsWith(id+':'))&&new Set(pair.map(c=>c.callId.split(':')[1])).size===2,'broken_adjacent_pair');
+ }
+}
+export function assertSources(plan:Plan){for(const[path,expected]of Object.entries(plan.sourceHashes))check(hash(readFileSync(path))===expected,`frozen_source_changed:${path}`);}
+function labelFreezeChecks(){
+ const a=json<any>(inputPaths.originalLabels),b=json<any>(inputPaths.originalSecond),ia=json<any>(inputPaths.identityLabels),ib=json<any>(inputPaths.identitySecond);
+ const adjudication=json<any>(inputPaths.originalAdjudication),iadj=json<any>(inputPaths.identityAdjudication);
+ check(adjudication.differences.length===0&&adjudication.originalAuthorManifestUnchanged===true,'original_labels_unresolved');
+ check(iadj.differences.length===0&&iadj.authorFreezeUnchanged===true,'identity_labels_unresolved');
+ for(const[first,second,count]of [[a,b,36],[ia,ib,8]] as const){check(first.labels.length===count&&second.labels.length===count,'label_count');for(const label of first.labels)check(second.labels.find((x:any)=>x.id===label.id)?.expectedApplicability===label.expectedApplicability,'labels_disagree');}
+}
+export function preparePlan():Plan{
+ labelFreezeChecks();
+ const contextsPath=resolve(new URL('./contexts.06.json',import.meta.url).pathname),requestsPath=resolve(new URL('./requests.06.json',import.meta.url).pathname);
+ const contexts=json<any>(contextsPath),requests=json<any>(requestsPath);
+ check(contexts.contexts.length===42&&contexts.bindingControls.length===2&&requests.calls.length===84,'capture_inventory');
+ const calls=requests.calls.map((c:any)=>({callId:c.callId,blockId:c.blockId,requestSHA256:c.requestSHA256,requestBytes:c.requestBytes,denominatorClass:`${c.cohort}/${c.arm}`}));
+ const blocks=['block1','block2','block3','block4'].map(blockId=>({blockId,limits:{maxCalls:calls.filter((c:any)=>c.blockId===blockId).length,maxInputTokens:320000,pendingReserve:24000,maxTotalRequestBytes:calls.filter((c:any)=>c.blockId===blockId).reduce((sum:number,c:any)=>sum+c.requestBytes,0),maxTotalResponseBytes:524288}}));
+ const sources=[contextsPath,requestsPath,...Object.values(inputPaths),
+  ...Object.values(contexts.sourceHashes).map((s:any)=>s.path),
+  ...['runner.ts','contexts.ts','study-guard.ts','capture-06.ts'].map(n=>resolve(new URL(n,import.meta.url).pathname)),
+  ...['adapter.ts','runtime-owner.ts','transport.ts','question.ts','identity-contract.json','version-reference.ts','manifest.json'].map(n=>`/workspace/task-evidence/typed-applicability-adapter-06/${n}`),
+  '/workspace/task-evidence/capability-selection-seam-02/material.ts','/workspace/task-evidence/capability-selection-seam-02/manifest.json',
+  ...['manifest.ts','snapshot.ts','types.ts','bind.ts','files.ts'].map(n=>`/workspace/task-evidence/record-capability-prototype-02/src/${n}`),
+  '/workspace/task-evidence/record-capability-prototype-02/installed/manifest.json',
+  ...['packages/contracts/src/index.ts','package-lock.json','services/api/src/providers/jev/client.ts','services/api/src/providers/jev/judgment.ts','services/api/src/policy/assessment.ts','services/api/src/policy/sources.ts','services/api/src/policy/verdict.ts','services/api/src/evidence/normalize.ts','services/api/src/runtime/session.ts','services/api/src/runtime/budget.ts','services/api/src/runtime/alternate-evidence.ts','services/api/src/runtime/provider-retry.ts'].map(n=>`/workspace/stack-20/${n}`),
+ ];
+ const plan:Plan={schemaVersion:1,kind:'prospective_open_applicability42',providerExecutionAuthorized:false,
+  sourceHashes:Object.fromEntries([...new Set(sources)].map(path=>[path,hash(readFileSync(path))])),contextsPath,requestsPath,
+  guard:{calls,blocks,limits:{maxCalls:84,maxInputTokens:1280000,pendingReserve:24000,maxRequestBytes:65536,maxTotalRequestBytes:6291456,maxResponseBytesPerCall:128000,maxTotalResponseBytes:2097152,wallMs:120000}},
+  thresholds:{applicability:.85,allProductionGates:'unchanged'},labels:inputPaths,bindingIds:contexts.bindingControls.map((u:any)=>u.id),semanticIds:contexts.contexts.map((c:any)=>c.unit.id),
+  limitations:['OPEN development only;42semantic cases reuse4underlying record families; no population calibration, factual coverage or promotion claim.',
+   'Original34semantic and new8identity contrasts have separate denominators;6original uncertain cases remain mandatory safety sentinels;2binding controls offline only.',
+   'Baseline is full judgment WITH declared semantic_as_of, not untouched production baseline; anchor never supplies runtime time/freshness/currentproof.',
+   'Unique current URL pools:6RFC/5other families; same-URL companion snippets archived only, not fabricated current sources. Exact pools/order same within pair; source order rotated prospectively across units.',
+   '5current-marker guard misses remain in full denominators; no item/missing result guessed as model answer. No repeats, no failed-unit rerun, no block borrowing.',
+   'All full-output spillovers and every new definitive/selected-citation expansion require independent exact source/qualifier/lineage audit. Semantic recall alone is not factual coverage.',
+   'Pendingraw generation is unchanged; nativegraph completion is privately bound to actual request/answers/judgment; no coreRecordCapability or authority bridge is active.',
+   'No calls authorized by plan file; root must explicitly dispatch exact SHA once in a fresh directory.'],};
+ validatePlan(plan);return plan;
+}
+const durable=(path:string,value:unknown)=>writeFileSync(path,JSON.stringify(value,null,2)+'\n',{flush:true});
+export async function runStudy(plan:Plan,output:string,options:{apiKey:string;fetch:typeof fetch;transportMode:'live'|'offline-mock'}){
+ validatePlan(plan);assertSources(plan);check(!existsSync(output),'fresh_output_required');mkdirSync(output,{recursive:false});
+ durable(`${output}/run-start.json`,{planSHA256:hash(JSON.stringify(plan)),transportMode:options.transportMode,actualExaCalls:0,startedAt:new Date().toISOString(),noRetries:true});
+ const guard=createStudyGuard(plan.guard,{fetch:options.fetch,onCheckpoint:event=>appendFileSync(`${output}/checkpoints.jsonl`,JSON.stringify(event)+'\n',{flush:true})});
+ const contexts=json<{contexts:StudyContext[];bindingControls:any[]}>(plan.contextsPath);
+ const manifest=await loadInstalledManifest('/workspace/task-evidence/record-capability-prototype-02/installed','7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4');
+ const bindings=[];
+ for(const unit of contexts.bindingControls){const receipt=resolveReceipt(manifest,unit.receiptAlias).receipt,artifact=await loadSnapshot(manifest,receipt.proofId);let reason='';try{bindExcerpt(receipt,snapshotState(artifact,manifest).text,unit.evidence.excerpt);}catch(e){reason=e instanceof Error?e.message:'unavailable';}check(reason,'binding_control_unexpectedly_available');bindings.push({id:unit.id,available:false,reason,actualJevAttempts:0,actualExaAttempts:0});}
+ durable(`${output}/offline-binding-controls.json`,bindings);
+ const rows:any[]=[];let localStop:string|null=null;
+ outer:for(const context of contexts.contexts){
+  const unit=context.unit,session=new Session(Date.now),at=session.now();
+  const claim:AcceptedClaim={id:`${unit.id}-claim-0`,originalText:unit.exactClaimText,checkedText:unit.exactClaimText,sourceSpan:{start:0,end:Array.from(unit.exactClaimText).length},admission:{assertionStatus:'asserted',hasPracticalConsequence:null,matchedSelectedTopic:null,admissionAction:'check',reasonCode:'public-open-calibration'}};
+  const record:RequestRecord={input:{schemaVersion:1,sessionId:session.id,sessionEpoch:session.epoch,requestId:unit.id,revision:1,text:unit.exactClaimText,context:[],mode:'typed',language:'en',capturedAt:new Date(at).toISOString(),capture:{source:'typed_fixture',segmentId:'open-calibration',confidence:1},userInitiated:true},budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:at,acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map(),fingerprint:'open-calibration'};session.requests.set(unit.id,record);
+  const material=captureSelectionMaterial({existing:context.records,incoming:[],checkedText:unit.exactClaimText}),generation=inspectMaterial(material).materialGeneration;
+  const artifact=await loadSnapshot(manifest,resolveReceipt(manifest,unit.receiptAlias).receipt.proofId);
+  for(const arm of context.arms){
+   const callId=`${unit.id}:${arm}`;
+   try{
+    assertSources(plan);
+    const beforeTokens=record.budget.inputTokens,beforeAttempts=record.budget.jev,beforeObservedTokens=guard.snapshot().totals.measuredInputTokens;
+    const result=await guard.run(callId,async lease=>{
+     lease.attachAbortController(record.controller);
+     const owner=captureDispatchOwner(material,{session,record,claimSlot:0,admittedClaim:claim,readMaterialGeneration:()=>generation,readInstallGeneration:()=> 'study-installed-v1',reservedJev:0});
+     const result=await createApplicabilityAdapter({manifest,dispatchOwner:owner,semanticAsOf:unit.asOf,bindings:arm==='applicability'?[{receiptAlias:unit.receiptAlias,artifact,evidenceId:unit.evidence.id}]:[],apiKey:options.apiKey,fetch:lease.fetch})(claim);
+     lease.assertOpen();assertSources(plan);
+     check(record.budget.jev-beforeAttempts===1,'runtime_attempt_mismatch');
+     check(record.budget.inputTokens-beforeTokens===guard.snapshot().totals.measuredInputTokens-beforeObservedTokens,'runtime_usage_mismatch');
+     check(result.completedJudgment&&result.assessmentContext&&verifyCompletedJudgment(result.completedJudgment.token,{material,dispatchOwner:owner,context:result.assessmentContext}),'completed_actual_ask_proof_missing');
+     for(const e of result.eligibility)check(verifySemanticEligibility(e.token,{manifest,material,owner:(await import('../typed-applicability-adapter-06/runtime-owner.js')).inspectDispatchOwner(owner).owner,context:result.assessmentContext}),'semantic_token_binding_failed');
+     const policy=decideVerdict(result.judgment),answers=result.assessmentContext.assessment.state.answers;
+     return {callId,unitId:unit.id,arm,cohort:context.cohort,category:unit.category,sourceFamily:unit.sourceFamily,targetId:unit.evidence.id,targetPosition:context.targetPosition,
+      judgment:result.judgment,policy,answers,unavailable:result.unavailable,dispatch:result.dispatch,
+      completedActualAsk:result.completedJudgment.audit,eligibility:result.eligibility.map(e=>e.audit),
+      contextSHA256:hash(JSON.stringify(result.assessmentContext)),nativeGraph:result.assessmentContext.originGraphState,
+      runtimeChargedAttempts:record.budget.jev-beforeAttempts,runtimeMeasuredInputTokens:record.budget.inputTokens-beforeTokens};
+    });
+    if(result.status==='completed'){rows.push(result.value);durable(`${output}/${String(rows.length).padStart(2,'0')}-${unit.id}-${arm}.json`,result.value);}
+    else{localStop=result.terminal.failure?.code??'guard_failed';durable(`${output}/failed-terminal.json`,result.terminal);break outer;}
+    durable(`${output}/partial-report.json`,{transportMode:options.transportMode,rows,guard:guard.snapshot(),offlineBindingControls:bindings});
+   }catch(error){localStop=error instanceof Error?error.message:'local_stop';durable(`${output}/local-stop.json`,{code:localStop});break outer;}
+  }
+ }
+ const snapshot=guard.close();
+ const report={transportMode:options.transportMode,projectProviderCalls:options.transportMode==='live'?snapshot.totals.actualStartedJev:0,actualExaCalls:0,unknownUsageExplicit:snapshot.totals.usageUnknownCalls,
+  planSHA256:hash(JSON.stringify(plan)),completedAllCalls:snapshot.completedCallIds.length===84,stop:localStop??snapshot.primaryFailure?.code??null,guard:snapshot,rows,offlineBindingControls:bindings};
+ durable(`${output}/report.json`,report);
+ return report;
+}
+async function main(){
+ const[action,...args]=process.argv.slice(2);
+ if(action==='prepare'){
+  const plan=preparePlan();const path=resolve(new URL('./applicability42-plan.json',import.meta.url).pathname);durable(path,plan);writeFileSync(path+'.sha256',hash(JSON.stringify(plan))+'\n',{flush:true});
+  process.stdout.write(JSON.stringify({planPath:path,planSHA256:hash(JSON.stringify(plan)),calls:84,bytes:plan.guard.calls.reduce((sum,c)=>sum+c.requestBytes,0),caps:plan.guard.limits})+'\n');
+ }else if(action==='execute'){
+  const[planPath,output,authorizedSHA]=args;check(planPath&&output&&authorizedSHA,'execute_requires_plan_fresh_output_authorized_sha');const plan=json<Plan>(planPath);
+  check(hash(JSON.stringify(plan))===authorizedSHA&&readFileSync(planPath+'.sha256','utf8').trim()===authorizedSHA,'exact_authorized_plan_required');
+  check(process.env.NODE_USE_ENV_PROXY==='1','proxy_required');check(process.env.JEV_API_KEY?.trim(),'environment_key_required');
+  const report=await runStudy(plan,output,{apiKey:process.env.JEV_API_KEY!,fetch:globalThis.fetch,transportMode:'live'});
+  process.stdout.write(JSON.stringify({reportPath:`${output}/report.json`,completedAllCalls:report.completedAllCalls,stop:report.stop,totals:report.guard.totals})+'\n');
+ }else throw Error('explicit_prepare_or_authorized_execute_required');
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href)await main();

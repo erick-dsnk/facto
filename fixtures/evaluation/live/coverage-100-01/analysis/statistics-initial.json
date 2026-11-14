@@ -1,0 +1,2989 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_100_case_first_run_analysis",
+  "createdAt": "2026-11-14T11:09:44.588600+00:00",
+  "reportSHA256": "e6cefc9877f271a231b4fd1834df0a9d6609a6dc7b03bed7846667b555a1111d",
+  "planSHA256": "06173d42b28595e2deb4f38216a35defad031008b0d82e38c0b1afb814ec83b5",
+  "datasetSHA256": "740a2a049a0c2ea36c611fcafcdf96d838e7205847e54a5c1e0375de3d4ab690",
+  "analysisSourceSHA256": "47583ac978de594b9416fbd5de9318ba18122e12cbd1073fc10c8a0d08a7218b",
+  "checkedSource": {
+    "commit": "b21809493aa7a6e3b337391f996a74b2e2f220a0",
+    "dirty": false,
+    "sourceSHA256": "511cf85cbd599c3b424766c77bbd7f33322afaafd98212dec75e6aefadac3f20"
+  },
+  "auditChecks": {
+    "planBytesMatchFreeze": true,
+    "datasetAndCSVPinsMatch": true,
+    "allSourceMaterialPinsMatch": true,
+    "executorAndAssemblerPinsMatch": true,
+    "captureMetadataMatchesFreeze": true,
+    "currentSourceScopeMatchesFrozenCapture": true,
+    "planCasesDatasetCasesSame": true,
+    "recordsUniqueInFrozenRelativeOrder": true,
+    "exact100DeclaredBalanceAndStyles": true,
+    "exactFrozenLimits": true,
+    "actualCountsMatchCapture": true,
+    "partialCostMatchesCapture": true,
+    "perCaseAccounted": true,
+    "reportedRawOutcomesMatchIndependent": true,
+    "perInputObservedAttemptsWithinLimits": true,
+    "recordedGlobalCallsBytesWithinLimits": true,
+    "noDuplicateTerminalWithinObservedInput": true,
+    "firstReportUnchangedByAnalysis": true
+  },
+  "auditChecksPass": true,
+  "captureStatus": {
+    "completed": true,
+    "allCasesAttempted": true,
+    "haltReason": null,
+    "counts": {
+      "declared": 100,
+      "attempted": 100,
+      "observed": 100,
+      "terminalReceipts": 100,
+      "guardedPrivacyFailures": 0,
+      "actualPrivacyExposures": 0,
+      "localStops": 0,
+      "transportFailures": 0,
+      "providerErrors": 0
+    }
+  },
+  "factual": {
+    "declared": 80,
+    "completedValidChecks": 79,
+    "definitive": 69,
+    "correctDefinitive": 69,
+    "wrongDefinitive": 0,
+    "abstained": 10,
+    "noResult": 1,
+    "notObserved": 0,
+    "correctDefinitiveCoverage": {
+      "numerator": 69,
+      "denominator": 80,
+      "rate": 0.8625,
+      "wilson95": {
+        "lower": 0.7703289993301339,
+        "upper": 0.9214528567566089,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "conditionalCorrectDefinitive": {
+      "numerator": 69,
+      "denominator": 69,
+      "rate": 1.0,
+      "wilson95": {
+        "lower": 0.9472627418109483,
+        "upper": 1,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "wrongDefinitivePerDeclared": {
+      "numerator": 0,
+      "denominator": 80,
+      "rate": 0.0,
+      "wilson95": {
+        "lower": 0,
+        "upper": 0.0458181295355271,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "confusion": {
+      "known_true": {
+        "supported": 36,
+        "contradicted": 0,
+        "misleading": 0,
+        "insufficient_evidence": 3,
+        "no_result": 1,
+        "not_observed": 0
+      },
+      "known_false": {
+        "supported": 0,
+        "contradicted": 33,
+        "misleading": 0,
+        "insufficient_evidence": 7,
+        "no_result": 0,
+        "not_observed": 0
+      }
+    },
+    "falseAlarm": {
+      "count": 0,
+      "declared": 40,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 39,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.08966685370757144,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 36,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.09641862859446367,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "abstained": 3,
+      "noResult": 1,
+      "notObserved": 0
+    },
+    "falseSupport": {
+      "count": 0,
+      "declared": 40,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 40,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.08762160119728664,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 33,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.10426999754245206,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "abstained": 7,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "fullySelectedContentVerifiedCorrect": null
+  },
+  "byDomain": {
+    "civics": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 8,
+      "correctDefinitive": 8,
+      "wrongDefinitive": 0,
+      "abstained": 2,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 8,
+        "denominator": 10,
+        "rate": 0.8,
+        "wilson95": {
+          "lower": 0.49016247153664183,
+          "upper": 0.9433178485456247,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 8,
+        "denominator": 8,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.6755924351161198,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 5,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 3,
+          "misleading": 0,
+          "insufficient_evidence": 2,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 5.551115123125783e-17,
+            "upper": 0.5614970317550454,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 2,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "computing_technology": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 9,
+      "correctDefinitive": 9,
+      "wrongDefinitive": 0,
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 9,
+        "denominator": 10,
+        "rate": 0.9,
+        "wilson95": {
+          "lower": 0.5958499732047615,
+          "upper": 0.9821237869049271,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 9,
+        "denominator": 9,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7008549515804559,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 5,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 4,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "culture_arts": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 8,
+      "correctDefinitive": 8,
+      "wrongDefinitive": 0,
+      "abstained": 2,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 8,
+        "denominator": 10,
+        "rate": 0.8,
+        "wilson95": {
+          "lower": 0.49016247153664183,
+          "upper": 0.9433178485456247,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 8,
+        "denominator": 8,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.6755924351161198,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 5,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 3,
+          "misleading": 0,
+          "insufficient_evidence": 2,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 5.551115123125783e-17,
+            "upper": 0.5614970317550454,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 2,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "earth_science": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 9,
+      "correctDefinitive": 9,
+      "wrongDefinitive": 0,
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 9,
+        "denominator": 10,
+        "rate": 0.9,
+        "wilson95": {
+          "lower": 0.5958499732047615,
+          "upper": 0.9821237869049271,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 9,
+        "denominator": 9,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7008549515804559,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 4,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 5,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "geography": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 9,
+      "correctDefinitive": 9,
+      "wrongDefinitive": 0,
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 9,
+        "denominator": 10,
+        "rate": 0.9,
+        "wilson95": {
+          "lower": 0.5958499732047615,
+          "upper": 0.9821237869049271,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 9,
+        "denominator": 9,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7008549515804559,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 4,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 5,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "history": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 9,
+      "correctDefinitive": 9,
+      "wrongDefinitive": 0,
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 9,
+        "denominator": 10,
+        "rate": 0.9,
+        "wilson95": {
+          "lower": 0.5958499732047615,
+          "upper": 0.9821237869049271,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 9,
+        "denominator": 9,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7008549515804559,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 5,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 4,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "natural_science": {
+      "declared": 10,
+      "completedValidChecks": 10,
+      "definitive": 9,
+      "correctDefinitive": 9,
+      "wrongDefinitive": 0,
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 9,
+        "denominator": 10,
+        "rate": 0.9,
+        "wilson95": {
+          "lower": 0.5958499732047615,
+          "upper": 0.9821237869049271,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 9,
+        "denominator": 9,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7008549515804559,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 4,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 5,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "sport": {
+      "declared": 10,
+      "completedValidChecks": 9,
+      "definitive": 8,
+      "correctDefinitive": 8,
+      "wrongDefinitive": 0,
+      "abstained": 1,
+      "noResult": 1,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 8,
+        "denominator": 10,
+        "rate": 0.8,
+        "wilson95": {
+          "lower": 0.49016247153664183,
+          "upper": 0.9433178485456247,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 8,
+        "denominator": 8,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.6755924351161198,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 10,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2775327998628892,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 4,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 1,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 4,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 1,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 4,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.4898908364545973,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    }
+  },
+  "byStyle": {
+    "first_person_public": {
+      "declared": 12,
+      "completedValidChecks": 12,
+      "definitive": 10,
+      "correctDefinitive": 10,
+      "wrongDefinitive": 0,
+      "abstained": 2,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 10,
+        "denominator": 12,
+        "rate": 0.8333333333333334,
+        "wilson95": {
+          "lower": 0.5519691377470266,
+          "upper": 0.9530348578161463,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 10,
+        "denominator": 10,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7224672001371107,
+          "upper": 0.9999999999999999,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 12,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 2.7755575615628914e-17,
+          "upper": 0.24249400665524085,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 5,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 0,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 5,
+          "misleading": 0,
+          "insufficient_evidence": 2,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 0,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 7,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 7,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 5.551115123125783e-17,
+            "upper": 0.35433043506668743,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 2,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "mixed_private_public": {
+      "declared": 12,
+      "completedValidChecks": 12,
+      "definitive": 9,
+      "correctDefinitive": 9,
+      "wrongDefinitive": 0,
+      "abstained": 3,
+      "noResult": 0,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 9,
+        "denominator": 12,
+        "rate": 0.75,
+        "wilson95": {
+          "lower": 0.46769466506643426,
+          "upper": 0.9110583316059453,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 9,
+        "denominator": 9,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.7008549515804559,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 12,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 2.7755575615628914e-17,
+          "upper": 0.24249400665524085,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 6,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 1,
+          "no_result": 0,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 3,
+          "misleading": 0,
+          "insufficient_evidence": 2,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 7,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 7,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 5.551115123125783e-17,
+            "upper": 0.35433043506668743,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 6,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 2.7755575615628914e-17,
+            "upper": 0.3903342879021653,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 1,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 5,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 5,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.43448246478317476,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 3,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 5.551115123125783e-17,
+            "upper": 0.5614970317550454,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 2,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    },
+    "standalone": {
+      "declared": 56,
+      "completedValidChecks": 55,
+      "definitive": 50,
+      "correctDefinitive": 50,
+      "wrongDefinitive": 0,
+      "abstained": 5,
+      "noResult": 1,
+      "notObserved": 0,
+      "correctDefinitiveCoverage": {
+        "numerator": 50,
+        "denominator": 56,
+        "rate": 0.8928571428571429,
+        "wilson95": {
+          "lower": 0.7853155482892853,
+          "upper": 0.9499606442888293,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "conditionalCorrectDefinitive": {
+        "numerator": 50,
+        "denominator": 50,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.9286524008666414,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "wrongDefinitivePerDeclared": {
+        "numerator": 0,
+        "denominator": 56,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 6.938893903907228e-18,
+          "upper": 0.06419393671876342,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "confusion": {
+        "known_true": {
+          "supported": 25,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 2,
+          "no_result": 1,
+          "not_observed": 0
+        },
+        "known_false": {
+          "supported": 0,
+          "contradicted": 25,
+          "misleading": 0,
+          "insufficient_evidence": 3,
+          "no_result": 0,
+          "not_observed": 0
+        }
+      },
+      "falseAlarm": {
+        "count": 0,
+        "declared": 28,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 27,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 0,
+            "upper": 0.12455502974186705,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 25,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 1.3877787807814457e-17,
+            "upper": 0.13319225093904846,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 2,
+        "noResult": 1,
+        "notObserved": 0
+      },
+      "falseSupport": {
+        "count": 0,
+        "declared": 28,
+        "completedChecks": {
+          "numerator": 0,
+          "denominator": 28,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 1.3877787807814457e-17,
+            "upper": 0.12064330476584563,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "definitiveOnly": {
+          "numerator": 0,
+          "denominator": 25,
+          "rate": 0.0,
+          "wilson95": {
+            "lower": 1.3877787807814457e-17,
+            "upper": 0.13319225093904846,
+            "level": 0.95,
+            "method": "Wilson score, descriptive IID-binomial mathematics"
+          }
+        },
+        "abstained": 3,
+        "noResult": 0,
+        "notObserved": 0
+      },
+      "fullySelectedContentVerifiedCorrect": null
+    }
+  },
+  "conversationalCombined": {
+    "declared": 24,
+    "completedValidChecks": 24,
+    "definitive": 19,
+    "correctDefinitive": 19,
+    "wrongDefinitive": 0,
+    "abstained": 5,
+    "noResult": 0,
+    "notObserved": 0,
+    "correctDefinitiveCoverage": {
+      "numerator": 19,
+      "denominator": 24,
+      "rate": 0.7916666666666666,
+      "wilson95": {
+        "lower": 0.5952954674681133,
+        "upper": 0.9075517464714814,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "conditionalCorrectDefinitive": {
+      "numerator": 19,
+      "denominator": 19,
+      "rate": 1.0,
+      "wilson95": {
+        "lower": 0.8318207759473837,
+        "upper": 1,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "wrongDefinitivePerDeclared": {
+      "numerator": 0,
+      "denominator": 24,
+      "rate": 0.0,
+      "wilson95": {
+        "lower": 1.3877787807814457e-17,
+        "upper": 0.13797620467498017,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "confusion": {
+      "known_true": {
+        "supported": 11,
+        "contradicted": 0,
+        "misleading": 0,
+        "insufficient_evidence": 1,
+        "no_result": 0,
+        "not_observed": 0
+      },
+      "known_false": {
+        "supported": 0,
+        "contradicted": 8,
+        "misleading": 0,
+        "insufficient_evidence": 4,
+        "no_result": 0,
+        "not_observed": 0
+      }
+    },
+    "falseAlarm": {
+      "count": 0,
+      "declared": 12,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 12,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 2.7755575615628914e-17,
+          "upper": 0.24249400665524085,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 11,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.2588329669680317,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "abstained": 1,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "falseSupport": {
+      "count": 0,
+      "declared": 12,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 12,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 2.7755575615628914e-17,
+          "upper": 0.24249400665524085,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 8,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.32440756488388023,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "abstained": 4,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "fullySelectedContentVerifiedCorrect": null
+  },
+  "controls": {
+    "declared": 20,
+    "observed": 20,
+    "matchedExpectedAction": 18,
+    "confusion": {
+      "skip": {
+        "skip": 14,
+        "needs_confirmation": 2,
+        "wait": 0,
+        "check": 0,
+        "no_action": 0,
+        "not_observed": 0
+      },
+      "needs_confirmation": {
+        "skip": 0,
+        "needs_confirmation": 4,
+        "wait": 0,
+        "check": 0,
+        "no_action": 0,
+        "not_observed": 0
+      }
+    },
+    "falsePublicAdmission": {
+      "numerator": 0,
+      "denominator": 20,
+      "rate": 0.0,
+      "wilson95": {
+        "lower": 0,
+        "upper": 0.16112515805281938,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "actualRetrievalAttempts": 0,
+    "factualVerdicts": 0
+  },
+  "admission": {
+    "truePositives": 79,
+    "falsePositives": 0,
+    "falseNegatives": 1,
+    "precision": {
+      "numerator": 79,
+      "denominator": 79,
+      "rate": 1.0,
+      "wilson95": {
+        "lower": 0.9536287883460772,
+        "upper": 1,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "recall": {
+      "numerator": 79,
+      "denominator": 80,
+      "rate": 0.9875,
+      "wilson95": {
+        "lower": 0.9325372992233133,
+        "upper": 0.9977900244795476,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "f1": 0.9937106918238994,
+    "actionMatches": 97,
+    "actionDenominator": 100
+  },
+  "binaryDetection": {
+    "falseClaimAlert": {
+      "truePositives": 33,
+      "falsePositives": 0,
+      "falseNegatives": 7,
+      "precision": {
+        "numerator": 33,
+        "denominator": 33,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.895730002457548,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "recallOverAllDeclaredGoldClass": {
+        "numerator": 33,
+        "denominator": 40,
+        "rate": 0.825,
+        "wilson95": {
+          "lower": 0.6805000966821229,
+          "upper": 0.9125458625396408,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "f1": 0.9041095890410958,
+      "definition": "Coverage-aware one-vs-rest detection: abstentions/no-result/unrun are missed positives for their gold class, never correct true negatives. F1 is 2TP/(2TP+FP+FN), without an invalid binomial interval for F1."
+    },
+    "trueClaimSupport": {
+      "truePositives": 36,
+      "falsePositives": 0,
+      "falseNegatives": 4,
+      "precision": {
+        "numerator": 36,
+        "denominator": 36,
+        "rate": 1.0,
+        "wilson95": {
+          "lower": 0.9035813714055363,
+          "upper": 1,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "recallOverAllDeclaredGoldClass": {
+        "numerator": 36,
+        "denominator": 40,
+        "rate": 0.9,
+        "wilson95": {
+          "lower": 0.7694822477247771,
+          "upper": 0.9604204713173936,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "f1": 0.9473684210526315,
+      "definition": "Coverage-aware one-vs-rest detection: abstentions/no-result/unrun are missed positives for their gold class, never correct true negatives. F1 is 2TP/(2TP+FP+FN), without an invalid binomial interval for F1."
+    }
+  },
+  "manualRespondTerminals": 100,
+  "accounting": {
+    "calls": {
+      "jev": 194,
+      "search": 94,
+      "contents": 80
+    },
+    "attempts": 368,
+    "pendingDispatchReservations": 0,
+    "requestBytes": 5898368,
+    "measuredInputTokens": 1376217,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 1376217,
+    "knownCostUSD": 0.8180000000000001,
+    "attemptsWithUnknownCost": 194,
+    "responseByteAggregate": null,
+    "campaignWallMs": 246922,
+    "maximumActualRequestBytes": 67801,
+    "jevAttemptsWithUnknownUsage": 0,
+    "attemptOutcomes": {
+      "response": 368
+    }
+  },
+  "latency": {
+    "allFactualIncludingAbstentionsErrorsTimeouts": {
+      "declared": 80,
+      "observedDurations": 80,
+      "missingDurations": 0,
+      "allDeclaredIncluded": true,
+      "medianMs": 2255.5,
+      "p95Ms": 6407,
+      "minMs": 131,
+      "maxMs": 7906,
+      "terminalReceiptMedianMs": 2255.5,
+      "terminalReceiptP95Ms": 6407,
+      "method": "All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed."
+    },
+    "controlsSeparate": {
+      "declared": 20,
+      "observedDurations": 20,
+      "missingDurations": 0,
+      "allDeclaredIncluded": true,
+      "medianMs": 234.0,
+      "p95Ms": 359,
+      "minMs": 146,
+      "maxMs": 376,
+      "terminalReceiptMedianMs": 234.0,
+      "terminalReceiptP95Ms": 359,
+      "method": "All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed."
+    },
+    "allInputs": {
+      "declared": 100,
+      "observedDurations": 100,
+      "missingDurations": 0,
+      "allDeclaredIncluded": true,
+      "medianMs": 2042.5,
+      "p95Ms": 6085,
+      "minMs": 131,
+      "maxMs": 7906,
+      "terminalReceiptMedianMs": 2042.5,
+      "terminalReceiptP95Ms": 6085,
+      "method": "All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed."
+    },
+    "maximumObservedServiceResultDurationMs": 7903.7236390000035,
+    "lateServiceResultsAtOrBeyond10000Ms": 0,
+    "byStyle": {
+      "standalone": {
+        "declared": 56,
+        "observedDurations": 56,
+        "missingDurations": 0,
+        "allDeclaredIncluded": true,
+        "medianMs": 2067.0,
+        "p95Ms": 6085,
+        "minMs": 131,
+        "maxMs": 7656,
+        "terminalReceiptMedianMs": 2066.5,
+        "terminalReceiptP95Ms": 6085,
+        "method": "All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed."
+      },
+      "mixed_private_public": {
+        "declared": 12,
+        "observedDurations": 12,
+        "missingDurations": 0,
+        "allDeclaredIncluded": true,
+        "medianMs": 2570.0,
+        "p95Ms": 7906,
+        "minMs": 768,
+        "maxMs": 7906,
+        "terminalReceiptMedianMs": 2570.0,
+        "terminalReceiptP95Ms": 7906,
+        "method": "All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed."
+      },
+      "first_person_public": {
+        "declared": 12,
+        "observedDurations": 12,
+        "missingDurations": 0,
+        "allDeclaredIncluded": true,
+        "medianMs": 2880.5,
+        "p95Ms": 7061,
+        "minMs": 1503,
+        "maxMs": 7061,
+        "terminalReceiptMedianMs": 2880.5,
+        "terminalReceiptP95Ms": 7061,
+        "method": "All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed."
+      }
+    }
+  },
+  "privacyAndQueries": {
+    "guardedPrivacyFailures": [],
+    "actualPrivacyExposures": 0,
+    "queryAudit": {
+      "searches": 94,
+      "contents": 80,
+      "initial": 79,
+      "alternate": 15,
+      "errors": []
+    },
+    "method": "Exact saved search query matched the same admitted public span or its frozen alternate; highlight/objective hashes matched helpers, contents URLs normalized. Raw request bodies remain omitted; full nested option guards are bound by frozen source."
+  },
+  "claimOutcomes": [
+    {
+      "label": "AD20",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "no_direct_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC16",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA03",
+      "domain": "history",
+      "style": "first_person_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA02",
+      "domain": "history",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD12",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": null,
+      "result": "no_result",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD04",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB19",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "below_threshold",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA15",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB09",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "below_threshold",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB15",
+      "domain": "earth_science",
+      "style": "first_person_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC18",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB20",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB11",
+      "domain": "earth_science",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA18",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD11",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC09",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC08",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD17",
+      "domain": "sport",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD09",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB06",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA01",
+      "domain": "history",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB16",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC03",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC01",
+      "domain": "natural_science",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "insufficient_independent_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC13",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD10",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA09",
+      "domain": "history",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD08",
+      "domain": "culture_arts",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "no_direct_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC07",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB12",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA04",
+      "domain": "history",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC02",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD19",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD18",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD14",
+      "domain": "sport",
+      "style": "first_person_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB07",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC12",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA10",
+      "domain": "history",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA07",
+      "domain": "history",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC10",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB18",
+      "domain": "earth_science",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA19",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD06",
+      "domain": "culture_arts",
+      "style": "mixed_private_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC15",
+      "domain": "computing_technology",
+      "style": "first_person_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC17",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC05",
+      "domain": "natural_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB14",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB10",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC19",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA20",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "insufficient_independent_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB13",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD13",
+      "domain": "sport",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC14",
+      "domain": "computing_technology",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC06",
+      "domain": "natural_science",
+      "style": "mixed_private_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB05",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA13",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA11",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA05",
+      "domain": "history",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC20",
+      "domain": "computing_technology",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "insufficient_independent_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB02",
+      "domain": "geography",
+      "style": "mixed_private_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA06",
+      "domain": "history",
+      "style": "mixed_private_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "no_direct_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD07",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "insufficient_independent_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD15",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA17",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB03",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA08",
+      "domain": "history",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD02",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB01",
+      "domain": "geography",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD05",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC11",
+      "domain": "computing_technology",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB04",
+      "domain": "geography",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD01",
+      "domain": "culture_arts",
+      "style": "mixed_private_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA16",
+      "domain": "civics",
+      "style": "mixed_private_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 0,
+      "reasonCode": "insufficient_independent_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB17",
+      "domain": "earth_science",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 5,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA14",
+      "domain": "civics",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD03",
+      "domain": "culture_arts",
+      "style": "standalone",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 4,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "HA12",
+      "domain": "civics",
+      "style": "first_person_public",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "GB08",
+      "domain": "geography",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "AD16",
+      "domain": "sport",
+      "style": "standalone",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 2,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    },
+    {
+      "label": "SC04",
+      "domain": "natural_science",
+      "style": "first_person_public",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "sourceVerification": "pending_separate_citation_audit",
+      "selectedReferences": 3,
+      "reasonCode": "qualifying_evidence",
+      "cached": false,
+      "operationalError": false,
+      "localStops": []
+    }
+  ],
+  "methodLimits": [
+    "One new OPEN purposive synthetic cohort; no blind population accuracy, historical pooling, causal improvement or readiness claim.",
+    "Wilson95 intervals are descriptive IID-binomial mathematics; representative independent sampling is not established and source/case dependence may invalidate population coverage.",
+    "Abstentions are explicit completed checks but never correct definitive decisions or observed true negatives; missing/invalid/unexecuted results are excluded from observed error denominators and retained in declared coverage.",
+    "Full selected-citation verification remains a separate manual agent content/access/scope/provenance audit; correct world labels do not grant source credit.",
+    "Conversation-styled inputs use fresh independent sessions, not a real multi-turn or carryover test.",
+    "Provider-reported usage/cost is not independent billing. Unknown dollar charges are never zero; aggregate response bytes remain unmeasured.",
+    "No provider request, public source fetch, old evaluation run or report rewrite occurs in this analysis."
+  ]
+}

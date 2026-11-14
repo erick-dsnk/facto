@@ -1,0 +1,124 @@
+{
+  "kind": "independent_agent_exact_citation_proof_reuse_audit",
+  "adaptationReviewedAt": "2026-11-14T04:45:23.645101+00:00",
+  "sourceReviewTimestampPreserved": "2026-11-14T04:42:02.662940+00:00",
+  "inputs": {
+    "/workspace/task-evidence/automatic-ad07-selected-citations.json": "aeb9ed108e07ddd1c1d0cf09f3a9d4c1a31538507c045750fe14221c7bd7fef1",
+    "/workspace/task-evidence/automatic-development-ad07-first-run.json": "53e4389369c8e00b9e6635ac4f68707694896deb294a8f2f341b1c83e0a61df0",
+    "/workspace/task-evidence/automatic-development-ad07/live-manifest.json": "cb3e436d23bc45afa11f8df188dc962a518432c4195aa3c2e6d4efba1c27fa68",
+    "/workspace/task-evidence/automatic08-citation-audit/reviews.json": "dca97e58485b6e79e18ad71c10ec0b54f45475317ccf0f4764aa41aa125039ba",
+    "/workspace/task-evidence/automatic08-citation-audit/audit-details.json": "de8b01ba6fe0db4ed55b0160e54d4e58f2f673d7fd744ef0160707dae8a0c189"
+  },
+  "counts": {
+    "selectedReferences": 2,
+    "uniqueSelectedURLs": 2,
+    "verified": 2,
+    "unsupported": 0,
+    "inaccessible": 0,
+    "freshOriginFetchesForAD07": 0,
+    "reusedOriginProofs": 2,
+    "projectProviderCalls": 0,
+    "newFactualAccuracyDenominator": 0
+  },
+  "sources": [
+    {
+      "evidenceId": "ev-f72fcf7616e02e44a3fd",
+      "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+      "excerptSHA256": "004b9ba2cdb4e42679e3dca4a033ff4a7b484307376b5c456f8596727fa00ad0",
+      "priorCaseLabel": "AD06-muted-manual",
+      "priorReviewTimestampPreserved": "2026-11-14T04:42:02.662940+00:00",
+      "priorAuditSource": "/workspace/task-evidence/automatic08-citation-audit/audit-details.json",
+      "sourceFetchTimestampPreserved": "2026-11-14T04:38:11.279062+00:00",
+      "originProof": {
+        "requestedUrl": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+        "fetchedAt": "2026-11-14T04:38:11.279062+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 5,
+        "status": 200,
+        "finalUrl": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+        "contentType": "text/html; charset=UTF-8",
+        "truncated": false,
+        "bytes": 153226,
+        "bodySHA256": "65ee11cbb85a7768311f5d52590470823b3bfa4297f83bd38606de871743449f",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/f72fcf7616e02e44.body",
+        "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/f72fcf7616e02e44.text.txt",
+        "textSHA256": "ffc306b0f704d61e848925a21ba3a34614f00df0feb09b8dbda8d5f80d282ebf"
+      },
+      "savedBodyHashAndBytesReverified": true,
+      "savedTextHashReverified": true,
+      "segmentAlignment": {
+        "method": "NFKC lowercase word-sequence alignment with explicit ellipsis segments; not byte identity between HTML and extracted excerpt.",
+        "segments": 1,
+        "normalizedCharacterOffsets": [
+          1783
+        ],
+        "allSegmentsMatchedInOrder": true
+      },
+      "contentAssessment": {
+        "basis": "The canal operator’s historical chronology gives a specifically dated inauguration and identifies the SS Ancon transit and participants.",
+        "relation": "Supports the same Panama Canal opening to world trade in 1914: the dated inauguration is described as opening to the world.",
+        "retainedQualifyingQuote": "AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific.",
+        "originFamily": "Panama Canal Authority historical chronology",
+        "limits": "The surrounding marketing and CO2 claims are not relied upon or independently verified. This review is about the opening year, not every retained statement."
+      },
+      "proofReused": true,
+      "newOriginFetch": false
+    },
+    {
+      "evidenceId": "ev-9f6b071f258ff2a1591d",
+      "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+      "excerptSHA256": "ab0b27f55ee718428b59345b8d865c52d2d143eeae3983d7607241a4ab7b6779",
+      "priorCaseLabel": "AD06-muted-manual",
+      "priorReviewTimestampPreserved": "2026-11-14T04:42:02.662940+00:00",
+      "priorAuditSource": "/workspace/task-evidence/automatic08-citation-audit/audit-details.json",
+      "sourceFetchTimestampPreserved": "2026-11-14T04:38:11.279532+00:00",
+      "originProof": {
+        "requestedUrl": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+        "fetchedAt": "2026-11-14T04:38:11.279532+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 6,
+        "status": 200,
+        "finalUrl": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+        "contentType": "text/html; charset=UTF-8",
+        "truncated": false,
+        "bytes": 47568,
+        "bodySHA256": "0c17f7741d767f0dcad21092d54ee7af6882c5315eebbcc063f5d00b785fe153",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/9f6b071f258ff2a1.body",
+        "title": "It&#039;s your birthday, Panama Canal! | National Museum of American History",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/9f6b071f258ff2a1.text.txt",
+        "textSHA256": "67159e527ae774683619e59114d5fd5eed879c1624de58b128ce90d899d4c9c0"
+      },
+      "savedBodyHashAndBytesReverified": true,
+      "savedTextHashReverified": true,
+      "segmentAlignment": {
+        "method": "NFKC lowercase word-sequence alignment with explicit ellipsis segments; not byte identity between HTML and extracted excerpt.",
+        "segments": 3,
+        "normalizedCharacterOffsets": [
+          377,
+          1581,
+          2492
+        ],
+        "allSegmentsMatchedInOrder": true
+      },
+      "contentAssessment": {
+        "basis": "A named museum author’s historical account gives the exact commercial opening date and vessel; the retained caption identifies the museum’s Maritime Ralph E. Cropley Collection.",
+        "relation": "Explicitly supports the Panama Canal opening for business in 1914, matching the checked world-trade proposition.",
+        "retainedQualifyingQuote": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight.",
+        "originFamily": "Smithsonian National Museum of American History account and cited collection",
+        "limits": "Does not certify the broader “first ship” caption or other incidental historical claims. A different publisher from the operator does not by itself prove fully independent historical sourcing."
+      },
+      "proofReused": true,
+      "newOriginFetch": false
+    }
+  ],
+  "limitations": [
+    "Prior source retrieval occurred before AD07. Exact URL and excerpt equality permit reuse, but do not prove origin accessibility or unchanged content at the later application retrieval time.",
+    "The operator chronology and museum account directly support the opening-to-world-trade year; incidental environmental, shipping-time and first-ship claims were not certified.",
+    "Distinct publishers and narratives do not establish fully independent historical origins.",
+    "This is independent agent reasoning over preserved actual source bodies and selected excerpts, not human review or deliberate user source opening.",
+    "AD07 is a separate purposive automatic-supported-silence probe. It does not replace AD03, erase its inconclusive outcome or add a new factual claim denominator."
+  ]
+}

@@ -37,7 +37,7 @@ export const eventEnvelopeSchema = z.object({
   sessionId: z.string().min(1), sessionEpoch: z.number().int().positive(), requestId: z.string().optional(),
   claimId: z.string().optional(), revision: z.number().int().positive().optional(),
   type: z.enum(['session.ready', 'session.ended', 'claim.detected', 'claim.waiting', 'claim.skipped', 'claim.needs_confirmation',
-    'claim.checking', 'claim.result', 'claim.superseded', 'check.cancelled', 'pipeline.error', 'audio.ready', 'audio.stopped', 'transcript.partial', 'transcript.final']),
+    'claim.checking', 'claim.result', 'claim.superseded', 'check.cancelled', 'pipeline.error', 'audio.ready', 'audio.stopped', 'transcript.partial', 'transcript.final', 'capture.request']),
   serverAt: timestamp, payload: z.unknown()
 }).strict().superRefine((event, ctx) => {
   if (event.type === 'claim.result') {
@@ -48,5 +48,9 @@ export const eventEnvelopeSchema = z.object({
   if (event.type === 'claim.waiting') {
     const waiting = z.object({ admissionAction: z.literal('wait'), reasonCode: z.string().min(1), waitExpiresAt: timestamp }).passthrough();
     if (!waiting.safeParse(event.payload).success) ctx.addIssue({ code: 'custom', message: 'Invalid waiting payload', path: ['payload'] });
+  }
+  if (event.type === 'capture.request') {
+    const capture = z.object({ reasonCode: z.string().min(1) }).passthrough();
+    if (!capture.safeParse(event.payload).success) ctx.addIssue({ code: 'custom', message: 'Invalid capture.request payload', path: ['payload'] });
   }
 });

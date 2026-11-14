@@ -26,9 +26,14 @@ function topicAdapters(priority: number | null = null): PipelineAdapters {
         for (const [name, question] of Object.entries(request.questions)) {
           if (!name.startsWith(candidate.id + '_')) continue;
           if (question.type === 'choice') {
-            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact' : 'asserted';
-            answers[name] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, key === choice ? .99 : .01 / (Object.keys(question.criteria).length - 1)])) };
-          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') ? .99 : priority };
+            const choices = Object.keys(question.criteria);
+            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact'
+              : name.endsWith('_assertion_status') ? 'asserted'
+                : name.endsWith('_quote_use') ? 'name_or_title'
+                : name.endsWith('_claim_structure') ? candidate.id === 'span_0' && (request.state as { candidates: unknown[] }).candidates.length > 1 ? 'multiple_propositions' : 'one_coherent'
+                    : 'asserted';
+            answers[name] = { choice, probabilities: Object.fromEntries(choices.map(key => [key, key === choice ? .99 : .01 / (choices.length - 1)])) };
+          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') || name.endsWith('_preserves_scope') ? .99 : priority };
         }
       }
       return answers;
@@ -112,6 +117,25 @@ describe('bounded pipeline runtime', () => {
     expect(session.notifications).toHaveLength(1);
   });
 
+  it('suppresses repeat notifications across irrelevant context and mode changes while preserving qualifier differences', async () => {
+    const adapters = topicAdapters(); const retrieve = vi.spyOn(adapters, 'retrieve');
+    const { session, runtime, events } = setup(adapters);
+    session.preferences = { muted: false, automaticNotifications: true, selectedTopics: ['Lightning'] };
+    const text = 'Lightning never strikes the same place twice.';
+    runtime.submit(session, input(session, 'first', { text, context: ['We are discussing weather.'], userInitiated: false })); await flush();
+    await vi.advanceTimersByTimeAsync(4_000);
+    runtime.submit(session, input(session, 'second', { text, context: ['We are discussing science.'], mode: 'audio', capture: { source: 'recorded_fixture', segmentId: 'seg', confidence: 1 }, userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').map(event => (event.payload as { presentation: { action: string }; cached: boolean }).presentation.action)).toEqual(['notify', 'silent']);
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { reasonCode: 'duplicate' } });
+    expect(retrieve).toHaveBeenCalledTimes(2); // factual cache remains context/mode-sensitive
+    await vi.advanceTimersByTimeAsync(4_000);
+    runtime.submit(session, input(session, 'qualifier', { text: 'Lightning never strikes the same place twice in 1980.', userInitiated: false })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { action: 'notify' } });
+    runtime.submit(session, input(session, 'manual-repeat', { text, userInitiated: true })); await flush();
+    expect(events.filter(event => event.type === 'claim.result').at(-1)?.payload).toMatchObject({ presentation: { action: 'respond' } });
+    expect(session.notifications).toHaveLength(2);
+  });
+
   it.each([true, false])('uses preferences current at completion when a topic is enabled=%s during provider work', async enabled => {
     const adapters = topicAdapters(); const original = adapters.retrieve;
     let resolve!: (value: Awaited<ReturnType<PipelineAdapters['retrieve']>>) => void;
@@ -167,6 +191,22 @@ describe('bounded pipeline runtime', () => {
     a.pause(); b.pause(); await flush();
   });
 
+  it('includes queue wait in result duration while stage timing starts at provider work', async () => {
+    const adapters = fixtureAdapters(); const classify = adapters.classify;
+    adapters.classify = (body, context) => body.requestId.startsWith('block') ? new Promise(() => undefined) : classify(body, context);
+    const session = new Session(Date.now); const events: EventEnvelope[] = []; session.listeners.add(event => events.push(event));
+    let mono = 0; const runtime = new PipelineRuntime(adapters, Date.now, () => mono);
+    runtime.submit(session, input(session, 'block-a')); runtime.submit(session, input(session, 'block-b'));
+    mono = 250; runtime.submit(session, input(session, 'queued'));
+    mono = 5_250; session.cancel('block-a'); await flush();
+    const result = events.find(event => event.requestId === 'queued' && event.type === 'claim.result')?.payload as { durationMs: number } | undefined;
+    expect(result?.durationMs).toBe(5_000);
+    const metric = runtime.metrics.find(item => item.searchAttempts === 1);
+    expect(metric?.durationMs).toBe(5_000);
+    expect(metric?.stageMs.admission).toBe(0);
+    session.cancel('block-b'); await flush();
+  });
+
   it('waits without retrieval and expires as a non-verdict', async () => {
     const adapters = fixtureAdapters(); const retrieve = vi.spyOn(adapters, 'retrieve');
     const { session, events, runtime } = setup(adapters);
@@ -207,10 +247,15 @@ describe('bounded pipeline runtime', () => {
     expect(events.some(e => e.type === 'claim.result')).toBe(false);
   });
 
-  it('enforces automatic cooldown and tombstone capacity without evicting attempt budgets', () => {
-    const { session, runtime } = setup();
-    runtime.submit(session, input(session, 'a', { userInitiated: false }));
+  it('starts the automatic cooldown at an admitted claim, never at a skipped sentence', async () => {
+    const { session, runtime, events } = setup();
+    runtime.submit(session, input(session, 'filler', { userInitiated: false, text: 'I felt tired after lunch.' })); await flush();
+    expect(events.some(e => e.requestId === 'filler' && e.type === 'claim.skipped')).toBe(true);
+    runtime.submit(session, input(session, 'a', { userInitiated: false })); await flush();
+    expect(events.some(e => e.requestId === 'a' && e.type === 'claim.result')).toBe(true);
     expect(() => runtime.submit(session, input(session, 'b', { userInitiated: false }))).toThrow('automatic_cooldown');
+    await vi.advanceTimersByTimeAsync(4_000);
+    expect(runtime.submit(session, input(session, 'c', { userInitiated: false }))).toMatchObject({ duplicate: false });
     session.pause();
   });
 

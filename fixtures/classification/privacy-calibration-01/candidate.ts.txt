@@ -1,0 +1,27 @@
+import { createClassifier } from '/workspace/stack-15/services/api/src/providers/jev/classification.ts';
+import type { JevClient, JevQuestion, JevRequest } from '/workspace/stack-15/services/api/src/providers/jev/client.ts';
+
+/** Root-approved experiment text. No production wiring or threshold change. */
+export const PRIVATE_DATA_QUESTION = "Does this exact candidate disclose private or sensitive information about an identifiable person that should not go to web search? A person's name together with a public role, published work, official act, or publicly conferred award is not private merely because it identifies them. Still mark health/medical history, personal finances/account details, home/private contact/location, credentials/identity-document details, and private lived events/anecdotes as private, including for public figures and when phrased as reported or publicly known. Assess the actual information and context; a name/title/public-figure label alone neither establishes privacy nor waives it. When privacy status is uncertain, do not infer safety from fame or apparent searchability.";
+
+const ORIGINAL_PRIVATE_DATA_QUESTION = 'Does it disclose private personal health, financial, identity, contact or lived-event data that must not go to web search?';
+
+/** Replace only the legacy private-data question, keeping every candidate prefix,
+ * all other questions, state and actual classifier admission gates unchanged. */
+export function substitutePrivacyQuestion(request: JevRequest): JevRequest {
+  let replaced = 0;
+  const questions: Record<string, JevQuestion> = Object.fromEntries(Object.entries(request.questions).map(([name, question]) => {
+    if (!name.endsWith('_private_data')) return [name, question];
+    if (question.type !== 'noul' || !question.instructions.endsWith(ORIGINAL_PRIVATE_DATA_QUESTION)) throw new Error('Production privacy template changed; experiment must be reviewed again.');
+    replaced++;
+    return [name, { ...question, instructions: question.instructions.slice(0, -ORIGINAL_PRIVATE_DATA_QUESTION.length) + PRIVATE_DATA_QUESTION }];
+  }));
+  if (!replaced) throw new Error('No production private-data question captured.');
+  return { ...request, questions };
+}
+
+/** Experimental full-path adapter only. It cannot bypass privacy vetoes, exact
+ * spans, coherence, public classification, self-containedness or scope gates. */
+export function createPrivacyClassificationExperiment(client: JevClient): ReturnType<typeof createClassifier> {
+  return createClassifier({ ask: (request, context) => client.ask(substitutePrivacyQuestion(request), context) });
+}

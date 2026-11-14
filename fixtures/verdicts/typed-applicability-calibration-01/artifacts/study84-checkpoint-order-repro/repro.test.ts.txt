@@ -1,0 +1,11 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { createStudyGuard } from './study-guard.before.ts';
+const body='{}';const block={maxCalls:1,maxInputTokens:1000,pendingReserve:100,maxTotalRequestBytes:100,maxTotalResponseBytes:1000};
+for(const phase of ['call_reserved','request_started'] as const)test(`durable ${phase} failure occurs before underlying fetch`,async()=>{
+ let fetches=0;const guard=createStudyGuard({calls:[{callId:'only',blockId:'one',requestSHA256:createHash('sha256').update(body).digest('hex'),requestBytes:2}],blocks:[{blockId:'one',limits:block}],limits:{...block,maxRequestBytes:100,maxResponseBytesPerCall:1000,wallMs:1000}},{fetch:async()=>{fetches++;return new Response('unavailable',{status:503});},onCheckpoint:e=>{if(e.type===phase)throw Error('mock durable journal failure');}});
+ const r=await guard.run('only',async lease=>{const response=await lease.fetch('https://api.typesafe.ai/v1/systemone',{method:'POST',body});return response.status;});
+ console.log(JSON.stringify({phase,result:r.status,fetches,totals:guard.snapshot().totals,providerCalls:0}));
+ assert.equal(fetches,0,'Failed durable dispatch checkpoint must prevent network invocation');
+});

@@ -1,0 +1,30 @@
+{
+  "kind": "injected_repro_only",
+  "networkCalls": 0,
+  "providerCalls": 0,
+  "collectorSHA256": "12b45e32d134d31c61647d31bf308e7b8936811dcb63c50608b4ed268051fee2",
+  "actualSearch": 1,
+  "actualContents": 2,
+  "expectedContentsBeforeStop": 1,
+  "observedExtraContentsAttempt": true,
+  "status": "stopped",
+  "fatal": "unknown_dispatch_or_body_settlement",
+  "attempts": [
+    {
+      "kind": "search",
+      "settled": true,
+      "bodyCleanup": "drained"
+    },
+    {
+      "kind": "contents",
+      "settled": false,
+      "bodyCleanup": "unknown"
+    },
+    {
+      "kind": "contents",
+      "settled": false,
+      "bodyCleanup": "unknown"
+    }
+  ],
+  "unobservedFamilies": 3
+}

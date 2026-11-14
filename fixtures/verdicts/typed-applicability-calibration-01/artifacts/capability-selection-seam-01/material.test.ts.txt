@@ -1,0 +1,245 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import type { AcceptedClaim, Evidence, Judgment } from '/workspace/stack-20/packages/contracts/src/index.js';
+import type { AssessedJudgment } from '/workspace/stack-20/services/api/src/policy/assessment.js';
+import { retainAlternateEvidence } from '/workspace/stack-20/services/api/src/runtime/alternate-evidence.js';
+import { Session, type RequestRecord } from '/workspace/stack-20/services/api/src/runtime/session.js';
+import { AttemptBudget } from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import { parseRetainedRecord } from '../record-capability-prototype-02/src/types.js';
+import { captureSelectionMaterial, inspectMaterial, captureRuntimeOwner, inspectOwnerBinding, assertCurrentOwner, awaitCurrentMaterial, assertPrototypeCompatible } from './material.js';
+
+const claim = 'The Meridian bridge opened in 1889.';
+const source = (id: string, excerpt: string): Evidence => ({ id, url: `https://${id}.org/record`, title: 'Bridge register',
+ publisher: null, publishedAt: '2026-11-14', retrievedAt: '2026-11-14T10:00:00Z', contentBasis: 'highlight', excerpt,
+ sourceGroup: `${id}.org`, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false,
+ matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+const judgment = (records: Evidence[]): AssessedJudgment => ({ checkedText: claim, label: 'insufficient_evidence',
+ probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 1 },
+ evidence: records.map(record => ({ ...record, directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance: 'supports', stanceProbability: .99 })),
+ selectedEvidenceIds: [], misleadingReason: null,
+ sourceAssessments: Object.fromEntries(records.map(record => [record.id, { contentBasis: 'original_record', confidence: .99 }])),
+ claimRisk: { level: 'ordinary', confidence: .99 }, originAssessments: [] });
+function simple() {
+ const old = { ...source('alpha', `Register M-17. ${claim} However, public access began in 1890; the earlier date describes a private ceremony. Keeper: Municipal Archive.`), contentBasis: 'page_text' as const };
+ const next = { ...old, contentBasis: 'highlight' as const, excerpt: claim, retrievedAt: '2026-11-14T10:00:05Z' };
+ const handle = captureSelectionMaterial({ existing: [old], incoming: [next], checkedText: claim, priorJudgment: judgment([old]) });
+ return { old, next, handle, snapshot: inspectMaterial(handle) };
+}
+function lifecycle() {
+ let clock = Date.parse('2026-11-14T10:00:00Z');
+ const session = new Session(() => clock);
+ const record: RequestRecord = { input: { schemaVersion: 1, sessionId: session.id, sessionEpoch: session.epoch, requestId: 'offline-request', revision: 1,
+  text: claim, context: [], mode: 'typed', language: 'en', capturedAt: new Date(clock).toISOString(),
+  capture: { source: 'typed_fixture', segmentId: 'offline-segment', confidence: 1 }, userInitiated: true },
+  budget: new AttemptBudget(), controller: new AbortController(), acceptedAt: clock,
+  acceptedMonotonic: 0, state: 'running', continuationCount: 0, results: new Map(), fingerprint: 'synthetic' };
+ session.requests.set(record.input.requestId, record);
+ const { handle, snapshot } = simple();
+ let generation = snapshot.materialGeneration, installation = 'installed-generation-1';
+ const admitted: AcceptedClaim = { id: 'offline-request-claim-0', originalText: claim, checkedText: claim,
+  sourceSpan: { start: 0, end: Array.from(claim).length }, admission: { assertionStatus: 'asserted', hasPracticalConsequence: null,
+   matchedSelectedTopic: null, admissionAction: 'check', reasonCode: 'synthetic-admitted-public-claim' } };
+ const owner = captureRuntimeOwner(handle, { session, record, claimSlot: 0, admittedClaim: admitted,
+  readMaterialGeneration: () => generation, readInstallGeneration: () => installation });
+ return { session, record, owner, handle, snapshot, admitted, advance: (ms: number) => { clock += ms; },
+  replaceMaterial: () => { generation = 'changed'; }, retireInstall: () => { installation = 'retired'; } };
+}
+
+test('retained records remain actual selector output; all original/incoming versions retain exact fields and time', () => {
+ const { old, next, snapshot } = simple();
+ assert.deepEqual(snapshot.retainedEvidence, retainAlternateEvidence([old], [next], claim, judgment([old])));
+ assert.equal(snapshot.originNodes.length, 2); assert.equal(snapshot.originLinks.length, 1);
+ assert.equal(snapshot.originLinks[0].relationship, 'common_origin');
+ assert.deepEqual(snapshot.originNodes.map(n => n.record.excerpt), [old.excerpt, next.excerpt]);
+ const retainedNode = snapshot.originNodes.find(n => n.key === snapshot.retainedNodeKeys[0])!;
+ assert.deepEqual(retainedNode.record, snapshot.retainedRecords[0]);
+ assert.equal(retainedNode.record.retrievedAt, old.retrievedAt);
+ assert.equal(snapshot.originGraphState.upstreamProviderBodiesComplete, false);
+ assert.equal('assessment' in snapshot, false); assert.equal('risk' in snapshot, false);
+ assert.equal('directlyAddressesClaim' in retainedNode.record.metadata, false);
+});
+
+test('opaque handles cannot be forged, serialized or mutated and caller mutation cannot change snapshot', () => {
+ const { old, snapshot, handle } = simple();
+ assert.throws(() => inspectMaterial(structuredClone(handle)), /untrusted_material_handle/);
+ assert.throws(() => { snapshot.originNodes[0].record.excerpt = 'replaced'; }, TypeError);
+ old.excerpt = 'caller changed'; assert.notEqual(snapshot.originNodes[0].record.excerpt, old.excerpt);
+});
+
+test('unchanged material is stable; Unicode, whitespace, keeper, timestamp and supplied raw metadata change generation', () => {
+ const { old, next, snapshot } = simple();
+ const build = (incoming: Evidence) => inspectMaterial(captureSelectionMaterial({ existing: [old], incoming: [incoming], checkedText: claim, priorJudgment: judgment([old]) }));
+ assert.equal(build(next).materialGeneration, snapshot.materialGeneration);
+ for (const changed of [{ ...next, excerpt: 'İZMİR 🦉' }, { ...next, excerpt: claim.replace(' ', '  ') },
+  { ...next, publisher: 'Changed keeper' }, { ...next, retrievedAt: '2026-11-14T10:00:06Z' }, { ...next, echoGroup: 'supplied-bridge' }]) {
+  assert.notEqual(build(changed).materialGeneration, snapshot.materialGeneration);
+ }
+});
+
+test('raw graph retains omitted bridge and both versions after its current text changes', () => {
+ const a = source('alpha', 'Aster is the capital of Belvar. Jurisdiction register Q-71 lists the maintained national administrative record.');
+ const shared = Array.from({ length: 32 }, (_, i) => `shared${i}`).join(' ');
+ const bridge = source('bridge', `${shared} ${Array.from({ length: 8 }, (_, i) => `prior${i}`).join(' ')}`);
+ const fresh = source('charlie', `${shared} ${Array.from({ length: 8 }, (_, i) => `fresh${i}`).join(' ')}`);
+ const changed = { ...bridge, excerpt: 'Aster Belvar revised administrative context describes orchard maintenance and planting schedules.' };
+ const prior = judgment([a, bridge]); prior.originAssessments = [{ evidenceIds: ['alpha', 'bridge'], relationship: 'common_origin', confidence: .99 }];
+ prior.checkedText = 'Aster is the capital of Belvar.';
+ const incoming = [changed, fresh, ...Array.from({ length: 3 }, (_, i) => source(`new-${i}`, `Aster Belvar gardening reference ${i} covers orchard planting.`))];
+ const s = inspectMaterial(captureSelectionMaterial({ existing: [a, bridge], incoming, checkedText: 'Aster is the capital of Belvar.', priorJudgment: prior }));
+ assert.equal(s.originNodes.length, 7); assert.equal(s.originLinks.length, 21);
+ const oldBridge = s.originNodes.find(n => n.record.id === 'bridge' && n.state.phase === 'original')!;
+ const newBridge = s.originNodes.find(n => n.record.id === 'bridge' && n.state.phase === 'incoming')!;
+ assert.equal(oldBridge.record.excerpt, bridge.excerpt); assert.equal(newBridge.record.excerpt, changed.excerpt);
+ assert.equal(s.retainedNodeKeys.includes(oldBridge.key), false);
+ const left = s.originNodes.find(n => n.record.id === 'alpha')!, right = s.originNodes.find(n => n.record.id === 'charlie')!;
+ const linked = (x: string, y: string) => s.originLinks.some(l => [l.left, l.right].includes(x) && [l.left, l.right].includes(y) && l.relationship === 'common_origin');
+ assert.equal(linked(left.key, oldBridge.key), true); assert.equal(linked(oldBridge.key, right.key), true);
+});
+
+test('complete twelve-version graph accepted; excessive raw inventory or projection width fails without truncation', () => {
+ const original = Array.from({ length: 6 }, (_, i) => source(`old-${i}`, `Initial catalogue ${i}.`));
+ const incoming = Array.from({ length: 6 }, (_, i) => source(`new-${i}`, `New municipal record ${i}.`));
+ const s = inspectMaterial(captureSelectionMaterial({ existing: original, incoming, checkedText: claim, priorJudgment: judgment(original) }));
+ assert.equal(s.originNodes.length, 12); assert.equal(s.originLinks.length, 66); assert.ok(s.retainedRecords.length <= 6);
+ assert.throws(() => captureSelectionMaterial({ existing: original, incoming: [...incoming, source('extra', 'Extra')], checkedText: claim, priorJudgment: judgment(original) }), /raw_inventory_bound/);
+ const tooWide = { ...original[0], title: 'x'.repeat(1001) };
+ const complete = captureSelectionMaterial({ existing: [tooWide], incoming: [], checkedText: claim, priorJudgment: judgment([tooWide]) });
+ assert.equal(inspectMaterial(complete).originNodes[0].record.title, tooWide.title);
+ assert.throws(() => assertPrototypeCompatible(complete), /prototype_material_unavailable:invalid_string/);
+});
+
+test('stale prior material and material accessors fail before a snapshot can be issued', () => {
+ const { old, next } = simple(); const prior = judgment([old]); prior.evidence[0].excerpt += ' stale';
+ assert.throws(() => captureSelectionMaterial({ existing: [old], incoming: [next], checkedText: claim, priorJudgment: prior }), /stale_prior_material/);
+ Object.defineProperty(next, 'excerpt', { get() { throw Error('getter executed'); } });
+ assert.throws(() => captureSelectionMaterial({ existing: [old], incoming: [next], checkedText: claim, priorJudgment: judgment([old]) }), /record_accessor/);
+});
+
+test('identical recurring raw versions remain two explicit occurrences without inventing selected phase', () => {
+ const r = source('alpha', claim), h = captureSelectionMaterial({ existing: [r], incoming: [r], checkedText: claim, priorJudgment: judgment([r]) });
+ const s = inspectMaterial(h);
+ assert.equal(s.originNodes.length, 2);
+ const retained = s.originNodes.find(n => n.key === s.retainedNodeKeys[0])!;
+ assert.deepEqual(retained.state.equivalentRawVersionOrdinals, [0, 1]);
+ assert.equal(retained.state.selectedPhaseIsNotInferred, true);
+});
+
+test('permuted raw inventory changes generation even if selected source identities are unchanged', () => {
+ const old = [source('alpha', 'First archival record.'), source('bravo', 'Second independent ledger.')];
+ const incoming = [source('charlie', 'A new engineering log.'), source('delta', 'A separate civic entry.')];
+ const capture = (additions: Evidence[]) => inspectMaterial(captureSelectionMaterial({ existing: old, incoming: additions, checkedText: claim, priorJudgment: judgment(old) }));
+ const a = capture(incoming), b = capture([...incoming].reverse());
+ assert.deepEqual(a.retainedRecords.map(r => r.id).sort(), b.retainedRecords.map(r => r.id).sort());
+ assert.notEqual(a.materialGeneration, b.materialGeneration);
+});
+
+test('saved public09 pools preserve actual current selector output and every raw version, without old verdict transfer', async () => {
+ let replayed = 0;
+ for (let batch = 1; batch <= 4; batch++) {
+  const report = JSON.parse(await readFile(`/workspace/task-evidence/broader-candidate09-${String(batch).padStart(2, '0')}.json`, 'utf8'));
+  for (const c of report.cases) {
+   if (!/^BD\d\d$/.test(c.label)) continue;
+   const first = c.evidence.find((s: any) => s.stage === 'retrieval'), alternate = c.evidence.find((s: any) => s.stage === 'alternate');
+   if (!alternate) continue;
+   const observed = c.evidence.find((s: any) => s.stage === 'judgment');
+   const prior: AssessedJudgment = { ...judgment(first.records), checkedText: c.admittedPublic[0], evidence: observed.records, sourceAssessments: observed.sourceAssessments, claimRisk: observed.claimRisk, originAssessments: observed.originAssessments };
+   const s = inspectMaterial(captureSelectionMaterial({ existing: first.records, incoming: alternate.records, checkedText: c.admittedPublic[0], priorJudgment: prior }));
+   assert.deepEqual(s.retainedEvidence, retainAlternateEvidence(first.records, alternate.records, c.admittedPublic[0], prior));
+   assert.equal(s.originNodes.length, first.records.length + alternate.records.length);
+   assert.equal(s.originLinks.length, s.originNodes.length * (s.originNodes.length - 1) / 2);
+   for (let n = 0; n < s.retainedRecords.length; n++) {
+    assert.deepEqual(s.originNodes.find(node => node.key === s.retainedNodeKeys[n])!.record, s.retainedRecords[n]);
+    if (!['BD08', 'BD12'].includes(c.label)) assert.doesNotThrow(() => parseRetainedRecord(s.retainedRecords[n]));
+   }
+   if (c.label === 'BD05') assert.equal(s.originNodes.filter(n => n.record.url.includes('/si-base-units/second')).length, 2);
+   const handle = captureSelectionMaterial({ existing: first.records, incoming: alternate.records, checkedText: c.admittedPublic[0], priorJudgment: prior });
+   if (['BD08', 'BD12'].includes(c.label)) assert.throws(() => assertPrototypeCompatible(handle), /prototype_material_unavailable/);
+   else assert.doesNotThrow(() => assertPrototypeCompatible(handle));
+   replayed++;
+  }
+ }
+ assert.equal(replayed, 11);
+});
+
+test('runtime owner captures actual claim slot, request, inherited deadline and independent install generation', () => {
+ const l = lifecycle(), b = inspectOwnerBinding(l.owner);
+ assert.equal(b.requestId, l.record.input.requestId); assert.equal(b.claimId, 'offline-request-claim-0');
+ assert.equal(b.deadlineAt, l.record.acceptedAt + 10000); assert.equal(b.materialGeneration, l.snapshot.materialGeneration);
+ assert.throws(() => assertCurrentOwner(structuredClone(l.owner)), /untrusted_runtime_owner/);
+});
+for (const variant of ['cancel', 'epoch', 'replace', 'session_expiry', 'deadline', 'material', 'install', 'done'] as const) {
+ test(`late completion under ${variant} cannot cross owner gate or populate a cache`, async () => {
+  const l = lifecycle(); let resolve!: (v: string) => void; let commits = 0;
+  const pending = awaitCurrentMaterial(l.owner, () => new Promise<string>(r => { resolve = r; })).then(() => { commits++; });
+  const rejected = assert.rejects(pending);
+  if (variant === 'cancel') l.session.cancel(l.record.input.requestId);
+  if (variant === 'epoch') { l.session.pause(); l.session.active = true; }
+  if (variant === 'replace') l.session.requests.set(l.record.input.requestId, { ...l.record, input: { ...l.record.input, revision: 2 }, controller: new AbortController() });
+  if (variant === 'session_expiry') l.session.expiresAt = l.session.now();
+  if (variant === 'deadline') l.advance(10000);
+  if (variant === 'material') l.replaceMaterial();
+  if (variant === 'install') l.retireInstall();
+  if (variant === 'done') l.record.state = 'done';
+  resolve('late valid-looking payload'); await rejected; assert.equal(commits, 0);
+  assert.equal(l.record.budget.jev, 0); assert.equal(l.session.cache.size, 0); assert.equal(l.record.results.size, 0);
+ });
+}
+
+test('same evidence does not make an old owner suitable for another claim slot or cache generation', () => {
+ const l = lifecycle();
+ const second = captureRuntimeOwner(l.handle, { session: l.session, record: l.record, claimSlot: 1,
+  admittedClaim: { ...l.admitted, id: 'offline-request-claim-1' },
+  readMaterialGeneration: () => l.snapshot.materialGeneration, readInstallGeneration: () => 'installed-generation-1' });
+ assert.notEqual(inspectOwnerBinding(l.owner).ownerIdentity, inspectOwnerBinding(second).ownerIdentity);
+ assert.notEqual(inspectOwnerBinding(l.owner).claimId, inspectOwnerBinding(second).claimId);
+ const firstGeneration = inspectOwnerBinding(l.owner).installGeneration;
+ l.retireInstall(); assert.throws(() => inspectOwnerBinding(l.owner), /stale_install_generation/);
+ assert.equal(firstGeneration, 'installed-generation-1');
+});
+
+test('exact prior claim identity is mandatory; initial-only material needs no fake assessment', () => {
+ const { old, next } = simple();
+ const prior = judgment([old]); prior.checkedText = 'An unrelated public proposition.';
+ assert.throws(() => captureSelectionMaterial({ existing: [old], incoming: [next], checkedText: claim, priorJudgment: prior }), /prior_claim_mismatch/);
+ delete prior.checkedText;
+ assert.throws(() => captureSelectionMaterial({ existing: [old], incoming: [next], checkedText: claim, priorJudgment: prior }), /prior_claim_mismatch/);
+ assert.throws(() => captureSelectionMaterial({ existing: [old], incoming: [next], checkedText: claim }), /prior_judgment_required/);
+ const first = inspectMaterial(captureSelectionMaterial({ existing: [old], incoming: [], checkedText: claim }));
+ assert.deepEqual(first.retainedEvidence, [old]); assert.equal('assessment' in first, false);
+});
+
+test('current request ownership cannot bind unrelated claim material, wrong slot or altered source span', () => {
+ const l = lifecycle();
+ const capture = (admittedClaim: AcceptedClaim, claimSlot = 0) => captureRuntimeOwner(l.handle, {
+  session: l.session, record: l.record, admittedClaim, claimSlot,
+  readMaterialGeneration: () => l.snapshot.materialGeneration, readInstallGeneration: () => 'installed-generation-1' });
+ assert.throws(() => capture({ ...l.admitted, checkedText: 'Unrelated assertion.' }), /admitted_claim_mismatch/);
+ assert.throws(() => capture(l.admitted, 1), /admitted_claim_mismatch/);
+ assert.throws(() => capture({ ...l.admitted, sourceSpan: { start: 1, end: l.admitted.sourceSpan.end } }), /admitted_claim_mismatch/);
+ l.admitted.sourceSpan.start = 1; assert.throws(() => assertCurrentOwner(l.owner), /admitted_claim_mismatch/);
+});
+
+test('admitted public span uses Unicode scalar offsets and does not add surrounding text to material', () => {
+ const l = lifecycle(), prefix = '🙂 Synthetic private prefix. ';
+ l.record.input.text = prefix + claim;
+ const admitted = { ...l.admitted, originalText: l.record.input.text,
+  sourceSpan: { start: Array.from(prefix).length, end: Array.from(prefix + claim).length } };
+ const input = { session: l.session, record: l.record, admittedClaim: admitted, claimSlot: 0,
+  readMaterialGeneration: () => l.snapshot.materialGeneration, readInstallGeneration: () => 'installed-generation-1' };
+ assert.doesNotThrow(() => captureRuntimeOwner(l.handle, input));
+ assert.throws(() => captureRuntimeOwner(l.handle, { ...input,
+  admittedClaim: { ...admitted, sourceSpan: { start: prefix.length, end: (prefix + claim).length } } }), /admitted_claim_mismatch/);
+ assert.equal(l.snapshot.exactCheckedText.includes(prefix), false);
+});
+
+test('a successful await grants no assessment and still needs a synchronous gate immediately before commit', async () => {
+ const l = lifecycle();
+ const value = await awaitCurrentMaterial(l.owner, async () => ({ localArtifact: 'bytes-read' }));
+ assert.deepEqual(value, { localArtifact: 'bytes-read' });
+ assert.equal('assessment' in inspectMaterial(l.handle), false);
+ // Retirement between the awaited step and the future caller's cache write.
+ l.retireInstall(); let writes = 0;
+ assert.throws(() => { assertCurrentOwner(l.owner); writes++; }, /stale_install_generation/);
+ assert.equal(writes, 0);
+});

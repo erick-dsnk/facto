@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "broader-development-2026-11-14-v2-batch-2",
+  "cases": [
+    {
+      "label": "BD04",
+      "text": "Lake Baikal is in Africa.",
+      "allowedPublic": [
+        "Lake Baikal is in Africa."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD04",
+            "acceptedTexts": [
+              "Lake Baikal is in Africa."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD05",
+      "text": "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz.",
+      "allowedPublic": [
+        "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD05",
+            "acceptedTexts": [
+              "In the SI definition of the second, the unperturbed ground-state hyperfine transition frequency of the caesium-133 atom is fixed at 9,192,631,770 Hz."
+            ],
+            "verdict": "supported",
+            "domain": "science"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD06",
+      "text": "The chemical symbol for gold is Ag.",
+      "allowedPublic": [
+        "The chemical symbol for gold is Ag."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD06",
+            "acceptedTexts": [
+              "The chemical symbol for gold is Ag."
+            ],
+            "verdict": "contradicted",
+            "domain": "science"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BDC02",
+      "text": "Handwritten postcards are more charming than digital messages.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "skip",
+        "claims": []
+      }
+    }
+  ]
+}

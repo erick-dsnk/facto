@@ -1,0 +1,107 @@
+import assert from 'node:assert/strict';
+import { captureSelectionMaterial, inspectMaterial } from '/workspace/task-evidence/capability-selection-seam-02/material.js';
+import { readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { retainAlternateEvidence as oldSelector } from '/workspace/task-evidence/selector-seam-implementation-01/legacy-oracle.js';
+import { selectAlternateEvidenceWithContext, retainAlternateEvidence } from '/workspace/stack-20/services/api/src/runtime/alternate-evidence.js';
+import type { Evidence } from '/workspace/stack-20/packages/contracts/src/index.js';
+import type { AssessedJudgment } from '/workspace/stack-20/services/api/src/policy/assessment.js';
+const out = '/workspace/task-evidence/native-completion-runtime-review';
+const hash = (b: string | Uint8Array) => createHash('sha256').update(b).digest('hex');
+const claim = 'Aster is the capital of Belvar.';
+const source = (id: string, excerpt: string): Evidence => ({ id, url: `https://${id}.org/record`, title: 'Administrative register',
+ publisher: null, publishedAt: '2026-11-14', retrievedAt: '2026-11-14T10:00:00Z', excerpt, contentBasis: 'highlight',
+ sourceGroup: `${id}.org`, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false,
+ matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+const judgment = (records: Evidence[]): AssessedJudgment => ({ checkedText: claim, label: 'insufficient_evidence',
+ probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 1 },
+ evidence: records.map(r => ({ ...r, directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance: 'supports', stanceProbability: .99 })),
+ selectedEvidenceIds: [], misleadingReason: null, sourceAssessments: Object.fromEntries(records.map(r => [r.id, { contentBasis: 'original_record', confidence: .99 }])),
+ claimRisk: { level: 'ordinary', confidence: .99 }, originAssessments: [] });
+function permutations<T>(items: T[]): T[][] {
+ return items.length < 2 ? [items] : items.flatMap((item, index) => permutations(items.filter((_, n) => n !== index)).map(tail => [item, ...tail]));
+}
+let compared = 0; const reasons: Record<string, number> = {};
+function compare(existing: Evidence[], incoming: Evidence[], text: string, prior: AssessedJudgment) {
+ const baseline = oldSelector(existing, incoming, text, prior);
+ const selected = selectAlternateEvidenceWithContext(existing, incoming, text, prior);
+ assert.deepEqual(selected.retained, baseline);
+ assert.deepEqual(retainAlternateEvidence(existing, incoming, text, prior), baseline);
+ const material = inspectMaterial(captureSelectionMaterial({ existing, incoming, checkedText: text, priorJudgment: prior }));
+ assert.deepEqual(material.retainedEvidence, baseline);
+ assert.deepEqual(material.retainedNodeKeys, selected.retainedVersionKeys);
+ assert.equal(material.originNodes.length, selected.inputVersions.length);
+ assert.deepEqual(material.originGraphState.nativeFamilyById, selected.familyById);
+ assert.equal(material.originGraphState.nativeContextAvailable, true);
+ assert.equal(material.originLinks.filter(link => link.relationship === 'common_origin').length, selected.dependenceLinks.length);
+ for (const version of selected.inputVersions) {
+  const node = material.originNodes.find(node => node.key === version.key)!;
+  assert.equal(node.state.canonicalInputEchoGroup, version.record.echoGroup);
+  assert.equal(node.state.dependenceEchoGroup, version.dependenceEchoGroup);
+  assert.equal(node.state.usedForDependence, version.usedForDependence);
+ }
+ for (const edge of selected.dependenceLinks) {
+  const projected = material.originLinks.find(link => link.left === edge.leftKey && link.right === edge.rightKey)!;
+  assert.deepEqual(projected.state.nativeReasons, edge.reasons);
+ }
+ assert.equal(selected.inputVersions.length, existing.length + incoming.length);
+ assert.equal(selected.retainedVersionKeys.length, baseline.length);
+ assert.ok(selected.dependenceLinks.length <= 66);
+ for (const [index, key] of selected.retainedVersionKeys.entries()) {
+  const v = selected.inputVersions.find(v => v.key === key)!;
+  const r = selected.retained[index]; assert.ok(v);
+  for (const field of ['id','url','title','publisher','publishedAt','retrievedAt','contentBasis','excerpt','sourceGroup'] as const) assert.equal(v.record[field], r[field]);
+ }
+ reasons[selected.reason] = (reasons[selected.reason] ?? 0) + 1; compared++;
+ return selected;
+}
+const inputs = [];
+for (let batch = 1; batch <= 4; batch++) {
+ const path = `/workspace/task-evidence/broader-candidate09-${String(batch).padStart(2,'0')}.json`;
+ const bytes = await readFile(path); assert.ok(bytes.byteLength < 8 * 1024 * 1024);
+ inputs.push({ path, bytes: bytes.byteLength, sha256: hash(bytes) });
+ const report = JSON.parse(bytes.toString());
+ for (const c of report.cases) {
+  if (!/^BD\d\d$/.test(c.label)) continue;
+  const a = c.evidence.find((s: any) => s.stage === 'retrieval'), b = c.evidence.find((s: any) => s.stage === 'alternate');
+  if (!b) continue;
+  const j = c.evidence.find((s: any) => s.stage === 'judgment');
+  const plan = report.predeclaredCases.find((p: any) => p.label === c.label);
+  assert.ok(plan.allowedPublic.includes(c.admittedPublic[0]));
+  compare(a.records,b.records,c.admittedPublic[0],{ ...judgment(a.records),checkedText:c.admittedPublic[0],evidence:j.records,
+    sourceAssessments:j.sourceAssessments,claimRisk:j.claimRisk,originAssessments:j.originAssessments });
+ }
+}
+const publicPools = compared;
+const old = [source('alpha','Register A names Aster as the capital of Belvar.'),source('bridge','A provenance appendix links register A with gazette B.'),source('charlie','Gazette B names Aster as the capital of Belvar.')];
+const incoming = [source('new-a','Aster Belvar gardening entry.'),source('new-b','Aster Belvar travel report.'),source('new-c','Aster Belvar civil engineering record.')];
+for (const variant of ['ordinary','origin_bridge','conflict_bridge'] as const) {
+ const j = judgment(old);
+ if (variant !== 'ordinary') j.originAssessments = [{evidenceIds:['alpha','bridge'],relationship:'common_origin',confidence:.99},{evidenceIds:['bridge','charlie'],relationship:'common_origin',confidence:.99}];
+ if (variant === 'conflict_bridge') { j.evidence[1]={...old[1],stance:'unrelated',stanceProbability:0};j.evidence[2].stance='contradicts'; }
+ for (const a of permutations(old)) for (const b of permutations(incoming)) compare(a,b,claim,j);
+}
+const page = { ...source('page',`${claim} However, another city is the current seat. Keeper: Gazette archive.`),contentBasis:'page_text' as const };
+for (const kind of ['contained','correction','title','equal','page_text'] as const) {
+ let next: Evidence = {...page,excerpt:kind==='correction'?'Correction: another city is the capital.':kind==='equal'?page.excerpt:claim,
+  contentBasis:kind==='page_text'?'page_text':'highlight',retrievedAt:'2026-11-14T10:00:05Z'};
+ if (kind==='title') next={...next,title:'Revised register'};
+ for (const b of permutations([next,...incoming.slice(0,2)])) compare([page],b,claim,judgment([page]));
+}
+const duplicate={...page,retrievedAt:'2026-11-14T10:00:06Z'};
+compare([page,duplicate],[],claim,judgment([duplicate]));
+compare([page],[{...page,retrievedAt:'2026-11-14T10:00:09Z'}],claim,judgment([page]));
+const timing=[];
+const maxOld=Array.from({length:6},(_,i)=>source(`max-old-${i}`,Array.from({length:160},(_,n)=>`old${i}word${n}`).join(' ').slice(0,2000)));
+const maxNew=Array.from({length:6},(_,i)=>source(`max-new-${i}`,Array.from({length:160},(_,n)=>`new${i}word${n}`).join(' ').slice(0,2000)));
+for(let n=0;n<5;n++){
+ const j=judgment(maxOld),start=performance.now();oldSelector(maxOld,maxNew,claim,j);const middle=performance.now();
+ const s=selectAlternateEvidenceWithContext(maxOld,maxNew,claim,j);const end=performance.now();
+ assert.equal(s.inputVersions.length,12);timing.push({baselineMs:middle-start,siblingMs:end-middle});
+}
+const result={kind:'offline_native_material_seam02_preedit_oracle_parity',providerCalls:0,modelCalls:0,
+ publicPools,syntheticAndPermutationPools:compared-publicPools,comparedPools:compared,exactRetainedParity:true,retainedVersionBindings:true,exactNativeGraphProjection:true,
+ reasons,inputReports:inputs,maxTwelveVersionTimingSamples:timing,
+ limitations:['Same saved normalized public pools; no new semantic judgment or factual coverage inference.','Timing is local diagnostic observation, not a latency SLA or causal production measurement.']};
+for(const f of inputs)assert.equal(hash(await readFile(f.path)),f.sha256);
+await writeFile(`${out}/parity.json`,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({compared,reasons,publicPools,timing}));

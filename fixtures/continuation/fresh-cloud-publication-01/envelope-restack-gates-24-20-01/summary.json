@@ -1,0 +1,54 @@
+{
+  "kind": "completed_sequential_offline_envelope_restack_gates",
+  "finishedAt": "2026-11-14T09:47:47.429049+00:00",
+  "command": "npm run check",
+  "eachInvokedExactlyOnce": true,
+  "executionOrder": [
+    "stack-24",
+    "stack-20"
+  ],
+  "sourceEdits": 0,
+  "providerCalls": 0,
+  "results": [
+    {
+      "worktree": "/workspace/stack-24",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "startedAt": "2026-11-14T09:46:47.420219+00:00",
+      "finishedAt": "2026-11-14T09:47:04.014287+00:00",
+      "elapsedSeconds": 16.594078572001308,
+      "exitCode": 0,
+      "headAfter": "d9882f12731e353ae2363eaaf32e452c15351b10",
+      "statusAfter": "",
+      "logPath": "/workspace/task-evidence/envelope-restack-gates-24-20-01/stack-24-check.log",
+      "logSHA256": "a48fe64095dc59d5914cde0d017f543c79791df1d77e511d490fcd760304451e",
+      "testsPassed": 416,
+      "testFilesPassed": 15,
+      "headUnchanged": true,
+      "cleanBeforeAndAfter": true
+    },
+    {
+      "worktree": "/workspace/stack-20",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "startedAt": "2026-11-14T09:47:15.080824+00:00",
+      "finishedAt": "2026-11-14T09:47:33.194756+00:00",
+      "elapsedSeconds": 18.113936546000332,
+      "exitCode": 0,
+      "headAfter": "03c1ed07b74b2c4f733ae9ce2ec7eb387f8f8ac5",
+      "statusAfter": "",
+      "logPath": "/workspace/task-evidence/envelope-restack-gates-24-20-01/stack-20-check.log",
+      "logSHA256": "a7adddc04715994417ca9496148d96d100eee5ee2984e310deee76ead7629180",
+      "testsPassed": 574,
+      "testFilesPassed": 26,
+      "headUnchanged": true,
+      "cleanBeforeAndAfter": true
+    }
+  ]
+}

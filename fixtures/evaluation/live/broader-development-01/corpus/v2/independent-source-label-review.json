@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "final_stack_review",
+  "createdAt": "2026-11-14T04:14:33.708471+00:00",
+  "verdict": "accept_for_open_development_baseline",
+  "changesRequired": [],
+  "preExecutionReview": true,
+  "engineOutputsViewed": false,
+  "keyedCalls": 0,
+  "privateOrOriginalHeldoutBodiesRead": false,
+  "method": "Independent manual reasoning over supplied claims, source excerpts and bounded saved retrieval context; no fresh URL retrieval. Source textual relation checked separately from truth labels and from provenance independence.",
+  "fileHashes": {
+    "v2/cases.json": "52babda66404dffdbe87d06fc9addba3eabdafad466d26c47d6c297c84368c62",
+    "v2/live-manifest.json": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+    "v2/amendment.md": "39de1f50c707fbcc50eff63792f2aa1ba7f8b29324317ea0631affeae7361de2",
+    "v2/manifest.json": "2233efba704496440a3ab018ff00ba69fc7f13e6d4d6b4baee61c722c8f90b77",
+    "sources.json": "dc6d5588055ba5fb77bd543862e9159312c3971063fa6bd42afeeed54895101c",
+    "ground-truth.md": "3dce91ff59ce41f1f7a3bac78142a0f6d3eb10fce87d21b0fc7c24908e2a0c89"
+  },
+  "staticChecks": {
+    "cases": 16,
+    "uniqueFacts": 12,
+    "trueUnique": 6,
+    "falseUnique": 6,
+    "eligibleOccurrences": 13,
+    "sourceRecords": 25,
+    "allPublicAndPrivateSpansExact": true,
+    "allowlistsMatchExactPublicSpans": true,
+    "sourceIdsResolve": true,
+    "allExcerptsContainedInSuppliedBoundedContext": true,
+    "v2ManifestFileHashesVerified": true
+  },
+  "factualReview": [
+    {
+      "id": "BD01",
+      "truthLabelAccepted": true,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D01-P",
+        "D01-A",
+        "D01-C"
+      ],
+      "reason": "Dated Pepys transcript plus museum history explicitly establish 1666; no exact day asserted."
+    },
+    {
+      "id": "BD02",
+      "truthLabelAccepted": false,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D02-P",
+        "D02-C"
+      ],
+      "reason": "1215 document text and explicit first-issue account contradict first issuance in1216; reissue scope kept distinct."
+    },
+    {
+      "id": "BD03",
+      "truthLabelAccepted": true,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D03-P",
+        "D03-C"
+      ],
+      "reason": "Named GVP country record and reference narrative locate mountain in Tanzania; no eruption/elevation inference needed."
+    },
+    {
+      "id": "BD04",
+      "truthLabelAccepted": false,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D04-P",
+        "D04-C"
+      ],
+      "reason": "Both source contexts locate lake in Siberia/Russia, incompatible with Africa; divergent depth figures are outside scope."
+    },
+    {
+      "id": "BD05",
+      "truthLabelAccepted": true,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D05-P",
+        "D05-C"
+      ],
+      "reason": "Normative SI definition explicitly fixes caesium133 unperturbed ground-state hyperfine frequency at9192631770Hz; no rounding or missing condition."
+    },
+    {
+      "id": "BD06",
+      "truthLabelAccepted": false,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D06-P",
+        "D06-C"
+      ],
+      "reason": "Named element records give Au, not Ag; no experimental benefit or merely attributed belief is substituted."
+    },
+    {
+      "id": "BD07",
+      "truthLabelAccepted": true,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D07-P",
+        "D07-C"
+      ],
+      "reason": "Operational history explicitly records opening to world trade August15,1914; corroborating date exists only as disclosed highlight."
+    },
+    {
+      "id": "BD08",
+      "truthLabelAccepted": false,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D08-P",
+        "D08-C"
+      ],
+      "reason": "Event registry/context and historical reference explicitly identify Athens1896 as first modern Games, contrary to Paris claim."
+    },
+    {
+      "id": "BD09",
+      "truthLabelAccepted": true,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D09-P",
+        "D09-C"
+      ],
+      "reason": "Legal-text heading explicitly records adoption in London November16,1945; UN registry conclusion is supporting context, not independent documentary origin."
+    },
+    {
+      "id": "BD10",
+      "truthLabelAccepted": false,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D10-P",
+        "D10-C"
+      ],
+      "reason": "Establishment act identifies US congressional enactment; historical account explicitly saysCongress established institution1846. Founder nationality does not imply Britishcharter."
+    },
+    {
+      "id": "BD11",
+      "truthLabelAccepted": true,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D11-P",
+        "D11-C"
+      ],
+      "reason": "Award register identifies Rontgen1901; secondary biography explicitly calls it firstPhysicsNobel. Primaryexcerpt alone does not establish ordinalfirst."
+    },
+    {
+      "id": "BD12",
+      "truthLabelAccepted": false,
+      "expectedAdmissionAccepted": true,
+      "exactScopeAccepted": true,
+      "sourceIdsReviewed": [
+        "D12-P",
+        "D12-C"
+      ],
+      "reason": "Designation/geographic references explicitly say northeasternAustralian coast, contrary to westcoast; ecological status not tested."
+    }
+  ],
+  "controls": {
+    "BDC01": "Synthetic personal anecdote:skip;no search;no factual label.",
+    "BDC02": "Pure preference/value judgment:skip;no search;no factual label.",
+    "BDC03": "v2 manual needs_confirmation terminal is appropriate; bounded intermediatewait permitted;no search or factual verdict.",
+    "BDC04": "Only exact public span[25,72) may search; private rent excluded; repeatsBD07 and earns no additional unique-fact credit."
+  },
+  "originAndSourceLimitations": [
+    "Saved extraction review does not establish current HTTP status or direct-origin freshness.",
+    "D01P is modern diarytranscript; D01A is custodian caption/relatedcollection context; no manuscript-image transcription or blanket origin independence established.",
+    "D05BIPM/NIST share normativeSIorigin; count one instrument family.",
+    "D06element records follow shared internationalnomenclature; different publishers are not independent discoveries.",
+    "D09UNESCO/UN share same legalinstrument; registryconclusion is not separate documentary proof ofadoption.",
+    "D07C remains highlightonly; fetchedbody did not retain date, so no fullpagequote verification is claimed.",
+    "D08P exactexcerpt identifiesAthens1896; firstmodern status is in boundedcontext. D11P exactexcerpt establishes recipient/year; firstordinal supplied byD11C.",
+    "Different prose/publishers elsewhere do not prove independent underlying observations.",
+    "Expected source-groundtruth truth does not compel liveengine definitive verdict without qualifying retrieved evidence.",
+    "OPENdevelopment may be tuned; corpus is neitherblind norindependentreleasequalification. Priorsealed cohorts were not inspected; unknown overlap is notcertified."
+  ],
+  "baselineConditions": [
+    "Keep all12unique factual denominators independent of the mixedrepeat; report13eligible occurrences separately.",
+    "Use v2manualincomplete expectation, notv1waitterminal.",
+    "Report failures, abstentions, admissionmisses, timeouts, latency and costs without replacing them with transportcompletion."
+  ]
+}

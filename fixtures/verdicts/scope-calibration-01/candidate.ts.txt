@@ -1,0 +1,25 @@
+import { createJudge } from '/workspace/stack-17/services/api/src/providers/jev/judgment.ts';
+import type { JevClient, JevQuestion, JevRequest } from '/workspace/stack-17/services/api/src/providers/jev/client.ts';
+
+/** Root-approved experiment wording; production and thresholds stay unchanged. */
+export const SCOPE_QUESTION = 'Does this retained passage address the same identified subject and factual relation, with the same material restrictions that determine which event, observation or population the proposition concerns? Separate the value being tested from restrictions on the comparison. A different asserted value of the same relation—including an event date, place, name, category, count or quantity—can directly contradict the claim and is not itself a scope mismatch. A different observation period, population, jurisdiction, version, episode or materially qualified relation is a mismatch even when the subject and topic overlap. Preserve qualifiers such as first, latest, original, revised, all and only, plus any condition: a repeated event does not establish the first event unless the passage explicitly relates them. An in-scope counterexample may refute a universal claim, while a limited sample cannot support the universal. Use only the retained passage and exact proposition; do not complete missing referents or restrictions from world knowledge, a title or source prestige. Scope is separate from stance, substantive basis and reliability. If matching the material restrictions requires guessing, answer no.';
+
+export function substituteScopeQuestion(request: JevRequest): JevRequest {
+  const state = request.state as { evidence?: Array<{ id: string }> };
+  if (!Array.isArray(state.evidence)) throw new Error('Full judge evidence state missing.');
+  let replaced = 0;
+  const questions: Record<string, JevQuestion> = Object.fromEntries(Object.entries(request.questions).map(([name, question]) => {
+    const match = /^e(\d+)_scope$/.exec(name);
+    if (!match) return [name, question];
+    const source = state.evidence![Number(match[1])];
+    if (!source || question.type !== 'noul' || !question.instructions.startsWith(`Does retained evidence ${source.id} address the same referent, factual relation`)) throw new Error('Production scope template changed; review required.');
+    replaced++;
+    return [name, { ...question, instructions: `For retained evidence ${source.id} alone: ${SCOPE_QUESTION}` }];
+  }));
+  if (!replaced) throw new Error('No production scope question captured.');
+  return { ...request, questions };
+}
+
+export function createScopeJudgmentExperiment(client: JevClient): ReturnType<typeof createJudge> {
+  return createJudge({ ask: (request, context) => client.ask(substituteScopeQuestion(request), context) });
+}

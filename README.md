@@ -48,18 +48,7 @@ To test without the Exa key, deploy in fixture mode with `npx wrangler deploy --
 
 ### Deploy
 
-Which code to deploy: until #38 and #39 merge, deploy `claude/14-deepgram-asr-v2`. `main` has no Deepgram adapter and no `TRUST_PROXY`, so two of the checks below fail on it. The deploy files aren't on that branch, so overlay them in a separate worktree (don't commit there):
-
-```sh
-git fetch origin
-git worktree add ../actually-deploy origin/claude/14-deepgram-asr-v2
-cd ../actually-deploy
-git checkout origin/claude/43-cloudflare-hosting -- Dockerfile .dockerignore wrangler.jsonc deploy/cloudflare   # or origin/main once #43 merges
-cd deploy/cloudflare && npm ci
-npx wrangler deploy --config ../../wrangler.jsonc
-```
-
-After #38, #39 and #43 merge, deploy from an up-to-date `main` checkout:
+Deploy from an up-to-date `main` checkout (the Deepgram adapter and `TRUST_PROXY` are on `main` since #38 and #39 merged):
 
 ```sh
 cd deploy/cloudflare && npm ci && npm run deploy
@@ -100,3 +89,14 @@ If a request gets Cloudflare error 1010 (Browser Integrity Check on `workers.dev
 - Redeploy: run the same deploy command. Clients reconnect and rejoin if the container was replaced.
 - Live logs from the Worker and container: `npx wrangler tail --config ../../wrangler.jsonc`, or the Worker's Logs tab in the dashboard (observability is on).
 - Container state: `npx wrangler containers list`, then `npx wrangler containers instances <ID>`.
+
+## Deploy (Railway)
+
+The API runs as one Railway service in EU West. `railway.json` sets the start command (`npm start`, which runs `tsx`, now a runtime dependency), the `/health` healthcheck and a single replica, because sessions live in memory.
+
+1. Create the service from this repo and enable auto-deploy from `main`.
+2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
+3. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset. Railway terminates TLS, so clients use `https://` and `wss://` on the Railway domain.
+4. Check `GET /health` on the public domain. It reports mode and provider readiness without credentials.
+
+`.env.example` lists every variable.
