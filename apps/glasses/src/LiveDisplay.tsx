@@ -12,7 +12,7 @@ export function consumeDisplayCredentials(): DisplayCredentials | null {
   if (window.location.hash) window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`);
   return credentials;
 }
-const verdicts = { supported: 'True', contradicted: 'False', misleading: 'Misleading', insufficient_evidence: 'Unclear' } as const;
+const verdicts = { supported: 'True', contradicted: 'False', misleading: 'Misleading', insufficient_evidence: 'Unclear', speculation: 'Speculation' } as const;
 export function LiveDisplay({ credentials }: { credentials: DisplayCredentials | null }) {
   const [model, setModel] = useState(emptyLiveModel);
   const [disconnected, setDisconnected] = useState(false);
