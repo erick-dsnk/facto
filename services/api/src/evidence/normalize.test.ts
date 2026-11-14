@@ -66,6 +66,44 @@ describe('evidence normalization', () => {
     expect(selected.excerpt).toContain('Eiffel Tower');
   });
 
+  it('centers equally relevant windows on the proposition instead of navigation, retaining following provenance', () => {
+    const navigation = 'Unrelated navigation. '.repeat(80);
+    const proposition = 'Aster is the capital of Belvar. ';
+    const record = 'Source record R-17: maintained jurisdiction register, independently surveyed and approved on 14 November 2026.';
+    const text = `${navigation}${proposition}${'Register supporting notes. '.repeat(20)}${record}${' Appendix notes.'.repeat(100)}`;
+    const selected = selectExcerpt({ url: 'https://synthetic.example.org/record', text }, proposition)!;
+    expect(selected.contentBasis).toBe('page_text');
+    expect(codePoints(selected.excerpt).length).toBeLessThanOrEqual(2000);
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(selected.excerpt).toContain(proposition);
+    expect(selected.excerpt).toContain(record);
+  });
+
+  it.each([false, true])('preserves nearby opposing and qualified context on either side of the centered proposition (%s)', reverse => {
+    const affirmative = 'The Aster bridge opened in 1889.';
+    const qualification = 'However, public access did not begin until 1890; the earlier date refers only to a private ceremony.';
+    const context = reverse ? `${qualification}\n${affirmative}` : `${affirmative}\n${qualification}`;
+    const text = `${'🦉 Unrelated navigation. '.repeat(90)}${context}${' Archive details.'.repeat(140)}`;
+    const selected = selectExcerpt({ url: 'https://synthetic.example.org/history', text }, affirmative)!;
+    expect(codePoints(selected.excerpt).length).toBeLessThanOrEqual(2000);
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(selected.excerpt).toContain(affirmative);
+    expect(selected.excerpt).toContain(qualification);
+  });
+
+  it.each([false, true])('retains a nearby wrong-value correction regardless of which statement comes first (%s)', reverse => {
+    const affirmative = 'The Aster bridge opened in 1889.';
+    const contrary = 'Register R-17 contradicts that account: the Aster bridge opened in 1890, not 1889.';
+    const gap = 'Archival detail. '.repeat(20);
+    const context = reverse ? `${contrary}${gap}${affirmative}` : `${affirmative}${gap}${contrary}`;
+    const text = `${'🦉 Unrelated navigation. '.repeat(90)}${context}${' Appendix notes.'.repeat(150)}`;
+    const selected = selectExcerpt({ url: 'https://synthetic.example.org/history', text }, affirmative)!;
+    expect(codePoints(selected.excerpt).length).toBeLessThanOrEqual(2000);
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(selected.excerpt).toContain(affirmative);
+    expect(selected.excerpt).toContain(contrary);
+  });
+
   it('keeps a relevant highlight when bounded fetched text omits its passage', () => {
     const selected = selectExcerpt({
       url: 'https://museum.org/history', highlights: [quote],
