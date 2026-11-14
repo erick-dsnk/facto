@@ -1,0 +1,117 @@
+# low-signal-domains.txt
+# Sites that are not fake news but should not count as evidence:
+# user posts, video, streaming and audio services, document uploads, satire, AI-written
+# encyclopedias and homework-answer farms.
+# Hand-written. Last reviewed: 2026-11-13.
+# Format: one domain per line, lowercase, no scheme, no "www.".
+# A domain also covers its subdomains when the app matches on suffix.
+
+# Social networks and user posts
+bsky.app
+facebook.com
+gab.com
+instagram.com
+linkedin.com
+pinterest.com
+quora.com
+reddit.com
+t.me
+threads.net
+tiktok.com
+truthsocial.com
+tumblr.com
+twitter.com
+vk.com
+x.com
+
+# Video, streaming and audio services: never evidence. An entry covers
+# its subdomains, so youtube.com also blocks m.youtube.com and music.youtube.com.
+audible.com
+audiomack.com
+bandcamp.com
+bilibili.com
+bitchute.com
+castbox.fm
+crunchyroll.com
+dailymotion.com
+deezer.com
+disneyplus.com
+hbomax.com
+hulu.com
+iheart.com
+iqiyi.com
+kick.com
+max.com
+mixcloud.com
+music.amazon.com
+music.apple.com
+netflix.com
+nicovideo.jp
+odysee.com
+overcast.fm
+pandora.com
+paramountplus.com
+peacocktv.com
+pluto.tv
+pocketcasts.com
+podbean.com
+podcasts.apple.com
+podcasts.google.com
+primevideo.com
+rumble.com
+soundcloud.com
+spotify.com
+spreaker.com
+streamable.com
+tidal.com
+tubitv.com
+tv.apple.com
+twitch.tv
+vevo.com
+vimeo.com
+youku.com
+youtu.be
+youtube-nocookie.com
+youtube.com
+
+# Document uploads and dumps
+academia.edu
+calameo.com
+coursehero.com
+dokumen.pub
+fliphtml5.com
+issuu.com
+pdfcoffee.com
+scribd.com
+slideshare.net
+studocu.com
+yumpu.com
+
+# Satire (all but babylonbee.com, duffelblog.com and legorafi.fr are rated "satire" in CRED-1)
+babylonbee.com
+betootaadvocate.com
+clickhole.com
+der-postillon.com
+duffelblog.com
+elmundotoday.com
+legorafi.fr
+newsthump.com
+reductress.com
+speld.nl
+thebeaverton.com
+thedailymash.co.uk
+thehardtimes.net
+theonion.com
+waterfordwhispersnews.com
+worldnewsdailyreport.com
+
+# AI-written encyclopedias
+grokipedia.com
+
+# Q&A and homework-answer farms
+answers.com
+brainly.com
+chegg.com
+numerade.com
+quizlet.com
+studymode.com
