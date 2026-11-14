@@ -1,0 +1,79 @@
+import { strict as assert } from 'node:assert';
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import { BASIS_CLARIFICATION, substituteContentBasisInstructions } from './candidate.ts';
+import { buildPlan, captureRequest, executePlan, LIMITS, type Label, type Unit } from './runner.ts';
+
+const units: Unit[] = Array.from({ length: 24 }, (_, index) => ({ id: `offline-${index}`, proposition: `SYNTHETIC ${index < 12 ? 'SUBSTANTIVE' : 'UNSUPPORTED'} proposition ${index}.`, title: 'Synthetic record catalogue', url: `https://record.example/entry-${index}`, excerpt: `SYNTHETIC register R-${index} records ten measured items in period A.`, partition: 'open_development', stratum: index < 12 ? 'record_contents' : 'heading_only', sourceFamily: `family-${index}` }));
+const labels: Label[] = units.map((unit, index) => ({ id: unit.id, expectedBasis: index < 12 ? 'substantive' : 'non_substantive', supportingSpan: `register R-${index}` }));
+const plan = () => buildPlan(units, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'basis02-runner-test-')), 'run');
+const fakeFetch = (tokens?: number, qualityProbability?: number, selectedGenre?: string, stance = 'supports'): typeof fetch => async (_url, init) => {
+  const request = JSON.parse(String(init!.body));
+  const answers = Object.fromEntries(Object.entries(request.questions).map(([name, value]) => {
+    const question = value as { type: string; criteria?: Record<string, string> };
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_context_established') ? 0 : .99 }];
+    const choice = name === 'verdict' ? stance === 'supports' ? 'supported' : 'contradicted' : name === 'selected_evidence' ? 'e0' : name === 'claim_risk' ? 'ordinary' : name.endsWith('_stance') ? stance : name.endsWith('_content_basis') ? selectedGenre ?? (request.state.checked_proposition.includes('UNSUPPORTED') ? 'bare_assertion' : 'original_record') : 'none';
+    let probabilities = Object.fromEntries(Object.keys(question.criteria!).map(key => [key, key === choice ? 1 : 0]));
+    if (name.endsWith('_content_basis') && qualityProbability !== undefined) probabilities = { original_record: qualityProbability, attributable_research: 0, substantive_secondary: 0, bare_assertion: 1 - qualityProbability, attributed: 0, promotional: 0, unclear: 0 };
+    return [name, { choice, probabilities }];
+  }));
+  return new Response(JSON.stringify({ answers, ...(tokens === undefined ? {} : { usage: { input_tokens: tokens } }) }), { status: 200 });
+};
+
+test('full actual judge changes only basis instructions; all seven criteria/state and every other question remain identical', async () => {
+  const baseline = await captureRequest(units[0], 'baseline'), candidate = await captureRequest(units[0], 'candidate');
+  assert.deepEqual(baseline.state, candidate.state); assert.deepEqual(Object.keys(baseline.questions), Object.keys(candidate.questions));
+  const before = baseline.questions.e0_content_basis, after = candidate.questions.e0_content_basis;
+  assert.equal(before.type, 'choice'); assert.equal(after.type, 'choice');
+  if (before.type !== 'choice' || after.type !== 'choice') throw new Error();
+  assert.deepEqual(before.criteria, after.criteria); assert.equal(Object.keys(after.criteria).length, 7);
+  assert.ok(after.instructions.includes('separate metadata title field')); assert.ok(after.instructions.includes(BASIS_CLARIFICATION));
+  for (const name of Object.keys(baseline.questions)) if (name !== 'e0_content_basis') assert.deepEqual(baseline.questions[name], candidate.questions[name]);
+  const frozen = await plan(); assert.equal(frozen.calls.length, 48); assert.ok(!JSON.stringify(frozen).includes('instructions'));
+});
+
+test('template drift and invalid corpus labels fail closed offline', async () => {
+  assert.throws(() => substituteContentBasisInstructions({ state: {}, questions: {} }), /No full-judge/);
+  const captured = await captureRequest(units[0], 'baseline'); captured.questions.e0_content_basis.instructions = 'changed';
+  assert.throws(() => substituteContentBasisInstructions(captured), /instructions changed/);
+  await assert.rejects(buildPlan(units.slice(0, 23), labels.slice(0, 23), {}), /24-unit/);
+  await assert.rejects(buildPlan(units, labels.map((label, index) => index === 0 ? { ...label, supportingSpan: 'invented' } : label), {}), /label\/span/);
+});
+
+test('one full-judge pass measures accepted-set probability rather than emitting a new class or factual outcome', async () => {
+  const frozen = await plan(), directory = output(); const report = await executePlan(frozen, units, directory, { apiKey: 'offline-only', fetch: fakeFetch(50) }) as any;
+  assert.equal(report.completedAllCalls, true); assert.equal(report.totals.actualStartedJev, 48); assert.equal(report.totals.consumedJev, 48); assert.equal(report.totals.actualStartedExa, 0); assert.equal(report.totals.measuredInputTokens, 2400);
+  for (const arm of ['baseline', 'candidate']) { assert.equal(report.metrics.open_development[arm].truePositive, 12); assert.equal(report.metrics.open_development[arm].trueNegative, 12); assert.equal(report.metrics.open_development[arm].falsePositive, 0); }
+  assert.ok(report.observations.every((value: any) => value.diagnostics.policyDecision.verdict === 'insufficient_evidence'));
+  const saved = readFileSync(join(directory, 'report.json'), 'utf8'); assert.ok(!saved.includes('offline-only')); assert.ok(!saved.includes('instructions')); assert.ok(!saved.includes('Authorization'));
+  await assert.rejects(executePlan(frozen, units, directory, { apiKey: 'offline-only', fetch: fakeFetch(50) }), /EEXIST/);
+});
+
+test('unchanged .85 and accepted-class gates reject .84 and nonaccepted genres despite high accepted mass', async () => {
+  for (const [probability, genre, passes] of [[.84, 'original_record', false], [.85, 'original_record', true], [.99, 'bare_assertion', false], [.99, 'promotional', false], [.99, 'attributed', false], [.99, 'unclear', false]] as const) {
+    const report = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50, probability, genre) }) as any;
+    assert.ok(report.observations.every((value: any) => Math.abs(value.quality.confidence - probability) < 1e-9 && value.qualityPass === passes));
+  }
+});
+
+test('scripted substantive refuting evidence keeps the same quality gate while stance is separately recorded', async () => {
+  const report = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50, .99, 'original_record', 'contradicts') }) as any;
+  assert.ok(report.observations.every((value: any) => value.qualityPass && value.diagnostics.stance === 'contradicts'));
+});
+
+test('unknown usage, reserve and wall time stop subsequent calls without retries', async () => {
+  const unknown = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch() }) as any; assert.equal(unknown.stopReason, 'unknown_usage'); assert.equal(unknown.totals.actualStartedJev, 1);
+  const reserve = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(LIMITS.maxInputTokens - LIMITS.pendingReserve + 1) }) as any; assert.equal(reserve.stopReason, 'budget_reserve'); assert.equal(reserve.totals.actualStartedJev, 1);
+  let reads = 0; const wall = await executePlan(await plan(), units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50), now: () => reads++ ? LIMITS.wallMs + 1 : 0 }) as any; assert.equal(wall.stopReason, 'wall_budget'); assert.equal(wall.totals.actualStartedJev, 0);
+});
+
+test('HTTP failure stays durable and frozen request/source tampering prevents actual fetch', async () => {
+  const directory = output(); const failed = await executePlan(await plan(), units, directory, { apiKey: 'offline-only', fetch: async () => new Response('denied', { status: 401 }) }) as any;
+  assert.equal(failed.totals.actualStartedJev, 1); assert.equal(failed.observations[0].status, 'failed'); assert.ok(readFileSync(join(directory, 'events.jsonl'), 'utf8').includes('attempt_terminal'));
+  const frozen = await plan(); frozen.calls[0].bodyHash = 'tampered'; let calls = 0;
+  await assert.rejects(executePlan(frozen, units, output(), { apiKey: 'offline-only', fetch: async () => { calls++; throw new Error(); } }), /request hashes/); assert.equal(calls, 0);
+  const source = await plan(); source.sourceHashes['candidate.ts'] = 'tampered'; await assert.rejects(executePlan(source, units, output(), { apiKey: 'offline-only', fetch: fakeFetch(50) }), /changed after freeze/);
+});
