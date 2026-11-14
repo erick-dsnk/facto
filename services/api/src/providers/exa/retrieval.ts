@@ -1,6 +1,6 @@
 import { PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../packages/contracts/src/index.js';
 import { getDomain } from 'tldts';
-import { buildAlternateQuery, buildHighlightQuery, needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse, RETRIEVAL_OBJECTIVE } from '../../evidence/normalize.js';
+import { buildAlternateQuery, buildHighlightQuery, needsPageText, normalizeEvidence, normalizeUrl, parseExaContentsResponse, parseExaResponse, RETRIEVAL_OBJECTIVE } from '../../evidence/normalize.js';
 import { AbortableExa } from './client.js';
 
 type BudgetAwareContext = Parameters<PipelineAdapters['retrieve']>[1] & { canConsume?(kind: 'contents', claimId?: string): boolean };
@@ -40,17 +40,23 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       perDomain.set(domain, (perDomain.get(domain) ?? 0) + 1);
       return true;
     }).slice(0, 3);
+    let pageFailures = 0;
     for (const page of candidates) {
       context.signal.throwIfAborted();
       if (budget.canConsume && !budget.canConsume('contents', claim.id)) break;
       context.consume('contents', claim.id);
-      const contents = parseExaResponse(await client.getContents([page.url], { text: { maxCharacters: 12000 }, highlights, livecrawl: 'preferred', livecrawlTimeout: 1500 }));
+      const contents = parseExaContentsResponse(await client.getContents([page.url], { text: { maxCharacters: 12000 }, highlights, livecrawl: 'preferred', livecrawlTimeout: 1500 }), [page.url]);
       context.signal.throwIfAborted();
-      const match = contents.find(item => normalizeUrl(item.url) === normalizeUrl(page.url));
+      pageFailures += contents.pageFailures.length;
+      const match = contents.pages.find(item => normalizeUrl(item.url) === normalizeUrl(page.url));
       if (match) Object.assign(page, { text: match.text?.trim() ? match.text : page.text,
         highlights: [...new Set([...(match.highlights ?? []), ...(page.highlights ?? [])])].slice(0, 20),
         publishedDate: match.publishedDate ?? page.publishedDate });
     }
-    return normalizeEvidence(pages, claim.checkedText, new Date(context.now()).toISOString());
+    const evidence = normalizeEvidence(pages, claim.checkedText, new Date(context.now()).toISOString());
+    // An empty result caused by unavailable pages is an unfinished acquisition,
+    // not a successful search proving an absence of qualifying evidence.
+    if (!evidence.length && pageFailures > 0) throw new PipelineError('exa_content_failed', true);
+    return evidence;
   };
 }
