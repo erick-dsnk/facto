@@ -1,0 +1,77 @@
+import { strict as assert } from 'node:assert';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import type { Evidence } from '/workspace/live-frozen-08/packages/contracts/src/index.ts';
+import { buildPlan, captureRequest, executePlan, hash, LIMITS, recordsFor, type Context, type Label } from './runner.ts';
+
+const temp = mkdtempSync(join(tmpdir(), 'context-diagnostic-test-')), reportPath = join(temp, 'open-source.json');
+writeFileSync(reportPath, JSON.stringify({ purpose: 'synthetic offline report' }));
+const record = (index: number, id: string): Evidence => ({ id, url: `https://source-${index}.example/${id}`, title: `Synthetic record ${id}`, publisher: null, publishedAt: null, retrievedAt: '2026-11-14T00:00:00Z', excerpt: `SYNTHETIC named observation ${id} records exact value ${index} under identified period A.`, contentBasis: 'highlight', sourceGroup: `source-${index}.example`, echoGroup: null, sourceRole: 'unknown', stance: 'unrelated', stanceProbability: null, directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false });
+const contexts: Context[] = Array.from({ length: 6 }, (_, index) => {
+  const targetId = `test-${index}-target`, records = [record(index, targetId), record(index + 10, `test-${index}-other`), record(index + 20, `test-${index}-bridge`)];
+  if (index % 2) records.reverse();
+  return { caseId: `C${index}`, targetId, proposition: `SYNTHETIC proposition ${index}.`, records, reportPath, reportSha256: hash(readFileSync(reportPath)), evidenceStageIndex: 1, judgmentOrdinal: 0, staleJudgment: { sourceAssessments: Object.fromEntries(records.map(source => [source.id, { contentBasis: 'bare_assertion', confidence: .2 }])) } };
+});
+const labels: Label[] = contexts.map((context, index) => ({ id: `T${index}`, retainedId: context.targetId, expectedBasis: 'substantive', excludeFromPrimary: index === 2 }));
+const plan = () => buildPlan(contexts, labels, {});
+const output = () => join(mkdtempSync(join(tmpdir(), 'context-run-')), 'run');
+const fakeFetch = (tokens?: number): typeof fetch => async (_url, init) => {
+  const request = JSON.parse(String(init!.body));
+  const answers = Object.fromEntries(Object.entries(request.questions).map(([name, value]) => {
+    const question = value as { type: string; criteria?: Record<string, string> };
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_context_established') ? 0 : .99 }];
+    const sourceIndex = /^e(\d+)_content_basis$/.exec(name)?.[1];
+    const choice = name === 'verdict' ? 'supported' : name === 'selected_evidence' ? 'e0' : name === 'claim_risk' ? 'ordinary' : name.endsWith('_stance') ? 'supports' : name.endsWith('_origin') ? 'distinct_origins' : sourceIndex !== undefined ? request.state.evidence[Number(sourceIndex)].id.endsWith('-target') ? 'original_record' : 'bare_assertion' : 'none';
+    return [name, { choice, probabilities: Object.fromEntries(Object.keys(question.criteria!).map(key => [key, key === choice ? 1 : 0])) }];
+  }));
+  return new Response(JSON.stringify({ answers, ...(tokens === undefined ? {} : { usage: { input_tokens: tokens } }) }), { status: 200 });
+};
+
+test('frozen08 full-state capture preserves every original material field and explicit retained-ID bindings', async () => {
+  const original = await captureRequest(contexts[0], 'original_full'), reversed = await captureRequest(contexts[0], 'reversed_full'), single = await captureRequest(contexts[0], 'isolated_target');
+  assert.equal(Object.keys(original.questions).length, 25); assert.equal(Object.keys(single.questions).length, 10);
+  const state = original.state as { evidence: Array<{ id: string; excerpt: string }> };
+  assert.deepEqual(state.evidence.map(source => source.id), contexts[0].records.map(source => source.id));
+  assert.equal((reversed.state as typeof state).evidence[0].id, contexts[0].records.at(-1)!.id);
+  assert.equal((single.state as typeof state).evidence[0].id, contexts[0].targetId);
+  assert.ok(!JSON.stringify(original.state).includes('questionKey'));
+  assert.equal(recordsFor(contexts[0], 'reversed_full').find(source => source.id === contexts[0].records[2].id)!.excerpt, contexts[0].records[2].excerpt);
+});
+
+test('counterbalanced18call plan retains all companions and gives every condition each execution slot twice', async () => {
+  const frozen = await plan(); assert.equal(frozen.calls.length, 18);
+  for (const condition of ['original_full', 'reversed_full', 'isolated_target']) {
+    const calls = frozen.calls.filter(call => call.condition === condition); assert.equal(calls.length, 6);
+    assert.deepEqual([0, 1, 2].map(slot => frozen.calls.filter((call, index) => call.condition === condition && index % 3 === slot).length), [2, 2, 2]);
+  }
+  for (const context of contexts) for (const call of frozen.calls.filter(call => call.caseId === context.caseId && call.condition !== 'isolated_target')) assert.deepEqual([...call.evidenceOrder].sort(), context.records.map(record => record.id).sort());
+  assert.ok(!JSON.stringify(frozen).includes('instructions'));
+});
+
+test('canonical scores and selected retained IDs remain bound through source reordering', async () => {
+  const frozen = await plan(), directory = output(); const report = await executePlan(frozen, contexts, directory, { apiKey: 'offline-only', fetch: fakeFetch(100) }) as any;
+  assert.equal(report.completedAllCalls, true); assert.equal(report.totals.consumedJev, 18); assert.equal(report.totals.actualStartedJev, 18); assert.equal(report.totals.actualStartedExa, 0); assert.equal(report.totals.measuredInputTokens, 1800);
+  assert.ok(report.observations.every((row: any) => row.assessments[row.targetId].contentBasis === 'original_record' && row.targetQualityPass));
+  assert.ok(report.observations.every((row: any) => row.selectedEvidenceIds[0] === row.evidenceOrder[0]));
+  const saved = readFileSync(join(directory, 'report.json'), 'utf8'); assert.ok(!saved.includes('offline-only')); assert.ok(!saved.includes('instructions')); assert.ok(!saved.includes('Authorization'));
+  await assert.rejects(executePlan(frozen, contexts, directory, { apiKey: 'offline-only', fetch: fakeFetch(100) }), /EEXIST/);
+});
+
+test('frozen08 retry-capable client is forced to one actual HTTP attempt on429', async () => {
+  let calls = 0; const directory = output(); const report = await executePlan(await plan(), contexts, directory, { apiKey: 'offline-only', fetch: async () => { calls++; return new Response('limited', { status: 429 }); } }) as any;
+  assert.equal(calls, 1); assert.equal(report.totals.consumedJev, 1); assert.equal(report.observations[0].status, 'failed'); assert.ok(readFileSync(join(directory, 'events.jsonl'), 'utf8').includes('attempt_terminal'));
+});
+
+test('unknown usage, pending reserve and wall deadline preserve partial denominators without retry', async () => {
+  const unknown = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch() }) as any; assert.equal(unknown.stopReason, 'unknown_usage'); assert.equal(unknown.totals.actualStartedJev, 1);
+  const reserve = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch(LIMITS.maxInputTokens - LIMITS.pendingReserve + 1) }) as any; assert.equal(reserve.stopReason, 'budget_reserve'); assert.equal(reserve.totals.actualStartedJev, 1);
+  let reads = 0; const wall = await executePlan(await plan(), contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch(100), now: () => reads++ ? LIMITS.wallMs + 1 : 0 }) as any; assert.equal(wall.stopReason, 'wall_budget'); assert.equal(wall.totals.actualStartedJev, 0);
+});
+
+test('context/report/source/request tampering fails before actual dispatch', async () => {
+  await assert.rejects(buildPlan(contexts.map((context, index) => index === 0 ? { ...context, reportSha256: 'bad' } : context), labels, {}), /report changed/);
+  const frozen = await plan(); frozen.calls[0].bodyHash = 'bad'; let calls = 0; await assert.rejects(executePlan(frozen, contexts, output(), { apiKey: 'offline-only', fetch: async () => { calls++; throw new Error(); } }), /request hashes/); assert.equal(calls, 0);
+  const source = await plan(); source.sourceHashes['diagnostic-runner.ts'] = 'bad'; await assert.rejects(executePlan(source, contexts, output(), { apiKey: 'offline-only', fetch: fakeFetch(100) }), /source\/runner changed/);
+});
