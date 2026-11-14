@@ -1,0 +1,37 @@
+import {createHash} from 'node:crypto';
+export interface Denominator {id:string;cohort:string;category:string;sourceFamily:string;expected:'covered'|'not_covered'|'uncertain';excludeFromPrimary:boolean}
+const sha=(v:string)=>createHash('sha256').update(v).digest('hex');
+const counts=(values:string[])=>Object.fromEntries([...new Set(values)].map(key=>[key,values.filter(v=>v===key).length]));
+export function scoreStudy(labels:Denominator[],rows:any[]){
+ const cells=labels.flatMap(label=>['baseline_anchor','applicability'].map(arm=>{const row=rows.find(r=>r.unitId===label.id&&r.arm===arm);const binding=row?.dispatch.questionMap.find((q:any)=>q.evidenceId===row.targetId);const answer=binding?row.answers?.[binding.questionId]:undefined;return{...label,arm,row,answer,asked:!!answer,covered:answer?.choice==='covered'&&(answer.probabilities?.covered??0)>=.85,typedEligibility:!!row?.eligibility.length};}));
+ const metric=(subset:typeof cells)=>{const value={declared:subset.length,completed:subset.filter(c=>c.row).length,missing:subset.filter(c=>!c.row).length,
+  declaredByExpected:counts(subset.map(c=>c.expected)),completedByExpected:counts(subset.filter(c=>c.row).map(c=>c.expected)),missingByExpected:counts(subset.filter(c=>!c.row).map(c=>c.expected)),
+  declaredIds:subset.map(c=>c.id),missingIds:subset.filter(c=>!c.row).map(c=>c.id),
+  applicabilityQuestionAsked:subset.filter(c=>c.asked).length,unaskedOrMissing:subset.filter(c=>!c.asked).length,
+  rawTernaryExact:subset.filter(c=>c.asked&&c.answer.choice===c.expected).length,
+  rawTernaryDenominator:subset.length,rawTernaryObserved:subset.filter(c=>c.asked).length,
+  combinedAvailabilityAndCoverageGate:{positiveDeclared:subset.filter(c=>c.expected==='covered').length,positiveAccepted:subset.filter(c=>c.expected==='covered'&&c.covered).length,
+   negativeDeclared:subset.filter(c=>c.expected==='not_covered').length,negativeAccepted:subset.filter(c=>c.expected==='not_covered'&&c.covered).length,
+   uncertainDeclared:subset.filter(c=>c.expected==='uncertain').length,unsafeUncertainGrants:subset.filter(c=>c.expected==='uncertain'&&c.covered).length},
+  privateTypedEligibility:{issued:subset.filter(c=>c.typedEligibility).length,notCoveredGrants:subset.filter(c=>c.expected==='not_covered'&&c.typedEligibility).length,uncertainGrants:subset.filter(c=>c.expected==='uncertain'&&c.typedEligibility).length},
+  deterministicOrGuardUnavailable:subset.filter(c=>c.row&&!c.asked&&c.arm==='applicability').map(c=>({id:c.id,reasons:c.row.unavailable})),
+  policyDecisions:counts(subset.filter(c=>c.row).map(c=>c.row.policy.verdict))};
+  return subset.every(c=>c.arm==='baseline_anchor')?{...value,applicabilityMetrics:'not_measured_baseline_has_no_item',rawTernaryExact:null,rawTernaryDenominator:null,rawTernaryObserved:null,combinedAvailabilityAndCoverageGate:null,privateTypedEligibility:null}:{...value,applicabilityMetrics:'candidate_only'};};
+ const by=(key:'cohort'|'category'|'sourceFamily')=>Object.fromEntries([...new Set(labels.map(l=>l[key]))].map(value=>[value,Object.fromEntries(['baseline_anchor','applicability'].map(arm=>[arm,metric(cells.filter(c=>c[key]===value&&c.arm===arm))]))]));
+ const pairs=labels.map(label=>{
+  const baseline=rows.find(r=>r.unitId===label.id&&r.arm==='baseline_anchor'),candidate=rows.find(r=>r.unitId===label.id&&r.arm==='applicability');
+  if(!baseline||!candidate)return{id:label.id,paired:false,missingArms:['baseline_anchor','applicability'].filter(arm=>!rows.some(r=>r.unitId===label.id&&r.arm===arm))};
+  const changedQuestions=Object.keys(baseline.answers).filter(key=>JSON.stringify(baseline.answers[key])!==JSON.stringify(candidate.answers[key])).map(key=>({key,baseline:baseline.answers[key],candidate:candidate.answers[key]}));
+  const newDefinitive=candidate.policy.verdict!=='insufficient_evidence'&&(baseline.policy.verdict==='insufficient_evidence'||baseline.policy.verdict!==candidate.policy.verdict);
+  const expandedSelected=candidate.policy.selectedEvidenceIds.filter((id:string)=>!baseline.policy.selectedEvidenceIds.includes(id));
+  const targetBefore=baseline.judgment.evidence.find((e:any)=>e.id===baseline.targetId),targetAfter=candidate.judgment.evidence.find((e:any)=>e.id===candidate.targetId);
+  return{id:label.id,paired:true,targetSourceSpillover:{baseline:targetBefore,candidate:targetAfter,baselineBasis:baseline.judgment.sourceAssessments[baseline.targetId],candidateBasis:candidate.judgment.sourceAssessments[candidate.targetId],baselineRisk:baseline.judgment.claimRisk,candidateRisk:candidate.judgment.claimRisk},baselinePolicy:baseline.policy,candidatePolicy:candidate.policy,newDefinitive,expandedSelected,changedQuestions,
+   allSourceGateChanges:baseline.judgment.evidence.map((before:any)=>{const after=candidate.judgment.evidence.find((e:any)=>e.id===before.id);const b=baseline.judgment.sourceAssessments[before.id],a=candidate.judgment.sourceAssessments[before.id];const basis=(v:any)=>['original_record','attributable_research','substantive_secondary'].includes(v.contentBasis)&&v.confidence>=.85;return{id:before.id,stance:[before.stance,after.stance],direct:[before.directlyAddressesClaim,after.directlyAddressesClaim],scope:[before.matchesTimePlaceAndPopulation,after.matchesTimePlaceAndPopulation],quality:[basis(b),basis(a)],rawQuality:[b,a]};})};
+ });
+ const audit=rows.filter(r=>r.policy.verdict!=='insufficient_evidence').map(row=>({unitId:row.unitId,arm:row.arm,exactClaim:row.judgment.checkedText,claimSHA256:sha(row.judgment.checkedText),policy:row.policy,
+  selectedSources:row.policy.selectedEvidenceIds.map((id:string)=>{const r=row.judgment.evidence.find((e:any)=>e.id===id);return{id,url:r.url,urlSHA256:sha(r.url),title:r.title,excerpt:r.excerpt,excerptSHA256:sha(r.excerpt),sourceGroup:r.sourceGroup,echoGroup:r.echoGroup};}),requiresIndependentWholeQualifierAndLineageAudit:true}));
+ return{declaredSemanticUnits:labels.length,declaredPairedCalls:labels.length*2,byArm:Object.fromEntries(['baseline_anchor','applicability'].map(arm=>[arm,metric(cells.filter(c=>c.arm===arm))])),byCohort:by('cohort'),byCategory:by('category'),bySourceFamily:by('sourceFamily'),
+  rows:cells.filter(c=>c.arm==='applicability').map(c=>({id:c.id,cohort:c.cohort,category:c.category,sourceFamily:c.sourceFamily,expected:c.expected,excludeFromPrimary:c.excludeFromPrimary,completed:!!c.row,questionAsked:c.asked,rawAnswer:c.answer??null,coveredAt85:c.covered,typedEligibility:c.typedEligibility,unavailable:c.row?.unavailable??[],missing:!c.row})),
+  primaryDecidedCandidate:metric(cells.filter(c=>c.arm==='applicability'&&!c.excludeFromPrimary&&c.expected!=='uncertain')),uncertainSafetySentinels:metric(cells.filter(c=>c.arm==='applicability'&&c.expected==='uncertain')),pairs,selectedCitationAuditInputs:audit,factualCoverageCredit:0,productionActivation:false,
+  interpretation:'Raw ternary answers, deterministic availability, private typed eligibility and full policy decisions are separate. Baseline has no applicability question. Missing/unasked observations remain in declared denominators. Labels describe applicability, not factual truth/stance/content quality. No new definitive counts as factual coverage until independent exact qualifier/lineage audit.'};
+}

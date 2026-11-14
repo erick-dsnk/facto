@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Actually · Pipeline console</title>
+  <style>
+    :root{color-scheme:light dark;font-family:system-ui,sans-serif}body{max-width:900px;margin:2rem auto;padding:0 1rem;line-height:1.5}h1{margin-bottom:.2rem}p{max-width:75ch}fieldset{margin:1.5rem 0;padding:1rem;border:1px solid #888;border-radius:.5rem}label{display:block;margin:.4rem 0}input,textarea,button{font:inherit;padding:.6rem}textarea{box-sizing:border-box;width:100%;min-height:7rem}button{cursor:pointer;margin:.4rem .4rem .4rem 0}button:disabled{cursor:default;opacity:.6}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #888;padding:1rem;border-radius:.5rem}#status{font-weight:600}input[type=checkbox]{width:1.2rem;height:1.2rem;vertical-align:middle}.note{font-size:.9rem;opacity:.85}
+  </style>
+</head>
+<body>
+  <h1>Actually pipeline console</h1>
+  <p>Submit typed text to the shared glasses API. This console does not capture glasses audio or images. No alert does not mean a claim was verified.</p>
+  <p id="readiness">Checking server status…</p>
+  <p id="status" role="status" aria-live="polite">Disconnected</p>
+  <form id="join-form">
+    <fieldset><legend>1. Start a demo session</legend>
+      <label for="join-code">Demo join code</label><input id="join-code" type="password" autocomplete="off" required maxlength="200">
+      <button id="join" type="submit">Connect</button><button id="stop" type="button" disabled>Stop and delete session</button>
+      <p class="note">Your session token stays in this tab’s memory. Live mode sends text to Jev and eligible public claims to Exa. Use public test material.</p>
+    </fieldset>
+  </form>
+  <form id="check-form">
+    <fieldset><legend>2. Check public text</legend>
+      <label for="claim">Captured text</label><textarea id="claim" required>Helsinki is the capital of Finland.</textarea>
+      <label><input id="manual" type="checkbox" checked> Explicit check request (otherwise test automatic presentation)</label>
+      <button id="submit" type="submit" disabled>Check text</button><button id="cancel" type="button" disabled>Cancel latest check</button>
+      <p class="note">Fixture examples: “Helsinki is the capital of Finland.”, “Lightning never strikes the same place twice.”, “There is not enough fixture evidence.” and “I felt tired after lunch.” Canned evidence is not a live fact check. Automatic results can remain silent and inspectable here.</p>
+    </fieldset>
+  </form>
+  <h2>Current result</h2><pre id="result">No result yet.</pre>
+  <h2>Events</h2><p class="note">Newest events first. Events and results are cleared on stop or disconnect.</p><pre id="events" aria-live="off">No events yet.</pre>
+  <script type="module">
+    const $ = id => document.getElementById(id);
+    let session = null, socket = null, latestRequest = null, eventLog = [], seen = new Set();
+    const status = text => { $('status').textContent = text; };
+    const clearResults = () => { eventLog = []; seen = new Set(); $('events').textContent = 'No events yet.'; $('result').textContent = 'No result yet.'; latestRequest = null; $('cancel').disabled = true; };
+    const controls = connected => { $('submit').disabled = !connected; $('stop').disabled = !session; $('join').disabled = !!session; };
+    async function jsonRequest(path, options = {}) {
+      const response = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', ...(session ? { Authorization: `Bearer ${session.token}` } : {}), ...options.headers } });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(typeof body.error === 'string' ? body.error : `Request failed (${response.status})`);
+      return body;
+    }
+    function disconnect(message) {
+      const oldSocket = socket; socket = null; session = null;
+      if (oldSocket) oldSocket.close(); clearResults(); controls(false); status(message);
+    }
+    $('join-form').addEventListener('submit', async event => {
+      event.preventDefault(); if (session) return; $('join').disabled = true;
+      try {
+        session = await jsonRequest('/v1/sessions', { method: 'POST', body: JSON.stringify({ joinCode: $('join-code').value }) });
+        $('join-code').value = ''; clearResults(); controls(false);
+        const base = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}`;
+        const ws = new WebSocket(`${base}/v1/sessions/${encodeURIComponent(session.sessionId)}/stream`, ['actually-v1', `bearer.${session.token}`]);
+        socket = ws;
+        ws.addEventListener('open', () => { if (socket === ws) { controls(true); status(`Connected · expires ${session.expiresAt}`); } });
+        ws.addEventListener('message', event => {
+          if (socket !== ws || !session) return;
+          let envelope; try { envelope = JSON.parse(event.data); } catch { return; }
+          if (envelope.sessionId !== session.sessionId || envelope.sessionEpoch !== session.sessionEpoch || seen.has(envelope.eventId)) return;
+          seen.add(envelope.eventId); if (seen.size > 200) seen.delete(seen.values().next().value);
+          eventLog.unshift(envelope); eventLog = eventLog.slice(0, 30); $('events').textContent = eventLog.map(e => JSON.stringify(e, null, 2)).join('\n\n');
+          if (envelope.type === 'claim.result') $('result').textContent = JSON.stringify(envelope.payload, null, 2);
+          if (['pipeline.error', 'claim.needs_confirmation', 'claim.skipped'].includes(envelope.type)) status(`${envelope.type}: ${envelope.payload.reasonCode || envelope.payload.code || 'See events'}`);
+          if (envelope.type === 'claim.superseded') $('result').textContent = 'The prior statement was corrected. Waiting for the current check.';
+          if (envelope.type === 'session.ended') disconnect('Session ended. Connect explicitly to start again.');
+        });
+        ws.addEventListener('close', () => { if (socket === ws) disconnect('Disconnected. Capture must resume explicitly in the native app.'); });
+        ws.addEventListener('error', () => { if (socket === ws) disconnect('Connection failed. Check the server and join again.'); });
+      } catch (error) { disconnect(error.message); }
+    });
+    $('check-form').addEventListener('submit', async event => {
+      event.preventDefault(); if (!session || socket?.readyState !== WebSocket.OPEN) return;
+      const text = $('claim').value; if (Array.from(text).length > 800) { status('Select at most 800 Unicode code points.'); return; }
+      const requestId = crypto.randomUUID(); latestRequest = requestId;
+      const input = { schemaVersion: 1, requestId, sessionId: session.sessionId, sessionEpoch: session.sessionEpoch, revision: 1, mode: 'typed', text, language: 'en', capturedAt: new Date().toISOString(), capture: { source: 'typed_fixture', segmentId: requestId, confidence: 1, final: true }, context: [], userInitiated: $('manual').checked };
+      try { await jsonRequest(`/v1/sessions/${session.sessionId}/checks`, { method: 'POST', body: JSON.stringify(input) }); $('cancel').disabled = false; status('Check accepted. Waiting for events.'); }
+      catch (error) { status(error.message); }
+    });
+    $('cancel').addEventListener('click', async () => {
+      if (!session || !latestRequest) return;
+      try { await jsonRequest(`/v1/sessions/${session.sessionId}/checks/${latestRequest}/cancel`, { method: 'POST', body: '{}' }); $('cancel').disabled = true; status('Cancellation requested.'); }
+      catch (error) { status(error.message); }
+    });
+    $('stop').addEventListener('click', async () => {
+      if (!session) return;
+      try { await jsonRequest(`/v1/sessions/${session.sessionId}`, { method: 'DELETE' }); disconnect('Session deleted.'); }
+      catch (error) { status(`Deletion failed: ${error.message}. Retry stop.`); }
+    });
+    fetch('/health').then(r => r.json()).then(body => { $('readiness').textContent = `Server: ${JSON.stringify(body)}`; }).catch(() => { $('readiness').textContent = 'Server unavailable.'; });
+  </script>
+</body>
+</html>

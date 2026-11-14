@@ -1,0 +1,106 @@
+{
+  "kind": "independent_adapter08_per_question_visible_binding_review",
+  "createdAt": "2026-11-14T06:52:08.003231+00:00",
+  "candidateManifestSHA256": "0b3e0bc8c55ee89bd1fffcac915530e80ffb56ab8d948c57de2c355514300aed",
+  "candidateSourcePins": {
+    "README.md": "bb8702670daa197f3b66f0cdda577ffa962464daa91c6a107ac7d6a0404ed157",
+    "adapter.test.ts": "83ce6b6b5728e5ff4882dc91dbd1f16ed2b0fecbfd7fb337c479a23102373bbf",
+    "adapter.ts": "2b667c531227bac0bff9fb9e864cfbeddb2bb0c6895b45a4a082bd9e6a36451c",
+    "binding-instructions.ts": "d98ddbe32fae02513d117e1ae16b61f4af4c2a8d78a9bdbcda122371cd9a931a",
+    "full-context-byte-preflight.json": "706566167538ec6ab174f91e7d4444113891b6e8ee25a8e5f5053ffa90cfc54f",
+    "identity-contract.json": "4582df7c4e2393882dceabb7c718d9cc3ca2d5dff02afb59391e8858f0d134bf",
+    "offline-tests.log": "0ae22c190f8a8db8fb271435aa9d8681b194f9795d7ff0d8fa8ead2301439fb7",
+    "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+    "preflight.ts": "116af5962ce0bac44a11a4fa35e3737217c7a6a3f6f8d7e3c5e7d0bb136dc733",
+    "question.ts": "e980f87308bdc932bf6323344a77247cc54e90cbc90a9e9565b615811b9377b3",
+    "runtime-owner.ts": "845b66da332a4949e2b1a7f173459f26bc64ab3d92a03a88636dfe74c390bcfb",
+    "transport.ts": "24a67d3d8ab5fef682d01d5dc93e988103b9e7c248c1c8d3203b839a9ee56da8",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "version-reference.test.ts": "f41e4d668d949c6b62ba6deb30253bc5c9edd9f5823ae3d21c413472faaeef16",
+    "version-reference.ts": "5931a6d60af23736a282d2fe5d91fca9b08398e2c8e7892f64ce1a09f0eb6e6b",
+    "visible-binding.test.ts": "fec8d62b8464185b5c0d72d8567ab35858a4f003564d46dadc6bd11b4cbbece4"
+  },
+  "dependenciesVerified": {
+    "/workspace/task-evidence/record-capability-prototype-02/manifest.json": "9d3f255bdc9ef81253f5b487e4359fff11dab0eeb661780e32f28ec5659b8630",
+    "/workspace/stack-20/services/api/src/providers/jev/client.ts": "de12cdeb0c20075cc9798036904ddd7535b3ad15c8fc982c51ece1ecf5904efc",
+    "/workspace/stack-20/services/api/src/providers/jev/judgment.ts": "8a531805d0d4ea1e78f4d3294905b99da286bd47fa6b7e500e87d898aa88dbdb",
+    "/workspace/stack-20/services/api/src/runtime/budget.ts": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b",
+    "/workspace/task-evidence/capability-selection-seam-02/material.ts": "b3acaefd0717bd7cbcaf0d99061dd326fb7e2ed62f46a44a0309a9c5982bc980",
+    "/workspace/task-evidence/capability-selection-seam-02/manifest.json": "f1e267762bd52ef3509f1f7fed25567e43a725785a7d15198676a458e19c1e80",
+    "/workspace/task-evidence/jev-question-visibility-findings-01.json": "960fe23ff87914fc12b03c451c4c17087d3d287a5146d39f571e90731b375e97"
+  },
+  "predecessor07ManifestSHA256": "aecfa1cc5449aee73c2a52057fc732a8f7378f5865921cd0a9e6c9491be149a0",
+  "all07And08ManifestFilesUnchangedAfterReplay": true,
+  "vendorReceiptSHA256": "960fe23ff87914fc12b03c451c4c17087d3d287a5146d39f571e90731b375e97",
+  "status": "approved_for_offline_interface_contract_only",
+  "openBlockingFindings": [],
+  "reviewerAuthorshipDisclosure": "Reviewer authored earlier calibration corpora, saved companions, prototype core and budget guard, but did not edit or implement adapter08 or its renderer. This is independent review of the new visible binding, not independent validation of reviewer-authored components. Outcomes of earlier studies were known.",
+  "method": [
+    "Read saved public vendor receipt; no fresh documentation fetch.",
+    "Read actual07-to08 adapter diff and standalone renderer, matching all core question/criterion and lifecycle/guard files byte-for-byte.",
+    "Independently authored9 offline probes through actual private saved receipts, material selector/owner, adapter and Jev serialization with injected in-memory response only; global network is forbidden by the probe.",
+    "Removed all sibling questions and legacy descriptor question/source aliases from the resolver view; each remaining own instructions plus shared state still identifies exactly one actual source/descriptor pair.",
+    "Four simultaneous authentic receipt bindings tested in3source orders, independently ordered descriptors, invalid/duplicate target filtering, and differing per-item answers under2additional source orders.",
+    "Compared actual07 and08 serialized surrounding state/full judge questions; exact same evidence IDs/URLs/excerpts/material/semantic_as_of and ordinary questions remain. Only structural own-question prefix plus descriptor.evidenceId differ.",
+    "Replayed all83author offline tests and strict TypeScript for independent probes; no provider or source requests."
+  ],
+  "verification": {
+    "independentProbesPassed": 9,
+    "independentProbeInMemoryDispatches": 8,
+    "authorSuiteReplayedPassed": 83,
+    "strictTypeScript": "passed",
+    "liveProviderCalls": 0,
+    "newPublicSourceRequests": 0,
+    "structuralProbeBodyBytes": 44709,
+    "ownInstructionsHaveBacktickedEvidenceAndDescriptorPaths": true,
+    "actualRetainedIdIsQuotedAndMatchesDescriptor": true,
+    "sourceAndDescriptorIndicesMayDiffer": true,
+    "standaloneViewNeverNeedsHiddenQuestionIdOrSiblingQuestion": true,
+    "distinctAnswersMapToIntendedActualIdAfterReorder": true,
+    "coreQuestionSHA256": "e980f87308bdc932bf6323344a77247cc54e90cbc90a9e9565b615811b9377b3",
+    "criteriaAndCoreInstructionsUnchanged": true,
+    "thresholdsUnchanged": {
+      "covered": 0.85,
+      "ordinaryRisk": 0.85
+    },
+    "baselineStateAndQuestionsUnchanged": true,
+    "old07VisibleViewDoesNotResolveAnd08Does": true
+  },
+  "limitations": [
+    "Offline reference resolution demonstrates an explicit interface binding, not that the model will reason correctly about applicability or obey every instruction.",
+    "No live accuracy, causal recovery from07, factual coverage, authority, current proof or independent-origin credit is established.",
+    "The complete42 candidate-only plan, actual payload/budget caps, cohort denominators and semantic interpretation remain separate independent review and root authorization work.",
+    "Do not pool any future08 observation with prior07 first84, relabel prior outcomes, or overwrite the previous review correction.",
+    "No production hook, RecordCapability bridge or policy acceptance rule is activated."
+  ],
+  "artifactFiles": {
+    "review.test.ts": {
+      "sha256": "3781690eabe53d783397e4b027986bcaaea533a5aca73717d5fc6c8acbbf9f73",
+      "bytes": 13107
+    },
+    "package.json": {
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+      "bytes": 33
+    },
+    "source-pins-before.json": {
+      "sha256": "23f7dfd5a49af5e829d4b442f480aa52454be2433bb7cb130980739942b85499",
+      "bytes": 1596
+    },
+    "final-probes.log": {
+      "sha256": "458e1979c5d8ecf8c9bfa760a058899d2640948c563969cdf168d706df5aad4b",
+      "bytes": 4031
+    },
+    "final-typecheck.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "author-suite-replay.log": {
+      "sha256": "1df5af9e902ef1eb806fe516711d6b730d0b389017a29fd6d9e916d3ac51499d",
+      "bytes": 8310
+    },
+    "adapter-07-to-08.diff": {
+      "sha256": "f3ea99ce9d03891301464c09c18a6ef200cc054ea89faa51b57497ec1fc8b557",
+      "bytes": 2462
+    }
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "variant": "baseline",
+    "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+    "path": "services/api/src/policy/assessment.ts",
+    "sha256": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14",
+    "relevantLines": [
+      "export const ASSESSMENT_THRESHOLD = 0.85;"
+    ]
+  },
+  {
+    "variant": "baseline",
+    "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+    "path": "services/api/src/policy/sources.ts",
+    "sha256": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5",
+    "relevantLines": [
+      "    && Number.isFinite(evidence.stanceProbability) && evidence.stanceProbability >= 0.8 && evidence.stanceProbability <= 1;"
+    ]
+  },
+  {
+    "variant": "candidate08",
+    "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+    "path": "services/api/src/policy/assessment.ts",
+    "sha256": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14",
+    "relevantLines": [
+      "export const ASSESSMENT_THRESHOLD = 0.85;"
+    ]
+  },
+  {
+    "variant": "candidate08",
+    "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+    "path": "services/api/src/policy/sources.ts",
+    "sha256": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5",
+    "relevantLines": [
+      "    && Number.isFinite(evidence.stanceProbability) && evidence.stanceProbability >= 0.8 && evidence.stanceProbability <= 1;"
+    ]
+  }
+]

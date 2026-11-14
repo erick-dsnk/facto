@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "AD05-personal-skip",
+  "cases": [
+    {
+      "label": "AD05-personal-skip",
+      "text": "I misplaced my blue notebook on the train yesterday.",
+      "allowedPublic": [],
+      "automatic": true,
+      "final": true,
+      "expected": {
+        "admissionAction": "skip",
+        "claims": [],
+        "presentationActions": [
+          "silent"
+        ]
+      },
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": []
+      }
+    }
+  ]
+}

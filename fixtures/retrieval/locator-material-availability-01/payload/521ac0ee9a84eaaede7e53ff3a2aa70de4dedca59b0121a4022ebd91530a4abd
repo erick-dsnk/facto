@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "kind": "separate_single_contents_locator_material_plan",
+  "createdAt": "2026-11-14T07:28:07.284561+00:00",
+  "networkAuthorized": false,
+  "sourceRoot": "/workspace/junction-2026",
+  "sourceCommit": "04ac297523291b1aa289761d5ba3bed98610536f",
+  "sourcePins": [
+    {
+      "path": "/workspace/junction-2026/services/api/src/providers/exa/client.ts",
+      "bytes": 4026,
+      "sha256": "4176b72e4a7458dd32716ca46fa47eb791ba270f871ab4558dc0a5eff34a43c2"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/runtime/budget.ts",
+      "bytes": 2500,
+      "sha256": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/runtime/provider-retry.ts",
+      "bytes": 3320,
+      "sha256": "ebb83ff0a5ce0bb469906ac4f86dead40f42fe6732939353aed11dd868b91e7f"
+    },
+    {
+      "path": "/workspace/junction-2026/packages/contracts/src/index.ts",
+      "bytes": 4891,
+      "sha256": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32"
+    },
+    {
+      "path": "/workspace/junction-2026/packages/contracts/src/wire.ts",
+      "bytes": 4191,
+      "sha256": "024ab8b2e899b4d705ee1b1b40ca89e549e0caa5dde9b498a7f1ad7c0c31aafd"
+    },
+    {
+      "path": "/workspace/junction-2026/package.json",
+      "bytes": 1034,
+      "sha256": "f9a98677f10d181a6d85e6da9091e13fec69778ae356eb45b95df33d2cfa6939"
+    },
+    {
+      "path": "/workspace/junction-2026/package-lock.json",
+      "bytes": 149136,
+      "sha256": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/package.json",
+      "bytes": 2722,
+      "sha256": "b6cc9e534a20be91b2e1a91e01c6e06c9f4be526c9d4b134dbe79c927585641b"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/dist/index.mjs",
+      "bytes": 142291,
+      "sha256": "bc4a6cb214c3a306578d444be147695a22e4aa07f8828c107d75d136f150cc5b"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/dist/index.js",
+      "bytes": 147237,
+      "sha256": "03cf33dae9aee925a12812d540899eda66e44dd95067b635f3f0f030daa027ce"
+    }
+  ],
+  "prototypeManifest": {
+    "path": "/workspace/task-evidence/source-bound-locator-prototype-01/MANIFEST.json",
+    "sha256": "944e0c2abffe31527df466f34acf65350b4148bc8e4271548869ce6d0f42dee8"
+  },
+  "prototypeRootReview": {
+    "path": "/workspace/task-evidence/locator-root-offline-review.json",
+    "sha256": "1eed6f274d9a0d1f17fda3fc7b9cd218749164d74468186b549f54acebcb47d6"
+  },
+  "sdkPreview": {
+    "path": "/workspace/task-evidence/source-bound-locator-prototype-01/sdk-serialization.json",
+    "sha256": "16d558911ad26d20431b72c549217e7a897d13b0b1d0b63dc49e553a900373d1"
+  },
+  "targetURL": "https://www.rfc-editor.org/info/rfc8174/",
+  "options": {
+    "text": {
+      "maxCharacters": 12000,
+      "includeHtmlTags": true
+    },
+    "extras": {
+      "links": 4
+    },
+    "livecrawl": "preferred",
+    "livecrawlTimeout": 1500
+  },
+  "request": {
+    "endpoint": "https://api.exa.ai/contents",
+    "method": "POST",
+    "redirect": "error",
+    "body": {
+      "urls": [
+        "https://www.rfc-editor.org/info/rfc8174/"
+      ],
+      "text": {
+        "maxCharacters": 12000,
+        "includeHtmlTags": true
+      },
+      "extras": {
+        "links": 4
+      },
+      "livecrawl": "preferred",
+      "livecrawlTimeout": 1500
+    },
+    "bodyBytes": 176,
+    "bodySHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd"
+  },
+  "limits": {
+    "search": 0,
+    "contents": 1,
+    "jev": 0,
+    "originGET": 0,
+    "retries": 0,
+    "childFollows": 0,
+    "absoluteDeadlineMs": 10000,
+    "requestBytes": 65536,
+    "acceptedStoredResponseBytes": 262144,
+    "results": 1,
+    "linksPerResult": 4,
+    "urlUTF8Bytes": 4096
+  },
+  "liveOutputRoot": null,
+  "outputAssignment": "Only an explicit later root approval may assign one exact fresh output root; none is reserved by this plan.",
+  "cost": "One attempted provider operation maximum; finite returned cost recorded, missing or invalid cost=>null/unknown1; no dollar price guarantee.",
+  "interpretation": "SDK field/material availability only; no search, child request, origin freshness, alias, identity, witness or factual/semantic credit.",
+  "newNetworkCalls": 0,
+  "rootReviewRequiredBeforeExecution": true
+}

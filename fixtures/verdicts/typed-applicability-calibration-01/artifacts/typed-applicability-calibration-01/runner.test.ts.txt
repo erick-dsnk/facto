@@ -1,0 +1,38 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {mkdtempSync,readFileSync,existsSync}from'node:fs';import{tmpdir}from'node:os';import{join}from'node:path';
+import {preparePlan,runStudy,validatePlan} from './runner.js';
+import {scoreStudy,type Denominator} from './scoring.js';
+const output=()=>join(mkdtempSync(join(tmpdir(),'applicability84-offline-')),'run');
+const mock=(usage:boolean=true,status=200):typeof fetch=>async(_url,init)=>{
+ if(status!==200)return new Response('terminal-provider-error',{status});
+ const req=JSON.parse(String(init?.body));const answers=Object.fromEntries(Object.entries(req.questions).map(([key,value])=>{const q=value as any;if(q.type==='noul')return[key,{noul:.99}];const keys=Object.keys(q.criteria);const choice=key==='claim_risk'?'ordinary':key==='selected_evidence'?'none':key==='verdict'?'insufficient_evidence':key.endsWith('_applicability')?'uncertain':key.endsWith('_content_basis')?'original_record':key.endsWith('_stance')?'unrelated':keys[keys.length-1]!;return[key,{choice,probabilities:Object.fromEntries(keys.map(k=>[k,k===choice?.99:.01/(keys.length-1)]))}];}));
+ return new Response(JSON.stringify({answers,...(usage?{usage:{input_tokens:1000}}:{})}),{status:200});
+};
+test('complete84 real-adapter offline pipeline preserves42labels/2offlinecontrols,84actualmockattempts and all gates',async()=>{
+ const plan=preparePlan(),dir=output();let calls=0;const fake=mock();
+ const report=await runStudy(plan,dir,{apiKey:'OFFLINE_MOCK_ONLY',transportMode:'offline-mock',fetch:async(...args)=>{calls++;assert.ok(readFileSync(`${dir}/checkpoints.jsonl`,'utf8').includes('request_prepared'));return fake(...args);}});
+ assert.equal(calls,84);assert.equal(report.completedAllCalls,true);assert.equal(report.projectProviderCalls,0);assert.equal(report.guard.totals.actualStartedJev,84);assert.equal(report.runtimeLedger.consumedJevAttempts,84);assert.equal(report.guard.totals.measuredInputTokens,84000);assert.equal(report.runtimeLedger.measuredInputTokens,84000);assert.equal(report.guard.totals.usageUnknownCalls,0);
+ assert.equal(report.offlineBindingControls.length,2);assert.ok(report.offlineBindingControls.every(c=>c.actualJevAttempts===0));
+ assert.equal(report.scoring.byArm.applicability.declared,42);assert.equal(report.scoring.byArm.applicability.applicabilityQuestionAsked,37);assert.equal(report.scoring.byArm.baseline_anchor.rawTernaryExact,null);assert.equal(report.scoring.primaryDecidedCandidate.declared,36);assert.equal(report.scoring.uncertainSafetySentinels.declared,6);assert.equal(report.scoring.selectedCitationAuditInputs.length,0);
+ assert.ok(report.rows.every(r=>r.runtimeChargedAttempts===1&&r.completedActualAsk.authorityGranted===false));
+ assert.ok(existsSync(`${dir}/report.json`));const checkpoints=readFileSync(`${dir}/checkpoints.jsonl`,'utf8').trim().split('\n').map(l=>JSON.parse(l));assert.equal(checkpoints.filter(c=>c.type==='request_prepared').length,84);assert.equal(checkpoints.find(c=>c.type==='request_prepared').snapshot.totals.actualStartedJev,0);
+});
+test('unknown actual usage stops after1mockattempt with all84missing declarations and no silent repeat',async()=>{
+ const plan=preparePlan(),dir=output();let calls=0;const fake=mock(false);
+ const r=await runStudy(plan,dir,{apiKey:'OFFLINE_MOCK_ONLY',transportMode:'offline-mock',fetch:async(...args)=>{calls++;return fake(...args);}});
+ assert.equal(calls,1);assert.equal(r.completedAllCalls,false);assert.equal(r.guard.totals.usageUnknownCalls,1);assert.equal(r.guard.missingCallIds.length,84);assert.equal(r.rows.length,0);assert.equal(r.scoring.byArm.applicability.missing,42);assert.equal(r.runtimeLedger.consumedJevAttempts,1);
+});
+test('transient429 remains terminal with1charged/actualmockattempt and0Exa',async()=>{
+ let calls=0;const fake=mock(true,429);const r=await runStudy(preparePlan(),output(),{apiKey:'OFFLINE_MOCK_ONLY',transportMode:'offline-mock',fetch:async(...a)=>{calls++;return fake(...a);}});assert.equal(calls,1);assert.equal(r.runtimeLedger.consumedJevAttempts,1);assert.equal(r.actualExaCalls,0);assert.equal(r.guard.totals.usageUnknownCalls,1);
+});
+test('pretransport body hash mismatch preserves consumed-vs-started ledger and final report',async()=>{
+ const p=preparePlan();p.guard.calls[0]!.requestSHA256='0'.repeat(64);let calls=0;const r=await runStudy(p,output(),{apiKey:'OFFLINE_MOCK_ONLY',transportMode:'offline-mock',fetch:async()=>{calls++;throw Error('should-not-fetch');}});assert.equal(calls,0);assert.equal(r.guard.totals.actualStartedJev,0);assert.equal(r.runtimeLedger.consumedJevAttempts,1);assert.equal(r.guard.totals.usageUnknownCalls,0);assert.equal(r.guard.missingCallIds.length,84);
+});
+test('fresh output required; no resume or failed-unit automatic replay',async()=>{
+ const p=preparePlan(),dir=output();await runStudy(p,dir,{apiKey:'OFFLINE_MOCK_ONLY',fetch:mock(false),transportMode:'offline-mock'});await assert.rejects(runStudy(p,dir,{apiKey:'OFFLINE_MOCK_ONLY',fetch:mock(),transportMode:'offline-mock'}),/fresh_output_required/);
+});
+test('full plan validator rejects cut cohorts, altered84inventory and cap relaxation',()=>{
+ for(const edit of [(p:any)=>p.guard.calls.pop(),(p:any)=>p.semanticIds.pop(),(p:any)=>p.guard.limits.maxRequestBytes++]){const p=preparePlan();edit(p);assert.throws(()=>validatePlan(p));}
+});
+test('missing and unasked outcomes remain denominators; baseline is N/A rather than zero-recall',()=>{
+ const labels:Denominator[]=[{id:'p',cohort:'a',category:'x',sourceFamily:'f',expected:'covered',excludeFromPrimary:false},{id:'n',cohort:'a',category:'x',sourceFamily:'f',expected:'not_covered',excludeFromPrimary:false},{id:'u',cohort:'a',category:'x',sourceFamily:'f',expected:'uncertain',excludeFromPrimary:true}];const s=scoreStudy(labels,[]);assert.equal(s.byArm.applicability.declared,3);assert.equal(s.byArm.applicability.missing,3);assert.equal(s.byArm.baseline_anchor.rawTernaryExact,null);assert.equal(s.uncertainSafetySentinels.declared,1);assert.equal(s.primaryDecidedCandidate.declared,2);
+});

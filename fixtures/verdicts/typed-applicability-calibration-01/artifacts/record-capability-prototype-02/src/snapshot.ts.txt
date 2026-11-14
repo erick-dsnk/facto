@@ -1,0 +1,36 @@
+import { artifactRoot, manifestIdentity, resolveProof, type InstalledManifest } from './manifest.js';
+import { readBounded } from './files.js';
+import { deepFreeze, digest, fail, type Proof } from './types.js';
+declare const snapshotBrand: unique symbol;
+export type VerifiedSnapshot = {
+    readonly [snapshotBrand]: true;
+};
+type State = {
+    manifest: InstalledManifest;
+    proof: Readonly<Proof>;
+    text: string;
+};
+const snapshots = new WeakMap<object, State>();
+/** Only reads content-addressed bytes already installed from independent reviewed captures. */
+export async function loadSnapshot(manifest: InstalledManifest, proofId: string): Promise<VerifiedSnapshot> {
+    manifestIdentity(manifest);
+    const proof = resolveProof(manifest, proofId), root = artifactRoot(manifest);
+    const body = await readBounded(root, `artifacts/${proof.rawBodySHA256}`), extraction = await readBounded(root, `artifacts/${proof.extractionSHA256}`);
+    if (digest(body) !== proof.rawBodySHA256 || digest(extraction) !== proof.extractionSHA256)
+        return fail('snapshot_hash_mismatch');
+    const text = extraction.toString('utf8');
+    if (!Buffer.from(text, 'utf8').equals(extraction))
+        return fail('invalid_utf8_extraction');
+    const handle = Object.freeze(Object.create(null)) as VerifiedSnapshot;
+    snapshots.set(handle, deepFreeze({ manifest, proof, text }));
+    return handle;
+}
+export function snapshotState(handle: unknown, manifest: InstalledManifest): Readonly<State> {
+    if (!handle || typeof handle !== 'object')
+        return fail('untrusted_snapshot');
+    const s = snapshots.get(handle);
+    if (!s || s.manifest !== manifest)
+        return fail('untrusted_snapshot');
+    manifestIdentity(manifest);
+    return s;
+}

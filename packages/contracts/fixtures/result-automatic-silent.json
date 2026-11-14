@@ -1,0 +1,43 @@
+{
+  "verdict": "supported",
+  "reasonCode": "qualifying_support",
+  "selectedEvidenceIds": [
+    "fixture-eiffel"
+  ],
+  "summary": "Supported by the sources I found.",
+  "originalText": "🙂 My salary is €4,000. The Eiffel Tower opened in 1889.",
+  "checkedText": "The Eiffel Tower opened in 1889.",
+  "sourceSpan": {
+    "start": 23,
+    "end": 55
+  },
+  "evidence": [
+    {
+      "id": "fixture-eiffel",
+      "url": "https://www.toureiffel.paris/en/the-monument/history",
+      "title": "Eiffel Tower history (contract fixture)",
+      "publisher": "Eiffel Tower",
+      "publishedAt": null,
+      "retrievedAt": "2026-11-14T10:00:01Z",
+      "contentBasis": "highlight",
+      "excerpt": "The Eiffel Tower opened in 1889.",
+      "sourceGroup": "toureiffel.paris",
+      "echoGroup": null,
+      "sourceRole": "primary",
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "stance": "supports",
+      "stanceProbability": 0.96
+    }
+  ],
+  "checkedAt": "2026-11-14T10:00:02Z",
+  "expiresAt": "2026-11-14T10:01:02Z",
+  "durationMs": 1200,
+  "cached": false,
+  "policyVersion": "glasses-p0.1",
+  "modelVersion": "fixture",
+  "presentation": {
+    "action": "silent",
+    "reasonCode": "automatic_supported"
+  }
+}

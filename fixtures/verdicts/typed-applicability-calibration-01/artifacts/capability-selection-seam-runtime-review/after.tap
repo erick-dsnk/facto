@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: prior assessment of another exact claim must not be accepted merely because evidence bytes match
+ok 1 - prior assessment of another exact claim must not be accepted merely because evidence bytes match
+  ---
+  duration_ms: 1.803377
+  type: 'test'
+  ...
+# Subtest: material for another claim must not become owned by an unrelated current request slot
+ok 2 - material for another claim must not become owned by an unrelated current request slot
+  ---
+  duration_ms: 8.957768
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 395.254208

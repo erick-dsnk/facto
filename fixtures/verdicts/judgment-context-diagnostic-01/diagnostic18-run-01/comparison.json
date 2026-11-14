@@ -1,0 +1,3642 @@
+{
+  "planHash": "9e8b780d5db6f9b3cf4efeb0f8aa87af916a2128206a496e715415cf1b67735a",
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "productionChanged": false,
+  "candidateAliasAdded": false,
+  "sourceHashesUnchangedAfterRun": true,
+  "primaryQualityByCondition": {
+    "original_full": {
+      "positivePass": 2,
+      "positiveCount": 4,
+      "negativeFalseAccept": 0,
+      "negativeCount": 1,
+      "excludedBoundaryTargets": 1
+    },
+    "reversed_full": {
+      "positivePass": 2,
+      "positiveCount": 4,
+      "negativeFalseAccept": 0,
+      "negativeCount": 1,
+      "excludedBoundaryTargets": 1
+    },
+    "isolated_target": {
+      "positivePass": 3,
+      "positiveCount": 4,
+      "negativeFalseAccept": 0,
+      "negativeCount": 1,
+      "excludedBoundaryTargets": 1
+    }
+  },
+  "targetComparisons": [
+    {
+      "caseId": "BD09",
+      "targetId": "ev-d13ed099d4e84ec8c01d",
+      "labelId": "T02",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "stale": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.4
+      },
+      "stalePass": false,
+      "original": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.27
+      },
+      "originalPass": false,
+      "reversed": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.56
+      },
+      "reversedPass": false,
+      "isolated": {
+        "contentBasis": "original_record",
+        "confidence": 0.77
+      },
+      "isolatedPass": false,
+      "freshIsolatedMinusOriginal": 0.5,
+      "freshReversedMinusOriginal": 0.29000000000000004,
+      "newOriginalMinusStale": -0.13,
+      "originalIndex": 5,
+      "reversedIndex": 0
+    },
+    {
+      "caseId": "BD05",
+      "targetId": "ev-68dd14f72943d0b9f377",
+      "labelId": "T04",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "stale": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "stalePass": false,
+      "original": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "originalPass": false,
+      "reversed": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.75
+      },
+      "reversedPass": false,
+      "isolated": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9199999999999999
+      },
+      "isolatedPass": true,
+      "freshIsolatedMinusOriginal": 0.1299999999999999,
+      "freshReversedMinusOriginal": -0.040000000000000036,
+      "newOriginalMinusStale": 0.0,
+      "originalIndex": 1,
+      "reversedIndex": 2
+    },
+    {
+      "caseId": "BD11",
+      "targetId": "ev-f00642f438bb08f87910",
+      "labelId": "T03",
+      "expectedBasis": "ambiguous",
+      "excludeFromPrimary": true,
+      "stale": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16999999999999998
+      },
+      "stalePass": false,
+      "original": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.18
+      },
+      "originalPass": false,
+      "reversed": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.24
+      },
+      "reversedPass": false,
+      "isolated": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16
+      },
+      "isolatedPass": false,
+      "freshIsolatedMinusOriginal": -0.01999999999999999,
+      "freshReversedMinusOriginal": 0.06,
+      "newOriginalMinusStale": 0.010000000000000009,
+      "originalIndex": 2,
+      "reversedIndex": 2
+    },
+    {
+      "caseId": "BD03",
+      "targetId": "ev-fc10664bbaa8225ad8ac",
+      "labelId": "T06",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "stale": {
+        "contentBasis": "original_record",
+        "confidence": 0.8799999999999999
+      },
+      "stalePass": true,
+      "original": {
+        "contentBasis": "original_record",
+        "confidence": 0.8799999999999999
+      },
+      "originalPass": true,
+      "reversed": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "reversedPass": true,
+      "isolated": {
+        "contentBasis": "original_record",
+        "confidence": 0.95
+      },
+      "isolatedPass": true,
+      "freshIsolatedMinusOriginal": 0.07000000000000006,
+      "freshReversedMinusOriginal": -0.019999999999999907,
+      "newOriginalMinusStale": 0.0,
+      "originalIndex": 1,
+      "reversedIndex": 4
+    },
+    {
+      "caseId": "BD10",
+      "targetId": "ev-eb0bdcebbd68c35e5e3a",
+      "labelId": "T01",
+      "expectedBasis": "substantive",
+      "excludeFromPrimary": false,
+      "stale": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9199999999999999
+      },
+      "stalePass": true,
+      "original": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9099999999999999
+      },
+      "originalPass": true,
+      "reversed": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.93
+      },
+      "reversedPass": true,
+      "isolated": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.96
+      },
+      "isolatedPass": true,
+      "freshIsolatedMinusOriginal": 0.050000000000000044,
+      "freshReversedMinusOriginal": 0.02000000000000013,
+      "newOriginalMinusStale": -0.010000000000000009,
+      "originalIndex": 3,
+      "reversedIndex": 0
+    },
+    {
+      "caseId": "BD04",
+      "targetId": "ev-c0111d21601a8a647c04",
+      "labelId": "T05",
+      "expectedBasis": "insufficient",
+      "excludeFromPrimary": false,
+      "stale": {
+        "contentBasis": "unclear",
+        "confidence": 0.04
+      },
+      "stalePass": false,
+      "original": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "originalPass": false,
+      "reversed": {
+        "contentBasis": "unclear",
+        "confidence": 0.06
+      },
+      "reversedPass": false,
+      "isolated": {
+        "contentBasis": "unclear",
+        "confidence": 0.02
+      },
+      "isolatedPass": false,
+      "freshIsolatedMinusOriginal": -0.009999999999999998,
+      "freshReversedMinusOriginal": 0.03,
+      "newOriginalMinusStale": -0.010000000000000002,
+      "originalIndex": 1,
+      "reversedIndex": 4
+    }
+  ],
+  "historicalVsNewOriginal": [
+    {
+      "caseId": "BD09",
+      "id": "ev-113dde7acdef51bd111e",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.21000000000000002
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.020000000000000018,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.97,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-6016ba9631faf63f9073",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.020000000000000018,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.78,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.75,
+        "relevance": false,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-47332ac6f44138688f51",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.28
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.27
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-62417e5ef3eb18382aec",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.89
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.88
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.5,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.46,
+        "relevance": false,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-ad1b812f1c20db711567",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.31
+      },
+      "newOriginalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.24000000000000002
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.06999999999999998,
+      "staleSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.55,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.55,
+        "relevance": false,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-d13ed099d4e84ec8c01d",
+      "target": true,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.4
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.27
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.13,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-ff82db4df607a864dd53",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-68dd14f72943d0b9f377",
+      "target": true,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-9a0f5f732a8afaebbc98",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.77
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.7
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.07000000000000006,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.9,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.93,
+        "relevance": true,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-2da3cc3a428073c92eaf",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-e31747a5310036c8ce8b",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-51e7a6599fda42f659b0",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.45999999999999996
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.48
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.020000000000000018,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.92,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.92,
+        "relevance": false,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-f00642f438bb08f87910",
+      "target": true,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16999999999999998
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.18
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.010000000000000009,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-1a8bf8bf3840cff4658d",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.66
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.58
+      },
+      "qualityClassChanges": true,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.08000000000000007,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-86a0029d5e1900ce9901",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.13
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.03,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-fdcab82cba190710f6f1",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.94
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.94
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-fc10664bbaa8225ad8ac",
+      "target": true,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8799999999999999
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8799999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-a99a80f163ee420d3c54",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16999999999999998
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16999999999999998
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.82,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.79,
+        "relevance": false,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-1519bfd6f08c0cf6d8f0",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.28
+      },
+      "newOriginalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.3
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.019999999999999962,
+      "staleSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.79,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.77,
+        "relevance": false,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-8cabcd0e009700e9fb3b",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9800000000000001
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.009999999999999898,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-ca40cfa600400c2bb442",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.09
+      },
+      "newOriginalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.09
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "staleSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-0731d2680f6821d2a03e",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8999999999999999
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.88
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.019999999999999907,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-6a6fe886686c4d654057",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9099999999999999
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8999999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-9ba7133657edfc20c794",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8500000000000001
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.04999999999999993,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-eb0bdcebbd68c35e5e3a",
+      "target": true,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9199999999999999
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9099999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-82570980f26c34b7d138",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.5
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.52
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": 0.020000000000000018,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.97,
+        "relevance": false,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-c0111d21601a8a647c04",
+      "target": true,
+      "staleQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.04
+      },
+      "newOriginalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000002,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.54,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.55,
+        "relevance": false,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-8a24057c524a95d58b34",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.48
+      },
+      "newOriginalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.47000000000000003
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.009999999999999953,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.97,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": false
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": false
+      }
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-8d8e57597f36a9992ee5",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8799999999999999
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.019999999999999907,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-5c571cb3cf9d01295d66",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.69
+      },
+      "newOriginalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.6799999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      }
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-566051bb4c4b0e20f045",
+      "target": false,
+      "staleQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.69
+      },
+      "newOriginalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.63
+      },
+      "qualityClassChanges": false,
+      "qualityPassChanges": false,
+      "qualityConfidenceDelta": -0.05999999999999994,
+      "staleSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": true
+      },
+      "newOriginalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      }
+    }
+  ],
+  "freshFullOrderComparisons": [
+    {
+      "caseId": "BD09",
+      "id": "ev-113dde7acdef51bd111e",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 5,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.15000000000000002
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.03999999999999998,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-6016ba9631faf63f9073",
+      "target": false,
+      "originalIndex": 1,
+      "reversedIndex": 4,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.75,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.86,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "stance_probability",
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-47332ac6f44138688f51",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.27
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.22
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.05000000000000002,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-62417e5ef3eb18382aec",
+      "target": false,
+      "originalIndex": 3,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.88
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9299999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.04999999999999993,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.46,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.79,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-ad1b812f1c20db711567",
+      "target": false,
+      "originalIndex": 4,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.24000000000000002
+      },
+      "reversedQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.4
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.16,
+      "originalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.55,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.5,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-d13ed099d4e84ec8c01d",
+      "target": true,
+      "originalIndex": 5,
+      "reversedIndex": 0,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.27
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.56
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.29000000000000004,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-ff82db4df607a864dd53",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.98
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-68dd14f72943d0b9f377",
+      "target": true,
+      "originalIndex": 1,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.75
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.040000000000000036,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-9a0f5f732a8afaebbc98",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.7
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.79
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.09000000000000008,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.93,
+        "relevance": true,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": false
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD05",
+      "id": "ev-2da3cc3a428073c92eaf",
+      "target": false,
+      "originalIndex": 3,
+      "reversedIndex": 0,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.99
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 1
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.010000000000000009,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": false
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-e31747a5310036c8ce8b",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 4,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.94,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-51e7a6599fda42f659b0",
+      "target": false,
+      "originalIndex": 1,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.48
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.54
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.06000000000000005,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.92,
+        "relevance": false,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-f00642f438bb08f87910",
+      "target": true,
+      "originalIndex": 2,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.18
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.24
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.06,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-1a8bf8bf3840cff4658d",
+      "target": false,
+      "originalIndex": 3,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.58
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.81
+      },
+      "qualityClassChanges": true,
+      "qualityConfidenceDelta": 0.2300000000000001,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-86a0029d5e1900ce9901",
+      "target": false,
+      "originalIndex": 4,
+      "reversedIndex": 0,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.13
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.12000000000000001
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.009999999999999995,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-fdcab82cba190710f6f1",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 5,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.94
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.07999999999999996,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-fc10664bbaa8225ad8ac",
+      "target": true,
+      "originalIndex": 1,
+      "reversedIndex": 4,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8799999999999999
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.019999999999999907,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-a99a80f163ee420d3c54",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16999999999999998
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.020000000000000018,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.79,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.87,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": [
+        "stance_probability"
+      ]
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-1519bfd6f08c0cf6d8f0",
+      "target": false,
+      "originalIndex": 3,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.3
+      },
+      "reversedQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.35
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.04999999999999999,
+      "originalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.77,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.76,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-8cabcd0e009700e9fb3b",
+      "target": false,
+      "originalIndex": 4,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9800000000000001
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.99
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.009999999999999898,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-ca40cfa600400c2bb442",
+      "target": false,
+      "originalIndex": 5,
+      "reversedIndex": 0,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.09
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.18
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.09,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-0731d2680f6821d2a03e",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.88
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.07999999999999996,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": [
+        "quality"
+      ]
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-6a6fe886686c4d654057",
+      "target": false,
+      "originalIndex": 1,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8999999999999999
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.8599999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.040000000000000036,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-9ba7133657edfc20c794",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8500000000000001
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.04999999999999993,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD10",
+      "id": "ev-eb0bdcebbd68c35e5e3a",
+      "target": true,
+      "originalIndex": 3,
+      "reversedIndex": 0,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.9099999999999999
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.93
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.02000000000000013,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-82570980f26c34b7d138",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 5,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.52
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.51
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.97,
+        "relevance": false,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-c0111d21601a8a647c04",
+      "target": true,
+      "originalIndex": 1,
+      "reversedIndex": 4,
+      "originalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "reversedQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.06
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.03,
+      "originalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.55,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.59,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-8a24057c524a95d58b34",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.47000000000000003
+      },
+      "reversedQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.3
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.17000000000000004,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.91,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-8d8e57597f36a9992ee5",
+      "target": false,
+      "originalIndex": 3,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.86
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.0,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-5c571cb3cf9d01295d66",
+      "target": false,
+      "originalIndex": 4,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.6799999999999999
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.6699999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-566051bb4c4b0e20f045",
+      "target": false,
+      "originalIndex": 5,
+      "reversedIndex": 0,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.63
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.83
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.19999999999999996,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": []
+    }
+  ],
+  "fullCaseSpillovers": [
+    {
+      "caseId": "BD09",
+      "claimRiskOriginal": {
+        "level": "ordinary",
+        "confidence": 0.97
+      },
+      "claimRiskReversed": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "modelLabelOriginal": "supported",
+      "modelLabelReversed": "supported",
+      "probabilitiesOriginal": {
+        "supported": 0.93,
+        "contradicted": 0.01,
+        "misleading": 0.04,
+        "insufficient_evidence": 0.02
+      },
+      "probabilitiesReversed": {
+        "supported": 0.94,
+        "contradicted": 0.01,
+        "misleading": 0.03,
+        "insufficient_evidence": 0.02
+      },
+      "selectedOriginal": [
+        "ev-d13ed099d4e84ec8c01d"
+      ],
+      "selectedReversed": [
+        "ev-d13ed099d4e84ec8c01d"
+      ],
+      "policyOriginal": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyReversed": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyIsolated": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "originChanges": [
+        {
+          "pair": "ev-113dde7acdef51bd111e|ev-6016ba9631faf63f9073",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.45
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.47
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-113dde7acdef51bd111e|ev-47332ac6f44138688f51",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.44
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.41
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-113dde7acdef51bd111e|ev-62417e5ef3eb18382aec",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.42
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.36
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-113dde7acdef51bd111e|ev-ad1b812f1c20db711567",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.71
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.51
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-113dde7acdef51bd111e|ev-d13ed099d4e84ec8c01d",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.6
+          },
+          "reversed": {
+            "relationship": "common_origin",
+            "confidence": 0.54
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-47332ac6f44138688f51|ev-6016ba9631faf63f9073",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.34
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.42
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-6016ba9631faf63f9073|ev-62417e5ef3eb18382aec",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.86
+          },
+          "reversed": {
+            "relationship": "common_origin",
+            "confidence": 0.9
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-6016ba9631faf63f9073|ev-ad1b812f1c20db711567",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.69
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.73
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-6016ba9631faf63f9073|ev-d13ed099d4e84ec8c01d",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.53
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.44
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-47332ac6f44138688f51|ev-62417e5ef3eb18382aec",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.38
+          },
+          "reversed": {
+            "relationship": "common_origin",
+            "confidence": 0.44
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-47332ac6f44138688f51|ev-ad1b812f1c20db711567",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.6
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.71
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-62417e5ef3eb18382aec|ev-ad1b812f1c20db711567",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.82
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.54
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-62417e5ef3eb18382aec|ev-d13ed099d4e84ec8c01d",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.45
+          },
+          "reversed": {
+            "relationship": "common_origin",
+            "confidence": 0.44
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-ad1b812f1c20db711567|ev-d13ed099d4e84ec8c01d",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.65
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.57
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        }
+      ]
+    },
+    {
+      "caseId": "BD05",
+      "claimRiskOriginal": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "claimRiskReversed": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "modelLabelOriginal": "supported",
+      "modelLabelReversed": "supported",
+      "probabilitiesOriginal": {
+        "supported": 0.93,
+        "contradicted": 0,
+        "misleading": 0.06,
+        "insufficient_evidence": 0.01
+      },
+      "probabilitiesReversed": {
+        "supported": 0.97,
+        "contradicted": 0,
+        "misleading": 0.03,
+        "insufficient_evidence": 0
+      },
+      "selectedOriginal": [
+        "ev-ff82db4df607a864dd53"
+      ],
+      "selectedReversed": [
+        "ev-68dd14f72943d0b9f377"
+      ],
+      "policyOriginal": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyReversed": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyIsolated": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "originChanges": [
+        {
+          "pair": "ev-68dd14f72943d0b9f377|ev-ff82db4df607a864dd53",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.6
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.64
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-2da3cc3a428073c92eaf|ev-ff82db4df607a864dd53",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.59
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.6
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-68dd14f72943d0b9f377|ev-9a0f5f732a8afaebbc98",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.55
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.63
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-2da3cc3a428073c92eaf|ev-68dd14f72943d0b9f377",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.51
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.51
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-2da3cc3a428073c92eaf|ev-9a0f5f732a8afaebbc98",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.7
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.53
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        }
+      ]
+    },
+    {
+      "caseId": "BD11",
+      "claimRiskOriginal": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "claimRiskReversed": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "modelLabelOriginal": "supported",
+      "modelLabelReversed": "supported",
+      "probabilitiesOriginal": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "probabilitiesReversed": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "selectedOriginal": [
+        "ev-1a8bf8bf3840cff4658d"
+      ],
+      "selectedReversed": [
+        "ev-e31747a5310036c8ce8b"
+      ],
+      "policyOriginal": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyReversed": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyIsolated": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "originChanges": [
+        {
+          "pair": "ev-51e7a6599fda42f659b0|ev-e31747a5310036c8ce8b",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.54
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.48
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-e31747a5310036c8ce8b|ev-f00642f438bb08f87910",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.48
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.66
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1a8bf8bf3840cff4658d|ev-e31747a5310036c8ce8b",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.54
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.67
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-86a0029d5e1900ce9901|ev-e31747a5310036c8ce8b",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.53
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.58
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-51e7a6599fda42f659b0|ev-f00642f438bb08f87910",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.8
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.73
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-51e7a6599fda42f659b0|ev-86a0029d5e1900ce9901",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.47
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.52
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1a8bf8bf3840cff4658d|ev-f00642f438bb08f87910",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.62
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.71
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-86a0029d5e1900ce9901|ev-f00642f438bb08f87910",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.47
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.69
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1a8bf8bf3840cff4658d|ev-86a0029d5e1900ce9901",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.4
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.57
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        }
+      ]
+    },
+    {
+      "caseId": "BD03",
+      "claimRiskOriginal": {
+        "level": "ordinary",
+        "confidence": 0.97
+      },
+      "claimRiskReversed": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "modelLabelOriginal": "supported",
+      "modelLabelReversed": "supported",
+      "probabilitiesOriginal": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "probabilitiesReversed": {
+        "supported": 0.98,
+        "contradicted": 0,
+        "misleading": 0.01,
+        "insufficient_evidence": 0.01
+      },
+      "selectedOriginal": [
+        "ev-ca40cfa600400c2bb442"
+      ],
+      "selectedReversed": [
+        "ev-ca40cfa600400c2bb442"
+      ],
+      "policyOriginal": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-fdcab82cba190710f6f1",
+          "ev-fc10664bbaa8225ad8ac",
+          "ev-8cabcd0e009700e9fb3b"
+        ],
+        "summary": "Supported by the sources I found."
+      },
+      "policyReversed": {
+        "verdict": "supported",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-8cabcd0e009700e9fb3b",
+          "ev-fc10664bbaa8225ad8ac",
+          "ev-fdcab82cba190710f6f1"
+        ],
+        "summary": "Supported by the sources I found."
+      },
+      "policyIsolated": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "originChanges": [
+        {
+          "pair": "ev-fc10664bbaa8225ad8ac|ev-fdcab82cba190710f6f1",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.68
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.39
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-a99a80f163ee420d3c54|ev-fdcab82cba190710f6f1",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.86
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.81
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-1519bfd6f08c0cf6d8f0|ev-fdcab82cba190710f6f1",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.81
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.73
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-8cabcd0e009700e9fb3b|ev-fdcab82cba190710f6f1",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.9
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.81
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-ca40cfa600400c2bb442|ev-fdcab82cba190710f6f1",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.66
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.75
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-a99a80f163ee420d3c54|ev-fc10664bbaa8225ad8ac",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.8
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.77
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1519bfd6f08c0cf6d8f0|ev-fc10664bbaa8225ad8ac",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.85
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.74
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-8cabcd0e009700e9fb3b|ev-fc10664bbaa8225ad8ac",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.93
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.84
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-ca40cfa600400c2bb442|ev-fc10664bbaa8225ad8ac",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.65
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.63
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1519bfd6f08c0cf6d8f0|ev-a99a80f163ee420d3c54",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.79
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.85
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-8cabcd0e009700e9fb3b|ev-a99a80f163ee420d3c54",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.93
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.85
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-a99a80f163ee420d3c54|ev-ca40cfa600400c2bb442",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.51
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.57
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1519bfd6f08c0cf6d8f0|ev-8cabcd0e009700e9fb3b",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.96
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.9
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-1519bfd6f08c0cf6d8f0|ev-ca40cfa600400c2bb442",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.62
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.65
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        }
+      ]
+    },
+    {
+      "caseId": "BD10",
+      "claimRiskOriginal": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "claimRiskReversed": {
+        "level": "ordinary",
+        "confidence": 0.99
+      },
+      "modelLabelOriginal": "contradicted",
+      "modelLabelReversed": "contradicted",
+      "probabilitiesOriginal": {
+        "supported": 0,
+        "contradicted": 0.99,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "probabilitiesReversed": {
+        "supported": 0,
+        "contradicted": 0.99,
+        "misleading": 0.01,
+        "insufficient_evidence": 0
+      },
+      "selectedOriginal": [
+        "ev-6a6fe886686c4d654057"
+      ],
+      "selectedReversed": [
+        "ev-6a6fe886686c4d654057"
+      ],
+      "policyOriginal": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-6a6fe886686c4d654057",
+          "ev-0731d2680f6821d2a03e",
+          "ev-9ba7133657edfc20c794",
+          "ev-eb0bdcebbd68c35e5e3a"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "policyReversed": {
+        "verdict": "contradicted",
+        "reasonCode": "qualifying_evidence",
+        "selectedEvidenceIds": [
+          "ev-6a6fe886686c4d654057",
+          "ev-eb0bdcebbd68c35e5e3a",
+          "ev-9ba7133657edfc20c794"
+        ],
+        "summary": "The evidence I found contradicts that claim."
+      },
+      "policyIsolated": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "originChanges": [
+        {
+          "pair": "ev-0731d2680f6821d2a03e|ev-6a6fe886686c4d654057",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.48
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.49
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-0731d2680f6821d2a03e|ev-9ba7133657edfc20c794",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.66
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.65
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-0731d2680f6821d2a03e|ev-eb0bdcebbd68c35e5e3a",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.71
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.74
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-6a6fe886686c4d654057|ev-9ba7133657edfc20c794",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.63
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.48
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-6a6fe886686c4d654057|ev-eb0bdcebbd68c35e5e3a",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.55
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.65
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-9ba7133657edfc20c794|ev-eb0bdcebbd68c35e5e3a",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.79
+          },
+          "reversed": {
+            "relationship": "unclear",
+            "confidence": 0.72
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        }
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "claimRiskOriginal": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "claimRiskReversed": {
+        "level": "ordinary",
+        "confidence": 1
+      },
+      "modelLabelOriginal": "contradicted",
+      "modelLabelReversed": "contradicted",
+      "probabilitiesOriginal": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "probabilitiesReversed": {
+        "supported": 0,
+        "contradicted": 1,
+        "misleading": 0,
+        "insufficient_evidence": 0
+      },
+      "selectedOriginal": [
+        "ev-8d8e57597f36a9992ee5"
+      ],
+      "selectedReversed": [
+        "ev-566051bb4c4b0e20f045"
+      ],
+      "policyOriginal": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyReversed": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "insufficient_independent_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "policyIsolated": {
+        "verdict": "insufficient_evidence",
+        "reasonCode": "no_direct_evidence",
+        "selectedEvidenceIds": [],
+        "summary": "I couldn\u2019t verify that."
+      },
+      "originChanges": [
+        {
+          "pair": "ev-82570980f26c34b7d138|ev-c0111d21601a8a647c04",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.83
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.95
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-82570980f26c34b7d138|ev-8a24057c524a95d58b34",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.92
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.93
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-82570980f26c34b7d138|ev-8d8e57597f36a9992ee5",
+          "original": {
+            "relationship": "common_origin",
+            "confidence": 0.46
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.54
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-5c571cb3cf9d01295d66|ev-82570980f26c34b7d138",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.84
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.88
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-566051bb4c4b0e20f045|ev-82570980f26c34b7d138",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.58
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.51
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-8a24057c524a95d58b34|ev-c0111d21601a8a647c04",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.97
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.93
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-5c571cb3cf9d01295d66|ev-c0111d21601a8a647c04",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.84
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.94
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-566051bb4c4b0e20f045|ev-c0111d21601a8a647c04",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.66
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.86
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-8a24057c524a95d58b34|ev-8d8e57597f36a9992ee5",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.96
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.95
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-5c571cb3cf9d01295d66|ev-8a24057c524a95d58b34",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.97
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.95
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-566051bb4c4b0e20f045|ev-8a24057c524a95d58b34",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.79
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.86
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": true
+        },
+        {
+          "pair": "ev-5c571cb3cf9d01295d66|ev-8d8e57597f36a9992ee5",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.88
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.86
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-566051bb4c4b0e20f045|ev-8d8e57597f36a9992ee5",
+          "original": {
+            "relationship": "unclear",
+            "confidence": 0.57
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.53
+          },
+          "relationshipChanges": true,
+          "confidenceThresholdCrossing": false
+        },
+        {
+          "pair": "ev-566051bb4c4b0e20f045|ev-5c571cb3cf9d01295d66",
+          "original": {
+            "relationship": "distinct_origins",
+            "confidence": 0.56
+          },
+          "reversed": {
+            "relationship": "distinct_origins",
+            "confidence": 0.76
+          },
+          "relationshipChanges": false,
+          "confidenceThresholdCrossing": false
+        }
+      ]
+    }
+  ],
+  "mechanicalBindingChecks": [
+    {
+      "caseId": "BD09",
+      "condition": "original_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD09",
+      "condition": "reversed_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD09",
+      "condition": "isolated_target",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD05",
+      "condition": "original_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD05",
+      "condition": "reversed_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD05",
+      "condition": "isolated_target",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD11",
+      "condition": "original_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD11",
+      "condition": "reversed_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD11",
+      "condition": "isolated_target",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD03",
+      "condition": "original_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD03",
+      "condition": "reversed_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD03",
+      "condition": "isolated_target",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD10",
+      "condition": "original_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD10",
+      "condition": "reversed_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD10",
+      "condition": "isolated_target",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD04",
+      "condition": "original_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD04",
+      "condition": "reversed_full",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    },
+    {
+      "caseId": "BD04",
+      "condition": "isolated_target",
+      "canonicalSourceKeysMatch": true,
+      "selectionMatchesWireAlias": true,
+      "originPairsValid": true
+    }
+  ],
+  "nonTargetCount": 25,
+  "nonTargetQualityGateChanges": [
+    {
+      "caseId": "BD10",
+      "id": "ev-0731d2680f6821d2a03e",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.88
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.8
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.07999999999999996,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": [
+        "quality"
+      ]
+    }
+  ],
+  "nonTargetOtherGateChanges": [
+    {
+      "caseId": "BD09",
+      "id": "ev-6016ba9631faf63f9073",
+      "target": false,
+      "originalIndex": 1,
+      "reversedIndex": 4,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.97
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.96
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.75,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.86,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "stance_probability",
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-47332ac6f44138688f51",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.27
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.22
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.05000000000000002,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "relevance": true,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.64,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-62417e5ef3eb18382aec",
+      "target": false,
+      "originalIndex": 3,
+      "reversedIndex": 2,
+      "originalQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.88
+      },
+      "reversedQuality": {
+        "contentBasis": "original_record",
+        "confidence": 0.9299999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.04999999999999993,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.46,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.79,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD09",
+      "id": "ev-ad1b812f1c20db711567",
+      "target": false,
+      "originalIndex": 4,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.24000000000000002
+      },
+      "reversedQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.4
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.16,
+      "originalSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.55,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "unrelated",
+        "stanceProbability": 0.5,
+        "relevance": false,
+        "scope": true
+      },
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD11",
+      "id": "ev-51e7a6599fda42f659b0",
+      "target": false,
+      "originalIndex": 1,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.48
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.54
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.06000000000000005,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.92,
+        "relevance": false,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.98,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD03",
+      "id": "ev-a99a80f163ee420d3c54",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.16999999999999998
+      },
+      "reversedQuality": {
+        "contentBasis": "bare_assertion",
+        "confidence": 0.19
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": 0.020000000000000018,
+      "originalSource": {
+        "stance": "supports",
+        "stanceProbability": 0.79,
+        "relevance": false,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "supports",
+        "stanceProbability": 0.87,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": [
+        "stance_probability"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-82570980f26c34b7d138",
+      "target": false,
+      "originalIndex": 0,
+      "reversedIndex": 5,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.52
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.51
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.97,
+        "relevance": false,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": [
+        "scope"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-8a24057c524a95d58b34",
+      "target": false,
+      "originalIndex": 2,
+      "reversedIndex": 3,
+      "originalQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.47000000000000003
+      },
+      "reversedQuality": {
+        "contentBasis": "unclear",
+        "confidence": 0.3
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.17000000000000004,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.96,
+        "relevance": true,
+        "scope": false
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.91,
+        "relevance": false,
+        "scope": false
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    },
+    {
+      "caseId": "BD04",
+      "id": "ev-5c571cb3cf9d01295d66",
+      "target": false,
+      "originalIndex": 4,
+      "reversedIndex": 1,
+      "originalQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.6799999999999999
+      },
+      "reversedQuality": {
+        "contentBasis": "substantive_secondary",
+        "confidence": 0.6699999999999999
+      },
+      "qualityClassChanges": false,
+      "qualityConfidenceDelta": -0.010000000000000009,
+      "originalSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.98,
+        "relevance": false,
+        "scope": true
+      },
+      "reversedSource": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "scope": true
+      },
+      "gateChanges": [
+        "relevance"
+      ]
+    }
+  ],
+  "limitations": [
+    "No candidate prompt or questionKey alias: exact frozen08 baseline only.",
+    "Historical-to-new differences are requery/staleness observations, not causal gains. Only within-new-run full/order/isolated contrasts diagnose context sensitivity.",
+    "One call per condition/context; no retry, repeat, tuning or population-calibration inference.",
+    "Order sensitivity cannot by itself distinguish ID misbinding, position effects or semantic interference.",
+    "Reversing an odd-sized set can leave a middle target at the same alias; report original/reversed target positions rather than claim complete position randomization.",
+    "Isolated-target policy results are shadow diagnostics and must never replace full-context judgments or suppress conflicts/origin bridges.",
+    "BD11 chronology remains a predeclared excluded boundary unless independently adjudicated otherwise; record genre never supplies missing first/discipline qualifiers.",
+    "BIPM earlier pass uses a different excerpt; no inference from its earlier-to-final score change."
+  ]
+}

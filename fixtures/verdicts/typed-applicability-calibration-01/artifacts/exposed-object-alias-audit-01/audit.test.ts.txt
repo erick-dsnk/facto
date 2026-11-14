@@ -1,0 +1,202 @@
+import { test, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { writeFile, readFile } from 'node:fs/promises';
+import { setup } from './fixture.js';
+import { loadInstalledManifest, resolveReceipt, resolveProof, resolveFrozenFrame, installedSummary, manifestIdentity } from '../record-capability-prototype-02/src/manifest.js';
+import { loadSnapshot, snapshotState } from '../record-capability-prototype-02/src/snapshot.js';
+import { loadFrozenClaimFrame, frameState } from '../record-capability-prototype-02/src/applicability.js';
+import { evaluate, verifyCapability } from '../record-capability-prototype-02/src/evaluate.js';
+import { bindExcerpt } from '../record-capability-prototype-02/src/bind.js';
+import { fixtureContext, fixtureRecord, refreshFixtureAssessment } from '../record-capability-prototype-02/src/fixture-context.js';
+import { canonical } from '../record-capability-prototype-02/src/types.js';
+import { inspectMaterial, inspectOwnerBinding } from '../capability-selection-seam-02/material.js';
+
+const out = '/workspace/task-evidence/exposed-object-alias-audit-01';
+const observations: unknown[] = [];
+const versions = ['05', '06'];
+const directory = (v: string) => `/workspace/task-evidence/typed-applicability-adapter-${v}`;
+const pause = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const setFails = (object: object, key: PropertyKey, value: unknown) => assert.equal(Reflect.set(object, key, value), false);
+function validity(s: Awaited<ReturnType<typeof setup>>, r: any) {
+ return { completed: s.verifyCompletedJudgment(r.completedJudgment.token, { material: s.material, dispatchOwner: s.dispatchOwner, context: r.assessmentContext }),
+  semantic: s.verifySemanticEligibility(r.eligibility[0].token, { manifest: s.manifest, material: s.material, owner: s.owner, context: r.assessmentContext }) };
+}
+function inventory(value: unknown, path: string, rows: unknown[], seen = new WeakSet<object>()) {
+ if (!value || (typeof value !== 'object' && typeof value !== 'function') || seen.has(value as object)) return;
+ seen.add(value as object);
+ const proto = Object.getPrototypeOf(value);
+ const native = ![Object.prototype, Array.prototype, null].includes(proto);
+ rows.push({ path, frozen: Object.isFrozen(value), kind: typeof value === 'function' ? 'callable' : native ? 'native_opaque' : Array.isArray(value) ? 'array' : 'record' });
+ if (native || typeof value === 'function') return;
+ for (const [key, d] of Object.entries(Object.getOwnPropertyDescriptors(value))) if ('value' in d) inventory(d.value, `${path}.${key}`, rows, seen);
+}
+
+for (const version of versions) {
+ test(`${version}: actual returned judgment is writable but detached from private actual-ask and context`, async () => {
+  const s = await setup({ adapterDir: directory(version), companions: 1 }), r = await s.execute();
+  const originalContext = canonical(r.assessmentContext);
+  r.judgment.label = 'supported'; r.judgment.probabilities.supported = 1;
+  r.judgment.evidence[0].excerpt = 'Caller changed returned passage.';
+  r.judgment.sourceAssessments.target.confidence = 0;
+  r.judgment.claimRisk.level = 'health_safety';
+  r.judgment.originAssessments[0].evidenceIds[0] = 'caller-origin';
+  assert.equal(canonical(r.assessmentContext), originalContext);
+  assert.deepEqual(validity(s, r), { completed: true, semantic: true });
+  observations.push({ version, surface: 'returned_judgment', writable: true, privateBindingChanged: false });
+ });
+
+ test(`${version}: dispatch question maps, audits and opaque token fields reject actual mutation`, async () => {
+  const s = await setup({ adapterDir: directory(version) }), r = await s.execute();
+  setFails(r.dispatch, 'requestSHA256', '0'.repeat(64));
+  setFails(r.dispatch.questionMap[0], 'receiptSHA256', '0'.repeat(64));
+  assert.throws(() => r.dispatch.questionMap[0].scopeDimensions.push('caller-dimension'), TypeError);
+  setFails(r.eligibility[0].audit, 'temporalAuthorization', true);
+  setFails(r.eligibility[0].audit, 'recordCapabilityIssued', true);
+  setFails(r.completedJudgment.audit, 'rawGeneration', 'caller');
+  setFails(r.completedJudgment.token, 'kind', 'caller');
+  setFails(r.eligibility[0].token, 'kind', 'caller');
+  assert.deepEqual(validity(s, r), { completed: true, semantic: true });
+  observations.push({ version, surface: 'dispatch_audit_handles', frozenAndBindingStable: true });
+ });
+
+ test(`${version}: mutable result envelopes and binding inputs do not retarget private identities`, async () => {
+  const s = await setup({ adapterDir: directory(version) });
+  s.bindings[0].receiptAlias = 'RA01'; s.bindings[0].evidenceId = 'caller-target'; s.bindings.length = 0;
+  const r = await s.execute(), token = r.eligibility[0].token, completed = r.completedJudgment.token;
+  assert.equal(r.dispatch.questionMap[0].receiptAlias, 'RA03');
+  r.eligibility[0].audit = { fabricated: true }; r.eligibility.push({ token: { kind: 'unwired_semantic_eligibility' }, audit: {} });
+  r.completedJudgment.audit = { fabricated: true };
+  assert.equal(s.verifySemanticEligibility(token, { manifest: s.manifest, material: s.material, owner: s.owner, context: r.assessmentContext }), true);
+  assert.equal(s.verifySemanticEligibility(r.eligibility[1].token, { manifest: s.manifest, material: s.material, owner: s.owner, context: r.assessmentContext }), false);
+  assert.equal(s.verifyCompletedJudgment(completed, { material: s.material, dispatchOwner: s.dispatchOwner, context: r.assessmentContext }), true);
+  observations.push({ version, surface: 'envelopes_and_binding_inputs', writableEnvelope: true, privateRetargeting: false });
+ });
+
+ test(`${version}: material and owner snapshots freeze actual nested arrays and disclose no record/budget`, async () => {
+  const s = await setup({ adapterDir: directory(version), companions: 1 });
+  const material = inspectMaterial(s.material), owner = inspectOwnerBinding(s.owner), dispatch = s.inspectDispatchOwner(s.dispatchOwner);
+  setFails(material.retainedRecords[0].metadata, 'caller', true);
+  setFails(material.originNodes[0].state, 'caller', true);
+  assert.throws(() => material.originNodes.push({} as never), TypeError);
+  setFails(owner, 'deadlineAt', Infinity); setFails(dispatch, 'owner', {}); setFails(dispatch.context, 'consume', () => {});
+  assert.equal('record' in dispatch, false); assert.equal('budget' in dispatch, false);
+  assert.equal('session' in owner, false); assert.equal('record' in owner, false);
+  observations.push({ version, surface: 'material_owner_snapshots', frozenNestedMetadata: true,
+    contextSignalFrozen: Object.isFrozen(dispatch.context.signal), signalIsNativeAlias: true });
+ });
+
+ test(`${version}: actual exposed signal method mutation delays prompt cancel, while private owner still prevents authority`, async () => {
+  const control = await setup({ adapterDir: directory(version), blockFetch: true });
+  let controlSettled = false;
+  const controlPending = control.execute().then(() => { controlSettled = true; }, () => { controlSettled = true; });
+  await control.started; control.session.cancel(control.record.input.requestId); await pause(30);
+  assert.equal(controlSettled, true); control.releaseTransport(); await controlPending;
+
+  const s = await setup({ adapterDir: directory(version), blockFetch: true });
+  const signal = s.inspectDispatchOwner(s.dispatchOwner).context.signal as AbortSignal;
+  const original = signal.addEventListener;
+  assert.equal(Reflect.set(signal, 'addEventListener', () => {}), true);
+  let settled = false; let succeeded = false;
+  const pending = s.execute().then(() => { settled = true; succeeded = true; }, () => { settled = true; });
+  await s.started; s.session.cancel(s.record.input.requestId); await pause(30);
+  const promptSettled = settled;
+  Reflect.deleteProperty(signal, 'addEventListener'); assert.equal(signal.addEventListener, original);
+  s.releaseTransport(); await pending;
+  assert.equal(promptSettled, false); assert.equal(succeeded, false); assert.equal(s.record.budget.jev, 1);
+  assert.equal(s.session.cache.size, 0); assert.equal(s.record.results.size, 0);
+  observations.push({ version, surface: 'exposed_transport_signal', actualMutation: 'shadow addEventListener on returned native object',
+    controlSettledAfterCancel: true, mutatedSettledAfter30ms: promptSettled, lateAuthorityIssued: succeeded,
+    mockAttemptsCharged: s.record.budget.jev, projectProviderCalls: 0,
+    scope: 'Trusted in-process caller can alter exposed native signal; no remote source/provider control demonstrated.' });
+ });
+
+ test(`${version}: mutable signal cannot preserve existing completed/semantic tokens after real cancellation`, async () => {
+  const s = await setup({ adapterDir: directory(version) }), r = await s.execute();
+  const signal = s.inspectDispatchOwner(s.dispatchOwner).context.signal;
+  Reflect.set(signal, 'throwIfAborted', () => {}); Reflect.set(signal, 'addEventListener', () => {});
+  s.session.cancel(s.record.input.requestId);
+  assert.deepEqual(validity(s, r), { completed: false, semantic: false });
+  observations.push({ version, surface: 'signal_vs_private_token_owner', cancellationAuthorityBypass: false });
+ });
+}
+
+test('06: remaining actual context metadata, origin and assessment paths are recursively frozen', async () => {
+ const s = await setup({ adapterDir: directory('06'), companions: 1 }), r = await s.execute();
+ const context = r.assessmentContext;
+ setFails(context.retainedRecords[0].metadata, 'caller', true); setFails(context.originNodes[0].record.metadata, 'caller', true);
+ setFails(context.originLinks[0].state, 'caller', true); setFails(context.originGraphState, 'nativeContextAvailable', false);
+ setFails(context.assessment.state.answers.verdict, 'choice', 'supported');
+ setFails(context.assessment.state.judgment.claimRisk, 'level', 'health_safety');
+ setFails(context.assessment, 'inputSHA256', '0'.repeat(64));
+ assert.deepEqual(validity(s, r), { completed: true, semantic: true });
+ observations.push({ version: '06', surface: 'known_context_alias_fix_extended_paths', actualMutationsBlocked: true,
+   original05PassageAliasReproductionRepeated: false });
+});
+
+async function prototype() {
+ const root = '/workspace/task-evidence/record-capability-prototype-02/installed';
+ const pin = '7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4';
+ const manifest = await loadInstalledManifest(root, pin), receipt = resolveReceipt(manifest, 'RA02').receipt;
+ const artifact = await loadSnapshot(manifest, receipt.proofId), source = snapshotState(artifact, manifest);
+ const f = resolveFrozenFrame(manifest, 'RC08'), frame = loadFrozenClaimFrame(manifest, 'RC08', f.exactText);
+ const evidence = { id: 'target', url: receipt.canonicalURL, excerpt: source.text.slice(receipt.units[0].start, receipt.units[0].end) };
+ const context = fixtureContext(f.exactText, [fixtureRecord(evidence), fixtureRecord({ id: 'companion', url: 'https://companion.example.org/record', excerpt: 'Synthetic companion record.' })]);
+ context.originLinks = [{ left: context.originNodes[0].key, right: context.originNodes[1].key, relationship: 'unclear', state: { note: 'synthetic origin control' } }];
+ refreshFixtureAssessment(context);
+ const input = { manifest, artifact, receiptAlias: 'RA02', frame, evidence, exactClaimText: f.exactText, context, now: '2026-11-15T00:00:00Z' };
+ const result = evaluate(input); if (result.kind !== 'capability') throw Error('prototype_fixture_unavailable');
+ return { ...input, receipt, source, frameData: f, result, valid: () => verifyCapability(result.token, input) };
+}
+
+test('prototype02: actual receipt/proof/snapshot/frame/summary aliases and nested arrays are frozen', async () => {
+ const s = await prototype(), identity = manifestIdentity(s.manifest);
+ setFails(s.receipt.scope, 'document', 'caller'); setFails(s.receipt.units[0], 'contentSHA256', '0'.repeat(64));
+ assert.throws(() => s.receipt.units[0].materialSpans.push({} as never), TypeError);
+ assert.throws(() => s.receipt.issuerProofIds.push('caller'), TypeError);
+ const proof = resolveProof(s.manifest, s.receipt.proofId);
+ assert.throws(() => proof.redirects.push('https://caller.invalid/'), TypeError);
+ setFails(s.source, 'text', 'caller'); setFails(frameState(s.frame, s.manifest).frame.materialContext, 'document', 'caller');
+ assert.throws(() => installedSummary(s.manifest).receiptAliases.push('caller'), TypeError);
+ assert.equal(manifestIdentity(s.manifest), identity); assert.equal(s.valid(), true);
+ observations.push({ surface: 'prototype02_issuer_receipt_proof_frame_snapshot', nestedActualMutationBlocked: true });
+});
+
+test('prototype02: actual capability audit freezes nested aliases; original input remains detached and changed input rejects', async () => {
+ const s = await prototype();
+ setFails(s.result.audit.originLinks[0].state, 'caller', true);
+ assert.throws(() => s.result.audit.alignment.materialRoles.push('caller'), TypeError);
+ assert.throws(() => s.result.audit.originalRedirects.push('https://caller.invalid/'), TypeError);
+ assert.equal(s.valid(), true);
+ s.context.originLinks[0].state.caller = true; refreshFixtureAssessment(s.context);
+ assert.equal(s.valid(), false); assert.equal(s.result.audit.originLinks[0].state.caller, undefined);
+ observations.push({ surface: 'prototype02_capability_audit', actualAuditMutationBlocked: true, originalInputDetached: true });
+});
+
+test('prototype02: mutable direct alignment output does not alter the issuer receipt or later capability audit', async () => {
+ const s = await prototype(), alignment = bindExcerpt(s.receipt, s.source.text, s.evidence.excerpt);
+ alignment.materialRoles.push('caller role'); alignment.unitLocator = 'caller locator';
+ assert.equal(s.result.audit.alignment.materialRoles.includes('caller role'), false);
+ assert.notEqual(s.result.audit.alignment.unitLocator, 'caller locator'); assert.equal(s.valid(), true);
+ observations.push({ surface: 'standalone_alignment', mutableDataOnly: true, privateAuthorityChanged: false });
+});
+
+test('freezing a native AbortSignal is not a safe blanket fix on this Node runtime', () => {
+ const controller = new AbortController(); Object.freeze(controller.signal);
+ assert.throws(() => controller.abort(), TypeError);
+ observations.push({ surface: 'native_signal_freeze_control', blanketFreezeBreaksAbort: true });
+});
+
+test('inventory actual exposed object graphs without traversing native implementation internals', async () => {
+ const s = await setup({ adapterDir: directory('06'), companions: 1 }), r = await s.execute();
+ const rows: unknown[] = []; inventory(r, 'adapter06.result', rows);
+ inventory(s.inspectDispatchOwner(s.dispatchOwner), 'adapter06.dispatchOwnerSnapshot', rows);
+ inventory(inspectMaterial(s.material), 'seam02.materialSnapshot', rows);
+ inventory(inspectOwnerBinding(s.owner), 'seam02.ownerBinding', rows);
+ await writeFile(`${out}/object-inventory.json`, JSON.stringify(rows, null, 2) + '\n');
+ assert.ok(rows.length > 30);
+});
+
+after(async () => {
+ await writeFile(`${out}/observations.json`, JSON.stringify({ kind: 'actual_returned_object_alias_audit', projectProviderCalls: 0,
+  networkCalls: 0, injectedFetchOnly: true, known05ContextAliasExcludedAsNewFinding: true, observations }, null, 2) + '\n');
+});

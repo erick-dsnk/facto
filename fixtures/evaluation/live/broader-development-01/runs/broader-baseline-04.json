@@ -1,0 +1,3516 @@
+{
+  "schemaVersion": 1,
+  "kind": "authenticated_http_websocket_live_development",
+  "startedAt": "2026-11-14T04:16:21.808Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.1",
+  "metadata": {
+    "commit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+    "dirty": false,
+    "sourceSHA256": "e6f36587593f39415f161a64a02f0946f4758b9a90b5c2c0ac40399adfb8de85"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "predeclaredCases": [
+    {
+      "label": "BD10",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "BD11",
+      "allowedPublic": [
+        "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "BD12",
+      "allowedPublic": [
+        "The Great Barrier Reef lies off the west coast of Australia."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "BDC04",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    }
+  ],
+  "counts": {
+    "declared": 4,
+    "observed": 4,
+    "terminalReceipts": 4,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "completed": true,
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "transportFailure": null,
+  "totals": {
+    "attempts": 15,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 8,
+      "search": 4,
+      "contents": 3
+    },
+    "requestBytes": 216249,
+    "measuredInputTokens": 52290,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 52290,
+    "knownCostUSD": 0.031000000000000003,
+    "attemptsWithUnknownCost": 8,
+    "elapsedMs": 6151
+  },
+  "cases": [
+    {
+      "label": "BD10",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 1597,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 2,
+          "revision": 1,
+          "receivedMs": 15
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 3,
+          "revision": 1,
+          "claimId": "BD10-6c70631e-claim-0",
+          "receivedMs": 182,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 4,
+          "revision": 1,
+          "claimId": "BD10-6c70631e-claim-0",
+          "receivedMs": 1597,
+          "reasonCode": "qualifying_evidence",
+          "verdict": "contradicted",
+          "checkedPublicText": "The Smithsonian Institution was created by a British royal charter in 1846.",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-6a6fe886686c4d654057",
+            "ev-0731d2680f6821d2a03e"
+          ],
+          "evidence": [
+            {
+              "id": "ev-6a6fe886686c4d654057",
+              "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+              "title": "Federal Register\n       :: \n      Agencies - Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "contentBasis": "highlight",
+              "excerpt": "The Smithsonian Institution was created by an act of Congress on August 10, 1846 (20 U.S.C. 41 et seq.), to carry out the terms of the will of British scientist James Smithson (1765-1829), who in 1826 had bequeathed his entire estate to the United States ``to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.'' On July 1, 1836, Congress accepted the legacy and pledged the faith of the United States to the charitable trust.",
+              "sourceGroup": "federalregister.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-0731d2680f6821d2a03e",
+              "url": "https://www.si.edu/about/history",
+              "title": "Our History | Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "contentBasis": "highlight",
+              "excerpt": "The Smithsonian Institution was established with funds from James Smithson (1765–1829), a British scientist who left his estate to the United States to found “at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge.” On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk.\n\nCongress authorized acceptance of the Smithson bequest on July 1, 1836, but it took another ten years of debate before the Smithsonian was founded. Once established, the Smithsonian became part of the process of developing an American national identity—an identity rooted in exploration, innovation, and a unique American style. That process continues today as the Smithsonian looks toward the future.\n\n...\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk on Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, more than 175 years ago, the Smithsonian has become the world's largest museum, education, and research complex, with 19 museums, the National Zoo, and numerous libraries and research facilities.",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9ba7133657edfc20c794",
+              "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+              "title": "A Brief History of the Smithsonian Institution | Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "contentBasis": "highlight",
+              "excerpt": "In 1826, British scientist James Smithson drew up his last will and testament, naming his nephew as beneficiary. Smithson stipulated that, should the nephew die without heirs (as he would in 1835), the estate should go “to the United States of America, to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.”\n\n...\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, the Smithsonian has become the world’s largest museum, education and research complex, with 21 museums, the National Zoo and nine research facilities.",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-eb0bdcebbd68c35e5e3a",
+              "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+              "title": "Smithsonian Institution Established         |     \n\n    \n    US House of Representatives: History, Art & Archives",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "contentBasis": "highlight",
+              "excerpt": "reached the United States in late 1835, the House established a select committee, chaired by Representative John Quincy Adams of Massachusetts, to consider the terms of Smithson’s will. In 1836, Adams and the committee recommended that Congress pass legislation to allow President Andrew Jackson to appoint an agent to collect the bequest in London. But legal complications in England meant it took more than two years for the money to arrive in the United States. Over much of the next decade, lawmakers and everyday citizens debated what to do with the gift. Adams fought to create an astronomical observatory with the Smithsonian fund. Others petitioned to create a national university or an institute of agriculture. Some in Congress questioned the constitutionality of the gift altogether. In early 1846, the new chairman of the select committee on Smithson’s gift, Representative Robert Dale Owen of Indiana, submitted a bill to establish the Smithsonian Institution. During debate, Owen said the House had no choice but to use the proceeds of Smithson’s estate to charter the new institution. “We have no more right to put off . . . the appropriation of such a fund, than we have to direct it to our own private purposes,” he argued. On April 29, 1846, the House took up business on the Smithsonian once more, making minor adjustments to the bill text as different Representatives reviewed it. The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+              "sourceGroup": "house.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            }
+          ],
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "explicit_request"
+          },
+          "durationMs": 1589.443922
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 1,
+          "dispatched": true,
+          "requestBytes": 5910,
+          "startedMs": 191.4033629999999,
+          "durationMs": 164,
+          "inputTokens": 1579,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.95
+            },
+            "span_0_private_data": {
+              "noul": 0.02
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.19
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.92,
+                "multiple_propositions": 0.08,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 2,
+          "dispatched": true,
+          "requestBytes": 147,
+          "startedMs": 358.992085,
+          "durationMs": 1248,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "The Smithsonian Institution was created by a British royal charter in 1846."
+        },
+        {
+          "kind": "jev",
+          "ordinal": 3,
+          "dispatched": true,
+          "requestBytes": 34095,
+          "startedMs": 1618.9406350000002,
+          "durationMs": 146,
+          "inputTokens": 8215,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 0.99,
+                "misleading": 0.01,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0.06,
+                "e0": 0.83,
+                "e1": 0.07,
+                "e2": 0.01,
+                "e3": 0.03
+              }
+            },
+            "misleading_reason": {
+              "choice": "omitted_condition",
+              "probabilities": {
+                "none": 0.38,
+                "omitted_condition": 0.46,
+                "outdated_fact": 0,
+                "exaggeration": 0.16
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.96
+            },
+            "e0_scope": {
+              "noul": 0.93
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.52,
+                "omitted_condition": 0.41,
+                "outdated_fact": 0,
+                "exaggeration": 0.07
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.55
+            },
+            "e0_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.56,
+                "attributable_research": 0,
+                "substantive_secondary": 0.36,
+                "bare_assertion": 0.07,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e1_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.93
+            },
+            "e1_scope": {
+              "noul": 0.94
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.64,
+                "omitted_condition": 0.33,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.02
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.47
+            },
+            "e1_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.39,
+                "attributable_research": 0,
+                "substantive_secondary": 0.47,
+                "bare_assertion": 0.13,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.84
+            },
+            "e2_scope": {
+              "noul": 0.94
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.65,
+                "omitted_condition": 0.25,
+                "outdated_fact": 0.04,
+                "exaggeration": 0.06
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.3
+            },
+            "e2_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.37,
+                "attributable_research": 0,
+                "substantive_secondary": 0.5,
+                "bare_assertion": 0.12,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e3_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.83
+            },
+            "e3_scope": {
+              "noul": 0.94
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.61,
+                "omitted_condition": 0.36,
+                "outdated_fact": 0,
+                "exaggeration": 0.03
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.45
+            },
+            "e3_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.36,
+                "attributable_research": 0,
+                "substantive_secondary": 0.56,
+                "bare_assertion": 0.05,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0.02
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.08,
+                "distinct_origins": 0.41,
+                "unclear": 0.51
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.13,
+                "distinct_origins": 0.34,
+                "unclear": 0.53
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.49,
+                "unclear": 0.48
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.25,
+                "distinct_origins": 0.02,
+                "unclear": 0.73
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.29,
+                "unclear": 0.69
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.07,
+                "distinct_origins": 0.16,
+                "unclear": 0.77
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 175.9344279999999,
+        "retrieval": 1260.0023099999999,
+        "judgment": 148.97412200000008
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-6a6fe886686c4d654057",
+              "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+              "title": "Federal Register\n       :: \n      Agencies - Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "The Smithsonian Institution was created by an act of Congress on August 10, 1846 (20 U.S.C. 41 et seq.), to carry out the terms of the will of British scientist James Smithson (1765-1829), who in 1826 had bequeathed his entire estate to the United States ``to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.'' On July 1, 1836, Congress accepted the legacy and pledged the faith of the United States to the charitable trust.",
+              "contentBasis": "highlight",
+              "sourceGroup": "federalregister.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-0731d2680f6821d2a03e",
+              "url": "https://www.si.edu/about/history",
+              "title": "Our History | Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "The Smithsonian Institution was established with funds from James Smithson (1765–1829), a British scientist who left his estate to the United States to found “at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge.” On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk.\n\nCongress authorized acceptance of the Smithson bequest on July 1, 1836, but it took another ten years of debate before the Smithsonian was founded. Once established, the Smithsonian became part of the process of developing an American national identity—an identity rooted in exploration, innovation, and a unique American style. That process continues today as the Smithsonian looks toward the future.\n\n...\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk on Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, more than 175 years ago, the Smithsonian has become the world's largest museum, education, and research complex, with 19 museums, the National Zoo, and numerous libraries and research facilities.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-9ba7133657edfc20c794",
+              "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+              "title": "A Brief History of the Smithsonian Institution | Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "In 1826, British scientist James Smithson drew up his last will and testament, naming his nephew as beneficiary. Smithson stipulated that, should the nephew die without heirs (as he would in 1835), the estate should go “to the United States of America, to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.”\n\n...\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, the Smithsonian has become the world’s largest museum, education and research complex, with 21 museums, the National Zoo and nine research facilities.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-eb0bdcebbd68c35e5e3a",
+              "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+              "title": "Smithsonian Institution Established         |     \n\n    \n    US House of Representatives: History, Art & Archives",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "reached the United States in late 1835, the House established a select committee, chaired by Representative John Quincy Adams of Massachusetts, to consider the terms of Smithson’s will. In 1836, Adams and the committee recommended that Congress pass legislation to allow President Andrew Jackson to appoint an agent to collect the bequest in London. But legal complications in England meant it took more than two years for the money to arrive in the United States. Over much of the next decade, lawmakers and everyday citizens debated what to do with the gift. Adams fought to create an astronomical observatory with the Smithsonian fund. Others petitioned to create a national university or an institute of agriculture. Some in Congress questioned the constitutionality of the gift altogether. In early 1846, the new chairman of the select committee on Smithson’s gift, Representative Robert Dale Owen of Indiana, submitted a bill to establish the Smithsonian Institution. During debate, Owen said the House had no choice but to use the proceeds of Smithson’s estate to charter the new institution. “We have no more right to put off . . . the appropriation of such a fund, than we have to direct it to our own private purposes,” he argued. On April 29, 1846, the House took up business on the Smithsonian once more, making minor adjustments to the bill text as different Representatives reviewed it. The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+              "contentBasis": "highlight",
+              "sourceGroup": "house.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-6a6fe886686c4d654057",
+              "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+              "title": "Federal Register\n       :: \n      Agencies - Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "The Smithsonian Institution was created by an act of Congress on August 10, 1846 (20 U.S.C. 41 et seq.), to carry out the terms of the will of British scientist James Smithson (1765-1829), who in 1826 had bequeathed his entire estate to the United States ``to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.'' On July 1, 1836, Congress accepted the legacy and pledged the faith of the United States to the charitable trust.",
+              "contentBasis": "highlight",
+              "sourceGroup": "federalregister.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-0731d2680f6821d2a03e",
+              "url": "https://www.si.edu/about/history",
+              "title": "Our History | Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "The Smithsonian Institution was established with funds from James Smithson (1765–1829), a British scientist who left his estate to the United States to found “at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge.” On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk.\n\nCongress authorized acceptance of the Smithson bequest on July 1, 1836, but it took another ten years of debate before the Smithsonian was founded. Once established, the Smithsonian became part of the process of developing an American national identity—an identity rooted in exploration, innovation, and a unique American style. That process continues today as the Smithsonian looks toward the future.\n\n...\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk on Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, more than 175 years ago, the Smithsonian has become the world's largest museum, education, and research complex, with 19 museums, the National Zoo, and numerous libraries and research facilities.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9ba7133657edfc20c794",
+              "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+              "title": "A Brief History of the Smithsonian Institution | Smithsonian Institution",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "In 1826, British scientist James Smithson drew up his last will and testament, naming his nephew as beneficiary. Smithson stipulated that, should the nephew die without heirs (as he would in 1835), the estate should go “to the United States of America, to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.”\n\n...\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, the Smithsonian has become the world’s largest museum, education and research complex, with 21 museums, the National Zoo and nine research facilities.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-eb0bdcebbd68c35e5e3a",
+              "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+              "title": "Smithsonian Institution Established         |     \n\n    \n    US House of Representatives: History, Art & Archives",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:23.420Z",
+              "excerpt": "reached the United States in late 1835, the House established a select committee, chaired by Representative John Quincy Adams of Massachusetts, to consider the terms of Smithson’s will. In 1836, Adams and the committee recommended that Congress pass legislation to allow President Andrew Jackson to appoint an agent to collect the bequest in London. But legal complications in England meant it took more than two years for the money to arrive in the United States. Over much of the next decade, lawmakers and everyday citizens debated what to do with the gift. Adams fought to create an astronomical observatory with the Smithsonian fund. Others petitioned to create a national university or an institute of agriculture. Some in Congress questioned the constitutionality of the gift altogether. In early 1846, the new chairman of the select committee on Smithson’s gift, Representative Robert Dale Owen of Indiana, submitted a bill to establish the Smithsonian Institution. During debate, Owen said the House had no choice but to use the proceeds of Smithson’s estate to charter the new institution. “We have no more right to put off . . . the appropriation of such a fund, than we have to direct it to our own private purposes,” he argued. On April 29, 1846, the House took up business on the Smithsonian once more, making minor adjustments to the bill text as different Representatives reviewed it. The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+              "contentBasis": "highlight",
+              "sourceGroup": "house.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-6a6fe886686c4d654057"
+          ],
+          "sourceAssessments": {
+            "ev-6a6fe886686c4d654057": {
+              "contentBasis": "original_record",
+              "confidence": 0.92
+            },
+            "ev-0731d2680f6821d2a03e": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.86
+            },
+            "ev-9ba7133657edfc20c794": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.87
+            },
+            "ev-eb0bdcebbd68c35e5e3a": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.92
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-6a6fe886686c4d654057",
+                "ev-0731d2680f6821d2a03e"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.51
+            },
+            {
+              "evidenceIds": [
+                "ev-6a6fe886686c4d654057",
+                "ev-9ba7133657edfc20c794"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.53
+            },
+            {
+              "evidenceIds": [
+                "ev-6a6fe886686c4d654057",
+                "ev-eb0bdcebbd68c35e5e3a"
+              ],
+              "relationship": "distinct_origins",
+              "confidence": 0.49
+            },
+            {
+              "evidenceIds": [
+                "ev-0731d2680f6821d2a03e",
+                "ev-9ba7133657edfc20c794"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.73
+            },
+            {
+              "evidenceIds": [
+                "ev-0731d2680f6821d2a03e",
+                "ev-eb0bdcebbd68c35e5e3a"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.69
+            },
+            {
+              "evidenceIds": [
+                "ev-9ba7133657edfc20c794",
+                "ev-eb0bdcebbd68c35e5e3a"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.77
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "The Smithsonian Institution was created by a British royal charter in 1846.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 9794
+      },
+      "usage": {
+        "measuredInputTokens": 9794,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 40152,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      }
+    },
+    {
+      "label": "BD11",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.skipped",
+      "durationMs": 108,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 5,
+          "revision": 1,
+          "receivedMs": 3
+        },
+        {
+          "type": "claim.skipped",
+          "eventSeq": 6,
+          "revision": 1,
+          "receivedMs": 108,
+          "reasonCode": "private_or_personal",
+          "admissionAction": "skip",
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "private_or_personal"
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": 0
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 4,
+          "dispatched": true,
+          "requestBytes": 5908,
+          "startedMs": 1777.597567,
+          "durationMs": 104,
+          "inputTokens": 1587,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.98
+            },
+            "span_0_private_data": {
+              "noul": 0.11
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.08
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.97,
+                "multiple_propositions": 0.03,
+                "unclear": 0
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 105.80650800000012,
+        "retrieval": 0,
+        "judgment": 0
+      },
+      "evidence": [],
+      "admittedPublic": [],
+      "deterministicPublicIssues": [
+        {
+          "text": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 1,
+        "searchConsumed": 0,
+        "contentsConsumed": 0,
+        "inputTokens": 1587
+      },
+      "usage": {
+        "measuredInputTokens": 1587,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 5908,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 1
+      }
+    },
+    {
+      "label": "BD12",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 3802,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 7,
+          "revision": 1,
+          "receivedMs": 2
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 8,
+          "revision": 1,
+          "claimId": "BD12-15a4358e-claim-0",
+          "receivedMs": 137,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 9,
+          "revision": 1,
+          "claimId": "BD12-15a4358e-claim-0",
+          "receivedMs": 3802,
+          "reasonCode": "insufficient_independent_evidence",
+          "verdict": "insufficient_evidence",
+          "checkedPublicText": "The Great Barrier Reef lies off the west coast of Australia.",
+          "cached": false,
+          "selectedEvidenceIds": [],
+          "evidence": [
+            {
+              "id": "ev-984c764866563beb57d4",
+              "url": "https://whc.unesco.org/document/216225",
+              "title": "Periodic Reporting Cycle 3, Section II",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "contentBasis": "highlight",
+              "excerpt": "o other World Heritage property contains such biodiversity. This diversity, \nespecially the endemic species, means the GBR is of enormous scientific and intrinsic importance, and it also contains a significant number of threatened species. \nAttime of inscription, the IUCN evaluation stated \"… if only one coral reef site in the world were to be chosen for the World Heritage List, the Great Barrier Reef is the \nsite to be chosen\". \nCriterion (vii): The GBR is of superlative natural beauty above and below the water, and provides some of the most spectacular scenery on earth. It is one of a few \nliving structures visible from space, appearing as a complex string of reefal structures along Australia's northeast coast. \nFrom the air, the vast mosaic patterns of reefs, islands and coral cays produce an unparalleled aerial panorama of seascapes comprising diverse shapes and sizes.\n\n...\n\nIsland.\n\n...\n\nCriterion (viii): The GBR, extending 2,000 kilometres along Queensland's coast, is a globally outstanding example of an ecosystem that has evolved over millennia.\n\n...\n\nOne-third of the GBR lies beyond the seaward edge of the shallower reefs; this area comprises continental slope and deep oceanic waters and abyssal plains.\n\n...\n\nThe GBR covers approximately 348,000 square kilometres. Most of the property lies within the GBR Marine Park: at 344,400 square kilometres, this Federal Marine \nPark comprises approximately 99% of the property. The GBR Marine Park's legal jurisdiction ends at low water mark along the mainland (with the exception of port \nareas) and around islands (with the exception of 70 Commonwealth managed islands which are part of the Marine Park). In addition the GBR also includes over \n900 islands within the jurisdiction of Queensland, about half of which are declared as 'national parks', and the internal waters of Queensland that occur within the \nWorld Heritage boundary (including a number of long-established port areas). \nThe World Heritage property is and has ",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-6c71c2bce768dd0b94b5",
+              "url": "https://www.gbrmpa.gov.au/learn/world-heritage-area",
+              "title": "World Heritage Area | Reef Authority",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "contentBasis": "page_text",
+              "excerpt": "World Heritage Area | Reef Authority\n\n# World Heritage Area \n\nWhile it may not be the largest World Heritage Area on Earth, the Great Barrier Reef is one of the better known. Its biological diversity is also unmatched by any other World Heritage Area.\n\nCovering 348,000 square kilometres, this vast expanse is bigger than the United Kingdom, Holland, and Switzerland combined, equivalent to 70 million football fields.\n\nThe World Heritage Area extends from the top of Cape York in northeast Australia to just north of Bundaberg and from the low water mark on the Queensland coast to the outer boundary of the Marine Park, which is beyond the edge of the continental shelf.\n\nAbout 99 per cent of the World Heritage Area is within the Great Barrier Reef Marine Park.\n\n- The remaining one per cent includes:\n- some 980 islands are under Queensland jurisdiction\n- some internal waters or Queensland (for example, some deep bays, narrow inlets or channels between islands)\n- intertidal areas protected by Queensland legislation\n- a number of small exclusion areas (state waters) around major ports and urban centres.\n- there are more than 3000 separate coral reefs within the World Heritage Area.\n- there are also 1050 islands and cays - these include 600 continental islands and 300 coral cays, while the remaining 150 islands are inshore mangrove islands that are important to the functioning and health of the Great Barrier Reef.\n\nTogether, the biodiversity and interconnectedness between species and habitats represent one of the richest and most complex natural ecosystems on earth.\n\nThe Great Barrier Reef was declared a World Heritage Area in 1981 because of its 'outstanding universal value'. This recognised the Reef as being one of the most remarkable places on earth, as well as its global importance and its natural worth.\n\n \n\n \n\n \n\n### The World Heritage Committee listed the Reef for all four natural criteria:¹\n\n- Be outstanding examples representing the major stages of the earth's evoluti",
+              "sourceGroup": "gbrmpa.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.97
+            },
+            {
+              "id": "ev-8c0caa7e5577952e6704",
+              "url": "https://whc.unesco.org/en/list/154/",
+              "title": "Great Barrier Reef - UNESCO World Heritage Centre",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "contentBasis": "page_text",
+              "excerpt": "l reefs of varying sizes and shapes, and over 900 islands, ranging from small sandy cays and larger vegetated cays, to large rugged continental islands rising, in one instance, over 1,100 metres above sea level. Collectively these landscapes and seascapes provide some of the most spectacular maritime scenery in the world.\n\nThe latitudinal and cross-shelf diversity, combined with diversity through the depths of the water column, encompasses a globally unique array of ecological communities, habitats and species. This diversity of species and habitats, and their interconnectivity, make the GBR one of the richest and most complex natural ecosystems on earth. There are over 1,500 species of fish, about 400 species of coral, 4,000 species of mollusk, and some 240 species of birds, plus a great diversity of sponges, anemones, marine worms, crustaceans, and other species. No other World Heritage property contains such biodiversity. This diversity, especially the endemic species, means the GBR is of enormous scientific and intrinsic importance, and it also contains a significant number of threatened species. Attime of inscription, the IUCN evaluation stated \"… if only one coral reef site in the world were to be chosen for the World Heritage List, the Great Barrier Reef is the site to be chosen\".\n\nCriterion (vii): The GBR is of superlative natural beauty above and below the water, and provides some of the most spectacular scenery on earth. It is one of a few living structures visible from space, appearing as a complex string of reefal structures along Australia's northeast coast.\n\nFrom the air, the vast mosaic patterns of reefs, islands and coral cays produce an unparalleled aerial panorama of seascapes comprising diverse shapes and sizes. The Whitsunday Islands provide a magnificent vista of green vegetated islands and spectacular sandy beaches spread over azure waters. This contrasts with the vast mangrove forests in Hinchinbrook Channel, and the rugged vegetated mountains",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-50cc8cb2bdce9b837267",
+              "url": "https://www.dcceew.gov.au/sites/default/files/documents/state-party-report-state-conservation-gbr-2026.pdf",
+              "title": "State party report on the state of conservation for Australia’s Great Barrier Reef",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "contentBasis": "page_text",
+              "excerpt": "the Environment and Water has \nexercised due care and skill in preparing and compiling the information and data in this publication. Notwithstanding, \nthe Department of Climate Change, Energy, the Environment and Water, its employees and advisers disclaim all liability, \nincluding liability for negligence and for any loss, damage, injury, expense or cost incurred by any person as a result of \naccessing, using or relying on any of the information or data in this publication to the maximum extent permitted by law. \nAcknowledgement of Country \nWe acknowledge the Traditional Owners of Country throughout Australia and recognise their continuing connection to \nland, waters and culture. We pay our respects to their Elders past and present. \nstate of conservation \nfor Australia’s \nGreat Barrier Reef \nProperty ID N154 \nIn response to the \nWorld Heritage Committee \ndecision 47 COM 7B.2 \n1 February 2026 \n\n#### State Party Report on the\n\n### Contents\n\nAcknowledgement of Country 5 \nExecutive summary 6 \nRésumé exécutif 10 \n1. Introduction 16 \n1.1 Decision of the World Heritage Committee 16 \n1.2 The Great Barrier Reef 16 \n1.3 Management and governance 18 \n2 Response to the 2025 Decision of the World Heritage \nCommittee 47 COM 7B.2 19 \n2.1 Boosting the Reef’s resilience to climate change 19 \n2.2 Improving water quality on the Great Barrier Reef 37 \n2.3 Working with Great Barrier Reef Traditional Owners 59 \n2.4 Sustainable fisheries 69 \n3 Current state of the Great Barrier Reef 77 \n3.1 Impacts of the 2023–24 coral bleaching and other \nextreme weather events 77 \n4 Other current conservation issues identified by the \nState Party whichmay have an impact on the property’s \nOutstanding Universal Value 83 \n4.1 Managing cumulative impacts 83 \n4.2 Adaptive management and reporting 83 \n5 Potential major restorations, alterations and/or new \nconstructionsintended within the property, the buffer \nzones and/or corridors or other areas, where such \ndevelopments may affect the Outstanding Univers",
+              "sourceGroup": "dcceew.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-c0b45a435dcc3cf6ae1a",
+              "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/e166e5b7-bd7f-4bc5-9807-ba263e248632/files/gbr-reference-map.pdf",
+              "title": "Great Barrier Reef - General reference map",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "contentBasis": "highlight",
+              "excerpt": "WORLD HERITAGE AREA AND REGION BOUNDARY \nGREAT BARRIER REEF WORLD HERITAGE AREA \n(Extends from the low water mark of the mainland and includes all \nislands, internal waters of Queensland and Seas and Submerged Lands \nAct exclusions.) \nTotal area approximately 348 000 sq km \nGREAT BARRIER REEF REGION \n(Extends from the low water mark of the mainland but excludes \nQueensland-owned islands, internal waters of Queensland and Seas \nand Submerged Lands Act exclusions.) \nTotal area approximately 346 000 sq km \n\nGREAT BARRIER REEF MARINE PARK (Excludes Queensland-owned islands, internal waters of Queensland and Seas and Submerged Lands Act exclusions.) Total area approximately 344 400 sq km\n\nGREAT BARRIER REEF MARINE PARK MANAGEMENT AREA GREAT BARRIER REEF PROVINCE (As defined by W.G.H. Maxwell. Includes that part of the Queensland shelf that is occupied by reefs and reef-derived sediment.) Total area is estimated to be 283 000 sq km\n\nMAJOR CATCHMENT BOUNDARY\n\n## GREAT BARRIER REEF General Reference Map\n\nTHIS MAP IS INDICATIVE ONLY. \nDerived from information or materials produced by: \nGreat Barrier Reef Marine Park Authority \nQueensland Department of Natural Resources & Mines \nGeoscience Australia, National Mapping Division \nRoyal Australian Navy, Hydrographic Office \nTimes Books (Great Britain) \nRoyal Navy (Great Britain) \nEnvironmental Systems Research Institute (USA) \nMap projection: Unprojected geographic coordinates \nHorizontal datum: Geocentric Datum of Australia, 1994 \nBathymetric contours: Depths in metres \nNames are not necessarily authoritative.\n\n...\n\nMap No. SDC 041206 Sept 2004",
+              "sourceGroup": "dcceew.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": 0.56
+            },
+            {
+              "id": "ev-6363429a21a0acec6ee9",
+              "url": "https://kids.britannica.com/students/article/Great-Barrier-Reef/274636",
+              "title": "Great Barrier Reef\n                    \n                \n                - Students | Britannica Kids | Homework Help",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "contentBasis": "highlight",
+              "excerpt": "In the Coral Sea, off the coast of Queensland, Australia, lies the Great Barrier Reef, one of the natural wonders of the world. A barrier reef is a long, narrow, mostly submerged coral formation that lies parallel to the shoreline of a landmass. The Great Barrier Reef is the largest complex of coral reefs, shoals, and islets in the world. Despite its name, it is not a single reef. It actually includes some 2,900 reefs, of which about 800 are fringing reefs (which form closer to shorelines). It stretches more than 1,250 miles (2,000 kilometers) from northwest to southeast, a length comparable to that of the Pacific coast of the United States. Its area is about 135,000 square miles (350,000 square kilometers).",
+              "sourceGroup": "britannica.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.99
+            }
+          ],
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "explicit_request"
+          },
+          "durationMs": 3798.6973190000003
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 5,
+          "dispatched": true,
+          "requestBytes": 5880,
+          "startedMs": 1886.1625609999999,
+          "durationMs": 133,
+          "inputTokens": 1569,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.96
+            },
+            "span_0_private_data": {
+              "noul": 0.01
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.44
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 6,
+          "dispatched": true,
+          "requestBytes": 132,
+          "startedMs": 2021.1563479999998,
+          "durationMs": 1230,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "The Great Barrier Reef lies off the west coast of Australia."
+        },
+        {
+          "kind": "jev",
+          "ordinal": 7,
+          "dispatched": true,
+          "requestBytes": 42802,
+          "startedMs": 3260.9568369999997,
+          "durationMs": 198,
+          "inputTokens": 10504,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 1,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e3",
+              "probabilities": {
+                "none": 0.03,
+                "e0": 0.01,
+                "e1": 0.35,
+                "e2": 0.02,
+                "e3": 0.57,
+                "e4": 0.02
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.52,
+                "omitted_condition": 0.31,
+                "outdated_fact": 0,
+                "exaggeration": 0.17
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 1,
+                "health_safety": 0,
+                "disputed": 0,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0.01,
+                "contradicts": 0.56,
+                "unrelated": 0.43
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.64
+            },
+            "e0_scope": {
+              "noul": 0.9
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.76,
+                "omitted_condition": 0.18,
+                "outdated_fact": 0,
+                "exaggeration": 0.06
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.18
+            },
+            "e0_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.12,
+                "attributable_research": 0,
+                "substantive_secondary": 0.17,
+                "bare_assertion": 0.66,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.05
+              }
+            },
+            "e1_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.96
+            },
+            "e1_scope": {
+              "noul": 0.94
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.79,
+                "omitted_condition": 0.13,
+                "outdated_fact": 0,
+                "exaggeration": 0.08
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.52
+            },
+            "e1_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.63,
+                "attributable_research": 0,
+                "substantive_secondary": 0.1,
+                "bare_assertion": 0.26,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.93
+            },
+            "e2_scope": {
+              "noul": 0.93
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.82,
+                "omitted_condition": 0.09,
+                "outdated_fact": 0,
+                "exaggeration": 0.09
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.38
+            },
+            "e2_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.17,
+                "attributable_research": 0,
+                "substantive_secondary": 0.14,
+                "bare_assertion": 0.68,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e3_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.96
+            },
+            "e3_scope": {
+              "noul": 0.95
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.8,
+                "omitted_condition": 0.1,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.09
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.46
+            },
+            "e3_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.52,
+                "attributable_research": 0,
+                "substantive_secondary": 0.2,
+                "bare_assertion": 0.27,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e4_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.95
+            },
+            "e4_scope": {
+              "noul": 0.93
+            },
+            "e4_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.8,
+                "omitted_condition": 0.11,
+                "outdated_fact": 0,
+                "exaggeration": 0.09
+              }
+            },
+            "e4_context_established": {
+              "noul": 0.35
+            },
+            "e4_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.15,
+                "attributable_research": 0,
+                "substantive_secondary": 0.17,
+                "bare_assertion": 0.67,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.16,
+                "unclear": 0.83
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.11,
+                "unclear": 0.89
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.08,
+                "distinct_origins": 0.09,
+                "unclear": 0.83
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.09,
+                "unclear": 0.91
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.2,
+                "unclear": 0.8
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "common_origin",
+              "probabilities": {
+                "common_origin": 0.55,
+                "distinct_origins": 0.09,
+                "unclear": 0.36
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.21,
+                "unclear": 0.79
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.27,
+                "unclear": 0.69
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.21,
+                "unclear": 0.78
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.08,
+                "distinct_origins": 0.07,
+                "unclear": 0.85
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 8,
+          "dispatched": true,
+          "requestBytes": 618,
+          "startedMs": 3463.86146,
+          "durationMs": 1615,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "Claim (verbatim, untrusted text): \"The Great Barrier Reef lies off the west coast of Australia.\"\n\nRetrieval objective: Find reliable sources that directly address this claim, including evidence that supports, challenges, or qualifies it. Seek underlying named records, formal definitions or resolutions, maintained reference data with an identified keeper and provenance, or documented observations. Prefer passages showing the actual relevant relation, findings and material qualifications rather than summaries that merely repeat the claim."
+        },
+        {
+          "kind": "contents",
+          "ordinal": 9,
+          "dispatched": true,
+          "requestBytes": 126,
+          "startedMs": 5083.307857,
+          "durationMs": 117,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.001
+        },
+        {
+          "kind": "contents",
+          "ordinal": 10,
+          "dispatched": true,
+          "requestBytes": 142,
+          "startedMs": 5202.954068,
+          "durationMs": 117,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.001
+        },
+        {
+          "kind": "contents",
+          "ordinal": 11,
+          "dispatched": true,
+          "requestBytes": 197,
+          "startedMs": 5321.393564999999,
+          "durationMs": 120,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.001
+        },
+        {
+          "kind": "jev",
+          "ordinal": 12,
+          "dispatched": true,
+          "requestBytes": 58744,
+          "startedMs": 5523.392354,
+          "durationMs": 156,
+          "inputTokens": 14024,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 1,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0.02,
+                "e0": 0.44,
+                "e1": 0.12,
+                "e2": 0.17,
+                "e3": 0,
+                "e4": 0,
+                "e5": 0.25
+              }
+            },
+            "misleading_reason": {
+              "choice": "omitted_condition",
+              "probabilities": {
+                "none": 0.37,
+                "omitted_condition": 0.44,
+                "outdated_fact": 0,
+                "exaggeration": 0.19
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 1,
+                "health_safety": 0,
+                "disputed": 0,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 0.99,
+                "unrelated": 0.01
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.92
+            },
+            "e0_scope": {
+              "noul": 0.92
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.73,
+                "omitted_condition": 0.14,
+                "outdated_fact": 0,
+                "exaggeration": 0.13
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.46
+            },
+            "e0_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.45,
+                "attributable_research": 0,
+                "substantive_secondary": 0.32,
+                "bare_assertion": 0.19,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0.03
+              }
+            },
+            "e1_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 0.97,
+                "unrelated": 0.03
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.88
+            },
+            "e1_scope": {
+              "noul": 0.89
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.71,
+                "omitted_condition": 0.19,
+                "outdated_fact": 0,
+                "exaggeration": 0.1
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.44
+            },
+            "e1_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.52,
+                "attributable_research": 0,
+                "substantive_secondary": 0.26,
+                "bare_assertion": 0.19,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.03
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 0.99,
+                "unrelated": 0.01
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.92
+            },
+            "e2_scope": {
+              "noul": 0.91
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.71,
+                "omitted_condition": 0.14,
+                "outdated_fact": 0,
+                "exaggeration": 0.15
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.46
+            },
+            "e2_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.3,
+                "attributable_research": 0,
+                "substantive_secondary": 0.26,
+                "bare_assertion": 0.4,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0.03
+              }
+            },
+            "e3_stance": {
+              "choice": "unrelated",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 0.01,
+                "unrelated": 0.99
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.04
+            },
+            "e3_scope": {
+              "noul": 0.33
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 1,
+                "omitted_condition": 0,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.04
+            },
+            "e3_content_basis": {
+              "choice": "unclear",
+              "probabilities": {
+                "original_record": 0.02,
+                "attributable_research": 0,
+                "substantive_secondary": 0,
+                "bare_assertion": 0.11,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.87
+              }
+            },
+            "e4_stance": {
+              "choice": "unrelated",
+              "probabilities": {
+                "supports": 0.01,
+                "contradicts": 0.43,
+                "unrelated": 0.56
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.23
+            },
+            "e4_scope": {
+              "noul": 0.71
+            },
+            "e4_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.91,
+                "omitted_condition": 0.08,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "e4_context_established": {
+              "noul": 0.1
+            },
+            "e4_content_basis": {
+              "choice": "unclear",
+              "probabilities": {
+                "original_record": 0.26,
+                "attributable_research": 0,
+                "substantive_secondary": 0.09,
+                "bare_assertion": 0.08,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.57
+              }
+            },
+            "e5_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 0.99,
+                "unrelated": 0.01
+              }
+            },
+            "e5_relevant": {
+              "noul": 0.91
+            },
+            "e5_scope": {
+              "noul": 0.92
+            },
+            "e5_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.65,
+                "omitted_condition": 0.15,
+                "outdated_fact": 0,
+                "exaggeration": 0.2
+              }
+            },
+            "e5_context_established": {
+              "noul": 0.47
+            },
+            "e5_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.13,
+                "attributable_research": 0,
+                "substantive_secondary": 0.16,
+                "bare_assertion": 0.69,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0.02
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.11,
+                "distinct_origins": 0.18,
+                "unclear": 0.71
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "common_origin",
+              "probabilities": {
+                "common_origin": 0.84,
+                "distinct_origins": 0.01,
+                "unclear": 0.15
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.29,
+                "distinct_origins": 0.19,
+                "unclear": 0.52
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.27,
+                "distinct_origins": 0.31,
+                "unclear": 0.42
+              }
+            },
+            "e0_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.06,
+                "distinct_origins": 0.3,
+                "unclear": 0.64
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.14,
+                "distinct_origins": 0.1,
+                "unclear": 0.76
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.14,
+                "unclear": 0.83
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.1,
+                "unclear": 0.75
+              }
+            },
+            "e1_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.11,
+                "unclear": 0.88
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.19,
+                "distinct_origins": 0.15,
+                "unclear": 0.66
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.19,
+                "distinct_origins": 0.17,
+                "unclear": 0.64
+              }
+            },
+            "e2_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.07,
+                "distinct_origins": 0.13,
+                "unclear": 0.8
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.22,
+                "distinct_origins": 0.23,
+                "unclear": 0.55
+              }
+            },
+            "e3_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.23,
+                "unclear": 0.77
+              }
+            },
+            "e4_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.22,
+                "unclear": 0.75
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 134.93436699999984,
+        "retrieval": 3256.4772600000006,
+        "judgment": 359.7532100000003
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-6363429a21a0acec6ee9",
+              "url": "https://kids.britannica.com/students/article/Great-Barrier-Reef/274636",
+              "title": "Great Barrier Reef\n                    \n                \n                - Students | Britannica Kids | Homework Help",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "In the Coral Sea, off the coast of Queensland, Australia, lies the Great Barrier Reef, one of the natural wonders of the world. A barrier reef is a long, narrow, mostly submerged coral formation that lies parallel to the shoreline of a landmass. The Great Barrier Reef is the largest complex of coral reefs, shoals, and islets in the world. Despite its name, it is not a single reef. It actually includes some 2,900 reefs, of which about 800 are fringing reefs (which form closer to shorelines). It stretches more than 1,250 miles (2,000 kilometers) from northwest to southeast, a length comparable to that of the Pacific coast of the United States. Its area is about 135,000 square miles (350,000 square kilometers).",
+              "contentBasis": "highlight",
+              "sourceGroup": "britannica.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-8c0caa7e5577952e6704",
+              "url": "https://whc.unesco.org/en/list/154/",
+              "title": "Great Barrier Reef - UNESCO World Heritage Centre",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "###### Great Barrier Reef\n\nThe Great Barrier Reef is a site of remarkable variety and beauty on the north-east coast of Australia. It contains the world’s largest collection of coral reefs, with 400 types of coral, 1,500 species of fish and 4,000 types of mollusc. It also holds great scientific interest as the habitat of species such as the dugong (‘sea cow’) and the large green turtle, which are threatened with extinction.\n\n...\n\nOff the east coast of the Queensland mainland S18 17 10 E147 41 60",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-9b8d5dabb7f8b5eb9eca",
+              "url": "https://oceanservice.noaa.gov/facts/gbrlargeststructure.html",
+              "title": "What is the largest living structure on Earth?",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "## The Great Barrier Reef is the largest living structure on Earth.\n\n Satellite photograph of the Great Barrier Reef situated off the northeastern coast of Australia. \n\nStretching for 1,429 miles over an area of approximately 133,000 square miles , the Great Barrier Reef is the largest coral reef system in the world. The reef is located off the coast of Queensland, Australia, in the Coral Sea.",
+              "contentBasis": "highlight",
+              "sourceGroup": "noaa.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-c945b1d4d51fc40d4d70",
+              "url": "https://en.wikipedia.org/wiki/Great_Barrier_Reef",
+              "title": "Great Barrier Reef",
+              "publisher": null,
+              "publishedAt": "2026-10-25T17:44:46.000Z",
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "| UNESCO World Heritage Site | |\n| --- | --- |\n| Image of part of the Great Barrier Reef adjacent to Queensland, taken from the International Space Station | |\n| Interactive map of Great Barrier Reef | |\n| Location | Off the east coast of the Queensland mainland, Australia |\n| Criteria | Natural: vii, viii, ix, x |\n| Reference | 154 |\n| Inscription | 1981 (5th Session) |\n| Area | 34,870,000 ha (86,200,000 acres) |\n| Website | www.gbrmpa.gov.au |\n| Coordinates | 16°24′S 145°48′E﻿ / ﻿ 16.4°S 145.8°E |\n| Locator map of the protected area | |\n\nThe Great Barrier Reef is the world's largest coral reef system, [1] [2] composed of over 2,900 individual reefs [3] and 900 islands stretching for over 2,300 kilometres (1,400 mi) over an area of approximately 344,400 square kilometres (133,000 mi 2). [4] [5] [6] The reef is located in the Coral Sea, off the coast of Queensland, Australia. It is separated from the coast by a channel 160 kilometres (100 mi) wide in places and over 61 metres (200 ft) deep. [7] The Great Barrier Reef can be seen from outer space and is the world's biggest single structure made by living organisms. [8] [9] This reef structure is composed of and built by billions of tiny organisms, known as coral polyps. [10] It supports a wide diversity of life and was selected as a World Heritage Site in 1981. [1] [2] CNN labelled it one of the Seven Natural Wonders of the World in 1997. [11] Australian World Heritage places included it in its list in 2007. [12] The Queensland National Trust named it a state icon of Queensland in 2006. [13]\n\n...\n\nThe Great Barrier Reef is a distinct feature of the East Australian Cordillera division. It reaches from Torres Strait (between Bramble Cay, its northernmost island, and the south coast of Papua New Guinea) in the north to the unnamed passage between Lady Elliot Island (its southernmost island) and Fraser Island in the south. Lady Elliot Island is located 1,915 km (1,190 mi) southeast of Bramble Cay as the crow flies. [30] ",
+              "contentBasis": "highlight",
+              "sourceGroup": "wikipedia.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-76a1ada4080e8b54d459",
+              "url": "https://www.barrierreef.org/news/news/the-great-barrier-reef-explained",
+              "title": "The Great Barrier Reef explained: size, species, threats and why it matters - Great Barrier Reef Foundation",
+              "publisher": null,
+              "publishedAt": "2025-04-16T14:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "## # Where is the Great Barrier Reef?\n\nThe Great Barrier Reef is a World Heritage Listed area situated in the Coral Sea, off Australia’s northeastern coast, stretching over 2,300 kilometres (1,400 miles) from the tip of Cape York Peninsula in the north to Bundaberg in the south. While it has one unifying name, it is an interconnected system of around 3,000 individual coral reefs that range from 15 kilometres to 150 kilometres (9 to 93 miles) off the coastline.",
+              "contentBasis": "highlight",
+              "sourceGroup": "barrierreef.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-6363429a21a0acec6ee9",
+              "url": "https://kids.britannica.com/students/article/Great-Barrier-Reef/274636",
+              "title": "Great Barrier Reef\n                    \n                \n                - Students | Britannica Kids | Homework Help",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "In the Coral Sea, off the coast of Queensland, Australia, lies the Great Barrier Reef, one of the natural wonders of the world. A barrier reef is a long, narrow, mostly submerged coral formation that lies parallel to the shoreline of a landmass. The Great Barrier Reef is the largest complex of coral reefs, shoals, and islets in the world. Despite its name, it is not a single reef. It actually includes some 2,900 reefs, of which about 800 are fringing reefs (which form closer to shorelines). It stretches more than 1,250 miles (2,000 kilometers) from northwest to southeast, a length comparable to that of the Pacific coast of the United States. Its area is about 135,000 square miles (350,000 square kilometers).",
+              "contentBasis": "highlight",
+              "sourceGroup": "britannica.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.56
+            },
+            {
+              "id": "ev-8c0caa7e5577952e6704",
+              "url": "https://whc.unesco.org/en/list/154/",
+              "title": "Great Barrier Reef - UNESCO World Heritage Centre",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "###### Great Barrier Reef\n\nThe Great Barrier Reef is a site of remarkable variety and beauty on the north-east coast of Australia. It contains the world’s largest collection of coral reefs, with 400 types of coral, 1,500 species of fish and 4,000 types of mollusc. It also holds great scientific interest as the habitat of species such as the dugong (‘sea cow’) and the large green turtle, which are threatened with extinction.\n\n...\n\nOff the east coast of the Queensland mainland S18 17 10 E147 41 60",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9b8d5dabb7f8b5eb9eca",
+              "url": "https://oceanservice.noaa.gov/facts/gbrlargeststructure.html",
+              "title": "What is the largest living structure on Earth?",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "## The Great Barrier Reef is the largest living structure on Earth.\n\n Satellite photograph of the Great Barrier Reef situated off the northeastern coast of Australia. \n\nStretching for 1,429 miles over an area of approximately 133,000 square miles , the Great Barrier Reef is the largest coral reef system in the world. The reef is located off the coast of Queensland, Australia, in the Coral Sea.",
+              "contentBasis": "highlight",
+              "sourceGroup": "noaa.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-c945b1d4d51fc40d4d70",
+              "url": "https://en.wikipedia.org/wiki/Great_Barrier_Reef",
+              "title": "Great Barrier Reef",
+              "publisher": null,
+              "publishedAt": "2026-10-25T17:44:46.000Z",
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "| UNESCO World Heritage Site | |\n| --- | --- |\n| Image of part of the Great Barrier Reef adjacent to Queensland, taken from the International Space Station | |\n| Interactive map of Great Barrier Reef | |\n| Location | Off the east coast of the Queensland mainland, Australia |\n| Criteria | Natural: vii, viii, ix, x |\n| Reference | 154 |\n| Inscription | 1981 (5th Session) |\n| Area | 34,870,000 ha (86,200,000 acres) |\n| Website | www.gbrmpa.gov.au |\n| Coordinates | 16°24′S 145°48′E﻿ / ﻿ 16.4°S 145.8°E |\n| Locator map of the protected area | |\n\nThe Great Barrier Reef is the world's largest coral reef system, [1] [2] composed of over 2,900 individual reefs [3] and 900 islands stretching for over 2,300 kilometres (1,400 mi) over an area of approximately 344,400 square kilometres (133,000 mi 2). [4] [5] [6] The reef is located in the Coral Sea, off the coast of Queensland, Australia. It is separated from the coast by a channel 160 kilometres (100 mi) wide in places and over 61 metres (200 ft) deep. [7] The Great Barrier Reef can be seen from outer space and is the world's biggest single structure made by living organisms. [8] [9] This reef structure is composed of and built by billions of tiny organisms, known as coral polyps. [10] It supports a wide diversity of life and was selected as a World Heritage Site in 1981. [1] [2] CNN labelled it one of the Seven Natural Wonders of the World in 1997. [11] Australian World Heritage places included it in its list in 2007. [12] The Queensland National Trust named it a state icon of Queensland in 2006. [13]\n\n...\n\nThe Great Barrier Reef is a distinct feature of the East Australian Cordillera division. It reaches from Torres Strait (between Bramble Cay, its northernmost island, and the south coast of Papua New Guinea) in the north to the unnamed passage between Lady Elliot Island (its southernmost island) and Fraser Island in the south. Lady Elliot Island is located 1,915 km (1,190 mi) southeast of Bramble Cay as the crow flies. [30] ",
+              "contentBasis": "highlight",
+              "sourceGroup": "wikipedia.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-76a1ada4080e8b54d459",
+              "url": "https://www.barrierreef.org/news/news/the-great-barrier-reef-explained",
+              "title": "The Great Barrier Reef explained: size, species, threats and why it matters - Great Barrier Reef Foundation",
+              "publisher": null,
+              "publishedAt": "2025-04-16T14:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "## # Where is the Great Barrier Reef?\n\nThe Great Barrier Reef is a World Heritage Listed area situated in the Coral Sea, off Australia’s northeastern coast, stretching over 2,300 kilometres (1,400 miles) from the tip of Cape York Peninsula in the north to Bundaberg in the south. While it has one unifying name, it is an interconnected system of around 3,000 individual coral reefs that range from 15 kilometres to 150 kilometres (9 to 93 miles) off the coastline.",
+              "contentBasis": "highlight",
+              "sourceGroup": "barrierreef.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 1
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-c945b1d4d51fc40d4d70"
+          ],
+          "sourceAssessments": {
+            "ev-6363429a21a0acec6ee9": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.29000000000000004
+            },
+            "ev-8c0caa7e5577952e6704": {
+              "contentBasis": "original_record",
+              "confidence": 0.73
+            },
+            "ev-9b8d5dabb7f8b5eb9eca": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.31000000000000005
+            },
+            "ev-c945b1d4d51fc40d4d70": {
+              "contentBasis": "original_record",
+              "confidence": 0.72
+            },
+            "ev-76a1ada4080e8b54d459": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.32
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 1
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-6363429a21a0acec6ee9",
+                "ev-8c0caa7e5577952e6704"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.83
+            },
+            {
+              "evidenceIds": [
+                "ev-6363429a21a0acec6ee9",
+                "ev-9b8d5dabb7f8b5eb9eca"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.89
+            },
+            {
+              "evidenceIds": [
+                "ev-6363429a21a0acec6ee9",
+                "ev-c945b1d4d51fc40d4d70"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.83
+            },
+            {
+              "evidenceIds": [
+                "ev-6363429a21a0acec6ee9",
+                "ev-76a1ada4080e8b54d459"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.91
+            },
+            {
+              "evidenceIds": [
+                "ev-8c0caa7e5577952e6704",
+                "ev-9b8d5dabb7f8b5eb9eca"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.8
+            },
+            {
+              "evidenceIds": [
+                "ev-8c0caa7e5577952e6704",
+                "ev-c945b1d4d51fc40d4d70"
+              ],
+              "relationship": "common_origin",
+              "confidence": 0.55
+            },
+            {
+              "evidenceIds": [
+                "ev-8c0caa7e5577952e6704",
+                "ev-76a1ada4080e8b54d459"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.79
+            },
+            {
+              "evidenceIds": [
+                "ev-9b8d5dabb7f8b5eb9eca",
+                "ev-c945b1d4d51fc40d4d70"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.69
+            },
+            {
+              "evidenceIds": [
+                "ev-9b8d5dabb7f8b5eb9eca",
+                "ev-76a1ada4080e8b54d459"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.78
+            },
+            {
+              "evidenceIds": [
+                "ev-c945b1d4d51fc40d4d70",
+                "ev-76a1ada4080e8b54d459"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.85
+            }
+          ]
+        },
+        {
+          "stage": "alternate",
+          "records": [
+            {
+              "id": "ev-6c71c2bce768dd0b94b5",
+              "url": "https://www.gbrmpa.gov.au/learn/world-heritage-area",
+              "title": "World Heritage Area | Reef Authority",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "World Heritage Area | Reef Authority\n\n# World Heritage Area \n\nWhile it may not be the largest World Heritage Area on Earth, the Great Barrier Reef is one of the better known. Its biological diversity is also unmatched by any other World Heritage Area.\n\nCovering 348,000 square kilometres, this vast expanse is bigger than the United Kingdom, Holland, and Switzerland combined, equivalent to 70 million football fields.\n\nThe World Heritage Area extends from the top of Cape York in northeast Australia to just north of Bundaberg and from the low water mark on the Queensland coast to the outer boundary of the Marine Park, which is beyond the edge of the continental shelf.\n\nAbout 99 per cent of the World Heritage Area is within the Great Barrier Reef Marine Park.\n\n- The remaining one per cent includes:\n- some 980 islands are under Queensland jurisdiction\n- some internal waters or Queensland (for example, some deep bays, narrow inlets or channels between islands)\n- intertidal areas protected by Queensland legislation\n- a number of small exclusion areas (state waters) around major ports and urban centres.\n- there are more than 3000 separate coral reefs within the World Heritage Area.\n- there are also 1050 islands and cays - these include 600 continental islands and 300 coral cays, while the remaining 150 islands are inshore mangrove islands that are important to the functioning and health of the Great Barrier Reef.\n\nTogether, the biodiversity and interconnectedness between species and habitats represent one of the richest and most complex natural ecosystems on earth.\n\nThe Great Barrier Reef was declared a World Heritage Area in 1981 because of its 'outstanding universal value'. This recognised the Reef as being one of the most remarkable places on earth, as well as its global importance and its natural worth.\n\n \n\n \n\n \n\n### The World Heritage Committee listed the Reef for all four natural criteria:¹\n\n- Be outstanding examples representing the major stages of the earth's evoluti",
+              "contentBasis": "page_text",
+              "sourceGroup": "gbrmpa.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-984c764866563beb57d4",
+              "url": "https://whc.unesco.org/document/216225",
+              "title": "Periodic Reporting Cycle 3, Section II",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "o other World Heritage property contains such biodiversity. This diversity, \nespecially the endemic species, means the GBR is of enormous scientific and intrinsic importance, and it also contains a significant number of threatened species. \nAttime of inscription, the IUCN evaluation stated \"… if only one coral reef site in the world were to be chosen for the World Heritage List, the Great Barrier Reef is the \nsite to be chosen\". \nCriterion (vii): The GBR is of superlative natural beauty above and below the water, and provides some of the most spectacular scenery on earth. It is one of a few \nliving structures visible from space, appearing as a complex string of reefal structures along Australia's northeast coast. \nFrom the air, the vast mosaic patterns of reefs, islands and coral cays produce an unparalleled aerial panorama of seascapes comprising diverse shapes and sizes.\n\n...\n\nIsland.\n\n...\n\nCriterion (viii): The GBR, extending 2,000 kilometres along Queensland's coast, is a globally outstanding example of an ecosystem that has evolved over millennia.\n\n...\n\nOne-third of the GBR lies beyond the seaward edge of the shallower reefs; this area comprises continental slope and deep oceanic waters and abyssal plains.\n\n...\n\nThe GBR covers approximately 348,000 square kilometres. Most of the property lies within the GBR Marine Park: at 344,400 square kilometres, this Federal Marine \nPark comprises approximately 99% of the property. The GBR Marine Park's legal jurisdiction ends at low water mark along the mainland (with the exception of port \nareas) and around islands (with the exception of 70 Commonwealth managed islands which are part of the Marine Park). In addition the GBR also includes over \n900 islands within the jurisdiction of Queensland, about half of which are declared as 'national parks', and the internal waters of Queensland that occur within the \nWorld Heritage boundary (including a number of long-established port areas). \nThe World Heritage property is and has ",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-8c0caa7e5577952e6704",
+              "url": "https://whc.unesco.org/en/list/154/",
+              "title": "Great Barrier Reef - UNESCO World Heritage Centre",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "l reefs of varying sizes and shapes, and over 900 islands, ranging from small sandy cays and larger vegetated cays, to large rugged continental islands rising, in one instance, over 1,100 metres above sea level. Collectively these landscapes and seascapes provide some of the most spectacular maritime scenery in the world.\n\nThe latitudinal and cross-shelf diversity, combined with diversity through the depths of the water column, encompasses a globally unique array of ecological communities, habitats and species. This diversity of species and habitats, and their interconnectivity, make the GBR one of the richest and most complex natural ecosystems on earth. There are over 1,500 species of fish, about 400 species of coral, 4,000 species of mollusk, and some 240 species of birds, plus a great diversity of sponges, anemones, marine worms, crustaceans, and other species. No other World Heritage property contains such biodiversity. This diversity, especially the endemic species, means the GBR is of enormous scientific and intrinsic importance, and it also contains a significant number of threatened species. Attime of inscription, the IUCN evaluation stated \"… if only one coral reef site in the world were to be chosen for the World Heritage List, the Great Barrier Reef is the site to be chosen\".\n\nCriterion (vii): The GBR is of superlative natural beauty above and below the water, and provides some of the most spectacular scenery on earth. It is one of a few living structures visible from space, appearing as a complex string of reefal structures along Australia's northeast coast.\n\nFrom the air, the vast mosaic patterns of reefs, islands and coral cays produce an unparalleled aerial panorama of seascapes comprising diverse shapes and sizes. The Whitsunday Islands provide a magnificent vista of green vegetated islands and spectacular sandy beaches spread over azure waters. This contrasts with the vast mangrove forests in Hinchinbrook Channel, and the rugged vegetated mountains",
+              "contentBasis": "page_text",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-50cc8cb2bdce9b837267",
+              "url": "https://www.dcceew.gov.au/sites/default/files/documents/state-party-report-state-conservation-gbr-2026.pdf",
+              "title": "State party report on the state of conservation for Australia’s Great Barrier Reef",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "the Environment and Water has \nexercised due care and skill in preparing and compiling the information and data in this publication. Notwithstanding, \nthe Department of Climate Change, Energy, the Environment and Water, its employees and advisers disclaim all liability, \nincluding liability for negligence and for any loss, damage, injury, expense or cost incurred by any person as a result of \naccessing, using or relying on any of the information or data in this publication to the maximum extent permitted by law. \nAcknowledgement of Country \nWe acknowledge the Traditional Owners of Country throughout Australia and recognise their continuing connection to \nland, waters and culture. We pay our respects to their Elders past and present. \nstate of conservation \nfor Australia’s \nGreat Barrier Reef \nProperty ID N154 \nIn response to the \nWorld Heritage Committee \ndecision 47 COM 7B.2 \n1 February 2026 \n\n#### State Party Report on the\n\n### Contents\n\nAcknowledgement of Country 5 \nExecutive summary 6 \nRésumé exécutif 10 \n1. Introduction 16 \n1.1 Decision of the World Heritage Committee 16 \n1.2 The Great Barrier Reef 16 \n1.3 Management and governance 18 \n2 Response to the 2025 Decision of the World Heritage \nCommittee 47 COM 7B.2 19 \n2.1 Boosting the Reef’s resilience to climate change 19 \n2.2 Improving water quality on the Great Barrier Reef 37 \n2.3 Working with Great Barrier Reef Traditional Owners 59 \n2.4 Sustainable fisheries 69 \n3 Current state of the Great Barrier Reef 77 \n3.1 Impacts of the 2023–24 coral bleaching and other \nextreme weather events 77 \n4 Other current conservation issues identified by the \nState Party whichmay have an impact on the property’s \nOutstanding Universal Value 83 \n4.1 Managing cumulative impacts 83 \n4.2 Adaptive management and reporting 83 \n5 Potential major restorations, alterations and/or new \nconstructionsintended within the property, the buffer \nzones and/or corridors or other areas, where such \ndevelopments may affect the Outstanding Univers",
+              "contentBasis": "page_text",
+              "sourceGroup": "dcceew.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-c0b45a435dcc3cf6ae1a",
+              "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/e166e5b7-bd7f-4bc5-9807-ba263e248632/files/gbr-reference-map.pdf",
+              "title": "Great Barrier Reef - General reference map",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "WORLD HERITAGE AREA AND REGION BOUNDARY \nGREAT BARRIER REEF WORLD HERITAGE AREA \n(Extends from the low water mark of the mainland and includes all \nislands, internal waters of Queensland and Seas and Submerged Lands \nAct exclusions.) \nTotal area approximately 348 000 sq km \nGREAT BARRIER REEF REGION \n(Extends from the low water mark of the mainland but excludes \nQueensland-owned islands, internal waters of Queensland and Seas \nand Submerged Lands Act exclusions.) \nTotal area approximately 346 000 sq km \n\nGREAT BARRIER REEF MARINE PARK (Excludes Queensland-owned islands, internal waters of Queensland and Seas and Submerged Lands Act exclusions.) Total area approximately 344 400 sq km\n\nGREAT BARRIER REEF MARINE PARK MANAGEMENT AREA GREAT BARRIER REEF PROVINCE (As defined by W.G.H. Maxwell. Includes that part of the Queensland shelf that is occupied by reefs and reef-derived sediment.) Total area is estimated to be 283 000 sq km\n\nMAJOR CATCHMENT BOUNDARY\n\n## GREAT BARRIER REEF General Reference Map\n\nTHIS MAP IS INDICATIVE ONLY. \nDerived from information or materials produced by: \nGreat Barrier Reef Marine Park Authority \nQueensland Department of Natural Resources & Mines \nGeoscience Australia, National Mapping Division \nRoyal Australian Navy, Hydrographic Office \nTimes Books (Great Britain) \nRoyal Navy (Great Britain) \nEnvironmental Systems Research Institute (USA) \nMap projection: Unprojected geographic coordinates \nHorizontal datum: Geocentric Datum of Australia, 1994 \nBathymetric contours: Depths in metres \nNames are not necessarily authoritative.\n\n...\n\nMap No. SDC 041206 Sept 2004",
+              "contentBasis": "highlight",
+              "sourceGroup": "dcceew.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-984c764866563beb57d4",
+              "url": "https://whc.unesco.org/document/216225",
+              "title": "Periodic Reporting Cycle 3, Section II",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "o other World Heritage property contains such biodiversity. This diversity, \nespecially the endemic species, means the GBR is of enormous scientific and intrinsic importance, and it also contains a significant number of threatened species. \nAttime of inscription, the IUCN evaluation stated \"… if only one coral reef site in the world were to be chosen for the World Heritage List, the Great Barrier Reef is the \nsite to be chosen\". \nCriterion (vii): The GBR is of superlative natural beauty above and below the water, and provides some of the most spectacular scenery on earth. It is one of a few \nliving structures visible from space, appearing as a complex string of reefal structures along Australia's northeast coast. \nFrom the air, the vast mosaic patterns of reefs, islands and coral cays produce an unparalleled aerial panorama of seascapes comprising diverse shapes and sizes.\n\n...\n\nIsland.\n\n...\n\nCriterion (viii): The GBR, extending 2,000 kilometres along Queensland's coast, is a globally outstanding example of an ecosystem that has evolved over millennia.\n\n...\n\nOne-third of the GBR lies beyond the seaward edge of the shallower reefs; this area comprises continental slope and deep oceanic waters and abyssal plains.\n\n...\n\nThe GBR covers approximately 348,000 square kilometres. Most of the property lies within the GBR Marine Park: at 344,400 square kilometres, this Federal Marine \nPark comprises approximately 99% of the property. The GBR Marine Park's legal jurisdiction ends at low water mark along the mainland (with the exception of port \nareas) and around islands (with the exception of 70 Commonwealth managed islands which are part of the Marine Park). In addition the GBR also includes over \n900 islands within the jurisdiction of Queensland, about half of which are declared as 'national parks', and the internal waters of Queensland that occur within the \nWorld Heritage boundary (including a number of long-established port areas). \nThe World Heritage property is and has ",
+              "contentBasis": "highlight",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-6c71c2bce768dd0b94b5",
+              "url": "https://www.gbrmpa.gov.au/learn/world-heritage-area",
+              "title": "World Heritage Area | Reef Authority",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "World Heritage Area | Reef Authority\n\n# World Heritage Area \n\nWhile it may not be the largest World Heritage Area on Earth, the Great Barrier Reef is one of the better known. Its biological diversity is also unmatched by any other World Heritage Area.\n\nCovering 348,000 square kilometres, this vast expanse is bigger than the United Kingdom, Holland, and Switzerland combined, equivalent to 70 million football fields.\n\nThe World Heritage Area extends from the top of Cape York in northeast Australia to just north of Bundaberg and from the low water mark on the Queensland coast to the outer boundary of the Marine Park, which is beyond the edge of the continental shelf.\n\nAbout 99 per cent of the World Heritage Area is within the Great Barrier Reef Marine Park.\n\n- The remaining one per cent includes:\n- some 980 islands are under Queensland jurisdiction\n- some internal waters or Queensland (for example, some deep bays, narrow inlets or channels between islands)\n- intertidal areas protected by Queensland legislation\n- a number of small exclusion areas (state waters) around major ports and urban centres.\n- there are more than 3000 separate coral reefs within the World Heritage Area.\n- there are also 1050 islands and cays - these include 600 continental islands and 300 coral cays, while the remaining 150 islands are inshore mangrove islands that are important to the functioning and health of the Great Barrier Reef.\n\nTogether, the biodiversity and interconnectedness between species and habitats represent one of the richest and most complex natural ecosystems on earth.\n\nThe Great Barrier Reef was declared a World Heritage Area in 1981 because of its 'outstanding universal value'. This recognised the Reef as being one of the most remarkable places on earth, as well as its global importance and its natural worth.\n\n \n\n \n\n \n\n### The World Heritage Committee listed the Reef for all four natural criteria:¹\n\n- Be outstanding examples representing the major stages of the earth's evoluti",
+              "contentBasis": "page_text",
+              "sourceGroup": "gbrmpa.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.97
+            },
+            {
+              "id": "ev-8c0caa7e5577952e6704",
+              "url": "https://whc.unesco.org/en/list/154/",
+              "title": "Great Barrier Reef - UNESCO World Heritage Centre",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "l reefs of varying sizes and shapes, and over 900 islands, ranging from small sandy cays and larger vegetated cays, to large rugged continental islands rising, in one instance, over 1,100 metres above sea level. Collectively these landscapes and seascapes provide some of the most spectacular maritime scenery in the world.\n\nThe latitudinal and cross-shelf diversity, combined with diversity through the depths of the water column, encompasses a globally unique array of ecological communities, habitats and species. This diversity of species and habitats, and their interconnectivity, make the GBR one of the richest and most complex natural ecosystems on earth. There are over 1,500 species of fish, about 400 species of coral, 4,000 species of mollusk, and some 240 species of birds, plus a great diversity of sponges, anemones, marine worms, crustaceans, and other species. No other World Heritage property contains such biodiversity. This diversity, especially the endemic species, means the GBR is of enormous scientific and intrinsic importance, and it also contains a significant number of threatened species. Attime of inscription, the IUCN evaluation stated \"… if only one coral reef site in the world were to be chosen for the World Heritage List, the Great Barrier Reef is the site to be chosen\".\n\nCriterion (vii): The GBR is of superlative natural beauty above and below the water, and provides some of the most spectacular scenery on earth. It is one of a few living structures visible from space, appearing as a complex string of reefal structures along Australia's northeast coast.\n\nFrom the air, the vast mosaic patterns of reefs, islands and coral cays produce an unparalleled aerial panorama of seascapes comprising diverse shapes and sizes. The Whitsunday Islands provide a magnificent vista of green vegetated islands and spectacular sandy beaches spread over azure waters. This contrasts with the vast mangrove forests in Hinchinbrook Channel, and the rugged vegetated mountains",
+              "contentBasis": "page_text",
+              "sourceGroup": "unesco.org",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-50cc8cb2bdce9b837267",
+              "url": "https://www.dcceew.gov.au/sites/default/files/documents/state-party-report-state-conservation-gbr-2026.pdf",
+              "title": "State party report on the state of conservation for Australia’s Great Barrier Reef",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "the Environment and Water has \nexercised due care and skill in preparing and compiling the information and data in this publication. Notwithstanding, \nthe Department of Climate Change, Energy, the Environment and Water, its employees and advisers disclaim all liability, \nincluding liability for negligence and for any loss, damage, injury, expense or cost incurred by any person as a result of \naccessing, using or relying on any of the information or data in this publication to the maximum extent permitted by law. \nAcknowledgement of Country \nWe acknowledge the Traditional Owners of Country throughout Australia and recognise their continuing connection to \nland, waters and culture. We pay our respects to their Elders past and present. \nstate of conservation \nfor Australia’s \nGreat Barrier Reef \nProperty ID N154 \nIn response to the \nWorld Heritage Committee \ndecision 47 COM 7B.2 \n1 February 2026 \n\n#### State Party Report on the\n\n### Contents\n\nAcknowledgement of Country 5 \nExecutive summary 6 \nRésumé exécutif 10 \n1. Introduction 16 \n1.1 Decision of the World Heritage Committee 16 \n1.2 The Great Barrier Reef 16 \n1.3 Management and governance 18 \n2 Response to the 2025 Decision of the World Heritage \nCommittee 47 COM 7B.2 19 \n2.1 Boosting the Reef’s resilience to climate change 19 \n2.2 Improving water quality on the Great Barrier Reef 37 \n2.3 Working with Great Barrier Reef Traditional Owners 59 \n2.4 Sustainable fisheries 69 \n3 Current state of the Great Barrier Reef 77 \n3.1 Impacts of the 2023–24 coral bleaching and other \nextreme weather events 77 \n4 Other current conservation issues identified by the \nState Party whichmay have an impact on the property’s \nOutstanding Universal Value 83 \n4.1 Managing cumulative impacts 83 \n4.2 Adaptive management and reporting 83 \n5 Potential major restorations, alterations and/or new \nconstructionsintended within the property, the buffer \nzones and/or corridors or other areas, where such \ndevelopments may affect the Outstanding Univers",
+              "contentBasis": "page_text",
+              "sourceGroup": "dcceew.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": 0.99
+            },
+            {
+              "id": "ev-c0b45a435dcc3cf6ae1a",
+              "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/e166e5b7-bd7f-4bc5-9807-ba263e248632/files/gbr-reference-map.pdf",
+              "title": "Great Barrier Reef - General reference map",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.251Z",
+              "excerpt": "WORLD HERITAGE AREA AND REGION BOUNDARY \nGREAT BARRIER REEF WORLD HERITAGE AREA \n(Extends from the low water mark of the mainland and includes all \nislands, internal waters of Queensland and Seas and Submerged Lands \nAct exclusions.) \nTotal area approximately 348 000 sq km \nGREAT BARRIER REEF REGION \n(Extends from the low water mark of the mainland but excludes \nQueensland-owned islands, internal waters of Queensland and Seas \nand Submerged Lands Act exclusions.) \nTotal area approximately 346 000 sq km \n\nGREAT BARRIER REEF MARINE PARK (Excludes Queensland-owned islands, internal waters of Queensland and Seas and Submerged Lands Act exclusions.) Total area approximately 344 400 sq km\n\nGREAT BARRIER REEF MARINE PARK MANAGEMENT AREA GREAT BARRIER REEF PROVINCE (As defined by W.G.H. Maxwell. Includes that part of the Queensland shelf that is occupied by reefs and reef-derived sediment.) Total area is estimated to be 283 000 sq km\n\nMAJOR CATCHMENT BOUNDARY\n\n## GREAT BARRIER REEF General Reference Map\n\nTHIS MAP IS INDICATIVE ONLY. \nDerived from information or materials produced by: \nGreat Barrier Reef Marine Park Authority \nQueensland Department of Natural Resources & Mines \nGeoscience Australia, National Mapping Division \nRoyal Australian Navy, Hydrographic Office \nTimes Books (Great Britain) \nRoyal Navy (Great Britain) \nEnvironmental Systems Research Institute (USA) \nMap projection: Unprojected geographic coordinates \nHorizontal datum: Geocentric Datum of Australia, 1994 \nBathymetric contours: Depths in metres \nNames are not necessarily authoritative.\n\n...\n\nMap No. SDC 041206 Sept 2004",
+              "contentBasis": "highlight",
+              "sourceGroup": "dcceew.gov.au",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": 0.56
+            },
+            {
+              "id": "ev-6363429a21a0acec6ee9",
+              "url": "https://kids.britannica.com/students/article/Great-Barrier-Reef/274636",
+              "title": "Great Barrier Reef\n                    \n                \n                - Students | Britannica Kids | Homework Help",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:25.063Z",
+              "excerpt": "In the Coral Sea, off the coast of Queensland, Australia, lies the Great Barrier Reef, one of the natural wonders of the world. A barrier reef is a long, narrow, mostly submerged coral formation that lies parallel to the shoreline of a landmass. The Great Barrier Reef is the largest complex of coral reefs, shoals, and islets in the world. Despite its name, it is not a single reef. It actually includes some 2,900 reefs, of which about 800 are fringing reefs (which form closer to shorelines). It stretches more than 1,250 miles (2,000 kilometers) from northwest to southeast, a length comparable to that of the Pacific coast of the United States. Its area is about 135,000 square miles (350,000 square kilometers).",
+              "contentBasis": "highlight",
+              "sourceGroup": "britannica.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "contradicts",
+              "stanceProbability": 0.99
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-984c764866563beb57d4"
+          ],
+          "sourceAssessments": {
+            "ev-984c764866563beb57d4": {
+              "contentBasis": "original_record",
+              "confidence": 0.77
+            },
+            "ev-6c71c2bce768dd0b94b5": {
+              "contentBasis": "original_record",
+              "confidence": 0.78
+            },
+            "ev-8c0caa7e5577952e6704": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.56
+            },
+            "ev-50cc8cb2bdce9b837267": {
+              "contentBasis": "unclear",
+              "confidence": 0.02
+            },
+            "ev-c0b45a435dcc3cf6ae1a": {
+              "contentBasis": "unclear",
+              "confidence": 0.35
+            },
+            "ev-6363429a21a0acec6ee9": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.29000000000000004
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 1
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-984c764866563beb57d4",
+                "ev-6c71c2bce768dd0b94b5"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.71
+            },
+            {
+              "evidenceIds": [
+                "ev-984c764866563beb57d4",
+                "ev-8c0caa7e5577952e6704"
+              ],
+              "relationship": "common_origin",
+              "confidence": 0.84
+            },
+            {
+              "evidenceIds": [
+                "ev-984c764866563beb57d4",
+                "ev-50cc8cb2bdce9b837267"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.52
+            },
+            {
+              "evidenceIds": [
+                "ev-984c764866563beb57d4",
+                "ev-c0b45a435dcc3cf6ae1a"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.42
+            },
+            {
+              "evidenceIds": [
+                "ev-984c764866563beb57d4",
+                "ev-6363429a21a0acec6ee9"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.64
+            },
+            {
+              "evidenceIds": [
+                "ev-6c71c2bce768dd0b94b5",
+                "ev-8c0caa7e5577952e6704"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.76
+            },
+            {
+              "evidenceIds": [
+                "ev-6c71c2bce768dd0b94b5",
+                "ev-50cc8cb2bdce9b837267"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.83
+            },
+            {
+              "evidenceIds": [
+                "ev-6c71c2bce768dd0b94b5",
+                "ev-c0b45a435dcc3cf6ae1a"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.75
+            },
+            {
+              "evidenceIds": [
+                "ev-6c71c2bce768dd0b94b5",
+                "ev-6363429a21a0acec6ee9"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.88
+            },
+            {
+              "evidenceIds": [
+                "ev-8c0caa7e5577952e6704",
+                "ev-50cc8cb2bdce9b837267"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.66
+            },
+            {
+              "evidenceIds": [
+                "ev-8c0caa7e5577952e6704",
+                "ev-c0b45a435dcc3cf6ae1a"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.64
+            },
+            {
+              "evidenceIds": [
+                "ev-8c0caa7e5577952e6704",
+                "ev-6363429a21a0acec6ee9"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.8
+            },
+            {
+              "evidenceIds": [
+                "ev-50cc8cb2bdce9b837267",
+                "ev-c0b45a435dcc3cf6ae1a"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.55
+            },
+            {
+              "evidenceIds": [
+                "ev-50cc8cb2bdce9b837267",
+                "ev-6363429a21a0acec6ee9"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.77
+            },
+            {
+              "evidenceIds": [
+                "ev-c0b45a435dcc3cf6ae1a",
+                "ev-6363429a21a0acec6ee9"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.75
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "The Great Barrier Reef lies off the west coast of Australia."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "The Great Barrier Reef lies off the west coast of Australia.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 3,
+        "searchConsumed": 2,
+        "contentsConsumed": 3,
+        "inputTokens": 26097
+      },
+      "usage": {
+        "measuredInputTokens": 26097,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 108641,
+        "knownCostUSD": 0.017,
+        "attemptsWithUnknownCost": 3
+      }
+    },
+    {
+      "label": "BDC04",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "claim.result",
+      "durationMs": 455,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 10,
+          "revision": 1,
+          "receivedMs": 3
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 11,
+          "revision": 1,
+          "claimId": "BDC04-8499a9c8-claim-0",
+          "receivedMs": 153,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "claim.result",
+          "eventSeq": 12,
+          "revision": 1,
+          "claimId": "BDC04-8499a9c8-claim-0",
+          "receivedMs": 455,
+          "reasonCode": "qualifying_evidence",
+          "verdict": "supported",
+          "checkedPublicText": "The Panama Canal opened to world trade in 1914.",
+          "cached": false,
+          "selectedEvidenceIds": [
+            "ev-9f6b071f258ff2a1591d",
+            "ev-f72fcf7616e02e44a3fd"
+          ],
+          "evidence": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "contentBasis": "highlight",
+              "excerpt": "Panama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n...\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "contentBasis": "highlight",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "contentBasis": "highlight",
+              "excerpt": "On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "contentBasis": "highlight",
+              "excerpt": "The Panama Canal, the American-built waterway across the Isthmus of Panama, connecting the Atlantic and Pacific oceans, is inaugurated with the passage of the U.S. vessel Ancon, a cargo and passenger ship.\n\n...\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "contentBasis": "highlight",
+              "excerpt": "Today, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\n...\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            }
+          ],
+          "presentation": {
+            "action": "respond",
+            "reasonCode": "explicit_request"
+          },
+          "durationMs": 453.0143819999994
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 13,
+          "dispatched": true,
+          "requestBytes": 18994,
+          "startedMs": 5689.972404,
+          "durationMs": 147,
+          "inputTokens": 4418,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "mixed",
+              "probabilities": {
+                "public_fact": 0,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 1,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.48
+            },
+            "span_0_private_data": {
+              "noul": 0.87
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 0.98,
+                "nonliteral_or_quoted": 0.01,
+                "unclear": 0.01
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.68
+            },
+            "span_0_claim_structure": {
+              "choice": "multiple_propositions",
+              "probabilities": {
+                "one_coherent": 0,
+                "multiple_propositions": 1,
+                "unclear": 0
+              }
+            },
+            "span_1_kind": {
+              "choice": "personal_experience",
+              "probabilities": {
+                "public_fact": 0.06,
+                "personal_experience": 0.93,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0.01
+              }
+            },
+            "span_1_self_contained": {
+              "noul": 0.47
+            },
+            "span_1_private_data": {
+              "noul": 0.88
+            },
+            "span_1_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 0.99,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0.01
+              }
+            },
+            "span_1_has_practical_consequence": {
+              "noul": 0.81
+            },
+            "span_1_preserves_scope": {
+              "noul": 0.97
+            },
+            "span_1_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            },
+            "span_2_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_2_self_contained": {
+              "noul": 0.95
+            },
+            "span_2_private_data": {
+              "noul": 0.04
+            },
+            "span_2_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 0.99,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0.01
+              }
+            },
+            "span_2_has_practical_consequence": {
+              "noul": 0.11
+            },
+            "span_2_preserves_scope": {
+              "noul": 0.96
+            },
+            "span_2_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.99,
+                "multiple_propositions": 0.01,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 14,
+          "dispatched": true,
+          "requestBytes": 119,
+          "startedMs": 5840.454721,
+          "durationMs": 100,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": 0.007,
+          "query": "The Panama Canal opened to world trade in 1914."
+        },
+        {
+          "kind": "jev",
+          "ordinal": 15,
+          "dispatched": true,
+          "requestBytes": 42435,
+          "startedMs": 5945.105055999999,
+          "durationMs": 193,
+          "inputTokens": 10394,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "supported",
+              "probabilities": {
+                "supported": 0.93,
+                "contradicted": 0,
+                "misleading": 0.04,
+                "insufficient_evidence": 0.03
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.93,
+                "e1": 0.02,
+                "e2": 0.02,
+                "e3": 0.02,
+                "e4": 0.01
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.92,
+                "omitted_condition": 0.07,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.99
+            },
+            "e0_scope": {
+              "noul": 0.98
+            },
+            "e0_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.98,
+                "omitted_condition": 0.02,
+                "outdated_fact": 0,
+                "exaggeration": 0
+              }
+            },
+            "e0_context_established": {
+              "noul": 0.64
+            },
+            "e0_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.36,
+                "attributable_research": 0,
+                "substantive_secondary": 0.4,
+                "bare_assertion": 0.23,
+                "attributed": 0,
+                "promotional": 0.01,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.96
+            },
+            "e1_scope": {
+              "noul": 0.94
+            },
+            "e1_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.91,
+                "omitted_condition": 0.04,
+                "outdated_fact": 0,
+                "exaggeration": 0.05
+              }
+            },
+            "e1_context_established": {
+              "noul": 0.46
+            },
+            "e1_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.45,
+                "attributable_research": 0,
+                "substantive_secondary": 0.49,
+                "bare_assertion": 0.06,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.98,
+                "contradicts": 0.01,
+                "unrelated": 0.01
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.94
+            },
+            "e2_scope": {
+              "noul": 0.91
+            },
+            "e2_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.66,
+                "omitted_condition": 0.29,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.04
+              }
+            },
+            "e2_context_established": {
+              "noul": 0.42
+            },
+            "e2_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0.07,
+                "attributable_research": 0,
+                "substantive_secondary": 0.34,
+                "bare_assertion": 0.58,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e3_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.98,
+                "contradicts": 0,
+                "unrelated": 0.02
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.94
+            },
+            "e3_scope": {
+              "noul": 0.91
+            },
+            "e3_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.94,
+                "omitted_condition": 0.05,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "e3_context_established": {
+              "noul": 0.46
+            },
+            "e3_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.27,
+                "attributable_research": 0,
+                "substantive_secondary": 0.54,
+                "bare_assertion": 0.19,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e4_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.96
+            },
+            "e4_scope": {
+              "noul": 0.94
+            },
+            "e4_context_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.96,
+                "omitted_condition": 0.02,
+                "outdated_fact": 0.01,
+                "exaggeration": 0.01
+              }
+            },
+            "e4_context_established": {
+              "noul": 0.39
+            },
+            "e4_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.48,
+                "attributable_research": 0,
+                "substantive_secondary": 0.43,
+                "bare_assertion": 0.09,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.15,
+                "unclear": 0.81
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.05,
+                "distinct_origins": 0.21,
+                "unclear": 0.74
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.12,
+                "unclear": 0.87
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.4,
+                "distinct_origins": 0.01,
+                "unclear": 0.59
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.07,
+                "distinct_origins": 0.15,
+                "unclear": 0.78
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.09,
+                "unclear": 0.88
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.07,
+                "distinct_origins": 0.15,
+                "unclear": 0.78
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.1,
+                "distinct_origins": 0.19,
+                "unclear": 0.71
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.06,
+                "distinct_origins": 0.14,
+                "unclear": 0.8
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.06,
+                "unclear": 0.93
+              }
+            }
+          }
+        }
+      ],
+      "stageMs": {
+        "admission": 150.69126199999937,
+        "retrieval": 104.41327900000033,
+        "judgment": 195.9844409999996
+      },
+      "evidence": [
+        {
+          "stage": "retrieval",
+          "records": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "Panama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n...\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight",
+              "contentBasis": "highlight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "The Panama Canal, the American-built waterway across the Isthmus of Panama, connecting the Atlantic and Pacific oceans, is inaugurated with the passage of the U.S. vessel Ancon, a cargo and passenger ship.\n\n...\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.",
+              "contentBasis": "highlight",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "Today, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\n...\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": false,
+              "matchesTimePlaceAndPopulation": false,
+              "stance": "unrelated",
+              "stanceProbability": null
+            }
+          ]
+        },
+        {
+          "stage": "judgment",
+          "records": [
+            {
+              "id": "ev-76fec2672b529967532e",
+              "url": "https://pancanal.com/en/the-panama-canal-celebrates-100-years-connecting-the-world/",
+              "title": "The Panama Canal Celebrates 100 Years Connecting the World - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2014-08-15T16:05:32.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "Panama City, Panama, August 15, 2014 – The Panama Canal celebrates today a century of operations connecting the world, committed to completing its Expansion, the largest infrastructure project of the waterway since its opening.\n\n...\n\nThe Panama Canal opened to world trade on August 15, 1914 with the passage of SS Ancon. Ever since, the 80-kilometer waterway has registered over 1,055,000 transits reducing distances, time and shipping costs.\n\nDuring the past 100 years, the Panama Canal has left a legacy of innovation, connectivity, cultural diversity and sustainability having an impact on world maritime trade.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-9f6b071f258ff2a1591d",
+              "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+              "title": "It's your birthday, Panama Canal!",
+              "publisher": null,
+              "publishedAt": null,
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.",
+              "contentBasis": "highlight",
+              "sourceGroup": "si.edu",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            },
+            {
+              "id": "ev-77bf5dacc342631f57f0",
+              "url": "https://www.govinfo.gov/features/anniversary-panama-canal",
+              "title": "Anniversary of the Opening of the Panama Canal | GovInfo",
+              "publisher": null,
+              "publishedAt": "2018-08-14T00:00:00.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "On August 15, 1914, the Panama Canal opened to cargo traffic connecting the Atlantic and Pacific Oceans\n\n Prior to the Panama’s Canal’s construction, ships had to travel around the entire continent of South America to get from the Pacific to the Atlantic Ocean. Construction of the Canal shortened the route ships traveled when voyaging around the world. The Canal’s 48-mile waterway cuts through the narrow Isthmus of Panama which separates the Pacific Ocean from the Caribbean Sea. The Panama Water Lock System consists of Lock Gates which allow vessels entering the canal to be lifted to a higher level over the terrain of Panama in order to reach the other end of the canal, and lowered upon return. After an extensive Canal Expansion Project (2009 – 2016), a third lane was added to allow for a greater number of transits as well as the ability to handle transit of larger ships. Sources: National Geographic Marine Insight",
+              "contentBasis": "highlight",
+              "sourceGroup": "govinfo.gov",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-a38329850f933790097c",
+              "url": "https://www.history.com/this-day-in-history/august-15/panama-canal-open-to-traffic",
+              "title": "Panama Canal open to traffic | August 15, 1914 | HISTORY",
+              "publisher": null,
+              "publishedAt": "2010-02-09T12:29:18.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "The Panama Canal, the American-built waterway across the Isthmus of Panama, connecting the Atlantic and Pacific oceans, is inaugurated with the passage of the U.S. vessel Ancon, a cargo and passenger ship.\n\n...\n\nIn 1906, American engineers decided on the construction of a lock canal, and the next three years were spent developing construction facilities and eradicating tropical diseases in the area. In 1909, construction proper began. In one of the largest construction projects of all time, U.S. engineers moved nearly 240 million cubic yards of earth and spent close to $400 million in constructing the 40-mile-long canal (or 51 miles long, if the deepened seabed on both ends of the canal is taken into account). On August 15, 1914, the Panama Canal was opened to traffic.",
+              "contentBasis": "highlight",
+              "sourceGroup": "history.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 0.98
+            },
+            {
+              "id": "ev-f72fcf7616e02e44a3fd",
+              "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+              "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+              "publisher": null,
+              "publishedAt": "2021-08-21T13:38:31.000Z",
+              "retrievedAt": "2026-11-14T04:16:27.751Z",
+              "excerpt": "Today, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\n...\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.",
+              "contentBasis": "highlight",
+              "sourceGroup": "pancanal.com",
+              "echoGroup": null,
+              "sourceRole": "unknown",
+              "directlyAddressesClaim": true,
+              "matchesTimePlaceAndPopulation": true,
+              "stance": "supports",
+              "stanceProbability": 1
+            }
+          ],
+          "selectedEvidenceIds": [
+            "ev-76fec2672b529967532e"
+          ],
+          "sourceAssessments": {
+            "ev-76fec2672b529967532e": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.76
+            },
+            "ev-9f6b071f258ff2a1591d": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.94
+            },
+            "ev-77bf5dacc342631f57f0": {
+              "contentBasis": "bare_assertion",
+              "confidence": 0.41000000000000003
+            },
+            "ev-a38329850f933790097c": {
+              "contentBasis": "substantive_secondary",
+              "confidence": 0.81
+            },
+            "ev-f72fcf7616e02e44a3fd": {
+              "contentBasis": "original_record",
+              "confidence": 0.9099999999999999
+            }
+          },
+          "claimRisk": {
+            "level": "ordinary",
+            "confidence": 0.99
+          },
+          "originAssessments": [
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-9f6b071f258ff2a1591d"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.81
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.74
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.87
+            },
+            {
+              "evidenceIds": [
+                "ev-76fec2672b529967532e",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.59
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-77bf5dacc342631f57f0"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.78
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.88
+            },
+            {
+              "evidenceIds": [
+                "ev-9f6b071f258ff2a1591d",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.78
+            },
+            {
+              "evidenceIds": [
+                "ev-77bf5dacc342631f57f0",
+                "ev-a38329850f933790097c"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.71
+            },
+            {
+              "evidenceIds": [
+                "ev-77bf5dacc342631f57f0",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.8
+            },
+            {
+              "evidenceIds": [
+                "ev-a38329850f933790097c",
+                "ev-f72fcf7616e02e44a3fd"
+              ],
+              "relationship": "unclear",
+              "confidence": 0.93
+            }
+          ]
+        }
+      ],
+      "admittedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "The Panama Canal opened to world trade in 1914.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 14812
+      },
+      "usage": {
+        "measuredInputTokens": 14812,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 61548,
+        "knownCostUSD": 0.007,
+        "attemptsWithUnknownCost": 2
+      }
+    }
+  ],
+  "limitations": [
+    "Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.",
+    "24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.",
+    "A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.",
+    "Known costs are partial when any attempt has unknown cost. No prices are invented.",
+    "No held-out bodies, raw private text, provider prompts, session credentials or keys are retained. Native/iOS/ASR paths are untested."
+  ],
+  "batchManifestSHA256": "708232974c3357053c129c93443ddca9c81d0ce9e7580b7cafc90cba19a0e39f",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8"
+}

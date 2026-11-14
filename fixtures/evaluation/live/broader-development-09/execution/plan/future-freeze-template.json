@@ -1,0 +1,37 @@
+{
+  "kind": "open_development_candidate_freeze",
+  "status": "ready_for_open_development",
+  "commit": "FILL_ACTUAL_40_HEX_AFTER_MERGE",
+  "sourceSHA256": "FILL_ACTUAL_64_HEX_AFTER_FREEZE",
+  "sourceTreeClean": true,
+  "checkedExecutableCodeMatchesFreeze": true,
+  "targetFailureFixReady": true,
+  "richerContainedHighlightFixReady": true,
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8",
+  "manifestSHA256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+  "freshInstallLogSHA256": "FILL_ACTUAL_INSTALL_LOG_SHA256",
+  "check": {
+    "tests": null,
+    "files": null,
+    "logSHA256": "FILL_ACTUAL_CURRENT_GATE_LOG_SHA256"
+  },
+  "evaluate": {
+    "counts": {
+      "selected": 36,
+      "passed": 36,
+      "failed": 0,
+      "notRun": 0,
+      "heldoutReserved": 12
+    },
+    "presentation": {
+      "passed": 21,
+      "total": 21
+    },
+    "logSHA256": "FILL_ACTUAL_CURRENT_EVALUATION_LOG_SHA256"
+  },
+  "limitations": [
+    "OPEN repeated development, not release qualification or component-causal attribution.",
+    "No original heldout/sealed bodies opened or rerun.",
+    "No claim that unknown billing costs are zero."
+  ]
+}

@@ -1,0 +1,3667 @@
+{
+  "schemaVersion": 1,
+  "planHash": "7673eba2cca0b6d2014c195074e9ecdd5055ce5d29a71f646cf061a72391d2c2",
+  "stopReason": "completed",
+  "completedAllCalls": true,
+  "durationMs": 3560,
+  "totals": {
+    "consumedJev": 32,
+    "actualStartedJev": 32,
+    "actualStartedExa": 0,
+    "requestBytes": 281362,
+    "responseBytes": 44535,
+    "measuredInputTokens": 71992,
+    "usageKnownCalls": 32,
+    "usageUnknownCalls": 0
+  },
+  "cost": {
+    "exaUsd": 0,
+    "jevUsd": null,
+    "reason": "Jev pricing/output-token cost unavailable."
+  },
+  "metricScope": "Scope compatibility only; full-judge stance/risk/quality spillovers are separate diagnostics. Single-passage policy abstention is not a scope error or factual-accuracy outcome.",
+  "metrics": {
+    "open_development": {
+      "baseline": {
+        "planned": 16,
+        "observed": 16,
+        "missingOrFailed": 0,
+        "truePositive": 8,
+        "falseNegative": 0,
+        "falsePositive": 0,
+        "trueNegative": 8,
+        "decisions": [
+          {
+            "unitId": "SC11",
+            "expectedScope": true,
+            "scope": 0.9,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC08",
+            "expectedScope": false,
+            "scope": 0.18,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC13",
+            "expectedScope": true,
+            "scope": 0.9,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC07",
+            "expectedScope": true,
+            "scope": 0.85,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC14",
+            "expectedScope": false,
+            "scope": 0.14,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC03",
+            "expectedScope": true,
+            "scope": 0.96,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC12",
+            "expectedScope": false,
+            "scope": 0.08,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC15",
+            "expectedScope": true,
+            "scope": 0.91,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC05",
+            "expectedScope": true,
+            "scope": 0.91,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC16",
+            "expectedScope": false,
+            "scope": 0.12,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC09",
+            "expectedScope": true,
+            "scope": 0.93,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC04",
+            "expectedScope": false,
+            "scope": 0.1,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC06",
+            "expectedScope": false,
+            "scope": 0.21,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC01",
+            "expectedScope": true,
+            "scope": 0.88,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC10",
+            "expectedScope": false,
+            "scope": 0.06,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC02",
+            "expectedScope": false,
+            "scope": 0.16,
+            "scopePass": false
+          }
+        ]
+      },
+      "candidate": {
+        "planned": 16,
+        "observed": 16,
+        "missingOrFailed": 0,
+        "truePositive": 8,
+        "falseNegative": 0,
+        "falsePositive": 0,
+        "trueNegative": 8,
+        "decisions": [
+          {
+            "unitId": "SC11",
+            "expectedScope": true,
+            "scope": 0.93,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC08",
+            "expectedScope": false,
+            "scope": 0.06,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC13",
+            "expectedScope": true,
+            "scope": 0.95,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC07",
+            "expectedScope": true,
+            "scope": 0.89,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC14",
+            "expectedScope": false,
+            "scope": 0.05,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC03",
+            "expectedScope": true,
+            "scope": 0.96,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC12",
+            "expectedScope": false,
+            "scope": 0.04,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC15",
+            "expectedScope": true,
+            "scope": 0.96,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC05",
+            "expectedScope": true,
+            "scope": 0.91,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC16",
+            "expectedScope": false,
+            "scope": 0.04,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC09",
+            "expectedScope": true,
+            "scope": 0.95,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC04",
+            "expectedScope": false,
+            "scope": 0.03,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC06",
+            "expectedScope": false,
+            "scope": 0.08,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC01",
+            "expectedScope": true,
+            "scope": 0.9,
+            "scopePass": true
+          },
+          {
+            "unitId": "SC10",
+            "expectedScope": false,
+            "scope": 0.09,
+            "scopePass": false
+          },
+          {
+            "unitId": "SC02",
+            "expectedScope": false,
+            "scope": 0.04,
+            "scopePass": false
+          }
+        ]
+      }
+    }
+  },
+  "observations": [
+    {
+      "unitId": "SC11",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.9,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.93,
+            "misleading": 0.05,
+            "insufficient_evidence": 0.02
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.2,
+            "e0": 0.8
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.08,
+            "omitted_condition": 0.01,
+            "outdated_fact": 0,
+            "exaggeration": 0.91
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.96,
+            "health_safety": 0,
+            "disputed": 0.03,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.95
+        },
+        "e0_scope": {
+          "noul": 0.9
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.03,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.97
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.59
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.03,
+            "attributable_research": 0,
+            "substantive_secondary": 0.06,
+            "bare_assertion": 0.9,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.96
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.09
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.93,
+          "misleading": 0.05,
+          "insufficient_evidence": 0.02
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC11",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.93,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.93,
+            "misleading": 0.05,
+            "insufficient_evidence": 0.02
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.15,
+            "e0": 0.85
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.07,
+            "omitted_condition": 0.01,
+            "outdated_fact": 0,
+            "exaggeration": 0.92
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.94,
+            "health_safety": 0.01,
+            "disputed": 0.04,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.96
+        },
+        "e0_scope": {
+          "noul": 0.93
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.03,
+            "omitted_condition": 0.01,
+            "outdated_fact": 0,
+            "exaggeration": 0.96
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.59
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.02,
+            "attributable_research": 0,
+            "substantive_secondary": 0.06,
+            "bare_assertion": 0.91,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.94
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.08
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.93,
+          "misleading": 0.05,
+          "insufficient_evidence": 0.02
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC08",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.06,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.19,
+            "misleading": 0.28,
+            "insufficient_evidence": 0.53
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.87,
+            "e0": 0.13
+          }
+        },
+        "misleading_reason": {
+          "choice": "outdated_fact",
+          "probabilities": {
+            "none": 0.3,
+            "omitted_condition": 0.28,
+            "outdated_fact": 0.4,
+            "exaggeration": 0.02
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.9,
+            "health_safety": 0,
+            "disputed": 0.03,
+            "unknown": 0.07
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.02,
+            "contradicts": 0.49,
+            "unrelated": 0.49
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.31
+        },
+        "e0_scope": {
+          "noul": 0.06
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.49,
+            "omitted_condition": 0.22,
+            "outdated_fact": 0.27,
+            "exaggeration": 0.02
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.15
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.06,
+            "attributable_research": 0,
+            "substantive_secondary": 0.09,
+            "bare_assertion": 0.46,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.39
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.49,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.9
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.15
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.19,
+          "misleading": 0.28,
+          "insufficient_evidence": 0.53
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC08",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.18,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.14,
+            "misleading": 0.26,
+            "insufficient_evidence": 0.6
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.85,
+            "e0": 0.15
+          }
+        },
+        "misleading_reason": {
+          "choice": "outdated_fact",
+          "probabilities": {
+            "none": 0.27,
+            "omitted_condition": 0.3,
+            "outdated_fact": 0.41,
+            "exaggeration": 0.02
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.89,
+            "health_safety": 0,
+            "disputed": 0.04,
+            "unknown": 0.07
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.01,
+            "contradicts": 0.53,
+            "unrelated": 0.46
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.32
+        },
+        "e0_scope": {
+          "noul": 0.18
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.56,
+            "omitted_condition": 0.19,
+            "outdated_fact": 0.23,
+            "exaggeration": 0.02
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.15
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.06,
+            "attributable_research": 0,
+            "substantive_secondary": 0.1,
+            "bare_assertion": 0.46,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.38
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.53,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.89
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.16
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.14,
+          "misleading": 0.26,
+          "insufficient_evidence": 0.6
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC13",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.9,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0.01,
+            "contradicted": 0.97,
+            "misleading": 0.02,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.24,
+            "e0": 0.76
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.28,
+            "omitted_condition": 0.04,
+            "outdated_fact": 0,
+            "exaggeration": 0.68
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.01,
+            "contradicts": 0.99,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.96
+        },
+        "e0_scope": {
+          "noul": 0.9
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.15,
+            "omitted_condition": 0.07,
+            "outdated_fact": 0,
+            "exaggeration": 0.78
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.48
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.3,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.41,
+            "bare_assertion": 0.27,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.72
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0.01,
+          "contradicted": 0.97,
+          "misleading": 0.02,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC13",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.95,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0.01,
+            "contradicted": 0.96,
+            "misleading": 0.02,
+            "insufficient_evidence": 0.01
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.26,
+            "e0": 0.74
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.25,
+            "omitted_condition": 0.05,
+            "outdated_fact": 0,
+            "exaggeration": 0.7
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.99,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.01,
+            "contradicts": 0.99,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.96
+        },
+        "e0_scope": {
+          "noul": 0.95
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.15,
+            "omitted_condition": 0.08,
+            "outdated_fact": 0,
+            "exaggeration": 0.77
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.46
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.35,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.37,
+            "bare_assertion": 0.26,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.99,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.99
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.73
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0.01,
+          "contradicted": 0.96,
+          "misleading": 0.02,
+          "insufficient_evidence": 0.01
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC07",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.89,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.99,
+            "misleading": 0.01,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.24,
+            "e0": 0.76
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.06,
+            "omitted_condition": 0.06,
+            "outdated_fact": 0.17,
+            "exaggeration": 0.71
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.98,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.97
+        },
+        "e0_scope": {
+          "noul": 0.89
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.08,
+            "omitted_condition": 0.09,
+            "outdated_fact": 0.12,
+            "exaggeration": 0.71
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.55
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.23,
+            "attributable_research": 0,
+            "substantive_secondary": 0.49,
+            "bare_assertion": 0.27,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.98
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.72
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.99,
+          "misleading": 0.01,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC07",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.85,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.99,
+            "misleading": 0.01,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.24,
+            "e0": 0.76
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.08,
+            "omitted_condition": 0.07,
+            "outdated_fact": 0.18,
+            "exaggeration": 0.67
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.98,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.97
+        },
+        "e0_scope": {
+          "noul": 0.85
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.09,
+            "omitted_condition": 0.11,
+            "outdated_fact": 0.19,
+            "exaggeration": 0.61
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.49
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.21,
+            "attributable_research": 0,
+            "substantive_secondary": 0.5,
+            "bare_assertion": 0.26,
+            "attributed": 0.01,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.98
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.71
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.99,
+          "misleading": 0.01,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC14",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.14,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.4,
+            "misleading": 0.33,
+            "insufficient_evidence": 0.27
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.75,
+            "e0": 0.25
+          }
+        },
+        "misleading_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.04,
+            "omitted_condition": 0.86,
+            "outdated_fact": 0,
+            "exaggeration": 0.1
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.96,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0.03
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.02,
+            "contradicts": 0.81,
+            "unrelated": 0.17
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.23
+        },
+        "e0_scope": {
+          "noul": 0.14
+        },
+        "e0_context_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.03,
+            "omitted_condition": 0.91,
+            "outdated_fact": 0,
+            "exaggeration": 0.06
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.12
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.06,
+            "attributable_research": 0,
+            "substantive_secondary": 0.13,
+            "bare_assertion": 0.47,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.34
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.81,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.96
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.19
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.4,
+          "misleading": 0.33,
+          "insufficient_evidence": 0.27
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC14",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.05,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.47,
+            "misleading": 0.38,
+            "insufficient_evidence": 0.15
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.75,
+            "e0": 0.25
+          }
+        },
+        "misleading_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.06,
+            "omitted_condition": 0.81,
+            "outdated_fact": 0,
+            "exaggeration": 0.13
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.94,
+            "health_safety": 0,
+            "disputed": 0.02,
+            "unknown": 0.04
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.01,
+            "contradicts": 0.85,
+            "unrelated": 0.14
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.19
+        },
+        "e0_scope": {
+          "noul": 0.05
+        },
+        "e0_context_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.03,
+            "omitted_condition": 0.91,
+            "outdated_fact": 0,
+            "exaggeration": 0.06
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.1
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.07,
+            "attributable_research": 0,
+            "substantive_secondary": 0.15,
+            "bare_assertion": 0.46,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.32
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.85,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.94
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.22
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.47,
+          "misleading": 0.38,
+          "insufficient_evidence": 0.15
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC03",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.96,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.85,
+            "misleading": 0.15,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.07,
+            "e0": 0.93
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.01,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.99
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.95
+        },
+        "e0_scope": {
+          "noul": 0.96
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.01,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.99
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.7
+        },
+        "e0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.83,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.14,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "original_record",
+          "confidence": 0.98
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.85,
+          "misleading": 0.15,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "below_threshold",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC03",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.96,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.86,
+            "misleading": 0.14,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.07,
+            "e0": 0.93
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.01,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.99
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.95
+        },
+        "e0_scope": {
+          "noul": 0.96
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.01,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.99
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.7
+        },
+        "e0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.82,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.14,
+            "bare_assertion": 0.02,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "original_record",
+          "confidence": 0.97
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.86,
+          "misleading": 0.14,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "below_threshold",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC12",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.08,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.1,
+            "misleading": 0.33,
+            "insufficient_evidence": 0.57
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.83,
+            "e0": 0.17
+          }
+        },
+        "misleading_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.22,
+            "omitted_condition": 0.47,
+            "outdated_fact": 0.1,
+            "exaggeration": 0.21
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.95,
+            "health_safety": 0.02,
+            "disputed": 0.01,
+            "unknown": 0.02
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 0.4,
+            "unrelated": 0.6
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.14
+        },
+        "e0_scope": {
+          "noul": 0.08
+        },
+        "e0_context_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.2,
+            "omitted_condition": 0.62,
+            "outdated_fact": 0.08,
+            "exaggeration": 0.1
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.16
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0.02,
+            "bare_assertion": 0.63,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.34
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.6,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.95
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.03
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.1,
+          "misleading": 0.33,
+          "insufficient_evidence": 0.57
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC12",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.04,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.09,
+            "misleading": 0.29,
+            "insufficient_evidence": 0.62
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.84,
+            "e0": 0.16
+          }
+        },
+        "misleading_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.2,
+            "omitted_condition": 0.5,
+            "outdated_fact": 0.09,
+            "exaggeration": 0.21
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.97,
+            "health_safety": 0.01,
+            "disputed": 0.01,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 0.49,
+            "unrelated": 0.51
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.15
+        },
+        "e0_scope": {
+          "noul": 0.04
+        },
+        "e0_context_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.23,
+            "omitted_condition": 0.56,
+            "outdated_fact": 0.08,
+            "exaggeration": 0.13
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.12
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.01,
+            "attributable_research": 0,
+            "substantive_secondary": 0.03,
+            "bare_assertion": 0.62,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.34
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.51,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.97
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.04
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.09,
+          "misleading": 0.29,
+          "insufficient_evidence": 0.62
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC15",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.96,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0.01,
+            "contradicted": 0.67,
+            "misleading": 0.31,
+            "insufficient_evidence": 0.01
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.1,
+            "e0": 0.9
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.08,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.92
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.06,
+            "contradicts": 0.93,
+            "unrelated": 0.01
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.96
+        },
+        "e0_scope": {
+          "noul": 0.96
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.04,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.96
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.45
+        },
+        "e0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.44,
+            "attributable_research": 0,
+            "substantive_secondary": 0.16,
+            "bare_assertion": 0.38,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.93,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "original_record",
+          "confidence": 0.6
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0.01,
+          "contradicted": 0.67,
+          "misleading": 0.31,
+          "insufficient_evidence": 0.01
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "below_threshold",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC15",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.91,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0.01,
+            "contradicted": 0.67,
+            "misleading": 0.31,
+            "insufficient_evidence": 0.01
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.12,
+            "e0": 0.88
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.08,
+            "omitted_condition": 0.01,
+            "outdated_fact": 0,
+            "exaggeration": 0.91
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.08,
+            "contradicts": 0.91,
+            "unrelated": 0.01
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.94
+        },
+        "e0_scope": {
+          "noul": 0.91
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.05,
+            "omitted_condition": 0,
+            "outdated_fact": 0,
+            "exaggeration": 0.95
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.41
+        },
+        "e0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.44,
+            "attributable_research": 0,
+            "substantive_secondary": 0.2,
+            "bare_assertion": 0.34,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.91,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "original_record",
+          "confidence": 0.64
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0.01,
+          "contradicted": 0.67,
+          "misleading": 0.31,
+          "insufficient_evidence": 0.01
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "below_threshold",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC05",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.91,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.97,
+            "misleading": 0.01,
+            "insufficient_evidence": 0.02
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.04,
+            "e0": 0.96
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.53,
+            "omitted_condition": 0.22,
+            "outdated_fact": 0.01,
+            "exaggeration": 0.24
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.88
+        },
+        "e0_scope": {
+          "noul": 0.91
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.71,
+            "omitted_condition": 0.11,
+            "outdated_fact": 0,
+            "exaggeration": 0.18
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.4
+        },
+        "e0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.35,
+            "attributable_research": 0,
+            "substantive_secondary": 0.31,
+            "bare_assertion": 0.29,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.05
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "original_record",
+          "confidence": 0.6599999999999999
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.97,
+          "misleading": 0.01,
+          "insufficient_evidence": 0.02
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC05",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.91,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.99,
+            "misleading": 0,
+            "insufficient_evidence": 0.01
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.04,
+            "e0": 0.96
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.56,
+            "omitted_condition": 0.21,
+            "outdated_fact": 0.01,
+            "exaggeration": 0.22
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 1,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.86
+        },
+        "e0_scope": {
+          "noul": 0.91
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.72,
+            "omitted_condition": 0.11,
+            "outdated_fact": 0,
+            "exaggeration": 0.17
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.36
+        },
+        "e0_content_basis": {
+          "choice": "original_record",
+          "probabilities": {
+            "original_record": 0.38,
+            "attributable_research": 0,
+            "substantive_secondary": 0.25,
+            "bare_assertion": 0.33,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.04
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 1
+        },
+        "quality": {
+          "contentBasis": "original_record",
+          "confidence": 0.63
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.99,
+          "misleading": 0,
+          "insufficient_evidence": 0.01
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC16",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.04,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.12,
+            "misleading": 0.19,
+            "insufficient_evidence": 0.69
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.86,
+            "e0": 0.14
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.19,
+            "omitted_condition": 0.18,
+            "outdated_fact": 0.01,
+            "exaggeration": 0.62
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.85,
+            "health_safety": 0,
+            "disputed": 0.02,
+            "unknown": 0.13
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 0.14,
+            "unrelated": 0.86
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.07
+        },
+        "e0_scope": {
+          "noul": 0.04
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.37,
+            "omitted_condition": 0.08,
+            "outdated_fact": 0,
+            "exaggeration": 0.55
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.09
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.08,
+            "attributable_research": 0,
+            "substantive_secondary": 0.01,
+            "bare_assertion": 0.33,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.58
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.86,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.85
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.09
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.12,
+          "misleading": 0.19,
+          "insufficient_evidence": 0.69
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC16",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.12,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.11,
+            "misleading": 0.17,
+            "insufficient_evidence": 0.72
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.87,
+            "e0": 0.13
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.2,
+            "omitted_condition": 0.17,
+            "outdated_fact": 0,
+            "exaggeration": 0.63
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.86,
+            "health_safety": 0,
+            "disputed": 0.02,
+            "unknown": 0.12
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 0.13,
+            "unrelated": 0.87
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.06
+        },
+        "e0_scope": {
+          "noul": 0.12
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.35,
+            "omitted_condition": 0.09,
+            "outdated_fact": 0,
+            "exaggeration": 0.56
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.09
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.07,
+            "attributable_research": 0,
+            "substantive_secondary": 0.02,
+            "bare_assertion": 0.37,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.54
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.87,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.86
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.09000000000000001
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.11,
+          "misleading": 0.17,
+          "insufficient_evidence": 0.72
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC09",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.93,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.99,
+            "misleading": 0.01,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.02,
+            "e0": 0.98
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.02,
+            "omitted_condition": 0.37,
+            "outdated_fact": 0,
+            "exaggeration": 0.61
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.97,
+            "health_safety": 0,
+            "disputed": 0.02,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.97
+        },
+        "e0_scope": {
+          "noul": 0.93
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.02,
+            "omitted_condition": 0.23,
+            "outdated_fact": 0,
+            "exaggeration": 0.75
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.63
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.16,
+            "attributable_research": 0,
+            "substantive_secondary": 0.54,
+            "bare_assertion": 0.29,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.01
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.97
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.7000000000000001
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.99,
+          "misleading": 0.01,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC09",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.95,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.99,
+            "misleading": 0.01,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.02,
+            "e0": 0.98
+          }
+        },
+        "misleading_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.01,
+            "omitted_condition": 0.39,
+            "outdated_fact": 0,
+            "exaggeration": 0.6
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.99,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.97
+        },
+        "e0_scope": {
+          "noul": 0.95
+        },
+        "e0_context_reason": {
+          "choice": "exaggeration",
+          "probabilities": {
+            "none": 0.02,
+            "omitted_condition": 0.2,
+            "outdated_fact": 0,
+            "exaggeration": 0.78
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.67
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.16,
+            "attributable_research": 0,
+            "substantive_secondary": 0.57,
+            "bare_assertion": 0.25,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.99
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.73
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.99,
+          "misleading": 0.01,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC04",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.03,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "misleading",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.43,
+            "misleading": 0.49,
+            "insufficient_evidence": 0.08
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.81,
+            "e0": 0.19
+          }
+        },
+        "misleading_reason": {
+          "choice": "outdated_fact",
+          "probabilities": {
+            "none": 0.06,
+            "omitted_condition": 0.23,
+            "outdated_fact": 0.67,
+            "exaggeration": 0.04
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.97,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0.03
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.03,
+            "contradicts": 0.89,
+            "unrelated": 0.08
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.23
+        },
+        "e0_scope": {
+          "noul": 0.03
+        },
+        "e0_context_reason": {
+          "choice": "outdated_fact",
+          "probabilities": {
+            "none": 0.09,
+            "omitted_condition": 0.38,
+            "outdated_fact": 0.48,
+            "exaggeration": 0.05
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.41
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.3,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.07,
+            "bare_assertion": 0.26,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.36
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.89,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.97
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.38
+        },
+        "modelLabel": "misleading",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.43,
+          "misleading": 0.49,
+          "insufficient_evidence": 0.08
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC04",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.1,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "misleading",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.43,
+            "misleading": 0.52,
+            "insufficient_evidence": 0.05
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.82,
+            "e0": 0.18
+          }
+        },
+        "misleading_reason": {
+          "choice": "outdated_fact",
+          "probabilities": {
+            "none": 0.07,
+            "omitted_condition": 0.33,
+            "outdated_fact": 0.55,
+            "exaggeration": 0.05
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.98,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0.02
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.03,
+            "contradicts": 0.9,
+            "unrelated": 0.07
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.28
+        },
+        "e0_scope": {
+          "noul": 0.1
+        },
+        "e0_context_reason": {
+          "choice": "outdated_fact",
+          "probabilities": {
+            "none": 0.11,
+            "omitted_condition": 0.38,
+            "outdated_fact": 0.47,
+            "exaggeration": 0.04
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.37
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.27,
+            "attributable_research": 0.01,
+            "substantive_secondary": 0.1,
+            "bare_assertion": 0.23,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.39
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.9,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.98
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.38
+        },
+        "modelLabel": "misleading",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.43,
+          "misleading": 0.52,
+          "insufficient_evidence": 0.05
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC06",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.21,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0.01,
+            "contradicted": 0.31,
+            "misleading": 0.07,
+            "insufficient_evidence": 0.61
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.59,
+            "e0": 0.41
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.5,
+            "omitted_condition": 0.34,
+            "outdated_fact": 0,
+            "exaggeration": 0.16
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.99,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.01,
+            "contradicts": 0.57,
+            "unrelated": 0.42
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.3
+        },
+        "e0_scope": {
+          "noul": 0.21
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.71,
+            "omitted_condition": 0.18,
+            "outdated_fact": 0,
+            "exaggeration": 0.11
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.14
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.03,
+            "attributable_research": 0,
+            "substantive_secondary": 0.06,
+            "bare_assertion": 0.38,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.53
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.57,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.99
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.09
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0.01,
+          "contradicted": 0.31,
+          "misleading": 0.07,
+          "insufficient_evidence": 0.61
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC06",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.08,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0.01,
+            "contradicted": 0.35,
+            "misleading": 0.07,
+            "insufficient_evidence": 0.57
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.49,
+            "e0": 0.51
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.55,
+            "omitted_condition": 0.32,
+            "outdated_fact": 0,
+            "exaggeration": 0.13
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.99,
+            "health_safety": 0,
+            "disputed": 0,
+            "unknown": 0.01
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0.01,
+            "contradicts": 0.6,
+            "unrelated": 0.39
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.28
+        },
+        "e0_scope": {
+          "noul": 0.08
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.76,
+            "omitted_condition": 0.14,
+            "outdated_fact": 0,
+            "exaggeration": 0.1
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.17
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.04,
+            "attributable_research": 0,
+            "substantive_secondary": 0.05,
+            "bare_assertion": 0.42,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.49
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 0.6,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.99
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.09
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0.01,
+          "contradicted": 0.35,
+          "misleading": 0.07,
+          "insufficient_evidence": 0.57
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC01",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.9,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.97,
+            "misleading": 0.03,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.16,
+            "e0": 0.84
+          }
+        },
+        "misleading_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.2,
+            "omitted_condition": 0.61,
+            "outdated_fact": 0.04,
+            "exaggeration": 0.15
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.99,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.95
+        },
+        "e0_scope": {
+          "noul": 0.9
+        },
+        "e0_context_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.22,
+            "omitted_condition": 0.45,
+            "outdated_fact": 0.14,
+            "exaggeration": 0.19
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.52
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.29,
+            "attributable_research": 0,
+            "substantive_secondary": 0.51,
+            "bare_assertion": 0.18,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.02
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.99
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.8
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.97,
+          "misleading": 0.03,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC01",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.88,
+      "scopePass": true,
+      "answers": {
+        "verdict": {
+          "choice": "contradicted",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.97,
+            "misleading": 0.03,
+            "insufficient_evidence": 0
+          }
+        },
+        "selected_evidence": {
+          "choice": "e0",
+          "probabilities": {
+            "none": 0.13,
+            "e0": 0.87
+          }
+        },
+        "misleading_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.17,
+            "omitted_condition": 0.69,
+            "outdated_fact": 0.04,
+            "exaggeration": 0.1
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.99,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0
+          }
+        },
+        "e0_stance": {
+          "choice": "contradicts",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 1,
+            "unrelated": 0
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.95
+        },
+        "e0_scope": {
+          "noul": 0.88
+        },
+        "e0_context_reason": {
+          "choice": "omitted_condition",
+          "probabilities": {
+            "none": 0.19,
+            "omitted_condition": 0.57,
+            "outdated_fact": 0.08,
+            "exaggeration": 0.16
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.51
+        },
+        "e0_content_basis": {
+          "choice": "substantive_secondary",
+          "probabilities": {
+            "original_record": 0.32,
+            "attributable_research": 0,
+            "substantive_secondary": 0.49,
+            "bare_assertion": 0.16,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.03
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "contradicts",
+        "stanceProbability": 1,
+        "relevance": true,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.99
+        },
+        "quality": {
+          "contentBasis": "substantive_secondary",
+          "confidence": 0.81
+        },
+        "modelLabel": "contradicted",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.97,
+          "misleading": 0.03,
+          "insufficient_evidence": 0
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "insufficient_independent_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC10",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.06,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.01,
+            "misleading": 0.02,
+            "insufficient_evidence": 0.97
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.82,
+            "e0": 0.18
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.61,
+            "omitted_condition": 0.18,
+            "outdated_fact": 0,
+            "exaggeration": 0.21
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.9,
+            "health_safety": 0,
+            "disputed": 0.06,
+            "unknown": 0.04
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0.04,
+            "contradicts": 0.05,
+            "unrelated": 0.91
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.16
+        },
+        "e0_scope": {
+          "noul": 0.06
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.82,
+            "omitted_condition": 0.08,
+            "outdated_fact": 0,
+            "exaggeration": 0.1
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.11
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.06,
+            "attributable_research": 0,
+            "substantive_secondary": 0.25,
+            "bare_assertion": 0.42,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.27
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.91,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.9
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.31
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.01,
+          "misleading": 0.02,
+          "insufficient_evidence": 0.97
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC10",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.09,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0.01,
+            "misleading": 0.02,
+            "insufficient_evidence": 0.97
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.85,
+            "e0": 0.15
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.63,
+            "omitted_condition": 0.18,
+            "outdated_fact": 0,
+            "exaggeration": 0.19
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.92,
+            "health_safety": 0,
+            "disputed": 0.04,
+            "unknown": 0.04
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0.03,
+            "contradicts": 0.06,
+            "unrelated": 0.91
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.14
+        },
+        "e0_scope": {
+          "noul": 0.09
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.77,
+            "omitted_condition": 0.09,
+            "outdated_fact": 0,
+            "exaggeration": 0.14
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.11
+        },
+        "e0_content_basis": {
+          "choice": "bare_assertion",
+          "probabilities": {
+            "original_record": 0.05,
+            "attributable_research": 0,
+            "substantive_secondary": 0.24,
+            "bare_assertion": 0.4,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.31
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.91,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.92
+        },
+        "quality": {
+          "contentBasis": "bare_assertion",
+          "confidence": 0.29
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0.01,
+          "misleading": 0.02,
+          "insufficient_evidence": 0.97
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC02",
+      "arm": "candidate",
+      "status": "completed",
+      "scope": 0.04,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0,
+            "misleading": 0,
+            "insufficient_evidence": 1
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.96,
+            "e0": 0.04
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.94,
+            "omitted_condition": 0.04,
+            "outdated_fact": 0.01,
+            "exaggeration": 0.01
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.93,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0.06
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 0.04,
+            "unrelated": 0.96
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.06
+        },
+        "e0_scope": {
+          "noul": 0.04
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.95,
+            "omitted_condition": 0.03,
+            "outdated_fact": 0.02,
+            "exaggeration": 0
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.04
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.02,
+            "attributable_research": 0,
+            "substantive_secondary": 0.05,
+            "bare_assertion": 0.12,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.81
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.96,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.93
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.07
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 1
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    },
+    {
+      "unitId": "SC02",
+      "arm": "baseline",
+      "status": "completed",
+      "scope": 0.16,
+      "scopePass": false,
+      "answers": {
+        "verdict": {
+          "choice": "insufficient_evidence",
+          "probabilities": {
+            "supported": 0,
+            "contradicted": 0,
+            "misleading": 0,
+            "insufficient_evidence": 1
+          }
+        },
+        "selected_evidence": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.97,
+            "e0": 0.03
+          }
+        },
+        "misleading_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.92,
+            "omitted_condition": 0.05,
+            "outdated_fact": 0.01,
+            "exaggeration": 0.02
+          }
+        },
+        "claim_risk": {
+          "choice": "ordinary",
+          "probabilities": {
+            "ordinary": 0.94,
+            "health_safety": 0,
+            "disputed": 0.01,
+            "unknown": 0.05
+          }
+        },
+        "e0_stance": {
+          "choice": "unrelated",
+          "probabilities": {
+            "supports": 0,
+            "contradicts": 0.05,
+            "unrelated": 0.95
+          }
+        },
+        "e0_relevant": {
+          "noul": 0.05
+        },
+        "e0_scope": {
+          "noul": 0.16
+        },
+        "e0_context_reason": {
+          "choice": "none",
+          "probabilities": {
+            "none": 0.96,
+            "omitted_condition": 0.03,
+            "outdated_fact": 0.01,
+            "exaggeration": 0
+          }
+        },
+        "e0_context_established": {
+          "noul": 0.04
+        },
+        "e0_content_basis": {
+          "choice": "unclear",
+          "probabilities": {
+            "original_record": 0.02,
+            "attributable_research": 0,
+            "substantive_secondary": 0.04,
+            "bare_assertion": 0.16,
+            "attributed": 0,
+            "promotional": 0,
+            "unclear": 0.78
+          }
+        }
+      },
+      "diagnostics": {
+        "stance": "unrelated",
+        "stanceProbability": 0.95,
+        "relevance": false,
+        "claimRisk": {
+          "level": "ordinary",
+          "confidence": 0.94
+        },
+        "quality": {
+          "contentBasis": "unclear",
+          "confidence": 0.06
+        },
+        "modelLabel": "insufficient_evidence",
+        "verdictProbabilities": {
+          "supported": 0,
+          "contradicted": 0,
+          "misleading": 0,
+          "insufficient_evidence": 1
+        },
+        "policyDecision": {
+          "verdict": "insufficient_evidence",
+          "reasonCode": "no_direct_evidence",
+          "selectedEvidenceIds": [],
+          "summary": "I couldn’t verify that."
+        }
+      }
+    }
+  ]
+}

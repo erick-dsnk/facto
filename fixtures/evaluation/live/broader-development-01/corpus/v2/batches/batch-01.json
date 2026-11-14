@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "broader-development-2026-11-14-v2-batch-1",
+  "cases": [
+    {
+      "label": "BD01",
+      "text": "The Great Fire of London occurred in 1666.",
+      "allowedPublic": [
+        "The Great Fire of London occurred in 1666."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD01",
+            "acceptedTexts": [
+              "The Great Fire of London occurred in 1666."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD02",
+      "text": "Magna Carta was first issued in 1216.",
+      "allowedPublic": [
+        "Magna Carta was first issued in 1216."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD02",
+            "acceptedTexts": [
+              "Magna Carta was first issued in 1216."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD03",
+      "text": "Mount Kilimanjaro is located in Tanzania.",
+      "allowedPublic": [
+        "Mount Kilimanjaro is located in Tanzania."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD03",
+            "acceptedTexts": [
+              "Mount Kilimanjaro is located in Tanzania."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BDC01",
+      "text": "I misplaced my blue notebook on the train yesterday.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "skip",
+        "claims": []
+      }
+    }
+  ]
+}

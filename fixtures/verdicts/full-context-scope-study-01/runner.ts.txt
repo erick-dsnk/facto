@@ -1,0 +1,486 @@
+import { createHash } from 'node:crypto';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { MODEL_VERSION, type AcceptedClaim, type Evidence, type ProviderContext } from '/workspace/live-frozen-08/packages/contracts/src/index.ts';
+import { createJudge } from '/workspace/live-frozen-08/services/api/src/providers/jev/judgment.ts';
+import { createJevClient, type JevAnswer, type JevRequest } from '/workspace/live-frozen-08/services/api/src/providers/jev/client.ts';
+import { decideVerdict } from '/workspace/live-frozen-08/services/api/src/policy/verdict.ts';
+import { substituteScopeInstructions, PROPOSAL_PATH, PROPOSAL_SHA256 } from './candidate.ts';
+export const LIMITS = Object.freeze({ maxAttempts: 48, maxInputTokens: 640000, pendingReserve: 24000, maxRequestBytes: 65536, maxTotalRequestBytes: 3145728, wallMs: 120000 });
+export const FROZEN_COMMIT = 'aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c';
+export const hash = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');
+const check: (condition: unknown, message: string) => asserts condition = (condition, message) => { if (!condition)
+    throw new Error(message); };
+const encode = (request: JevRequest): string => JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions });
+/** Runner-owned settlement: an abort-ignoring transport cannot hold the campaign open. */
+export function raceAbort<T>(operation: Promise<T>, signal: AbortSignal, onAbort: () => void): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+        let settled = false;
+        const abort = () => { if (settled)
+            return; settled = true; onAbort(); signal.removeEventListener('abort', abort); reject(new Error('absolute_wall_deadline')); };
+        if (signal.aborted) {
+            operation.catch(() => { });
+            abort();
+            return;
+        }
+        signal.addEventListener('abort', abort, { once: true });
+        operation.then(value => { if (settled)
+            return; settled = true; signal.removeEventListener('abort', abort); resolve(value); }, error => { if (settled)
+            return; settled = true; signal.removeEventListener('abort', abort); reject(error); });
+    });
+}
+function cancelDetached(cancel: () => Promise<unknown>): void { try {
+    void cancel().catch(() => { });
+}
+catch { } }
+export type Condition = 'original_full' | 'reversed_full';
+export type Arm = 'baseline' | 'scope_candidate';
+export type Stratum = 'prospective' | 'existing_safety_diagnostic';
+export const STRATUM_LIMITS = Object.freeze({ maxAttempts: 24, maxInputTokens: 320000, pendingReserve: 24000, maxRequestBytes: 65536, maxTotalRequestBytes: 1572864 });
+export const CANDIDATE_SHA = PROPOSAL_SHA256;
+export type Context = {
+    stratum: Stratum;
+    contrastFamily?: string;
+    synthetic?: boolean;
+    caseId: string;
+    targetId: string;
+    proposition: string;
+    records: Evidence[];
+    reportPath: string;
+    reportSha256: string;
+    evidenceStageIndex: number;
+    judgmentOrdinal: number;
+    staleJudgment: {
+        sourceAssessments: Record<string, {
+            contentBasis: string;
+            confidence: number;
+        }>;
+        [key: string]: unknown;
+    };
+};
+export type Label = {
+    caseId: string;
+    retainedId: string;
+    expectedScope: boolean | null;
+    expectedStance: 'supports' | 'contradicts' | 'unrelated' | null;
+    excludeFromPrimary?: boolean;
+    [key: string]: unknown;
+};
+type Call = {
+    stratum: Stratum;
+    arm: Arm;
+    caseId: string;
+    targetId: string;
+    condition: Condition;
+    evidenceOrder: string[];
+    requestBytes: number;
+    bodyHash: string;
+    questionCount: number;
+    questionHashes: Record<string, string>;
+};
+export type Plan = {
+    schemaVersion: 1;
+    frozenCommit: string;
+    preparedAt: string;
+    model: string;
+    assessmentThreshold: number;
+    limits: typeof LIMITS;
+    sourceHashes: Record<string, string>;
+    inputHashes: Record<string, string>;
+    labels: Label[];
+    stratumLimits: typeof STRATUM_LIMITS;
+    deferredCohorts: string[];
+    payloadByStratum: Record<string, {
+        calls: number;
+        bytes: number;
+        largestRequestBytes: number;
+    }>;
+    calls: Call[];
+    causalLimits: string[];
+};
+const sourceHashes = (): Record<string, string> => Object.fromEntries([
+    ...['packages/contracts/src/index.ts', 'package-lock.json', 'services/api/src/providers/jev/judgment.ts', 'services/api/src/providers/jev/client.ts', 'services/api/src/policy/assessment.ts', 'services/api/src/policy/sources.ts', 'services/api/src/policy/verdict.ts', 'services/api/src/runtime/provider-retry.ts'].map(path => [path, hash(readFileSync(`/workspace/live-frozen-08/${path}`))]),
+    ['scope-runner.ts', hash(readFileSync(new URL('./runner.ts', import.meta.url)))],
+    ['scope-candidate.ts', hash(readFileSync(new URL('./candidate.ts', import.meta.url)))],
+    ['scope-proposal.json', hash(readFileSync(PROPOSAL_PATH))],
+    ['staging.json', hash(readFileSync(new URL('./staging.json', import.meta.url)))],
+]);
+const claim = (context: Context): AcceptedClaim => ({ id: context.caseId, originalText: context.proposition, checkedText: context.proposition, sourceSpan: { start: 0, end: Array.from(context.proposition).length }, admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_fact', hasPracticalConsequence: null, matchedSelectedTopic: null } });
+export function recordsFor(context: Context, condition: Condition): Evidence[] {
+    const records = condition === 'original_full' ? context.records : [...context.records].reverse();
+    return records.map(record => ({ ...record, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null }));
+}
+export async function captureRequest(context: Context, condition: Condition, arm: Arm = 'baseline'): Promise<JevRequest> {
+    let captured: JevRequest | undefined;
+    const sentinel = new Error('offline frozen08 capture');
+    try {
+        await createJudge({ ask: async (request) => { captured = arm === 'baseline' ? request : substituteScopeInstructions(request); throw sentinel; } })(claim(context), recordsFor(context, condition), { signal: new AbortController().signal, consume: () => { throw new Error('offline capture cannot consume'); }, now: Date.now });
+    }
+    catch (error) {
+        if (error !== sentinel)
+            throw error;
+    }
+    check(captured, 'frozen08 request not captured');
+    return captured;
+}
+export async function buildPlan(contexts: Context[], labels: Label[], inputHashes: Record<string, string>): Promise<Plan> {
+    check(contexts.length === 18 && new Set(contexts.map(c => c.caseId)).size === 18 && contexts.filter(c => c.stratum === 'prospective').length === 12 && contexts.filter(c => c.stratum === 'existing_safety_diagnostic').length === 6, '12 prospective and six existing complete contexts required');
+    check(labels.length === 36 && new Set(labels.map(l => l.caseId + '::' + l.retainedId)).size === labels.length, 'all36 independently reviewed prospective source labels required');
+    for (const c of contexts.filter(c => c.stratum === 'prospective'))
+        check(c.records.length === 3 && c.records.every(r => labels.some(l => l.caseId === c.caseId && l.retainedId === r.id)), 'prospective labels must cover every one of the36 retained records');
+    for (const label of labels) {
+        const c = contexts.find(c => c.caseId === label.caseId && c.stratum === 'prospective');
+        check(c?.records.some(e => e.id === label.retainedId), 'label refers outside prospective context');
+        check(label.expectedScope === null || typeof label.expectedScope === 'boolean', 'invalid scope label');
+        check(label.expectedStance === null || ['supports', 'contradicts', 'unrelated'].includes(label.expectedStance), 'invalid stance label');
+    }
+    check(hash(readFileSync(PROPOSAL_PATH)) === PROPOSAL_SHA256, 'frozen scope proposal changed');
+    const calls: Call[] = [];
+    const ordered = [...contexts].sort((a, b) => (a.stratum === 'prospective' ? 0 : 1) - (b.stratum === 'prospective' ? 0 : 1) || hash(a.targetId).localeCompare(hash(b.targetId)));
+    const stratumIndexes: Record<string, number> = {};
+    let block = 0;
+    for (const [index, context] of ordered.entries()) {
+        check(hash(readFileSync(context.reportPath)) === context.reportSha256, 'original OPEN report changed');
+        check(context.records.length >= (context.stratum === 'prospective' ? 3 : 2) && context.records.length <= 6 && new Set(context.records.map(record => record.id)).size === context.records.length, 'full set missing/duplicate/beyond cap');
+        check(context.records.every(record => typeof record.excerpt === 'string' && Array.from(record.excerpt).length <= 2000), 'retained excerpt exceeds unchanged2000-codepoint cap');
+        check(context.records.some(record => record.id === context.targetId) && (context.stratum !== 'prospective' || labels.some(label => label.caseId === context.caseId && label.retainedId === context.targetId)), 'target/label not in context');
+        const stratumIndex = stratumIndexes[context.stratum] ?? 0;
+        stratumIndexes[context.stratum] = stratumIndex + 1;
+        const conditions: Condition[] = context.stratum === 'prospective' ? ['original_full'] : stratumIndex % 2 ? ['reversed_full', 'original_full'] : ['original_full', 'reversed_full'];
+        for (const condition of conditions) {
+            const baseline = await captureRequest(context, condition, 'baseline'), candidate = await captureRequest(context, condition, 'scope_candidate');
+            check(JSON.stringify(baseline.state) === JSON.stringify(candidate.state), 'within-pair state differs');
+            check(JSON.stringify(Object.keys(baseline.questions)) === JSON.stringify(Object.keys(candidate.questions)), 'within-pair question names differ');
+            for (const [name, question] of Object.entries(baseline.questions)) {
+                const after = candidate.questions[name];
+                if (!/^e\d+_scope$/.test(name))
+                    check(JSON.stringify(question) === JSON.stringify(after), 'nonscope question changed');
+                else
+                    check(question.type === 'noul' && after.type === 'noul' && after.instructions.startsWith(question.instructions + ' '), 'scope template/options changed');
+            }
+            const records = recordsFor(context, condition);
+            check(JSON.stringify(records.map(record => record.id).sort()) === JSON.stringify(context.records.map(record => record.id).sort()), 'full condition dropped a companion/conflict/origin bridge');
+            const arms: Arm[] = block++ % 2 ? ['scope_candidate', 'baseline'] : ['baseline', 'scope_candidate'];
+            for (const arm of arms) {
+                const request = arm === 'baseline' ? baseline : candidate;
+                records.forEach((record, position) => { check(request.questions[`e${position}_content_basis`].instructions.includes(record.id), 'source binding mismatch'); const selected = request.questions.selected_evidence; check(selected.type === 'choice' && selected.criteria[`e${position}`] === `Retained evidence ${record.id}`, 'selected binding mismatch'); });
+                const body = encode(request);
+                check(Buffer.byteLength(body) <= LIMITS.maxRequestBytes, 'request byte cap');
+                calls.push({ stratum: context.stratum, arm, caseId: context.caseId, targetId: context.targetId, condition, evidenceOrder: records.map(record => record.id), requestBytes: Buffer.byteLength(body), bodyHash: hash(body), questionCount: Object.keys(request.questions).length, questionHashes: Object.fromEntries(Object.entries(request.questions).map(([name, question]) => [name, hash(JSON.stringify(question))])) });
+            }
+        }
+    }
+    check(calls.length === LIMITS.maxAttempts && calls.reduce((sum, call) => sum + call.requestBytes, 0) <= LIMITS.maxTotalRequestBytes, 'campaign attempt/byte cap');
+    const payloadByStratum = Object.fromEntries((['prospective', 'existing_safety_diagnostic'] as const).map(stratum => { const selected = calls.filter(c => c.stratum === stratum); const bytes = selected.reduce((n, c) => n + c.requestBytes, 0); check(selected.length === STRATUM_LIMITS.maxAttempts && bytes <= STRATUM_LIMITS.maxTotalRequestBytes, 'stratum attempt/byte cap'); return [stratum, { calls: selected.length, bytes, largestRequestBytes: Math.max(...selected.map(c => c.requestBytes)) }]; }));
+    return { schemaVersion: 1, frozenCommit: FROZEN_COMMIT, preparedAt: new Date().toISOString(), model: MODEL_VERSION, assessmentThreshold: .85, limits: LIMITS, stratumLimits: STRATUM_LIMITS, deferredCohorts: ['scope16_live_rerun'], payloadByStratum, sourceHashes: sourceHashes(), inputHashes, labels, calls, causalLimits: [
+            'One frozen scope-only appendix; every nonscope question, actual full state and threshold remain unchanged within each pair.',
+            'Two separate strata:12 independently authored prospective full contexts once per arm; six outcome-informed existing safety contexts in both orders. Never pool accuracy.',
+            'scope16 live rerun was explicitly DEFERRED before outputs; oldscope16 results do not validate this candidate.',
+            'No adaptive repeats, isolation, companion/bridge removal, basis combination, label change or threshold tuning.',
+            'Synthetic prospective records and correlated contrast pairs carry no factual-accuracy or live-coverage credit.',
+            'All source/joint/risk/origin/selection/policy outputs and spillovers retained. A new definitive existing result requires independent exact-selected-source audit.',
+            'Current approved plan preparation authorizes zero live calls; explicit root run authorization remains required.',
+        ] };
+}
+type Observation = {
+    stratum: Stratum;
+    arm: Arm;
+    caseId: string;
+    targetId: string;
+    condition: Condition;
+    status: string;
+    assessments?: Record<string, unknown>;
+    targetQuality?: {
+        contentBasis: string;
+        confidence: number;
+    };
+    targetQualityPass?: boolean;
+    [key: string]: unknown;
+};
+export function summarizeObservations(observations: Observation[], labels: Label[], contexts: Context[]) {
+    const prospective = Object.fromEntries((['baseline', 'scope_candidate'] as const).map(arm => {
+        const completed = observations.filter(o => o.stratum === 'prospective' && o.arm === arm && o.status === 'completed');
+        const score = (targetOnly: boolean) => {
+            const eligible = labels.filter(l => !targetOnly || contexts.find(c => c.caseId === l.caseId)?.targetId === l.retainedId);
+            const result = { declaredLabels: eligible.length, declaredPositive: eligible.filter(l => !l.excludeFromPrimary && l.expectedScope === true).length, declaredNegative: eligible.filter(l => !l.excludeFromPrimary && l.expectedScope === false).length, declaredAmbiguousOrExcluded: eligible.filter(l => l.excludeFromPrimary || l.expectedScope === null).length, observed: 0, missing: 0, missingPositive: 0, missingNegative: 0, missingAmbiguousOrExcluded: 0, excludedOrAmbiguous: 0, positive: 0, trueAccept: 0, falseReject: 0, negative: 0, falseAccept: 0, trueReject: 0, declaredStanceLabels: eligible.filter(l => !l.excludeFromPrimary && l.expectedStance !== null).length, missingStanceLabels: 0, stanceLabeled: 0, stanceChoiceCorrect: 0 };
+            for (const l of eligible) {
+                const row = completed.find(o => o.caseId === l.caseId) as any;
+                if (!row) {
+                    result.missing++;
+                    if (l.excludeFromPrimary || l.expectedScope === null)
+                        result.missingAmbiguousOrExcluded++;
+                    else if (l.expectedScope)
+                        result.missingPositive++;
+                    else
+                        result.missingNegative++;
+                    if (!l.excludeFromPrimary && l.expectedStance !== null)
+                        result.missingStanceLabels++;
+                    continue;
+                }
+                const p = row.evidenceOrder.indexOf(l.retainedId);
+                check(p >= 0, 'scored source missing from full result');
+                result.observed++;
+                if (!l.excludeFromPrimary && l.expectedStance !== null) {
+                    result.stanceLabeled++;
+                    if (row.answers[`e${p}_stance`].choice === l.expectedStance)
+                        result.stanceChoiceCorrect++;
+                }
+                if (l.excludeFromPrimary || l.expectedScope === null) {
+                    result.excludedOrAmbiguous++;
+                    continue;
+                }
+                const pass = row.answers[`e${p}_scope`].noul >= .85;
+                if (l.expectedScope) {
+                    result.positive++;
+                    if (pass)
+                        result.trueAccept++;
+                    else
+                        result.falseReject++;
+                }
+                else {
+                    result.negative++;
+                    if (pass)
+                        result.falseAccept++;
+                    else
+                        result.trueReject++;
+                }
+            }
+            return result;
+        };
+        return [arm, { completedContexts: completed.length, completeStratum: completed.length === 12, accuracyClaimPermitted: completed.length === 12, targetPrimary: score(true), allIndependentlyLabeledSources: score(false) }];
+    }));
+    const spillovers = [];
+    for (const before of observations.filter(o => o.arm === 'baseline' && o.status === 'completed') as any[]) {
+        const after = observations.find(o => o.arm === 'scope_candidate' && o.caseId === before.caseId && o.condition === before.condition && o.status === 'completed') as any;
+        if (!after)
+            continue;
+        spillovers.push({ stratum: before.stratum, caseId: before.caseId, condition: before.condition, changedNonscopeQuestionNames: Object.keys(before.answers).filter(n => !/^e\d+_scope$/.test(n) && JSON.stringify(before.answers[n]) !== JSON.stringify(after.answers[n])), baselinePolicy: before.policyDecision, candidatePolicy: after.policyDecision, baselineModelSelection: before.selectedEvidenceIds, candidateModelSelection: after.selectedEvidenceIds });
+    }
+    return { prospective, existingSafetyDiagnostics: { contexts: contexts.filter(c => c.stratum === 'existing_safety_diagnostic').length, observations: observations.filter(o => o.stratum === 'existing_safety_diagnostic').length, scopeAccuracyNotComputed: true, reason: 'Outcome-informed contexts; preserve raw outputs and exact selected sets, no pooled accuracy or new factual denominator.' }, spillovers, pooledAccuracy: false, scope16LiveRerun: 'DEFERRED' };
+}
+export async function executePlan(plan: Plan, contexts: Context[], output: string, options: {
+    apiKey: string;
+    fetch?: typeof fetch;
+    now?: () => number;
+    testTransportMutator?: (init: RequestInit) => RequestInit;
+}): Promise<unknown> {
+    check(!options.testTransportMutator || options.fetch, 'transport mutator requires injected mock transport');
+    check(plan.frozenCommit === FROZEN_COMMIT && plan.model === MODEL_VERSION && plan.assessmentThreshold === .85 && JSON.stringify(plan.limits) === JSON.stringify(LIMITS) && JSON.stringify(plan.stratumLimits) === JSON.stringify(STRATUM_LIMITS) && JSON.stringify(plan.deferredCohorts) === '["scope16_live_rerun"]', 'source/model/threshold/budget mismatch');
+    check(JSON.stringify(plan.sourceHashes) === JSON.stringify(sourceHashes()), 'frozen08 source/runner changed');
+    check(JSON.stringify((await buildPlan(contexts, plan.labels, plan.inputHashes)).calls) === JSON.stringify(plan.calls), 'frozen request hashes changed');
+    mkdirSync(output, { recursive: false, mode: 0o700 });
+    const log = (event: unknown) => appendFileSync(`${output}/events.jsonl`, `${JSON.stringify(event)}\n`, { mode: 0o600, flush: true });
+    const now = options.now ?? Date.now, started = now(), controller = new AbortController(), timeout = setTimeout(() => controller.abort(new Error('full-context comparison wall deadline')), LIMITS.wallMs);
+    const emptyTotals = () => ({ consumedJev: 0, actualStartedJev: 0, actualStartedExa: 0, requestBytes: 0, responseBytes: 0, measuredInputTokens: 0, usageKnownCalls: 0, usageUnknownCalls: 0 });
+    const perStratum: Record<Stratum, ReturnType<typeof emptyTotals>> = { prospective: emptyTotals(), existing_safety_diagnostic: emptyTotals() };
+    const totals = { consumedJev: 0, actualStartedJev: 0, actualStartedExa: 0, requestBytes: 0, responseBytes: 0, measuredInputTokens: 0, usageKnownCalls: 0, usageUnknownCalls: 0 };
+    const observations: Observation[] = [];
+    let stopReason = 'completed';
+    let primaryFailure: {
+        kind: string;
+        reason: string;
+        caseId: string;
+        stratum: Stratum;
+    } | null = null;
+    log({ type: 'started', planHash: hash(JSON.stringify(plan)), limits: LIMITS });
+    try {
+        for (const [sequence, call] of plan.calls.entries()) {
+            const stratumTotals = perStratum[call.stratum];
+            if (controller.signal.aborted || now() - started >= LIMITS.wallMs) {
+                stopReason = 'wall_budget';
+                break;
+            }
+            if (totals.usageUnknownCalls) {
+                stopReason = 'unknown_usage';
+                break;
+            }
+            if (stratumTotals.consumedJev >= STRATUM_LIMITS.maxAttempts || stratumTotals.measuredInputTokens + STRATUM_LIMITS.pendingReserve > STRATUM_LIMITS.maxInputTokens || stratumTotals.requestBytes + call.requestBytes > STRATUM_LIMITS.maxTotalRequestBytes || totals.consumedJev >= LIMITS.maxAttempts || totals.measuredInputTokens + LIMITS.pendingReserve > LIMITS.maxInputTokens || totals.requestBytes + call.requestBytes > LIMITS.maxTotalRequestBytes) {
+                stopReason = 'budget_reserve';
+                break;
+            }
+            if (JSON.stringify(plan.sourceHashes) !== JSON.stringify(sourceHashes())) {
+                stopReason = 'source_freeze_changed';
+                break;
+            }
+            const context = contexts.find(context => context.caseId === call.caseId)!;
+            let usage: number | undefined, answers: Record<string, JevAnswer> | undefined;
+            const callStarted = now();
+            let localGuardFailure: string | null = null;
+            let responseReader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+            let attemptOpen = true;
+            const localCheck: (condition: unknown, code: string) => asserts condition = (condition, code) => { if (!condition) {
+                if (attemptOpen)
+                    localGuardFailure ??= code;
+                throw new Error('local_guard:' + code);
+            } };
+            const assertDeadline = () => localCheck(attemptOpen && !controller.signal.aborted && now() - started < LIMITS.wallMs, 'absolute_wall_deadline');
+            const fetcher: typeof fetch = async (url, init) => {
+                assertDeadline();
+                if (options.testTransportMutator)
+                    init = options.testTransportMutator(init ?? {});
+                localCheck(String(url) === 'https://api.typesafe.ai/v1/systemone', 'request_endpoint_mismatch');
+                localCheck(typeof init?.body === 'string' && hash(init.body) === call.bodyHash, 'request_body_hash_mismatch');
+                localCheck(Buffer.byteLength(init.body) === call.requestBytes && call.requestBytes <= LIMITS.maxRequestBytes, 'request_byte_cap');
+                totals.actualStartedJev++;
+                stratumTotals.actualStartedJev++;
+                totals.requestBytes += call.requestBytes;
+                stratumTotals.requestBytes += call.requestBytes;
+                log({ type: 'request_sent', sequence, caseId: call.caseId, condition: call.condition, arm: call.arm, requestBytes: call.requestBytes, bodyHash: call.bodyHash });
+                const response = await (options.fetch ?? fetch)(url, { ...init, redirect: 'error' });
+                try {
+                    assertDeadline();
+                }
+                catch (error) {
+                    controller.abort(error);
+                    if (response.body)
+                        cancelDetached(() => response.body!.cancel(error));
+                    throw error;
+                }
+                log({ type: 'response_headers', sequence, status: response.status });
+                const reader = response.body?.getReader();
+                responseReader = reader;
+                let responseBytes = 0, streamCanceled = false;
+                const stream = reader ? new ReadableStream<Uint8Array>({ async pull(target) {
+                        try {
+                            assertDeadline();
+                            const chunk = await reader.read();
+                            if (streamCanceled)
+                                return;
+                            if (!attemptOpen || controller.signal.aborted)
+                                throw new Error('attempt_closed');
+                            if (!chunk.done) {
+                                responseBytes += chunk.value.byteLength;
+                                totals.responseBytes += chunk.value.byteLength;
+                                stratumTotals.responseBytes += chunk.value.byteLength;
+                            }
+                            assertDeadline();
+                            localCheck(responseBytes <= 1048576, 'response_byte_cap');
+                            if (chunk.done)
+                                target.close();
+                            else
+                                target.enqueue(chunk.value);
+                        }
+                        catch (error) {
+                            if (streamCanceled)
+                                return;
+                            controller.abort(error);
+                            cancelDetached(() => reader.cancel(error));
+                            throw error;
+                        }
+                    }, cancel(reason) { streamCanceled = true; cancelDetached(() => reader.cancel(reason)); } }) : null;
+                return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers });
+            };
+            // Frozen08 client retries are explicitly disabled at their existing seam.
+            // The initial attempt still consumes immediately before HTTP dispatch.
+            const provider: ProviderContext & {
+                canConsume(): boolean;
+                deadlineAt: number;
+            } = { signal: controller.signal, now, deadlineAt: started + LIMITS.wallMs, canConsume: () => false, consume: kind => { localCheck(kind === 'jev' && totals.consumedJev < LIMITS.maxAttempts && stratumTotals.consumedJev < STRATUM_LIMITS.maxAttempts, 'provider_attempt_cap'); assertDeadline(); totals.consumedJev++; stratumTotals.consumedJev++; }, recordUsage: value => { assertDeadline(); localCheck(typeof value.inputTokens === 'number' && Number.isSafeInteger(value.inputTokens) && value.inputTokens >= 0 && usage === undefined, 'invalid_or_duplicate_usage'); usage = value.inputTokens; totals.measuredInputTokens += value.inputTokens; stratumTotals.measuredInputTokens += value.inputTokens; } };
+            const actual = createJevClient({ apiKey: options.apiKey, fetch: fetcher });
+            log({ type: 'attempt_started', sequence, caseId: call.caseId, condition: call.condition, arm: call.arm, evidenceOrder: call.evidenceOrder });
+            try {
+                const operation = createJudge({ ask: async (request, ctx) => { const sent = call.arm === 'baseline' ? request : substituteScopeInstructions(request); localCheck(hash(encode(sent)) === call.bodyHash, 'judge_request_hash_mismatch'); const received = await actual.ask(sent, ctx); assertDeadline(); answers = received; return received; } })(claim(context), recordsFor(context, call.condition), provider);
+                const judged = await raceAbort(operation, controller.signal, () => { localGuardFailure ??= 'absolute_wall_deadline'; attemptOpen = false; });
+                assertDeadline();
+                const targetQuality = judged.sourceAssessments[call.targetId], targetQualityPass = ['original_record', 'attributable_research', 'substantive_secondary'].includes(targetQuality.contentBasis) && targetQuality.confidence >= .85;
+                const observation = { stratum: call.stratum, arm: call.arm, caseId: call.caseId, targetId: call.targetId, condition: call.condition, status: 'completed', evidenceOrder: call.evidenceOrder, targetQuality, targetQualityPass, assessments: judged.sourceAssessments, sourceDiagnostics: Object.fromEntries(judged.evidence.map(record => [record.id, { stance: record.stance, stanceProbability: record.stanceProbability, relevance: record.directlyAddressesClaim, scope: record.matchesTimePlaceAndPopulation }])), claimRisk: judged.claimRisk, originAssessments: judged.originAssessments, modelLabel: judged.label, probabilities: judged.probabilities, selectedEvidenceIds: judged.selectedEvidenceIds, policyDecision: decideVerdict(judged), answers };
+                observations.push(observation);
+                log({ type: 'attempt_terminal', sequence, durationMs: now() - callStarted, inputTokens: usage ?? null, ...observation });
+            }
+            catch (error) {
+                attemptOpen = false;
+                controller.abort(error);
+                if (responseReader)
+                    cancelDetached(() => responseReader!.cancel(error));
+                const failureKind = localGuardFailure ? 'local_guard' : 'provider';
+                const failureReason = localGuardFailure ?? (error && typeof error === 'object' && 'code' in error ? String(error.code) : 'provider_error');
+                primaryFailure ??= { kind: failureKind, reason: failureReason, caseId: call.caseId, stratum: call.stratum };
+                const observation = { stratum: call.stratum, arm: call.arm, caseId: call.caseId, targetId: call.targetId, condition: call.condition, status: 'failed', failureKind, failureReason, localGuardFailure };
+                observations.push(observation);
+                log({ type: 'attempt_terminal', sequence, ...observation, durationMs: now() - callStarted, inputTokens: usage ?? null });
+                stopReason = 'terminal_failure';
+            }
+            attemptOpen = false;
+            observations[observations.length - 1]!.unknownUsage = usage === undefined;
+            if (usage === undefined) {
+                totals.usageUnknownCalls++;
+                stratumTotals.usageUnknownCalls++;
+                if (stopReason === 'completed') {
+                    stopReason = 'unknown_usage';
+                    primaryFailure ??= { kind: 'accounting', reason: 'unknown_usage', caseId: call.caseId, stratum: call.stratum };
+                }
+            }
+            else {
+                totals.usageKnownCalls++;
+                stratumTotals.usageKnownCalls++;
+            }
+            if (totals.measuredInputTokens > LIMITS.maxInputTokens || stratumTotals.measuredInputTokens > STRATUM_LIMITS.maxInputTokens)
+                stopReason = 'measured_token_budget';
+            if (stopReason !== 'completed')
+                break;
+        }
+    }
+    finally {
+        clearTimeout(timeout);
+        if (stopReason !== 'completed' && !controller.signal.aborted)
+            controller.abort(new Error(stopReason));
+    }
+    const report = { schemaVersion: 1, planHash: hash(JSON.stringify(plan)), sourceCommit: FROZEN_COMMIT, stopReason, completedAllCalls: observations.length === plan.calls.length && stopReason === 'completed', durationMs: now() - started, primaryFailure, unknownUsage: totals.usageUnknownCalls > 0, totals, perStratum, deferredCohorts: plan.deferredCohorts, pooledAccuracy: false, analysis: summarizeObservations(observations, plan.labels, contexts), cost: { exaUsd: 0, jevUsd: null, reason: 'Jev pricing/output tokens unavailable.' }, causalLimits: plan.causalLimits, observations };
+    log({ type: 'finished', stopReason, totals });
+    writeFileSync(`${output}/report.json`, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
+    return report;
+}
+async function main(): Promise<void> {
+    const [action, ...args] = process.argv.slice(2);
+    if (action === 'prepare') {
+        check(args.length === 4, 'prepare requires prospective-contexts labels adjudication new-plan');
+        const [prospectivePath, labelsPath, adjudicationPath, planPath] = args;
+        const existingPath = '/workspace/task-evidence/judgment-context-diagnostic-01/contexts.json';
+        const raw = Object.fromEntries([prospectivePath, labelsPath, adjudicationPath, existingPath].map(p => [resolve(p), readFileSync(p, 'utf8')]));
+        const adjudication = JSON.parse(raw[resolve(adjudicationPath)]);
+        check(adjudication.frozen && adjudication.independentReviewComplete, 'independent labels/adjudication not frozen');
+        check(adjudication.neutralInputSHA256 === hash(raw[resolve(prospectivePath)]) && adjudication.labelsSHA256 === hash(raw[resolve(labelsPath)]), 'adjudication does not bind exact prospective inputs/labels');
+        check(adjudication.reviewedInputHashes && typeof adjudication.reviewedInputHashes === 'object', 'reviewed independent source hashes missing');
+        for (const [path, expected] of Object.entries(adjudication.reviewedInputHashes)) {
+            const body = readFileSync(path, 'utf8');
+            check(hash(body) === expected, 'independent label/provenance file changed');
+            raw[resolve(path)] = body;
+        }
+        const prospective = JSON.parse(raw[resolve(prospectivePath)]).contexts as Context[];
+        const existing = JSON.parse(raw[resolve(existingPath)]);
+        check(existing.sourceCommit === FROZEN_COMMIT, 'wrong existing source freeze');
+        const contexts: Context[] = [...prospective.map(c => ({ ...c, stratum: 'prospective' as const, reportPath: resolve(prospectivePath), reportSha256: hash(raw[resolve(prospectivePath)]), evidenceStageIndex: -1, judgmentOrdinal: -1, staleJudgment: { sourceAssessments: {} } })), ...existing.contexts.map((c: Context) => ({ ...c, stratum: 'existing_safety_diagnostic' as const }))];
+        const predecessorPath = '/workspace/task-evidence/full-context-basis-comparison-01/comparison24-plan.json', predecessorRaw = readFileSync(predecessorPath, 'utf8'), predecessor = JSON.parse(predecessorRaw) as {
+            calls: Call[];
+        };
+        const built = await buildPlan(contexts, JSON.parse(raw[resolve(labelsPath)]).labels, { ...Object.fromEntries(Object.entries(raw).map(([path, body]) => [path, hash(body)])), [predecessorPath]: hash(predecessorRaw) });
+        for (const call of built.calls.filter(c => c.stratum === 'existing_safety_diagnostic' && c.arm === 'baseline'))
+            check(predecessor.calls.some(old => old.caseId === call.caseId && old.condition === call.condition && old.bodyHash === call.bodyHash), 'baseline existing request differs from frozen predecessor');
+        const plan = { ...built, contexts, predecessorPlanHash: hash(JSON.stringify(predecessor)) };
+        writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
+        writeFileSync(`${planPath}.sha256`, `${hash(JSON.stringify(plan))}\n`, { flag: 'wx', mode: 0o600 });
+        process.stdout.write(`Prepared ${plan.calls.length} frozen paired scope-only calls; scope16 deferred; no provider calls.\n`);
+    }
+    else if (action === 'execute') {
+        check(args.length === 2, 'execute requires frozen-plan/new-output');
+        const [planPath, output] = args;
+        const plan = JSON.parse(readFileSync(planPath, 'utf8')) as Plan & {
+            contexts: Context[];
+        };
+        check(hash(JSON.stringify(plan)) === readFileSync(`${planPath}.sha256`, 'utf8').trim(), 'plan hash mismatch');
+        for (const [path, expected] of Object.entries(plan.inputHashes))
+            check(hash(readFileSync(path)) === expected, 'frozen input changed');
+        check(process.env.JEV_API_KEY?.trim(), 'JEV_API_KEY required from environment');
+        const report = await executePlan(plan, plan.contexts, output, { apiKey: process.env.JEV_API_KEY! }) as {
+            stopReason: string;
+            completedAllCalls: boolean;
+            totals: unknown;
+        };
+        process.stdout.write(`${JSON.stringify({ stopReason: report.stopReason, completedAllCalls: report.completedAllCalls, totals: report.totals, reportPath: `${output}/report.json` })}\n`);
+    }
+    else
+        throw new Error('Explicit prepare or execute required; no default provider action.');
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href)
+    main().catch(error => { process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`); process.exitCode = 1; });

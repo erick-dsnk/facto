@@ -1,0 +1,132 @@
+import { createHash } from 'node:crypto';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { MODEL_VERSION, type AcceptedClaim, type Evidence, type ProviderContext } from '/workspace/live-frozen-08/packages/contracts/src/index.ts';
+import { createJudge } from '/workspace/live-frozen-08/services/api/src/providers/jev/judgment.ts';
+import { createJevClient, type JevAnswer, type JevRequest } from '/workspace/live-frozen-08/services/api/src/providers/jev/client.ts';
+import { decideVerdict } from '/workspace/live-frozen-08/services/api/src/policy/verdict.ts';
+
+export const LIMITS = Object.freeze({ maxAttempts: 18, maxInputTokens: 200000, pendingReserve: 24000, maxRequestBytes: 65536, maxTotalRequestBytes: 1048576, wallMs: 120000 });
+export const FROZEN_COMMIT = 'aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c';
+export const hash = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');
+const check: (condition: unknown, message: string) => asserts condition = (condition, message) => { if (!condition) throw new Error(message); };
+const encode = (request: JevRequest): string => JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions });
+export type Condition = 'original_full' | 'reversed_full' | 'isolated_target';
+export type Context = { caseId: string; targetId: string; proposition: string; records: Evidence[]; reportPath: string; reportSha256: string; evidenceStageIndex: number; judgmentOrdinal: number; staleJudgment: { sourceAssessments: Record<string, { contentBasis: string; confidence: number }>; [key: string]: unknown } };
+export type Label = { id: string; retainedId: string; expectedBasis: string; excludeFromPrimary?: boolean; [key: string]: unknown };
+type Call = { caseId: string; targetId: string; condition: Condition; evidenceOrder: string[]; requestBytes: number; bodyHash: string; questionCount: number; questionHashes: Record<string, string> };
+export type Plan = { schemaVersion: 1; frozenCommit: string; preparedAt: string; model: string; assessmentThreshold: number; limits: typeof LIMITS; sourceHashes: Record<string, string>; inputHashes: Record<string, string>; labels: Label[]; calls: Call[]; causalLimits: string[] };
+const sourceHashes = (): Record<string, string> => Object.fromEntries([
+  ...['packages/contracts/src/index.ts', 'package-lock.json', 'services/api/src/providers/jev/judgment.ts', 'services/api/src/providers/jev/client.ts', 'services/api/src/policy/assessment.ts', 'services/api/src/policy/sources.ts', 'services/api/src/policy/verdict.ts', 'services/api/src/runtime/provider-retry.ts'].map(path => [path, hash(readFileSync(`/workspace/live-frozen-08/${path}`))]),
+  ['diagnostic-runner.ts', hash(readFileSync(new URL('./runner.ts', import.meta.url)))],
+]);
+const claim = (context: Context): AcceptedClaim => ({ id: context.caseId, originalText: context.proposition, checkedText: context.proposition, sourceSpan: { start: 0, end: Array.from(context.proposition).length }, admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_fact', hasPracticalConsequence: null, matchedSelectedTopic: null } });
+export function recordsFor(context: Context, condition: Condition): Evidence[] {
+  const records = condition === 'original_full' ? context.records : condition === 'reversed_full' ? [...context.records].reverse() : context.records.filter(record => record.id === context.targetId);
+  return records.map(record => ({ ...record, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null }));
+}
+
+export async function captureRequest(context: Context, condition: Condition): Promise<JevRequest> {
+  let captured: JevRequest | undefined; const sentinel = new Error('offline frozen08 capture');
+  try { await createJudge({ ask: async request => { captured = request; throw sentinel; } })(claim(context), recordsFor(context, condition), { signal: new AbortController().signal, consume: () => { throw new Error('offline capture cannot consume'); }, now: Date.now }); }
+  catch (error) { if (error !== sentinel) throw error; }
+  check(captured, 'frozen08 request not captured'); return captured;
+}
+
+export async function buildPlan(contexts: Context[], labels: Label[], inputHashes: Record<string, string>): Promise<Plan> {
+  check(contexts.length === 6 && new Set(contexts.map(context => context.caseId)).size === 6 && new Set(contexts.map(context => context.targetId)).size === 6, 'six unique OPEN contexts/targets required');
+  check(labels.length === 6 && new Set(labels.map(label => label.retainedId)).size === 6, 'six independently reviewed target labels required');
+  const calls: Call[] = [], conditions: Condition[] = ['original_full', 'reversed_full', 'isolated_target'];
+  // Hash ordering fixes case order without using scores. Rotate condition order
+  // across cases so each condition occurs first/middle/last twice.
+  const ordered = [...contexts].sort((a, b) => hash(a.targetId).localeCompare(hash(b.targetId)));
+  for (const [index, context] of ordered.entries()) {
+    check(hash(readFileSync(context.reportPath)) === context.reportSha256, 'original OPEN report changed');
+    check(context.records.length >= 2 && context.records.length <= 6 && new Set(context.records.map(record => record.id)).size === context.records.length, 'full set missing/duplicate/beyond cap');
+    check(context.records.some(record => record.id === context.targetId) && labels.some(label => label.retainedId === context.targetId), 'target/label not in context');
+    const original = await captureRequest(context, 'original_full');
+    const expectedState = { checked_proposition: context.proposition, evidence: context.records.map(source => ({ id: source.id, url: source.url, title: Array.from(source.title).slice(0, 300).join(''), publishedAt: source.publishedAt, contentBasis: source.contentBasis, excerpt: source.excerpt })) };
+    check(JSON.stringify(original.state) === JSON.stringify(expectedState), 'faithful frozen08 original state mismatch');
+    for (const condition of [...conditions.slice(index % 3), ...conditions.slice(0, index % 3)]) {
+      const request = condition === 'original_full' ? original : await captureRequest(context, condition);
+      const records = recordsFor(context, condition);
+      if (condition !== 'isolated_target') check(JSON.stringify([...records.map(record => record.id)].sort()) === JSON.stringify(context.records.map(record => record.id).sort()), 'full condition dropped a companion/conflict/origin bridge');
+      records.forEach((record, position) => {
+        check(request.questions[`e${position}_content_basis`].instructions.includes(record.id), 'source question binding mismatch');
+        const selected = request.questions.selected_evidence; check(selected.type === 'choice' && selected.criteria[`e${position}`] === `Retained evidence ${record.id}`, 'selected-ID binding mismatch');
+      });
+      const body = encode(request); check(Buffer.byteLength(body) <= LIMITS.maxRequestBytes, 'request byte cap');
+      calls.push({ caseId: context.caseId, targetId: context.targetId, condition, evidenceOrder: records.map(record => record.id), requestBytes: Buffer.byteLength(body), bodyHash: hash(body), questionCount: Object.keys(request.questions).length, questionHashes: Object.fromEntries(Object.entries(request.questions).map(([name, question]) => [name, hash(JSON.stringify(question))])) });
+    }
+  }
+  check(calls.length === LIMITS.maxAttempts && calls.reduce((sum, call) => sum + call.requestBytes, 0) <= LIMITS.maxTotalRequestBytes, 'campaign attempt/byte cap');
+  return { schemaVersion: 1, frozenCommit: FROZEN_COMMIT, preparedAt: new Date().toISOString(), model: MODEL_VERSION, assessmentThreshold: .85, limits: LIMITS, sourceHashes: sourceHashes(), inputHashes, labels, calls, causalLimits: [
+    'No candidate prompt or questionKey alias: exact frozen08 baseline only.',
+    'Historical-to-new differences are requery/staleness observations, not causal gains. Only within-new-run full/order/isolated contrasts diagnose context sensitivity.',
+    'One call per condition/context; no retry, repeat, tuning or population-calibration inference.',
+    'Order sensitivity cannot by itself distinguish ID misbinding, position effects or semantic interference.',
+    'Reversing an odd-sized set can leave a middle target at the same alias; report original/reversed target positions rather than claim complete position randomization.',
+    'Isolated-target policy results are shadow diagnostics and must never replace full-context judgments or suppress conflicts/origin bridges.',
+    'BD11 chronology remains a predeclared excluded boundary unless independently adjudicated otherwise; record genre never supplies missing first/discipline qualifiers.',
+    'BIPM earlier pass uses a different excerpt; no inference from its earlier-to-final score change.',
+  ] };
+}
+
+type Observation = { caseId: string; targetId: string; condition: Condition; status: string; assessments?: Record<string, unknown>; targetQuality?: { contentBasis: string; confidence: number }; targetQualityPass?: boolean; [key: string]: unknown };
+export async function executePlan(plan: Plan, contexts: Context[], output: string, options: { apiKey: string; fetch?: typeof fetch; now?: () => number }): Promise<unknown> {
+  check(plan.frozenCommit === FROZEN_COMMIT && plan.model === MODEL_VERSION && plan.assessmentThreshold === .85 && JSON.stringify(plan.limits) === JSON.stringify(LIMITS), 'source/model/threshold/budget mismatch');
+  check(JSON.stringify(plan.sourceHashes) === JSON.stringify(sourceHashes()), 'frozen08 source/runner changed');
+  check(JSON.stringify((await buildPlan(contexts, plan.labels, plan.inputHashes)).calls) === JSON.stringify(plan.calls), 'frozen request hashes changed');
+  mkdirSync(output, { recursive: false, mode: 0o700 }); const log = (event: unknown) => appendFileSync(`${output}/events.jsonl`, `${JSON.stringify(event)}\n`, { mode: 0o600, flush: true });
+  const now = options.now ?? Date.now, started = now(), controller = new AbortController(), timeout = setTimeout(() => controller.abort(new Error('diagnostic wall deadline')), LIMITS.wallMs);
+  const totals = { consumedJev: 0, actualStartedJev: 0, actualStartedExa: 0, requestBytes: 0, responseBytes: 0, measuredInputTokens: 0, usageKnownCalls: 0, usageUnknownCalls: 0 }; const observations: Observation[] = []; let stopReason = 'completed';
+  log({ type: 'started', planHash: hash(JSON.stringify(plan)), limits: LIMITS });
+  try {
+    for (const [sequence, call] of plan.calls.entries()) {
+      if (controller.signal.aborted || now() - started >= LIMITS.wallMs) { stopReason = 'wall_budget'; break; }
+      if (totals.usageUnknownCalls) { stopReason = 'unknown_usage'; break; }
+      if (totals.consumedJev >= LIMITS.maxAttempts || totals.measuredInputTokens + LIMITS.pendingReserve > LIMITS.maxInputTokens || totals.requestBytes + call.requestBytes > LIMITS.maxTotalRequestBytes) { stopReason = 'budget_reserve'; break; }
+      if (JSON.stringify(plan.sourceHashes) !== JSON.stringify(sourceHashes())) { stopReason = 'source_freeze_changed'; break; }
+      const context = contexts.find(context => context.caseId === call.caseId)!; let usage: number | undefined, answers: Record<string, JevAnswer> | undefined; const callStarted = now();
+      const fetcher: typeof fetch = async (url, init) => {
+        check(String(url) === 'https://api.typesafe.ai/v1/systemone' && typeof init?.body === 'string' && hash(init.body) === call.bodyHash, 'actual request differs from freeze');
+        check(Buffer.byteLength(init.body) === call.requestBytes && call.requestBytes <= LIMITS.maxRequestBytes, 'actual request byte cap'); totals.actualStartedJev++; totals.requestBytes += call.requestBytes;
+        log({ type: 'request_sent', sequence, caseId: call.caseId, condition: call.condition, requestBytes: call.requestBytes, bodyHash: call.bodyHash });
+        const response = await (options.fetch ?? fetch)(url, init); log({ type: 'response_headers', sequence, status: response.status }); const reader = response.body?.getReader();
+        const stream = reader ? new ReadableStream<Uint8Array>({ async pull(target) { const chunk = await reader.read(); if (chunk.done) target.close(); else { totals.responseBytes += chunk.value.byteLength; target.enqueue(chunk.value); } }, async cancel(reason) { await reader.cancel(reason); } }) : null;
+        return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers });
+      };
+      // Frozen08 client retries are explicitly disabled at their existing seam.
+      // The initial attempt still consumes immediately before HTTP dispatch.
+      const provider: ProviderContext & { canConsume(): boolean; deadlineAt: number } = { signal: controller.signal, now, deadlineAt: started + LIMITS.wallMs, canConsume: () => false, consume: kind => { check(kind === 'jev' && totals.consumedJev < LIMITS.maxAttempts, 'provider/attempt cap'); totals.consumedJev++; }, recordUsage: value => { check(typeof value.inputTokens === 'number' && Number.isSafeInteger(value.inputTokens) && value.inputTokens >= 0 && usage === undefined, 'invalid/duplicate usage'); usage = value.inputTokens; totals.measuredInputTokens += value.inputTokens; } };
+      const actual = createJevClient({ apiKey: options.apiKey, fetch: fetcher }); log({ type: 'attempt_started', sequence, caseId: call.caseId, condition: call.condition, evidenceOrder: call.evidenceOrder });
+      try {
+        const judged = await createJudge({ ask: async (request, ctx) => { check(hash(encode(request)) === call.bodyHash, 'actual frozen08 judge state changed'); answers = await actual.ask(request, ctx); return answers; } })(claim(context), recordsFor(context, call.condition), provider);
+        const targetQuality = judged.sourceAssessments[call.targetId], targetQualityPass = ['original_record', 'attributable_research', 'substantive_secondary'].includes(targetQuality.contentBasis) && targetQuality.confidence >= .85;
+        const observation = { caseId: call.caseId, targetId: call.targetId, condition: call.condition, status: 'completed', evidenceOrder: call.evidenceOrder, targetQuality, targetQualityPass, assessments: judged.sourceAssessments, sourceDiagnostics: Object.fromEntries(judged.evidence.map(record => [record.id, { stance: record.stance, stanceProbability: record.stanceProbability, relevance: record.directlyAddressesClaim, scope: record.matchesTimePlaceAndPopulation }])), claimRisk: judged.claimRisk, originAssessments: judged.originAssessments, modelLabel: judged.label, probabilities: judged.probabilities, selectedEvidenceIds: judged.selectedEvidenceIds, policyDecision: decideVerdict(judged), answers };
+        observations.push(observation); log({ type: 'attempt_terminal', sequence, durationMs: now() - callStarted, inputTokens: usage ?? null, ...observation });
+      } catch (error) { const observation = { caseId: call.caseId, targetId: call.targetId, condition: call.condition, status: 'failed' }; observations.push(observation); log({ type: 'attempt_terminal', sequence, ...observation, durationMs: now() - callStarted, inputTokens: usage ?? null, error: error instanceof Error ? error.message : String(error) }); stopReason = 'terminal_failure'; }
+      if (usage === undefined) { totals.usageUnknownCalls++; stopReason = 'unknown_usage'; } else totals.usageKnownCalls++;
+      if (totals.measuredInputTokens > LIMITS.maxInputTokens) stopReason = 'measured_token_budget'; if (stopReason !== 'completed') break;
+    }
+  } finally { clearTimeout(timeout); }
+  const report = { schemaVersion: 1, planHash: hash(JSON.stringify(plan)), sourceCommit: FROZEN_COMMIT, stopReason, completedAllCalls: observations.length === plan.calls.length && stopReason === 'completed', durationMs: now() - started, totals, cost: { exaUsd: 0, jevUsd: null, reason: 'Jev pricing/output tokens unavailable.' }, causalLimits: plan.causalLimits, observations };
+  log({ type: 'finished', stopReason, totals }); writeFileSync(`${output}/report.json`, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx', mode: 0o600 }); return report;
+}
+
+async function main(): Promise<void> {
+  const [action, ...args] = process.argv.slice(2);
+  if (action === 'prepare') {
+    check(args.length === 4, 'prepare requires contexts labels adjudication new-plan'); const [contextsPath, labelsPath, adjudicationPath, planPath] = args;
+    const raw = Object.fromEntries([contextsPath, labelsPath, adjudicationPath].map(path => [resolve(path), readFileSync(path, 'utf8')])); const adjudication = JSON.parse(raw[resolve(adjudicationPath)]); check(adjudication.frozen && adjudication.independentReviewComplete, 'independent labels/adjudication not frozen');
+    const contextFile = JSON.parse(raw[resolve(contextsPath)]); check(contextFile.sourceCommit === FROZEN_COMMIT, 'wrong source freeze');
+    const plan = { ...await buildPlan(contextFile.contexts, JSON.parse(raw[resolve(labelsPath)]).labels, Object.fromEntries(Object.entries(raw).map(([path, body]) => [path, hash(body)]))), contextsPath: resolve(contextsPath) };
+    writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx', mode: 0o600 }); writeFileSync(`${planPath}.sha256`, `${hash(JSON.stringify(plan))}\n`, { flag: 'wx', mode: 0o600 }); process.stdout.write(`Prepared ${plan.calls.length} frozen baseline calls; no provider calls.\n`);
+  } else if (action === 'execute') {
+    check(args.length === 2, 'execute requires frozen-plan/new-output'); const [planPath, output] = args; const plan = JSON.parse(readFileSync(planPath, 'utf8')) as Plan & { contextsPath: string };
+    check(hash(JSON.stringify(plan)) === readFileSync(`${planPath}.sha256`, 'utf8').trim(), 'plan hash mismatch'); for (const [path, expected] of Object.entries(plan.inputHashes)) check(hash(readFileSync(path)) === expected, 'frozen input changed'); check(process.env.JEV_API_KEY?.trim(), 'JEV_API_KEY required from environment');
+    const report = await executePlan(plan, JSON.parse(readFileSync(plan.contextsPath, 'utf8')).contexts, output, { apiKey: process.env.JEV_API_KEY! }) as { stopReason: string; completedAllCalls: boolean; totals: unknown }; process.stdout.write(`${JSON.stringify({ stopReason: report.stopReason, completedAllCalls: report.completedAllCalls, totals: report.totals, reportPath: `${output}/report.json` })}\n`);
+  } else throw new Error('Explicit prepare or execute required; no default provider action.');
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) main().catch(error => { process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`); process.exitCode = 1; });

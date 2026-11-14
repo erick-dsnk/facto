@@ -1,0 +1,37 @@
+{
+  "kind": "bounded_readonly_next_intervention_assessment",
+  "sourceEdits": 0,
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "newLabels": 0,
+  "new24GoldRead": false,
+  "adapter11Authorized": false,
+  "retainedBaseline": true,
+  "files": {
+    "ASSESSMENT.md": "a4fca8cf07f37cf3b6da1d91ae1ae33b7bb55db11e4f071032abf37caf267aa1"
+  },
+  "readOnlyInputHashes": {
+    "/workspace/stack-20/services/api/src/providers/jev/judgment.ts": "8a531805d0d4ea1e78f4d3294905b99da286bd47fa6b7e500e87d898aa88dbdb",
+    "/workspace/stack-20/services/api/src/policy/verdict.ts": "de40566ea3d59ae02b5da4a9d207e42a83c0a25fe6ebb462bebafa4504dd102b",
+    "/workspace/task-evidence/jev-question-visibility-findings-01.json": "960fe23ff87914fc12b03c451c4c17087d3d287a5146d39f571e90731b375e97",
+    "/workspace/task-evidence/applicability84-wire-visibility-independent-correction.json": "c1ff1afe5b1d4b1acd9e79ec0828a838c321309e729dda53c71aeb1f7011f5b5",
+    "/workspace/task-evidence/new24-semantic-run-01/report.json": "bfdf3c00687e43e269c491d148bc75e5e04bd8c3b006a664567084373aad7b9d",
+    "/workspace/task-evidence/content-basis-calibration-02/basis24-run-01/report.json": "5b263ea6571703aca46787dc47b212a367b5be3fd36b693e65fcbd457330e5eb",
+    "/workspace/task-evidence/scope-calibration/scope16-run-01/report.json": "2225bf7a74b21820ad1dac4b1e75ba492fa8205ca9a6193ba23f6e72dc737e37",
+    "/workspace/task-evidence/judgment-context-diagnostic-01/diagnostic18-run-01/report.json": "a15e76b8e07608adb80a5d23afd228727c4fa65814f5e97627c30b633c7adc9e",
+    "/workspace/task-evidence/full-context-basis-comparison-01/comparison24-run-01/report.json": "7c5a09f026a281db34b49cf7aa8187c9bd9c4dafa02273361e694e0722d40d63"
+  },
+  "observedNew24PolicyReasons": {
+    "no_direct_evidence": 14,
+    "insufficient_independent_evidence": 9,
+    "below_threshold": 1,
+    "no_agreeing_citation": 0
+  },
+  "futureExperimentProposedNotAuthorized": {
+    "onlyQuestion": "selected_evidence",
+    "newOpenContexts": 12,
+    "pairedFullJudgeCalls": 24,
+    "passesPerArm": 1,
+    "sourcePathChangeBundled": false
+  }
+}

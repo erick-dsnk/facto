@@ -1,0 +1,20 @@
+{
+  "createdAt": "2026-11-14T05:32:23.042072+00:00",
+  "prototypeManifestSHA256": "9d3f255bdc9ef81253f5b487e4359fff11dab0eeb661780e32f28ec5659b8630",
+  "prototypeManifestEntriesVerified": 52,
+  "productionHead": "a7532b82ec7870c11d1ded5ff8c686c71b524e51",
+  "productionSourceBindings": {
+    "services/api/src/runtime/session.ts": "762635a33a608baecc3709aaa76bc81bba0a532758d374ad099be3d74a802e2c",
+    "services/api/src/runtime/budget.ts": "6d138f30452ae02af6822b72d60a963fbef870f6bcc46861550fb18d0a53016a",
+    "services/api/src/runtime/pipeline.ts": "491f057b8611c6ef7fff57c66baab60f80c1b0d4f3ff4f59c5da620eecf84c90",
+    "services/api/src/runtime/alternate-evidence.ts": "dbfc1722f92cf5c97707997fb9febafc77fc40dec4fa758f0038c62d435acac6",
+    "services/api/src/providers/jev/client.ts": "de12cdeb0c20075cc9798036904ddd7535b3ad15c8fc982c51ece1ecf5904efc",
+    "services/api/src/providers/jev/judgment.ts": "8a531805d0d4ea1e78f4d3294905b99da286bd47fa6b7e500e87d898aa88dbdb"
+  },
+  "scope": "Read-only runtime review; ten new external offline probes; no provider calls or production integration",
+  "tests": {
+    "pass": 10,
+    "fail": 0
+  },
+  "immutableComparison24ManifestSHA256": "6a0e8c98a22b322fe8d3498e929cb4488a81bdb93aa43872f09be14977d0018e"
+}

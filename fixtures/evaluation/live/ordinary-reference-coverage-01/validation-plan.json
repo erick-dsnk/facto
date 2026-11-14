@@ -1,0 +1,22 @@
+{
+  "pass": true,
+  "cases": 12,
+  "facts": 8,
+  "true": 4,
+  "false": 4,
+  "controls": 4,
+  "helperQueryComparisons": 24,
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1500000,
+    "inputTokens": 300000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 36,
+      "search": 16,
+      "contents": 24
+    },
+    "wallMs": 180000
+  },
+  "providerCalls": 0
+}

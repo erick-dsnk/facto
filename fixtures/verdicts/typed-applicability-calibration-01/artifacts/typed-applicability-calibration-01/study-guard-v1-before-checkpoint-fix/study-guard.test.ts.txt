@@ -1,0 +1,298 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { createStudyGuard, StudyGuardError, type StudyGuardPlan, type StudyLease, type GuardCheckpoint } from './study-guard.ts';
+
+const url = 'https://api.typesafe.ai/v1/systemone';
+const body = JSON.stringify({ model: 'offline', state: { value: 'bounded' }, questions: {} });
+const bodyHash = createHash('sha256').update(body).digest('hex');
+const bytes = Buffer.byteLength(body);
+function plan(counts = [2, 2]): StudyGuardPlan {
+  return {
+    calls: counts.flatMap((count, b) => Array.from({ length: count }, (_, n) => ({
+      callId: `b${b}-c${n}`, blockId: `b${b}`, requestSHA256: bodyHash, requestBytes: bytes,
+      denominatorClass: ['positive', 'negative', 'uncertain'][n % 3],
+    }))),
+    blocks: counts.map((count, n) => ({ blockId: `b${n}`, limits: {
+      maxCalls: count, maxInputTokens: 100000, pendingReserve: 24000,
+      maxTotalRequestBytes: count * bytes, maxTotalResponseBytes: 128000 * count,
+    } })),
+    limits: { maxCalls: counts.reduce((a, b) => a + b, 0), maxInputTokens: 1000000,
+      pendingReserve: 24000, maxRequestBytes: 65536, maxTotalRequestBytes: counts.reduce((a, b) => a + b, 0) * bytes,
+      maxResponseBytesPerCall: 128000, maxTotalResponseBytes: 128000 * counts.reduce((a, b) => a + b, 0), wallMs: 120000 },
+  };
+}
+function response(tokens: unknown = 10): Response { return Response.json({ usage: { input_tokens: tokens }, answers: {} }); }
+const fetcher = (fn: (...args: Parameters<typeof fetch>) => Promise<Response> | Response): typeof fetch => async (...args) => fn(...args);
+const runWork = async (lease: StudyLease) => (await lease.fetch(url, { method: 'POST', body })).json();
+const tick = () => new Promise<void>(resolve => setImmediate(resolve));
+async function settles<T>(promise: Promise<T>): Promise<T> {
+  let timer: ReturnType<typeof setTimeout>;
+  const fail = new Promise<never>((_resolve, reject) => { timer = setTimeout(() => reject(new Error('guard did not settle')), 150); });
+  try { return await Promise.race([promise, fail]); } finally { clearTimeout(timer!); }
+}
+function manualClock() {
+  let time = 1000, fire: (() => void) | undefined;
+  return { now: () => time, setTimer: (f: () => void) => { fire = f; return 1; }, clearTimer: () => undefined,
+    deadline: () => { time += 120000; fire!(); }, advance: (ms: number) => { time += ms; } };
+}
+
+test('complete84 inventory executes22/22/20/20 once, counts actual bodies and declared classes', async () => {
+  const p = plan([22, 22, 20, 20]); let actual = 0; const events: GuardCheckpoint[] = [];
+  const guard = createStudyGuard(p, { fetch: fetcher((_url, init) => { actual++; assert.equal(init?.redirect, 'error'); return response(1); }), onCheckpoint: e => events.push(e) });
+  for (const c of p.calls) assert.equal((await guard.run(c.callId, runWork)).status, 'completed');
+  const s = guard.snapshot();
+  assert.equal(actual, 84); assert.equal(s.status, 'completed'); assert.equal(s.totals.actualStartedJev, 84);
+  assert.equal(s.totals.actualStartedExa, 0); assert.equal(s.totals.measuredInputTokens, 84);
+  assert.equal(s.totals.requestBytes, 84 * bytes); assert.equal(s.missingCallIds.length, 0);
+  assert.equal(s.completeAccuracyClaimPermitted, true);
+  assert.deepEqual(Object.values(s.perBlock).map(b => b.actualStartedJev), [22, 22, 20, 20]);
+  assert.equal(events.filter(e => e.type === 'request_started').length, 84);
+  assert.ok(events.filter(e => e.type === 'request_started').every(e => e.requestSHA256 === bodyHash && e.requestBytes === bytes));
+  assert.equal(events.filter(e => e.type === 'call_terminal').length, 84);
+  await assert.rejects(guard.run(p.calls[0]!.callId, runWork), StudyGuardError);
+});
+
+test('zero input usage is known, not falsy or missing', async () => {
+  const guard = createStudyGuard(plan([1]), { fetch: fetcher(() => response(0)) });
+  assert.equal((await guard.run('b0-c0', runWork)).status, 'completed');
+  assert.equal(guard.snapshot().totals.usageKnownCalls, 1); assert.equal(guard.snapshot().unknownUsage, false);
+});
+
+test('actual body mutation stops before HTTP, keeps local failure distinct from unknown usage', async () => {
+  let actual = 0;
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => { actual++; return response(); }) });
+  const r = await guard.run('b0-c0', l => l.fetch(url, { method: 'POST', body: body + ' ' }));
+  assert.equal(r.status, 'failed'); assert.equal(actual, 0);
+  const s = guard.snapshot(); assert.equal(s.primaryFailure?.code, 'request_body_hash_mismatch');
+  assert.equal(s.primaryFailure?.kind, 'local_guard'); assert.equal(s.totals.reservedCalls, 1);
+  assert.equal(s.unknownUsage, false); assert.equal(s.totals.actualStartedJev, 0);
+});
+
+test('provider failure retains code while unknown usage is separately reported', async () => {
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => { throw Object.assign(new Error('do not log sensitive body'), { code: 'jev_unavailable' }); }) });
+  await guard.run('b0-c0', runWork);
+  const s = guard.snapshot(); assert.equal(s.primaryFailure?.kind, 'provider');
+  assert.equal(s.primaryFailure?.code, 'jev_unavailable'); assert.equal(s.unknownUsage, true);
+  assert.equal(JSON.stringify(s).includes('sensitive'), false);
+});
+
+test('a successful answer without measured usage fails closed and stops remaining calls', async () => {
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => Response.json({ answers: {} })) });
+  assert.equal((await guard.run('b0-c0', runWork)).status, 'failed');
+  assert.equal(guard.snapshot().primaryFailure?.kind, 'accounting');
+  assert.equal(guard.snapshot().primaryFailure?.code, 'unknown_usage');
+  await assert.rejects(guard.run('b0-c1', runWork), StudyGuardError);
+  assert.equal(guard.snapshot().totals.actualStartedJev, 1);
+});
+
+test('invalid, fractional, negative and non-numeric usage never becomes known', async () => {
+  for (const v of [-1, 0.5, '10', null, Number.MAX_SAFE_INTEGER + 1]) {
+    const guard = createStudyGuard(plan([1]), { fetch: fetcher(() => response(v)) });
+    assert.equal((await guard.run('b0-c0', runWork)).status, 'failed');
+    assert.equal(guard.snapshot().unknownUsage, true);
+  }
+});
+
+test('valid usage remains charged when answer interpretation fails later', async () => {
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => response(17)) });
+  await guard.run('b0-c0', async l => { await runWork(l); throw Object.assign(new Error(), { code: 'malformed_provider' }); });
+  const s = guard.snapshot(); assert.equal(s.primaryFailure?.code, 'malformed_provider');
+  assert.equal(s.totals.measuredInputTokens, 17); assert.equal(s.unknownUsage, false);
+});
+
+test('the same lease cannot dispatch twice or consume a retry', async () => {
+  let actual = 0; const guard = createStudyGuard(plan(), { fetch: fetcher(() => { actual++; return response(); }) });
+  const r = await guard.run('b0-c0', async l => { await runWork(l); return runWork(l); });
+  assert.equal(r.status, 'failed'); assert.equal(actual, 1);
+  assert.equal(guard.snapshot().primaryFailure?.code, 'retry_or_second_dispatch');
+  assert.equal(guard.snapshot().unknownUsage, false);
+});
+
+test('skipping or reordering a declared call stops the campaign without dispatch', async () => {
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => response()) });
+  await assert.rejects(guard.run('b1-c0', runWork), StudyGuardError);
+  assert.equal(guard.snapshot().totals.actualStartedJev, 0);
+  assert.equal(guard.snapshot().missingCallIds.length, 4);
+});
+
+test('block token reserves cannot borrow campaign or other block capacity', async () => {
+  const p = plan(); p.blocks[0]!.limits.maxInputTokens = 100; p.blocks[0]!.limits.pendingReserve = 60;
+  const guard = createStudyGuard(p, { fetch: fetcher(() => response(50)) });
+  assert.equal((await guard.run('b0-c0', runWork)).status, 'completed');
+  await assert.rejects(guard.run('b0-c1', runWork), StudyGuardError);
+  const s = guard.snapshot(); assert.equal(s.primaryFailure?.code, 'pre_dispatch_budget_reserve');
+  assert.equal(s.totals.actualStartedJev, 1); assert.equal(s.perBlock.b1!.actualStartedJev, 0);
+});
+
+test('actual token overrun is fully counted and keeps a local cap failure', async () => {
+  const p = plan(); p.blocks[0]!.limits.maxInputTokens = 50; p.blocks[0]!.limits.pendingReserve = 20;
+  const guard = createStudyGuard(p, { fetch: fetcher(() => response(51)) });
+  await guard.run('b0-c0', runWork);
+  const s = guard.snapshot(); assert.equal(s.totals.measuredInputTokens, 51);
+  assert.equal(s.primaryFailure?.code, 'measured_input_token_cap'); assert.equal(s.unknownUsage, false);
+});
+
+test('response overrun counts the received chunk, aborts actual signal and detaches cancellation', async () => {
+  const p = plan(); p.limits.maxResponseBytesPerCall = 10;
+  let cancelled = 0, signal: AbortSignal | null | undefined;
+  const guard = createStudyGuard(p, { fetch: fetcher((_url, init) => {
+    signal = init?.signal;
+    return new Response(new ReadableStream({ start(c) { c.enqueue(new Uint8Array(11)); }, cancel() { cancelled++; return new Promise(() => undefined); } }));
+  }) });
+  const r = await settles(guard.run('b0-c0', runWork));
+  assert.equal(r.status, 'failed'); assert.equal(guard.snapshot().totals.responseBytes, 11);
+  assert.equal(guard.snapshot().primaryFailure?.code, 'response_byte_cap');
+  assert.equal(signal?.aborted, true); assert.equal(cancelled, 1);
+});
+
+test('block aggregate response bytes cannot borrow another block response budget', async () => {
+  const p = plan(); const wireBytes = Buffer.byteLength(JSON.stringify({ usage: { input_tokens: 1 }, answers: {} }));
+  p.blocks[0]!.limits.maxTotalResponseBytes = wireBytes + 1;
+  const guard = createStudyGuard(p, { fetch: fetcher(() => response(1)) });
+  await guard.run('b0-c0', runWork); await guard.run('b0-c1', runWork);
+  assert.equal(guard.snapshot().primaryFailure?.code, 'response_byte_cap');
+  assert.equal(guard.snapshot().perBlock.b0!.responseBytes, wireBytes * 2);
+});
+
+test('hung fetch ignoring abort settles on campaign timer and aborts runtime owner', async () => {
+  const clock = manualClock(); let signal: AbortSignal | null | undefined;
+  const owner = new AbortController();
+  const guard = createStudyGuard(plan(), { ...clock, fetch: fetcher((_url, init) => { signal = init?.signal; return new Promise(() => undefined); }) });
+  const pending = guard.run('b0-c0', async l => { l.attachAbortController(owner); return runWork(l); });
+  await tick(); clock.deadline();
+  assert.equal((await settles(pending)).status, 'failed'); assert.equal(signal?.aborted, true);
+  assert.equal(owner.signal.aborted, true); assert.equal(guard.snapshot().primaryFailure?.kind, 'deadline');
+  assert.equal(guard.snapshot().unknownUsage, true);
+});
+
+test('hung reader and hanging cancel cannot hold campaign finalization open', async () => {
+  const clock = manualClock(); let cancelled = 0;
+  const guard = createStudyGuard(plan(), { ...clock, fetch: fetcher(() => ({ status: 200, statusText: 'OK', headers: new Headers(), body: { getReader: () => ({ read: () => new Promise(() => undefined), cancel: () => { cancelled++; return new Promise(() => undefined); } }) } }) as Response) });
+  const pending = guard.run('b0-c0', runWork); await tick(); clock.deadline();
+  assert.equal((await settles(pending)).status, 'failed'); assert.ok(cancelled >= 1);
+  assert.equal(guard.snapshot().primaryFailure?.code, 'absolute_wall_deadline');
+});
+
+test('late headers after deadline are cancelled without mutating finalized accounting', async () => {
+  const clock = manualClock(); let resolveResponse!: (r: Response) => void, cancelled = 0;
+  const guard = createStudyGuard(plan(), { ...clock, fetch: fetcher(() => new Promise<Response>(resolve => { resolveResponse = resolve; })) });
+  const pending = guard.run('b0-c0', runWork); await tick(); clock.deadline(); await settles(pending);
+  const before = guard.snapshot();
+  resolveResponse(new Response(new ReadableStream({ cancel() { cancelled++; return new Promise(() => undefined); } })));
+  await tick(); assert.equal(cancelled, 1); assert.deepEqual(guard.snapshot(), before);
+});
+
+test('late EOF cannot introduce usage or a completed answer after timeout', async () => {
+  const clock = manualClock(); let end!: (v: ReadableStreamReadResult<Uint8Array>) => void, reads = 0;
+  const chunk = new TextEncoder().encode(JSON.stringify({ usage: { input_tokens: 99 }, answers: {} }));
+  const reader = { read: () => ++reads === 1 ? Promise.resolve({ done: false, value: chunk }) : new Promise<ReadableStreamReadResult<Uint8Array>>(resolve => { end = resolve; }), cancel: () => new Promise(() => undefined) };
+  const guard = createStudyGuard(plan(), { ...clock, fetch: fetcher(() => ({ status: 200, statusText: 'OK', headers: new Headers(), body: { getReader: () => reader } }) as Response) });
+  const pending = guard.run('b0-c0', runWork); await tick(); clock.deadline(); await settles(pending);
+  const before = guard.snapshot(); end({ done: true, value: undefined }); await tick();
+  assert.equal(before.totals.measuredInputTokens, 0); assert.deepEqual(guard.snapshot(), before);
+});
+
+test('chunk received after logical deadline but before timer firing is counted before rejection', async () => {
+  const clock = manualClock(); const chunk = new Uint8Array(12);
+  const guard = createStudyGuard(plan(), { ...clock, fetch: fetcher(() => ({ status: 200, statusText: 'OK', headers: new Headers(), body: { getReader: () => ({ read: async () => { clock.advance(120000); return { done: false, value: chunk }; }, cancel: async () => undefined }) } }) as Response) });
+  await guard.run('b0-c0', runWork);
+  assert.equal(guard.snapshot().primaryFailure?.kind, 'deadline');
+  assert.equal(guard.snapshot().totals.responseBytes, 12);
+});
+
+test('failure preserves declared positive/negative/uncertain denominators and missing classes', async () => {
+  const p = plan([3, 1]);
+  const guard = createStudyGuard(p, { fetch: fetcher(() => response()) });
+  await guard.run('b0-c0', runWork);
+  await guard.run('b0-c1', async l => { await runWork(l); throw new Error('provider answer failure'); });
+  const s = guard.snapshot();
+  assert.deepEqual(s.declaredByClass, { positive: 2, negative: 1, uncertain: 1 });
+  assert.deepEqual(s.completedByClass, { positive: 1, negative: 0, uncertain: 0 });
+  assert.deepEqual(s.missingByClass, { positive: 1, negative: 1, uncertain: 1 });
+  assert.equal(s.completeAccuracyClaimPermitted, false); assert.equal(s.missingCallIds.length, 3);
+});
+
+test('plan is cloned and external mutation cannot authorize a changed request', async () => {
+  const p = plan([1]); const guard = createStudyGuard(p, { fetch: fetcher(() => response()) });
+  p.calls[0]!.requestSHA256 = createHash('sha256').update('tampered').digest('hex');
+  assert.equal((await guard.run('b0-c0', runWork)).status, 'completed');
+});
+
+test('malformed inventories, byte caps and noncontiguous block order are rejected offline', () => {
+  for (const mutate of [
+    (p: StudyGuardPlan) => { p.calls[1]!.callId = p.calls[0]!.callId; },
+    (p: StudyGuardPlan) => { p.calls[0]!.requestBytes = 65537; },
+    (p: StudyGuardPlan) => { p.limits.wallMs = 120001; },
+    (p: StudyGuardPlan) => { [p.calls[1], p.calls[2]] = [p.calls[2]!, p.calls[1]!]; },
+    (p: StudyGuardPlan) => { p.blocks[0]!.limits.maxTotalRequestBytes = bytes; },
+    (p: StudyGuardPlan) => { delete (p.limits as Partial<typeof p.limits>).maxInputTokens; },
+    (p: StudyGuardPlan) => { delete (p.blocks[0]!.limits as Partial<typeof p.blocks[0]['limits']>).maxTotalResponseBytes; },
+  ]) { const p = plan(); mutate(p); assert.throws(() => createStudyGuard(p, { fetch: fetcher(() => response()) })); }
+});
+
+test('runtime-owner cancellation settles abort-ignoring work and prevents later accounting', async () => {
+  const owner = new AbortController(); let signal: AbortSignal | null | undefined;
+  const guard = createStudyGuard(plan(), { fetch: fetcher((_url, init) => { signal = init?.signal; return new Promise(() => undefined); }) });
+  const pending = guard.run('b0-c0', async l => { l.attachAbortController(owner); return runWork(l); });
+  await tick(); owner.abort(new Error('request superseded'));
+  assert.equal((await settles(pending)).status, 'failed'); assert.equal(signal?.aborted, true);
+  assert.equal(guard.snapshot().primaryFailure?.code, 'runtime_owner_aborted');
+});
+
+test('synchronous campaign timer cannot dispatch after it has already stopped the guard', async () => {
+  let actual = 0;
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => { actual++; return response(); }), setTimer: f => { f(); return 1; }, clearTimer: () => undefined });
+  await assert.rejects(guard.run('b0-c0', runWork), StudyGuardError);
+  assert.equal(actual, 0); assert.equal(guard.snapshot().primaryFailure?.kind, 'deadline');
+});
+
+test('checkpoint failure after actual dispatch preserves actual count and aborts work', async () => {
+  let signal: AbortSignal | null | undefined;
+  const guard = createStudyGuard(plan(), { fetch: fetcher((_url, init) => { signal = init?.signal; return new Promise(() => undefined); }), onCheckpoint(e) { if (e.type === 'request_started') throw new Error('disk full'); } });
+  assert.equal((await settles(guard.run('b0-c0', runWork))).status, 'failed');
+  assert.equal(guard.snapshot().totals.actualStartedJev, 1); assert.equal(signal?.aborted, true);
+  assert.equal(guard.snapshot().primaryFailure?.code, 'checkpoint_failed');
+});
+
+test('normal HTTP error-body cancellation does not manufacture a local failure', async () => {
+  let cancelled = 0;
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => new Response(new ReadableStream({ cancel() { cancelled++; return new Promise(() => undefined); } }), { status: 503 })) });
+  await settles(guard.run('b0-c0', async l => {
+    const r = await l.fetch(url, { method: 'POST', body });
+    await r.body?.cancel();
+    throw Object.assign(new Error(), { code: 'jev_unavailable' });
+  }));
+  assert.equal(cancelled, 1); assert.equal(guard.snapshot().primaryFailure?.kind, 'provider');
+  assert.equal(guard.snapshot().primaryFailure?.code, 'jev_unavailable');
+});
+
+test('provider normalization cannot erase an actual local body guard failure', async () => {
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => response()) });
+  await guard.run('b0-c0', async l => {
+    try { return await l.fetch(url, { method: 'POST', body: 'wrong' }); }
+    catch { throw Object.assign(new Error(), { code: 'jev_unavailable' }); }
+  });
+  assert.equal(guard.snapshot().primaryFailure?.kind, 'local_guard');
+  assert.equal(guard.snapshot().primaryFailure?.code, 'request_body_hash_mismatch');
+});
+
+test('work returning without the predeclared HTTP dispatch cannot complete a call', async () => {
+  const guard = createStudyGuard(plan(), { fetch: fetcher(() => response()) });
+  assert.equal((await guard.run('b0-c0', async () => 'fake result')).status, 'failed');
+  assert.equal(guard.snapshot().primaryFailure?.code, 'missing_actual_dispatch');
+  assert.equal(guard.snapshot().unknownUsage, false);
+});
+
+test('active checkpoints expose the pending reserve and cannot mutate internal state', async () => {
+  const checkpoints: GuardCheckpoint[] = [];
+  const guard = createStudyGuard(plan([1]), { fetch: fetcher(() => response()), onCheckpoint(e) {
+    checkpoints.push(structuredClone(e)); e.snapshot.totals.actualStartedJev = 999;
+  } });
+  await guard.run('b0-c0', runWork);
+  const reserved = checkpoints.find(e => e.type === 'call_reserved')!;
+  assert.equal(reserved.snapshot.pendingInputTokenReserve, 24000);
+  assert.equal(reserved.snapshot.inFlightCallId, 'b0-c0');
+  assert.equal(guard.snapshot().totals.actualStartedJev, 1);
+  assert.equal(guard.snapshot().pendingInputTokenReserve, 0);
+});

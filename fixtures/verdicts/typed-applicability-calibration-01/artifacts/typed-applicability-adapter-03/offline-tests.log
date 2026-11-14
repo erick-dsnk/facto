@@ -1,0 +1,43 @@
+✔ same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability (100.175426ms)
+✔ clipped entire-unit binding fails before ask but unchanged baseline still executes once (57.360475ms)
+✔ fails closed on not_covered 0.99 (103.069666ms)
+✔ fails closed on uncertain 0.99 (62.966904ms)
+✔ fails closed on covered 0.84 (45.433841ms)
+✔ public/current wording cannot acquire freshness by covered answer (51.976155ms)
+✔ post-await advance invalidates response (108.107619ms)
+✔ post-await cancel invalidates response (49.077069ms)
+✔ post-await replaceMaterial invalidates response (52.685363ms)
+✔ post-await replaceInstall invalidates response (79.845036ms)
+✔ retirement invalidates a previously issued semantic token (41.081095ms)
+✔ same-ID companion and assessment changes do not validate token (46.758036ms)
+✔ nonordinary risk never gains semantic eligibility even with covered answer (58.358724ms)
+✔ prototype width mismatch preserves exact baseline title and disables optional route (38.759008ms)
+REQUEST_BYTES {"baseline":63394,"augmentation":0,"actual":63394}
+✔ maximal legal companion material preflights actual serialization without dropping any source (49.245953ms)
+✔ over-limit augmentation preserves baseline byte for byte and sends no optional item (41.812467ms)
+✔ shared inherited exhausted allowance prevents any HTTP attempt (46.408154ms)
+✔ actual response token accounting charges the same request budget (41.806708ms)
+✔ explicit second-claim reservation cannot be stolen by optional question (55.062874ms)
+✔ stale owner is rechecked on every consume, not just factory creation (80.133986ms)
+✔ transient HTTP failure is terminal with one actual attempt and no hidden allowance (49.8713ms)
+✔ forged or serialized dispatch-owner handle is rejected before ask (41.419324ms)
+✔ hung transport settles on Session.cancel before release; late result creates no answer/usage/commit (83.081681ms)
+✔ hung transport settles at inherited absolute deadline even if injected transport ignores signal (63.625465ms)
+✔ captured budget replacement fails before any dispatch (46.345535ms)
+✔ captured controller replacement fails before any dispatch (40.345577ms)
+✔ captured clock replacement fails before any dispatch (31.472073ms)
+✔ captured acceptedAt replacement fails before any dispatch (41.020113ms)
+✔ budget replaced during hung transport cannot receive usage or validate old response (34.959956ms)
+✔ deadline aborts actual local transport signal without aborting pinned request controller (55.358259ms)
+✔ deadline during ignored-signal body read cancels owned underlying reader and settles (50.332419ms)
+✔ postheaders owner failure cancels exact returned body; reject cleanup cannot mask or delay failure (35.061218ms)
+✔ postheaders owner failure cancels exact returned body; hang cleanup cannot mask or delay failure (38.719869ms)
+✔ owner failure aborts local transport but never a replacement controller (32.543716ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2299.249684

@@ -1,0 +1,264 @@
+{
+  "schema": "aggregate-only-independent-blind-first-run-v1",
+  "metadata": {
+    "commit": "b66fa5dcbc1e4a58665bc110cb0ab1b6dccf950f",
+    "dirty": false,
+    "sourceSHA256": "049cfba0da1bb9927c24261da9a45b4777908747e0196740b36d4dae827e899c",
+    "sourceHashScope": "tracked live harness, API source, contracts source, package manifest and lockfile",
+    "blindSetSHA256": "28f2e3037d0d8a024cb9e2e26af58d710d6d9c637a99ab510f65bda4c74feb85",
+    "blindInputsSHA256": "a70fdc86739a384d18d679c7cdc3c57ad95dc24ab3d9826f2f2c465f6eef8747",
+    "runnerSHA256": "e6e59f7dd2ef75e3a813ce6a6cf176a9515e9b920552f31d3c566ad07b980e49",
+    "role": "independent_blind_first_run",
+    "noImplementationTuningDuringRun": true
+  },
+  "counts": {
+    "declared": 10,
+    "observed": 10,
+    "terminalReceipts": 10,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "completed": true,
+  "truth": {
+    "eligible": 8,
+    "observedEligible": 8,
+    "correctDefinitive": 2,
+    "wrongDefinitive": 0,
+    "abstentions": 5,
+    "noVerdict": 1,
+    "notRun": 0,
+    "supportedExpected": 4,
+    "contradictedExpected": 4,
+    "definitivePrecision": 1,
+    "definitiveCoverage": 2,
+    "correctDefinitiveFractionOfEligible": 0.25
+  },
+  "admission": {
+    "declared": 10,
+    "observed": 10,
+    "correct": 8,
+    "incorrect": 2,
+    "notRun": 0,
+    "exactPublicSpanPass": 9,
+    "exactPublicSpanFail": 1
+  },
+  "privacy": {
+    "observedSearchCalls": 12,
+    "forbiddenPrivateQueryViolations": 0,
+    "unexpectedControlRetrievals": 0,
+    "harnessPrivacyBoundaryStops": 0,
+    "note": "Harness rejects unapproved queries before dispatch; a boundary stop is counted separately from actual exposure."
+  },
+  "totals": {
+    "attempts": 52,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 22,
+      "search": 12,
+      "contents": 18
+    },
+    "requestBytes": 583108,
+    "measuredInputTokens": 141603,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 141603,
+    "knownCostUSD": 0.10200000000000004,
+    "attemptsWithUnknownCost": 22,
+    "elapsedMs": 30080
+  },
+  "firstRunPreserved": true,
+  "scope": "Ten purposive nonrepresentative low-stakes manual cases; seven ordinary complete public claims, one mixed synthetic private/public, one personal preference and one incomplete fragment. Eight eligible facts balanced four true/four false.",
+  "completedFactualResults": {
+    "eligibleInputs": 8,
+    "factualResults": 7,
+    "explicitClarificationInsteadOfFactualResult": 1,
+    "resultPresentationRespond": 7,
+    "resultPresentationAvailableDenominator": 7,
+    "clarificationTerminals": 3,
+    "allTerminalFeedback": 10,
+    "allRequests": 10,
+    "nonResultPresentationRetained": false
+  },
+  "semanticActionConfusion": {
+    "expectedCheck": {
+      "denominator": 8,
+      "actualCheck": 7,
+      "actualNeedsConfirmation": 1
+    },
+    "expectedSkip": {
+      "denominator": 1,
+      "actualNeedsConfirmation": 1
+    },
+    "expectedNeedsConfirmation": {
+      "denominator": 1,
+      "actualNeedsConfirmation": 1
+    },
+    "interpretation": "Semantic action and terminal event type determine scoring. Wire admissionAction uses wait/skip/check only; needs_confirmation terminal plus skip means clarification with verification stopped. No extra failures are assigned for those payload values."
+  },
+  "citations": {
+    "definitiveResults": 2,
+    "selectedReferences": 5,
+    "uniqueSelectedURLCount": 5,
+    "missingSelectedRecords": 0,
+    "definitiveWithoutCitation": 0,
+    "independentReview": {
+      "uniqueSelectedUrls": 5,
+      "independentlyOpened": 5,
+      "relevant": 5,
+      "irrelevant": 0,
+      "inaccessible": 0,
+      "matchingSelectedStance": 5,
+      "contradictingSelectedStance": 0,
+      "unresolvedStance": 0,
+      "firstPartyInstitutionalPages": 2,
+      "officialGovernmentTreatyRecords": 1,
+      "secondaryJournalism": 1,
+      "tertiaryEncyclopedia": 1,
+      "definitiveOutcomesReviewed": 2,
+      "correctDefinitive": 2,
+      "wrongDefinitive": 0,
+      "eligibleFactualClaims": 8,
+      "abstentions": 5,
+      "noVerdict": 1
+    },
+    "reviewStatus": "complete",
+    "openingMethod": "Independent connected Exa fetch returning substantive page content; may use index/cache, not a direct-origin freshness guarantee.",
+    "independence": "Five relevant citations are not five independent origins; source overlap documented in sealed review."
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 240000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 30,
+      "search": 16,
+      "contents": 24
+    },
+    "wallMs": 180000
+  },
+  "usageDetails": {
+    "maxSingleRequestBytes": 58986,
+    "usageUnknownJevAttempts": 0,
+    "costUnknownAttempts": 22,
+    "knownCostUSD": 0.102,
+    "costIsPartial": true
+  },
+  "scopeBreakdown": {
+    "ordinaryPublic": {
+      "eligible": 7,
+      "correctDefinitive": 1,
+      "wrongDefinitive": 0,
+      "abstentions": 5,
+      "noVerdict": 1
+    },
+    "mixedSyntheticPrivatePublic": {
+      "eligible": 1,
+      "correctDefinitive": 1,
+      "wrongDefinitive": 0,
+      "abstentions": 0,
+      "noVerdict": 0
+    },
+    "personalControl": {
+      "expectedSkip": 1,
+      "actualNeedsConfirmation": 1,
+      "searchCalls": 0,
+      "truthVerdicts": 0
+    },
+    "incompleteControl": {
+      "expectedNeedsConfirmation": 1,
+      "actualNeedsConfirmation": 1,
+      "searchCalls": 0,
+      "truthVerdicts": 0
+    }
+  },
+  "sourceFreezeVerification": {
+    "commit": "b66fa5dcbc1e4a58665bc110cb0ab1b6dccf950f",
+    "rootProvidedFullSourceSHA256": "71f6fb9504e9045763f081b885fdf63fbcccfc8b138f845953b1575b5b2072e3",
+    "fullSourceHashVerifiedBeforeDispatch": true,
+    "cleanWorktreeVerifiedBeforeAndAfterDispatch": true,
+    "runnerSourceSHA256": "049cfba0da1bb9927c24261da9a45b4777908747e0196740b36d4dae827e899c",
+    "runnerSourceHashScope": "tracked live harness, API source, contracts source, package manifest and lockfile"
+  },
+  "methodology": {
+    "presealIndependentReview": {
+      "factualLabelsVerified": 8,
+      "admissionExpectationsReviewed": 10,
+      "issues": 0
+    },
+    "authorshipIsolation": "Author read repository policy only before authoring and sealing. Later integration reads of the requested frozen harness exposed its inline development examples after sealing; no sealed inputs or labels changed. No original heldout fixture was inspected.",
+    "exactCaseHashUnchanged": true,
+    "implementationTuningDuringRun": false,
+    "executions": 1,
+    "reruns": 0,
+    "durableJournal": {
+      "beforeDispatch": 1,
+      "dispatchReserved": 52,
+      "attemptFinished": 52,
+      "caseCompleted": 10,
+      "executionComplete": 1,
+      "records": 116
+    },
+    "groundTruthSourceQualification": "Authoritative first-party institutional/operator publications were used for ground truth; science references are original institutional educational publications, not original experimental research.",
+    "original12HeldoutTouched": false
+  },
+  "limitations": [
+    "This small purposive nonrepresentative sample does not estimate production accuracy.",
+    "Only 2/8 eligible facts were resolved correctly and definitively (25%); this is not a successful coverage result.",
+    "Conditional precision 2/2 is based on two outputs, with five abstentions and one no-verdict excluded from that denominator; neither abstention nor clarification passes factual correctness.",
+    "All ten requests had terminal feedback. Seven factual results retained presentation and all seven responded; non-result presentation fields were not retained, so silence cannot be inferred.",
+    "Zero forbidden search-query exposure is observed with a harness that blocks unapproved queries before dispatch; authorized classification receives the submitted input, using synthetic private data in the mixed control.",
+    "Five sources were opened through connected Exa and may be index/cache backed. Relevant citations overlap and are not five independent confirmations.",
+    "Known cost is partial: 22 Jev attempts lack reported cost. Token usage was measured, with zero remaining unknown usage reservations.",
+    "Input-token reservations are stopping allowances, not guaranteed upper bounds; actual requests can exceed reservations before a stop.",
+    "Automatic notification, native/iOS and ASR paths were not evaluated.",
+    "Progress checkpoint records retain completed:false even at final phase; the preserved final campaign report records completed:true and all ten terminal receipts.",
+    "No hardware benchmark or listening false-alert inference; small sequential manual sample. Cold/cached flags apply to retained factual result events, not clarification events. Source URL openings by the reviewer are independent validation, not deliberate user opens."
+  ],
+  "artifactHashes": {
+    "sealedBundle": "28f2e3037d0d8a024cb9e2e26af58d710d6d9c637a99ab510f65bda4c74feb85",
+    "sealedInputs": "a70fdc86739a384d18d679c7cdc3c57ad95dc24ab3d9826f2f2c465f6eef8747",
+    "presealReview": "0f89ac62e3eff7af436cb0f0814b31e1d40df58dde0c3a7c038e6969cc7f9593",
+    "sanitizedFirstRun": "6bd336d3250f01fcc94e3d2a01923ef3742ab8b359e3d1072476086c2e04f6c0",
+    "journal": "99140eb9db1ad4af93c95bbbae28a94e97b68a4147fce18f8148644f323d4bdb",
+    "citationReview": "dc5a302b46d97ba5ae7393b5febb04251f4784e32d49fc072c607b17aa08c138",
+    "citationEvidence": "479fc8fea83ee5fec608cc6973da8d73debfc2ef30674b159b1980f6d01a3957",
+    "runner": "e6e59f7dd2ef75e3a813ce6a6cf176a9515e9b920552f31d3c566ad07b980e49",
+    "retentionManifest": "a18651c519197588da50c0fdcb5f81c4d3fa5741bc224d004b4a22aa28dc643d"
+  },
+  "retentionArchive": {
+    "path": "/workspace/independent-evaluation-retention/sealed-first-run.tar.gz",
+    "sha256": "df1a87d8679823e214b705ae84fb594cc8b9461400d3ec5e0ccde8391db1128c",
+    "bytes": 3387836,
+    "publication": "Private user retention only; contains sealed case material and must remain outside the PR."
+  },
+  "publicDisclosure": "Aggregate-only: no case bodies, labels or identifying source URLs. Detailed reports, journal, ground truth and reviews remain sealed outside the repository.",
+  "latencyAndCache": {
+    "allTypedRequests": {
+      "requests": 10,
+      "durationMetric": "Harness CaseReport.durationMs: typed request dispatch through terminal receipt and provider drain; integer milliseconds.",
+      "medianMs": 2519.5,
+      "p95Ms": 9091,
+      "p95Method": "Nearest rank: sorted durations at ceil(0.95*n); for n<=10 this is maximum. Median averages middle pair for even n.",
+      "resultEvents": 7,
+      "coldResultEvents": 7,
+      "cachedResultEvents": 0,
+      "resultEventsWithoutCacheFlag": 0,
+      "requestsWithoutFactualResult": 3
+    },
+    "eligibleFactualRequests": {
+      "requests": 8,
+      "durationMetric": "Harness CaseReport.durationMs: typed request dispatch through terminal receipt and provider drain; integer milliseconds.",
+      "medianMs": 3957.5,
+      "p95Ms": 9091,
+      "p95Method": "Nearest rank: sorted durations at ceil(0.95*n); for n<=10 this is maximum. Median averages middle pair for even n.",
+      "resultEvents": 7,
+      "coldResultEvents": 7,
+      "cachedResultEvents": 0,
+      "resultEventsWithoutCacheFlag": 0,
+      "requestsWithoutFactualResult": 1
+    },
+    "limitation": "No hardware benchmark or listening false-alert inference; small sequential manual sample. Cold/cached flags apply to retained factual result events, not clarification events. Source URL openings by the reviewer are independent validation, not deliberate user opens.",
+    "userDeliberateSourceOpens": "not measured"
+  }
+}

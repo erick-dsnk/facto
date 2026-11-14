@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "kind": "separate_purposive_automatic_followup",
+  "sourceRunSHA256": "53e4389369c8e00b9e6635ac4f68707694896deb294a8f2f341b1c83e0a61df0",
+  "executedOnce": true,
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+  "actionOutcome": "passed",
+  "actual": {
+    "verdict": "supported",
+    "presentation": {
+      "action": "silent",
+      "reasonCode": "automatic_noncontradiction"
+    },
+    "cached": false,
+    "checkedPublicText": "The Panama Canal opened to world trade in 1914.",
+    "revision": 1,
+    "durationMs": 583
+  },
+  "sourceVerification": {
+    "reviewer": "independent_agent",
+    "selectedReferences": 2,
+    "verifiedReferences": 2,
+    "newSourceFetches": 0,
+    "proofReuse": "Exact same selected IDs, URLs and excerpt hashes as original AD06. Original04:38:11source-fetch and04:42:02review timestamps preserved; no later accessibility claim."
+  },
+  "totals": {
+    "attempts": 3,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 2,
+      "search": 1,
+      "contents": 0
+    },
+    "requestBytes": 55046,
+    "measuredInputTokens": 13243,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 13243,
+    "knownCostUSD": 0.007,
+    "attemptsWithUnknownCost": 2,
+    "elapsedMs": 779
+  },
+  "counts": {
+    "declared": 1,
+    "observed": 1,
+    "terminalReceipts": 1,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "journalRecords": 7,
+  "newFactualAccuracyDenominator": 0,
+  "originalAutomatic08": "Unchanged:five passed,one inconclusive; AD07 does not replaceAD03."
+}

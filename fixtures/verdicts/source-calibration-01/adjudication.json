@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "frozen": true,
+  "independentReviewComplete": true,
+  "createdAt": "2026-11-14T04:14:35.289833+00:00",
+  "providerOutputsViewed": false,
+  "projectKeyCalls": 0,
+  "evaluatedCohort": "all48 core units; eight boundary extensions unexecuted",
+  "reviewers": [
+    "source_calibration AI agent",
+    "final_stack_review AI agent"
+  ],
+  "primaryMetricExcludedIds": [
+    "Q23",
+    "Q39",
+    "Q47"
+  ],
+  "revisedIds": [
+    "Q07",
+    "Q11",
+    "Q15",
+    "Q19",
+    "Q31",
+    "Q43"
+  ],
+  "rationale": "Use a concrete retained basis, not source prestige, factual familiarity, word count or merely asserted relation. Named record/research summaries can qualify content basis without certifying truth/authenticity/origin. Genuine ordinary-reference boundary remains unresolved and is not favorable evidence for policy change.",
+  "requirements": [
+    "Execute all48 core units for both arms exactly as predeclared, within root-authorized budget.",
+    "Primary confusion matrices exclude Q23 Q39 Q47. Report predictions for excluded units and separate sensitivity assuming each possible label; do not choose favorable labels.",
+    "Do not execute boundary extension in this bounded experiment. Preserve its disagreement, no post-output relabeling.",
+    "Origin-pair controls are separate and synthetic; they do not establish actual publication independence.",
+    "No production readiness claim or probability calibration claim from this finite correlated corpus."
+  ]
+}

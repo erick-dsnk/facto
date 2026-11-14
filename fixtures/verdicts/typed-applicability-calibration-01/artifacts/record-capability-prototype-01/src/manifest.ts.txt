@@ -1,0 +1,81 @@
+import { readBounded, assertRoot } from './files.js';
+import { canonical, deepFreeze, digest, fail, hash, LIMITS, parseInstalledData, parseReceipt, string, type Frame, type InstalledData, type Proof, type Receipt } from './types.js';
+declare const installedBrand: unique symbol;
+export type InstalledManifest = {
+    readonly [installedBrand]: true;
+};
+type State = {
+    root: string;
+    manifestSHA256: string;
+    data: InstalledData;
+    receipts: Map<string, {
+        sha256: string;
+        receipt: Receipt;
+    }>;
+    retired: boolean;
+};
+const installed = new WeakMap<object, State>();
+const state = (handle: unknown): State => { if (!handle || typeof handle !== 'object')
+    return fail('untrusted_manifest'); const s = installed.get(handle); if (!s)
+    return fail('untrusted_manifest'); if (s.retired)
+    return fail('retired_manifest'); return s; };
+/** ADMIN-ONLY bootstrap. expectedSHA256/root come from trusted code, never a source/request. */
+export async function loadInstalledManifest(root: string, expectedSHA256: string): Promise<InstalledManifest> {
+    await assertRoot(root);
+    hash(expectedSHA256);
+    const raw = await readBounded(root, 'manifest.json');
+    if (digest(raw) !== expectedSHA256)
+        return fail('manifest_hash_mismatch');
+    const data = deepFreeze(parseInstalledData(JSON.parse(raw.toString('utf8'))));
+    const receipts = new Map<string, {
+        sha256: string;
+        receipt: Receipt;
+    }>();
+    const artifacts = new Set(data.proofs.flatMap(p => [p.rawBodySHA256, p.extractionSHA256]));
+    let bytes = 0;
+    for (const id of artifacts) {
+        const content = await readBounded(root, `artifacts/${id}`);
+        if (digest(content) !== id)
+            return fail('proof_hash_mismatch');
+        bytes += content.length;
+        if (bytes > LIMITS.totalArtifactBytes)
+            return fail('total_artifact_limit');
+    }
+    for (const entry of data.receipts) {
+        const bytes = await readBounded(root, `receipts/${entry.sha256}.json`);
+        if (digest(bytes) !== entry.sha256)
+            return fail('receipt_hash_mismatch');
+        const receipt = deepFreeze(parseReceipt(JSON.parse(bytes.toString('utf8'))));
+        const proof = data.proofs.find(p => p.id === receipt.proofId);
+        if (!proof || proof.requestedURL !== receipt.canonicalURL || proof.rawBodySHA256 !== receipt.rawBodySHA256 || proof.extractionSHA256 !== receipt.extractionSHA256 || receipt.issuerProofIds.some(id => !data.proofs.some(p => p.id === id)))
+            return fail('receipt_proof_mismatch');
+        const text = (await readBounded(root, `artifacts/${receipt.extractionSHA256}`)).toString('utf8');
+        for (const unit of receipt.units) {
+            const content = text.slice(unit.start, unit.end);
+            if (unit.end > text.length || digest(content) !== unit.contentSHA256 || Array.from(content).length > LIMITS.excerptCodepoints)
+                return fail('record_unit_mismatch');
+            if (unit.materialSpans.length !== 1 || unit.materialSpans[0]?.role !== 'entire_audited_record_unit' || unit.materialSpans[0].start !== 0 || unit.materialSpans[0].end !== content.length)
+                return fail('unreviewed_material_span_policy');
+        }
+        receipts.set(entry.alias, deepFreeze({ sha256: entry.sha256, receipt }));
+    }
+    const handle = Object.freeze(Object.create(null)) as InstalledManifest;
+    installed.set(handle, { root, manifestSHA256: expectedSHA256, data, receipts, retired: false });
+    return handle;
+}
+/** ADMIN-ONLY lifecycle: retire the old instance before switching trusted revocation/install manifests. */
+export function retireInstalledManifest(handle: InstalledManifest): void { state(handle).retired = true; }
+export function manifestIdentity(handle: unknown): string { return state(handle).manifestSHA256; }
+export function artifactRoot(handle: unknown): string { return state(handle).root; }
+export function resolveReceipt(handle: unknown, alias: unknown): Readonly<{
+    sha256: string;
+    receipt: Receipt;
+}> { const s = state(handle); const entry = s.receipts.get(string(alias, 64)); if (!entry)
+    return fail('unknown_receipt'); if (s.data.revokedReceipts.includes(entry.sha256))
+    return fail('receipt_revoked'); return entry; }
+export function resolveProof(handle: unknown, id: unknown): Readonly<Proof> { const p = state(handle).data.proofs.find(p => p.id === string(id, 64)); if (!p)
+    return fail('unknown_proof'); return p; }
+export function resolveFrozenFrame(handle: unknown, id: unknown): Readonly<Frame> { const f = state(handle).data.frames.find(f => f.id === string(id, 64)); if (!f)
+    return fail('unknown_claim_frame'); return f; }
+export function frameDigest(frame: Frame): string { return digest(canonical(frame)); }
+export function installedSummary(handle: unknown) { const s = state(handle); return deepFreeze({ manifestSHA256: s.manifestSHA256, corpusManifestSHA256: s.data.corpusManifestSHA256, receiptAliases: [...s.receipts.keys()], proofIds: s.data.proofs.map(p => p.id), frameIds: s.data.frames.map(f => f.id), productionAuthorized: false }); }
