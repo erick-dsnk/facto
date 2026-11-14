@@ -1,0 +1,41 @@
+{
+  "kind": "exa_cleanup_minimal_fix_validation",
+  "lowerBranchBaseCommit": "9359da3ef0edda849f3e7eea255e8ed535fb4f61",
+  "sourceFiles": {
+    "services/api/src/providers/exa/client.ts": "584ae2700ea3023090e84c525e9d55f2c7bb1adcca200b30a2817a85c3d72f72",
+    "services/api/src/providers/exa/client-cleanup.test.ts": "46aac901d78baf7233f2e103d7755261dbc78f8a060889f6ea9e02c823b34835"
+  },
+  "originalInvestigationManifestSHA256": "2be36c9d2c26aeec95910c5bddf6423831ef48fab5e8901a4d1f1388bb87d2a0",
+  "before": {
+    "tests": 16,
+    "failed": 13,
+    "passed": 3
+  },
+  "focused": {
+    "tests": 42,
+    "passed": 42,
+    "files": 2
+  },
+  "lowerBranchFullCheck": {
+    "lint": "pass",
+    "typecheck": "pass",
+    "tests": 242,
+    "files": 13,
+    "passed": 242
+  },
+  "combinedSourceProjection": {
+    "tests": 20,
+    "passed": 20,
+    "sourceCommit": "601a804e60cf311798dc27226616d10789ef5d78",
+    "transformationVerification": "pass",
+    "firstAttempt": "harness module-mode setup failed before tests; original log preserved",
+    "moduleModeCorrectedRun": "all 20 tests passed; source and test unchanged"
+  },
+  "providerCalls": 0,
+  "limits": [
+    "Native body-reset failure reproduced with deterministic post-header delivery barrier.",
+    "Pending/rejected injected stream cases are not evidence of default-native hanging cancellation.",
+    "Best-effort cancellation is initiated; arbitrary remote resource closure is not certified.",
+    "Integrated root propagation and full gate remain separate."
+  ]
+}
