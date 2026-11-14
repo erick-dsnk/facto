@@ -37,20 +37,10 @@ enum DisplayCardBuilder {
       verdict: card.verdictWord,
       kind: card.kind,
       context: card.detail,
-      detail: card.detailText ?? ResultWording.line(for: outcome(for: card.kind)),
-      publisher: card.sourceName
+      detail: card.detailText ?? ResultWording.lensSentence(for: card.kind),
+      publisher: card.sourceName,
+      includeDot: includeSwatch
     )
-  }
-
-  private static func outcome(for kind: CardKind) -> OutputOutcome {
-    switch kind {
-    case .supported: .verdict(.supported)
-    case .contradicted: .verdict(.contradicted)
-    case .misleading: .verdict(.misleading)
-    case .unverified: .verdict(.insufficientEvidence)
-    case .needsConfirmation: .needsConfirmation(heard: false)
-    case .checkFailed: .checkFailed
-    }
   }
 
   /// The screen the lens shows for a moment after it connects.
@@ -62,11 +52,11 @@ enum DisplayCardBuilder {
     .padding(padding)
   }
 
-  /// Sends `card` through `send`, with its swatch when `includeSwatch` is true. If a send
-  /// with a swatch throws, sends the card again with the icon instead.
+  /// Sends `card` through `send`, with its verdict dot (an image) when `includeSwatch` is true.
+  /// If a send with the dot throws, sends the card again without any image.
   ///
-  /// - Returns: whether later sends should still include swatches. False once a send with
-  ///   a swatch failed and the resend without it worked.
+  /// - Returns: whether later sends should still include the dot. False once a send with it
+  ///   failed and the resend without it worked.
   @MainActor
   static func send(
     _ card: ResultCard,
@@ -75,6 +65,7 @@ enum DisplayCardBuilder {
     onDismiss: (@Sendable () -> Void)?,
     using send: (FlexBox) async throws -> Void
   ) async throws -> Bool {
+    // Not sure and Check failed have no verdict colour, so they go out without the dot.
     guard includeSwatch, swatchImage(for: card.kind) != nil else {
       try await send(build(card, includeSwatch: false, onRepeat: onRepeat, onDismiss: onDismiss))
       return includeSwatch
@@ -178,7 +169,7 @@ enum DisplayCardBuilder {
 enum NativeLensCardLayout {
   static func build(
     capture: String?, claim: String, verdict: String, kind: CardKind,
-    context: String? = nil, detail: String, publisher: String?
+    context: String? = nil, detail: String, publisher: String?, includeDot: Bool = true
   ) -> FlexBox {
     FlexBox(
       direction: .column, spacing: 16,
@@ -192,7 +183,8 @@ enum NativeLensCardLayout {
       }
       FlexBox(direction: .column, spacing: 12) {
         FlexBox(direction: .row, spacing: 8, crossAlignment: .center) {
-          Image(image: dot(for: kind), sizePreset: .icon, cornerRadius: .none)
+          // Left out after a send with an image failed, so the card still reaches the lens.
+          if includeDot { Image(image: dot(for: kind), sizePreset: .icon, cornerRadius: .none) }
           Text(verdict, style: .body)
           if let context, !context.isEmpty {
             Text(context, style: .meta, color: .secondary)

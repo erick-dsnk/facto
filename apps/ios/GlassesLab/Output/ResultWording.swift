@@ -51,6 +51,19 @@ enum ResultWording {
     }
   }
 
+  /// The lens card's explanation line when the backend sent none (Eric's native layout). The
+  /// verdict word already sits above it, so this is a sentence, not "False." again.
+  static func lensSentence(for kind: CardKind) -> String {
+    switch kind {
+    case .supported: "Supported by the sources I found."
+    case .contradicted: "The evidence I found contradicts that claim."
+    case .misleading: "That needs context."
+    case .unverified: "I couldn’t verify that."
+    case .needsConfirmation: "I’m not sure what was read."
+    case .checkFailed: "The check didn’t finish."
+    }
+  }
+
   static func kind(for outcome: OutputOutcome) -> CardKind {
     switch outcome {
     case .verdict(.supported): .supported
