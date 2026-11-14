@@ -1,0 +1,51 @@
+{
+  "caseLabel": "BD08",
+  "evidenceId": "ev-b0521ce99264614043b9",
+  "url": "https://www.olympics.com/en/news/this-week-olympic-sports-history-april-1-7-athens-1896-first-modern-games",
+  "excerptSHA256": "110e67e5f56134a857f8b899fc60385d63f3fe14d1d1f359ec156855cdd1fbd2",
+  "mode": "exact_prior_proof_reuse",
+  "reuseDecisionAt": "2026-11-14T05:15:38.129983+00:00",
+  "originalReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+  "originalOriginCompletedAt": "2026-11-14T04:35:54.186375+00:00",
+  "priorReviewPath": "/workspace/task-evidence/broader-candidate08-citation-review.json",
+  "originMetadataPath": "/workspace/task-evidence/broader-candidate08-citation-work/origin-fetches/b0521ce992646140.json",
+  "originalOriginMetadata": {
+    "id": "b0521ce992646140",
+    "requestedUrl": "https://www.olympics.com/en/news/this-week-olympic-sports-history-april-1-7-athens-1896-first-modern-games",
+    "requestedAt": "2026-11-14T04:35:54.040083+00:00",
+    "method": "GET",
+    "projectKeysUsed": false,
+    "providerIndexedRetrievalUsed": false,
+    "completedAt": "2026-11-14T04:35:54.186375+00:00",
+    "httpStatus": 503,
+    "finalUrl": "https://www.olympics.com/en/news/this-week-olympic-sports-history-april-1-7-athens-1896-first-modern-games",
+    "responseHeaders": {
+      "content-length": "85",
+      "content-type": "text/plain",
+      "date": "Sat, 14 Nov 2026 04:35:53 GMT",
+      "server": "envoy"
+    },
+    "redirects": [],
+    "responseBodyFile": "b0521ce992646140.body",
+    "responseBodyBytes": 85,
+    "responseBodySHA256": "e482a48fef03d183029fa2edf995fc8e9ce023f18649fd1d9149958e977068a1",
+    "bodyTruncated": false,
+    "textExtraction": "stdlib HTMLParser excluding script/style/noscript",
+    "extractedTextFile": "b0521ce992646140.text.txt",
+    "extractedTextSHA256": "e482a48fef03d183029fa2edf995fc8e9ce023f18649fd1d9149958e977068a1",
+    "extractedTextCodepoints": 85
+  },
+  "selectedExcerpt": "## On This Day - April 6 1896 - The first modern Olympic Games began in Athens\n\nThe first modern Olympic Games began in Athens on 6 April 1896. To mark the occasion, the Greek capital was adorned with bunting, streamers, and green wreaths adorning house fronts.\n\nThis event was the culmination of a long-standing endeavor led by Pierre Baron de Coubertin, the visionary founder of the International Olympic Committee.\n\nDespite prior unsuccessful attempts to revive the Olympic Games, the Frenchman's determination paid off when the International Congress of Paris for the Re-establishment of the Olympic Games approved his project in 1894.\n\nAthens was then selected to host the inaugural Olympic Games of the modern era, paying hommage to the ancient Olympic Games held in Olympia, Greece, from 776 BC ato 393 AD.\n\n...\n\nAthletes from 14 different nations participated in the historic event, which opened with a ceremony at the beautifully restored Panathenaic Stadium. This marked one of the most significant international sporting events of its time, with almost 300 athletes participating.",
+  "status": "inaccessible",
+  "priorReview": {
+    "caseLabel": "BD08",
+    "expectedClaimId": "BD08",
+    "evidenceId": "ev-b0521ce99264614043b9",
+    "url": "https://www.olympics.com/en/news/this-week-olympic-sports-history-april-1-7-athens-1896-first-modern-games",
+    "excerptSHA256": "110e67e5f56134a857f8b899fc60385d63f3fe14d1d1f359ec156855cdd1fbd2",
+    "status": "inaccessible",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Two fresh GETs to exact selected Olympics.com news URL returned HTTP 503 with upstream connect/reset error and no substantive article. Both raw responses retained. Indexed selected highlight is not treated as fresh-origin verification. The separately selected readable IOC PDF does not substitute for this inaccessible selected reference."
+  }
+}

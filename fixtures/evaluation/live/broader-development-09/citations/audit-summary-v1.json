@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_selected_citation_audit_summary",
+  "createdAt": "2026-11-14T05:16:31.493267+00:00",
+  "sourceCommit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "selectedPacketPath": "/workspace/task-evidence/broader-candidate09-selected-citations.json",
+  "selectedPacketSHA256": "aa0a15a650de37d1267f8fe5eac7f917a39efeaf937d192cbb2982561b49d96d",
+  "reviewFile": "/workspace/task-evidence/broader-candidate09-citation-review.json",
+  "reviewSHA256": "fd7fa43084aa555549957069564653d7443cb8d01e7387d943ba7d3dadab2f83",
+  "counts": {
+    "selectedReferences": 11,
+    "uniqueSelectedUrls": 11,
+    "verifiedReferences": 10,
+    "unsupportedReferences": 0,
+    "inaccessibleReferences": 1,
+    "uniqueFacts": 12,
+    "eligibleOccurrences": 13,
+    "correctDefinitiveUniqueFacts": 4,
+    "abstainedUniqueFacts": 8,
+    "operationalErrorUniqueFacts": 0,
+    "wrongDefinitiveUniqueFacts": 0,
+    "sourceVerifiedCorrectUniqueFacts": 3,
+    "sourceVerifiedCorrectOccurrences": 3,
+    "terminalReceipts": 16,
+    "admittedEligibleOccurrences": 13
+  },
+  "sourceVerifiedUniqueLabels": [
+    "BD03",
+    "BD10",
+    "BD12"
+  ],
+  "definitiveNotFullyVerified": {
+    "BD08": "Exact prior selected Olympics.com URL/excerpt proof reused: HTTP503 access failure; no fresh09 request or source substitution."
+  },
+  "mixedControl": "BDC04 repeats BD07; its abstention adds one occurrence and zero unique facts.",
+  "proofReuse": {
+    "exactPriorReferencesReused": 9,
+    "verifiedPriorReferences": 8,
+    "inaccessiblePriorReferences": 1,
+    "originalReviewAndOriginTimesPreserved": true,
+    "candidateTimeFreshnessClaimedForReusedProof": false,
+    "federalRegisterOriginCompletedAt": "2026-11-14T04:19:05.217388+00:00"
+  },
+  "network": {
+    "newOrChangedSelectedUniqueUrlsFreshlyRequested": 2,
+    "logicalGETs": 2,
+    "redirects": 0,
+    "automaticRetries": 0,
+    "http200": 2,
+    "bodyBytes": 669925,
+    "truncatedBodies": 0,
+    "projectKeysOrProviderApiCalls": 0,
+    "freshRequestCanHitCDN": true
+  },
+  "validation": {
+    "strictMetricFunctionAcceptedAll11Rows": true,
+    "selectedExcerptHashesMatchAllRows": true,
+    "newRawBodyTextHashesMatch": true,
+    "priorRawBodyTextHashesMatch": true,
+    "expectedCheckedTextAndScopeUnchangedForProofReuse": true
+  },
+  "guardChronology": "All reports completed before this review. Original guard halted after batch01/before02; versioned, independently reviewed revision03 allowed only unstarted02\u201304. Paid batch01 preserved without rerun. This source audit does not rewrite predispatch chronology.",
+  "limitations": [
+    "Repeated OPEN corpus, neither blind nor causal;4/12 raw and3/12 verified do not isolate any fix effect.",
+    "Prior proof retains original access limitations and timestamps; no claim that all sources were freshly opened at candidate09 time.",
+    "Fully verified selected sets do not establish independent source families or complete verdict-policy eligibility.",
+    "Kilimanjaro CPAG and UNESCO/IUCN share nomination origin; Smithsonian histories share institution/legislation; reef periodic report and nomination overlap; Marine Regions derives from GEBCO/ACUF.",
+    "AI-agent inspection, not human review."
+  ]
+}

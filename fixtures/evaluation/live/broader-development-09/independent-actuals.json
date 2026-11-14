@@ -1,0 +1,184 @@
+{
+  "kind": "candidate09_independent_packaging_actuals",
+  "checkedAt": "2026-11-14T05:18:21.547546+00:00",
+  "reports": [
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-01.json",
+      "sha256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-02.json",
+      "sha256": "c41785a39098a7485cd13e865e52f663ab6539cc3fcfff6d8f90dabdde1bef42"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-03.json",
+      "sha256": "28152cdc24eba9c605304b94bb3deb0caf99fa57681387844790f941753c7f26"
+    },
+    {
+      "path": "/workspace/task-evidence/broader-candidate09-04.json",
+      "sha256": "ef3b4c3e3e4a5dd23abc4ec9fc16d8d7b14f087bc3bcb5f6a6facec7d6a5fc89"
+    }
+  ],
+  "totals": {
+    "chargedInputTokens": 329197,
+    "requestBytes": 1381736,
+    "elapsedMs": 39806,
+    "unknownInputTokenReservations": 0,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 41,
+      "search": 25,
+      "contents": 36
+    },
+    "knownPartialCostUSD": 0.245,
+    "attemptsWithUnknownCost": 41,
+    "totalCostUSD": null,
+    "outputTokens": null,
+    "httpStatuses": {
+      "200": 102
+    },
+    "journalRows": 204
+  },
+  "attempts": 102,
+  "terminalReceipts": 16,
+  "uniqueFactualLatency": {
+    "n": 12,
+    "minMs": 1607,
+    "medianMs": 3216.5,
+    "p50NearestRankMs": 3175,
+    "p95NearestRankMs": 5302,
+    "maxMs": 5302,
+    "sortedMs": [
+      1607,
+      1884,
+      2431,
+      2469,
+      2498,
+      3175,
+      3258,
+      3493,
+      3535,
+      3568,
+      4378,
+      5302
+    ]
+  },
+  "all16InputLatency": {
+    "n": 16,
+    "minMs": 90,
+    "medianMs": 2483.5,
+    "p50NearestRankMs": 2469,
+    "p95NearestRankMs": 5302,
+    "maxMs": 5302,
+    "sortedMs": [
+      90,
+      115,
+      139,
+      1088,
+      1607,
+      1884,
+      2431,
+      2469,
+      2498,
+      3175,
+      3258,
+      3493,
+      3535,
+      3568,
+      4378,
+      5302
+    ]
+  },
+  "occurrenceMetrics": {
+    "expected": 13,
+    "correctDefinitive": 4,
+    "wrongDefinitive": 0,
+    "abstained": 9,
+    "noResult": 0,
+    "notObserved": 0,
+    "sourceVerifiedCorrect": 3,
+    "coldCorrect": 4,
+    "cachedResults": 0,
+    "definitiveCoverage": 0.3076923076923077,
+    "sourceVerifiedCoverage": 0.23076923076923078
+  },
+  "uniqueFactMetrics": {
+    "expected": 12,
+    "correctDefinitive": 4,
+    "wrongDefinitive": 0,
+    "abstained": 8,
+    "noResult": 0,
+    "notObserved": 0,
+    "sourceVerifiedCorrect": 3,
+    "coldCorrect": 4,
+    "cachedResults": 0,
+    "definitiveCoverage": 0.3333333333333333,
+    "sourceVerifiedCoverage": 0.25
+  },
+  "mixedRepeatMetrics": {
+    "expected": 1,
+    "correctDefinitive": 0,
+    "wrongDefinitive": 0,
+    "abstained": 1,
+    "noResult": 0,
+    "notObserved": 0,
+    "sourceVerifiedCorrect": 0,
+    "coldCorrect": 0,
+    "cachedResults": 0,
+    "definitiveCoverage": 0,
+    "sourceVerifiedCoverage": 0
+  },
+  "note": "Median is arithmetic mean of two middle values for even cohorts; nearest-rankP50 is separately retained, explaining runtime summary3175ms vs median3216.5ms. All typed-input terminal intervals include abstentions; reviewpause not in sum batch elapsed.",
+  "providerCallsDuringPackaging": 0,
+  "perBatchCapsChecked": true,
+  "perBatchActuals": [
+    {
+      "batch": 1,
+      "calls": {
+        "jev": 10,
+        "search": 6,
+        "contents": 9
+      },
+      "inputTokens": 84751,
+      "requestBytes": 356194,
+      "elapsedMs": 11475,
+      "allWithinCaps": true
+    },
+    {
+      "batch": 2,
+      "calls": {
+        "jev": 10,
+        "search": 6,
+        "contents": 9
+      },
+      "inputTokens": 75990,
+      "requestBytes": 314273,
+      "elapsedMs": 9498,
+      "allWithinCaps": true
+    },
+    {
+      "batch": 3,
+      "calls": {
+        "jev": 10,
+        "search": 6,
+        "contents": 9
+      },
+      "inputTokens": 74439,
+      "requestBytes": 312957,
+      "elapsedMs": 10996,
+      "allWithinCaps": true
+    },
+    {
+      "batch": 4,
+      "calls": {
+        "jev": 11,
+        "search": 7,
+        "contents": 9
+      },
+      "inputTokens": 94017,
+      "requestBytes": 398312,
+      "elapsedMs": 7837,
+      "allWithinCaps": true
+    }
+  ]
+}
