@@ -1,0 +1,972 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline_unwired_record_capability_shadow",
+  "createdAt": "2026-11-14T05:23:16.691Z",
+  "sourceCorpusManifestSHA256": "61d06043365be55ad91b8f85e01d336b82c481d83585fdcba4906604471cda4e",
+  "installed": {
+    "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+    "corpusManifestSHA256": "61d06043365be55ad91b8f85e01d336b82c481d83585fdcba4906604471cda4e",
+    "receiptAliases": [
+      "RA01",
+      "RA02",
+      "RA03",
+      "RA04"
+    ],
+    "proofIds": [
+      "RP01",
+      "IP01",
+      "RP02",
+      "IP02",
+      "RP03",
+      "IP03",
+      "RP04",
+      "IP04",
+      "RFC-INFO",
+      "RFC-PRIOR",
+      "XP01",
+      "XP02",
+      "XP03"
+    ],
+    "frameIds": [
+      "RC01",
+      "RC02",
+      "RC03",
+      "RC04",
+      "RC05",
+      "RC06",
+      "RC07",
+      "RC08",
+      "RC09",
+      "RC10",
+      "RC11",
+      "RC12",
+      "RC13",
+      "RC14",
+      "RC15",
+      "RC16",
+      "RC17",
+      "RC18",
+      "RC19",
+      "RC20",
+      "RC21",
+      "RC22"
+    ],
+    "productionAuthorized": false
+  },
+  "projectProviderCalls": 0,
+  "networkCalls": 0,
+  "productionImports": 0,
+  "productionChanged": false,
+  "rawEnglishFramingImplemented": false,
+  "currentVersionAuthenticationImplemented": false,
+  "verdictsAssigned": 0,
+  "counts": {
+    "requests": 22,
+    "applicable": 10,
+    "positiveExpected": 10,
+    "falseCapabilities": 0,
+    "missedCapabilities": 0,
+    "matches": 22,
+    "recordFamilies": 4
+  },
+  "pairs": [
+    {
+      "receiptId": "RA01",
+      "originFamily": "RFC8174",
+      "ids": [
+        "RC16",
+        "RC19"
+      ],
+      "identicalExcerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "allSameApplicability": true
+    },
+    {
+      "receiptId": "RA02",
+      "originFamily": "CA-RSC1985-H5",
+      "ids": [
+        "RC05",
+        "RC08"
+      ],
+      "identicalExcerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "allSameApplicability": true
+    },
+    {
+      "receiptId": "RA03",
+      "originFamily": "Pulitzer-2021-Fiction-winner",
+      "ids": [
+        "RC02",
+        "RC17"
+      ],
+      "identicalExcerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "allSameApplicability": true
+    },
+    {
+      "receiptId": "RA04",
+      "originFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "ids": [
+        "RC15",
+        "RC20"
+      ],
+      "identicalExcerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "allSameApplicability": true
+    }
+  ],
+  "rows": [
+    {
+      "id": "RC01",
+      "receiptId": "RA04",
+      "synthetic": false,
+      "inputExcerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "result": {
+        "kind": "unavailable",
+        "reason": "current_version_unverified",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC02",
+      "receiptId": "RA03",
+      "synthetic": false,
+      "inputExcerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "7a019e1306fa321c557ea6d26b179d29748a489d1931267dd5aee02aef6c4c6e",
+          "canonicalDocumentId": "Pulitzer-2021-Fiction-winner",
+          "versionId": "2021 award edition; snapshot at recorded access time",
+          "canonicalURL": "https://www.pulitzer.org/winners/louise-erdrich",
+          "proofId": "RP03",
+          "rawBodySHA256": "364f2adfe7b0f124c9baa8bcaa9370b87fdfe808533c2f29e4933792b0661877",
+          "extractionSHA256": "2fe5fd853ed375bc05efdcd2e8090dc62766df248d3c431ab11b726d54c89ca7",
+          "originalFinalURL": "https://www.pulitzer.org/winners/louise-erdrich",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:36.908946+00:00",
+          "newOriginObservation": false,
+          "originFamily": "Pulitzer-2021-Fiction-winner",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "b4641e6564334dfb2d8df584b607599a3d9c02d82f283401b2fd03052a59f0fa",
+          "frameSHA256": "41378040f932f46e1b1b9fd38ea47a464185bdf28e1741f4d8d9c8d3324506c6",
+          "evidenceId": "RC02",
+          "evidenceURL": "https://www.pulitzer.org/winners/louise-erdrich",
+          "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+          "contextSHA256": "5abcbd3fbf151191fd9871384197758fc3c4c186ff46f73a34718a43f6581d7a",
+          "retainedEvidenceIds": [
+            "RC02"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "2021-Fiction-winning-work",
+            "extractionStart": 724,
+            "extractionEnd": 963,
+            "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+            "recordContentSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Winning-work record does not prove book merit, sales, publication date or reader effects.",
+            "Publisher administration/award records identify Pulitzer Board/Columbia; two attempted Columbia URL crosschecks returned404 and are not identity proof. Independent reviewer should flag any residual identity-assurance limitation.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": "Publisher administration and award record are same-publisher primary-custodian evidence. No external Columbia identity confirmation is supplied; attempted404s are not proof. This limits assurance/independence, but does not make this ordinary bounded award register inherently inapplicable."
+    },
+    {
+      "id": "RC03",
+      "receiptId": "RA03",
+      "synthetic": true,
+      "inputExcerptSHA256": "d9d9b44b7b76e0f11ce9d9a73d0753fe4e5cd7f51552c1e55fa367d18a341402",
+      "result": {
+        "kind": "unavailable",
+        "reason": "untrusted_snapshot",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": "Publisher administration and award record are same-publisher primary-custodian evidence. No external Columbia identity confirmation is supplied; attempted404s are not proof. This limits assurance/independence, but does not make this ordinary bounded award register inherently inapplicable."
+    },
+    {
+      "id": "RC04",
+      "receiptId": "RA02",
+      "synthetic": true,
+      "inputExcerptSHA256": "73688f9f20c0b0f694484838ab4870f6fe15c01c0d256762188479dd017bec70",
+      "result": {
+        "kind": "unavailable",
+        "reason": "untrusted_snapshot",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC05",
+      "receiptId": "RA02",
+      "synthetic": false,
+      "inputExcerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "98830321fd61e5ff25a18c55eb132acee4f5d3eb1932bf6d6a7096feaa621d9b",
+          "canonicalDocumentId": "CA-RSC1985-H5",
+          "versionId": "consolidation-current-to-2026-10-19; last-amended-2018-03-01",
+          "canonicalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "proofId": "RP02",
+          "rawBodySHA256": "a05ae0d874c0bed1278e4f7237b13c0c16db57404391ee54094cc1bb8def167f",
+          "extractionSHA256": "c8ddfbd45b5ed9f4337d6a5c0d3b1c042832789592ac43fa10000b9a55a119d0",
+          "originalFinalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:36.004097+00:00",
+          "newOriginObservation": false,
+          "originFamily": "CA-RSC1985-H5",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "c7cfcf2ef77d19794cc97df572363ca4b6bbfe8879c1e71f4f036bdf04d1cf08",
+          "frameSHA256": "0429aee6db96f8fd83ba9aff3717eb4e655f6c51af4476fe479d56fca2f64ca1",
+          "evidenceId": "RC05",
+          "evidenceURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+          "contextSHA256": "73c9e6c7c450a900da034e89c2da42d1cb33f919591b25b77a55e2d83f6fb5b9",
+          "retainedEvidenceIds": [
+            "RC05"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "section2",
+            "extractionStart": 1167,
+            "extractionEnd": 1551,
+            "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+            "recordContentSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Consolidated text is evidence; original enactments/amendments prevail on inconsistency; no legal-application advice or claim about later unobserved changes.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC06",
+      "receiptId": "RA01",
+      "synthetic": false,
+      "inputExcerptSHA256": "cc80911b6054ba8e4bc79b2b043afbfb32ff70bf5e1b7dd74fbef2c004b37385",
+      "result": {
+        "kind": "unavailable",
+        "reason": "exact_material_alignment_unavailable",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC07",
+      "receiptId": "RA01",
+      "synthetic": false,
+      "inputExcerptSHA256": "ddb089246a2c3fb70d1a663e16ebb2a6dbfb3b233d0aa82c4429c59ab0d0f67b",
+      "result": {
+        "kind": "unavailable",
+        "reason": "artifact_receipt_mismatch",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC08",
+      "receiptId": "RA02",
+      "synthetic": false,
+      "inputExcerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "98830321fd61e5ff25a18c55eb132acee4f5d3eb1932bf6d6a7096feaa621d9b",
+          "canonicalDocumentId": "CA-RSC1985-H5",
+          "versionId": "consolidation-current-to-2026-10-19; last-amended-2018-03-01",
+          "canonicalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "proofId": "RP02",
+          "rawBodySHA256": "a05ae0d874c0bed1278e4f7237b13c0c16db57404391ee54094cc1bb8def167f",
+          "extractionSHA256": "c8ddfbd45b5ed9f4337d6a5c0d3b1c042832789592ac43fa10000b9a55a119d0",
+          "originalFinalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:36.004097+00:00",
+          "newOriginObservation": false,
+          "originFamily": "CA-RSC1985-H5",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "defbcdcb8c8ff04f6282da6030f5b141417651637ea066ef99b8ec56b72a5f4e",
+          "frameSHA256": "439799bc55075a23b03a074a04c5494594ee427ca1bd909feeec948a05ffe39a",
+          "evidenceId": "RC08",
+          "evidenceURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+          "contextSHA256": "301d5f9bb1f80f0bd826dbe724d3bdd30253e31ff9e67c3f8d9aa39695a85dfb",
+          "retainedEvidenceIds": [
+            "RC08"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "section2",
+            "extractionStart": 1167,
+            "extractionEnd": 1551,
+            "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+            "recordContentSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Consolidated text is evidence; original enactments/amendments prevail on inconsistency; no legal-application advice or claim about later unobserved changes.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC09",
+      "receiptId": "RA01",
+      "synthetic": true,
+      "inputExcerptSHA256": "fd24d3e2e56d7c150e9570d665f2730d65fa271a240e1f9b35ead79fbf2768e6",
+      "result": {
+        "kind": "unavailable",
+        "reason": "untrusted_snapshot",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC10",
+      "receiptId": "RA01",
+      "synthetic": true,
+      "inputExcerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "result": {
+        "kind": "unavailable",
+        "reason": "untrusted_snapshot",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC11",
+      "receiptId": "RA04",
+      "synthetic": false,
+      "inputExcerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "result": {
+        "kind": "unavailable",
+        "reason": "material_scope_mismatch",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC12",
+      "receiptId": "RA02",
+      "synthetic": true,
+      "inputExcerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "98830321fd61e5ff25a18c55eb132acee4f5d3eb1932bf6d6a7096feaa621d9b",
+          "canonicalDocumentId": "CA-RSC1985-H5",
+          "versionId": "consolidation-current-to-2026-10-19; last-amended-2018-03-01",
+          "canonicalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "proofId": "RP02",
+          "rawBodySHA256": "a05ae0d874c0bed1278e4f7237b13c0c16db57404391ee54094cc1bb8def167f",
+          "extractionSHA256": "c8ddfbd45b5ed9f4337d6a5c0d3b1c042832789592ac43fa10000b9a55a119d0",
+          "originalFinalURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:36.004097+00:00",
+          "newOriginObservation": false,
+          "originFamily": "CA-RSC1985-H5",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "defbcdcb8c8ff04f6282da6030f5b141417651637ea066ef99b8ec56b72a5f4e",
+          "frameSHA256": "4f9b3c14d1455a3d96a883abc87b7b4c73843a07de55f01113cb3ac91af70f4d",
+          "evidenceId": "RC12",
+          "evidenceURL": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+          "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+          "contextSHA256": "3eb46066bd37f58c7cfd4cf325781f444386363547a62aa12cea40e071cfe80d",
+          "retainedEvidenceIds": [
+            "RC12",
+            "synthetic-conflict-witness"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": true,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "section2",
+            "extractionStart": 1167,
+            "extractionEnd": 1551,
+            "excerptSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+            "recordContentSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Consolidated text is evidence; original enactments/amendments prevail on inconsistency; no legal-application advice or claim about later unobserved changes.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC13",
+      "receiptId": "RA01",
+      "synthetic": true,
+      "inputExcerptSHA256": "2efb3aaf8933288261f4c2a24979f64134c7408ce8fbcbf6df2a87d6fd538e86",
+      "result": {
+        "kind": "unavailable",
+        "reason": "untrusted_snapshot",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC14",
+      "receiptId": "RA03",
+      "synthetic": false,
+      "inputExcerptSHA256": "4213d908ba7ff245713f081e80fe8d46e39f5b235fd7925ef73ecaa25092f5f3",
+      "result": {
+        "kind": "unavailable",
+        "reason": "unresolved_claim_time",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": "Publisher administration and award record are same-publisher primary-custodian evidence. No external Columbia identity confirmation is supplied; attempted404s are not proof. This limits assurance/independence, but does not make this ordinary bounded award register inherently inapplicable."
+    },
+    {
+      "id": "RC15",
+      "receiptId": "RA04",
+      "synthetic": false,
+      "inputExcerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "1f348fff4928f3748df40f66b3641d816f652356eaec7e0f6e837262773cdcf2",
+          "canonicalDocumentId": "ONS-Census2021-EW-population-first-release-20220628",
+          "versionId": "28June2022 first rounded release; explicitly not latest",
+          "canonicalURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "proofId": "RP04",
+          "rawBodySHA256": "f4e134377b6b46147023b5bf7bf57e3f9cc746238ad6891b4e7a47fbc98aea1c",
+          "extractionSHA256": "9c4d4fbbbaa610ceea7f700121035ab30dde35e11d8e177577706b90af8a7c0a",
+          "originalFinalURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:38.230237+00:00",
+          "newOriginObservation": false,
+          "originFamily": "ONS-Census2021-EW-population-first-release-20220628",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "506528f342ac71668ff3061067364f7d5ccb18626da0cd3b3b74ab45b8e7ac0b",
+          "frameSHA256": "12a56826da173b6b99772d753834b88cb16da24d87e531894417b7b78fc796c0",
+          "evidenceId": "RC15",
+          "evidenceURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+          "contextSHA256": "45f4d69684fc9f0cee84e5f2c3d79d7c9de9306c450558fcfb29c898fe86cb74",
+          "retainedEvidenceIds": [
+            "RC15"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "main-points-first-rounded-release",
+            "extractionStart": 1952,
+            "extractionEnd": 3067,
+            "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+            "recordContentSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Explicitly an old rounded census release, estimates not exact counts; not UK-wide population and not a current/latest estimate.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC16",
+      "receiptId": "RA01",
+      "synthetic": false,
+      "inputExcerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "01e35da8ce834669df2f555a268da03e0b80cfa63d141d26eecb678bd8fb9313",
+          "canonicalDocumentId": "RFC8174",
+          "versionId": "May2017; BCP14 update to RFC2119",
+          "canonicalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "proofId": "RP01",
+          "rawBodySHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+          "extractionSHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+          "originalFinalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:34.462385+00:00",
+          "newOriginObservation": false,
+          "originFamily": "RFC8174",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "c6bbca972b25cf604f06e9cf10cba1fe5ca694451c44120ab2de488f2cd3181a",
+          "frameSHA256": "5ee009a9cc933c1e6ce15fc9d54e08f40ae50531021a27d1f89128e81a553452",
+          "evidenceId": "RC16",
+          "evidenceURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+          "contextSHA256": "ed7d489035dd1be2bc5fbed26804d48cdcd9f31efe0a22a158fa4d65f7d70b0a",
+          "retainedEvidenceIds": [
+            "RC16"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "section2-new",
+            "extractionStart": 3793,
+            "extractionEnd": 4746,
+            "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+            "recordContentSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "No conclusion about software implementation compliance.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC17",
+      "receiptId": "RA03",
+      "synthetic": false,
+      "inputExcerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "7a019e1306fa321c557ea6d26b179d29748a489d1931267dd5aee02aef6c4c6e",
+          "canonicalDocumentId": "Pulitzer-2021-Fiction-winner",
+          "versionId": "2021 award edition; snapshot at recorded access time",
+          "canonicalURL": "https://www.pulitzer.org/winners/louise-erdrich",
+          "proofId": "RP03",
+          "rawBodySHA256": "364f2adfe7b0f124c9baa8bcaa9370b87fdfe808533c2f29e4933792b0661877",
+          "extractionSHA256": "2fe5fd853ed375bc05efdcd2e8090dc62766df248d3c431ab11b726d54c89ca7",
+          "originalFinalURL": "https://www.pulitzer.org/winners/louise-erdrich",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:36.908946+00:00",
+          "newOriginObservation": false,
+          "originFamily": "Pulitzer-2021-Fiction-winner",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "e3bfcad679f7b7e6f6a3010b9e57b4481a9f60ca64550cb5a4c2a1835800ebae",
+          "frameSHA256": "33e4ecd7013302fda2064de2907200c95a1890ed16b8879d582ae89cc9b03756",
+          "evidenceId": "RC17",
+          "evidenceURL": "https://www.pulitzer.org/winners/louise-erdrich",
+          "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+          "contextSHA256": "3be7dd15977e807bee29e35c0b4c5c15e0eafaf6e6875ca96ba96aa1c179b288",
+          "retainedEvidenceIds": [
+            "RC17"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "2021-Fiction-winning-work",
+            "extractionStart": 724,
+            "extractionEnd": 963,
+            "excerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+            "recordContentSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Winning-work record does not prove book merit, sales, publication date or reader effects.",
+            "Publisher administration/award records identify Pulitzer Board/Columbia; two attempted Columbia URL crosschecks returned404 and are not identity proof. Independent reviewer should flag any residual identity-assurance limitation.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": "Publisher administration and award record are same-publisher primary-custodian evidence. No external Columbia identity confirmation is supplied; attempted404s are not proof. This limits assurance/independence, but does not make this ordinary bounded award register inherently inapplicable."
+    },
+    {
+      "id": "RC18",
+      "receiptId": "RA01",
+      "synthetic": false,
+      "inputExcerptSHA256": "ae3536f41fc273c89d4a61d1bf03ed131d6e99975a7117c478b7918d50b3738f",
+      "result": {
+        "kind": "unavailable",
+        "reason": "artifact_receipt_mismatch",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC19",
+      "receiptId": "RA01",
+      "synthetic": false,
+      "inputExcerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "01e35da8ce834669df2f555a268da03e0b80cfa63d141d26eecb678bd8fb9313",
+          "canonicalDocumentId": "RFC8174",
+          "versionId": "May2017; BCP14 update to RFC2119",
+          "canonicalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "proofId": "RP01",
+          "rawBodySHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+          "extractionSHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+          "originalFinalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:34.462385+00:00",
+          "newOriginObservation": false,
+          "originFamily": "RFC8174",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "7dee125b76cbe13ef0a89f2dc15cdb1aae19e2b4e49ca49ec854e9cf8774f8a3",
+          "frameSHA256": "01f1f298f7aca9321693c49573d171979caa34f14c86d049f35501f6603896d5",
+          "evidenceId": "RC19",
+          "evidenceURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+          "contextSHA256": "7a02fb583fd8cda4580655c4fc4bc468262f6e15b0a218395bcb38d27fabc047",
+          "retainedEvidenceIds": [
+            "RC19"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "section2-new",
+            "extractionStart": 3793,
+            "extractionEnd": 4746,
+            "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+            "recordContentSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "No conclusion about software implementation compliance.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC20",
+      "receiptId": "RA04",
+      "synthetic": false,
+      "inputExcerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "1f348fff4928f3748df40f66b3641d816f652356eaec7e0f6e837262773cdcf2",
+          "canonicalDocumentId": "ONS-Census2021-EW-population-first-release-20220628",
+          "versionId": "28June2022 first rounded release; explicitly not latest",
+          "canonicalURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "proofId": "RP04",
+          "rawBodySHA256": "f4e134377b6b46147023b5bf7bf57e3f9cc746238ad6891b4e7a47fbc98aea1c",
+          "extractionSHA256": "9c4d4fbbbaa610ceea7f700121035ab30dde35e11d8e177577706b90af8a7c0a",
+          "originalFinalURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:38.230237+00:00",
+          "newOriginObservation": false,
+          "originFamily": "ONS-Census2021-EW-population-first-release-20220628",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "8e1761744b5ea79775fdfc9d7b07163d957057f79e4516a342d123925550e198",
+          "frameSHA256": "bdf4b927f3fa707047dc21683c49685b39a3d7e8e01e3cf75f22ccbfa858e42f",
+          "evidenceId": "RC20",
+          "evidenceURL": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+          "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+          "contextSHA256": "9af635fadf8fa409645a38560afc07ea71707837f06a96592f86b30b7bbf5a06",
+          "retainedEvidenceIds": [
+            "RC20"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "main-points-first-rounded-release",
+            "extractionStart": 1952,
+            "extractionEnd": 3067,
+            "excerptSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+            "recordContentSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "Explicitly an old rounded census release, estimates not exact counts; not UK-wide population and not a current/latest estimate.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    },
+    {
+      "id": "RC21",
+      "receiptId": "RA03",
+      "synthetic": false,
+      "inputExcerptSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+      "result": {
+        "kind": "unavailable",
+        "reason": "unresolved_claim_time",
+        "verdictAssigned": false,
+        "allOtherPolicyGatesRequired": true,
+        "productionWired": false
+      },
+      "expectedApplicable": false,
+      "actualApplicable": false,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": "Publisher administration and award record are same-publisher primary-custodian evidence. No external Columbia identity confirmation is supplied; attempted404s are not proof. This limits assurance/independence, but does not make this ordinary bounded award register inherently inapplicable."
+    },
+    {
+      "id": "RC22",
+      "receiptId": "RA01",
+      "synthetic": true,
+      "inputExcerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+      "result": {
+        "kind": "capability",
+        "audit": {
+          "manifestSHA256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4",
+          "receiptSHA256": "01e35da8ce834669df2f555a268da03e0b80cfa63d141d26eecb678bd8fb9313",
+          "canonicalDocumentId": "RFC8174",
+          "versionId": "May2017; BCP14 update to RFC2119",
+          "canonicalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "proofId": "RP01",
+          "rawBodySHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+          "extractionSHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+          "originalFinalURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "originalRedirects": [],
+          "originalProofAt": "2026-11-14T05:00:34.462385+00:00",
+          "newOriginObservation": false,
+          "originFamily": "RFC8174",
+          "independentCorroborationCredit": false,
+          "claimSHA256": "7dee125b76cbe13ef0a89f2dc15cdb1aae19e2b4e49ca49ec854e9cf8774f8a3",
+          "frameSHA256": "2a3e3019998600163cbb6acf369b1b4b529d895e005572fa6edc1fe1af8344fc",
+          "evidenceId": "RC22",
+          "evidenceURL": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+          "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+          "contextSHA256": "426786b3b6776314abd4339c7158c27a0c09a7c5312c4a21fa45dc0c57d26107",
+          "retainedEvidenceIds": [
+            "RC22"
+          ],
+          "originLinks": [],
+          "credibleConflictPresent": false,
+          "conflictVetoMustRemain": true,
+          "allOtherPolicyGatesRequired": true,
+          "verdictAssigned": false,
+          "productionWired": false,
+          "alignment": {
+            "unitLocator": "section2-new",
+            "extractionStart": 3793,
+            "extractionEnd": 4746,
+            "excerptSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+            "recordContentSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+            "materialRoles": [
+              "entire_audited_record_unit"
+            ],
+            "offsetConvention": "UTF-16"
+          },
+          "limitations": [
+            "No conclusion about software implementation compliance.",
+            "Receipt authority derives from the frozen independent corpus review, not from text labels or a hostname.",
+            "Dated snapshot only; current-version authentication and generic raw-English framing are not implemented.",
+            "Context binds caller-provided evidence IDs and origin links; other-source bodies and final conflict judgments are outside this prototype."
+          ]
+        },
+        "privateTokenRoundTrip": true
+      },
+      "expectedApplicable": true,
+      "actualApplicable": true,
+      "matches": true,
+      "conflictControlPreserved": true,
+      "provenanceLimitation": null
+    }
+  ],
+  "limitations": [
+    "Only independently frozen structured claim frames; this is not a solution for raw-English production routing.",
+    "Historical snapshots do not authenticate current/latest versions or fresh origin accessibility.",
+    "Whole audited record units are required because the frozen receipt did not separately annotate minimal field spans; no inferred relaxation.",
+    "Opposite values reuse four passages; they are correlated and not new factual samples.",
+    "No final verdict policy or source-quality model is executed; no factual coverage or backend-readiness claim."
+  ]
+}

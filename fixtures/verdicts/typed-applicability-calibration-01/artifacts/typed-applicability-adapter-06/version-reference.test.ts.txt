@@ -1,0 +1,33 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {versionReferenceAvailability as guard} from './version-reference.js';
+const installed='consolidation-current-to-2028-02-29; last-amended-2018-03-01';
+for(const phrase of ['consolidation current to 29 February 2028','version current to 2028-02-29','edition current to 29 february 2028','snapshot current to 2028-02-29'])test(`bounded historical reference ${phrase} can ask without asserting force`,()=>{
+ const claim=`In the identified document ${phrase}, section 7 records a different amount.`;const result=guard(claim,installed);
+ assert.equal(result.allowed,true);if(!result.allowed)throw Error('expectedbound');assert.equal(result.mode,'bound_historical_version');assert.equal(result.versionDate,'2028-02-29');assert.equal(claim.slice(result.matchedSpan!.start,result.matchedSpan!.end),phrase);
+});
+for(const claim of [
+ 'This is the current law.','The latest version records 7.','Under this document today, 7 is recorded.',
+ 'The document is current to 29 February 2028.',
+ 'In the consolidation current to 28 February 2028, section 7 records 7.',
+ 'In the consolidation current to 29 February 2027, section 7 records 7.',
+ 'In the consolidation current to 2028-02-30, section 7 records 7.',
+ 'In the consolidation current to 02/29/2028, section 7 records 7.',
+ 'In the consolidation current to 29 February 2028, section 7 now records 7.',
+ 'In the consolidation current to 29 February 2028, the latest record says 7.',
+ 'The consolidation current to 29 February 2028 is in force.',
+ 'The version current to 2028-02-29 remains binding.',
+ 'The snapshot current to 2028-02-29 has legal effect.',
+ 'The consolidation current to 29 February 2028 and edition current to 2028-02-29 both record 7.'
+])test(`current/ambiguous/mismatched guard denies: ${claim}`,()=>assert.equal(guard(claim,installed).allowed,false));
+test('matching date elsewhere in trusted version cannot substitute exact current-to marker',()=>{
+ assert.equal(guard('In the consolidation current to 29 February 2028, 7 is recorded.','published-2028-02-29;current-to-2027-01-01').allowed,false);
+ assert.equal(guard('In the consolidation current to 29 February 2028, 7 is recorded.','current-to-2028-02-29; current-to-2028-02-29').allowed,false);
+});
+test('no-current wording keeps ordinary applicability independent of claimed value/truth',()=>{
+ assert.deepEqual(guard('The edition reported an amount of 999.',installed),{allowed:true,mode:'no_current_marker'});
+});
+
+test('trusted identity negation or malformed additional current segment cannot authenticate a version modifier',()=>{
+ const claim='In the consolidation current to 29 February 2028, section7 records a value.';
+ for(const id of ['not-current-to-2028-02-29','not current to 2028-02-29','current-to-2028-02-29; currently-to-2028-02-29','current-to-2028-02-29; current-to-invalid'])assert.equal(guard(claim,id).allowed,false);
+});

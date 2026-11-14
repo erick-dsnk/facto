@@ -1,0 +1,33 @@
+{
+  "kind": "runner_integration_audit_with_guard_companion_authorship_overlap",
+  "createdAt": "2026-11-14T06:35:11.250452+00:00",
+  "runnerSHA256": "bb2877fc891db57b58346cccabd5744c2fe423ad5b387bf898d177d576790b0c",
+  "planCanonicalSHA256": "6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0",
+  "publicationManifestSHA256": "438f836910938cfff92b9bcbc5e89a8886e1a981f35d255dfb88bebb2f430463",
+  "scope": "Integration, checkpoint persistence, denominator accounting and serialization; not independent guard review or dispatch authorization.",
+  "disclosedAuthorship": [
+    "study_guard",
+    "companion_packet"
+  ],
+  "blockingFindings": [],
+  "closedFindings": [
+    "Fresh runtime Session/request/budget/deadline per arm",
+    "Exact first/second/input/adjudication hash bindings",
+    "All42 candidate labels, uncertain sentinels and deterministic no-items retained in denominators; baseline applicability N/A"
+  ],
+  "offlineRunnerTestsReplayed": 7,
+  "fullMockTransportRequests": 84,
+  "checks": [
+    "Required checkpoint callback is synchronous appendFileSync with flush:true",
+    "84 mock prepared events precede actual starts and terminal records with exact frozen hashes/bytes",
+    "Actual run also has84 ordered unique triples, matching runtime/transport ledgers",
+    "Observed raw answers/judgment are durably saved before subsequent completion validation",
+    "Partial/final reports retain full declared label counts, missing-by-class, uncertain and no-item distinctions",
+    "Prepared-only crash records explicitly indeterminate and cannot authorize replay",
+    "All publication/source hashes remain unchanged"
+  ],
+  "actualProjectProviderCallsByAuditor": 0,
+  "providerExecutionAuthorizedByAudit": false,
+  "mockValidationPath": "/workspace/task-evidence/study84-runner-integration-audit/exact-version-validation.json",
+  "actualIntegrityPath": "/workspace/task-evidence/study84-live-analysis-01/integrity-validation.json"
+}

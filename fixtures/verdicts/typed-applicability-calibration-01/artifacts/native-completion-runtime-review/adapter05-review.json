@@ -1,0 +1,44 @@
+{
+  "decision": "HOLD_two_concrete_unwired_adapter_findings",
+  "adapter05ManifestSHA256": "724348388680d5991ad1baaa66a8aef87c6a37b287a28d307a869e0efff3f490",
+  "filesAndDependenciesVerified": true,
+  "findings": [
+    {
+      "id": "completion_deadline",
+      "test": "completion-boundary-05.test.ts",
+      "log": "completion-boundary-05-before.tap",
+      "observed": {
+        "postresponseClockAtDeadline": true,
+        "fulfilled": true,
+        "completedHandleReturned": true,
+        "chargedAttempts": 1,
+        "cacheWrites": 0
+      },
+      "method": "Controlled injected clock advanced at postresponse Context serialization, applicability uncertain. Existing positive-only assertion is skipped.",
+      "scope": "Late fulfillment/issuance only: existing verifier would later reject stale token; no usable stale capability or production write demonstrated.",
+      "fix": "Unconditional current/deadline checks before issuance and after final return-object construction."
+    },
+    {
+      "id": "mutable_context_alias",
+      "test": "context-alias-05.test.ts",
+      "log": "context-alias-05-before.tap",
+      "observed": {
+        "returnedContextFrozen": false,
+        "changedPassageAcceptedAsCompleted": true,
+        "changedPassageAcceptedAsEligibility": true,
+        "chargedAttempts": 1
+      },
+      "method": "Directly mutate returned context retained passage plus corresponding node, refresh contextInputDigest, then verify original tokens. The private WeakMaps reference the same caller-mutable context.",
+      "fix": "Deep-freeze parsed context before store/return, or retain a private deeply frozen clone and captured canonical digest. Direct-return mutation tests required.",
+      "precursorImpact": "Same shared-context pattern exists in earlier semantic-only adapter. Prior03 approval is historical and superseded for future use by this finding; all predecessor files/reviews preserved."
+    }
+  ],
+  "otherObservations": [
+    "private actual-ask receipt mint/consume does bind validated real ask and immutable answer/judgment objects",
+    "pure native material seam02 independently approved31tests+151parity+strictTS",
+    "no production integration or core source authority active"
+  ],
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "productionEdits": 0
+}

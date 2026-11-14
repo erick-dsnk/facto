@@ -1,0 +1,69 @@
+// Adapter03 lifecycle revision; frozen selector seam01 remains unchanged.
+import { PipelineError, type AcceptedClaim } from '/workspace/stack-20/packages/contracts/src/index.js';
+import type { RequestRecord, Session } from '/workspace/stack-20/services/api/src/runtime/session.js';
+import { abortable } from '/workspace/stack-20/services/api/src/runtime/budget.js';
+import { captureRuntimeOwner, assertCurrentOwner, inspectOwnerBinding, type MaterialHandle, type RuntimeOwnerHandle } from '../capability-selection-seam-01/material.js';
+export interface DispatchOwner { readonly kind: 'unwired_dispatch_owner' }
+type State = {
+ material: MaterialHandle; owner: RuntimeOwnerHandle; context: ReturnType<RequestRecord['budget']['context']>;
+ record: RequestRecord; session: Session; budget: RequestRecord['budget']; controller: AbortController;
+ signal: AbortSignal; now: Session['now']; acceptedAt: number; invalidated: boolean; invalidationReason?: unknown; transport: AbortController;
+};
+const states = new WeakMap<object, State>();
+function state(handle: DispatchOwner): State {
+ const s = states.get(handle); if (!s) throw new Error('untrusted_dispatch_owner');return s;
+}
+function invalidate(s:State,reason:unknown):void{
+ if(!s.invalidated){s.invalidated=true;s.invalidationReason=reason;}
+ if(!s.transport.signal.aborted)s.transport.abort(s.invalidationReason);
+}
+export function assertDispatchOwnerCurrent(handle: DispatchOwner): void {
+ const s=state(handle);
+ if(s.invalidated)throw s.invalidationReason;
+ try{
+  if(s.record.budget!==s.budget)throw new Error('request_budget_replaced');
+  if(s.record.controller!==s.controller||s.record.controller.signal!==s.signal)throw new Error('request_controller_replaced');
+  if(s.session.now!==s.now||s.record.acceptedAt!==s.acceptedAt)throw new Error('request_deadline_clock_replaced');
+  assertCurrentOwner(s.owner);
+ }catch(error){invalidate(s,error);throw error;}
+}
+export function captureDispatchOwner(material: MaterialHandle, input: {
+ session: Session; record: RequestRecord; claimSlot: number; admittedClaim: AcceptedClaim;
+ readMaterialGeneration: () => string; readInstallGeneration: () => string; reservedJev: number;
+}): DispatchOwner {
+ const reserved=input.reservedJev;
+ if(!Number.isInteger(reserved)||reserved<0||reserved>2) throw new Error('invalid_inherited_reservation');
+ const owner=captureRuntimeOwner(material,input), budget=input.record.budget, controller=input.record.controller;
+ const now=input.session.now, acceptedAt=input.record.acceptedAt;
+ const transport=new AbortController();
+ const inherited=budget.context(transport.signal,now,acceptedAt+10000,reserved);
+ const handle=Object.freeze({kind:'unwired_dispatch_owner' as const});
+ const context=Object.freeze({...inherited,
+  consume:(...args:Parameters<typeof inherited.consume>)=>{assertDispatchOwnerCurrent(handle);inherited.consume(...args);},
+  canConsume:(...args:Parameters<typeof inherited.canConsume>)=>{try{assertDispatchOwnerCurrent(handle);return inherited.canConsume(...args);}catch{return false;}},
+  recordUsage:(...args:Parameters<NonNullable<typeof inherited.recordUsage>>)=>{assertDispatchOwnerCurrent(handle);inherited.recordUsage?.(...args);}
+ });
+ states.set(handle,{material,owner,context,record:input.record,session:input.session,budget,controller,signal:controller.signal,now,acceptedAt,invalidated:false,transport});
+ assertDispatchOwnerCurrent(handle);return handle;
+}
+export function inspectDispatchOwner(handle: DispatchOwner) {
+ assertDispatchOwnerCurrent(handle);const s=state(handle);return Object.freeze({material:s.material,owner:s.owner,context:s.context});
+}
+/** Race the complete actual judge, including a transport that ignores abort.
+ * Invalidating this local lease prevents late responses from publishing answers
+ * or usage after timeout/cancellation; the actual charged attempt stays charged. */
+export async function awaitOwnedDispatch<T>(handle:DispatchOwner,work:()=>Promise<T>):Promise<T>{
+ assertDispatchOwnerCurrent(handle);const s=state(handle);
+ const deadline=inspectOwnerBinding(s.owner).deadlineAt;
+ let timer:ReturnType<typeof setTimeout>|undefined;
+ const onAbort=()=>invalidate(s,s.signal.reason ?? new PipelineError('cancelled'));
+ s.signal.addEventListener('abort',onAbort,{once:true});
+ if(s.signal.aborted)onAbort();
+ const timeout=new Promise<never>((_resolve,reject)=>{timer=setTimeout(()=>{const error=new PipelineError('timeout');invalidate(s,error);reject(error);},Math.max(0,deadline-s.now()));});
+ try{
+  const pending=Promise.resolve().then(()=>{assertDispatchOwnerCurrent(handle);return work();});
+  const result=await abortable(Promise.race([pending,timeout]),s.transport.signal);
+  assertDispatchOwnerCurrent(handle);return result;
+ }catch(error){invalidate(s,error);throw s.invalidationReason;}
+ finally{clearTimeout(timer);s.signal.removeEventListener('abort',onAbort);}
+}

@@ -1,0 +1,30 @@
+import { digest, fail, type Receipt } from './types.js';
+export interface Alignment {
+    unitLocator: string;
+    extractionStart: number;
+    extractionEnd: number;
+    excerptSHA256: string;
+    recordContentSHA256: string;
+    materialRoles: string[];
+    offsetConvention: 'UTF-16';
+}
+/** No normalization, rewriting, title inference or recovery of omitted qualifiers. */
+export function bindExcerpt(receipt: Receipt, text: string, excerpt: string): Alignment {
+    const matches: Alignment[] = [];
+    for (const unit of receipt.units) {
+        const body = text.slice(unit.start, unit.end);
+        if (digest(body) !== unit.contentSHA256)
+            return fail('record_unit_mismatch');
+        let start = body.indexOf(excerpt);
+        while (start >= 0) {
+            const end = start + excerpt.length;
+            const covered = unit.materialSpans.every(s => start <= s.start && end >= s.end);
+            if (covered)
+                matches.push({ unitLocator: unit.locator, extractionStart: unit.start + start, extractionEnd: unit.start + end, excerptSHA256: digest(excerpt), recordContentSHA256: unit.contentSHA256, materialRoles: unit.materialSpans.map(s => s.role), offsetConvention: 'UTF-16' });
+            start = body.indexOf(excerpt, start + 1);
+        }
+    }
+    if (matches.length !== 1)
+        return fail(matches.length ? 'ambiguous_record_alignment' : 'exact_material_alignment_unavailable');
+    return matches[0]!;
+}

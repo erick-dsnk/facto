@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: 05: actual returned judgment is writable but detached from private actual-ask and context
+ok 1 - 05: actual returned judgment is writable but detached from private actual-ask and context
+  ---
+  duration_ms: 113.933667
+  type: 'test'
+  ...
+# Subtest: 05: dispatch question maps, audits and opaque token fields reject actual mutation
+ok 2 - 05: dispatch question maps, audits and opaque token fields reject actual mutation
+  ---
+  duration_ms: 53.121786
+  type: 'test'
+  ...
+# Subtest: 05: mutable result envelopes and binding inputs do not retarget private identities
+ok 3 - 05: mutable result envelopes and binding inputs do not retarget private identities
+  ---
+  duration_ms: 37.368715
+  type: 'test'
+  ...
+# Subtest: 05: material and owner snapshots freeze actual nested arrays and disclose no record/budget
+ok 4 - 05: material and owner snapshots freeze actual nested arrays and disclose no record/budget
+  ---
+  duration_ms: 25.255596
+  type: 'test'
+  ...
+# Subtest: 05: actual exposed signal method mutation delays prompt cancel, while private owner still prevents authority
+ok 5 - 05: actual exposed signal method mutation delays prompt cancel, while private owner still prevents authority
+  ---
+  duration_ms: 118.923283
+  type: 'test'
+  ...
+# Subtest: 05: mutable signal cannot preserve existing completed/semantic tokens after real cancellation
+ok 6 - 05: mutable signal cannot preserve existing completed/semantic tokens after real cancellation
+  ---
+  duration_ms: 35.584677
+  type: 'test'
+  ...
+# Subtest: 06: actual returned judgment is writable but detached from private actual-ask and context
+ok 7 - 06: actual returned judgment is writable but detached from private actual-ask and context
+  ---
+  duration_ms: 52.162261
+  type: 'test'
+  ...
+# Subtest: 06: dispatch question maps, audits and opaque token fields reject actual mutation
+ok 8 - 06: dispatch question maps, audits and opaque token fields reject actual mutation
+  ---
+  duration_ms: 38.939892
+  type: 'test'
+  ...
+# Subtest: 06: mutable result envelopes and binding inputs do not retarget private identities
+ok 9 - 06: mutable result envelopes and binding inputs do not retarget private identities
+  ---
+  duration_ms: 31.286111
+  type: 'test'
+  ...
+# Subtest: 06: material and owner snapshots freeze actual nested arrays and disclose no record/budget
+ok 10 - 06: material and owner snapshots freeze actual nested arrays and disclose no record/budget
+  ---
+  duration_ms: 26.47278
+  type: 'test'
+  ...
+# Subtest: 06: actual exposed signal method mutation delays prompt cancel, while private owner still prevents authority
+ok 11 - 06: actual exposed signal method mutation delays prompt cancel, while private owner still prevents authority
+  ---
+  duration_ms: 142.608615
+  type: 'test'
+  ...
+# Subtest: 06: mutable signal cannot preserve existing completed/semantic tokens after real cancellation
+ok 12 - 06: mutable signal cannot preserve existing completed/semantic tokens after real cancellation
+  ---
+  duration_ms: 36.466756
+  type: 'test'
+  ...
+# Subtest: 06: remaining actual context metadata, origin and assessment paths are recursively frozen
+ok 13 - 06: remaining actual context metadata, origin and assessment paths are recursively frozen
+  ---
+  duration_ms: 64.65441
+  type: 'test'
+  ...
+# Subtest: prototype02: actual receipt/proof/snapshot/frame/summary aliases and nested arrays are frozen
+ok 14 - prototype02: actual receipt/proof/snapshot/frame/summary aliases and nested arrays are frozen
+  ---
+  duration_ms: 31.211519
+  type: 'test'
+  ...
+# Subtest: prototype02: actual capability audit freezes nested aliases; original input remains detached and changed input rejects
+ok 15 - prototype02: actual capability audit freezes nested aliases; original input remains detached and changed input rejects
+  ---
+  duration_ms: 37.427709
+  type: 'test'
+  ...
+# Subtest: prototype02: mutable direct alignment output does not alter the issuer receipt or later capability audit
+ok 16 - prototype02: mutable direct alignment output does not alter the issuer receipt or later capability audit
+  ---
+  duration_ms: 29.377847
+  type: 'test'
+  ...
+# Subtest: freezing a native AbortSignal is not a safe blanket fix on this Node runtime
+ok 17 - freezing a native AbortSignal is not a safe blanket fix on this Node runtime
+  ---
+  duration_ms: 0.355626
+  type: 'test'
+  ...
+# Subtest: inventory actual exposed object graphs without traversing native implementation internals
+ok 18 - inventory actual exposed object graphs without traversing native implementation internals
+  ---
+  duration_ms: 40.55815
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1314.639006
