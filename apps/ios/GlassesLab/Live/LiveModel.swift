@@ -712,6 +712,8 @@ final class LiveModel {
   func connectIfConfigured() async {
     guard canEditBackend, !joinCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
     if case .disconnected(let reason) = connection, Self.settingsErrorCodes.contains(reason) { return }
+    // A suspended client belongs to the foreground restore path (setAppActive).
+    if case .disconnected("suspended") = connection { return }
     await connect()
   }
 
@@ -736,7 +738,8 @@ final class LiveModel {
   /// What to do about a failed connect, by the client's reason code.
   static func connectFailureNotice(_ reason: String) -> String? {
     switch reason {
-    case "closed", "cancelled": nil
+    // "suspended" is the app being in the background; restoreConnection resumes it on return.
+    case "closed", "cancelled", "suspended": nil
     case "missing_join_code": "Add your join code in Settings."
     case "unauthorized", "http_401", "http_403": "The backend rejected the join code. Check it in Settings."
     case "connect_timeout", "timed_out": "The backend didn't answer in time. Check the URL and mobile data, then tap Reconnect."
