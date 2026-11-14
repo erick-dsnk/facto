@@ -238,10 +238,10 @@ describe('session HTTP and WebSocket boundary', () => {
     const inputFor = (segmentId: string) => [...state.requests.values()].find(record => record.input.capture.segmentId === segmentId)?.input;
     await vi.waitFor(() => { final('s1', 'We met in Helsinki.', 0); expect(inputFor('s1')).toBeDefined(); });
     expect(inputFor('s1')!.context).toEqual([]);
+    // A sentence the checker does not admit never starts the automatic cooldown, so the next sentence is checked at once.
     final('s2', 'It is a big city.', 1);
-    await eventOf(events, 'pipeline.error');
-    expect(inputFor('s2')).toBeUndefined();
-    server.advance(4_000);
+    await vi.waitFor(() => expect(inputFor('s2')).toBeDefined());
+    expect(inputFor('s2')!.context).toEqual(['Speaker 1: We met in Helsinki.']);
     final('s3', 'Helsinki is the capital of Finland.', 0);
     await vi.waitFor(() => expect(inputFor('s3')).toBeDefined());
     expect(inputFor('s3')!.context).toEqual(['Speaker 1: We met in Helsinki.', 'Speaker 2: It is a big city.']);
@@ -254,7 +254,6 @@ describe('session HTTP and WebSocket boundary', () => {
     await new Promise<void>(done => setImmediate(done));
     expect(events.filter(event => event.type === 'capture.request')).toHaveLength(1);
     expect(state.requests.size).toBe(requestsBefore);
-    server.advance(4_000);
     final('s5', 'Lightning never strikes twice.', null);
     await vi.waitFor(() => expect(inputFor('s5')).toBeDefined());
     expect(inputFor('s5')!.context).toEqual(['Speaker 2: It is a big city.', 'Speaker 1: Helsinki is the capital of Finland.']);
@@ -263,9 +262,52 @@ describe('session HTTP and WebSocket boundary', () => {
     socket.send(JSON.stringify({ type: 'audio.start', sessionEpoch: 1, streamGeneration: 2, encoding: 'pcm_s16le', sampleRateHz: 16000, channels: 1, source: 'glasses_stream_audio' }));
     await vi.waitFor(() => expect(events.filter(event => event.type === 'audio.ready')).toHaveLength(2));
     const second = Buffer.alloc(3213); second.writeUInt8(1, 0); second.writeUInt32BE(2, 1); socket.send(second);
-    server.advance(4_000);
     await vi.waitFor(() => { final('s6', 'Paris is in France.', 0); expect(inputFor('s6')).toBeDefined(); });
     expect(inputFor('s6')!.context).toEqual([]);
+  });
+
+  it('re-checks a corrected trigger, asks for one photo per segment and per 2 s, and keeps listening past 128 sentences', async () => {
+    let publish!: (event: AsrTranscript) => void;
+    const asr: AsrAdapter = { start: async (_config, onTranscript) => { publish = onTranscript; return { write: async () => {}, stop: async () => {} }; } };
+    const server = await setup({ asr }); const session = await join(server); const { socket, events } = await stream(server, session);
+    socket.send(JSON.stringify({ type: 'audio.start', sessionEpoch: 1, streamGeneration: 1, encoding: 'pcm_s16le', sampleRateHz: 16000, channels: 1, source: 'glasses_stream_audio' }));
+    await eventOf(events, 'audio.ready');
+    const bytes = Buffer.alloc(3213); bytes.writeUInt8(1, 0); bytes.writeUInt32BE(1, 1); socket.send(bytes);
+    const final = (segmentId: string, text: string) => publish({ text, final: true, segmentId, confidence: 0.9, captureOffsetMs: 0, speaker: 0 });
+    const settle = () => new Promise<void>(done => setImmediate(done));
+    const state = server.store.sessions.get(session.sessionId)!;
+    const inputFor = (segmentId: string) => [...state.requests.values()].find(record => record.input.capture.segmentId === segmentId)?.input;
+    const captures = () => events.filter(event => event.type === 'capture.request').length;
+    await vi.waitFor(() => { final('t1', 'Check this.'); expect(captures()).toBe(1); });
+    final('t1', 'Helsinki is the capital of Finland.'); await settle();
+    expect(inputFor('t1')).toMatchObject({ revision: 1, text: 'Helsinki is the capital of Finland.' });
+    final('t1', 'Check this.'); await settle();
+    expect(captures()).toBe(1); expect(events.some(event => event.type === 'check.cancelled')).toBe(true);
+    final('t1', 'Helsinki is the capital of Finland.'); await settle();
+    expect(inputFor('t1')).toMatchObject({ revision: 2 });
+    final('t2', 'Is this true?'); await settle();
+    expect(captures()).toBe(1);
+    server.advance(2_000);
+    final('t3', 'Check this one.'); await settle();
+    expect(captures()).toBe(2);
+    for (let index = 0; state.requests.size < 128; index++) { final(`n${index}`, `Sentence number ${index}.`); await settle(); }
+    expect(events.some(event => event.type === 'audio.stopped')).toBe(false);
+    final('over', 'One sentence too many.'); await settle();
+    expect((await eventOf(events, 'audio.stopped')).payload).toMatchObject({ reasonCode: 'request_capacity' });
+    expect(events.some(event => event.type === 'pipeline.error' && (event.payload as { reasonCode: string }).reasonCode === 'request_capacity')).toBe(true);
+  });
+
+  it('reads the client address from the trusted proxy hop so one client cannot lock every device out of joining', async () => {
+    const server = await setup({ trustProxy: 1 });
+    const attempt = (forwardedFor: string, code = 'incorrect-code') => server.app.inject({ method: 'POST', url: '/v1/sessions', headers: { 'x-forwarded-for': forwardedFor }, payload: { joinCode: code } });
+    for (let index = 0; index < 10; index++) expect((await attempt('203.0.113.1')).statusCode).toBe(401);
+    expect((await attempt('203.0.113.1', joinCode)).statusCode).toBe(429);
+    // A forged left-most entry does not escape the bucket of the address the proxy saw.
+    expect((await attempt('198.51.100.7, 203.0.113.1', joinCode)).statusCode).toBe(429);
+    expect((await attempt('203.0.113.2', joinCode)).statusCode).toBe(201);
+    const direct = await setup();
+    for (let index = 0; index < 10; index++) await direct.app.inject({ method: 'POST', url: '/v1/sessions', headers: { 'x-forwarded-for': `203.0.113.${index}` }, payload: { joinCode: 'incorrect-code' } });
+    expect((await direct.app.inject({ method: 'POST', url: '/v1/sessions', headers: { 'x-forwarded-for': '203.0.113.99' }, payload: { joinCode } })).statusCode).toBe(429);
   });
 
   it('resumes after a reconnect with a strictly higher stream generation', async () => {

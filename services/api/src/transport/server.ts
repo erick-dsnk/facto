@@ -13,6 +13,19 @@ import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
 export type ServerOptions = {
   adapters: PipelineAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
   allowedOrigins?: string[]; now?: () => number; tls?: { cert: Buffer; key: Buffer }; asr?: AsrAdapter;
+  /**
+   * Proxy hops in front of every request (1 behind Railway's edge proxy). The client address then comes from the entry that hop
+   * appended to X-Forwarded-For, so a forged left-most entry is ignored. Leave unset when clients can connect directly.
+   */
+  trustProxy?: number;
+};
+/** Spoken segments remembered per stream for corrections. The oldest is forgotten first, so listening never stops on a count. */
+const SEGMENT_MEMORY = 64;
+/** Repeated "check this" within this window asks the app for one photo, not several. */
+const CAPTURE_REQUEST_INTERVAL_MS = 2_000;
+const remember = <T>(map: Map<string, T>, key: string, value: T) => {
+  map.delete(key); map.set(key, value);
+  if (map.size > SEGMENT_MEMORY) map.delete(map.keys().next().value!);
 };
 export async function buildServer(options: ServerOptions) {
   if (options.joinCode.length < 8 || !Number.isFinite(options.joinExpiresAt)) throw new Error('Configure an 8+ character DEMO_JOIN_CODE and DEMO_JOIN_EXPIRES_AT.');
@@ -22,7 +35,7 @@ export async function buildServer(options: ServerOptions) {
   const audioBridges = new Map<string, AudioBridge>();
   // One stream per session. A newer authenticated connection replaces a stale one (half-open after a network blip).
   const connections = new Map<string, () => void>();
-  const app = Fastify({ logger: false, bodyLimit: 16_384, ...(options.tls ? { https: options.tls } : {}) });
+  const app = Fastify({ logger: false, bodyLimit: 16_384, ...(options.trustProxy ? { trustProxy: (_address: string, hop: number) => hop < options.trustProxy! } : {}), ...(options.tls ? { https: options.tls } : {}) });
   await app.register(websocket, { options: { maxPayload: 16_384, handleProtocols: protocols => protocols.has('actually-v1') ? 'actually-v1' : false } });
   const allowedOrigins = new Set(options.allowedOrigins ?? ['http://localhost:3000', 'http://127.0.0.1:3000']);
   const joinAttempts = new Map<string, { count: number; until: number }>();
@@ -92,7 +105,9 @@ export async function buildServer(options: ServerOptions) {
     const session = store.authenticate(paramsSchema.parse(request.params).sessionId, token);
     connections.get(session.id)?.();
     const transcripts = new Map<string, { hash: string; revision: number; capturedAt: string; context: string[] }>();
-    const triggered = new Set<string>();
+    // Segments that already asked for a photo: capture.request goes out at most once per segment.
+    const triggered = new Map<string, true>();
+    let lastCaptureRequestAt = -Infinity;
     const recent = new TranscriptContext();
     const forget = () => { transcripts.clear(); triggered.clear(); };
     const fail = (error: unknown) => {
@@ -100,21 +115,24 @@ export async function buildServer(options: ServerOptions) {
       if (!session.active || !store.sessions.has(session.id)) return;
       session.emit('pipeline.error', { reasonCode: error instanceof PipelineError ? error.code : 'invalid_request', message: 'The request could not be completed.' });
     };
-    const bridge = options.asr ? new AudioBridge(session, options.asr, (event, config, capturedAt) => {
+    const bridge: AudioBridge | undefined = options.asr ? new AudioBridge(session, options.asr, (event, config, capturedAt) => {
       try {
         const segmentHash = createHash('sha256').update(event.segmentId).digest('hex').slice(0, 24);
         const requestId = `asr-${config.sessionEpoch}-${config.streamGeneration}-${segmentHash}`;
         const hash = createHash('sha256').update(JSON.stringify([event.text, event.confidence])).digest('hex');
         const previous = transcripts.get(requestId);
-        if (triggered.has(requestId)) return;
-        if (!previous && transcripts.size + triggered.size >= 128) throw new PipelineError('request_capacity');
         if (isVoiceTrigger(event.text)) {
           // A spoken "check this" asks the app for a photo. The command itself is never fact-checked.
-          triggered.add(requestId);
-          if (previous) { transcripts.delete(requestId); session.cancel(requestId); }
+          // Keep the segment's revision so a later correction back to a claim is checked as a newer revision.
+          if (previous) { remember(transcripts, requestId, { ...previous, hash }); session.cancel(requestId); }
+          if (triggered.has(requestId)) return;
+          remember(triggered, requestId, true);
+          if (now() - lastCaptureRequestAt < CAPTURE_REQUEST_INTERVAL_MS) return;
+          lastCaptureRequestAt = now();
           session.emit('capture.request', { reasonCode: 'voice_trigger' });
           return;
         }
+        // Every revision is re-evaluated: a correction that is no longer a trigger is checked like any sentence.
         const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(capturedAt).toISOString(),
           context: previous?.context ?? recent.contextFor(requestId, capturedAt) };
         const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(event.segmentId) ? event.segmentId : `segment-${segmentHash}`;
@@ -123,8 +141,12 @@ export async function buildServer(options: ServerOptions) {
           capture: { source: config.source, segmentId, confidence: event.confidence, final: true }, context: record.context, userInitiated: false });
         // Context reflects the conversation, including sentences the runtime later declines to check.
         recent.record(requestId, event.text, event.speaker ?? null, Date.parse(record.capturedAt));
-        runtime.submit(session, input); transcripts.set(requestId, record);
-      } catch (error) { fail(error); }
+        runtime.submit(session, input); remember(transcripts, requestId, record);
+      } catch (error) {
+        // The session's request budget is spent. Stop listening with a distinct reason instead of dropping every later sentence.
+        if (error instanceof PipelineError && error.code === 'request_capacity') void bridge?.stop('request_capacity').catch(() => undefined);
+        fail(error);
+      }
     }) : undefined;
     if (bridge) audioBridges.set(session.id, bridge);
     const send: Session['listeners'] extends Set<infer T> ? T : never = event => {
