@@ -1,0 +1,33 @@
+{
+  "kind": "root_exact_once_acquisition_diagnostic_authorization",
+  "createdAt": "2026-11-14T06:43:52.565Z",
+  "networkAuthorized": true,
+  "planPath": "/workspace/task-evidence/record-acquisition-feasibility-plan-01/plan.json",
+  "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+  "collectorPath": "/workspace/task-evidence/record-acquisition-feasibility-collector-04/collector.mts",
+  "collectorSHA256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958",
+  "reviewPath": "/workspace/task-evidence/record-acquisition-collector-review-01/review.json",
+  "reviewSHA256": "586d062649d6fb26a83afba53ebc7b88b2b14d2486c9abbdaf5242af27cca9bc",
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "soleOutput": "/workspace/task-evidence/record-acquisition-feasibility-01",
+  "authorizedExecutor": "broader_dev_author",
+  "limits": {
+    "declaredFamilies": 4,
+    "jevActualAttempts": 0,
+    "searchActualAttemptsTotal": 4,
+    "searchActualAttemptsPerFamily": 1,
+    "contentsActualAttemptsTotal": 12,
+    "contentsActualAttemptsPerFamily": 3,
+    "deadlineMsPerFamily": 10000,
+    "serialFamilies": true,
+    "maximumSumOfFamilyNetworkWindowsMs": 40000,
+    "requestBytesPerActualAttempt": 65536,
+    "requestBytesTotal": 1048576,
+    "responseBytesPerActualAttempt": 262144,
+    "responseBytesTotal": 4194304,
+    "searchRetries": 0,
+    "contentsRetries": "Existing at-most-one retry only within the original3actualcontents slots and inherited deadline; no extra slots or laterfamily borrowing."
+  },
+  "execution": "Run once, serial four declared queries, no Jev, no custom ranking/quote repair/alias changes; use actual current retriever and SDK. Preserve all failures/unknowns/unobserved families. Stop on declared global/local conditions; no resume/replay/rerun.",
+  "interpretation": "Component acquisition feasibility only; no factual coverage, origin freshness, source independence, capability activation or end-to-end latency credit."
+}
