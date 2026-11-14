@@ -1,6 +1,6 @@
 # Evaluation fixtures
 
-`cases.json` contains 48 synthetic scenarios frozen on 14 November 2026: 12 personal/opinion/nonclaims, 12 public propositions, 8 mixed/ambiguous, 8 capture/correction and 8 service/lifecycle scenarios. Twelve are reserved as held-out cases before tuning; default evaluation excludes them.
+`cases.json` is a metadata-only manifest with IDs, categories and the split for 48 synthetic scenarios frozen on 14 November 2026: 12 personal/opinion/nonclaims, 12 public propositions, 8 mixed/ambiguous, 8 capture/correction and 8 service/lifecycle scenarios. Twelve cases were reserved as held-out before tuning. Their bodies are kept in `cases-heldout.json`; the default runner filters the manifest to `development` before opening `cases-development.json`, so held-out inputs are not read or evaluated by default. The split preserved all 12 held-out records unchanged: their canonical JSON SHA-256 before and after separation is `16f927c84ed3703356280f02241b4354d35ef6337288d3495ef08b7969aa37bb`.
 
 The semantic answers in `modelFixture` and exact `candidateModelFixtures` are scripted model responses, separate from the expected actions. The harness passes these through the real Jev response validator and classifier, then runs the real verdict and presentation policies. It does not compare expected fields with themselves. Changing an expected action causes the report to fail; the harness test demonstrates this.
 
@@ -13,7 +13,7 @@ npm run evaluate
 npm run --silent evaluate > fixtures/evaluation/development-results.json
 ```
 
-This is a fixed-clock, no-network run. `not_run` means a scenario requires runtime orchestration or hardware; it is never counted as passing. Presentation suppression tests inject state and do not prove that audio stopped. Admission-only cases do not claim to test delivery of manual clarification/status events. Outbound private-query leakage remains unmeasured here; exact public-span preservation is tested separately.
+This is a fixed-clock, no-provider-network run. E33 correction sequencing and E43 deadline behavior use injected deterministic providers through a real local Fastify HTTP server and authenticated WebSocket; their wall-clock timings include the 10-second runtime deadline where applicable. All other development cases use scripted model answers and synthetic evidence. A `not_run` case is never counted as passing. This harness does not measure provider semantics, live retrieval, audio stopping, or outbound-query leakage.
 
 `development-results.json` records the latest explicitly executed development run. The report also consumes the shared B7 action cases at `../actions/presentation-cases.json` and reports their denominator separately.
 

@@ -4,24 +4,26 @@ Status on 14 November 2026: deterministic backend evaluation and a bounded live 
 
 ## Reproducible development result
 
-Run `npm run evaluate` from the repository root. The original machine-readable baseline is `fixtures/evaluation/development-results.json`; the dataset and test scope are explained in `fixtures/evaluation/README.md`. A fresh development-only rerun on 14 November 2026 reproduced the counts below, with 0 failures and the same 2 cases not run; the checked-in baseline artifact and held-outs were left unchanged.
+Run `npm run evaluate` from the repository root. The machine-readable development report is `fixtures/evaluation/development-results.json`; dataset loading and held-out isolation are explained in `fixtures/evaluation/README.md`. The runner reads the metadata-only manifest, selects the development split, and only then opens the development case bodies. The 12 held-out bodies are in a separate file and are not read during the default run.
 
-The continuation’s `npm run check` passed lint, typecheck and 171 tests across 12 files on Node 22.22.1 (baseline: 148 tests). The added notification/runtime tests exercise literal topic matching, current preferences and private-span exclusion with synthetic provider/evidence inputs. They do not add live or hardware cases.
+`npm run check` passed lint, typecheck and 171 tests across 12 files on Node 22.22.1 (baseline: 148 tests). The runtime evaluation added two composed transport scenarios with deterministic injected providers. They do not add live-provider or hardware evidence.
 
 | Measurement | Recorded outcome | What was tested |
 |---|---:|---|
-| Development scenarios | 34 passed / 36 selected; 2 not run | Scripted Jev responses, real admission and deterministic policies |
+| Development scenarios | 36 passed / 36 selected; 0 failed, 0 not run | 34 scripted policy fixtures plus 2 injected-runtime transport cases |
 | Admission stage | 33 executed | Public/personal gates, waiting, exact mixed spans, Unicode and capture confidence |
 | Evidence/verdict stage | 17 executed | Synthetic evidence, conflict abstention and copied-source suppression |
 | Presentation stage | 17 executed | Manual completion and automatic restraint with injected session state |
 | Malformed-provider fixture | 1 executed | Invalid Jev answers fail as an operational error |
 | Shared presentation fixtures | 21 passed / 21 | Same action/reason fixtures as B7's policy tests |
-| Reserved held-outs | 12 / 48 cases | Excluded from initial execution and tuning |
+| Correction sequencing (E33) | Pass; 264 ms | Authenticated HTTP submissions, WebSocket events; revision 1 retrieval was aborted and emitted no stale result; corrected revision 2 requested confirmation |
+| Provider deadline (E43) | Pass; 10,033 ms | Authenticated HTTP submission and WebSocket operational error; the runtime aborted a hung injected admission provider at its 10 s deadline, with no factual result |
+| Reserved held-outs | 12 / 48 cases | Body file was not read by the default run |
 | Successful live admission / judgment / Exa calls | 3 / 2 / 2 | Direct adapters; separate from this fixture harness |
 | Selected live citations inspected by agent / human | 1 / 0 | Historical Sydney Opera House claim; see smoke record |
 | Real glasses capture / output runs | 0 / 0 | Not measured |
 
-The two unexecuted development scenarios are revision correction orchestration (E33) and a provider deadline (E43). Dedicated runtime tests can establish those behaviors, but this harness does not pretend that a pure presentation decision exercises a queue, cancellation or a real timeout. The held-out hardware disconnect and TTS feedback cases also need native device execution.
+E33 and E43 exercise the real local Fastify server, authenticated HTTP routes, and authenticated WebSocket event delivery, with synthetic providers and a fixed application clock. E43's measured duration includes the runtime's configured 10-second wall-clock deadline. These results establish transport and orchestration behavior for deterministic injected providers; they do not measure Jev/Exa semantics, network reliability, or user-visible app behavior. The held-out hardware disconnect and TTS feedback cases still need native device execution.
 
 The 17 executed presentation decisions have this confusion matrix. Rows are expected actions; columns are actual actions. These are policy fixtures with known input state, not notification quality in a listening session.
 
@@ -31,13 +33,15 @@ The 17 executed presentation decisions have this confusion matrix. Rows are expe
 | notify | 0 | 1 | 0 |
 | respond | 0 | 0 | 7 |
 
-The 48 scenarios use the plan's distribution: 12 personal/opinion/nonclaims, 12 public facts, 8 mixed/ambiguous, 8 capture/corrections and 8 service/lifecycle cases. The held-out set is marked in the manifest before policy tuning. Scripted model decisions cannot measure Jev's semantic accuracy, so admission precision/recall are deliberately absent. Synthetic source stances cannot establish factual correctness or source relevance. The code preserves null/unmeasured metrics instead of reporting zeros as successes.
+The 48 scenarios use the plan's distribution: 12 personal/opinion/nonclaims, 12 public facts, 8 mixed/ambiguous, 8 capture/corrections and 8 service/lifecycle cases. The held-out set is marked in the metadata-only manifest before policy tuning. Scripted model decisions cannot measure Jev's semantic accuracy, so admission precision/recall are deliberately absent. Synthetic source stances cannot establish factual correctness or source relevance. The code preserves null/unmeasured metrics instead of reporting zeros as successes.
+
+In these fixture judgments, only the predeclared Helsinki/Finland, Helsinki/Norway and lightning propositions receive explicit substantive synthetic records, ordinary-risk assessments and distinct synthetic-origin assessments. The conflicting laboratory fixture has an unknown-risk assessment, while the echoed battery promotion is assessed as promotional with a common origin. Unrecognized propositions remain unclear and do not inherit a positive source-quality assessment. These labels test the policy gates only; they are not claims of real source quality.
 
 ## Selected-topic integration coverage
 
 The continuation adds a deterministic literal matcher over the exact admitted `checkedText` and the session’s currently enabled `selectedTopics`, recomputed immediately before presentation (including cache hits and in-flight preference changes). It normalizes Unicode with NFKC, case and whitespace, requires whole phrase boundaries and ignores empty or punctuation/symbol-only topics. It never examines rejected private clauses or context and adds no provider calls. It does not infer semantic categories: `weather` does not match a lightning sentence without the literal enabled phrase. Topic priority still passes through ordinary contradiction, opt-in, session, evidence, cooldown and duplicate gates.
 
-Targeted notification/runtime tests use real admission and runtime logic with synthetic Jev answers and synthetic evidence; they are distinct from the direct live adapter smoke below. The development evaluation denominator and held-out reservation remain unchanged.
+Targeted notification/runtime tests use real admission and runtime logic with synthetic Jev answers and synthetic evidence; E33/E43 additionally drive the composed authenticated service. These are distinct from the direct live adapter smoke below. The development denominator remains 36 and the 12 held-outs remain reserved.
 
 ## Bounded live adapter smoke test
 
