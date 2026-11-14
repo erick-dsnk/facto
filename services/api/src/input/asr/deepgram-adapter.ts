@@ -8,6 +8,37 @@ import { SentenceAssembler, type AsrWord } from './sentence-assembler.js';
 export const DEEPGRAM_LISTEN_URL = 'wss://api.deepgram.com/v1/listen?model=nova-3&encoding=linear16&sample_rate=16000&channels=1' +
   '&interim_results=true&smart_format=true&diarize=true&endpointing=300&utterance_end_ms=1000';
 
+/** Names nova-3 keyterm prompting should favour. DEEPGRAM_KEYTERMS (comma list) adds to these. */
+export const DEFAULT_KEYTERMS = ['Facto', 'Anthropic', 'Nvidia', 'Jensen Huang', 'Meta', 'Ray-Ban', 'OpenAI'] as const;
+const MAX_KEYTERMS = 50;
+const MAX_KEYTERM_LENGTH = 50;
+const KEYTERM_PATTERN = /^[\p{L}\p{N} .\-'&]+$/u;
+
+/**
+ * The defaults plus a comma-separated list. Terms are trimmed and inner whitespace collapsed; a term that is empty,
+ * longer than 50 characters or holds anything but letters, digits, spaces and . - ' & is dropped. Duplicates are
+ * removed ignoring case (the first spelling wins), and at most 50 terms are kept.
+ */
+export function parseKeyterms(value: string | undefined): string[] {
+  const terms: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of [...DEFAULT_KEYTERMS, ...(value ?? '').split(',')]) {
+    const term = raw.trim().replace(/\s+/g, ' ');
+    const length = Array.from(term).length;
+    if (length < 1 || length > MAX_KEYTERM_LENGTH || !KEYTERM_PATTERN.test(term)) continue;
+    const key = term.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key); terms.push(term);
+    if (terms.length === MAX_KEYTERMS) break;
+  }
+  return terms;
+}
+
+/** The listen URL with one `keyterm` parameter per term. Terms carry no secret; the key stays in the header. */
+export function deepgramListenUrl(keyterms: readonly string[]): string {
+  return DEEPGRAM_LISTEN_URL + keyterms.map(term => `&keyterm=${encodeURIComponent(term)}`).join('');
+}
+
 /** The part of a `ws` client socket the adapter uses. Tests inject a fake. */
 export interface DeepgramSocket {
   send(data: string | Uint8Array, callback?: (error?: Error) => void): void;
@@ -27,7 +58,10 @@ export type DeepgramTranscriptEntry = {
   averageConfidence: number | null; words: { word: string; confidence: number | null; speaker: number | null }[];
 };
 export type DeepgramOptions = {
+  /** `url` replaces the whole listen URL, keyterms included. */
   apiKey: string; url?: string; socketFactory?: DeepgramSocketFactory;
+  /** Keyterm prompts for nova-3. Default DEFAULT_KEYTERMS; pass parseKeyterms(...) output. */
+  keyterms?: readonly string[];
   openTimeoutMs?: number; keepAliveMs?: number; closeGraceMs?: number; now?: () => number; log?: DeepgramLog;
   /** Off unless the server opts in (DEBUG_TRANSCRIPTS=1). Receives every final result with its words. */
   transcriptLog?: (entry: DeepgramTranscriptEntry) => void;
@@ -90,11 +124,12 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
   const closeGraceMs = options.closeGraceMs ?? 2_000;
   const now = options.now ?? Date.now;
   const log = options.log ?? defaultLog;
+  const listenUrl = options.url ?? deepgramListenUrl(options.keyterms ?? DEFAULT_KEYTERMS);
 
   return {
     async start(config, onTranscript, signal, onFailure) {
       signal.throwIfAborted();
-      const socket = factory(options.url ?? DEEPGRAM_LISTEN_URL, { Authorization: `Token ${options.apiKey}` });
+      const socket = factory(listenUrl, { Authorization: `Token ${options.apiKey}` });
       const assembler = new SentenceAssembler(onTranscript, { idPrefix: `g${config.streamGeneration}` });
       const generation = config.streamGeneration;
       // One line per kind of failure and stream, so a broken provider is visible in the server log without flooding it.
