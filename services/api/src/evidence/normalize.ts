@@ -243,7 +243,10 @@ export function buildAlternateQuery(checkedText: string, strategy: AlternateQuer
   if (!checkedText.trim()) throw new PipelineError('claim_not_admitted');
   switch (strategy) {
     case 'balanced_evidence':
-      return `An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): ${JSON.stringify(checkedText)}`;
+      // Do not add search-operator quotation marks around the proposition:
+      // exact-phrase restrictions favor pages that repeat even a false claim.
+      // Preserve user-owned quotes and every other original character.
+      return `An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): ${checkedText}`;
   }
 }
 
