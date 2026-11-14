@@ -1,0 +1,255 @@
+
+ RUN  v5.1.0 /workspace/stack-16
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts (16 tests | 13 failed) 1151ms
+   ❯ Exa response cleanup preserves the established error (16)
+     × preserves an oversized header error when a native HTTP body has already failed 76ms
+     × preserves HTTP 401 classification with pending cleanup 154ms
+     × preserves HTTP 403 classification with pending cleanup 152ms
+     × preserves HTTP 400 classification with pending cleanup 152ms
+     × preserves HTTP 429 classification with pending cleanup 152ms
+     × preserves HTTP 503 classification with pending cleanup 151ms
+     × preserves declared overflow with pending cleanup 152ms
+     × preserves streamed overflow with pending cleanup 154ms
+     × preserves HTTP 401 classification with rejected cleanup 1ms
+     × preserves HTTP 403 classification with rejected cleanup 1ms
+     × preserves HTTP 400 classification with rejected cleanup 1ms
+     × preserves HTTP 429 classification with rejected cleanup 0ms
+     × preserves declared overflow with rejected cleanup 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves an oversized header error when a native HTTP body has already failed
+AssertionError: expected { code: 'exa_unavailable', …(1) } to deeply equal { Object (code, retryable) }
+
+- Expected
++ Received
+
+  {
+-   "code": "malformed_exa_response",
+-   "retryable": false,
++   "code": "exa_unavailable",
++   "retryable": true,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:56:72
+     54|     try {
+     55|       const client = new AbortableExa('local-test-key', controller.sig…
+     56|       await expect(outcome(client.search('Synthetic public control.'))…
+       |                                                                        ^
+     57|       expect(fetcher).toHaveBeenCalledTimes(1);
+     58|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 401 classification with pending cleanup
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 403 classification with pending cleanup
+AssertionError: expected { code: 'blocked_on_cleanup', …(1) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "code": "exa_authentication_failed",
++   "code": "blocked_on_cleanup",
+    "retryable": false,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 400 classification with pending cleanup
+AssertionError: expected { code: 'blocked_on_cleanup', …(1) } to deeply equal { code: 'exa_unavailable', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "code": "exa_unavailable",
++   "code": "blocked_on_cleanup",
+    "retryable": false,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 429 classification with pending cleanup
+AssertionError: expected { code: 'blocked_on_cleanup', …(1) } to deeply equal { code: 'exa_rate_limited', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "code": "exa_rate_limited",
+-   "retryable": true,
++   "code": "blocked_on_cleanup",
++   "retryable": false,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 503 classification with pending cleanup
+AssertionError: expected { code: 'blocked_on_cleanup', …(1) } to deeply equal { code: 'exa_unavailable', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "code": "exa_unavailable",
+-   "retryable": true,
++   "code": "blocked_on_cleanup",
++   "retryable": false,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves declared overflow with pending cleanup
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves streamed overflow with pending cleanup
+AssertionError: expected { code: 'blocked_on_cleanup', …(1) } to deeply equal { Object (code, retryable) }
+
+- Expected
++ Received
+
+  {
+-   "code": "malformed_exa_response",
++   "code": "blocked_on_cleanup",
+    "retryable": false,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:97:48
+     95|       const operation = client.search('Synthetic public control.');
+     96|       try {
+     97|         expect(await beforeCleanup(operation)).toEqual({ code: 'malfor…
+       |                                                ^
+     98|         expect(cancel).toHaveBeenCalledTimes(1);
+     99|         expect(body.locked).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 401 classification with rejected cleanup
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 403 classification with rejected cleanup
+AssertionError: expected { code: 'exa_unavailable', …(1) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "code": "exa_authentication_failed",
+-   "retryable": false,
++   "code": "exa_unavailable",
++   "retryable": true,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 400 classification with rejected cleanup
+AssertionError: expected { code: 'exa_unavailable', …(1) } to deeply equal { code: 'exa_unavailable', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "exa_unavailable",
+-   "retryable": false,
++   "retryable": true,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves HTTP 429 classification with rejected cleanup
+AssertionError: expected { code: 'exa_unavailable', …(1) } to deeply equal { code: 'exa_rate_limited', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "code": "exa_rate_limited",
++   "code": "exa_unavailable",
+    "retryable": true,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:81:48
+     79|       const operation = client.search('Synthetic public control.');
+     80|       try {
+     81|         expect(await beforeCleanup(operation)).toEqual({ code, retryab…
+       |                                                ^
+     82|         expect(cancel).toHaveBeenCalledTimes(1);
+     83|         expect(fetcher).toHaveBeenCalledTimes(1); // A client without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  services/api/src/providers/exa/client-cleanup.test.ts > Exa response cleanup preserves the established error > preserves declared overflow with rejected cleanup
+AssertionError: expected { code: 'exa_unavailable', …(1) } to deeply equal { Object (code, retryable) }
+
+- Expected
++ Received
+
+  {
+-   "code": "malformed_exa_response",
+-   "retryable": false,
++   "code": "exa_unavailable",
++   "retryable": true,
+  }
+
+ ❯ services/api/src/providers/exa/client-cleanup.test.ts:97:48
+     95|       const operation = client.search('Synthetic public control.');
+     96|       try {
+     97|         expect(await beforeCleanup(operation)).toEqual({ code: 'malfor…
+       |                                                ^
+     98|         expect(cancel).toHaveBeenCalledTimes(1);
+     99|         expect(body.locked).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 3 passed (16)
+   Start at  06:41:27
+   Duration  1.59s (tests 83%, import 14%, transform 3%)
+
