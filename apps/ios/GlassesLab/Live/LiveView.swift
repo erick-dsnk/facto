@@ -77,10 +77,17 @@ struct LiveSections: View {
         .disabled(camera.isStreaming)
       Toggle("Mute speech and chimes", isOn: $live.isMuted)
       Toggle("Automatic alerts", isOn: $live.automaticAlerts)
+      Toggle("Wake on “\(WakePhrase.spoken)”", isOn: $live.wakeWordEnabled)
+      if live.wakeWordEnabled {
+        LabeledContent("Wake phrase", value: live.wakeState.title)
+        if let detail = live.wakeState.detail {
+          Text(detail).font(.footnote).foregroundStyle(.secondary)
+        }
+      }
     } header: {
       Text("Listen and check")
     } footer: {
-      Text("Demo quality on: \(StreamQuality.demo.summary). Off: \(StreamQuality.listening.summary), for long listening. Applies when the stream starts. Say “check this” or tap Check this: the photo comes from the running stream, which never pauses. Automatic alerts: a chime and a card when the backend hears a contradicted claim. The phone stays awake while listening; keep Glasses Lab in the foreground.")
+      Text("Wake on “\(WakePhrase.spoken)”: the glasses stream stays off and nothing you say is sent until this phone hears the phrase; then it listens for a minute and goes back to waiting. Say “\(WakePhrase.spokenCommand)” to check what you are looking at. The phrase is detected on the phone. Demo quality on: \(StreamQuality.demo.summary). Off: \(StreamQuality.listening.summary), for long listening. Applies when the stream starts. Say “check this” or tap Check this: the photo comes from the running stream, which never pauses. Automatic alerts: a chime and a card when the backend hears a contradicted claim. The phone stays awake while listening; keep Glasses Lab in the foreground.")
     }
   }
 

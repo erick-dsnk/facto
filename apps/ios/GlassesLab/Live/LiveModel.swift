@@ -48,6 +48,9 @@ protocol LiveCamera: PhotoCapturing {
   var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)? { get set }
   var onStreamStopped: (@MainActor (_ byUser: Bool) -> Void)? { get set }
   func startListeningStream(quality: StreamQuality) async throws
+  /// Ends a stream Live mode started for the wake phrase, and its device session, so the
+  /// glasses go back to idle. Returns once they have stopped (or after a few seconds).
+  func stopLiveStream() async
 }
 
 /// The glasses lens. `DisplayModel` is the real one.
@@ -195,6 +198,11 @@ final class LiveModel {
   static let demoQualityKey = "live.demoQuality"
   static let mutedKey = "live.muted"
   static let automaticAlertsKey = "live.automaticAlerts"
+  static let wakeWordKey = "live.wakeWord"
+  /// How long listening stays on after the wake phrase, before the stream is stopped again.
+  nonisolated static let defaultWakeWindow: TimeInterval = 60
+  /// How long the stream stays on for a "Check this" tapped while waiting for the phrase.
+  nonisolated static let defaultWakeCheckWindow: TimeInterval = 20
   /// `session.ended` reasons after which Live mode opens a new session by itself. Server
   /// sessions last 5 minutes and are never extended (services/api session.ts).
   static let renewableEndReasons: Set<String> = ["deleted", "expired"]
@@ -238,15 +246,32 @@ final class LiveModel {
     }
   }
 
+  /// Off by default. On: the glasses stream stays off and nothing that is said is sent until
+  /// "Hey Facto" is heard by the on-device detector (issue #53).
+  var wakeWordEnabled: Bool {
+    didSet {
+      defaults.set(wakeWordEnabled, forKey: Self.wakeWordKey)
+      guard wakeWordEnabled != oldValue else { return }
+      wakeFailure = nil
+      if wakeWordEnabled {
+        refreshWake()
+      } else {
+        Task { await self.endWakeSession() }
+      }
+    }
+  }
+
   // MARK: State
 
   private(set) var connection: ChannelConnectionState = .idle
   private(set) var listening: AudioStreamerPhase = .idle {
     didSet {
-      // Keep the phone awake while listening: a locked phone suspends the app, and with it
-      // the socket and the audio pipeline.
-      if listening.isActive != oldValue.isActive { idleTimer(listening.isActive) }
+      updateKeepAwake()
+      if listening.isActive != oldValue.isActive { refreshWake() }
     }
+  }
+  private(set) var wakeState: WakeWordState = .off {
+    didSet { updateKeepAwake() }
   }
   private(set) var isStartingStream = false
   /// The last non-fatal problem, e.g. a stream that wouldn't start or a backend error code.
@@ -293,6 +318,9 @@ final class LiveModel {
   @ObservationIgnored private let configureAudioSession: () -> Void
   @ObservationIgnored private let idleTimer: (_ keepAwake: Bool) -> Void
   @ObservationIgnored private let uptime: () -> TimeInterval
+  @ObservationIgnored private let wake: WakeWordListening
+  @ObservationIgnored private let wakeWindow: TimeInterval
+  @ObservationIgnored private let wakeCheckWindow: TimeInterval
   @ObservationIgnored private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "live")
 
   @ObservationIgnored private var backend: LiveBackend?
@@ -313,6 +341,15 @@ final class LiveModel {
   @ObservationIgnored private var listenAfterRenewal = false
   @ObservationIgnored private var isRenewing = false
   @ObservationIgnored private var lastRenewalAt: TimeInterval?
+  /// True from the wake phrase (or a "Check this" tapped while waiting) until the stream that
+  /// it started has been stopped again.
+  @ObservationIgnored private var wakeSession = false
+  @ObservationIgnored private var wakeStartedStream = false
+  @ObservationIgnored private var wakeTimer: Task<Void, Never>?
+  @ObservationIgnored private var wakeStarting = false
+  /// Why the detector couldn't start. Cleared by toggling the option or by Connect.
+  @ObservationIgnored private var wakeFailure: String?
+  @ObservationIgnored private var keptAwake = false
 
   /// What one photo's chunks came back with. The user hears one answer per photo: a verdict
   /// is presented as it arrives; a "not sure" or failure only when no chunk gave a verdict.
@@ -338,6 +375,9 @@ final class LiveModel {
     configureAudioSession: (() -> Void)? = nil,
     idleTimer: ((_ keepAwake: Bool) -> Void)? = nil,
     uptime: (() -> TimeInterval)? = nil,
+    wakeListener: WakeWordListening? = nil,
+    wakeWindow: TimeInterval = LiveModel.defaultWakeWindow,
+    wakeCheckWindow: TimeInterval = LiveModel.defaultWakeCheckWindow,
     makeBackend: (@MainActor (BackendConfig) -> LiveBackend)? = nil
   ) {
     let config = BackendConfig.load(from: defaults, secrets: secrets)
@@ -346,6 +386,11 @@ final class LiveModel {
     self.demoQuality = defaults.object(forKey: Self.demoQualityKey) as? Bool ?? true
     self.isMuted = defaults.bool(forKey: Self.mutedKey)
     self.automaticAlerts = defaults.object(forKey: Self.automaticAlertsKey) as? Bool ?? true
+    self.wakeWordEnabled = defaults.bool(forKey: Self.wakeWordKey)
+    let wakeListener = wakeListener ?? MicrophoneWakeWordListener()
+    self.wake = wakeListener
+    self.wakeWindow = wakeWindow
+    self.wakeCheckWindow = wakeCheckWindow
     self.camera = camera
     self.display = display
     self.defaults = defaults
@@ -374,7 +419,9 @@ final class LiveModel {
     camera.liveQuality = quality
     camera.onStreamStopped = { [weak self] byUser in self?.streamStopped(byUser: byUser) }
     camera.onAudioBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
+    wakeListener.onWake = { [weak self] command in self?.wakeHeard(command) }
     startLensPump()
+    refreshWake()
   }
 
   // MARK: Connection
@@ -383,6 +430,8 @@ final class LiveModel {
   func connect() async {
     guard canEditBackend else { return }
     notice = nil
+    wakeFailure = nil
+    defer { refreshWake() }
     let text = baseURLText.trimmingCharacters(in: .whitespacesAndNewlines)
     guard let url = URL(string: text), url.scheme == "http" || url.scheme == "https", let host = url.host() else {
       connection = .disconnected(reason: "invalid_url")
@@ -451,6 +500,8 @@ final class LiveModel {
     await backend?.close()
     connection = backend?.connectionState ?? .idle
     sessionActive = nil
+    await endWakeSession()
+    refreshWake()
   }
 
   // MARK: Listening
@@ -467,8 +518,13 @@ final class LiveModel {
       return
     }
     notice = nil
+    // The wake detector uses the hands-free microphone; it must be off before a stream starts.
+    pauseWakeDetector()
     isStartingStream = true
-    defer { isStartingStream = false }
+    defer {
+      isStartingStream = false
+      refreshWake()
+    }
     do {
       try await camera.startListeningStream(quality: quality)
     } catch {
@@ -492,6 +548,8 @@ final class LiveModel {
     streamer.stop()
     presenter.stopOutput()
     syncListening()
+    // Stopping by hand during a wake session also ends that session and its stream.
+    if wakeSession { Task { await self.endWakeSession() } }
   }
 
   // MARK: Look and check
@@ -508,6 +566,12 @@ final class LiveModel {
     guard await ensureSessionActive() else {
       checkMessage = "The backend session is paused. Disconnect and connect again."
       return
+    }
+    // Tapped while waiting for the wake phrase: the photo needs the stream, so this counts as a
+    // short wake session and the stream is stopped again once the check is done.
+    if wakeWordEnabled, !wakeSession, !camera.isStreaming {
+      beginWakeSession()
+      startWakeTimer(after: wakeCheckWindow)
     }
     coordinator.trigger(.button)
   }
@@ -581,6 +645,7 @@ final class LiveModel {
 
   private func handle(_ state: ChannelConnectionState) {
     connection = state
+    refreshWake()
     if case .disconnected(let reason) = state, Self.renewableEndReasons.contains(reason) {
       renewSession(after: reason)
     }
@@ -754,6 +819,8 @@ final class LiveModel {
       return
     }
     speakStopReason(reason)
+    // Listening failed during a wake session: stop its stream and go back to waiting.
+    if wakeSession { Task { await self.endWakeSession() } }
   }
 
   /// A distinct spoken reason for every failure (decision 9). Nil for the user's own Stop.
@@ -776,6 +843,7 @@ final class LiveModel {
   }
 
   private func streamStopped(byUser: Bool) {
+    defer { refreshWake() }
     guard let streamer, streamer.phase.isActive else { return }
     if byUser {
       streamer.stop()
@@ -899,6 +967,144 @@ final class LiveModel {
     checkTimers.removeAll()
     pendingChecks.removeAll()
     photoChecks.removeAll()
+  }
+
+  // MARK: Wake phrase
+
+  /// Arms or disarms the on-device detector to match the current state. It listens only when
+  /// the option is on, the backend is connected, and no stream or listening is running.
+  private func refreshWake() {
+    guard wakeWordEnabled else {
+      pauseWakeDetector()
+      wakeState = .off
+      return
+    }
+    if wakeSession {
+      wakeState = .awake
+      return
+    }
+    let blocked: String? =
+      if !isConnected { "Connect to the backend to arm it." }
+      else if listening.isActive || isStartingStream { "Paused while listening." }
+      else if camera.isStreaming { "Paused while the glasses stream is on. Stop the stream to arm it." }
+      else { nil }
+    if let blocked {
+      pauseWakeDetector()
+      wakeState = .blocked(blocked)
+      return
+    }
+    if let wakeFailure {
+      wakeState = .unavailable(wakeFailure)
+      return
+    }
+    if wake.isRunning {
+      wakeState = .waiting(input: wake.inputName)
+      return
+    }
+    guard !wakeStarting else { return }
+    wakeStarting = true
+    wakeState = .starting
+    Task {
+      do {
+        try await self.wake.start()
+      } catch {
+        self.wakeFailure = (error as? WakeWordError)?.message ?? "The wake phrase detector didn't start."
+        self.log.error("wake detector failed to start")
+      }
+      self.wakeStarting = false
+      // Conditions may have changed while the microphone was starting.
+      self.refreshWake()
+    }
+  }
+
+  /// Stops the detector and gives the audio session back to spoken output.
+  private func pauseWakeDetector() {
+    guard wake.isRunning else { return }
+    wake.stop()
+    configureAudioSession()
+  }
+
+  private func beginWakeSession() {
+    pauseWakeDetector()
+    wakeSession = true
+    wakeStartedStream = !camera.isStreaming
+    wakeState = .awake
+  }
+
+  /// The detector heard the phrase. "Hey Facto" starts listening for a bounded window;
+  /// "Hey Facto, check this" takes a photo and checks it, like the Check this button.
+  private func wakeHeard(_ command: WakeCommand) {
+    guard wakeWordEnabled, !wakeSession, isConnected else { return }
+    // A chime is not playback, so it is not reported to the backend.
+    if !isMuted { chime.playChime() }
+    if command == .checkThis {
+      log.info("wake phrase: check this")
+      // checkThis() releases the detector's microphone, starts the short wake session and
+      // stops the stream again once the check is done.
+      Task { await self.checkThis() }
+      return
+    }
+    log.info("wake phrase: starting to listen")
+    beginWakeSession()
+    Task {
+      await self.startListening()
+      guard self.wakeSession else { return }
+      if self.streamer?.phase.isActive ?? false {
+        self.startWakeTimer(after: self.wakeWindow)
+      } else {
+        // Listening didn't start; `notice` says why.
+        await self.endWakeSession()
+      }
+    }
+  }
+
+  private func startWakeTimer(after seconds: TimeInterval) {
+    wakeTimer?.cancel()
+    wakeTimer = Task { [weak self] in
+      try? await Task.sleep(nanoseconds: UInt64(max(0, seconds) * 1_000_000_000))
+      // Don't cut off a check in flight: wait for it, up to 30 s more.
+      var waited = 0
+      while !Task.isCancelled, let self, self.isChecking || !self.pendingChecks.isEmpty, waited < 30 {
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        waited += 1
+      }
+      guard !Task.isCancelled, let self else { return }
+      self.wakeTimer = nil
+      await self.endWakeSession()
+    }
+  }
+
+  /// Ends a wake session: stops listening and the stream it started, then waits for the phrase
+  /// again (if the option is still on).
+  private func endWakeSession() async {
+    guard wakeSession else {
+      refreshWake()
+      return
+    }
+    wakeSession = false
+    wakeTimer?.cancel()
+    wakeTimer = nil
+    if let streamer, streamer.phase.isActive {
+      streamer.stop()
+      presenter.stopOutput()
+      syncListening()
+    }
+    let stopStream = wakeStartedStream && camera.isStreaming
+    wakeStartedStream = false
+    if stopStream {
+      log.info("wake session over: stopping the stream")
+      await camera.stopLiveStream()
+    }
+    refreshWake()
+  }
+
+  /// Keep the phone awake while listening or waiting for the wake phrase: a locked phone
+  /// suspends the app, and with it the socket and the audio pipeline.
+  private func updateKeepAwake() {
+    let wanted = listening.isActive || wakeState.isWaiting || wakeState == .awake
+    guard wanted != keptAwake else { return }
+    keptAwake = wanted
+    idleTimer(wanted)
   }
 
   // MARK: Lens and listening state
