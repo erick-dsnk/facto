@@ -288,10 +288,15 @@ struct ResultCard: Equatable, Sendable {
   var sourceName: String?
   /// What the presenter says for this card.
   var spokenLine: String
+  /// The backend's explanation, distinct from the claim being checked. The native lens layout
+  /// shows it; the phone card uses `detail`.
+  var detailText: String?
+  /// "Read from screen" or "Heard nearby", when the caller knows the input mode.
+  var captureLabel: String?
 
   init(
     kind: CardKind, verdictWord: String, detail: String?, excerpt: String, quote: String?,
-    sourceName: String?, spokenLine: String
+    sourceName: String?, spokenLine: String, detailText: String? = nil, captureLabel: String? = nil
   ) {
     self.kind = kind
     self.verdictWord = verdictWord
@@ -300,6 +305,8 @@ struct ResultCard: Equatable, Sendable {
     self.quote = quote
     self.sourceName = sourceName
     self.spokenLine = spokenLine
+    self.detailText = detailText
+    self.captureLabel = captureLabel
   }
 
   /// A card for a claim result.
@@ -312,7 +319,9 @@ struct ResultCard: Equatable, Sendable {
       excerpt: CardText.excerpt(result.checkedText, maxCodePoints: ResultWording.maxExcerptCodePoints),
       quote: ResultWording.bestEvidence(for: result).flatMap { Self.quote($0.excerpt) },
       sourceName: ResultWording.bestSourceName(for: result),
-      spokenLine: ResultWording.spokenLine(for: result)
+      spokenLine: ResultWording.spokenLine(for: result),
+      detailText: result.summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        ? nil : CardText.excerpt(result.summary, maxCodePoints: 140)
     )
   }
 
@@ -327,7 +336,8 @@ struct ResultCard: Equatable, Sendable {
       excerpt: claimText.map { CardText.excerpt($0, maxCodePoints: ResultWording.maxExcerptCodePoints) } ?? "",
       quote: nil,
       sourceName: nil,
-      spokenLine: ResultWording.line(for: outcome)
+      spokenLine: ResultWording.line(for: outcome),
+      detailText: ResultWording.line(for: outcome)
     )
   }
 

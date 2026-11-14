@@ -3,6 +3,9 @@ import SwiftUI
 /// MockDeviceKit glasses: no hardware needed, the phone's back camera stands in for theirs.
 struct SimulatedGlassesSection: View {
   let wearables: WearablesModel
+  let display: DisplayModel
+  let camera: CameraModel
+  let live: LiveModel
 
   var body: some View {
     Section {
@@ -14,6 +17,12 @@ struct SimulatedGlassesSection: View {
           MockDisplayPreview(display: mockDisplay)
             .frame(height: 300)
             .clipShape(.rect(cornerRadius: FactoRadius.card, style: .continuous))
+          #if DEBUG
+          NativeCardPreviewControls(
+            wearables: wearables, display: display,
+            captureOrLiveActive: camera.hasSession || live.isConnected
+          )
+          #endif
         }
       } else {
         ForEach(WearablesModel.MockModel.allCases) { model in

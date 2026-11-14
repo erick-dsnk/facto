@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "type": "display.snapshot",
+  "sessionId": "session-1",
+  "sessionEpoch": 1,
+  "eventSeq": 2,
+  "active": true,
+  "expiresAt": "2026-11-14T10:05:00Z",
+  "state": {
+    "requestId": "request-1",
+    "claimId": "claim-1",
+    "revision": 1,
+    "claimText": "The Eiffel Tower opened in 1889.",
+    "mode": "ocr",
+    "userInitiated": true,
+    "phase": "checking",
+    "sources": [
+      {
+        "id": "tower-site",
+        "hostname": "toureiffel.paris",
+        "title": "The Eiffel Tower",
+        "stage": "reading",
+        "provider": "exa"
+      }
+    ]
+  }
+}
