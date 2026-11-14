@@ -1,5 +1,45 @@
 # Fact-checking pipeline evaluation
 
+## Live HTTP eval (fact-check port)
+
+`npm run evaluate:live` drives any running server through its public contract: `POST /v1/sessions`, the authenticated WebSocket stream, then `POST /v1/sessions/:id/checks` with `userInitiated: true` for each case. The same script therefore measures any branch, including ones from before the port. The old in-process campaign runner is now `npm run evaluate:live:inprocess`.
+
+```sh
+# Server under test, e.g. a branch checked out locally (keys come from .env):
+PORT=3311 PIPELINE_MODE=live npm start
+# Eval, with DEMO_JOIN_CODE in the environment or .env:
+npm run evaluate:live -- --server http://127.0.0.1:3311 --label fc-port
+npm run evaluate:live -- --baseline fixtures/evaluation/live-runs/<baseline>.json --candidate fixtures/evaluation/live-runs/<candidate>.json
+```
+
+Options: `--sets everyday,hard`, `--limit N` (first N per set), `--label`, `--out-dir`, `--timeout-ms` (default 15 s) and `--baseline` (prints the ship rule after a run). Checks run one at a time, 250 ms apart. The script joins a new session every 40 checks, when fewer than 20 s of a session remain, or after a 401, and keeps joins under 10 a minute. A server that rejects `capture.lowConfidenceWords` with `400 invalid_request` gets the case once more without the field, and the row is flagged `fieldUnsupported`. A check ends on the first `claim.result` (the first claim's when there are two), `claim.skipped`, `claim.needs_confirmation`, `pipeline.error` or a 15 s timeout, which also cancels the request. Latency is measured on the client.
+
+**Sets.** EVERYDAY is the reference app's `test/claims.json` (44 labelled claims; context is the page title and preceding text) plus [`fixtures/evaluation/device-phrases.json`](../fixtures/evaluation/device-phrases.json) (15 phrases as heard through the glasses, each with its expected label and why). HARD is the AVeriTeC held-out sample, `factcheck/.build/averitec/heldout.json` (100 claims, CC BY-NC 4.0). The script reads it in place (`FACTCHECK_REPO` points at the checkout) and writes only ids, labels and metrics: no claim text reaches the repo, a report or stdout.
+
+**Labels.** supported → true, contradicted → false, misleading, insufficient_evidence → cant_verify, speculation. A skip with a `kind`, `not_a_claim` or `private_or_personal` (or `not_eligible_public_fact`, the older servers' confident-opinion skip) → not_a_claim; any other skip → skip; `claim.needs_confirmation` → needs_confirmation; errors and timeouts → error. AVeriTeC maps Supported → true, Refuted → false, Conflicting → misleading, Not Enough Evidence → cant_verify.
+
+**Metrics per set.** Accuracy over the four verdict labels; outcome accuracy over every label; wrong True/False (true called false plus false called true); Can't-verify share and skip share (skip, needs_confirmation, not_a_claim or error), both over rows where a claim was expected; latency median and nearest-rank P95; Exa searches and Jev calls per check from the result's `usage` (n/a when a server sends none); a confusion matrix.
+
+**Ship rule** (`--baseline`): wrong True/False not higher on either set, Can't verify + skips lower on EVERYDAY, and the candidate's median under 4 s and P95 under 10 s on each set.
+
+Each run writes `fixtures/evaluation/live-runs/<UTC>-<label>.json` (set, id, expected, predicted, reason code, latency, Jev calls, Exa searches) and a matching `.md` table.
+
+### Results
+
+Baseline (`claude/debug-transcripts`) against candidate (`claude/fc-port`) on both full sets: pending, run at integration with this script on two local servers.
+
+Smoke run on branch `claude/fc-port-asr-eval` (base pipeline, before the admission, sources and verdict ports merge), live mode on a loopback server, first three EVERYDAY claims, 14 November 2026 ([report](../fixtures/evaluation/live-runs/2026-11-14T171438Z-smoke-fc-port-asr-eval.md)). It shows the script runs end to end against live providers; three cases measure nothing about accuracy.
+
+| Metric | EVERYDAY: smoke-fc-port-asr-eval |
+|---|---|
+| Cases | 3 |
+| Accuracy, 4 labels | 0/3 (0.0%) |
+| Wrong True/False | 0 |
+| Can't verify share | 2/3 (66.7%) |
+| Skip share | 1/3 (33.3%) |
+| Latency median / P95 | 3.80 s / 3.84 s |
+| Exa searches, Jev calls per check | n/a (this pipeline sends no `usage`) |
+
 ## Latest researched 100-input OPEN cohort
 
 A fresh independently reviewed synthetic dataset completed **100/100 inputs** on unchanged backend `b218094`: **69/80 correct definitive facts (86.25%)**, ten abstentions, one factual clarification and zero observed wrong labels or operational errors. Exact public-span admission was **79/80**, precision **79/79**, recall **98.75%**, F1 **0.99371**. Controls matched **18/20 exact actions**, while all twenty avoided public retrieval and factual verdicts; all hundred manual presentations responded. Factual median/P95 over all eighty observations were **2.2555/6.407 seconds**. Actual usage was **194 Jev, 94 searches, 80 contents, 1,376,217 input tokens**, with **$0.818 known partial cost and Jev charges unknown**.
