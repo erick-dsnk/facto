@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sources": {
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "hostname": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 253,
+            "pattern": "^[a-z0-9.-]+$"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "found",
+              "reading",
+              "ready"
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "const": "exa"
+          }
+        },
+        "required": [
+          "id",
+          "hostname",
+          "title",
+          "stage",
+          "provider"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "sources"
+  ],
+  "additionalProperties": false
+}

@@ -395,6 +395,9 @@ struct AdmissionPayload: Codable, Equatable, Sendable {
   var admissionAction: AdmissionAction
   var reasonCode: String
   var presentation: Presentation?
+  var claimText: String? = nil
+  var mode: InputMode? = nil
+  var userInitiated: Bool? = nil
 }
 
 /// claim.waiting: `admissionAction` is always `wait`. Not a factual verdict.
@@ -452,7 +455,7 @@ struct TranscriptPayload: Codable, Equatable, Sendable {
 
 enum ServerEventType: OpenStringEnum {
   case sessionReady, sessionEnded
-  case claimDetected, claimWaiting, claimSkipped, claimNeedsConfirmation, claimChecking, claimResult, claimSuperseded
+  case claimDetected, claimWaiting, claimSkipped, claimNeedsConfirmation, claimChecking, claimSources, claimResult, claimSuperseded
   case checkCancelled, pipelineError
   case audioReady, audioStopped, transcriptPartial, transcriptFinal
   /// Pending backend confirmation (docs/live-pipeline.md decision 4). Not in contract v1;
@@ -469,6 +472,7 @@ enum ServerEventType: OpenStringEnum {
     case "claim.skipped": self = .claimSkipped
     case "claim.needs_confirmation": self = .claimNeedsConfirmation
     case "claim.checking": self = .claimChecking
+    case "claim.sources": self = .claimSources
     case "claim.result": self = .claimResult
     case "claim.superseded": self = .claimSuperseded
     case "check.cancelled": self = .checkCancelled
@@ -491,6 +495,7 @@ enum ServerEventType: OpenStringEnum {
     case .claimSkipped: "claim.skipped"
     case .claimNeedsConfirmation: "claim.needs_confirmation"
     case .claimChecking: "claim.checking"
+    case .claimSources: "claim.sources"
     case .claimResult: "claim.result"
     case .claimSuperseded: "claim.superseded"
     case .checkCancelled: "check.cancelled"
@@ -505,6 +510,19 @@ enum ServerEventType: OpenStringEnum {
   }
 }
 
+/// Search progress is informational. Native output never treats a source arrival as a verdict.
+struct ClaimSourcesPayload: Decodable, Equatable, Sendable {
+  struct Source: Decodable, Equatable, Sendable {
+    var id: String
+    var hostname: String
+    var title: String
+    // Open strings keep newer providers/stages backward compatible.
+    var stage: String
+    var provider: String
+  }
+  var sources: [Source]
+}
+
 enum ServerEventPayload: Equatable, Sendable {
   case sessionReady(SessionReadyPayload)
   case sessionEnded(SessionEndedPayload)
@@ -513,6 +531,7 @@ enum ServerEventPayload: Equatable, Sendable {
   case claimSkipped(AdmissionPayload)
   case claimNeedsConfirmation(AdmissionPayload)
   case claimChecking(AdmissionPayload)
+  case claimSources(ClaimSourcesPayload)
   case claimResult(ClaimResult)
   case claimSuperseded(SupersededPayload)
   case checkCancelled(ReasonPayload)
@@ -607,6 +626,7 @@ struct ServerEvent: Decodable, Equatable, Sendable {
     case .claimSkipped: return decode(AdmissionPayload.self, ServerEventPayload.claimSkipped)
     case .claimNeedsConfirmation: return decode(AdmissionPayload.self, ServerEventPayload.claimNeedsConfirmation)
     case .claimChecking: return decode(AdmissionPayload.self, ServerEventPayload.claimChecking)
+    case .claimSources: return decode(ClaimSourcesPayload.self, ServerEventPayload.claimSources)
     case .claimResult: return decode(ClaimResult.self, ServerEventPayload.claimResult)
     case .claimSuperseded: return decode(SupersededPayload.self, ServerEventPayload.claimSuperseded)
     case .checkCancelled: return decode(ReasonPayload.self, ServerEventPayload.checkCancelled)

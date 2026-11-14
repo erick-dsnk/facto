@@ -16,6 +16,7 @@ final class MicrophoneWakeWordListener: WakeWordListening {
   private(set) var inputName: String?
 
   private let makeRecognizer: () throws -> WakePhraseRecognizer
+  private var startupGeneration = 0
   private var recognizer: WakePhraseRecognizer?
   private lazy var engine = AVAudioEngine()
   private let queue = DispatchQueue(label: "glasseslab.wake-word", qos: .userInitiated)
@@ -36,7 +37,10 @@ final class MicrophoneWakeWordListener: WakeWordListening {
 
   func start() async throws {
     guard !isRunning else { return }
-    guard await AVAudioApplication.requestRecordPermission() else { throw WakeWordError.microphoneDenied }
+    let generation = startupGeneration
+    let permitted = await AVAudioApplication.requestRecordPermission()
+    guard generation == startupGeneration, !Task.isCancelled else { throw CancellationError() }
+    guard permitted else { throw WakeWordError.microphoneDenied }
     if recognizer == nil { recognizer = try makeRecognizer() }
     do {
       let session = AVAudioSession.sharedInstance()
@@ -64,6 +68,8 @@ final class MicrophoneWakeWordListener: WakeWordListening {
   }
 
   func stop() {
+    // Also cancels a permission request whose start() has not opened the engine yet.
+    startupGeneration += 1
     guard isRunning else { return }
     isRunning = false
     if let configurationObserver { NotificationCenter.default.removeObserver(configurationObserver) }

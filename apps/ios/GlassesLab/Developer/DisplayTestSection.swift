@@ -12,6 +12,7 @@ struct DisplayTestSection: View {
       LabeledContent("Taps from glasses", value: "\(display.taps)")
       if display.sessionState == .idle {
         Button("Connect display") { display.connect() }
+          .disabled(display.webDisplayEnabled)
       } else {
         Button("Send test screen") { Task { await display.sendHome() } }
           .disabled(!display.isConnected)
@@ -25,7 +26,9 @@ struct DisplayTestSection: View {
       SettingsHeader("Display")
     } footer: {
       SettingsFooter(
-        "Needs Meta Ray-Ban Display glasses or the simulated Display. Facto connects the display by itself when those glasses connect. Ray-Ban Meta Gen 2 has no display."
+        display.webDisplayEnabled
+          ? "Native display output is off while Web display is selected in Glasses display above. The camera still takes photos."
+          : "Needs Meta Ray-Ban Display glasses or the simulated Display. Facto reconnects the display by itself while those glasses are around. Ray-Ban Meta Gen 2 has no display."
       )
     }
   }

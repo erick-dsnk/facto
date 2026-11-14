@@ -125,6 +125,47 @@ final class LookAndCheckCoordinatorTests: XCTestCase {
     )
   }
 
+  func testStopBeforeQueuedTriggerCannotStartCapture() async {
+    let coordinator = makeCoordinator()
+    XCTAssertTrue(coordinator.trigger(.button))
+    coordinator.stop()
+    for _ in 0..<30 { await Task.yield() }
+    XCTAssertEqual(photo.calls, 0)
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testStopDuringPhotoSuppressesSubmissionAndOutcomeAfterSessionChanges() async {
+    let coordinator = makeCoordinator()
+    photo.holdNext = true
+    var outcomes = 0
+    var cleanup = 0
+    coordinator.onOutcome = { _ in outcomes += 1 }
+    coordinator.onCancelledCapture = { cleanup += 1 }
+    let check = Task { await coordinator.performCheck(source: .button) }
+    for _ in 0..<100 where photo.gate == nil { await Task.yield() }
+    XCTAssertNotNil(photo.gate)
+    coordinator.stop()
+    channel.sessionId = "replacement-session"
+    channel.sessionEpoch = 1
+    photo.release()
+    _ = await check.value
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+    XCTAssertEqual(outcomes, 0)
+    XCTAssertEqual(cleanup, 1)
+  }
+
+  func testRejectedCaptureHasNoAcknowledgementOrSensorStart() async {
+    let coordinator = makeCoordinator()
+    coordinator.canCapture = { false }
+    var acknowledgements = 0
+    coordinator.onAccepted = { acknowledgements += 1 }
+    XCTAssertFalse(coordinator.trigger(.voice))
+    let outcome = await coordinator.performCheck(source: .button)
+    XCTAssertNil(outcome)
+    XCTAssertEqual(acknowledgements, 0)
+    XCTAssertEqual(photo.calls, 0)
+  }
+
   func testButtonCheckSubmitsAnOCREnvelope() async throws {
     let outcome = await makeCoordinator().performCheck(source: .button)
 

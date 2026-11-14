@@ -6,7 +6,7 @@ import { decideVerdict } from '../policy/verdict.js';
 import { decidePresentation, matchSelectedTopic } from '../policy/notifications.js';
 import { AttemptBudget, abortable, assertWithinDeadline } from './budget.js';
 import { fingerprint, type RequestRecord, type Session } from './session.js';
-import { claimResultSchema } from '../../../../packages/contracts/src/wire.js';
+import { claimResultSchema, claimSourcesSchema } from '../../../../packages/contracts/src/wire.js';
 
 type Job = { session: Session; record: RequestRecord };
 export type RuntimeMetric = {
@@ -42,7 +42,7 @@ export class PipelineRuntime {
       previous.controller.abort(new PipelineError('superseded')); clearTimeout(previous.timer);
       previous.state = 'cancelled';
       const presented = [...previous.results.values()].some(result => result.presentation.action !== 'silent');
-      if (previous.results.size) session.emit('claim.superseded', { reasonCode: 'corrected', presentation: { action: presented && !session.preferences.muted && (previous.input.userInitiated || session.preferences.automaticNotifications) ? 'respond' : 'silent', reasonCode: 'correction_status' } }, previous.input);
+      session.emit('claim.superseded', { reasonCode: 'corrected', presentation: { action: presented && !session.preferences.muted && (previous.input.userInitiated || session.preferences.automaticNotifications) ? 'respond' : 'silent', reasonCode: 'correction_status' } }, previous.input);
       previous.results.clear();
     }
     // Revisions and continuations share the original deadline and attempt budget.
@@ -140,7 +140,7 @@ export class PipelineRuntime {
           session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input, claim.id);
           record.state = 'done'; return;
         }
-        session.emit('claim.checking', { admissionAction: 'check', reasonCode: 'eligible_public_claim' }, input, claim.id);
+        session.emit('claim.checking', { admissionAction: 'check', reasonCode: 'eligible_public_claim', claimText: claim.checkedText, mode: input.mode, userInitiated: input.userInitiated }, input, claim.id);
         const key = cacheKey(claim.checkedText);
         // Notification identity is the complete admitted proposition, independent of
         // capture mode/context. Keep factual cache identity context-sensitive above.
@@ -161,6 +161,10 @@ export class PipelineRuntime {
           }).length;
           const reserved = Math.min(laterUncached, Math.max(0, 3 - record.budget.jev - 1));
           const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+          claimContext.reportSources = sources => {
+            const progress = claimSourcesSchema.safeParse({ sources });
+            if (progress.success && session.current(record) && this.now() < record.acceptedAt + 10_000) session.emit('claim.sources', progress.data, input, claim.id);
+          };
           const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, claimContext));
           if (!session.current(record) || stopIfStale()) return;
           let judgment = evidence.length ? await timed('judgment', () => this.adapters.judge(claim, evidence, claimContext)) : {

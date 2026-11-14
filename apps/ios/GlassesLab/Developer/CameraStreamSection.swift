@@ -6,6 +6,8 @@ import SwiftUI
 /// clock, frame grabs and photos.
 struct CameraStreamSection: View {
   @Bindable var camera: CameraModel
+  /// Manual captures go through LiveModel so they pause "Hey Facto" and end its wake session.
+  let live: LiveModel
 
   var body: some View {
     Section {
@@ -14,7 +16,9 @@ struct CameraStreamSection: View {
       if camera.hasSession {
         Button("End session", role: .destructive) { camera.endSession() }
       } else {
-        Button("Start session") { camera.startSession() }
+        Button("Start session") {
+          Task { await live.performManualCapture { camera.startSession() } }
+        }
       }
 
       Picker("Resolution", selection: $camera.resolution) {
@@ -34,7 +38,7 @@ struct CameraStreamSection: View {
       if camera.isStreaming {
         Button("Stop stream", role: .destructive) { camera.stopStream() }
       } else {
-        Button("Start stream") { Task { await camera.startStream() } }
+        Button("Start stream") { Task { await live.performManualCapture { await camera.startStream() } } }
           .disabled(camera.sessionState != .started)
       }
 
@@ -82,7 +86,7 @@ struct CameraStreamSection: View {
       }
       .disabled(camera.isCapturingPhoto)
       Button(camera.isCapturingPhoto ? "Taking photo…" : "Take photo") {
-        Task { await camera.capturePhoto() }
+        Task { await live.performManualCapture { await camera.capturePhoto() } }
       }
       .disabled(camera.sessionState != .started || camera.isCapturingPhoto)
       if let status = camera.photoStatus {

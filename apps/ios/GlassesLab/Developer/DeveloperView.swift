@@ -1,8 +1,9 @@
 import SwiftUI
 
 /// Every lab panel from the old Glasses Lab list, for the device checklist and for debugging:
-/// the live session, Meta AI, simulated glasses, the camera, audio routes, the display test,
-/// the event log and the debug log. Pushed from Settings.
+/// the live session, Meta AI, simulated glasses, the camera, audio routes, the glasses display
+/// output (native or web), the display test, the event log and the debug log. Pushed from
+/// Settings.
 struct DeveloperView: View {
   let wearables: WearablesModel
   @Bindable var camera: CameraModel
@@ -16,11 +17,13 @@ struct DeveloperView: View {
         .factoRowBackground()
       MetaAISection(wearables: wearables)
         .factoRowBackground()
-      SimulatedGlassesSection(wearables: wearables)
+      SimulatedGlassesSection(wearables: wearables, display: display, camera: camera, live: live)
         .factoRowBackground()
-      CameraStreamSection(camera: camera)
+      CameraStreamSection(camera: camera, live: live)
         .factoRowBackground()
       AudioRoutesSection(audioLab: audioLab, camera: camera)
+        .factoRowBackground()
+      DisplayOutputSection(live: live)
         .factoRowBackground()
       DisplayTestSection(display: display)
         .factoRowBackground()

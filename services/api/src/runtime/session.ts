@@ -1,5 +1,6 @@
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
-import { PipelineError, type ClaimResult, type EventEnvelope, type EventType, type Preferences, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, type ClaimResult, type EventEnvelope, type EventType, type Preferences, type TextInput, type DisplayState } from '../../../../packages/contracts/src/index.js';
+import { projectDisplay } from './display.js';
 import { AttemptBudget } from './budget.js';
 
 export type RequestRecord = {
@@ -21,12 +22,17 @@ export class Session {
   recentClaims = new Map<string, number>();
   cache = new Map<string, { result: ClaimResult; expiresAt: number }>();
   preferences: Preferences = { muted: false, automaticNotifications: false, selectedTopics: [] };
+  displayState: DisplayState | null = null;
+  displayListeners = new Set<(event: EventEnvelope, state: DisplayState | null, previous: DisplayState | null) => void>();
   listeners = new Set<(event: EventEnvelope) => void>();
   constructor(public now: () => number, lifetimeMs = 300_000) { this.expiresAt = now() + lifetimeMs; }
   emit(type: EventType, payload: unknown, input?: TextInput, claimId?: string) {
     const event: EventEnvelope = { schemaVersion: 1, eventId: randomUUID(), eventSeq: ++this.sequence, sessionId: this.id, sessionEpoch: this.epoch, type, serverAt: new Date(this.now()).toISOString(), payload };
     if (input) { event.requestId = input.requestId; event.revision = input.revision; }
     if (claimId) event.claimId = claimId;
+    const previous = this.displayState;
+    this.displayState = projectDisplay(previous, event);
+    for (const listener of this.displayListeners) listener(event, this.displayState, previous);
     for (const listener of this.listeners) listener(event);
   }
   current(record: RequestRecord) {
@@ -68,7 +74,7 @@ export class SessionStore {
     const session = this.sessions.get(id); if (!session) return;
     if (session.active) session.pause('deleted');
     else session.emit('session.ended', { reasonCode: 'deleted', active: false });
-    session.token = ''; session.requests.clear(); session.listeners.clear(); this.sessions.delete(id); this.onDelete?.(id);
+    session.token = ''; session.requests.clear(); session.listeners.clear(); session.displayListeners.clear(); session.displayState = null; this.sessions.delete(id); this.onDelete?.(id);
   }
   sweep() { for (const [id, session] of this.sessions) if (session.expiresAt <= this.now()) this.delete(id); }
 }

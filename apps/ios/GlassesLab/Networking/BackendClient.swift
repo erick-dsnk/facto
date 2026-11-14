@@ -24,14 +24,16 @@ enum BackendClientError: Error, Equatable, Sendable {
 
 /// Backoff and resume window for stream reconnects (decision 9 in docs/live-pipeline.md).
 struct ReconnectPolicy: Equatable, Sendable {
-  /// Wait before each attempt. One attempt per entry, then give up.
+  /// Wait before each attempt within a retry cycle.
   var delays: [TimeInterval] = [0.5, 1, 2]
+  /// Pause between bounded retry cycles. nil disables ongoing retries (e.g. in tests).
+  var retryCycleDelay: TimeInterval? = 15
   /// How long a reconnect socket may take to deliver its first event (`session.ready`).
   var openTimeout: TimeInterval = 3
   /// The same for the first connect, which may need a cold TLS handshake on a venue or
   /// cellular network.
   var initialOpenTimeout: TimeInterval = 10
-  /// Gaps shorter than this may auto-resume; longer ones stop listening.
+  /// Legacy gap classification for diagnostics; transport recovery never authorizes capture.
   var autoResumeWindow: TimeInterval = 5
   /// A ping goes out this often while connected; 0 turns the heartbeat off.
   var pingInterval: TimeInterval = 2
@@ -43,10 +45,9 @@ struct ReconnectPolicy: Equatable, Sendable {
 /// What happened during the last reconnect. Read it when the state returns to `.connected`
 /// after `.reconnecting`, or subscribe to `reconnections()`.
 ///
-/// After any reconnect the server has paused the session and raised the epoch: in-flight
-/// checks are gone and `session.ready` arrives with `active: false`. Within the window the
-/// audio layer sends `session.resume` with the new epoch and starts a new stream
-/// generation; audio from the gap is discarded, never replayed.
+/// After a reconnect the server has paused the session and raised the epoch: in-flight
+/// checks are gone and `session.ready` arrives with `active: false`. The gap is diagnostic
+/// only. Resuming recording requires a fresh user action; gap audio is never replayed.
 struct ReconnectInfo: Equatable, Sendable {
   var attempt: Int
   /// Seconds from losing the socket to the first event on the new one.
@@ -70,6 +71,8 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   private(set) var expiresAt: String?
   private(set) var capabilities: SessionCreateResponse.Capabilities?
   private(set) var lastReconnect: ReconnectInfo?
+  /// Join-code authorization failed. Foreground/network changes must not retry it.
+  private(set) var requiresAuthentication = false
   /// Events that arrived but could not be read: a broken envelope, or a known type whose
   /// payload does not match the contract. Counts only; the payload is never logged.
   private(set) var unreadableEventCount = 0
@@ -108,6 +111,12 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   /// Bumped for every socket so callbacks from a replaced socket are ignored.
   private var connectionID = 0
   private var closing = false
+  private var desiredConnection = false
+  private var suspended = false
+  /// Covers HTTP creation as well as sockets; a late response cannot resurrect a session.
+  private var lifecycleID = 0
+  private var connectTask: Task<Void, Error>?
+  private var expiryTask: Task<Void, Never>?
   /// Set by a `session.ended` that ends the session for good (deleted, expired).
   private var terminalReason: String?
 
@@ -177,6 +186,8 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   /// `POST /v1/sessions` with the configured join code. Does not open the stream.
   @discardableResult
   func createSession() async throws -> SessionCreateResponse {
+    let generation = lifecycleID
+    try Task.checkCancellation()
     guard sessionId == nil else { throw BackendClientError.sessionAlreadyExists }
     let joinCode = config.joinCode.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !joinCode.isEmpty else { throw BackendClientError.missingJoinCode }
@@ -196,6 +207,11 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     }
     guard WireID.isValid(response.sessionId), !response.token.isEmpty else { throw BackendClientError.invalidResponse }
 
+    guard generation == lifecycleID, !closing, !suspended, !Task.isCancelled else {
+      // The HTTP server may have committed before cancellation reached URLSession.
+      await deleteOrphanSession(response)
+      throw CancellationError()
+    }
     sessionId = response.sessionId
     sessionEpoch = response.sessionEpoch
     token = response.token
@@ -220,54 +236,184 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   /// or lost in a server restart) is replaced by a new one, so read `sessionId` and
   /// `sessionEpoch` again after connecting.
   func connect() async throws {
-    switch connectionState {
-    case .connecting, .connected, .reconnecting: return
-    case .idle, .disconnected: break
-    }
+    requiresAuthentication = false
+    desiredConnection = true
+    suspended = false
     closing = false
+    try await establishConnection()
+  }
+
+  /// Stops transport while the app is ineligible, preserving authorization and intent.
+  /// Sensor lifecycle is deliberately not part of this client.
+  func suspend() {
+    suspended = true
+    invalidatePendingConnection()
+    connectionState = .disconnected(reason: "suspended")
+  }
+
+  /// Called after foreground/network restoration. Explicit disconnect and invalid join
+  /// credentials remain stopped until the user chooses Connect again.
+  func resume() async throws {
+    guard desiredConnection, !requiresAuthentication else { return }
+    guard connectionState != .connected else { return }
+    suspended = false
+    closing = false
+    if reconnectTask != nil {
+      invalidatePendingConnection()
+      connectionState = .disconnected(reason: "restoring")
+    }
+    try await establishConnection()
+  }
+
+  private func establishConnection() async throws {
+    if let connectTask { return try await connectTask.value }
+    switch connectionState {
+    case .connected, .reconnecting: return
+    case .idle, .connecting, .disconnected: break
+    }
+    lifecycleID += 1
+    let generation = lifecycleID
     terminalReason = nil
     connectionState = .connecting
+    let task = Task { try await self.connectOnce(generation: generation, reconnectAttempt: nil) }
+    connectTask = task
     do {
-      let reusingSession = sessionId != nil
-      if !reusingSession { try await createSession() }
-      try await deleteSessionIfClosing()
-      do {
-        try await openStream(reconnectAttempt: nil)
-      } catch BackendClientError.handshakeRejected(let status) where reusingSession && (status == 401 || status == 403) {
-        Self.log.info("stored session rejected status=\(status), creating a new one")
-        forgetSession()
-        try await createSession()
-        try await deleteSessionIfClosing()
-        try await openStream(reconnectAttempt: nil)
+      try await withTaskCancellationHandler {
+        try await task.value
+      } onCancel: {
+        task.cancel()
       }
+      guard generation == lifecycleID else { throw CancellationError() }
+      connectTask = nil
     } catch {
       debugLog.log("backend.connect_failed", ["reason": Self.reasonCode(for: error), "error": String(describing: error), "closing": closing])
-      if !closing { connectionState = .disconnected(reason: Self.reasonCode(for: error)) }
+      guard generation == lifecycleID else { throw CancellationError() }
+      connectTask = nil
+      if Self.isCancellation(error) {
+        desiredConnection = false
+        tearDownSocket(code: .goingAway)
+        connectionState = .disconnected(reason: "cancelled")
+      } else if Self.isAuthorizationFailure(error) {
+        stopForAuthorization()
+      } else {
+        connectionState = .disconnected(reason: Self.reasonCode(for: error))
+        scheduleReconnect(lostAt: uptime(), generation: generation)
+      }
       throw error
     }
   }
 
-  /// Stops the stream at once, then deletes the session (best effort). Late events are
-  /// suppressed because the socket is gone before the DELETE goes out.
+  /// Replace an expired/unknown bearer once. A second rejected socket is terminal, so a
+  /// revoked join code or a misconfigured server never creates an authorization storm.
+  private func connectOnce(generation: Int, reconnectAttempt: (attempt: Int, lostAt: TimeInterval, previousEpoch: Int?)?) async throws {
+    try checkEligible(generation)
+    if sessionHasExpired { forgetSession() }
+    let reused = sessionId != nil
+    if !reused { try await createSession() }
+    try checkEligible(generation)
+    do {
+      try await openStream(reconnectAttempt: reconnectAttempt)
+    } catch BackendClientError.handshakeRejected(let status) where reused && (status == 401 || status == 403) {
+      try checkEligible(generation)
+      forgetSession()
+      try await createSession()
+      try checkEligible(generation)
+      try await openStream(reconnectAttempt: reconnectAttempt)
+    }
+    try checkEligible(generation)
+    scheduleExpiry(generation: generation)
+  }
+
+  /// Stops the stream at once, then deletes the session (best effort). Late HTTP and socket
+  /// callbacks cannot overwrite a newer explicit connection.
   func close() async {
+    desiredConnection = false
     closing = true
-    reconnectTask?.cancel()
-    reconnectTask = nil
+    suspended = false
+    requiresAuthentication = false
     let id = sessionId
     let bearer = token
-    tearDownSocket(code: .normalClosure)
+    invalidatePendingConnection()
     forgetSession()
     connectionState = .disconnected(reason: "closed")
-
     guard let id, let bearer else { return }
+    await deleteSession(id: id, bearer: bearer)
+  }
+
+  private func invalidatePendingConnection() {
+    lifecycleID += 1
+    connectTask?.cancel()
+    connectTask = nil
+    reconnectTask?.cancel()
+    reconnectTask = nil
+    expiryTask?.cancel()
+    expiryTask = nil
+    tearDownSocket(code: .goingAway)
+  }
+
+  private func checkEligible(_ generation: Int) throws {
+    try Task.checkCancellation()
+    guard generation == lifecycleID, desiredConnection, !closing, !suspended else { throw CancellationError() }
+  }
+
+  private var sessionHasExpired: Bool {
+    guard let expiresAt, let date = Self.expiryDate(expiresAt) else { return false }
+    return date <= Date()
+  }
+
+  private static func expiryDate(_ value: String) -> Date? {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    return formatter.date(from: value) ?? ISO8601DateFormatter().date(from: value)
+  }
+
+  private func scheduleExpiry(generation: Int) {
+    expiryTask?.cancel()
+    guard let expiresAt, let deadline = Self.expiryDate(expiresAt) else { return }
+    let wait = max(0, deadline.timeIntervalSinceNow)
+    expiryTask = Task { [weak self] in
+      do { try await Task.sleep(nanoseconds: UInt64(wait * 1_000_000_000)) } catch { return }
+      guard let self, generation == self.lifecycleID, !Task.isCancelled else { return }
+      self.renewExpiredSession(reason: "expired")
+    }
+  }
+
+  private func deleteOrphanSession(_ response: SessionCreateResponse) async {
+    await deleteSession(id: response.sessionId, bearer: response.token)
+  }
+
+  private func deleteSession(id: String, bearer: String) async {
     var request = URLRequest(url: config.sessionsURL.appending(path: id), timeoutInterval: Self.httpTimeout)
     request.httpMethod = "DELETE"
     request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
-    do {
-      _ = try await perform(request, label: "session.delete")
-    } catch {
-      Self.log.error("session.delete failed \(Self.reasonCode(for: error), privacy: .public)")
+    do { _ = try await perform(request, label: "session.delete") }
+    catch { Self.log.error("session.delete failed \(Self.reasonCode(for: error), privacy: .public)") }
+  }
+
+  /// Mints a read-only, short-lived browser capability. The owner bearer stays native.
+  func requestDisplayGrant() async throws -> DisplayGrant {
+    let (id, bearer) = try sessionCredentials()
+    guard connectionState == .connected, let epoch = sessionEpoch else { throw BackendClientError.notConnected }
+    var request = URLRequest(url: config.sessionsURL.appending(path: id).appending(path: "display-grant"), timeoutInterval: Self.httpTimeout)
+    request.httpMethod = "POST"
+    request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+    let data = try await perform(request, label: "display.grant")
+    guard sessionId == id, sessionEpoch == epoch, token == bearer, connectionState == .connected else {
+      throw WebDisplayLinkError.staleSession
     }
+    guard let grant = try? JSONDecoder().decode(DisplayGrant.self, from: data),
+          grant.sessionId == id, grant.sessionEpoch == epoch else { throw BackendClientError.invalidResponse }
+    _ = try WebDisplayConnection.expiry(of: grant, now: Date())
+    return grant
+  }
+
+  /// Disconnects all browser readers without ending the owner/capture session.
+  func revokeDisplayGrants() async throws {
+    let (id, bearer) = try sessionCredentials()
+    var request = URLRequest(url: config.sessionsURL.appending(path: id).appending(path: "display-grant"), timeoutInterval: Self.httpTimeout)
+    request.httpMethod = "DELETE"
+    request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+    _ = try await perform(request, label: "display.revoke")
   }
 
   // MARK: - CheckSubmitter
@@ -426,19 +572,10 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   }
 
   private func socketEnded(connection: WebSocketConnection, id: Int, error: Error) {
-    guard id == connectionID, !closing else { return }
-    socket = nil
-    heartbeatTask?.cancel()
-    heartbeatTask = nil
-    // The session is over on the server; the next connect() creates a new one.
+    guard id == connectionID, desiredConnection, !closing, !suspended else { return }
+    tearDownSocket(code: .goingAway)
     if let terminalReason {
-      forgetSession()
-      connectionState = .disconnected(reason: terminalReason)
-      return
-    }
-    if connection.handshakeStatusCode == 401 {
-      forgetSession()
-      connectionState = .disconnected(reason: "unauthorized")
+      renewExpiredSession(reason: terminalReason)
       return
     }
     let nsError = error as NSError
@@ -447,47 +584,85 @@ final class BackendClient: SessionChannel, CheckSubmitter {
       "conn": id, "domain": nsError.domain, "code": nsError.code,
       "handshakeStatus": connection.handshakeStatusCode as Any,
     ])
-    let lostAt = uptime()
-    // Leave `.connected` now, not when the reconnect task first runs: senders must see the
-    // loss at once instead of failing against a nil socket while the state still says connected.
-    connectionState = .reconnecting(attempt: 1)
-    reconnectTask?.cancel()
-    reconnectTask = Task { [weak self] in await self?.reconnect(lostAt: lostAt) }
+    if let status = connection.handshakeStatusCode, status == 401 || status == 403 { forgetSession() }
+    scheduleReconnect(lostAt: uptime(), generation: lifecycleID)
   }
 
-  /// Bounded backoff. Gives up after the last delay with `disconnected(network_lost)`.
-  private func reconnect(lostAt: TimeInterval) async {
+  private func renewExpiredSession(reason: String) {
+    guard desiredConnection, !closing, !suspended else { return }
+    tearDownSocket(code: .goingAway)
+    expiryTask?.cancel()
+    expiryTask = nil
+    terminalReason = nil
+    forgetSession()
+    connectionState = .disconnected(reason: reason)
+    scheduleReconnect(lostAt: uptime(), generation: lifecycleID)
+  }
+
+  private func scheduleReconnect(lostAt: TimeInterval, generation: Int) {
+    guard desiredConnection, !closing, !suspended, !requiresAuthentication, !policy.delays.isEmpty else { return }
+    reconnectTask?.cancel()
+    connectionState = .reconnecting(attempt: 1)
+    reconnectTask = Task { [weak self] in await self?.reconnect(lostAt: lostAt, generation: generation) }
+  }
+
+  /// A small bounded burst followed by a capped quiet interval; lifecycle suspension,
+  /// explicit disconnect and invalid credentials cancel the entire loop.
+  private func reconnect(lostAt: TimeInterval, generation: Int) async {
     let previousEpoch = sessionEpoch
-    for (index, delay) in policy.delays.enumerated() {
-      let attempt = index + 1
-      guard !closing else { return }
-      guard sessionId != nil else {
-        connectionState = .disconnected(reason: "no_session")
+    var attempt = 0
+    while true {
+      for delay in policy.delays {
+        attempt += 1
+        do {
+          try checkEligible(generation)
+          connectionState = .reconnecting(attempt: attempt)
+          try await sleep(max(0, delay))
+          try checkEligible(generation)
+          try await connectOnce(generation: generation, reconnectAttempt: (attempt, lostAt, previousEpoch))
+          if generation == lifecycleID { reconnectTask = nil }
+          return
+        } catch {
+          guard generation == lifecycleID, !Self.isCancellation(error) else { return }
+          if Self.isAuthorizationFailure(error) {
+            stopForAuthorization()
+            return
+          }
+          Self.log.info("reconnect attempt=\(attempt) failed \(Self.reasonCode(for: error), privacy: .public)")
+          debugLog.log("ws.reconnect_failed", ["attempt": attempt, "reason": Self.reasonCode(for: error), "error": String(describing: error)])
+        }
+      }
+      guard generation == lifecycleID, desiredConnection, !suspended, !closing else { return }
+      connectionState = .disconnected(reason: "network_lost")
+      guard let cooldown = policy.retryCycleDelay, cooldown > 0, !policy.delays.isEmpty else {
+        reconnectTask = nil
         return
       }
-      connectionState = .reconnecting(attempt: attempt)
-      do {
-        try await sleep(delay)
-      } catch {
-        return
-      }
-      guard !closing else { return }
-      do {
-        try await openStream(reconnectAttempt: (attempt, lostAt, previousEpoch))
-        return
-      } catch BackendClientError.handshakeRejected(let status) where status == 401 || status == 403 {
-        forgetSession()
-        connectionState = .disconnected(reason: "unauthorized")
-        return
-      } catch is CancellationError {
-        return
-      } catch {
-        Self.log.info("reconnect attempt=\(attempt) failed \(Self.reasonCode(for: error), privacy: .public)")
-        debugLog.log("ws.reconnect_failed", ["attempt": attempt, "reason": Self.reasonCode(for: error), "error": String(describing: error)])
-      }
+      do { try await sleep(min(60, max(1, cooldown))) } catch { return }
     }
-    guard !closing else { return }
-    connectionState = .disconnected(reason: "network_lost")
+  }
+
+  private func stopForAuthorization() {
+    reconnectTask = nil
+    requiresAuthentication = true
+    desiredConnection = false
+    forgetSession()
+    tearDownSocket(code: .goingAway)
+    expiryTask?.cancel()
+    expiryTask = nil
+    connectionState = .disconnected(reason: "unauthorized")
+  }
+
+  private static func isCancellation(_ error: Error) -> Bool {
+    error is CancellationError || (error as? URLError)?.code == .cancelled
+  }
+
+  private static func isAuthorizationFailure(_ error: Error) -> Bool {
+    switch error {
+    case BackendClientError.missingJoinCode: return true
+    case BackendClientError.http(let status, _), BackendClientError.handshakeRejected(let status): return status == 401 || status == 403
+    default: return false
+    }
   }
 
   private func handle(_ frame: WebSocketFrame) {
@@ -553,6 +728,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
       terminalReason = payload.reasonCode
     }
     for continuation in eventSubscribers.values { continuation.yield(event) }
+    if let terminalReason { renewExpiredSession(reason: terminalReason) }
   }
 
   private func tearDownSocket(code: URLSessionWebSocketTask.CloseCode) {
@@ -575,13 +751,6 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     filter = nil
   }
 
-  /// close() ran while a session was being created: delete it instead of leaking it.
-  private func deleteSessionIfClosing() async throws {
-    guard closing else { return }
-    await close()
-    throw CancellationError()
-  }
-
   private func sessionCredentials() throws -> (String, String) {
     guard let sessionId, let token else { throw BackendClientError.noSession }
     return (sessionId, token)
@@ -590,18 +759,23 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   /// Races the first receive against the open timeout. On timeout the caller cancels the
   /// socket, which also ends the pending receive.
   private nonisolated static func firstFrame(from connection: WebSocketConnection, timeout: TimeInterval) async throws -> WebSocketFrame {
-    try await withThrowingTaskGroup(of: WebSocketFrame?.self) { group in
-      group.addTask { try await connection.receive() }
-      group.addTask {
-        try await Task.sleep(nanoseconds: UInt64(max(0, timeout) * 1_000_000_000))
-        return nil
+    try await withTaskCancellationHandler {
+      try await withThrowingTaskGroup(of: WebSocketFrame?.self) { group in
+        group.addTask { try await connection.receive() }
+        group.addTask {
+          try await Task.sleep(nanoseconds: UInt64(max(0, timeout) * 1_000_000_000))
+          return nil
+        }
+        defer { group.cancelAll() }
+        guard let first = try await group.next(), let frame = first else {
+          connection.cancel(with: .goingAway)
+          throw BackendClientError.connectTimeout
+        }
+        return frame
       }
-      defer { group.cancelAll() }
-      guard let first = try await group.next(), let frame = first else {
-        connection.cancel(with: .goingAway)
-        throw BackendClientError.connectTimeout
-      }
-      return frame
+    } onCancel: {
+      // Unblocks receive even when task cancellation alone does not cancel the OS socket.
+      connection.cancel(with: .goingAway)
     }
   }
 

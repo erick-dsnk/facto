@@ -16,6 +16,14 @@ final class ContractsV1Tests: XCTestCase {
     try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? NSDictionary)
   }
 
+  func testClaimSourcesIsInformationalAndToleratesNewOptionalFields() throws {
+    let event = try ServerEvent.decode(from: Data(#"{"schemaVersion":1,"eventId":"sources-1","eventSeq":3,"sessionId":"session-1","sessionEpoch":1,"requestId":"req-1","claimId":"claim-1","revision":1,"type":"claim.sources","serverAt":"2026-11-14T12:00:00Z","payload":{"sources":[{"id":"site-1","hostname":"example.org","title":"Evidence","stage":"reading","provider":"exa","futureField":true}],"futureField":1}}"#.utf8))
+    XCTAssertEqual(event.type, .claimSources)
+    guard case .claimSources(let payload) = event.payload else { return XCTFail("expected informational sources") }
+    XCTAssertEqual(payload.sources.first?.hostname, "example.org")
+    XCTAssertEqual(payload.sources.first?.stage, "reading")
+  }
+
   // MARK: Text input
 
   func testTextUnicodeFixtureDecodesAndSpanSelectsCheckedText() throws {
