@@ -1,0 +1,16 @@
+{
+  "kind": "later_original_location_observation",
+  "checkedAt": "2026-11-14T06:54:38.840723+00:00",
+  "networkCalls": 0,
+  "checkedOriginals": 671,
+  "matching": 670,
+  "changedOrMissing": [
+    {
+      "originalPath": "/workspace/junction-2026/services/api/src/providers/exa/client.ts",
+      "archivedSHA256": "c1cd881d14572016bca568d3f0477830336c3122b0dd16feb422bd76c178f376",
+      "currentOriginalSHA256": "4176b72e4a7458dd32716ca46fa47eb791ba270f871ab4558dc0a5eff34a43c2",
+      "note": "Archived decoded bytes remain pinned and unchanged; original location advanced after byte-copy preparation."
+    }
+  ],
+  "interpretation": "Optional --originals is strict and may fail after source integration advances the original working tree. Portable archived bytes remain checked independently against their historical pins. The pre-conversion initial strict671-original verification passed."
+}

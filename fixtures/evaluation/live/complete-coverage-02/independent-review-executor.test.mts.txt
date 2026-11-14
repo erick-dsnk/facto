@@ -1,0 +1,51 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {mkdtemp,mkdir,readFile,writeFile,access,rm} from 'node:fs/promises';
+import {pathToFileURL} from 'node:url';
+const owned='/workspace/task-evidence/complete-coverage-02';
+const sha=(x:string|Buffer)=>createHash('sha256').update(x).digest('hex');
+let fetchCalls=0;const originalFetch=globalThis.fetch;
+globalThis.fetch=(async()=>{fetchCalls++;throw new Error('offline_network_forbidden');}) as typeof fetch;
+const limits={requestBytes:524288,totalRequestBytes:134217728,inputTokens:16000000,unknownInputTokensPerAttempt:128000,calls:{jev:96,search:48,contents:72},wallMs:600000};
+const perBatchLimits={...limits,totalRequestBytes:67108864,inputTokens:8000000,calls:{jev:48,search:24,contents:36},wallMs:300000};
+function validPlan(){
+ const facts=Array.from({length:24},(_,i)=>{const text=`Synthetic public artifact ${i} opened in 1812.`;return{label:`F${i}`,text,allowedPublic:[text],automatic:false,final:true,expected:{claims:[{id:`F${i}`,acceptedTexts:[text],verdict:i%2?'contradicted':'supported',domain:'synthetic'}],admissionAction:'check',presentationActions:['respond']}};});
+ const controls=Array.from({length:8},(_,i)=>({label:`CT${i}`,text:'I prefer morning walks.',allowedPublic:[],automatic:false,final:true,expected:{claims:[],admissionAction:'skip',presentationActions:['respond']}}));
+ const all=[...facts,...controls];return {name:'offline_synthetic_complete',limits:structuredClone(limits),perBatchLimits:structuredClone(perBatchLimits),batches:[all.slice(0,16),all.slice(16)]};
+}
+for(const variation of ['valid','commit','source','plan','executor','preflight','dirty','batch_count','batch_size','duplicate','fact_count','request_cap','total_bytes','input_tokens','call_cap','wall_cap'] as const){
+ test(`complete executor rejects ${variation} drift before any dispatch`,async()=>{
+ const sandbox=await mkdtemp(`${owned}/independent-review-sandbox-`);
+ try{
+  const root=`${sandbox}/repo`,directory=`${sandbox}/campaign`;await mkdir(root);await mkdir(directory);
+  const git=(...args:string[])=>execFileSync('git',args,{cwd:root,stdio:['ignore','pipe','pipe']}).toString();
+  git('init','-q');git('config','user.email','offline-validator@example.invalid');git('config','user.name','Offline validator');await writeFile(`${root}/package.json`,'{"private":true}\n');git('add','package.json');git('commit','-qm','Synthetic offline source');
+  const source=(await readFile(`${owned}/execute.mts`,'utf8')).replace("const root='/workspace/junction-2026-current';",`const root=${JSON.stringify(root)};`).replace("const directory='/workspace/task-evidence/complete-coverage-02';",`const directory=${JSON.stringify(directory)};`);
+  const modulePath=`${sandbox}/executor.mts`;await writeFile(modulePath,source);const module=await import(pathToFileURL(modulePath).href);
+  const snapshot=await module.sourceSnapshot();const plan:any=validPlan();
+  if(variation==='batch_count')plan.batches.pop();
+  if(variation==='batch_size')plan.batches[0].pop();
+  if(variation==='duplicate')plan.batches[1][15].label=plan.batches[0][0].label;
+  if(variation==='fact_count'){const x=plan.batches[1][7];x.allowedPublic=[];x.expected={claims:[],admissionAction:'skip',presentationActions:['respond']};}
+  if(variation==='request_cap')plan.perBatchLimits.requestBytes++;
+  if(variation==='total_bytes')plan.perBatchLimits.totalRequestBytes++;
+  if(variation==='input_tokens')plan.perBatchLimits.inputTokens++;
+  if(variation==='call_cap')plan.perBatchLimits.calls.jev++;
+  if(variation==='wall_cap')plan.perBatchLimits.wallMs++;
+  const planBytes=JSON.stringify(plan),preflight='{"networkCalls":0}\n';await writeFile(`${directory}/plan.json`,planBytes);await writeFile(`${directory}/preflight.json`,preflight);
+  const freeze={...snapshot,planSHA256:sha(planBytes),executorSHA256:sha(source),preflightSHA256:sha(preflight)};
+  if(variation==='commit')freeze.commit='0'.repeat(40);
+  if(variation==='source')freeze.sourceSHA256='0'.repeat(64);
+  if(variation==='plan')freeze.planSHA256='0'.repeat(64);
+  if(variation==='executor')freeze.executorSHA256='0'.repeat(64);
+  if(variation==='preflight')freeze.preflightSHA256='0'.repeat(64);
+  if(variation==='dirty')await writeFile(`${root}/untracked.txt`,'dirty');
+  await writeFile(`${directory}/freeze.json`,JSON.stringify(freeze));
+  if(variation==='valid'){assert.equal((await module.verifyFreeze()).all.length,32);await module.execute(false);}else await assert.rejects(module.verifyFreeze());
+  await assert.rejects(access(`${directory}/run`));assert.equal(fetchCalls,0);
+ }finally{await rm(sandbox,{recursive:true,force:true});}
+ });
+}
+test.after(()=>{globalThis.fetch=originalFetch;assert.equal(fetchCalls,0);});

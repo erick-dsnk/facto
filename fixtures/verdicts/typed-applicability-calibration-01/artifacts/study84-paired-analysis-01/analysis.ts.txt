@@ -1,0 +1,219 @@
+/** Read-only postprocessing. No provider, production or filesystem mutation imports. */
+import { createHash } from 'node:crypto';
+export type Expected = 'covered' | 'not_covered' | 'uncertain';
+export type Arm = 'baseline_anchor' | 'applicability';
+export interface Label { id: string; cohort: 'original36' | 'identity8'; category: string; sourceFamily: string; expected: Expected; excludeFromPrimary?: boolean }
+export interface InputPlan {
+  denominatorLabels: Label[]; semanticIds: string[]; bindingIds: string[];
+  thresholds: { applicability: number; allProductionGates: string };
+  guard: { calls: { callId: string; blockId: string }[] };
+  [key: string]: unknown;
+}
+export interface InputReport {
+  planSHA256: string; rows: any[];
+  guard: { completedCallIds: string[]; [key: string]: unknown };
+  offlineBindingControls: any[];
+  [key: string]: unknown;
+}
+const arms: Arm[] = ['baseline_anchor', 'applicability'];
+const expectedValues: Expected[] = ['covered', 'not_covered', 'uncertain'];
+const acceptedBasis = ['original_record', 'attributable_research', 'substantive_secondary'];
+const materialFields = ['id', 'url', 'title', 'publisher', 'publishedAt', 'retrievedAt', 'contentBasis', 'excerpt', 'sourceGroup', 'echoGroup'];
+export const hash = (value: string) => createHash('sha256').update(value).digest('hex');
+function insist(condition: unknown, code: string): asserts condition { if (!condition) throw new Error(code); }
+const validProbability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
+const byExpected = (labels: Label[]) => Object.fromEntries(expectedValues.map(value => [value, labels.filter(l => l.expected === value).length])) as Record<Expected, number>;
+const frequencies = (values: string[]) => Object.fromEntries([...new Set(values)].sort().map(value => [value, values.filter(v => v === value).length]));
+function same(a: unknown, b: unknown): boolean {
+  if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) <= 1e-12;
+  if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return a === b;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  const ak = Object.keys(a), bk = Object.keys(b);
+  return ak.length === bk.length && ak.every(k => Object.hasOwn(b, k) && same((a as any)[k], (b as any)[k]));
+}
+function material(row: any) { return Object.fromEntries(materialFields.map(k => [k, row[k] ?? null])); }
+function probability(row: any, key: string) { const value = row.answers?.[key]?.noul; return validProbability(value) ? value : null; }
+function sourceView(row: any, source: any, index: number) {
+  const quality = row.judgment.sourceAssessments?.[source.id] ?? null;
+  const scopeProbability = probability(row, `e${index}_scope`), relevanceProbability = probability(row, `e${index}_relevant`);
+  return { id: source.id, retainedPosition: index, material: material(source),
+    relevanceProbability, relevanceGate: source.directlyAddressesClaim,
+    scopeProbability, scopeGate: source.matchesTimePlaceAndPopulation,
+    stance: source.stance, stanceProbability: source.stanceProbability,
+    rawStance: row.answers?.[`e${index}_stance`] ?? null,
+    quality, rawQuality: row.answers?.[`e${index}_content_basis`] ?? null,
+    qualityGate: !!quality && acceptedBasis.includes(quality.contentBasis) && validProbability(quality.confidence) && quality.confidence >= .85 };
+}
+function application(row: any | undefined, arm: Arm) {
+  if (!row) return { state: 'missing_result', rawAnswer: null, coveredAt85: null, eligibilityIssued: null, unavailable: [] };
+  if (arm === 'baseline_anchor') return { state: 'not_measured_in_baseline', rawAnswer: null, coveredAt85: null, eligibilityIssued: null, unavailable: row.unavailable ?? [] };
+  const mappings = row.dispatch?.questionMap?.filter((q: any) => q.evidenceId === row.targetId) ?? [];
+  insist(mappings.length <= 1, 'ambiguous_target_question_map');
+  const eligibility = (row.eligibility ?? []).filter((e: any) => e.evidenceId === row.targetId);
+  if (!mappings.length) return { state: 'no_item', rawAnswer: null, coveredAt85: null, eligibilityIssued: eligibility.length > 0, unavailable: row.unavailable ?? [] };
+  const answer = row.answers?.[mappings[0].questionId];
+  if (!answer) return { state: 'item_missing_answer', rawAnswer: null, coveredAt85: null, eligibilityIssued: eligibility.length > 0, unavailable: row.unavailable ?? [] };
+  const valid = expectedValues.includes(answer.choice) && validProbability(answer.probabilities?.covered)
+    && expectedValues.every(key => validProbability(answer.probabilities?.[key]));
+  return { state: valid ? 'asked' : 'invalid_answer', questionId: mappings[0].questionId,
+    rawAnswer: answer, coveredAt85: valid ? answer.choice === 'covered' && answer.probabilities.covered >= .85 : null,
+    eligibilityIssued: eligibility.length > 0, unavailable: row.unavailable ?? [] };
+}
+
+export function analyze(plan: InputPlan, report: InputReport, observedAttempts: any[] = []) {
+  insist(hash(JSON.stringify(plan)) === report.planSHA256, 'report_plan_hash_mismatch');
+  insist(plan.thresholds.applicability === .85 && plan.thresholds.allProductionGates === 'unchanged', 'thresholds_changed');
+  const labels = plan.denominatorLabels;
+  insist(labels.length === 42 && new Set(labels.map(l => l.id)).size === 42, 'requires_exact42_labels');
+  insist(labels.filter(l => l.cohort === 'original36').length === 34 && labels.filter(l => l.cohort === 'identity8').length === 8, 'cohort_denominators_changed');
+  insist(labels.every(l => expectedValues.includes(l.expected)), 'invalid_expected_enum');
+  insist(plan.semanticIds.length === 42 && new Set(plan.semanticIds).size === 42 && labels.every(l => plan.semanticIds.includes(l.id)), 'semantic_inventory_changed');
+  insist(plan.bindingIds.slice().sort().join(',') === 'AC-B01,AC-B02', 'offline_binding_inventory_changed');
+  const callIds = labels.flatMap(l => arms.map(a => `${l.id}:${a}`));
+  insist(plan.guard.calls.length === 84 && new Set(plan.guard.calls.map(c => c.callId)).size === 84
+    && callIds.every(id => plan.guard.calls.some(c => c.callId === id)), 'requires_exact84_call_inventory');
+  const completed = new Set(report.guard.completedCallIds);
+  insist(completed.size === report.guard.completedCallIds.length && [...completed].every(id => callIds.includes(id)), 'invalid_completed_call_inventory');
+  const rows = new Map<string, any>();
+  insist(new Set(observedAttempts.map(o => o.callId)).size === observedAttempts.length
+    && observedAttempts.every(o => callIds.includes(o.callId)), 'invalid_observed_attempt_inventory');
+  for (const row of report.rows) {
+    insist(callIds.includes(row.callId) && row.callId === `${row.unitId}:${row.arm}` && !rows.has(row.callId), 'duplicate_or_unexpected_result_row');
+    insist(completed.has(row.callId), 'row_not_completed_by_guard');
+    const label = labels.find(l => l.id === row.unitId)!;
+    insist(row.cohort === label.cohort && row.sourceFamily === label.sourceFamily, 'row_label_metadata_mismatch');
+    insist(Array.isArray(row.judgment?.evidence) && new Set(row.judgment.evidence.map((s: any) => s.id)).size === row.judgment.evidence.length, 'invalid_retained_source_inventory');
+    insist(row.judgment.evidence.some((e: any) => e.id === row.targetId), 'target_not_retained');
+    insist(Array.isArray(row.policy?.selectedEvidenceIds) && row.policy.selectedEvidenceIds.every((id: string) => row.judgment.evidence.some((e: any) => e.id === id)), 'selected_source_not_retained');
+    rows.set(row.callId, row);
+  }
+  const cells = labels.flatMap(label => arms.map(arm => {
+    const row = rows.get(`${label.id}:${arm}`);
+    return { label, arm, row, application: application(row, arm) };
+  }));
+  const missingDurableResults = [...completed].filter(id => !rows.has(id));
+  const targetOutcomes = cells.map(c => ({ id: c.label.id, cohort: c.label.cohort, category: c.label.category,
+    sourceFamily: c.label.sourceFamily, expected: c.label.expected, excludeFromPrimary: c.label.excludeFromPrimary ?? false,
+    arm: c.arm, resultPresent: !!c.row, ...c.application,
+    fullJudgmentTarget: c.row ? sourceView(c.row, c.row.judgment.evidence.find((e: any) => e.id === c.row.targetId), c.row.judgment.evidence.findIndex((e: any) => e.id === c.row.targetId)) : null,
+    policy: c.row?.policy ?? null }));
+  function armSummary(selected: Label[], arm: Arm) {
+    const selectedCells = cells.filter(c => c.arm === arm && selected.some(l => l.id === c.label.id));
+    const observed = selectedCells.filter(c => c.row), missing = selectedCells.filter(c => !c.row);
+    const asked = selectedCells.filter(c => c.application.state === 'asked');
+    const candidate = arm === 'applicability';
+    return { declared: selected.length, completedResults: observed.length, missingResults: missing.length,
+      declaredByExpected: byExpected(selected), completedByExpected: byExpected(observed.map(c => c.label)),
+      missingByExpected: byExpected(missing.map(c => c.label)), missingIds: missing.map(c => c.label.id),
+      applicationStates: frequencies(selectedCells.map(c => c.application.state)),
+      applicabilityMetrics: candidate ? {
+        declared: selected.length, rawObserved: asked.length,
+        rawEnumExact: asked.filter(c => c.application.rawAnswer.choice === c.label.expected).length,
+        rawConfusion3x3: Object.fromEntries(expectedValues.map(expected => [expected,
+          Object.fromEntries(expectedValues.map(predicted => [predicted,
+            asked.filter(c => c.label.expected === expected && c.application.rawAnswer.choice === predicted).length]))])),
+        notCoveredUncertainDisagreements: asked.filter(c =>
+          (c.label.expected === 'not_covered' && c.application.rawAnswer.choice === 'uncertain')
+          || (c.label.expected === 'uncertain' && c.application.rawAnswer.choice === 'not_covered')).length,
+        wrongCoveredBelowThreshold: asked.filter(c => c.label.expected !== 'covered'
+          && c.application.rawAnswer.choice === 'covered' && c.application.coveredAt85 === false).length,
+        rawPredictions: frequencies(asked.map(c => c.application.rawAnswer.choice)),
+        positiveDeclared: selected.filter(l => l.expected === 'covered').length,
+        positiveCoveredAt85: selectedCells.filter(c => c.label.expected === 'covered' && c.application.coveredAt85 === true).length,
+        negativeDeclared: selected.filter(l => l.expected === 'not_covered').length,
+        falseCoverageAt85: selectedCells.filter(c => c.label.expected === 'not_covered' && c.application.coveredAt85 === true).length,
+        uncertainDeclared: selected.filter(l => l.expected === 'uncertain').length,
+        unsafeUncertainCoverageAt85: selectedCells.filter(c => c.label.expected === 'uncertain' && c.application.coveredAt85 === true).length,
+        eligibilityIssued: selectedCells.filter(c => c.application.eligibilityIssued === true).length,
+        unsafeNegativeEligibility: selectedCells.filter(c => c.label.expected === 'not_covered' && c.application.eligibilityIssued === true).length,
+        unsafeUncertainEligibility: selectedCells.filter(c => c.label.expected === 'uncertain' && c.application.eligibilityIssued === true).length,
+        noItemIds: selectedCells.filter(c => c.application.state === 'no_item').map(c => c.label.id),
+        unresolvedAnswerIds: selectedCells.filter(c => ['item_missing_answer', 'invalid_answer'].includes(c.application.state)).map(c => c.label.id),
+        completenessOnly: missing.length === 0,
+      } : null,
+      baselineAppMetricReason: candidate ? null : 'No applicability item exists in this arm; absence is not zero recall.',
+      ordinaryPolicyCounts: frequencies(observed.map(c => c.row.policy.verdict)),
+      ordinaryModelLabelCounts: frequencies(observed.map(c => c.row.judgment.label)),
+      ordinaryRiskCounts: frequencies(observed.map(c => c.row.judgment.claimRisk?.level ?? 'missing')),
+    };
+  }
+  const pairs = labels.map(label => {
+    const baseline = rows.get(`${label.id}:baseline_anchor`), candidate = rows.get(`${label.id}:applicability`);
+    if (!baseline || !candidate) return { id: label.id, cohort: label.cohort, paired: false,
+      missingArms: arms.filter(a => !rows.has(`${label.id}:${a}`)) };
+    const before = baseline.judgment.evidence, after = candidate.judgment.evidence;
+    insist(before.length === after.length && before.every((s: any) => after.some((a: any) => a.id === s.id)), 'within_pair_source_pool_changed');
+    const sourcePairs = before.map((source: any, index: number) => {
+      const afterIndex = after.findIndex((a: any) => a.id === source.id), next = after[afterIndex];
+      insist(index === afterIndex && same(material(source), material(next)), 'within_pair_material_or_order_changed');
+      const b = sourceView(baseline, source, index), a = sourceView(candidate, next, afterIndex);
+      return { id: source.id, baseline: b, candidate: a,
+        changed: { relevanceProbability: !same(b.relevanceProbability, a.relevanceProbability), relevanceGate: b.relevanceGate !== a.relevanceGate,
+          scopeProbability: !same(b.scopeProbability, a.scopeProbability), scopeGate: b.scopeGate !== a.scopeGate,
+          stance: b.stance !== a.stance, stanceProbability: !same(b.stanceProbability, a.stanceProbability),
+          quality: !same(b.quality, a.quality), qualityGate: b.qualityGate !== a.qualityGate } };
+    });
+    const commonKeys = Object.keys(baseline.answers).filter(k => Object.hasOwn(candidate.answers, k));
+    const changedSharedQuestions = commonKeys.filter(k => !same(baseline.answers[k], candidate.answers[k]))
+      .map(key => ({ key, baseline: baseline.answers[key], candidate: candidate.answers[key] }));
+    const expandedSelected = candidate.policy.selectedEvidenceIds.filter((id: string) => !baseline.policy.selectedEvidenceIds.includes(id));
+    return { id: label.id, cohort: label.cohort, paired: true, sourcePairs,
+      ordinaryPolicy: { baseline: baseline.policy, candidate: candidate.policy,
+        changed: !same(baseline.policy, candidate.policy), verdictChanged: baseline.policy.verdict !== candidate.policy.verdict,
+        candidateNewDefinitive: candidate.policy.verdict !== 'insufficient_evidence' && candidate.policy.verdict !== baseline.policy.verdict,
+        candidateAbstentionAfterDefinitive: candidate.policy.verdict === 'insufficient_evidence' && baseline.policy.verdict !== 'insufficient_evidence', expandedSelected },
+      modelSelection: { baseline: baseline.judgment.selectedEvidenceIds, candidate: candidate.judgment.selectedEvidenceIds },
+      risk: { baseline: baseline.judgment.claimRisk, candidate: candidate.judgment.claimRisk,
+        rawBaseline: baseline.answers.claim_risk ?? null, rawCandidate: candidate.answers.claim_risk ?? null },
+      origin: { baseline: baseline.judgment.originAssessments, candidate: candidate.judgment.originAssessments,
+        nativeGraphBaseline: baseline.nativeGraph ?? null, nativeGraphCandidate: candidate.nativeGraph ?? null },
+      changedSharedQuestions, candidateOnlyQuestions: Object.keys(candidate.answers).filter(k => !Object.hasOwn(baseline.answers, k)),
+      missingCandidateQuestions: Object.keys(baseline.answers).filter(k => !Object.hasOwn(candidate.answers, k)),
+    };
+  });
+  const cohorts = Object.fromEntries((['original36', 'identity8'] as const).map(cohort => {
+    const selected = labels.filter(l => l.cohort === cohort);
+    const paired = pairs.filter(p => p.cohort === cohort && p.paired);
+    const sourcePairs = paired.flatMap(p => p.sourcePairs ?? []);
+    return [cohort === 'original36' ? 'original34' : 'identity8', {
+      inputCohortName: cohort, declaredSemanticUnits: selected.length,
+      arms: Object.fromEntries(arms.map(arm => [arm, armSummary(selected, arm)])),
+      completePairs: paired.length, missingPairs: selected.length - paired.length,
+      spillovers: { pairedSourceOccurrences: sourcePairs.length,
+        sourceGateFlips: Object.fromEntries(['relevanceGate', 'scopeGate', 'qualityGate', 'stance'].map(key => [key, sourcePairs.filter(p => p.changed[key as keyof typeof p.changed]).length])),
+        changedSharedQuestions: paired.reduce((sum, p) => sum + (p.changedSharedQuestions?.length ?? 0), 0),
+        policyVerdictChanges: paired.filter(p => p.ordinaryPolicy?.verdictChanged).length,
+        candidateNewDefinitiveCells: paired.filter(p => p.ordinaryPolicy?.candidateNewDefinitive).length,
+        candidateAbstentionAfterDefinitiveCells: paired.filter(p => p.ordinaryPolicy?.candidateAbstentionAfterDefinitive).length,
+      },
+    }];
+  }));
+  const selectedCitationAuditInputs = [...rows.values()].filter(r => r.policy.verdict !== 'insufficient_evidence').map(row => ({
+    unitId: row.unitId, arm: row.arm, cohort: row.cohort, exactClaim: row.judgment.checkedText,
+    claimSHA256: hash(row.judgment.checkedText), policy: row.policy,
+    sources: row.policy.selectedEvidenceIds.map((id: string) => { const s = row.judgment.evidence.find((e: any) => e.id === id); return {
+      id, ...material(s), excerptSHA256: hash(s.excerpt), urlSHA256: hash(s.url),
+      retainedScope: s.matchesTimePlaceAndPopulation, retainedRelevance: s.directlyAddressesClaim,
+      retainedStance: s.stance, retainedStanceProbability: s.stanceProbability,
+      sourceAssessment: row.judgment.sourceAssessments?.[id] ?? null }; }),
+    originAssessments: row.judgment.originAssessments, requiresIndependentWholeQualifierAndLineageAudit: true,
+  }));
+  return { kind: 'read_only_applicability84_paired_analysis', planSHA256: report.planSHA256,
+    declaredSemanticUnits: 42, declaredPairedCalls: 84, cohorts, targetOutcomes, pairs,
+    missingDurableResults, guardAccounting: report.guard,
+    offlineBindingControls: { declaredIds: plan.bindingIds, observations: report.offlineBindingControls,
+      missingIds: plan.bindingIds.filter(id => !report.offlineBindingControls.some(c => c.id === id)), separateFromSemanticDenominators: true },
+    selectedCitationAuditInputs,
+    observedAttemptsWithoutCompletedResult: observedAttempts.filter(o => !rows.has(o.callId))
+      .map(o => ({ callId: o.callId, includedInPrimaryScores: false, reason: 'Observed output exists but no completed durable result; preserve raw output without upgrading completion.', observed: o })),
+    limitations: [
+      'Helper author also authored the study guard and companion packet; this is analysis support, not independent outcome validation.',
+      'OPEN development across four reused source families; paired and repeated source occurrences are correlated, not independent facts.',
+      'Original34 and identity8 denominators stay separate. No pooled primary accuracy or factual coverage is computed.',
+      'Baseline has no applicability item. Candidate raw ternary, deterministic no-item availability, thresholded coverage, typed eligibility and full policy are distinct.',
+      'Missing, no-item and uncertain are never interchangeable. Excluded/uncertain sentinels remain visible in safety counts.',
+      'Frozen ternary labels and exact3x3 confusion stay unchanged. Not-covered versus uncertain disagreement is separate from a covered>=.85 unsafe grant or an actual typed eligibility grant.',
+      'Ordinary judgment spillovers are one-pass numerical/choice differences, not established causal effects or successful factual decisions.',
+      'Every selected source is retained for an independent full-qualifier and origin audit. No source retrieval, authority credit, fresh-origin proof or promotion is provided.',
+    ], factualCoverageCredit: 0, authorityGranted: false, productionActivation: false, providerCalls: 0 };
+}

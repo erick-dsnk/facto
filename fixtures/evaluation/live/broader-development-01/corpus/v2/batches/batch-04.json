@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "broader-development-2026-11-14-v2-batch-4",
+  "cases": [
+    {
+      "label": "BD10",
+      "text": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD11",
+      "text": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+      "allowedPublic": [
+        "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD11",
+            "acceptedTexts": [
+              "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+            ],
+            "verdict": "supported",
+            "domain": "institutional_record"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD12",
+      "text": "The Great Barrier Reef lies off the west coast of Australia.",
+      "allowedPublic": [
+        "The Great Barrier Reef lies off the west coast of Australia."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD12",
+            "acceptedTexts": [
+              "The Great Barrier Reef lies off the west coast of Australia."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BDC04",
+      "text": "My rent is €980 a month. The Panama Canal opened to world trade in 1914.",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ]
+      }
+    }
+  ]
+}

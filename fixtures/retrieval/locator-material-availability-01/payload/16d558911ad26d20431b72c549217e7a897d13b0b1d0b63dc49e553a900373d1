@@ -1,0 +1,56 @@
+{
+  "kind": "offline_actual_sdk_locator_option_serialization",
+  "networkCalls": 0,
+  "providerCalls": 0,
+  "projectKeysRead": 0,
+  "interceptedSyntheticRequests": 1,
+  "sdkVersion": "2.28.0",
+  "publicURLSelection": "Exact already observed first RFC search result, not a fabricated canonical target.",
+  "request": {
+    "endpoint": "https://api.exa.ai/contents",
+    "method": "POST",
+    "redirect": "error",
+    "body": {
+      "urls": [
+        "https://www.rfc-editor.org/info/rfc8174/"
+      ],
+      "text": {
+        "maxCharacters": 12000,
+        "includeHtmlTags": true
+      },
+      "extras": {
+        "links": 4
+      },
+      "livecrawl": "preferred",
+      "livecrawlTimeout": 1500
+    },
+    "bodyBytes": 176,
+    "bodySHA256": "8d3e498e3f6d52c7ba0b69e09b102ffc5b338b05349cacf2b9745343accabffd"
+  },
+  "sourcePins": [
+    {
+      "path": "/workspace/junction-2026/services/api/src/providers/exa/client.ts",
+      "sha256": "4176b72e4a7458dd32716ca46fa47eb791ba270f871ab4558dc0a5eff34a43c2"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/runtime/budget.ts",
+      "sha256": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/runtime/provider-retry.ts",
+      "sha256": "ebb83ff0a5ce0bb469906ac4f86dead40f42fe6732939353aed11dd868b91e7f"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/dist/index.mjs",
+      "sha256": "bc4a6cb214c3a306578d444be147695a22e4aa07f8828c107d75d136f150cc5b"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/dist/index.d.ts",
+      "sha256": "399b4dd2f97d8c21105b2d5ed9d7f2795f362d422a37b2f71bb85dd73b33f04b"
+    }
+  ],
+  "limitations": [
+    "No live locator field availability, formatting preservation, pricing, origin freshness or material quality was observed.",
+    "Empty synthetic response exercises serialization only."
+  ]
+}

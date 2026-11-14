@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: only scope instructions change; exact full state, source count and every other question remain identical
+ok 1 - only scope instructions change; exact full state, source count and every other question remain identical
+  ---
+  duration_ms: 4.086598
+  type: 'test'
+  ...
+# Subtest: 48 requests keep separate balanced strata, all companions, one prospective order and both existing orders
+ok 2 - 48 requests keep separate balanced strata, all companions, one prospective order and both existing orders
+  ---
+  duration_ms: 41.366653
+  type: 'test'
+  ...
+# Subtest: offline actual-client replay preserves all outputs and scores prospective scope separately from existing diagnostics
+ok 3 - offline actual-client replay preserves all outputs and scores prospective scope separately from existing diagnostics
+  ---
+  duration_ms: 265.322358
+  type: 'test'
+  ...
+# Subtest: unknown usage stops after one attempt without retries or changing declared denominators
+ok 4 - unknown usage stops after one attempt without retries or changing declared denominators
+  ---
+  duration_ms: 35.890962
+  type: 'test'
+  ...
+# Subtest: a stratum token reserve stops the campaign before starting a second request
+ok 5 - a stratum token reserve stops the campaign before starting a second request
+  ---
+  duration_ms: 33.432288
+  type: 'test'
+  ...
+# Subtest: 429 consumes exactly one actual attempt and never retries
+ok 6 - 429 consumes exactly one actual attempt and never retries
+  ---
+  duration_ms: 33.976769
+  type: 'test'
+  ...
+# Subtest: source/report drift and request tampering reject before any HTTP dispatch
+ok 7 - source/report drift and request tampering reject before any HTTP dispatch
+  ---
+  duration_ms: 36.554422
+  type: 'test'
+  ...
+# Subtest: candidate over64KiB fails preparation instead of truncating evidence or dropping companions
+ok 8 - candidate over64KiB fails preparation instead of truncating evidence or dropping companions
+  ---
+  duration_ms: 7.080499
+  type: 'test'
+  ...
+# Subtest: deadline expiry before dispatch starts no fetch
+ok 9 - deadline expiry before dispatch starts no fetch
+  ---
+  duration_ms: 28.263629
+  type: 'test'
+  ...
+# Subtest: late headers and late complete answers cannot produce a completed observation or policy result
+ok 10 - late headers and late complete answers cannot produce a completed observation or policy result
+  ---
+  duration_ms: 34.306906
+  type: 'test'
+  ...
+# Subtest: late body chunks are rejected before result acceptance
+ok 11 - late body chunks are rejected before result acceptance
+  ---
+  duration_ms: 26.267436
+  type: 'test'
+  ...
+# Subtest: oversized provider responses fail closed without accepting or repeating results
+ok 12 - oversized provider responses fail closed without accepting or repeating results
+  ---
+  duration_ms: 35.722649
+  type: 'test'
+  ...
+# Subtest: all36 prospective source labels are mandatory, not just twelve target labels
+ok 13 - all36 prospective source labels are mandatory, not just twelve target labels
+  ---
+  duration_ms: 0.43819
+  type: 'test'
+  ...
+# Subtest: declared positive/negative denominators remain fixed when contexts are missing
+ok 14 - declared positive/negative denominators remain fixed when contexts are missing
+  ---
+  duration_ms: 0.171919
+  type: 'test'
+  ...
+# Subtest: request body guard remains local after client normalization and missing usage does not overwrite it
+ok 15 - request body guard remains local after client normalization and missing usage does not overwrite it
+  ---
+  duration_ms: 31.180435
+  type: 'test'
+  ...
+# Subtest: provider failure stays distinct from a local guard despite absent usage
+ok 16 - provider failure stays distinct from a local guard despite absent usage
+  ---
+  duration_ms: 42.621084
+  type: 'test'
+  ...
+# Subtest: late headers cancel the unread body and abort the shared signal
+ok 17 - late headers cancel the unread body and abort the shared signal
+  ---
+  duration_ms: 33.89209
+  type: 'test'
+  ...
+# Subtest: oversized received chunks are accounted and the underlying open reader is canceled
+ok 18 - oversized received chunks are accounted and the underlying open reader is canceled
+  ---
+  duration_ms: 26.884782
+  type: 'test'
+  ...
+# Subtest: a received late chunk is counted before deadline rejection and underlying cancellation
+ok 19 - a received late chunk is counted before deadline rejection and underlying cancellation
+  ---
+  duration_ms: 31.564483
+  type: 'test'
+  ...
+# Subtest: wall abort settles despite an abort-ignoring reader and never-settling cancellation
+ok 20 - wall abort settles despite an abort-ignoring reader and never-settling cancellation
+  ---
+  duration_ms: 31.394497
+  type: 'test'
+  ...
+# Subtest: late abort-ignoring success cannot mutate finalized totals, answers, observations or report
+ok 21 - late abort-ignoring success cannot mutate finalized totals, answers, observations or report
+  ---
+  duration_ms: 35.248635
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1690.271316

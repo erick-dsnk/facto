@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "retrospective_packaging_of_predeclared_execution_limits",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "appliesTo": "each of four batches, not cumulative campaign",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8",
+  "sourceCommit": "3cfdfb13d8e6d37ab956e781206d892786ba441f",
+  "sourceSHA256": "e6f36587593f39415f161a64a02f0946f4758b9a90b5c2c0ac40399adfb8de85",
+  "declarationEvidence": [
+    "Exact executed wrapper bytes declare limits before constructing runLiveCampaign.",
+    "Four immutable final reports independently retain the same declared limits and wrapper digest.",
+    "Per-dispatch journals retain reserved/dispatched attempt progress and cumulative budget totals; they are not a separate externally registered protocol."
+  ],
+  "earlierPlanningLimits": {
+    "calls": {
+      "jev": 12,
+      "search": 6,
+      "contents": 9
+    },
+    "inputTokens": 100000,
+    "totalRequestBytes": 524288,
+    "wallMs": 90000
+  },
+  "revisionProvenance": "The orchestrator states the earlier planning limits were revised before any live call because batch4 has a fourth eligible occurrence; the executed wrapper comment documents this reasoning and does not assume a cache hit.",
+  "approvalChronology": {
+    "orchestratorAttestation": "The source reviewer communicated acceptance in an agent message before the first batch was dispatched and stated that the concise review artifact was being frozen.",
+    "firstBatchStartedAt": "2026-11-14T04:14:27.492Z",
+    "reviewArtifactCreatedAt": "2026-11-14T04:14:33.708471+00:00",
+    "interpretation": "Written review serialized6.216471seconds after first batch start. Do not claim its file hash was frozen before first dispatch. No independent external registration is claimed."
+  }
+}

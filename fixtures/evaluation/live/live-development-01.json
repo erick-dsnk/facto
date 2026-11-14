@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "kind": "authenticated_http_websocket_live_development",
+  "startedAt": "2026-11-14T02:39:13.534Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.1",
+  "metadata": {
+    "commit": "d72c8c5821e8aa049de5f21de15e313d0a16f778",
+    "dirty": false,
+    "sourceSHA256": "0d5920b0768fb8da8470e8369f3e50f6a84e3a5997229261f8d1afcf9e9c2770"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 180000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 24,
+      "search": 12,
+      "contents": 18
+    },
+    "wallMs": 150000
+  },
+  "predeclaredCases": [
+    {
+      "label": "L1-opera",
+      "allowedPublic": [
+        "The Sydney Opera House opened in 1973."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "L2-lightning",
+      "allowedPublic": [
+        "Lightning never strikes the same place twice."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "L3-personal",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "L4-mixed",
+      "allowedPublic": [
+        "Oslo is the capital of Norway."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "L5-cache-repeat",
+      "allowedPublic": [
+        "The Sydney Opera House opened in 1973."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "L6-existential",
+      "allowedPublic": [
+        "There are eight planets in the Solar System."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    },
+    {
+      "label": "L7-wait-expiry",
+      "allowedPublic": [],
+      "automatic": true,
+      "final": false,
+      "cancellation": false
+    },
+    {
+      "label": "L8-first-person",
+      "allowedPublic": [
+        "I think Helsinki is the capital of Norway.",
+        "Helsinki is the capital of Norway."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    }
+  ],
+  "counts": {
+    "declared": 8,
+    "observed": 1,
+    "terminalReceipts": 1,
+    "localStops": 1,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "completed": false,
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "transportFailure": null,
+  "totals": {
+    "attempts": 1,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 1,
+      "search": 0,
+      "contents": 0
+    },
+    "requestBytes": 5325,
+    "measuredInputTokens": 0,
+    "unknownInputTokenReservations": 24000,
+    "chargedInputTokens": 24000,
+    "knownCostUSD": null,
+    "attemptsWithUnknownCost": 1,
+    "elapsedMs": 5409
+  },
+  "cases": [
+    {
+      "label": "L1-opera",
+      "status": "local_stop",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "pipeline.error",
+      "durationMs": 5242,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 2,
+          "revision": 1,
+          "receivedMs": 21
+        },
+        {
+          "type": "pipeline.error",
+          "eventSeq": 3,
+          "revision": 1,
+          "receivedMs": 5241,
+          "reasonCode": "harness_unknown_input_usage"
+        }
+      ],
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 1,
+          "dispatched": true,
+          "requestBytes": 5325,
+          "startedMs": 174.31124799999998,
+          "durationMs": 5101,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 24000,
+          "status": null,
+          "outcome": "network_error",
+          "costUSD": null
+        }
+      ],
+      "stageMs": {
+        "admission": 5231.581013999999,
+        "retrieval": 0,
+        "judgment": 0
+      },
+      "evidence": [],
+      "admittedPublic": [],
+      "deterministicPublicIssues": [
+        {
+          "text": "The Sydney Opera House opened in 1973.",
+          "issue": null
+        }
+      ],
+      "localStops": [
+        "harness_unknown_input_usage"
+      ],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 2,
+        "searchConsumed": 0,
+        "contentsConsumed": 0,
+        "inputTokens": 0
+      },
+      "usage": {
+        "measuredInputTokens": 0,
+        "unknownInputTokenReservations": 24000,
+        "requestBytes": 5325,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 1
+      }
+    }
+  ],
+  "limitations": [
+    "Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.",
+    "24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.",
+    "A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.",
+    "Known costs are partial when any attempt has unknown cost. No prices are invented.",
+    "No held-out bodies, raw private text, provider prompts, session credentials or keys are retained. Native/iOS/ASR paths are untested."
+  ]
+}

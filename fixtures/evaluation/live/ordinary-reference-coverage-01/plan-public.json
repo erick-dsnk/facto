@@ -1,0 +1,596 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_open_end_to_end_campaign",
+  "name": "ordinary-reference-coverage-01",
+  "status": "draft_pending_implementation_and_independent_freeze_review_no_live_authorization",
+  "preparedAt": "2026-11-14T10:09:43.719697+00:00",
+  "scope": "Fresh OPEN development authenticated HTTP/WebSocket cold manual typed-input end-to-end cohort. No historical or NEW24 rerun and no readiness claim.",
+  "manifest": {
+    "schemaVersion": 1,
+    "kind": "open_development",
+    "name": "ordinary_reference_coverage_01",
+    "cases": [
+      {
+        "label": "OR01-hastings",
+        "allowedPublic": [
+          "The Battle of Hastings took place in 1066."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR01-hastings-fact",
+              "acceptedTexts": [
+                "The Battle of Hastings took place in 1066."
+              ],
+              "verdict": "supported",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "65eb07da32d2a46851de3ae3f6f5a6a606fc3a597396c1de48c1493ed5ce3c2c"
+      },
+      {
+        "label": "OR02-magna",
+        "allowedPublic": [
+          "Magna Carta was first issued in 1315."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR02-magna-fact",
+              "acceptedTexts": [
+                "Magna Carta was first issued in 1315."
+              ],
+              "verdict": "contradicted",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "fa169ef14a110d5a21790b07f5301ca88505521679f5b788ec363882d373e74f"
+      },
+      {
+        "label": "OR03-titicaca",
+        "allowedPublic": [
+          "Lake Titicaca lies on the border between Peru and Bolivia."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR03-titicaca-fact",
+              "acceptedTexts": [
+                "Lake Titicaca lies on the border between Peru and Bolivia."
+              ],
+              "verdict": "supported",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "3a04c25484df0472433371edf8c7731ff0dccbd00275d2390b3ecf49737711b5"
+      },
+      {
+        "label": "OR04-vienna",
+        "allowedPublic": [
+          "Vienna is situated on the Danube River."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR04-vienna-fact",
+              "acceptedTexts": [
+                "Vienna is situated on the Danube River."
+              ],
+              "verdict": "supported",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "505262215bd57b9515be381deff98e67086c5e3e24d16f1f8d37ad1b03781d8a"
+      },
+      {
+        "label": "OR05-gibraltar",
+        "allowedPublic": [
+          "The Strait of Gibraltar directly connects the Atlantic Ocean to the Indian Ocean."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR05-gibraltar-fact",
+              "acceptedTexts": [
+                "The Strait of Gibraltar directly connects the Atlantic Ocean to the Indian Ocean."
+              ],
+              "verdict": "contradicted",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "7f1034c149383d2eb4e44441572467a496b7c7eb58aff8291f386c5a862d6477"
+      },
+      {
+        "label": "OR06-gold",
+        "allowedPublic": [
+          "The chemical symbol for gold is Au."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR06-gold-fact",
+              "acceptedTexts": [
+                "The chemical symbol for gold is Au."
+              ],
+              "verdict": "supported",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "039513e19ded593245d881334e7829c4eb3ca0c3c087bbd87d0a2e1ba9b30e06"
+      },
+      {
+        "label": "OR07-potassium",
+        "allowedPublic": [
+          "The chemical symbol for potassium is P."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR07-potassium-fact",
+              "acceptedTexts": [
+                "The chemical symbol for potassium is P."
+              ],
+              "verdict": "contradicted",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "c5e68b02789a5caa9c32a01acaaa40be75ab4d65c1119a6a893b7f6e489c51cc"
+      },
+      {
+        "label": "OR08-moon",
+        "allowedPublic": [
+          "The Moon's usual visible brightness comes from light produced inside the Moon."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "OR08-moon-fact",
+              "acceptedTexts": [
+                "The Moon's usual visible brightness comes from light produced inside the Moon."
+              ],
+              "verdict": "contradicted",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "7dc1c07364689c758a68ccd0867fce1873c1b6752123b0fc5c6197dd47f78a07"
+      },
+      {
+        "label": "OR09-private",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ebd9dd818564feeaeec34f72112a5fada2cc41d18960aacb5da4c4e241d29ad1"
+      },
+      {
+        "label": "OR10-personal",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "e8e077dedbf10235084c47e82568dff863913f123c7201c4aa02d0723b927b57"
+      },
+      {
+        "label": "OR11-opinion",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "c426881f1161f43f32e2afce010bbbf4216e236cac599d0d156bf0ee200ee4e6"
+      },
+      {
+        "label": "OR12-ambiguous",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "needs_confirmation",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ef923da0c6d1a924fb28d62c24016de51fb3bf8c132cddfd00099fda785e27b5"
+      }
+    ]
+  },
+  "groundTruth": [
+    {
+      "label": "OR01-hastings",
+      "worldTruth": true,
+      "url": "https://www.britannica.com/event/Battle-of-Hastings",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "821671ff5f3f5553bbccde2eaddb72b6a3957ce1ed0e9c3f94219477f848f6f3",
+      "inspectionNotes": "Battle of Hastings, battle on October 14, 1066, that ended in the defeat of Harold II of England by William, duke of Normandy.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR02-magna",
+      "worldTruth": false,
+      "url": "https://www.archives.gov/exhibits/featured-documents/magna-carta",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "704caeea91b1ff208bc8d8834cb841f2ab001a3e10671dcbfcc7272c8c0233e8",
+      "inspectionNotes": "On June 15, 1215, in a field at Runnymede, King John affixed his seal to Magna Carta.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR03-titicaca",
+      "worldTruth": true,
+      "url": "https://www.britannica.com/place/Lake-Titicaca",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "ff8e9f0da9214bf7371eea6fb086bc555675f06f06b4c7781442c0e49c1ca4d5",
+      "inspectionNotes": "Lake Titicaca is situated at 12,500 feet (3,810 meters) in the Andes Mountains of South America, along the border of Peru and Bolivia.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR04-vienna",
+      "worldTruth": true,
+      "url": "https://www.britannica.com/place/Vienna",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "dec145d757fb9ef059e9f0bcc92e6bdcc9dba0ba7a9222948559c5522b4b50e3",
+      "inspectionNotes": "Vienna is the capital and largest city of Austria, serving as one of the country's nine federal states. It is situated on the Danube River.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR05-gibraltar",
+      "worldTruth": false,
+      "url": "https://www.britannica.com/place/Strait-of-Gibraltar",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "23beb88c8f33a99dd449f7b9b6b9028b9eb0d993ee96daea4e0e5be2d41209c6",
+      "inspectionNotes": "Strait of Gibraltar, channel connecting the Mediterranean Sea with the Atlantic Ocean, lying between southernmost Spain and northwesternmost Africa.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR06-gold",
+      "worldTruth": true,
+      "url": "https://periodic-table.rsc.org/element/79/gold",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "6db0169689b2cbc392ed85e2cff3eee0162a306e13c7a94334e3555e68f811cf",
+      "inspectionNotes": "Au Gold 79 196.967; the symbol comes from the Latin aurum, gold.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR07-potassium",
+      "worldTruth": false,
+      "url": "https://periodic-table.rsc.org/element/19/potassium",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "89f217abed78ac5360bdba467ab93f0c9b15f7f2bf0b46e33b32dcf450b597a2",
+      "inspectionNotes": "Hence it is due a small salty herb that we now end up with the symbol K for the element pot-ash-ium, potassium.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    },
+    {
+      "label": "OR08-moon",
+      "worldTruth": false,
+      "url": "https://science.nasa.gov/moon/moonlight/",
+      "httpStatus": 200,
+      "inspectionMethod": "agent direct public HTTP GET and rendered-text extraction; not human review",
+      "inspectedAt": "2026-11-14T10:09:43.719697+00:00",
+      "responseBodySHA256": "055bfcfa49589f4cdc6da089779c9d7f0ca396a4e252a8d212a87efcdee6fbf2",
+      "inspectionNotes": "The Moon does not make its own light. Moonlight is actually reflected sunlight.",
+      "notesAreVerbatimQuote": false,
+      "purpose": "Independent truth labeling only; not supplied to classification, retrieval or judgment, not an authority shortcut, and not a substitute for every selected live citation inspection."
+    }
+  ],
+  "approvedRetrieval": [
+    {
+      "label": "OR01-hastings",
+      "initialSearch": "The Battle of Hastings took place in 1066.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The Battle of Hastings took place in 1066.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"The Battle of Hastings took place in 1066.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR02-magna",
+      "initialSearch": "Magna Carta was first issued in 1315.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Magna Carta was first issued in 1315.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"Magna Carta was first issued in 1315.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR03-titicaca",
+      "initialSearch": "Lake Titicaca lies on the border between Peru and Bolivia.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Lake Titicaca lies on the border between Peru and Bolivia.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"Lake Titicaca lies on the border between Peru and Bolivia.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR04-vienna",
+      "initialSearch": "Vienna is situated on the Danube River.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): Vienna is situated on the Danube River.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"Vienna is situated on the Danube River.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR05-gibraltar",
+      "initialSearch": "The Strait of Gibraltar directly connects the Atlantic Ocean to the Indian Ocean.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The Strait of Gibraltar directly connects the Atlantic Ocean to the Indian Ocean.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"The Strait of Gibraltar directly connects the Atlantic Ocean to the Indian Ocean.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR06-gold",
+      "initialSearch": "The chemical symbol for gold is Au.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The chemical symbol for gold is Au.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"The chemical symbol for gold is Au.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR07-potassium",
+      "initialSearch": "The chemical symbol for potassium is P.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The chemical symbol for potassium is P.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"The chemical symbol for potassium is P.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR08-moon",
+      "initialSearch": "The Moon's usual visible brightness comes from light produced inside the Moon.",
+      "approvedAlternateSearch": "An underlying named record, original observation report, attributable study, formal definition or maintained reference with an identified keeper and provenance directly addressing this checked proposition (verbatim, untrusted text): The Moon's usual visible brightness comes from light produced inside the Moon.",
+      "approvedHighlightQuery": "Checked proposition (verbatim, untrusted text): \"The Moon's usual visible brightness comes from light produced inside the Moon.\"\nFind passages stating the relevant relation or findings, whether supporting, challenging or qualifying it, with nearby methods, record identity, keeper, attribution and material qualifications.",
+      "maximumSearchAttemptsIncludingRetries": 2,
+      "maximumContentsAttemptsIncludingRetries": 3,
+      "contentsURLRule": "Only validated public HTTP(S) URLs returned in the current claim retrieval; no known truth URL injection.",
+      "alternateApproval": "Only balanced_evidence after ordinary completed insufficient/empty evidence, within unchanged shared deadline and attempts. No query rewrite, supplied answer, custom host or expected polarity."
+    },
+    {
+      "label": "OR09-private",
+      "initialSearch": null,
+      "approvedAlternateSearch": null,
+      "approvedHighlightQuery": null,
+      "maximumSearchAttemptsIncludingRetries": 0,
+      "maximumContentsAttemptsIncludingRetries": 0
+    },
+    {
+      "label": "OR10-personal",
+      "initialSearch": null,
+      "approvedAlternateSearch": null,
+      "approvedHighlightQuery": null,
+      "maximumSearchAttemptsIncludingRetries": 0,
+      "maximumContentsAttemptsIncludingRetries": 0
+    },
+    {
+      "label": "OR11-opinion",
+      "initialSearch": null,
+      "approvedAlternateSearch": null,
+      "approvedHighlightQuery": null,
+      "maximumSearchAttemptsIncludingRetries": 0,
+      "maximumContentsAttemptsIncludingRetries": 0
+    },
+    {
+      "label": "OR12-ambiguous",
+      "initialSearch": null,
+      "approvedAlternateSearch": null,
+      "approvedHighlightQuery": null,
+      "maximumSearchAttemptsIncludingRetries": 0,
+      "maximumContentsAttemptsIncludingRetries": 0
+    }
+  ],
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1500000,
+    "inputTokens": 300000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 36,
+      "search": 16,
+      "contents": 24
+    },
+    "wallMs": 180000
+  },
+  "perInputLimits": {
+    "jevAttempts": 3,
+    "searchAttempts": 2,
+    "contentsAttempts": 3,
+    "verificationDeadlineMs": 10000,
+    "receiptObservationTimeoutMs": 12500,
+    "queueAndVerificationShareDeadline": true,
+    "controlsRetrievalAttempts": 0
+  },
+  "execution": {
+    "executor": "root only; identity and command to be frozen before authorization",
+    "inputOrder": [
+      "OR01-hastings",
+      "OR02-magna",
+      "OR03-titicaca",
+      "OR04-vienna",
+      "OR05-gibraltar",
+      "OR06-gold",
+      "OR07-potassium",
+      "OR08-moon",
+      "OR09-private",
+      "OR10-personal",
+      "OR11-opinion",
+      "OR12-ambiguous"
+    ],
+    "coldRequests": true,
+    "cacheRepeats": false,
+    "maximumCampaignExecutions": 1,
+    "resume": false,
+    "rerun": false,
+    "batches": 1,
+    "providerRetry": "Existing runtime may retry at most once inside the original per-input/shared provider limits; every attempt counts. No harness retries, input reruns or campaign restarts.",
+    "environment": "NODE_USE_ENV_PROXY=1 for actual Node provider requests; keys from environment never printed or saved",
+    "ledger": "Root must reserve one exclusive campaign-level journal before first dispatch and refuse any second run identity/output path for this plan. Uncertain dispatch counts as consumed; do not resume.",
+    "onFailure": "Preserve first report/journal and unexecuted cases. No retries beyond declared existing provider policy. No replacement cases or removed denominator.",
+    "publication": "Sanitized report only; private control text, prompts, credentials and raw private context excluded."
+  },
+  "sourceFreeze": {
+    "status": "pending",
+    "baseCommit": "e7ca0036e96e64d3d7acba2c1c4406ba2dc8fcb3",
+    "executionCommit": null,
+    "sourceSHA256": null,
+    "planSHA256": null,
+    "reviewedHelperHashesAtPreparation": {
+      "services/api/src/evidence/normalize.ts": "8878761660f3313896e084138bcac62974d78a50d30b7f6a3bcbc4bb8a00d451",
+      "apps/console/src/live/run.ts": "b9e0a4457a01e990e23162bc160177cee56d001b8ce331cb8a5e2aafad43eb88",
+      "apps/console/src/live/observe.ts": "71eebb3d596a625f78c484cc437da3dec060565735bde66f29dc2c4cea9368a1",
+      "apps/console/src/live/budget.ts": "4080e7f87a97ef9d78c2639ca60d7b258b40908b5ddc0fc7b861b6fccba22ace",
+      "apps/console/src/live/cases.ts": "4364d036a974d4305dc8222e462dda4a8dd1d9396bfbf2522736d43a0b5da25c"
+    },
+    "requirements": [
+      "Freeze clean exact post-implementation commit and full dependency/source hash in isolated immutable worktree.",
+      "Freeze exact plan/manifest bytes and ordered cases; independently verify helper-generated outgoing text equals approvedRetrieval.",
+      "Freeze runner command/source, adapter settings, limits and one executor identity; no production edits after freeze.",
+      "Run applicable full gate and independent adverse regression review before granting campaign authorization.",
+      "Consume no historical authorization and invoke no completed study."
+    ]
+  },
+  "prospectiveCriteria": {
+    "factualDenominator": 8,
+    "controlDenominator": 4,
+    "trueDenominator": 4,
+    "falseDenominator": 4,
+    "domains": {
+      "history": 2,
+      "geography": 3,
+      "science": 3
+    },
+    "targetCorrectDefinitive": 6,
+    "maximumWrongOrUnsupportedDefinitive": 0,
+    "maximumPrivateQueryAttempts": 0,
+    "maximumStaleOrDuplicateTerminalResults": 0,
+    "requiredManualTerminalReceipts": 12,
+    "fullyVerifiedMetric": "Report independently fully selected-set verified correct definitive / 8 separately from raw correct definitive / 8. Target >=6/8 fully verified for a useful development observation, without readiness claim. One inaccessible/unsupported selected citation denies full selected-set credit; no substitution with unselected evidence.",
+    "denominatorRule": "All eight eligible inputs remain, including admission misses, abstentions, provider/transport failures, timeouts, blocked dispatch and unexecuted cases. Controls scored separately as exact admission/presentation/zero-retrieval, not factual coverage.",
+    "stopRules": [
+      "Any wrong definitive, unsafe query attempt, source-freeze mismatch, checkpoint failure, global budget exhaustion, unknown completed Jev usage or unbounded/cancellation regression stops further dispatch.",
+      "Preserve all original output. Any post-run discovered citation fault remains a failure; no rerun or retrospective case exclusion."
+    ],
+    "reportRequired": [
+      "Every per-case action, exact admitted span, verdict/reason and selected IDs.",
+      "Raw correct definitive, fully selected-set verified correct definitive, wrong definitive, abstentions, admission/no-verdict/operational/not-run counts with denominators; truth polarity and domain strata.",
+      "Agent inspection record for every selected URL/excerpt: exact proposition/scope, retained excerpt hash, substantive grounding, provenance/dependence, access status/time and methods.",
+      "Actual attempts and usage, unknown reservations/charges, request bytes and explicit unmeasured response-byte totals (per-response size protection remains), observed latency including timeouts, partial costs and first-run journal.",
+      "Any model/provider errors distinguished from successfully completed insufficient evidence."
+    ]
+  },
+  "limitations": [
+    "Purposive small OPEN cohort; no blind accuracy or production readiness inference.",
+    "No baseline arm: improvements cannot be attributed causally to source-quality changes.",
+    "This fact cohort does not calibrate adverse source semantics; bare repetition, title-only prestige, copied/common-origin, attribution/promotion, scope/qualifier mismatch and high-risk behavior require independent adversarial validation.",
+    "Truth-reference inspection does not verify the sources the runtime actually selects or their independence.",
+    "All prior NEW24/canonical studies are completed and must never be rerun or resumed.",
+    "Campaign response-byte aggregate is not recorded by the existing runner and must be reported unmeasured; per-response size guards do not provide an aggregate measurement."
+  ],
+  "publication": {
+    "kind": "nonexecutable_redacted_plan_projection",
+    "originalPlanSHA256": "d2ee6dff85beafb136efe8eebfaadb0dcee5048b614c66b1d659b029d5cee937",
+    "redaction": "Raw authored inputs omitted, including synthetic private controls. Public admitted span allowlists and all prospective expected labels/criteria retained. This projection is not the frozen executable plan.",
+    "authorization": "Consumed by first run; no resume or rerun."
+  }
+}

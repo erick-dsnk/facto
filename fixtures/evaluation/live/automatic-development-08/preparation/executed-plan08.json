@@ -1,0 +1,198 @@
+{
+  "kind": "isolated_automatic_presentation_development",
+  "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+  "manifestSHA256": "2c223938aa63f555bc4ae9e0c09fbd43381071ace2a13778cdbedea9cd2ca8d0",
+  "wrapperSHA256": "243a4398b26f11b036d2e33d7506846b33675b5ce28294dc2ac9821838d0fff1",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 180000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 24,
+      "search": 12,
+      "contents": 18
+    },
+    "wallMs": 90000
+  },
+  "minimumAutomaticSpacingMs": 4100,
+  "freshSessionPerScenario": true,
+  "cases": [
+    {
+      "label": "AD01-disabled-contradiction",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": false,
+        "selectedTopics": []
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    },
+    {
+      "label": "AD02-selected-topic-notify",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": [
+          "Smithsonian Institution"
+        ]
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "notify"
+        ]
+      }
+    },
+    {
+      "label": "AD03-supported-silent",
+      "allowedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": [
+          "UNESCO"
+        ]
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD09",
+            "acceptedTexts": [
+              "UNESCO's Constitution was adopted in London on 16 November 1945."
+            ],
+            "verdict": "supported",
+            "domain": "institutional_record"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    },
+    {
+      "label": "AD04-low-priority-silent",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": []
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    },
+    {
+      "label": "AD05-personal-skip",
+      "allowedPublic": [],
+      "automatic": true,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": []
+      },
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    },
+    {
+      "label": "AD06-muted-manual",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false,
+      "preferences": {
+        "muted": true,
+        "automaticNotifications": true,
+        "selectedTopics": [
+          "Panama Canal"
+        ]
+      },
+      "expected": {
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    }
+  ]
+}

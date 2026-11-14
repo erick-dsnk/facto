@@ -1,0 +1,37 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import type { JevRequest } from '/workspace/live-frozen-08/services/api/src/providers/jev/client.ts';
+export const PROPOSAL_PATH = '/workspace/task-evidence/full-context-scope-proposal-01/candidate-freeze.json';
+export const PROPOSAL_SHA256 = '04124646b25100b3bcd1f8fe4e7324db91ed83f7744d339a68494bf69ce610b7';
+const bytes = readFileSync(PROPOSAL_PATH);
+if (createHash('sha256').update(bytes).digest('hex') !== PROPOSAL_SHA256)
+    throw new Error('Frozen scope proposal changed');
+const proposal = JSON.parse(bytes.toString('utf8')) as {
+    appendix: string;
+    baselineScopeInstructionTemplate: string;
+};
+/** One frozen appendix, every retained source, inside the same actual full judge request. */
+export function substituteScopeInstructions(request: JevRequest): JevRequest {
+    const state = request.state as {
+        evidence?: {
+            id: string;
+        }[];
+    };
+    if (!Array.isArray(state.evidence))
+        throw new Error('Full evidence state missing');
+    let count = 0;
+    const questions = Object.fromEntries(Object.entries(request.questions).map(([name, question]) => {
+        const match = /^e(\d+)_scope$/.exec(name);
+        if (!match)
+            return [name, question];
+        const source = state.evidence![Number(match[1])];
+        const expected = proposal.baselineScopeInstructionTemplate.replace('${source.id}', source?.id ?? 'missing');
+        if (!source || question.type !== 'noul' || question.instructions !== expected)
+            throw new Error('Frozen source scope template mismatch');
+        count++;
+        return [name, { ...question, instructions: question.instructions + ' ' + proposal.appendix }];
+    }));
+    if (count !== state.evidence.length)
+        throw new Error('Scope substitution omitted a retained source');
+    return { ...request, questions };
+}

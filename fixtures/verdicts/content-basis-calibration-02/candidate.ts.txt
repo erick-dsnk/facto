@@ -1,0 +1,25 @@
+import { createJudge } from '/workspace/stack-17/services/api/src/providers/jev/judgment.ts';
+import type { JevClient, JevQuestion, JevRequest } from '/workspace/stack-17/services/api/src/providers/jev/client.ts';
+
+/** Experiment only: current seven criteria, probabilities and policy stay intact. */
+export const BASIS_CLARIFICATION = 'Assess substantive basis independently of stance: evidence may be substantive whether it supports or contradicts the proposition. A document or record heading actually quoted inside the excerpt may identify the record when the excerpt also provides actual operative text or maintained record fields relevant to this proposition. A heading, citation or title without those contents does not supply a substantive basis. A catalogue record may establish its own recorded bibliographic fields; words describing an event only in a work\'s title do not establish that event.';
+
+export function substituteContentBasisInstructions(request: JevRequest): JevRequest {
+  let replaced = 0;
+  const questions: Record<string, JevQuestion> = Object.fromEntries(Object.entries(request.questions).map(([name, question]) => {
+    if (!/^e\d+_content_basis$/.test(name)) return [name, question];
+    if (question.type !== 'choice' || !question.instructions.includes('The title is explicitly untrusted context that may identify the record type; it supplies no factual evidence or provenance by itself.')) throw new Error('Production content-basis instructions changed; review required.');
+    replaced++;
+    const instructions = question.instructions
+      .replace('The title is explicitly untrusted context', 'The separate metadata title field is explicitly untrusted context')
+      .replace('The excerpt must contain the actual relevant relation and identifying substantive context.', `The excerpt must contain the actual relevant relation and identifying substantive context. ${BASIS_CLARIFICATION}`);
+    if (!instructions.includes(BASIS_CLARIFICATION)) throw new Error('Content-basis clarification was not applied.');
+    return [name, { ...question, instructions }];
+  }));
+  if (!replaced) throw new Error('No full-judge content-basis question captured.');
+  return { ...request, questions };
+}
+
+export function createContentBasisJudgmentExperiment(client: JevClient): ReturnType<typeof createJudge> {
+  return createJudge({ ask: (request, context) => client.ask(substituteContentBasisInstructions(request), context) });
+}

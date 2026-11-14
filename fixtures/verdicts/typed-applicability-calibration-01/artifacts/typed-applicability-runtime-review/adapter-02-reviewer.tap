@@ -1,0 +1,185 @@
+TAP version 13
+# Subtest: same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability
+ok 1 - same full judge call binds actual body, validated answers, complete graph and ordinary risk; no core capability
+  ---
+  duration_ms: 111.227131
+  type: 'test'
+  ...
+# Subtest: clipped entire-unit binding fails before ask but unchanged baseline still executes once
+ok 2 - clipped entire-unit binding fails before ask but unchanged baseline still executes once
+  ---
+  duration_ms: 64.578602
+  type: 'test'
+  ...
+# Subtest: fails closed on not_covered 0.99
+ok 3 - fails closed on not_covered 0.99
+  ---
+  duration_ms: 101.383851
+  type: 'test'
+  ...
+# Subtest: fails closed on uncertain 0.99
+ok 4 - fails closed on uncertain 0.99
+  ---
+  duration_ms: 52.014364
+  type: 'test'
+  ...
+# Subtest: fails closed on covered 0.84
+ok 5 - fails closed on covered 0.84
+  ---
+  duration_ms: 32.794927
+  type: 'test'
+  ...
+# Subtest: public/current wording cannot acquire freshness by covered answer
+ok 6 - public/current wording cannot acquire freshness by covered answer
+  ---
+  duration_ms: 47.444158
+  type: 'test'
+  ...
+# Subtest: post-await advance invalidates response
+ok 7 - post-await advance invalidates response
+  ---
+  duration_ms: 87.043007
+  type: 'test'
+  ...
+# Subtest: post-await cancel invalidates response
+ok 8 - post-await cancel invalidates response
+  ---
+  duration_ms: 42.651077
+  type: 'test'
+  ...
+# Subtest: post-await replaceMaterial invalidates response
+ok 9 - post-await replaceMaterial invalidates response
+  ---
+  duration_ms: 32.682439
+  type: 'test'
+  ...
+# Subtest: post-await replaceInstall invalidates response
+ok 10 - post-await replaceInstall invalidates response
+  ---
+  duration_ms: 40.816002
+  type: 'test'
+  ...
+# Subtest: retirement invalidates a previously issued semantic token
+ok 11 - retirement invalidates a previously issued semantic token
+  ---
+  duration_ms: 61.949051
+  type: 'test'
+  ...
+# Subtest: same-ID companion and assessment changes do not validate token
+ok 12 - same-ID companion and assessment changes do not validate token
+  ---
+  duration_ms: 34.027765
+  type: 'test'
+  ...
+# Subtest: nonordinary risk never gains semantic eligibility even with covered answer
+ok 13 - nonordinary risk never gains semantic eligibility even with covered answer
+  ---
+  duration_ms: 38.970472
+  type: 'test'
+  ...
+# Subtest: prototype width mismatch preserves exact baseline title and disables optional route
+ok 14 - prototype width mismatch preserves exact baseline title and disables optional route
+  ---
+  duration_ms: 27.36635
+  type: 'test'
+  ...
+# REQUEST_BYTES {"baseline":63394,"augmentation":0,"actual":63394}
+# Subtest: maximal legal companion material preflights actual serialization without dropping any source
+ok 15 - maximal legal companion material preflights actual serialization without dropping any source
+  ---
+  duration_ms: 49.707187
+  type: 'test'
+  ...
+# Subtest: over-limit augmentation preserves baseline byte for byte and sends no optional item
+ok 16 - over-limit augmentation preserves baseline byte for byte and sends no optional item
+  ---
+  duration_ms: 50.924882
+  type: 'test'
+  ...
+# Subtest: shared inherited exhausted allowance prevents any HTTP attempt
+ok 17 - shared inherited exhausted allowance prevents any HTTP attempt
+  ---
+  duration_ms: 31.688651
+  type: 'test'
+  ...
+# Subtest: actual response token accounting charges the same request budget
+ok 18 - actual response token accounting charges the same request budget
+  ---
+  duration_ms: 40.527147
+  type: 'test'
+  ...
+# Subtest: explicit second-claim reservation cannot be stolen by optional question
+ok 19 - explicit second-claim reservation cannot be stolen by optional question
+  ---
+  duration_ms: 62.061399
+  type: 'test'
+  ...
+# Subtest: stale owner is rechecked on every consume, not just factory creation
+ok 20 - stale owner is rechecked on every consume, not just factory creation
+  ---
+  duration_ms: 37.907651
+  type: 'test'
+  ...
+# Subtest: transient HTTP failure is terminal with one actual attempt and no hidden allowance
+ok 21 - transient HTTP failure is terminal with one actual attempt and no hidden allowance
+  ---
+  duration_ms: 33.501512
+  type: 'test'
+  ...
+# Subtest: forged or serialized dispatch-owner handle is rejected before ask
+ok 22 - forged or serialized dispatch-owner handle is rejected before ask
+  ---
+  duration_ms: 52.128936
+  type: 'test'
+  ...
+# Subtest: hung transport settles on Session.cancel before release; late result creates no answer/usage/commit
+ok 23 - hung transport settles on Session.cancel before release; late result creates no answer/usage/commit
+  ---
+  duration_ms: 99.912034
+  type: 'test'
+  ...
+# Subtest: hung transport settles at inherited absolute deadline even if injected transport ignores signal
+ok 24 - hung transport settles at inherited absolute deadline even if injected transport ignores signal
+  ---
+  duration_ms: 80.801652
+  type: 'test'
+  ...
+# Subtest: captured budget replacement fails before any dispatch
+ok 25 - captured budget replacement fails before any dispatch
+  ---
+  duration_ms: 48.237843
+  type: 'test'
+  ...
+# Subtest: captured controller replacement fails before any dispatch
+ok 26 - captured controller replacement fails before any dispatch
+  ---
+  duration_ms: 41.064987
+  type: 'test'
+  ...
+# Subtest: captured clock replacement fails before any dispatch
+ok 27 - captured clock replacement fails before any dispatch
+  ---
+  duration_ms: 34.911707
+  type: 'test'
+  ...
+# Subtest: captured acceptedAt replacement fails before any dispatch
+ok 28 - captured acceptedAt replacement fails before any dispatch
+  ---
+  duration_ms: 39.286047
+  type: 'test'
+  ...
+# Subtest: budget replaced during hung transport cannot receive usage or validate old response
+ok 29 - budget replaced during hung transport cannot receive usage or validate old response
+  ---
+  duration_ms: 41.587234
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1974.958439

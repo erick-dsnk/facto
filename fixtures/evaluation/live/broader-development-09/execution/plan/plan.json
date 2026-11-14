@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_open_development_execution_plan",
+  "name": "broader-candidate09",
+  "createdAt": "2026-11-14T05:03:37.980993+00:00",
+  "status": "plan_finalized_source_frozen_no_live_dispatch",
+  "apiCallsExecuted": 0,
+  "frozenCodeCreated": false,
+  "candidateFreezePath": "/workspace/live-frozen-09",
+  "candidateFreezeArtifact": "/workspace/task-evidence/candidate09-freeze.json",
+  "candidateCommit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "candidateSourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "fullManifestPath": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/live-manifest.json",
+  "fullManifestSHA256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+  "wrapperPath": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+  "wrapperSHA256": "57d1c86425ba493fd400f3a03fcf4efcb2f31ad3021ac04fcdde6f15040ccbb8",
+  "tsxPath": "/workspace/junction-2026/node_modules/.bin/tsx",
+  "limitsPerBatch": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "maximumSumOfFourDeclaredBatchCaps": {
+    "jev": 64,
+    "search": 32,
+    "contents": 48,
+    "chargedInputTokens": 560000,
+    "totalRequestBytes": 2600000,
+    "sumBatchWallMs": 360000
+  },
+  "denominators": {
+    "totalInputs": 16,
+    "uniqueFacts": 12,
+    "trueUniqueFacts": 6,
+    "falseUniqueFacts": 6,
+    "controls": 4,
+    "eligiblePublicOccurrences": 13,
+    "mixedRepeat": "BDC04 repeats BD07; no additional unique-fact credit"
+  },
+  "requiredFixReadiness": {
+    "targetFailureFixReady": true,
+    "richerContainedHighlightFixReady": true,
+    "note": "Readiness now bound to the separately recorded candidate09 freeze and its actual 525-test/25-file check plus default evaluation logs; readiness is not live-dispatch authorization."
+  },
+  "requiredFutureLogs": {
+    "install": "/workspace/task-evidence/candidate09-install.log",
+    "check": "/workspace/task-evidence/candidate09-check.log",
+    "evaluate": "/workspace/task-evidence/candidate09-evaluate.log"
+  },
+  "protectedPackages": [
+    "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01",
+    "/workspace/junction-2026/fixtures/evaluation/live/broader-development-08"
+  ],
+  "batches": [
+    {
+      "batch": 1,
+      "labels": [
+        "BD01",
+        "BD02",
+        "BD03",
+        "BDC01"
+      ],
+      "manifestPath": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-01.json",
+      "manifestSHA256": "755fcccac694f94db05743d6723e4a123e3003f79c01142d8a2d5551c5cf1e99",
+      "outputPath": "/workspace/task-evidence/broader-candidate09-01.json",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-01.json.journal.jsonl",
+      "checkpointPath": "/workspace/task-evidence/broader-candidate09-01.json.tmp",
+      "previewPath": "/workspace/task-evidence/candidate09-plan-01.json",
+      "uniqueFactCount": 3,
+      "trueUniqueFacts": 2,
+      "falseUniqueFacts": 1,
+      "eligiblePublicOccurrences": 3,
+      "additionalMixedRepeat": null,
+      "pathsAbsentAsOfPlan": true,
+      "previewCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-01.json",
+        "/workspace/task-evidence/broader-candidate09-01.json",
+        "plan"
+      ],
+      "liveCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-01.json",
+        "/workspace/task-evidence/broader-candidate09-01.json",
+        "live"
+      ],
+      "environment": {
+        "NODE_USE_ENV_PROXY": "1"
+      }
+    },
+    {
+      "batch": 2,
+      "labels": [
+        "BD04",
+        "BD05",
+        "BD06",
+        "BDC02"
+      ],
+      "manifestPath": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-02.json",
+      "manifestSHA256": "65f4edaf91213073c46678babf92e65c7087b8dde51d98489dbb68e379e97fc9",
+      "outputPath": "/workspace/task-evidence/broader-candidate09-02.json",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-02.json.journal.jsonl",
+      "checkpointPath": "/workspace/task-evidence/broader-candidate09-02.json.tmp",
+      "previewPath": "/workspace/task-evidence/candidate09-plan-02.json",
+      "uniqueFactCount": 3,
+      "trueUniqueFacts": 1,
+      "falseUniqueFacts": 2,
+      "eligiblePublicOccurrences": 3,
+      "additionalMixedRepeat": null,
+      "pathsAbsentAsOfPlan": true,
+      "previewCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-02.json",
+        "/workspace/task-evidence/broader-candidate09-02.json",
+        "plan"
+      ],
+      "liveCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-02.json",
+        "/workspace/task-evidence/broader-candidate09-02.json",
+        "live"
+      ],
+      "environment": {
+        "NODE_USE_ENV_PROXY": "1"
+      }
+    },
+    {
+      "batch": 3,
+      "labels": [
+        "BD07",
+        "BD08",
+        "BD09",
+        "BDC03"
+      ],
+      "manifestPath": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-03.json",
+      "manifestSHA256": "8c42e6eaace67ce1fa5e01a90f007509ed961096a00ec77ede075c714cae16da",
+      "outputPath": "/workspace/task-evidence/broader-candidate09-03.json",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-03.json.journal.jsonl",
+      "checkpointPath": "/workspace/task-evidence/broader-candidate09-03.json.tmp",
+      "previewPath": "/workspace/task-evidence/candidate09-plan-03.json",
+      "uniqueFactCount": 3,
+      "trueUniqueFacts": 2,
+      "falseUniqueFacts": 1,
+      "eligiblePublicOccurrences": 3,
+      "additionalMixedRepeat": null,
+      "pathsAbsentAsOfPlan": true,
+      "previewCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-03.json",
+        "/workspace/task-evidence/broader-candidate09-03.json",
+        "plan"
+      ],
+      "liveCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-03.json",
+        "/workspace/task-evidence/broader-candidate09-03.json",
+        "live"
+      ],
+      "environment": {
+        "NODE_USE_ENV_PROXY": "1"
+      }
+    },
+    {
+      "batch": 4,
+      "labels": [
+        "BD10",
+        "BD11",
+        "BD12",
+        "BDC04"
+      ],
+      "manifestPath": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-04.json",
+      "manifestSHA256": "708232974c3357053c129c93443ddca9c81d0ce9e7580b7cafc90cba19a0e39f",
+      "outputPath": "/workspace/task-evidence/broader-candidate09-04.json",
+      "journalPath": "/workspace/task-evidence/broader-candidate09-04.json.journal.jsonl",
+      "checkpointPath": "/workspace/task-evidence/broader-candidate09-04.json.tmp",
+      "previewPath": "/workspace/task-evidence/candidate09-plan-04.json",
+      "uniqueFactCount": 3,
+      "trueUniqueFacts": 1,
+      "falseUniqueFacts": 2,
+      "eligiblePublicOccurrences": 4,
+      "additionalMixedRepeat": "BD07",
+      "pathsAbsentAsOfPlan": true,
+      "previewCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-04.json",
+        "/workspace/task-evidence/broader-candidate09-04.json",
+        "plan"
+      ],
+      "liveCommand": [
+        "/workspace/junction-2026/node_modules/.bin/tsx",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/execution/run-open-development.mts",
+        "/workspace/live-frozen-09",
+        "/workspace/junction-2026/fixtures/evaluation/live/broader-development-01/corpus/v2/batches/batch-04.json",
+        "/workspace/task-evidence/broader-candidate09-04.json",
+        "live"
+      ],
+      "environment": {
+        "NODE_USE_ENV_PROXY": "1"
+      }
+    }
+  ],
+  "interpretation": [
+    "Repeated OPEN development using the same16inputs; neither blind nor causal.",
+    "Candidate09 intended target-failure and richer-contained-highlight fixes were not in frozen08.",
+    "Preserve every08outcome, especially BD06 exa_content_failed and its missing underlying per-target status; never retrospectively classify it from09diagnostics.",
+    "No factual outcome, retrieval success, source-verification status, latency, token usage or cost is predicted.",
+    "Actual09 clean freeze passed525tests/25files,36/36development and21/21presentation; historical479/504/525root integration counts are not substituted for the saved09logs.",
+    "Unknown Jev cost stays unknown; pending input-token reserve is not a tokenizer-derived upper bound."
+  ],
+  "comparisonAssessmentThresholds": {
+    "contentAssessment": 0.85,
+    "originAssessment": 0.85,
+    "stanceConfidence": 0.8,
+    "note": "Use separately corrected comparator. Historical08proxy used .8 for content/origin and remains archived; assessment qualification is neither full verdict-policy eligibility nor independent source verification."
+  },
+  "sourceFreezeCreatedBy": "runtime_evaluation under root authorization",
+  "sourceFreezeArtifactSHA256": "f12a85c3a308882c52e9c4f271cea80ae0479ba49a29a5fc0f2951d28ea0cdf1",
+  "updatedAt": "2026-11-14T05:09:24.906157+00:00"
+}

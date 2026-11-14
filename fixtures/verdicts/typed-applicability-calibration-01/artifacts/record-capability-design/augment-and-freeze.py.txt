@@ -1,0 +1,33 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,hashlib
+b=Path('/workspace/task-evidence/record-capability-design');rows=[json.loads(x)for x in(b/'origin-fetches/requests.jsonl').read_text().splitlines()]
+def load(n):return json.loads((b/n).read_text())
+def dump(n,v):(b/n).write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+def sha(n):return hashlib.sha256((b/n).read_bytes()).hexdigest()
+packet=load('annotation-inputs.json');proof=load('proof-packet.json');receipts=load('attestations.proposed.json')
+extra=[]
+for i,url in enumerate(['https://datatracker.ietf.org/doc/rfc8174/','https://www.canada.ca/en/department-justice.html','https://www.gov.uk/government/organisations/office-for-national-statistics']):
+ r=next(x for x in rows if x['requestedUrl']==url);t=Path(r['textFile']).read_text()
+ if 'datatracker' in url:
+  pos=t.rfind('RFC 8174');quote=t[max(0,pos-200):pos+1300]
+ elif 'canada.ca' in url:quote=t[:1000]
+ else:
+  pos=t.find('We are the UK');
+  if pos<0:pos=t.find('The Office for National Statistics',1200)
+  if pos<0:pos=t.find('ONS is',1200)
+  quote=t[max(0,pos-100):pos+1300]
+ extra.append({'id':f'XP{i+1:02}','role':'additional_public_identity_crosscheck','retrieval':r,'recordQuote':quote,'quoteSHA256':hashlib.sha256(quote.encode()).hexdigest(),'limitations':'Identity context only, not host-wide competence or an independent finding for the checked fact.'})
+for target in [packet,proof]:target['proofs']+=extra
+for source in [packet['attestations'],receipts['attestations']]:
+ for r in source:
+  r['reusePolicy'].update({'requireExactTrustedCanonicalBodyHash':True,'recordOnlyDigestReusePermitted':False,'changedHTMLMayNotReuseReceiptWithoutNewReview':True})
+  r['issuer']['additionalIdentityProofRefs']={'RA01':['XP01'],'RA02':['XP02'],'RA03':[],'RA04':['XP03']}[r['attestationId']]
+  if r['attestationId']=='RA03':r['issuer']['identityLimitations']='Publisher administration/award records identify Pulitzer Board/Columbia; two attempted Columbia URL crosschecks returned404 and are not identity proof. Independent reviewer should flag any residual identity-assurance limitation.'
+proof['networkBudget']=load('origin-fetches/budget.json');proof['failedExploratoryRequests']=[r for r in rows if r['status']!=200]
+packet['limitations']=['No candidate implementation or model calls; public provenance review only.','Four positive passages are repeated with opposed asserted values; not eight independent record families.','Pulitzer publisher appeared in an earlier open content-basis corpus with a different award record; no failed BD02/04/05/09/11 cases or source records were reused.','Receipts are proposed data pending independent review, not production authorization or cryptographic issuer signatures.']
+dump('annotation-inputs.json',packet);dump('proof-packet.json',proof);dump('attestations.proposed.json',receipts)
+files=['annotation-inputs.json','annotation-first.json','attestations.proposed.json','proof-packet.json','rubric.md','request-plan.json','origin-fetches/requests.jsonl','origin-fetches/budget.json']
+dump('first-label-freeze.json',{'schemaVersion':1,'frozen':True,'frozenAt':datetime.now(timezone.utc).isoformat(),'noImplementationReadsForThisDesign':True,'projectProviderCalls':0,'ExaCalls':0,'JevCalls':0,'privateOrFutureBlindLabelsRead':False,'units':22,'files':{n:sha(n)for n in files}})
+print('first-label-freeze SHA256',sha('first-label-freeze.json'))
+print('budget',load('origin-fetches/budget.json'))

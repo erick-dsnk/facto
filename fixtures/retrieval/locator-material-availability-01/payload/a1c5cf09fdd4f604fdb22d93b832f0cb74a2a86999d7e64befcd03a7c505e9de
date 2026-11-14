@@ -1,0 +1,14 @@
+# Independent runner review scope
+
+No live provider calls, project-key access, production edits or new24 reads. Tests will execute only after the author's corrected source and plan freeze, using the actual local AbortableExa and SDK serialization with an injected fetch function. All outputs belong in fresh reviewer-owned subdirectories.
+
+1. Exact one serialized contents request and inherited signal; durable prepared checkpoint before injected HTTP; no retries, search, child followup or origin fetch.
+2. Typed status fields and contradictory root/result/status error fields cannot export material or link hints; complete raw body/cost accounting remains intact.
+3. Prepared-only crash recovery preserves possible-dispatch bounds0..1 and unknown total cost, never claiming zero paid attempts. Existing output blocks rerun.
+4. Request/response caps, streaming overflow, original absolute deadline including late EOF and predispatch expiry; no late decoded material.
+5. Rejected/pending reader cancellation and late transport settlement remain unknown; SDK secondary cancellation cannot upgrade observed settlement.
+6. Exact source/plan pins before dispatch and after terminal acquisition. Local drift stays local, preserves observed bytes/usage, suppresses material.
+7. Before-dispatch, response/decoded and terminal storage failures leave durable conservative evidence; no retry/reroot/resume.
+8. Evidence is SDK material only: no origin freshness, identity, whole-body equivalence, semantic, witness or verdict credit.
+
+Known root findings before this review: typed-status/error validation and prepared-only cost/dispatch bounds. Author preserves the22-test predecessor and is correcting these before final freeze. The reviewer will not rerun that predecessor or repeat live work.

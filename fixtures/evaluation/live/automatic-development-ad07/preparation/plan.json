@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-14T04:41:16.869054+00:00",
+  "status": "prepared_not_executed",
+  "kind": "open_purposive_presentation_followup",
+  "sourceDirectory": "/workspace/live-frozen-08",
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+  "manifestSHA256": "cb3e436d23bc45afa11f8df188dc962a518432c4195aa3c2e6d4efba1c27fa68",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 300000,
+    "inputTokens": 80000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 6,
+      "search": 2,
+      "contents": 3
+    },
+    "wallMs": 30000
+  },
+  "expected": {
+    "httpStatus": 202,
+    "admissionAction": "check",
+    "exactPublicSpan": "The Panama Canal opened to world trade in 1914.",
+    "verdict": "supported",
+    "presentation": {
+      "action": "silent",
+      "reasonCode": "automatic_noncontradiction"
+    },
+    "cached": false,
+    "terminalReceived": true,
+    "selectedTopics": [],
+    "automaticNotifications": true,
+    "muted": false
+  },
+  "denominators": {
+    "inputs": 1,
+    "newFactualAccuracyFacts": 0,
+    "presentationFollowups": 1
+  },
+  "provenance": {
+    "reusedCase": "BD07",
+    "sourceIds": [
+      "D07-P",
+      "D07-C"
+    ],
+    "groundTruthManifest": "/workspace/task-evidence/broader-development/v2/live-manifest.json",
+    "groundTruthManifestSHA256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+    "independentSourceLabelReview": "/workspace/task-evidence/broader-development/v2/independent-source-label-review.json",
+    "selection": "Root explicitly requested reviewed BD07 after AD03 abstained and AD06 observed supported BD07. This is a purposive action-branch probe, not an independent factual evaluation or a rerun of AD03."
+  },
+  "rules": [
+    "One fresh authenticated session and empty cache; execute exactly once only after root execute instruction.",
+    "Original automatic08 six-case report remains five passes and one inconclusive; AD07 is reported separately and never replaces AD03.",
+    "Require actual supported claim.result with silent/automatic_noncontradiction. A silent abstention is inconclusive, not a branch pass.",
+    "No repeat, fallback fact substitution, or source-policy changes to obtain the target receipt.",
+    "Actual attempts, bytes, tokens, partial costs and all terminal behavior are retained.",
+    "Selected runtime citations require independent exact-scope verification; prior BD07 ground-truth references do not pre-verify this run.",
+    "Frozen08 is immutable; later ebd686d status diagnostics are not part of this execution."
+  ]
+}

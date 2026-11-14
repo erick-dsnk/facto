@@ -1,0 +1,523 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-14T05:28:07.987758+00:00",
+  "inputPacketSHA256": "b7d43799e910c72ed393e3c6afd937d9ab27fad5e8d6b80d3a18fd1b9c8d1162",
+  "inputBindingsSHA256": "d21721f943319b55014d95e4202357707c874a653c8d6035f79acad8d2cec72d",
+  "rawStudyReportSHA256": "7c5a09f026a281db34b49cf7aa8187c9bd9c4dafa02273361e694e0722d40d63",
+  "scope": "All11unique selected references for four claim contexts; three newly definitive order-condition outputs (BD04original/reversed and excludedT03/BD11reversed), plus control selected-set expansions. No new factual denominator.",
+  "counts": {
+    "uniqueSelectedRecords": 11,
+    "inspectableMatchingSources": 11,
+    "freshExactTargets": 4,
+    "reusedExactProofs": 7,
+    "inaccessible": 0,
+    "completeSelectedPropositionRecords": 8,
+    "partialSelectedPropositionRecords": 3
+  },
+  "records": [
+    {
+      "caseId": "BD11",
+      "proposition": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+      "evidenceId": "ev-e31747a5310036c8ce8b",
+      "url": "https://www.nobelprize.org/prizes/physics/1901/ceremony-speech/",
+      "excerptSHA256": "05a68cd6f8d22694321626eb5f9a810130ecc99ca59c43e045e7ba00ae8f1a02",
+      "selectedIn": [
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": true,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "partial",
+      "relation": "supports_award_recipient_category_year_but_not_first_ordinal",
+      "completeSelectedProposition": false,
+      "passageVerification": "All four substantive selected blocks match the fresh exact-URL body after markup/whitespace normalization, including date, Odhner introduction and Academy award sentence. Excerpt ends mid-sentence; no missing first-award language was restored from elsewhere.",
+      "supportedQualifiers": [
+        "Wilhelm Conrad Röntgen",
+        "Nobel Prize in Physics",
+        "1901"
+      ],
+      "missingQualifiers": [
+        "first Nobel Prize in Physics"
+      ],
+      "lineage": "NobelPrize.org reproduction of the 10 December 1901 C. T. Odhner presentation speech for the Royal Swedish Academy of Sciences; page identifies Nobel Lectures, Physics 1901–1921, Elsevier, 1967 and Nobel Foundation copyright1901. Institutional reproduction of an award announcement. It corroborates recipient/category/year but does not independently establish the ordinal.",
+      "limits": "Opening discussion of newly founded prizes does not explicitly say this was the first Physics award. Do not infer ordinal from truth of the world claim or the URL year. Full-page lineage is audit context, not model-retained evidence.",
+      "proofMode": "fresh_exact_url",
+      "fetchCompletedAt": "2026-11-14T05:26:15.914346+00:00",
+      "priorReviewedAt": null,
+      "proofMetadata": "origin-fetches/e31747a5310036c8.json",
+      "bodySHA256": "5e1e1a686e665dd914fb608f04ad9f29540ce4d7161ef0981257aa71c6df1df0",
+      "textSHA256": "49b5f450f54822a3f6cd74df71447f099e5067c4d555a418ca601a69d800472a"
+    },
+    {
+      "caseId": "BD11",
+      "proposition": "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901.",
+      "evidenceId": "ev-1a8bf8bf3840cff4658d",
+      "url": "https://wilhelmconradroentgen.de/en/wilhelm-roentgen/",
+      "excerptSHA256": "90c18126b850d3f89675d9bdcdd21faebe3d5af801d335dd14bba670b9b4dfb4",
+      "selectedIn": [
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": true,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "supports",
+      "completeSelectedProposition": true,
+      "passageVerification": "All twelve substantive selected blocks match the fresh exact-URL body after markup/whitespace normalization. Timeline says 10 Dec1901 / First Nobel Prize in Physics; selected prose explicitly says he received the first Nobel Prize in Physics on10December1901. Dates in intervening short timeline fields are also present.",
+      "supportedQualifiers": [
+        "Wilhelm Conrad Röntgen",
+        "first Nobel Prize in Physics",
+        "1901"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Röntgen Memorial Würzburg institutional biography; no named author or cited historical source for the first-Physics statement appears in the retrieved body. Different publisher from NobelPrize.org; no copying is demonstrated, but independent underlying evidence for the ordinal is not established. A certificate image is linked, not fetched or transcribed in this audit.",
+      "limits": "The separate image caption says first Nobel Prize in history. That broader statement is not the tested first-Physics claim and is not certified. One complete selected passage plus one partial corroborator is not proof of two independently grounded complete sources.",
+      "proofMode": "fresh_exact_url",
+      "fetchCompletedAt": "2026-11-14T05:26:17.510689+00:00",
+      "priorReviewedAt": null,
+      "proofMetadata": "origin-fetches/1a8bf8bf3840cff4.json",
+      "bodySHA256": "ed4ede0f6e46cdd516ff6021f287c471000a2df53c04c541b53694348400516f",
+      "textSHA256": "f36f91c6d8ffaf4e8f698460e6abc070ff79188ee5f2dd712e41f0347150b945"
+    },
+    {
+      "caseId": "BD03",
+      "proposition": "Mount Kilimanjaro is located in Tanzania.",
+      "evidenceId": "ev-fdcab82cba190710f6f1",
+      "url": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+      "excerptSHA256": "673b21adeb8b18f5de5db8336bd79c178e406a0bc44209413642cf5839c25f5d",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": false,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "supports",
+      "completeSelectedProposition": true,
+      "passageVerification": "Fresh GET to exact selected URL returned HTTP 200 seven-page PDF. Country field, title and geographical-location paragraphs explicitly associate the named mountain/park with Tanzania. Selected extraction repeats some headings and truncates the next section, but tested relation is retained. Mirror-hosted compilation dates June 1987, updated through May 2011; metadata does not supply a named author. References explicitly say principal source was original World Heritage nomination. It shares that origin with selected UNESCO/IUCN document, so not independent merely by domain. Conflicting height numbers are outside the country claim.",
+      "supportedQualifiers": [
+        "named mountain",
+        "Tanzania"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Fresh GET to exact selected URL returned HTTP 200 seven-page PDF. Country field, title and geographical-location paragraphs explicitly associate the named mountain/park with Tanzania. Selected extraction repeats some headings and truncates the next section, but tested relation is retained. Mirror-hosted compilation dates June 1987, updated through May 2011; metadata does not supply a named author. References explicitly say principal source was original World Heritage nomination. It shares that origin with selected UNESCO/IUCN document, so not independent merely by domain. Conflicting height numbers are outside the country claim.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:32:18.649522+00:00",
+      "priorReviewedAt": "2026-11-14T04:33:33.261511+00:00",
+      "proofMetadata": "reused-proofs/fdcab82cba190710.json",
+      "bodySHA256": "dc5da66031d45692568412ffea0040cf965e869a4ec070dda5badc3e07eba383",
+      "textSHA256": "e78da2efb19586bb1981a2b6c4ce7c1bb15c45253d286135c7d4bf431cfec10b"
+    },
+    {
+      "caseId": "BD03",
+      "proposition": "Mount Kilimanjaro is located in Tanzania.",
+      "evidenceId": "ev-fc10664bbaa8225ad8ac",
+      "url": "https://whc.unesco.org/document/153391",
+      "excerptSHA256": "191349d9f0276dfe58381221edfe8a9707065883cff393b4fd4ca86bb163fae7",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": false,
+          "expandedSelection": false
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "supports",
+      "completeSelectedProposition": true,
+      "passageVerification": "Fresh GET to exact UNESCO URL returned HTTP 200 scanned PDF. Page 1 visually inspected: World Heritage Nomination—IUCN Summary; 403 Kilimanjaro National Park (Tanzania); prepared April 1987 from Tanzania nomination. Location paragraph explicitly identifies Mount Kilimanjaro near Moshi/Kenyan border. Selected OCR has glyph/table-heading errors, but named mountain-country association is clear in original image. Later evaluation states original nomination was sketchy/inaccurate and IUCN prepared new dossier. Shared nomination/IUCN provenance with CPAG compilation, not independent domains. CF-Cache-Status HIT; fresh request is not uncached-origin proof.",
+      "supportedQualifiers": [
+        "named mountain",
+        "Tanzania"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Fresh GET to exact UNESCO URL returned HTTP 200 scanned PDF. Page 1 visually inspected: World Heritage Nomination—IUCN Summary; 403 Kilimanjaro National Park (Tanzania); prepared April 1987 from Tanzania nomination. Location paragraph explicitly identifies Mount Kilimanjaro near Moshi/Kenyan border. Selected OCR has glyph/table-heading errors, but named mountain-country association is clear in original image. Later evaluation states original nomination was sketchy/inaccurate and IUCN prepared new dossier. Shared nomination/IUCN provenance with CPAG compilation, not independent domains. CF-Cache-Status HIT; fresh request is not uncached-origin proof.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:32:18.650060+00:00",
+      "priorReviewedAt": "2026-11-14T04:33:33.261511+00:00",
+      "proofMetadata": "reused-proofs/fc10664bbaa8225a.json",
+      "bodySHA256": "4004cd144b8b7b381fc0b4f7818127feee532f1e3e70c8a13e55c3bc755638ed",
+      "textSHA256": "cebc6e70e878d74d831828f24e7ace21df7c14629d999473ff1f90187453b361"
+    },
+    {
+      "caseId": "BD03",
+      "proposition": "Mount Kilimanjaro is located in Tanzania.",
+      "evidenceId": "ev-8cabcd0e009700e9fb3b",
+      "url": "https://bryophyteportal.org/portal/collections/individual/index.php?occid=6103830",
+      "excerptSHA256": "9d874893f39ae55a36f2fe5c96987d23f0dff8f4903d1fababf16779b75da374",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "supported",
+          "newDefinitive": false,
+          "expandedSelection": false
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "supports",
+      "completeSelectedProposition": true,
+      "passageVerification": "Fresh GET to exact occurrence URL returned HTTP 200 substantive University of Tennessee Bryophyte Herbarium record TENN-B-0117171, occurrence UUID 1d5729ee-0f2e-44d1-a2c7-ea9079df6903. The locality explicitly gives Tanzania, Kilimanjaro, Mt. Kilimanjaro, Mt. Kilimanjaro; georeference remarks name Uhuru peak/Mt. Kilimanjaro National Park. This directly connects the mountain, not merely a shared regional name, to country. Collector V.C. Gilbert and collection date 2 May 1966 supply specimen provenance. Coordinates carry ±25085m uncertainty and were placed near peak; no precise GPS/boundary inference or original specimen-image transcription is claimed.",
+      "supportedQualifiers": [
+        "named mountain",
+        "Tanzania"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Fresh GET to exact occurrence URL returned HTTP 200 substantive University of Tennessee Bryophyte Herbarium record TENN-B-0117171, occurrence UUID 1d5729ee-0f2e-44d1-a2c7-ea9079df6903. The locality explicitly gives Tanzania, Kilimanjaro, Mt. Kilimanjaro, Mt. Kilimanjaro; georeference remarks name Uhuru peak/Mt. Kilimanjaro National Park. This directly connects the mountain, not merely a shared regional name, to country. Collector V.C. Gilbert and collection date 2 May 1966 supply specimen provenance. Coordinates carry ±25085m uncertainty and were placed near peak; no precise GPS/boundary inference or original specimen-image transcription is claimed.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:32:18.506850+00:00",
+      "priorReviewedAt": "2026-11-14T04:33:33.261511+00:00",
+      "proofMetadata": "reused-proofs/8cabcd0e009700e9.json",
+      "bodySHA256": "9614f7e3b4681fabf7d6ca27df03e8d50519295e316b19bf38efb3ca87c7c420",
+      "textSHA256": "218a1327d3fe4219cdac38b9e4041d0764b01c319b45b275e420218d2dc15c27"
+    },
+    {
+      "caseId": "BD10",
+      "proposition": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "evidenceId": "ev-0731d2680f6821d2a03e",
+      "url": "https://www.si.edu/about/history",
+      "excerptSHA256": "554c2f626a1a58fd2b0249b80507e445788433f3dd39037d77ee241d14e80d58",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "contradicts",
+      "completeSelectedProposition": true,
+      "passageVerification": "Fresh exact-URL GET returned HTTP 200 Smithsonian Our History. Candidate’s expanded excerpt was checked afresh; opening passage explicitly identifies US Senate act signed by Polk 10 August 1846 and distinguishes 1836 bequest acceptance from 1846 establishment. This directly addresses claimed British royal-charter mechanism. Later speculation about donor motives is attributed speculation, not establishment proof. Institutional retrospective; overlaps same-publisher factsheet and same underlying legislation, not an independent legal origin.",
+      "supportedQualifiers": [
+        "Smithsonian Institution",
+        "creation by US congressional act rather than British royal charter",
+        "1846"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Fresh exact-URL GET returned HTTP 200 Smithsonian Our History. Candidate’s expanded excerpt was checked afresh; opening passage explicitly identifies US Senate act signed by Polk 10 August 1846 and distinguishes 1836 bequest acceptance from 1846 establishment. This directly addresses claimed British royal-charter mechanism. Later speculation about donor motives is attributed speculation, not establishment proof. Institutional retrospective; overlaps same-publisher factsheet and same underlying legislation, not an independent legal origin.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:35:25.760962+00:00",
+      "priorReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+      "proofMetadata": "reused-proofs/0731d2680f6821d2.json",
+      "bodySHA256": "4b7ecaa96a9794dee1596c4edf41efe6d552dabdb13d417e148d06cc9d68c1b2",
+      "textSHA256": "3173e281ef234b60aec8eb57f9239fd42e5f7bc9c69d358e6d2743fbe5402336"
+    },
+    {
+      "caseId": "BD10",
+      "proposition": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "evidenceId": "ev-6a6fe886686c4d654057",
+      "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+      "excerptSHA256": "b681e556c772beaaff5e0536f2f53c50982b8fb713e2cb119674f9d93c247a93",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": false
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "contradicts",
+      "completeSelectedProposition": true,
+      "passageVerification": "Reused prior verified proof only because exact selected URL and exact excerpt SHA-256 b681e556… match baseline review; retained original origin fetch completed 2026-11-14T04:19:05Z, not a candidate-time fresh fetch. Saved HTTP 200 body contains entire paragraph explicitly created by act of Congress 10 August 1846, citing 20 U.S.C. 41 et seq. It directly contradicts British-charter mechanism. FederalRegister agency profile is informational; site disclaims official legal-edition status. Original body/metadata hashes preserved; no statutory scan substituted.",
+      "supportedQualifiers": [
+        "Smithsonian Institution",
+        "creation by US congressional act rather than British royal charter",
+        "1846"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Reused prior verified proof only because exact selected URL and exact excerpt SHA-256 b681e556… match baseline review; retained original origin fetch completed 2026-11-14T04:19:05Z, not a candidate-time fresh fetch. Saved HTTP 200 body contains entire paragraph explicitly created by act of Congress 10 August 1846, citing 20 U.S.C. 41 et seq. It directly contradicts British-charter mechanism. FederalRegister agency profile is informational; site disclaims official legal-edition status. Original body/metadata hashes preserved; no statutory scan substituted.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:19:05.217388+00:00",
+      "priorReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+      "proofMetadata": "reused-proofs/6a6fe886686c4d65.json",
+      "bodySHA256": "8058d402ee3bac7ff8e51ca0ca85d3cd725da98ac962f6c739cf0e6061501011",
+      "textSHA256": "1bff2fa0f581774e5074da3e39ac5d68cdc3ad670b3786337e2574fc31831588"
+    },
+    {
+      "caseId": "BD10",
+      "proposition": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "evidenceId": "ev-9ba7133657edfc20c794",
+      "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+      "excerptSHA256": "4713e30bff6c89cf11a86ef051600e20e3f3443806e56e2c6ccc651396bc0d1d",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "contradicts",
+      "completeSelectedProposition": true,
+      "passageVerification": "Fresh exact-URL GET returned HTTP 200 Smithsonian Brief History factsheet, current body identifier SI-120-2026. Selected passages occur and explicitly give Act of Congress signed by Polk 10 August 1846 after donor/bequest history. Directly contradicts British-charter mechanism while preserving British donor distinction. Same-publisher institutional history and overlapping prose with Our History count as one institutional family, not extra independent corroboration. No original 1846 act inspected.",
+      "supportedQualifiers": [
+        "Smithsonian Institution",
+        "creation by US congressional act rather than British royal charter",
+        "1846"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Fresh exact-URL GET returned HTTP 200 Smithsonian Brief History factsheet, current body identifier SI-120-2026. Selected passages occur and explicitly give Act of Congress signed by Polk 10 August 1846 after donor/bequest history. Directly contradicts British-charter mechanism while preserving British donor distinction. Same-publisher institutional history and overlapping prose with Our History count as one institutional family, not extra independent corroboration. No original 1846 act inspected.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:35:25.865344+00:00",
+      "priorReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+      "proofMetadata": "reused-proofs/9ba7133657edfc20.json",
+      "bodySHA256": "a194c9bbb880fe495b5ddcb4d2953232cfde2526b6f2d6059384c1d11387005d",
+      "textSHA256": "8117ef4a8387edc32df47926aa718461bdf7f55283931c5801fb11671a0dda48"
+    },
+    {
+      "caseId": "BD10",
+      "proposition": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "evidenceId": "ev-eb0bdcebbd68c35e5e3a",
+      "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+      "excerptSHA256": "56617513f2810dcab0311251e9dbed706c1c9db996f915562e24387cca1a3eba",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": false
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": false,
+          "expandedSelection": false
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "complete",
+      "relation": "contradicts",
+      "completeSelectedProposition": true,
+      "passageVerification": "Fresh exact-URL GET returned HTTP 200 US House History, Art & Archives Smithsonian Institution Established entry dated 29 April 1846. It explicitly records House passage and Polk signature 10 August 1846; selected body matches after whitespace/HTML normalization. Source is maintained by Office of Historian/Office of Art & Archives and recounts own legislative proceedings. Correct distinction: 29 April is House-passage date, 10 August enactment; not a British charter. Different publisher, shared underlying congressional event, not a separate enacting instrument.",
+      "supportedQualifiers": [
+        "Smithsonian Institution",
+        "creation by US congressional act rather than British royal charter",
+        "1846"
+      ],
+      "missingQualifiers": [],
+      "lineage": "Fresh exact-URL GET returned HTTP 200 US House History, Art & Archives Smithsonian Institution Established entry dated 29 April 1846. It explicitly records House passage and Polk signature 10 August 1846; selected body matches after whitespace/HTML normalization. Source is maintained by Office of Historian/Office of Art & Archives and recounts own legislative proceedings. Correct distinction: 29 April is House-passage date, 10 August enactment; not a British charter. Different publisher, shared underlying congressional event, not a separate enacting instrument.",
+      "limits": "Exact prior proof reused with original timestamp; no fresh source accessibility claim and no certification of incidental facts outside tested proposition.",
+      "proofMode": "reused_exact_url_and_excerpt",
+      "fetchCompletedAt": "2026-11-14T04:35:26.044712+00:00",
+      "priorReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+      "proofMetadata": "reused-proofs/eb0bdcebbd68c35e.json",
+      "bodySHA256": "1905b617f04c6134468d30ee2f6d695dd18e4bc92af9f7c290cfa7cd305043ba",
+      "textSHA256": "6ab0e34234c6582c3b05843636daaf54a798adedf1b67b54c72856022b19e7cb"
+    },
+    {
+      "caseId": "BD04",
+      "proposition": "Lake Baikal is in Africa.",
+      "evidenceId": "ev-8d8e57597f36a9992ee5",
+      "url": "https://whc.unesco.org/document/164347",
+      "excerptSHA256": "99a8f53c6eb223e093bc517bcad1364d54328dbe57257f29d08ed565bd0f902e",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": true,
+          "expandedSelection": true
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": true,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "partial",
+      "relation": "contradiction_requires_unretained_geographic_mapping",
+      "completeSelectedProposition": false,
+      "passageVerification": "Fresh exact URL returned the 12-page UNESCO Periodic Report Second Cycle, SectionII LakeBaikal. Rendered page1 visually inspected against every retained paragraph, property field and table. Excerpt reorders two PDF columns and converts the location table to Markdown; named property754, Russian Federation, south-east Siberia and53.174/107.663 all visibly match. Final map row is truncated.",
+      "supportedQualifiers": [
+        "Lake Baikal",
+        "south-east Siberia",
+        "Russian Federation",
+        "53.174/107.663"
+      ],
+      "missingQualifiers": [
+        "explicit Baikal continent or explicit not-in-Africa relation"
+      ],
+      "lineage": "World Heritage Centre-hosted State Party periodic report, generated13October2014; StateParty RussianFederation and responsible national bodies named on page1. This is a conservation/heritage report, not a continent gazetteer. Location fields are substantive but not an explicit continent assertion.",
+      "limits": "A reader with ordinary geographic knowledge can infer not Africa from Siberia/Russia/coordinates. The selected passage alone does not state the continent link; this audit does not invent a missing geographic premise. No pagewide Africa/Asia assertion resolves it. Original map links were not fetched. Depth,age,freshwater percentages and biodiversity claims are outside scope.",
+      "proofMode": "fresh_exact_url",
+      "fetchCompletedAt": "2026-11-14T05:26:18.247660+00:00",
+      "priorReviewedAt": null,
+      "proofMetadata": "origin-fetches/8d8e57597f36a999.json",
+      "bodySHA256": "e964b397a89fab0d1b9414261c62e10fe83e5100726a2299cde3119e9a4ed0d8",
+      "textSHA256": "705cb7431bc468adcf82c153bd92faa83714096ffa3f210a943c74781e4d4822"
+    },
+    {
+      "caseId": "BD04",
+      "proposition": "Lake Baikal is in Africa.",
+      "evidenceId": "ev-566051bb4c4b0e20f045",
+      "url": "https://wldb.ilec.or.jp/Display/html/3544",
+      "excerptSHA256": "4a0dec247e79aa24d5b80d02e181e474d33351d8e0bd48c61bb3999b5639cd62",
+      "selectedIn": [
+        {
+          "condition": "original_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": true,
+          "expandedSelection": true
+        },
+        {
+          "condition": "reversed_full",
+          "candidateVerdict": "contradicted",
+          "newDefinitive": true,
+          "expandedSelection": true
+        }
+      ],
+      "sourceInspection": "verified",
+      "sourceInspectionMeaning": "Exact selected material is present in an inspectable source; not an assertion that every proposition qualifier is supported or that source origins are independent.",
+      "auditedAt": "2026-11-14T05:28:07.987758+00:00",
+      "scope": "partial",
+      "relation": "contradiction_requires_unretained_geographic_mapping",
+      "completeSelectedProposition": false,
+      "passageVerification": "Fresh exact URL returned substantive ILEC World Lake Database lake3544. Selected title, photo caption, location, coordinates, stale-place-name caveat and full description match after markup/whitespace normalization; the provider-inserted leading list numeral1 is formatting. Africa/Asia labels in the full body are generic navigation links, not a location field for this lake.",
+      "supportedQualifiers": [
+        "Ozero Baykal / Lake Baikal",
+        "Buryat A.S.S.R. and Irkutsk, Russia",
+        "51:29–55:46N,103:40–109:55E"
+      ],
+      "missingQualifiers": [
+        "explicit Baikal continent or explicit not-in-Africa relation"
+      ],
+      "lineage": "International Lake Environment Committee Foundation database compilation; full body lists older limnological and Siberian sources from1963–1988 including1979 Academy ofSciences LakeBaikal guidebook. Selected A.LOCATION field has no per-field citation. Different compilation from UNESCO; no direct copy/common-origin link is proven, and independent continent evidence is not established.",
+      "limits": "Great Lakes of North America appears only as a water-volume comparison. Generic Asia menu links and internal ASI-27 IDs are outside the selected passage and are not substituted as a continent proof. The explicit place-names-not-updated caveat remains. No related URL was fetched.",
+      "proofMode": "fresh_exact_url",
+      "fetchCompletedAt": "2026-11-14T05:26:19.533356+00:00",
+      "priorReviewedAt": null,
+      "proofMetadata": "origin-fetches/566051bb4c4b0e20.json",
+      "bodySHA256": "4d1e1da750fde09d73cf01c074c8941465351f54346d4ff61921359175886975",
+      "textSHA256": "fa1e845ce81db088a2532d51c40d159b03d1a107410ad27749e47aac279b5212"
+    }
+  ],
+  "contextConclusions": [
+    {
+      "caseId": "BD04",
+      "conditions": [
+        "original_full",
+        "reversed_full"
+      ],
+      "conclusion": "Sources are authentic and provide specific non-African-location evidence through Siberia/Russia/coordinates, but an external geographic mapping is required. The audit withholds unconditional exact-passage continent verification. It does not label the real-world contradiction wrong. No claim that two domains supply two complete independent continent proofs."
+    },
+    {
+      "caseId": "BD11",
+      "conditions": [
+        "reversed_full"
+      ],
+      "excludedSentinel": "T03 remains excluded from fitting/accuracy denominator but not safety review",
+      "conclusion": "The memorial explicitly supports every tested qualifier; the Nobel ceremony corroborates recipient/category/year only. This is one complete passage plus one partial passage. The study does not establish independent underlying ordinal evidence in both sources."
+    },
+    {
+      "caseId": "BD03",
+      "conditions": [
+        "original_full",
+        "reversed_full"
+      ],
+      "conclusion": "All three selected passages retain the mountain-country relation. CPAG/WCMC and UNESCO/IUCN share nomination lineage; herbarium is a distinct specimen record with locality scope and coordinate uncertainty, not precise boundary proof."
+    },
+    {
+      "caseId": "BD10",
+      "conditions": [
+        "original_full",
+        "reversed_full"
+      ],
+      "conclusion": "All four selected passages retain the US congressional creation mechanism/year. SIhistory/factsheet share publisher and narrative. House/FederalRegister corroborate congressional action; they are not four independent original legal instruments. No original statutory scan was inspected."
+    }
+  ],
+  "limitations": [
+    "Sourceinspection and exactclaim coverage are distinct; these rows are not the liveharness strictCitationReview[] schema and must not be collapsed into an all-verified policy pass.",
+    "No threshold/prompt/schema/production changes, project-provider calls, heldout reads, reruns or new fact-accuracy denominator.",
+    "Source bodies fetched later than the retained08 passages establish current presence only; prior reused bodies establish presence at original fetch times. CachedHTTP200 responses do not prove uncached-origin freshness.",
+    "No new material is retroactively inserted into comparison24 model inputs. An independently supported world fact does not repair a selected passage missing a qualifier.",
+    "Four publicGETs, no redirects/retries,737051 responsebodybytes; no extra image/source/statute/map fetches."
+  ],
+  "originalCandidateReportsHashVerified": {
+    "/workspace/task-evidence/broader-candidate08-04.json": "6f51d7986ade300cea34ac31602602e9223a924d76373069a127f39f403eaf2d",
+    "/workspace/task-evidence/broader-candidate08-01.json": "5512bec4f350cdd69e2da03a124dfcf02cbe53f726db3ee9b75d10a851331a76",
+    "/workspace/task-evidence/broader-candidate08-02.json": "7281cc44d5932e84f113161b471f4434eefc7a57f36d6dd542fb3559ec8539ce"
+  },
+  "reuseSecondReview": {
+    "reviewer": "broader_dev_author",
+    "result": "Allseven exact URL+excerpt+claim matches and priorpositive reviews/bodytexthashes reconfirmed; qualifiers and lineage independently inspected from saved proofs only; no fetches."
+  }
+}

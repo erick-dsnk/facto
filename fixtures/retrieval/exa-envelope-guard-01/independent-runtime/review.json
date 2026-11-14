@@ -1,0 +1,44 @@
+{
+  "kind": "independent_production_exa_operational_envelope_review",
+  "createdAt": "2026-11-14T08:09:07.738997+00:00",
+  "decision": "APPROVED_no_P1_findings",
+  "sourceRoot": "/workspace/exa-envelope-guard",
+  "reviewedSourceHashes": {
+    "services/api/src/evidence/normalize.ts": "8878761660f3313896e084138bcac62974d78a50d30b7f6a3bcbc4bb8a00d451",
+    "services/api/src/evidence/normalize-envelope.test.ts": "c331848981a7818ceedabd5d5ac3ef91ee6755ed77bc49d3ba61623d60b94f73",
+    "services/api/src/providers/exa/retrieval.test.ts": "1104a510b8325de8e255adcccb7650eedf9dede3bc5bd5d11968a23e4c7ca06a"
+  },
+  "authorEvidenceManifestSHA256": "ed9e0db9060a1feeec18ac87b74c841bd98731872c7b78000f0789c7afa56683",
+  "reviewScope": "Read-only targeted fail-closed envelope and unchanged known-target fallback/actual-SDK attempt-budget boundary. No code/index changes.",
+  "independentTests": 13,
+  "testsPassed": 13,
+  "actualSDKInjectedHTTPInvocations": 18,
+  "providerCalls": 0,
+  "networkCalls": 0,
+  "verified": [
+    "Operational root/result/status metadata is preserved until validation, then stripped from unchanged RetrievedPage shape. Nonstringstatus failsmalformed; operationalnon-success/error/tag failsretryable exa_content_failed.",
+    "Search failure never reaches contents or returns plausible accompanying text; oneactualsearchcharged.",
+    "Known per-target contents failure excludes that body before resultadmission and retains separately indexed highlights; no global quarantine or authority promotion.",
+    "Unknown/malformed/contradictory/root/separatelyeligible-result failures remain operational and do not masquerade as optionalknownpagefallback.",
+    "Successful legacy responses with absentstatus and successful unknownextensions retain existingpagebehavior and outputshape.",
+    "ActualSDK503transportretry thenknown403targetfailure consumes1search+2contents; no extraapplication-level retry of parsed HTTP200 envelope failures.",
+    "RealAttemptBudget counts match18actual mockedHTTP calls; noJev charges; exact publicspan only in outgoinginstructions.",
+    "Pre-cancel sends0calls; exactdeadline aftersearch suppressescontents/result while chargingtheactualattempt.",
+    "Only normalize.ts and twoownedtestfiles changed; no client/budget/retry/contracts/policy threshold changes."
+  ],
+  "authorValidationReportedNotRedundantlyRerun": {
+    "focused": 120,
+    "fullCheck": 621,
+    "lint": "passed",
+    "strictTypeScript": "passed",
+    "developmentEvaluation": "36/36",
+    "presentationEvaluation": "21/21"
+  },
+  "limits": [
+    "Syntheticfailures exercise actualSDK serialization/productionparser; no claim of a newly observed nativeprovider incident.",
+    "Unknown operationalstatus strings now failclosed; future documented provider success-enum changes would require explicit compatibilityreview.",
+    "Retainedcachedhighlights are not currentoriginverification or factualcoveragecredit."
+  ],
+  "independentLogSHA256": "343f9df30fd02879005733abec2cafff1e43beeaf7af65e12cd521924ad5d581",
+  "independentTestSHA256": "7337ff2acfa25232f72423583cd66a6b2893371697c9bd8ce02e12e78e0fb323"
+}

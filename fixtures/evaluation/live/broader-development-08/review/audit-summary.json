@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_selected_citation_audit_summary",
+  "createdAt": "2026-11-14T04:39:18.875876+00:00",
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "reviewFile": "/workspace/task-evidence/broader-candidate08-citation-review.json",
+  "reviewSHA256": "ee6a93fae614678a14f977eb654dc42af8cc38c39d5ec553249e2d11c3464232",
+  "counts": {
+    "selectedReferences": 19,
+    "uniqueSelectedUrls": 17,
+    "verifiedReferences": 17,
+    "unsupportedReferences": 0,
+    "inaccessibleReferences": 2,
+    "uniqueFacts": 12,
+    "eligibleOccurrences": 13,
+    "correctDefinitiveUniqueFacts": 6,
+    "abstainedUniqueFacts": 5,
+    "operationalErrorUniqueFacts": 1,
+    "wrongDefinitiveUniqueFacts": 0,
+    "sourceVerifiedCorrectUniqueFacts": 4,
+    "sourceVerifiedCorrectOccurrences": 5,
+    "terminalReceipts": 16,
+    "admittedEligibleOccurrences": 13
+  },
+  "sourceVerifiedUniqueLabels": [
+    "BD03",
+    "BD07",
+    "BD10",
+    "BD12"
+  ],
+  "definitiveNotFullyVerified": {
+    "BD01": "Selected Bartleby403inaccessible",
+    "BD08": "Selected Olympics.com503inaccessible"
+  },
+  "mixedControl": "BDC04 repeatsBD07; one additional occurrence, zero additional unique fact.",
+  "proofReuse": {
+    "reusedExactBaselineReferences": 1,
+    "id": "ev-6a6fe886686c4d654057",
+    "originalOriginFetchCompletedAt": "2026-11-14T04:19:05.217388+00:00",
+    "candidateTimeFreshnessClaimed": false
+  },
+  "network": {
+    "freshlyRequestedUniqueSelectedUrls": 16,
+    "freshRequestsIncludingTwoRetries": 18,
+    "newOrChangedSelectedExcerptsFreshlyRequested": true,
+    "onlyExactSelectedUrlsUsed": true,
+    "projectKeysOrProviderApiCalls": 0
+  },
+  "validation": {
+    "strictMetricFunctionAcceptedAll19Rows": true,
+    "selectedExcerptHashesMatchAll19Rows": true,
+    "savedRawBodyAndTextHashesMatch": true,
+    "operationalFailureKeptSeparateFromAbstention": true
+  }
+}

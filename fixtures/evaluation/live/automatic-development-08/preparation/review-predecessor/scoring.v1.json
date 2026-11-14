@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "label": "AD01-disabled-contradiction",
+      "sourceCaseId": "BD10",
+      "expectedVerdict": "contradicted",
+      "expectedAdmission": "check",
+      "expectedPresentation": {
+        "action": "silent",
+        "reasonCode": "notifications_disabled"
+      },
+      "sourceIds": [
+        "D10-P",
+        "D10-C"
+      ],
+      "scope": "legal establishment mechanism in 1846; founder's British nationality is separate",
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 75,
+          "text": "The Smithsonian Institution was created by a British royal charter in 1846."
+        }
+      ],
+      "isolatedManifest": "isolated/AD01-disabled-contradiction.json",
+      "requiredAdditionalEvidence": [
+        "First cold result (cached false) from a fresh session.",
+        "Exact admitted public span and correlated terminal receipt."
+      ],
+      "sourceVerification": "Unreviewed for new outputs; prior ground-truth sources do not pre-verify selected live references."
+    },
+    {
+      "label": "AD02-selected-topic-notify",
+      "sourceCaseId": "BD10",
+      "expectedVerdict": "contradicted",
+      "expectedAdmission": "check",
+      "expectedPresentation": {
+        "action": "notify",
+        "reasonCode": "selected_topic_contradiction"
+      },
+      "sourceIds": [
+        "D10-P",
+        "D10-C"
+      ],
+      "scope": "legal establishment mechanism in 1846; founder's British nationality is separate",
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 75,
+          "text": "The Smithsonian Institution was created by a British royal charter in 1846."
+        }
+      ],
+      "isolatedManifest": "isolated/AD02-selected-topic-notify.json",
+      "requiredAdditionalEvidence": [
+        "First cold result (cached false) from a fresh session.",
+        "Exact admitted public span and correlated terminal receipt."
+      ],
+      "sourceVerification": "Unreviewed for new outputs; prior ground-truth sources do not pre-verify selected live references."
+    },
+    {
+      "label": "AD03-supported-silent",
+      "sourceCaseId": "BD09",
+      "expectedVerdict": "supported",
+      "expectedAdmission": "check",
+      "expectedPresentation": {
+        "action": "silent",
+        "reasonCode": "automatic_noncontradiction"
+      },
+      "sourceIds": [
+        "D09-P",
+        "D09-C"
+      ],
+      "scope": "adoption of Constitution, place London, exact date; no member/signatory-count assertion",
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 64,
+          "text": "UNESCO's Constitution was adopted in London on 16 November 1945."
+        }
+      ],
+      "isolatedManifest": "isolated/AD03-supported-silent.json",
+      "requiredAdditionalEvidence": [
+        "First cold result (cached false) from a fresh session.",
+        "Exact admitted public span and correlated terminal receipt."
+      ],
+      "sourceVerification": "Unreviewed for new outputs; prior ground-truth sources do not pre-verify selected live references."
+    },
+    {
+      "label": "AD04-low-priority-silent",
+      "sourceCaseId": "BD10",
+      "expectedVerdict": "contradicted",
+      "expectedAdmission": "check",
+      "expectedPresentation": {
+        "action": "silent",
+        "reasonCode": "insufficient_priority"
+      },
+      "sourceIds": [
+        "D10-P",
+        "D10-C"
+      ],
+      "scope": "legal establishment mechanism in 1846; founder's British nationality is separate",
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 75,
+          "text": "The Smithsonian Institution was created by a British royal charter in 1846."
+        }
+      ],
+      "isolatedManifest": "isolated/AD04-low-priority-silent.json",
+      "requiredAdditionalEvidence": [
+        "First cold result (cached false) from a fresh session.",
+        "Exact admitted public span and correlated terminal receipt.",
+        "Recorded numeric practical-consequence assessment below0.8 and no selected topic."
+      ],
+      "sourceVerification": "Unreviewed for new outputs; prior ground-truth sources do not pre-verify selected live references."
+    },
+    {
+      "label": "AD05-personal-skip",
+      "sourceCaseId": "BDC01",
+      "expectedVerdict": null,
+      "expectedAdmission": "skip",
+      "expectedPresentation": {
+        "action": "silent",
+        "reasonCode": "private_or_personal"
+      },
+      "sourceIds": [],
+      "scope": "Synthetic control; truth labels do not apply.",
+      "publicSpans": [],
+      "isolatedManifest": "isolated/AD05-personal-skip.json",
+      "requiredAdditionalEvidence": [
+        "First cold result (cached false) from a fresh session.",
+        "Exact admitted public span and correlated terminal receipt.",
+        "Zero search and contents calls; no public admitted span."
+      ],
+      "sourceVerification": "Unreviewed for new outputs; prior ground-truth sources do not pre-verify selected live references."
+    },
+    {
+      "label": "AD06-muted-manual",
+      "sourceCaseId": "BD07",
+      "expectedVerdict": "supported",
+      "expectedAdmission": "check",
+      "expectedPresentation": {
+        "action": "silent",
+        "reasonCode": "muted"
+      },
+      "sourceIds": [
+        "D07-P",
+        "D07-C"
+      ],
+      "scope": "opening to world trade, not construction start, earlier test passage, expansion or transfer",
+      "publicSpans": [
+        {
+          "start": 0,
+          "end": 47,
+          "text": "The Panama Canal opened to world trade in 1914."
+        }
+      ],
+      "isolatedManifest": "isolated/AD06-muted-manual.json",
+      "requiredAdditionalEvidence": [
+        "First cold result (cached false) from a fresh session.",
+        "Exact admitted public span and correlated terminal receipt."
+      ],
+      "sourceVerification": "Unreviewed for new outputs; prior ground-truth sources do not pre-verify selected live references."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "baselineCommit": "04ac297523291b1aa289761d5ba3bed98610536f",
+  "baselinePath": "services/api/src/evidence/normalize.ts",
+  "baselineSHA256": "e7f9e5663a07011107bb44d912b1d28175e2b60e1427c81820ae5d7a129d7ae9",
+  "candidateWorkspace": "/workspace/exa-envelope-guard",
+  "candidatePath": "services/api/src/evidence/normalize.ts",
+  "candidateSHA256": "8878761660f3313896e084138bcac62974d78a50d30b7f6a3bcbc4bb8a00d451",
+  "onlyReplayRelocation": "Each snapshot changes only the contracts import path to its unchanged04ac source module; parser bytes otherwise identical. Existing tldts/zod deps reused, no installations.",
+  "sharedContractPins": [
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32",
+      "sameAs04ac": true
+    },
+    {
+      "path": "packages/contracts/src/wire.ts",
+      "sha256": "024ab8b2e899b4d705ee1b1b40ca89e549e0caa5dde9b498a7f1ad7c0c31aafd",
+      "sameAs04ac": true
+    }
+  ],
+  "captureManifests": [
+    {
+      "path": "/workspace/task-evidence/record-acquisition-feasibility-01/MANIFEST.json",
+      "sha256": "2dfce1983136220ff877ecff2fa7cce0845023aa5b43fb16f1baf4c4f2914c4c"
+    },
+    {
+      "path": "/workspace/task-evidence/locator-material-availability-01/MANIFEST.json",
+      "sha256": "6df4a74e93fc6daf17ccdbc9da77a6c4dbf07cea496472814b803559b06a18ab"
+    }
+  ],
+  "networkRequests": 0,
+  "providerCalls": 0
+}
