@@ -15,10 +15,8 @@ final class DisplayModel {
 
   var isConnected: Bool { displayState == .started }
 
-  /// Created once so it has already found a display-capable device when you tap Connect.
-  @ObservationIgnored private let deviceSelector = AutoDeviceSelector(
-    wearables: Wearables.shared, filter: { $0.supportsDisplay() }
-  )
+  /// The one session shared with the camera (see GlassesSession).
+  @ObservationIgnored private let glasses: GlassesSession
   @ObservationIgnored private var session: DeviceSession?
   @ObservationIgnored private var display: Display?
   @ObservationIgnored private let tokens = ListenerTokenBag()
@@ -32,20 +30,22 @@ final class DisplayModel {
   /// How long the ready screen stays when no result card replaces it.
   nonisolated static let readyDuration: Duration = .seconds(4)
 
+  /// Must be created after `Wearables.configure()`.
+  init(glasses: GlassesSession = .shared) {
+    self.glasses = glasses
+  }
+
   func connect() {
     guard session == nil else { return }
     lastError = nil
     do {
-      // Only picks glasses that have a display.
-      let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
-      session = newSession
-      newSession.statePublisher.listen { [weak self] state in
-        Task { @MainActor in self?.handleSession(state) }
-      }.store(in: tokens)
-      newSession.errorPublisher.listen { [weak self] error in
-        Task { @MainActor in self?.lastError = "Session: \(error.localizedDescription)" }
-      }.store(in: tokens)
-      try newSession.start()
+      // Joins the camera's session when it already has one: the glasses take one session.
+      session = try glasses.acquire(
+        .display,
+        onState: { [weak self] state in self?.handleSession(state) },
+        onError: { [weak self] message in self?.lastError = "Session: \(message)" }
+      )
+      handleSession(glasses.state)
     } catch {
       lastError = "Session: \(error.localizedDescription)"
       clear()
@@ -55,9 +55,14 @@ final class DisplayModel {
   func disconnect() {
     if let display {
       display.stop()
-    } else {
-      session?.stop()
+    } else if session != nil {
+      releaseSession()
     }
+  }
+
+  /// Leaves the shared session. If the camera still uses it, only the display state clears.
+  private func releaseSession() {
+    if !glasses.release(.display) { clear() }
   }
 
   private func handleSession(_ state: DeviceSessionState) {
@@ -83,7 +88,7 @@ final class DisplayModel {
       newDisplay.start()
     } catch {
       lastError = "Display: \(error.localizedDescription)"
-      session.stop()
+      releaseSession()
     }
   }
 
@@ -93,9 +98,9 @@ final class DisplayModel {
     case .started:
       Task { await sendReady() }
     case .stopped:
-      // Stopping the display detaches it; end the session too.
+      // Stopping the display detaches it; leave the session too (the camera may keep it).
       display = nil
-      session?.stop()
+      releaseSession()
     default:
       break
     }
