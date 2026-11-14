@@ -1,0 +1,218 @@
+/** Standalone, explicitly invoked public calibration runner. No production wiring. */
+import { createHash } from 'node:crypto';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { MODEL_VERSION, type AcceptedClaim, type Evidence, type ProviderContext } from '/workspace/stack-17/packages/contracts/src/index.ts';
+import { createJevClient, validateAnswers, type JevAnswer, type JevQuestion, type JevRequest } from '/workspace/stack-17/services/api/src/providers/jev/client.ts';
+import { createJudge } from '/workspace/stack-17/services/api/src/providers/jev/judgment.ts';
+import { ASSESSMENT_THRESHOLD } from '/workspace/stack-17/services/api/src/policy/assessment.ts';
+import { buildSourceAssessmentExperimentRequest, type SourceAssessmentExperimentUnit } from '/workspace/stack-17/services/api/src/policy/source-assessment-experiment.ts';
+
+export const LIMITS = Object.freeze({ maxAttempts: 16, maxUnits: 48, batchSize: 6, maxInputTokens: 150000, pendingReserve: 24000, maxRequestBytes: 65536, maxTotalRequestBytes: 1048576, wallMs: 120000 });
+export const hash = (value: string | Uint8Array): string => createHash('sha256').update(value).digest('hex');
+const encode = (request: JevRequest): string => JSON.stringify({ model: MODEL_VERSION, state: request.state, questions: request.questions });
+const check: (condition: unknown, message: string) => asserts condition = (condition, message) => { if (!condition) throw new Error(message); };
+type Unit = SourceAssessmentExperimentUnit & { sourceFamily: string; partition: 'development' | 'validation' };
+type Label = { id: string; expectedBasis: 'substantive' | 'non_substantive' | 'insufficient'; supportingSpan: string; basisSubtype?: string; excludeFromPrimary?: boolean; firstLabel?: unknown; secondLabel?: unknown };
+type Call = { arm: 'baseline' | 'candidate'; batch: number; ids: string[]; request: JevRequest; bodyHash: string; requestBytes: number };
+export type Plan = { schemaVersion: 1; preparedAt: string; threshold: number; model: string; limits: typeof LIMITS; units: Unit[]; labels: Label[]; inputHashes: Record<string, string>; sourceHashes: Record<string, string>; templateHashes: Record<string, string>; calls: Call[]; caveats: string[] };
+const SOURCE_FILES = ['packages/contracts/src/index.ts', 'services/api/src/providers/jev/client.ts', 'services/api/src/providers/jev/judgment.ts', 'services/api/src/policy/assessment.ts', 'services/api/src/policy/sources.ts', 'services/api/src/policy/source-assessment-experiment.ts'];
+const frozenSources = (): Record<string, string> => Object.fromEntries([
+  ...SOURCE_FILES.map(file => [file, hash(readFileSync(`/workspace/stack-17/${file}`))]),
+  ['standalone-runner.ts', hash(readFileSync(new URL('./runner.ts', import.meta.url)))],
+]);
+
+/** Extract the real current seven-way question without making a provider call. */
+export async function extractBaselineQuestion(unit: SourceAssessmentExperimentUnit): Promise<JevQuestion> {
+  let captured: JevQuestion | undefined;
+  const sentinel = new Error('offline template capture');
+  const originalText = unit.proposition;
+  const claim: AcceptedClaim = { id: unit.id, originalText, checkedText: originalText, sourceSpan: { start: 0, end: Array.from(originalText).length }, admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_fact', hasPracticalConsequence: null, matchedSelectedTopic: null } };
+  const source: Evidence = { id: unit.id, url: unit.url, title: unit.title, excerpt: unit.excerpt, publisher: null, publishedAt: null, retrievedAt: '2026-11-14T00:00:00.000Z', contentBasis: 'highlight', sourceGroup: unit.id, echoGroup: null, sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null };
+  try {
+    await createJudge({ ask: async request => { captured = request.questions.e0_content_basis; throw sentinel; } })(claim, [source], { signal: new AbortController().signal, consume: () => { throw new Error('offline capture must not consume'); }, now: Date.now });
+  } catch (error) { if (error !== sentinel) throw error; }
+  check(captured, 'production content-basis question not captured');
+  return captured;
+}
+
+export async function buildPlan(units: Unit[], labels: Label[], inputHashes: Record<string, string>): Promise<Plan> {
+  check(units.length > 0 && units.length <= LIMITS.maxUnits, 'unit count outside budget');
+  check(new Set(units.map(unit => unit.id)).size === units.length, 'duplicate unit IDs');
+  check(labels.length === units.length && new Set(labels.map(label => label.id)).size === units.length, 'one frozen label per unit required');
+  for (const unit of units) {
+    const label = labels.find(value => value.id === unit.id);
+    check(unit.partition === 'development' || unit.partition === 'validation', 'invalid partition');
+    check(typeof unit.sourceFamily === 'string' && unit.sourceFamily.length, 'source family missing');
+    check(label && ['substantive', 'non_substantive', 'insufficient'].includes(label.expectedBasis), 'invalid independent label');
+    check(typeof label.supportingSpan === 'string' && label.supportingSpan.length > 0 && unit.excerpt.includes(label.supportingSpan), 'label span not retained');
+  }
+  for (const family of new Set(units.map(unit => unit.sourceFamily))) check(new Set(units.filter(unit => unit.sourceFamily === family).map(unit => unit.partition)).size === 1, 'source family crosses partitions');
+  const calls: Call[] = [];
+  const templateHashes: Record<string, string> = {};
+  for (let offset = 0; offset < units.length; offset += LIMITS.batchSize) {
+    const batch = units.slice(offset, offset + LIMITS.batchSize);
+    const candidate = buildSourceAssessmentExperimentRequest(batch);
+    const baselineQuestions: Record<string, JevQuestion> = {};
+    for (let index = 0; index < batch.length; index++) {
+      const original = await extractBaselineQuestion(batch[index]);
+      baselineQuestions[`u${index}_content_basis`] = { ...original, instructions: `For calibration unit ${batch[index].id} alone, use its proposition and retained excerpt. Do not borrow evidence from another unit. ${original.instructions}` };
+      templateHashes[`baseline-original:${batch[index].id}`] = hash(JSON.stringify(original));
+    }
+    const baseline: JevRequest = { state: candidate.state, questions: baselineQuestions };
+    // Alternate which arm goes first across batches to bound simple order effects.
+    const arms: Array<[Call['arm'], JevRequest]> = offset / LIMITS.batchSize % 2 === 0 ? [['baseline', baseline], ['candidate', candidate]] : [['candidate', candidate], ['baseline', baseline]];
+    for (const [arm, request] of arms) {
+      const body = encode(request);
+      check(Buffer.byteLength(body) <= LIMITS.maxRequestBytes, 'request exceeds byte cap');
+      calls.push({ arm, batch: offset / LIMITS.batchSize, ids: batch.map(unit => unit.id), request, bodyHash: hash(body), requestBytes: Buffer.byteLength(body) });
+    }
+  }
+  check(calls.length <= LIMITS.maxAttempts, 'attempt cap exceeded by plan');
+  check(calls.reduce((sum, call) => sum + call.requestBytes, 0) <= LIMITS.maxTotalRequestBytes, 'planned request bytes exceed total cap');
+  templateHashes.candidateCriteria = hash(JSON.stringify(buildSourceAssessmentExperimentRequest([units[0]]).questions));
+  return { schemaVersion: 1, preparedAt: new Date().toISOString(), threshold: ASSESSMENT_THRESHOLD, model: MODEL_VERSION, limits: LIMITS, units, labels, inputHashes, sourceHashes: frozenSources(), templateHashes, calls, caveats: ['Isolated rubric comparison, not production joint-judgment accuracy or end-to-end coverage.', 'Both arms receive identical per-batch state and exact retained bytes. Baseline uses current production seven-way criteria, with a unit-scoping prefix.', 'Genre is diagnostic for candidate. No risk, origin, stance, scope, privacy or corroboration policy is replaced.', 'Single pass per arm; no retries or repeated failed units. Small strata cannot establish calibrated factual reliability.'] };
+}
+
+export function decode(call: Call, answers: Record<string, JevAnswer>): Array<{ id: string; decision: string; confidence: number; passesContentBasis: boolean; diagnosticGenre?: string }> {
+  const valid = validateAnswers({ answers }, call.request.questions);
+  return call.ids.map((id, index) => {
+    if (call.arm === 'candidate') {
+      const basis = valid[`u${index}_substantive_basis`];
+      const confidence = basis.probabilities!.substantive;
+      return { id, decision: basis.choice!, confidence, passesContentBasis: basis.choice === 'substantive' && confidence >= ASSESSMENT_THRESHOLD, diagnosticGenre: valid[`u${index}_genre`].choice! };
+    }
+    const basis = valid[`u${index}_content_basis`];
+    const accepted = ['original_record', 'attributable_research', 'substantive_secondary'];
+    const confidence = Math.min(1, accepted.reduce((sum, category) => sum + basis.probabilities![category], 0));
+    return { id, decision: basis.choice!, confidence, passesContentBasis: accepted.includes(basis.choice!) && confidence >= ASSESSMENT_THRESHOLD };
+  });
+}
+
+export async function executePlan(plan: Plan, output: string, options: { apiKey: string; fetch?: typeof fetch; now?: () => number }): Promise<unknown> {
+  check(plan.model === MODEL_VERSION && plan.threshold === ASSESSMENT_THRESHOLD, 'model/threshold changed after freeze');
+  check(JSON.stringify(plan.limits) === JSON.stringify(LIMITS), 'budget changed after freeze');
+  check(JSON.stringify(plan.sourceHashes) === JSON.stringify(frozenSources()), 'source templates changed after freeze');
+  check(plan.calls.length <= LIMITS.maxAttempts && plan.calls.every(call => call.requestBytes === Buffer.byteLength(encode(call.request)) && call.bodyHash === hash(encode(call.request))), 'request freeze mismatch');
+  check(plan.calls.every(call => call.requestBytes <= LIMITS.maxRequestBytes) && plan.calls.reduce((sum, call) => sum + call.requestBytes, 0) <= LIMITS.maxTotalRequestBytes, 'request byte budget invalid');
+  mkdirSync(output, { recursive: false, mode: 0o700 });
+  const log = (event: unknown): void => appendFileSync(`${output}/events.jsonl`, `${JSON.stringify(event)}\n`, { encoding: 'utf8', mode: 0o600, flush: true });
+  const now = options.now ?? Date.now;
+  const started = now();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(new Error('calibration wall deadline')), LIMITS.wallMs);
+  const totals = { attempts: 0, actualFetches: 0, requestBytes: 0, responseBytes: 0, measuredInputTokens: 0, unknownUsage: false, usageMissingCalls: 0, usageKnownCalls: 0, exaActualCalls: 0 };
+  const outcomes: unknown[] = [];
+  let stopReason = 'completed';
+  log({ type: 'started', planHash: hash(JSON.stringify(plan)), startedAt: new Date(started).toISOString(), limits: LIMITS });
+  try {
+    for (const [sequence, call] of plan.calls.entries()) {
+      if (controller.signal.aborted || now() - started >= LIMITS.wallMs) { stopReason = 'wall_budget'; break; }
+      if (totals.unknownUsage) { stopReason = 'unknown_usage'; break; }
+      if (totals.attempts >= LIMITS.maxAttempts || totals.measuredInputTokens + LIMITS.pendingReserve > LIMITS.maxInputTokens || totals.requestBytes + call.requestBytes > LIMITS.maxTotalRequestBytes) { stopReason = 'budget_reserve'; break; }
+      let usage: number | undefined;
+      const previousResponseBytes = totals.responseBytes;
+      const callStarted = now();
+      const fetcher: typeof fetch = async (input, init) => {
+        check(String(input) === 'https://api.typesafe.ai/v1/systemone', 'unexpected provider endpoint');
+        check(typeof init?.body === 'string' && hash(init.body) === call.bodyHash, 'actual request differs from frozen request');
+        check(Buffer.byteLength(init.body) <= LIMITS.maxRequestBytes, 'actual request exceeds byte cap');
+        totals.actualFetches++;
+        totals.requestBytes += Buffer.byteLength(init.body);
+        log({ type: 'request_sent', sequence, arm: call.arm, ids: call.ids, requestBytes: Buffer.byteLength(init.body), bodyHash: call.bodyHash });
+        const response = await (options.fetch ?? fetch)(input, init);
+        // Preserve status and count actual received bytes without a second fetch.
+        const reader = response.body?.getReader();
+        const stream = reader ? new ReadableStream<Uint8Array>({
+          async pull(target) {
+            const chunk = await reader.read();
+            if (chunk.done) { target.close(); return; }
+            totals.responseBytes += chunk.value.byteLength;
+            target.enqueue(chunk.value);
+          },
+          async cancel(reason) { await reader.cancel(reason); },
+        }) : null;
+        log({ type: 'response_headers', sequence, status: response.status });
+        return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers });
+      };
+      const context: ProviderContext = { signal: controller.signal, now, consume: provider => { check(provider === 'jev', 'Exa prohibited'); check(totals.attempts < LIMITS.maxAttempts, 'attempt budget'); totals.attempts++; }, recordUsage: value => { check(typeof value.inputTokens === 'number' && Number.isSafeInteger(value.inputTokens) && value.inputTokens >= 0 && usage === undefined, 'invalid or duplicate usage'); usage = value.inputTokens; totals.measuredInputTokens += value.inputTokens; } };
+      log({ type: 'attempt_started', sequence, arm: call.arm, ids: call.ids });
+      try {
+        const answers = await createJevClient({ apiKey: options.apiKey, fetch: fetcher }).ask(call.request, context);
+        const result = { sequence, arm: call.arm, ids: call.ids, status: 'completed', inputTokens: usage ?? null, durationMs: now() - callStarted, responseBytes: totals.responseBytes - previousResponseBytes, results: decode(call, answers), answers };
+        outcomes.push(result); log({ type: 'attempt_terminal', ...result });
+      } catch (error) {
+        const result = { sequence, arm: call.arm, ids: call.ids, status: 'failed', inputTokens: usage ?? null, durationMs: now() - callStarted, responseBytes: totals.responseBytes - previousResponseBytes, error: error instanceof Error ? error.message : String(error) };
+        outcomes.push(result); log({ type: 'attempt_terminal', ...result });
+        stopReason = 'terminal_failure';
+      }
+      if (usage === undefined) { totals.unknownUsage = true; totals.usageMissingCalls++; }
+      else totals.usageKnownCalls++;
+      if (totals.measuredInputTokens > LIMITS.maxInputTokens) stopReason = 'measured_token_budget';
+      if (totals.unknownUsage) stopReason = 'unknown_usage';
+      if (stopReason !== 'completed') break;
+    }
+  } finally { clearTimeout(timeout); }
+  const report = { schemaVersion: 1, planHash: hash(JSON.stringify(plan)), stopReason, completedAllCalls: outcomes.length === plan.calls.length && stopReason === 'completed', durationMs: now() - started, totals,
+    providerAccounting: { consumedJev: totals.attempts, actualStartedJev: totals.actualFetches, actualStartedExa: 0, jevUsageKnownCalls: totals.usageKnownCalls, jevUsageUnknownCalls: totals.usageMissingCalls },
+    cost: { exaUsd: 0, jevUsd: null, measuredJevInputTokens: totals.measuredInputTokens, unknownJevUsageCalls: totals.usageMissingCalls, reason: 'Jev price/output-token cost unavailable; no invented total cost.' },
+    plannedCalls: plan.calls.length, metrics: metrics(plan, outcomes), outcomes };
+  log({ type: 'finished', ...report });
+  writeFileSync(`${output}/report.json`, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
+  return report;
+}
+
+export function metrics(plan: Plan, outcomes: unknown[]): unknown {
+  type Completed = { arm: Call['arm']; status: string; results?: Array<{ id: string; decision: string; confidence: number; passesContentBasis: boolean }> };
+  const observed = outcomes as Completed[];
+  return Object.fromEntries((['development', 'validation'] as const).map(partition => [partition, Object.fromEntries((['baseline', 'candidate'] as const).map(arm => {
+    const units = plan.units.filter(unit => unit.partition === partition);
+    const allResults = observed.filter(outcome => outcome.arm === arm && outcome.status === 'completed').flatMap(outcome => outcome.results ?? []).filter(result => units.some(unit => unit.id === result.id));
+    const excluded = (id: string): boolean => plan.labels.find(label => label.id === id)!.excludeFromPrimary === true;
+    const results = allResults.filter(result => !excluded(result.id));
+    const primaryUnits = units.filter(unit => !excluded(unit.id));
+    const boundary = allResults.filter(result => excluded(result.id));
+    const positive = (id: string): boolean => plan.labels.find(label => label.id === id)!.expectedBasis === 'substantive';
+    return [arm, { scheduled: units.length, allObserved: allResults.length, planned: primaryUnits.length, observed: results.length, missingOrFailed: primaryUnits.length - results.length,
+      truePositive: results.filter(result => positive(result.id) && result.passesContentBasis).length,
+      falseNegative: results.filter(result => positive(result.id) && !result.passesContentBasis).length,
+      falsePositive: results.filter(result => !positive(result.id) && result.passesContentBasis).length,
+      trueNegative: results.filter(result => !positive(result.id) && !result.passesContentBasis).length,
+      excludedFromPrimary: units.filter(unit => excluded(unit.id)).length,
+      boundaryPredictions: boundary.map(result => ({ ...result, provisionalExpected: plan.labels.find(label => label.id === result.id)!.expectedBasis, firstLabel: plan.labels.find(label => label.id === result.id)!.firstLabel, secondLabel: plan.labels.find(label => label.id === result.id)!.secondLabel })),
+      boundarySensitivity: { ifAllSubstantive: { additionalTruePositive: boundary.filter(result => result.passesContentBasis).length, additionalFalseNegative: boundary.filter(result => !result.passesContentBasis).length }, ifAllNonSubstantive: { additionalFalsePositive: boundary.filter(result => result.passesContentBasis).length, additionalTrueNegative: boundary.filter(result => !result.passesContentBasis).length } },
+      strata: Object.fromEntries([...new Set(primaryUnits.map(unit => plan.labels.find(label => label.id === unit.id)!.basisSubtype ?? 'unspecified'))].map(subtype => { const group = results.filter(result => (plan.labels.find(label => label.id === result.id)!.basisSubtype ?? 'unspecified') === subtype); return [subtype, { planned: primaryUnits.filter(unit => (plan.labels.find(label => label.id === unit.id)!.basisSubtype ?? 'unspecified') === subtype).length, observed: group.length, labelledPositive: group.filter(result => positive(result.id)).length, passed: group.filter(result => result.passesContentBasis).length, falsePositive: group.filter(result => result.passesContentBasis && !positive(result.id)).length }]; })),
+      probabilityBins: [[0, .7], [.7, .85], [.85, .9], [.9, 1.000001]].map(([lower, upper]) => { const group = results.filter(result => result.confidence >= lower && result.confidence < upper); return { lower, upper: Math.min(upper, 1), count: group.length, labelledPositive: group.filter(result => positive(result.id)).length }; }),
+    }];
+  }))]));
+}
+
+async function main(): Promise<void> {
+  const [action, ...args] = process.argv.slice(2);
+  if (action === 'prepare') {
+    const [unitsPath, labelsPath, adjudicationPath, outputPath] = args;
+    check(args.length === 4, 'prepare requires units labels adjudication output paths');
+    const raw = Object.fromEntries([unitsPath, labelsPath, adjudicationPath].map(path => [resolve(path), readFileSync(path, 'utf8')]));
+    const units = JSON.parse(raw[resolve(unitsPath)]).units as Unit[];
+    const labels = JSON.parse(raw[resolve(labelsPath)]).labels as Label[];
+    const adjudication = JSON.parse(raw[resolve(adjudicationPath)]);
+    check(adjudication.frozen === true && adjudication.independentReviewComplete === true, 'independent adjudication not frozen');
+    const plan = await buildPlan(units, labels, Object.fromEntries(Object.entries(raw).map(([path, value]) => [path, hash(value)])));
+    writeFileSync(outputPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
+    writeFileSync(`${outputPath}.sha256`, `${hash(JSON.stringify(plan))}\n`, { flag: 'wx', mode: 0o600 });
+    process.stdout.write(`Prepared ${plan.calls.length} frozen calls; no provider calls made.\n`);
+  } else if (action === 'execute') {
+    const [planPath, output] = args;
+    check(args.length === 2, 'execute requires frozen-plan and new-output-directory');
+    const plan = JSON.parse(readFileSync(planPath, 'utf8')) as Plan;
+    check(readFileSync(`${planPath}.sha256`, 'utf8').trim() === hash(JSON.stringify(plan)), 'plan hash mismatch');
+    for (const [path, expected] of Object.entries(plan.inputHashes)) check(hash(readFileSync(path)) === expected, 'frozen corpus/labels changed');
+    check(process.env.JEV_API_KEY?.trim(), 'JEV_API_KEY required from environment');
+    const report = await executePlan(plan, output, { apiKey: process.env.JEV_API_KEY! });
+    const summary = report as { stopReason: string; completedAllCalls: boolean; totals: unknown; plannedCalls: number };
+    process.stdout.write(`${JSON.stringify({ stopReason: summary.stopReason, completedAllCalls: summary.completedAllCalls, plannedCalls: summary.plannedCalls, totals: summary.totals, reportPath: `${output}/report.json` })}\n`);
+  } else throw new Error('Use prepare or execute explicitly; runner never executes by default.');
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) main().catch(error => { process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`); process.exitCode = 1; });
