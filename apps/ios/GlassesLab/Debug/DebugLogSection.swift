@@ -19,7 +19,7 @@ struct DebugLogSection: View {
       VStack(alignment: .leading, spacing: 4) {
         Toggle("Debug log", isOn: $isEnabled)
           .onChange(of: isEnabled) { _, enabled in log.isEnabled = enabled }
-        Text("Saves photos, OCR text and transcripts on this phone for 24 hours.")
+        Text("Off until you turn it on. When on, saves photos, OCR text and transcripts on this phone for 24 hours.")
           .font(.footnote)
           .foregroundStyle(.secondary)
       }
