@@ -26,9 +26,14 @@ function topicAdapters(priority: number | null = null): PipelineAdapters {
         for (const [name, question] of Object.entries(request.questions)) {
           if (!name.startsWith(candidate.id + '_')) continue;
           if (question.type === 'choice') {
-            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact' : 'asserted';
-            answers[name] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, key === choice ? .99 : .01 / (Object.keys(question.criteria).length - 1)])) };
-          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') ? .99 : priority };
+            const choices = Object.keys(question.criteria);
+            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact'
+              : name.endsWith('_assertion_status') ? 'asserted'
+                : name.endsWith('_quote_use') ? 'name_or_title'
+                  : name.endsWith('_claim_structure') ? (request.state as { candidates: unknown[] }).candidates.length > 1 ? 'multiple_propositions' : 'one_coherent'
+                    : 'asserted';
+            answers[name] = { choice, probabilities: Object.fromEntries(choices.map(key => [key, key === choice ? .99 : .01 / (choices.length - 1)])) };
+          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') || name.endsWith('_preserves_scope') ? .99 : priority };
         }
       }
       return answers;

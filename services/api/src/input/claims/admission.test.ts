@@ -8,7 +8,7 @@ function input(text: string, userInitiated = false): TextInput {
   return { schemaVersion: 1, requestId: 'request-1', sessionId: 'session-1', sessionEpoch: 1, revision: 1, mode: 'typed', text, language: 'en', capturedAt: '2026-11-14T12:00:00Z', capture: { source: 'typed_fixture', segmentId: 'segment-1', confidence: null }, context: [], userInitiated };
 }
 const context = (): ProviderContext => ({ signal: new AbortController().signal, consume: vi.fn(), now: () => Date.parse('2026-11-14T12:00:00Z') });
-type Semantic = { kind?: string; private?: number; self?: number; assertion?: string; priority?: number | null };
+type Semantic = { kind?: string; private?: number; self?: number; assertion?: string; quoteUse?: string; structure?: string; scope?: number | null; priority?: number | null };
 function fixtureClient(resolve: (text: string) => Semantic): JevClient {
   return { ask: vi.fn(async (request: JevRequest) => {
     const state = request.state as { candidates: { id: string; text: string }[] };
@@ -18,9 +18,13 @@ function fixtureClient(resolve: (text: string) => Semantic): JevClient {
       for (const [name, question] of Object.entries(request.questions)) {
         if (!name.startsWith(candidate.id + '_')) continue;
         if (question.type === 'choice') {
-          const choice = name.endsWith('_kind') ? result.kind ?? 'public_fact' : result.assertion ?? 'asserted';
+          const choice = name.endsWith('_kind') ? result.kind ?? 'public_fact'
+            : name.endsWith('_assertion_status') ? result.assertion ?? 'asserted'
+              : name.endsWith('_quote_use') ? result.quoteUse ?? 'name_or_title'
+                : name.endsWith('_claim_structure') ? result.structure ?? 'one_coherent'
+                  : result.assertion ?? 'asserted';
           answers[name] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, key === choice ? 0.97 : 0.03 / (Object.keys(question.criteria).length - 1)])) };
-        } else answers[name] = { noul: name.endsWith('_private_data') ? result.private ?? 0.01 : name.endsWith('_self_contained') ? result.self ?? 0.99 : result.priority ?? null };
+        } else answers[name] = { noul: name.endsWith('_private_data') ? result.private ?? 0.01 : name.endsWith('_self_contained') ? result.self ?? 0.99 : name.endsWith('_preserves_scope') ? result.scope ?? 0.99 : result.priority ?? null };
       }
     }
     return answers;
@@ -39,6 +43,20 @@ describe('bounded exact public admission', () => {
   it('never detaches a conditional or quoted proposition at a conjunction', () => {
     expect(generateCandidates('If pressure is low, water boils early and water is not always 100°C.')).toHaveLength(1);
     expect(generateCandidates('She said "Earth is flat and the Moon is cheese."')).toHaveLength(1);
+    expect(generateCandidates('A fictional narrator says: “Mars is made of ice cream. Venus is made of cake. Mercury is made of candy.”')).toHaveLength(1);
+    expect(generateCandidates('It is not true that antibiotics cure viruses and vaccines cause autism.')).toHaveLength(1);
+    expect(generateCandidates('It is false that penicillin cures viral infections and the Moon is made of cheese.')).toHaveLength(1);
+  });
+
+  it.each([
+    ['My salary is €4,000 AND Helsinki is the capital of Finland.', 'Helsinki is the capital of Finland.'],
+    ['My salary is €4,000;Helsinki is the capital of Finland.', 'Helsinki is the capital of Finland.']
+  ])('finds exact public subspans across formatting variants: %s', (text, expectedPublicSpan) => {
+    const candidates = generateCandidates(text);
+    expect(candidates.map(candidate => candidate.text)).toContain(expectedPublicSpan);
+    for (const candidate of candidates) {
+      expect(Array.from(text).slice(candidate.span.start, candidate.span.end).join('')).toBe(candidate.text);
+    }
   });
 
   it('admits first-person framing of a public proposition', async () => {
@@ -47,6 +65,79 @@ describe('bounded exact public admission', () => {
     expect(result.action).toBe('check');
     expect(result.claims[0].checkedText).toBe(text);
     expect(result.claims[0].admission.hasPracticalConsequence).toBeNull();
+  });
+
+  it('keeps the configured completeness boundary at 0.85', async () => {
+    const text = 'The Colosseum is in Rome.';
+    const below = await createClassifier(fixtureClient(() => ({ self: 0.84 })))(input(text), context());
+    expect(below).toMatchObject({ action: 'wait', claims: [] });
+    const atBoundary = await createClassifier(fixtureClient(() => ({ self: 0.85 })))(input(text), context());
+    expect(atBoundary.action).toBe('check');
+  });
+
+  it('binds structural questions to exact candidate spans', async () => {
+    const client = fixtureClient(() => ({}));
+    await createClassifier(client)(input('The Eiffel Tower opened in 1889. Helsinki is in Finland.'), context());
+    const request = vi.mocked(client.ask).mock.calls[0][0];
+    const state = request.state as { candidates: { text: string; span: { start: number; end: number } }[] };
+    expect(state.candidates[1].text).toBe('The Eiffel Tower opened in 1889.');
+    expect(state.candidates[1].span).toEqual({ start: 0, end: 32 });
+    expect(request.questions.span_1_preserves_scope?.type).toBe('noul');
+    expect(request.questions.span_0_claim_structure?.type).toBe('choice');
+  });
+
+  it('allows a quoted title only when Jev separates the title from an asserted proposition', async () => {
+    const text = 'The book “1984” was written by George Orwell.';
+    const accepted = await createClassifier(fixtureClient(() => ({ quoteUse: 'name_or_title' })))(input(text), context());
+    expect(accepted.action).toBe('check');
+    expect(accepted.claims.map(claim => claim.checkedText)).toEqual([text]);
+
+    const quoted = await createClassifier(fixtureClient(() => ({ quoteUse: 'quoted_proposition' })))(input(text), context());
+    expect(quoted).toMatchObject({ action: 'skip', reasonCode: 'nonliteral_or_quoted', claims: [] });
+  });
+
+  it('retains a quoted-title sentence next to private text as an exact candidate', async () => {
+    const text = 'My salary is €4,200. The novel “Dune” was written by Frank Herbert.';
+    const result = await createClassifier(fixtureClient(candidate => candidate === text
+      ? { kind: 'mixed', private: 0.99, structure: 'multiple_propositions' }
+      : candidate.includes('salary') ? { kind: 'personal_experience', private: 0.99 } : {}))(input(text), context());
+    expect(result.action).toBe('check');
+    expect(result.claims.map(claim => claim.checkedText)).toEqual(['The novel “Dune” was written by Frank Herbert.']);
+  });
+
+  it('does not extract an unquoted middle sentence from a multi-sentence quotation', async () => {
+    const text = 'A fictional narrator says: “Mars is made of ice cream. Venus is made of cake. Mercury is made of candy.” Helsinki is in Finland.';
+    const candidates = generateCandidates(text);
+    expect(candidates.map(candidate => candidate.text)).not.toContain('Venus is made of cake.');
+    const result = await createClassifier(fixtureClient(candidate => candidate === text ? { structure: 'multiple_propositions' } : {}))(input(text), context());
+    expect(result.claims.map(claim => claim.checkedText)).toEqual(['Helsinki is in Finland.']);
+  });
+
+  it('does not merge separate title-bearing propositions when no safe split exists', async () => {
+    const text = 'The novel “Dune” was written by Frank Herbert and the film “Titanic” was directed by James Cameron.';
+    const result = await createClassifier(fixtureClient(candidate => candidate === text ? { structure: 'multiple_propositions' } : {}))(input(text), context());
+    expect(result).toMatchObject({ action: 'skip', reasonCode: 'not_eligible_public_fact', claims: [] });
+  });
+
+  it('requires a proper subspan to preserve the whole utterance scope', async () => {
+    const text = 'My salary is €4,000 and Helsinki is the capital of Finland.';
+    const result = await createClassifier(fixtureClient(candidate => candidate.includes('Helsinki') ? { scope: 0.2 } : { kind: 'personal_experience', private: 0.99 }))(input(text), context());
+    expect(result.action).toBe('skip');
+    expect(result.claims).toEqual([]);
+  });
+
+  it('uses complete exact sentence claims when the whole input contains several propositions', async () => {
+    const text = 'The Eiffel Tower opened in 1889. The Moon is made of cheese.';
+    const result = await createClassifier(fixtureClient(candidate => candidate === text ? { structure: 'multiple_propositions' } : {}))(input(text), context());
+    expect(result.action).toBe('check');
+    expect(result.claims.map(claim => claim.checkedText)).toEqual(['The Eiffel Tower opened in 1889.', 'The Moon is made of cheese.']);
+  });
+
+  it('does not promote an imaginary-world sentence when its qualifier is in adjacent context', async () => {
+    const text = 'Imagine an alternate world. The Moon is made of cheese. This is the imaginary world I mean.';
+    const result = await createClassifier(fixtureClient(candidate => candidate.includes('The Moon') ? { scope: 0.2 } : { structure: 'multiple_propositions' }))(input(text), context());
+    expect(result.action).toBe('skip');
+    expect(result.claims).toEqual([]);
   });
 
   it('exports only the exact independent public span from private mixed input', async () => {
@@ -83,6 +174,16 @@ describe('bounded exact public admission', () => {
     const classify = createClassifier(fixtureClient(() => ({ kind: 'incomplete_or_unclear', self: 0.1 })));
     expect(await classify(input('Unemployment is 7%.'), context())).toMatchObject({ action: 'wait', claims: [] });
     expect(await classify(input('Unemployment is 7%.', true), context())).toMatchObject({ action: 'needs_confirmation', claims: [] });
+  });
+
+  it('waits for an unfinished conditional instead of treating it as a completed hypothetical', async () => {
+    const classify = createClassifier(fixtureClient(() => ({ kind: 'incomplete_or_unclear', self: 0.1, assertion: 'unclear' })));
+    expect(await classify(input('If air pressure drops, water'), context())).toMatchObject({ action: 'wait', claims: [] });
+  });
+
+  it('skips a completed hypothetical without converting it into a literal assertion', async () => {
+    const classify = createClassifier(fixtureClient(() => ({ assertion: 'nonliteral_or_quoted' })));
+    expect(await classify(input('If pressure is low, water boils early.'), context())).toMatchObject({ action: 'skip', reasonCode: 'nonliteral_or_quoted', claims: [] });
   });
 
   it('rejects null or missing privacy/completeness evidence instead of searching', async () => {
