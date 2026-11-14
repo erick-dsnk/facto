@@ -1,6 +1,6 @@
 # Demo deck working outline
 
-This is draft content, not a final results claim. Authenticated HTTP/WebSocket campaigns supplement the fixture results below. Useful factual coverage remains below the readiness goal; human demo citation review and real-device measurements remain pending. Keep the deck to eight slides.
+This is draft content, not a final results claim. Authenticated HTTP/WebSocket campaigns supplement the fixture results below. Useful factual coverage remains below the proposed readiness bar. Agent citation audits are complete to their stated access/scope limits, while real-device measurements remain deferred; no extra human sign-off gate is imposed. Keep the deck to eight slides.
 
 ## 1. Public information while hands and attention are occupied
 
@@ -40,13 +40,21 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-At the 14 November 2026 executable freeze `3cfdfb1`, lint/typecheck and 429 tests passed. The development evaluator passed 36/36 scenarios: 34 scripted cases and two authenticated HTTP/WebSocket scenarios with injected providers. Shared presentation fixtures passed 21/21. The original 12 held-outs remain unchanged and unrun; their blindness cannot be certified because earlier text exposure may have occurred. These checks establish control-flow behavior, not live model accuracy or hardware reliability.
+Current integration passes lint/typecheck and **504 tests across 23 files**. Later per-target extraction fallback/status diagnostics are not present in the completed frozen08 live cohorts; green checks do not establish their provider behavior or readiness.
+
+On the repeated OPEN broader corpus, [baseline](broader-development-2026-11-14.md) produced 3/12 correct definitive unique facts and 2/12 with all selected sources verified. [Candidate08](broader-development-candidate08.md), frozen at `aefb9e7`, produced **6/12 correct definitive**, **4/12 fully source-verified**, five abstentions and one operational error; it admitted 13/13 eligible occurrences and delivered all 16 terminals. The mixed repeat adds no fact credit. These are development observations, not blind accuracy or an isolated causal improvement.
+
+[Actual-provider automatic controls](automatic-development-2026-11-14.md) produced **five passes and one inconclusive** in the original six-scenario cohort. A separate AD07 followup exercised supported + silent; it does not replace AD03 or change the original score, and adds zero new facts. This is typed backend action evidence, not hardware notification delivery.
+
+### Earlier measurement context (retain distinct denominators)
+
+At the earlier 14 November 2026 executable freeze `3cfdfb1`, lint/typecheck and 429 tests passed. The development evaluator passed 36/36 scenarios: 34 scripted cases and two authenticated HTTP/WebSocket scenarios with injected providers. Shared presentation fixtures passed 21/21. The original 12 held-outs remain unchanged and unrun; their blindness cannot be certified because earlier text exposure may have occurred. These checks establish control-flow behavior, not live model accuracy or hardware reliability.
 
 Public live development run 07 completed nine authenticated requests, including cache, personal/opinion and wait-expiry controls. Among five unique factual propositions, two received correct definitive results and three abstained; none received a wrong definitive result. All 38 provider calls returned HTTP 200. One selected citation was inaccessible to the independent agent review, so the definitive count is not a count of fully verified source sets. Separate deliberately invalid Jev and Exa keys each produced a non-retryable HTTP 401 operational error. See [evaluation](evaluation.md) and the [live campaign](live-campaign-2026-11-14.md).
 
-Three independent sealed campaigns ran once each on different frozen implementations and different inputs. Their correct definitive counts were 2/8, 4/8 and 2/8; do not pool them or treat the differences as causal improvements. The latest completed all ten input receipts, with five factual abstentions and one factual timeout in addition to its two correct definitive results. It made 56 actual provider attempts; five of six selected references were verified by an independent AI agent, while one displayed an application error. There were zero observed private-query violations or wrong definitive outputs in that campaign. Cold input median/P95 were 3,817/10,038 ms, including controls and the timeout. The known $0.116 cost subtotal excludes 24 attempts with unknown cost. See the [third independent report](blind-evaluation-2026-11-14-03.md).
+Three independent sealed campaigns ran once each on different frozen implementations and different inputs. Their correct definitive counts were 2/8, 4/8 and 2/8; do not pool them or treat the differences as causal improvements. The third sealed campaign completed all ten input receipts, with five factual abstentions and one factual timeout in addition to its two correct definitive results. It made 56 actual provider attempts; five of six selected references were verified by an independent AI agent, while one displayed an application error. There were zero observed private-query violations or wrong definitive outputs in that campaign. Cold input median/P95 were 3,817/10,038 ms, including controls and the timeout. The known $0.116 cost subtotal excludes 24 attempts with unknown cost. See the [third independent report](blind-evaluation-2026-11-14-03.md).
 
-Real-device sample size remains zero. Human demo citation sign-off, complete provider costs and false alerts per listening minute remain unmeasured. Broader development and release evaluation are ongoing; current factual coverage does not establish backend readiness. Do not use PRD/vendor/FactNudger scores as this prototype’s results.
+Real-device sample size remains zero. Agent citation inspection must retain its disclosed method and inaccessible-source limits. Complete provider costs and false alerts per listening minute remain unmeasured; no additional human sign-off gate is imposed. Broader development and release evaluation are ongoing; current factual coverage does not establish backend readiness. Do not use PRD/vendor/FactNudger scores as this prototype’s results.
 
 ## 8. Opt-in pilot and next milestone
 
