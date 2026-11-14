@@ -37,7 +37,7 @@ struct SettingsView: View {
             .factoToggleTint()
         } footer: {
           SettingsFooter(
-            "The glasses stay off and nothing is sent until this phone hears “\(WakePhrase.spoken)”. Then Facto listens for a minute. Say “\(WakePhrase.spokenCommand)” to check what you’re looking at."
+            "This phone listens for “\(WakePhrase.spoken)” on its own and sends nothing. Say it to take a photo with the glasses and check what you’re looking at."
           )
         }
         .factoRowBackground()

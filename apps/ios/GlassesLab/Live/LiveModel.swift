@@ -324,6 +324,8 @@ final class LiveModel {
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private let secrets: SecretStoring
   @ObservationIgnored private let configureAudioSession: () -> Void
+  /// Listening input: the glasses' Bluetooth mic. The camera only takes Check this photos.
+  @ObservationIgnored private let mic: ListeningMicrophone
   @ObservationIgnored private let idleTimer: (_ keepAwake: Bool) -> Void
   @ObservationIgnored private let uptime: () -> TimeInterval
   @ObservationIgnored private let debugLog: DebugLog
@@ -388,6 +390,7 @@ final class LiveModel {
     wakeListener: WakeWordListening? = nil,
     wakeWindow: TimeInterval = LiveModel.defaultWakeWindow,
     wakeCheckWindow: TimeInterval = LiveModel.defaultWakeCheckWindow,
+    microphone: ListeningMicrophone? = nil,
     makeBackend: (@MainActor (BackendConfig) -> LiveBackend)? = nil
   ) {
     let config = BackendConfig.load(from: defaults, secrets: secrets)
@@ -396,12 +399,14 @@ final class LiveModel {
     self.demoQuality = defaults.object(forKey: Self.demoQualityKey) as? Bool ?? true
     self.isMuted = defaults.bool(forKey: Self.mutedKey)
     self.automaticAlerts = defaults.object(forKey: Self.automaticAlertsKey) as? Bool ?? true
-    self.wakeWordEnabled = defaults.bool(forKey: Self.wakeWordKey)
+    // On by default: "Hey Facto" is how a check starts without touching the phone.
+    self.wakeWordEnabled = defaults.object(forKey: Self.wakeWordKey) as? Bool ?? true
     let wakeListener = wakeListener ?? MicrophoneWakeWordListener()
     self.wake = wakeListener
     self.wakeWindow = wakeWindow
     self.wakeCheckWindow = wakeCheckWindow
     self.camera = camera
+    self.mic = microphone ?? GlassesMicrophone()
     self.display = display
     self.defaults = defaults
     self.secrets = secrets
@@ -430,6 +435,7 @@ final class LiveModel {
     camera.liveQuality = quality
     camera.onStreamStopped = { [weak self] byUser in self?.streamStopped(byUser: byUser) }
     camera.onAudioBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
+    mic.onBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
     wakeListener.onWake = { [weak self] command in self?.wakeHeard(command) }
     startLensPump()
     refreshWake()
@@ -571,27 +577,39 @@ final class LiveModel {
       isStartingStream = false
       refreshWake()
     }
-    do {
-      try await camera.startListeningStream(quality: quality)
-    } catch {
-      notice = (error as? LiveStreamError)?.message ?? "The glasses stream didn't start."
+    // Listening uses the glasses' Bluetooth mic, not the camera stream: on Display glasses a
+    // running camera holds back the lens cards and shows a viewfinder.
+    guard await AVAudioApplication.requestRecordPermission() else {
+      notice = MicrophoneError.denied.message
       return
     }
+    do {
+      try mic.start()
+    } catch {
+      notice = (error as? MicrophoneError)?.message ?? "The microphone didn't start (\((error as NSError).code))."
+      configureAudioSession()
+      return
+    }
+    debugLog.log("live.mic_input", ["input": mic.inputName ?? "unknown"])
     guard await ensureSessionActive() else {
+      stopMic()
       notice = Self.pausedMessage
       return
     }
-    guard isConnected, self.streamer === streamer else { return }
+    guard isConnected, self.streamer === streamer else {
+      stopMic()
+      return
+    }
     streamer.start()
     syncListening()
     startTicker()
   }
 
-  /// The user's Stop listening. The camera stream keeps running so a photo stays instant;
-  /// "Stop stream" ends it.
+  /// The user's Stop listening: the mic stops and the audio session goes back to spoken output.
   func stopListening() {
     guard let streamer, streamer.phase.isActive else { return }
     streamer.stop()
+    stopMic()
     presenter.stopOutput()
     syncListening()
     // Stopping by hand during a wake session also ends that session and its stream.
@@ -642,7 +660,7 @@ final class LiveModel {
   private func build(_ config: BackendConfig) {
     let backend = makeBackend(config)
     backend.onUnreadableEvent = { [weak self] type in self?.unreadableEvent(type) }
-    let streamer = AudioStreamer(channel: backend, clock: audioClock, debugLog: debugLog)
+    let streamer = AudioStreamer(channel: backend, source: .glassesHfp, clock: audioClock, debugLog: debugLog)
     streamer.onStopped = { [weak self] reason in self?.listeningStopped(reason) }
     streamer.onAutoResumed = { [weak self] in self?.autoResumed() }
     relay.target = streamer
@@ -892,7 +910,15 @@ final class LiveModel {
     return sessionActive == true
   }
 
+  /// Stops the Bluetooth mic and gives the audio session back to spoken output.
+  private func stopMic() {
+    guard mic.isRunning else { return }
+    mic.stop()
+    configureAudioSession()
+  }
+
   private func listeningStopped(_ reason: AudioStreamerStopReason) {
+    stopMic()
     listening = .stopped(reason)
     log.info("listening stopped \(reason.code, privacy: .public)")
     debugLog.log("live.listening_stopped", ["reason": reason.code, "canRenew": canRenew, "isRenewing": isRenewing])
@@ -925,16 +951,11 @@ final class LiveModel {
     syncListening()
   }
 
+  /// A camera stream ended. Listening runs on the Bluetooth mic, so it carries on; a stream only
+  /// runs for a fallback photo or from the Developer screen.
   private func streamStopped(byUser: Bool) {
     defer { refreshWake() }
     debugLog.log("live.stream_stopped", ["byUser": byUser, "listening": String(describing: streamer?.phase ?? .idle)])
-    guard let streamer, streamer.phase.isActive else { return }
-    if byUser {
-      streamer.stop()
-    } else {
-      streamer.glassesDisconnected()
-    }
-    syncListening()
   }
 
   private func checkFinished(_ outcome: LookAndCheckCoordinator.Outcome) {
@@ -1122,26 +1143,13 @@ final class LiveModel {
     guard wakeWordEnabled, !wakeSession, isConnected else { return }
     // A chime is not playback, so it is not reported to the backend.
     if !isMuted { chime.playChime() }
-    if command == .checkThis {
-      log.info("wake phrase: check this")
-      // checkThis() releases the detector's microphone, starts the short wake session and
-      // stops the stream again once the check is done.
-      Task { await self.checkThis() }
-      return
-    }
-    log.info("wake phrase: starting to listen")
-    beginWakeSession()
-    Task {
-      await self.startListening()
-      guard self.wakeSession else { return }
-      if self.streamer?.phase.isActive ?? false {
-        self.startWakeTimer(after: self.wakeWindow)
-      } else {
-        // Listening didn't start; `notice` says why.
-        await self.endWakeSession()
-      }
-    }
+    // Every "Hey Facto…" takes a photo and checks what is in view; nothing is streamed.
+    // checkThis() releases the detector's microphone, starts the short wake session and
+    // re-arms the detector once the check is done.
+    log.info("wake phrase: \(command == .checkThis ? "check this" : "hey facto", privacy: .public), taking a photo")
+    Task { await self.checkThis() }
   }
+
 
   private func startWakeTimer(after seconds: TimeInterval) {
     wakeTimer?.cancel()
