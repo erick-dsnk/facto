@@ -75,6 +75,10 @@ final class CameraModel {
   /// The stream runs only to make photos fast on glasses without a display (no audio).
   @ObservationIgnored private var warmStandby = false
   var isWarmStandby: Bool { warmStandby && isStreaming && !captureStreamAudio && !isCapturingPhoto }
+  /// Glasses without a display listen through the camera stream's mic, which hears nearby
+  /// voices best, and take photos from the same stream. Display glasses use the Bluetooth mic,
+  /// because a running camera holds back their lens cards.
+  var listensThroughStream: Bool { glasses.preferredPairHasDisplay == false }
   /// Quality for a stream that Live mode starts (LiveModel keeps it in sync with Demo quality).
   @ObservationIgnored var liveQuality: StreamQuality = .demo
 
