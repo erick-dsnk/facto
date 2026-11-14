@@ -25,6 +25,17 @@ xcodebuild -project GlassesLab.xcodeproj -scheme GlassesLab \
   -destination 'platform=iOS,name=David' -allowProvisioningUpdates build
 ```
 
+## Tests
+
+`GlassesLabTests` decodes the contract v1 golden files. `GlassesLabTests/Fixtures` is a copy of `packages/contracts/fixtures`; refresh it when the contract changes.
+
+```sh
+xcodebuild test -project GlassesLab.xcodeproj -scheme GlassesLab \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' -parallel-testing-enabled NO
+```
+
+Live-pipeline code lives in `GlassesLab/Contracts` (wire types), `GlassesLab/Pipeline` (protocols between modules), `Networking`, `Audio`, `Capture` and `Output`.
+
 ## Deploy without Xcode
 
 ```sh
