@@ -72,6 +72,9 @@ final class CameraModel {
   @ObservationIgnored private var photoWaiters: [CheckedContinuation<Data, Error>] = []
   /// The camera was added only for one photo; it has no stream and is stopped after it.
   @ObservationIgnored private var photoOnlyCamera = false
+  /// The stream runs only to make photos fast on glasses without a display (no audio).
+  @ObservationIgnored private var warmStandby = false
+  var isWarmStandby: Bool { warmStandby && isStreaming && !captureStreamAudio && !isCapturingPhoto }
   /// Quality for a stream that Live mode starts (LiveModel keeps it in sync with Demo quality).
   @ObservationIgnored var liveQuality: StreamQuality = .demo
 
@@ -501,6 +504,7 @@ final class CameraModel {
     audioDeliveries = nil
     camera = nil
     streamState = .stopped
+    warmStandby = false
     if hadStream {
       let byUser = userStoppedStream
       userStoppedStream = false
@@ -589,15 +593,21 @@ extension CameraModel: LiveCamera {
   func captureStillDuringStream() async throws -> Data {
     guard await ensureSessionStarted() else { throw PhotoCaptureError.noSession }
     if !isStreaming, !isCapturingPhoto {
-      // Listening uses the Bluetooth mic now, so no stream is running: take one photo with the
-      // camera's photo capability and turn the camera off again. Faster than starting a video
-      // stream, and the Display glasses keep showing cards.
-      do {
-        return try await captureStillWithoutStream()
-      } catch {
-        plog("photo without a stream failed (\(error)); falling back to a short stream")
+      // A stream-less photo (Meta's photo API) took ~14 s: 7.8 s to capture and 5.8 s over
+      // Bluetooth. Grabbing a still from a running stream takes ~1 s, so photos come from a
+      // stream, chosen per glasses:
+      if glasses.sessionHasDisplay {
+        // Display glasses: a running stream holds back lens cards and shows a viewfinder, so
+        // the stream runs only for the photo.
         return try await captureStillWithShortStream()
       }
+      // Glasses without a display: start a quiet stream (no audio, nothing sent anywhere) and
+      // keep it, so the next photo is instant too.
+      warmStandby = true
+      captureStreamAudio = false
+      resolution = .low
+      frameRate = 15
+      plog("starting the quiet photo stream (glasses without a display)")
     }
     return try await withCheckedThrowingContinuation { continuation in
       photoWaiters.append(continuation)

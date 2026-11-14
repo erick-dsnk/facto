@@ -44,11 +44,20 @@ final class GlassesSession {
     onError: @escaping (String) -> Void
   ) throws -> DeviceSession {
     if let session, state != .stopping, state != .stopped {
+      // The lens only makes sense on a Display pair: don't attach it to Ray-Ban Meta.
+      if holder == .display, session.device?.supportsDisplay() == false { throw DeviceSessionError.noEligibleDevice }
       holders[holder] = Handlers(onState: onState, onError: onError)
       return session
     }
+    let pick = preferredPair(for: holder)
+    // Opening a session moves the phone onto the glasses' Wi-Fi and drops the backend for a
+    // moment, so the display never opens one on glasses without a display (it retried every
+    // ~30 s on Ray-Ban Meta and kept knocking the connection off).
+    if holder == .display, pick?.supportsDisplay() != true { throw DeviceSessionError.noEligibleDevice }
     tokens.clear()
-    let newSession = try Wearables.shared.createSession(deviceSelector: pickSelector(for: holder))
+    let newSession = try Wearables.shared.createSession(
+      deviceSelector: pick.map { SpecificDeviceSelector(device: $0.identifier) } ?? deviceSelector
+    )
     session = newSession
     state = .starting
     holders = [holder: Handlers(onState: onState, onError: onError)]
@@ -86,7 +95,10 @@ final class GlassesSession {
   /// pairs, AutoDeviceSelector can pick one that isn't nearby, and the session then fails
   /// with "device unavailable". Logs every pair's
   /// state, since a pair that is folded, not worn or too hot also refuses sessions.
-  private func pickSelector(for holder: Holder) -> any DeviceSelector {
+  /// True when the open session runs on glasses with a display (Meta Ray-Ban Display).
+  var sessionHasDisplay: Bool { session?.device?.supportsDisplay() ?? false }
+
+  private func preferredPair(for holder: Holder) -> Device? {
     let pairs = Wearables.shared.devices.compactMap { Wearables.shared.deviceForIdentifier($0) }
     for device in pairs {
       let row = "name=\(device.nameOrId()) link=\(device.linkState) display=\(device.supportsDisplay()) "
@@ -103,11 +115,11 @@ final class GlassesSession {
     let pool = worn.isEmpty ? connected : worn
     guard let pick = pool.first(where: { $0.supportsDisplay() }) ?? pool.first else {
       NSLog("[glasses] %@: no connected pair, letting the SDK choose", "\(holder)")
-      return deviceSelector
+      return nil
     }
     NSLog("[glasses] %@: opening the session on %@", "\(holder)", pick.nameOrId())
-    DebugLog.shared.log("glasses.session_pick", ["holder": "\(holder)", "device": pick.nameOrId()])
-    return SpecificDeviceSelector(device: pick.identifier)
+    DebugLog.shared.log("glasses.session_pick", ["holder": "\(holder)", "device": pick.nameOrId(), "display": pick.supportsDisplay()])
+    return pick
   }
 
   /// Leaves the session. Returns true when this holder was the last one: the session is then
