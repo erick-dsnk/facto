@@ -85,6 +85,31 @@
         },
         "final": {
           "type": "boolean"
+        },
+        "lowConfidenceWords": {
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "text",
+              "confidence"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Audio only, optional: words the ASR was unsure of, in sentence order. Text is at most 64 Unicode code points."
         }
       },
       "required": [
