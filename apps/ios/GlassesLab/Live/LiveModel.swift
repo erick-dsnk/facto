@@ -61,6 +61,9 @@ extension BackendClient: LiveBackend {}
 protocol LiveCamera: PhotoCapturing {
   var isStreaming: Bool { get }
   var hasSession: Bool { get }
+  /// A quiet video stream (no audio) kept running on glasses without a display, only so a
+  /// photo takes ~1 s instead of ~14 s. "Hey Facto" stays armed during it.
+  var isWarmStandby: Bool { get }
   var onCaptureStarting: (@MainActor () -> Void)? { get set }
   var onCaptureSessionEnded: (@MainActor () -> Void)? { get set }
   /// Quality for a stream that Live mode starts, including one started by "Check this".
@@ -71,6 +74,10 @@ protocol LiveCamera: PhotoCapturing {
   /// Ends a stream Live mode started for the wake phrase, and its device session, so the
   /// glasses go back to idle. Returns once they have stopped (or after a few seconds).
   func stopLiveStream() async
+}
+
+extension LiveCamera {
+  var isWarmStandby: Bool { false }
 }
 
 /// The glasses lens. `DisplayModel` is the real one.
@@ -1471,8 +1478,8 @@ final class LiveModel {
       else if !wantsBackendConnection || !isConnected { "Connect to the backend to arm it." }
       else if listening.isActive || isStartingStream { "Paused while listening." }
       else if wakeStartTask != nil || wakeCleanupTask != nil || manualCaptureStarting { "Waiting for the glasses session to finish." }
-      else if camera.isStreaming { "Paused while the glasses stream is on. Stop the stream to arm it." }
-      else if camera.hasSession { "Paused while the glasses session is on." }
+      else if camera.isStreaming, !camera.isWarmStandby { "Paused while the glasses stream is on. Stop the stream to arm it." }
+      else if camera.hasSession, !camera.isWarmStandby { "Paused while the glasses session is on." }
       else { nil }
     if let blocked {
       pauseWakeDetector()
@@ -1524,7 +1531,7 @@ final class LiveModel {
   /// "Hey Facto, check this" takes a photo and checks it, like the Check this button.
   private func wakeHeard(_ command: WakeCommand) {
     guard wakeWordEnabled, !wakeSession, wakeStartTask == nil, wakeCleanupTask == nil,
-      isAppActive, glassesAuthorized, wantsBackendConnection, !manualCaptureStarting, !camera.hasSession, !camera.isStreaming, isConnected else { return }
+      isAppActive, glassesAuthorized, wantsBackendConnection, !manualCaptureStarting, camera.isWarmStandby || (!camera.hasSession && !camera.isStreaming), isConnected else { return }
     // A chime is not playback, so it is not reported to the backend.
     if !isMuted { chime.playChime() }
     // Every "Hey Facto…" takes a photo and checks what is in view; nothing is streamed.
@@ -1587,7 +1594,8 @@ final class LiveModel {
     // is pending. Keep ownership until it returns, then end even a partially started session.
     let cleanup = Task {
       await startup?.value
-      if ownsStream {
+      // The quiet photo stream on glasses without a display stays on for the next photo.
+      if ownsStream, !self.camera.isWarmStandby {
         self.log.info("wake session over: stopping the stream")
         await self.camera.stopLiveStream()
       }
