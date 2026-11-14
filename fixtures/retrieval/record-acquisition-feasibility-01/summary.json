@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_record_unit_acquisition_feasibility_summary",
+  "analysisMethod": "Separate agent literal analyzer ignoring collector convenience matches; no network/model calls. Analyzer author also reviewed collector and later package; this is not blind or external evaluation.",
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "primary": {
+    "numerator": 0,
+    "denominator": 4,
+    "unit": "declared registered families with own canonical URL AND exact entire retained material unit",
+    "completedAcquisitions": 4,
+    "operationalErrors": 0,
+    "unobserved": 0,
+    "retainedRecords": 17
+  },
+  "diagnosticOnly": {
+    "familiesWithExactRawWholeUnitAtAnyURL": 1,
+    "exactRawResponseResultFieldOccurrences": 3,
+    "familiesWithRegisteredCanonicalURLRetained": 1,
+    "retainedExcerptsExactlyContainingWholeUnit": 0,
+    "retainedExactProperSubunitsOfRegisteredWholeUnit": 0,
+    "wholeExcerptDifferencesDemonstratedWhitespaceOnly": 0,
+    "rawHighlightsAboveRequested4000Codepoints": 6,
+    "credit": 0
+  },
+  "familyFindings": [
+    {
+      "family": "RA01",
+      "primary": false,
+      "finding": "Registered .txt URL absent. Exact full unit appears only at unreviewed /info/rfc8174/ in three raw fields. The same contents-text interval proves retained2000-character window starts257characters into the unit, losing prefix; no repaired quote or alias credit."
+    },
+    {
+      "family": "RA02",
+      "primary": false,
+      "finding": "Official section-2.html returned rather than registered FullText.html. Both conditional subsections visible, but no exact raw/retained whole unit; headings/markup/spacing/citation differ. Not demonstrated merely whitespace or exact proper subunit."
+    },
+    {
+      "family": "RA03",
+      "primary": false,
+      "finding": "Registered canonical URL retained; selected2000-character window starts in biography with finalists/navigation, omitting raw opening winning-work labels. Exact registered unit absent even from raw fields; window selection alone is not proven sufficient."
+    },
+    {
+      "family": "RA04",
+      "primary": false,
+      "finding": "Registered first rounded-release URL absent; release index, other government publication and later unrounded-release PDF cannot substitute. Exact unit absent from raw/retained fields."
+    }
+  ],
+  "actualUsage": {
+    "attempts": 9,
+    "search": 4,
+    "contents": 5,
+    "jev": 0,
+    "requestBytes": 6426,
+    "observedResponseBytes": 121753,
+    "storedResponseBytes": 121753,
+    "pending": 0,
+    "returnedCostUSD": 0.038,
+    "missingCostFields": 0,
+    "http200FullyDrainedSettled": 9,
+    "unknownCostAttempts": 0,
+    "contentsCachedStatuses": 5,
+    "perFamilyElapsedMs": [
+      1697,
+      1408,
+      2977,
+      1521
+    ],
+    "sumFamilyElapsedMs": 7603,
+    "firstStartToLastCompletionMs": 7651
+  },
+  "costQualification": "Returned Exa cost fields; no independent billing verification or knowledge of internal upstream work.",
+  "timingQualification": "Isolated retriever component includes SDK body/selection; excludes admission/Jev and startup outside family windows; no pipeline latency-gain claim.",
+  "authorizationConsumedOnce": true,
+  "newCallsDuringPackaging": 0,
+  "factualTruthDenominator": 0,
+  "capabilityActivated": false,
+  "promotionRecommended": false,
+  "currentOriginProofEstablished": false,
+  "historicalPendingSnapshotsPreserved": true,
+  "authoritativeIndependentArtifacts": {
+    "analysisManifestSHA256": "394c119bacc780aca8d3da74812c6740e7b5a5d07d0f59bebf53b1a425b08731",
+    "analysisSHA256": "3f4e83c93f4ce8a9d5f53e067e5945b5c90fc4c0c383ecdf194f61fc52cb1684",
+    "reconciliationSHA256": "3dc2344fc9d67a01cee5dd1b2006137142ef3975ac840b362a6a915d1497af01"
+  }
+}

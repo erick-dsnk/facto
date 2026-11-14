@@ -1,0 +1,188 @@
+{
+  "kind": "record_acquisition_checkpoint",
+  "mode": "offline",
+  "completed": false,
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+  "collectorSHA256": "12b45e32d134d31c61647d31bf308e7b8936811dcb63c50608b4ed268051fee2",
+  "limits": {
+    "declaredFamilies": 4,
+    "jevActualAttempts": 0,
+    "searchActualAttemptsTotal": 4,
+    "searchActualAttemptsPerFamily": 1,
+    "contentsActualAttemptsTotal": 12,
+    "contentsActualAttemptsPerFamily": 3,
+    "deadlineMsPerFamily": 10000,
+    "serialFamilies": true,
+    "maximumSumOfFamilyNetworkWindowsMs": 40000,
+    "requestBytesPerActualAttempt": 65536,
+    "requestBytesTotal": 1048576,
+    "responseBytesPerActualAttempt": 262144,
+    "responseBytesTotal": 4194304,
+    "searchRetries": 0,
+    "contentsRetries": "Existing at-most-one retry only within the original3actualcontents slots and inherited deadline; no extra slots or laterfamily borrowing."
+  },
+  "totals": {
+    "httpBoundaryAttempts": 4,
+    "networkCalls": 0,
+    "jevCalls": 0,
+    "search": 4,
+    "contents": 0,
+    "consumedAllowances": {
+      "search": 4,
+      "contents": 0,
+      "jev": 0
+    },
+    "requestBytes": 3792,
+    "responseBytes": 0,
+    "pendingDispatchReservations": 0,
+    "knownPartialCostUSD": 0,
+    "attemptsWithUnknownCost": 4,
+    "totalCostUSD": null
+  },
+  "fatal": null,
+  "cases": [
+    {
+      "id": "AQ01",
+      "familyAlias": "RA01",
+      "publicQuery": "RFC 8174 BCP 14 requirement keyword interpretation",
+      "status": "error",
+      "evidence": [],
+      "startedAt": "2026-11-14T00:00:00.000Z",
+      "error": "timeout",
+      "completedAt": "2026-11-14T00:00:10.000Z",
+      "elapsedMs": 10000,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    },
+    {
+      "id": "AQ02",
+      "familyAlias": "RA02",
+      "publicQuery": "Canada Holidays Act section 2 Canada Day Sunday",
+      "status": "error",
+      "evidence": [],
+      "startedAt": "2026-11-14T00:00:10.000Z",
+      "error": "timeout",
+      "completedAt": "2026-11-14T00:00:20.000Z",
+      "elapsedMs": 10000,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    },
+    {
+      "id": "AQ03",
+      "familyAlias": "RA03",
+      "publicQuery": "2021 Pulitzer Prize Fiction winner record",
+      "status": "error",
+      "evidence": [],
+      "startedAt": "2026-11-14T00:00:20.000Z",
+      "error": "timeout",
+      "completedAt": "2026-11-14T00:00:30.000Z",
+      "elapsedMs": 10000,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    },
+    {
+      "id": "AQ04",
+      "familyAlias": "RA04",
+      "publicQuery": "ONS Census 2021 England and Wales population first release",
+      "status": "error",
+      "evidence": [],
+      "startedAt": "2026-11-14T00:00:30.000Z",
+      "error": "timeout",
+      "completedAt": "2026-11-14T00:00:40.000Z",
+      "elapsedMs": 10000,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "id": "attempt-01",
+      "familyId": "AQ01",
+      "kind": "search",
+      "requestBytes": 950,
+      "requestSHA256": "a4d5a47e64be2052c69677b6879aaff5d62221395e8f184c5b2a4d3c4bc6d7f1",
+      "requestFile": "sdk-responses/attempt-01-request.json",
+      "reservedAt": "2026-11-14T00:00:00.000Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 0,
+      "storedResponseBytes": 0,
+      "bodyComplete": false,
+      "bodyCleanup": "cancelled",
+      "costUSD": null,
+      "dispatchedAt": "2026-11-14T00:00:00.000Z",
+      "error": "timeout",
+      "settledAt": "2026-11-14T00:00:10.000Z"
+    },
+    {
+      "id": "attempt-02",
+      "familyId": "AQ02",
+      "kind": "search",
+      "requestBytes": 944,
+      "requestSHA256": "adff2cea031d603e7e7ce86b290f4b72be037fadf2905e5a6db00fcae4f15077",
+      "requestFile": "sdk-responses/attempt-02-request.json",
+      "reservedAt": "2026-11-14T00:00:10.000Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 0,
+      "storedResponseBytes": 0,
+      "bodyComplete": false,
+      "bodyCleanup": "cancelled",
+      "costUSD": null,
+      "dispatchedAt": "2026-11-14T00:00:10.000Z",
+      "error": "timeout",
+      "settledAt": "2026-11-14T00:00:20.000Z"
+    },
+    {
+      "id": "attempt-03",
+      "familyId": "AQ03",
+      "kind": "search",
+      "requestBytes": 932,
+      "requestSHA256": "3469b7af84000d526801c04d5411fe49476844c5b2cc19bab9a1e043aca02928",
+      "requestFile": "sdk-responses/attempt-03-request.json",
+      "reservedAt": "2026-11-14T00:00:20.000Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 0,
+      "storedResponseBytes": 0,
+      "bodyComplete": false,
+      "bodyCleanup": "cancelled",
+      "costUSD": null,
+      "dispatchedAt": "2026-11-14T00:00:20.000Z",
+      "error": "timeout",
+      "settledAt": "2026-11-14T00:00:30.000Z"
+    },
+    {
+      "id": "attempt-04",
+      "familyId": "AQ04",
+      "kind": "search",
+      "requestBytes": 966,
+      "requestSHA256": "6785c754e9ad570db8bed3e17eb2d23fda4261c5334b69cf80ff8c46c56c2647",
+      "requestFile": "sdk-responses/attempt-04-request.json",
+      "reservedAt": "2026-11-14T00:00:30.000Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 0,
+      "storedResponseBytes": 0,
+      "bodyComplete": false,
+      "bodyCleanup": "cancelled",
+      "costUSD": null,
+      "dispatchedAt": "2026-11-14T00:00:30.000Z",
+      "error": "timeout",
+      "settledAt": "2026-11-14T00:00:40.000Z"
+    }
+  ]
+}
