@@ -155,7 +155,11 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
       // Like privacy and completeness, the mishearing answer never defaults: an unanswered one fails closed.
       const misheard = noul(answers.misheard);
       if (typeof misheard !== 'number') throw new PipelineError('malformed_provider');
-      if (misheard >= ADMISSION_THRESHOLDS.misheard) return { action: input.userInitiated ? 'needs_confirmation' : 'skip', reasonCode: REASON_CODES.possiblyMisheard, claims: [] };
+      // A photo the wearer asked about is checked even with an OCR typo ("Trurhp" for "Trump"):
+      // the searches find the story despite one bad letter, and "I'm not sure what was read"
+      // is a dead end. Speech keeps the gate, where a misheard word can change the claim.
+      const askedAboutPhoto = input.mode === 'ocr' && input.userInitiated;
+      if (misheard >= ADMISSION_THRESHOLDS.misheard && !askedAboutPhoto) return { action: input.userInitiated ? 'needs_confirmation' : 'skip', reasonCode: REASON_CODES.possiblyMisheard, claims: [] };
     }
     // A name from a sensitive candidate of this input never becomes another candidate's subject: it would carry that text's person to a search.
     const sensitiveTexts = plans.filter(plan => sensitiveSpan(plan.candidate, answers)).map(plan => plan.candidate.text.toLocaleLowerCase('en'));
