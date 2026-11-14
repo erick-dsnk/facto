@@ -26,7 +26,43 @@ Each run writes `fixtures/evaluation/live-runs/<UTC>-<label>.json` (set, id, exp
 
 ### Results
 
-Baseline (`claude/debug-transcripts`) against candidate (`claude/fc-port`) on both full sets: pending, run at integration with this script on two local servers.
+Run on 14 November 2026 with this script on two loopback servers in live mode, both sets in full. Baseline: `claude/debug-transcripts` at `d9c4f9d` on port 3301. Candidate: `claude/fc-port` at `e09879d` on port 3302, started with an empty 24 h cache. Both servers ran with `DEBUG_TRANSCRIPTS=0`. Every run finished with 0 errors and 0 timeouts; EVERYDAY used 2 sessions and HARD 3. On dev-misheard the baseline rejected `capture.lowConfidenceWords` with a 400, so the script resent the case without the field (the row is flagged `fieldUnsupported`). Reports: baseline [EVERYDAY](../fixtures/evaluation/live-runs/2026-11-14T173947Z-baseline-everyday.md) and [HARD](../fixtures/evaluation/live-runs/2026-11-14T174153Z-baseline-hard.md), candidate [EVERYDAY](../fixtures/evaluation/live-runs/2026-11-14T180853Z-candidate-everyday.md) and [HARD](../fixtures/evaluation/live-runs/2026-11-14T181040Z-candidate-hard.md).
+
+| Metric | EVERYDAY baseline | EVERYDAY candidate | HARD baseline | HARD candidate |
+|---|---|---|---|---|
+| Cases | 59 | 59 | 100 | 100 |
+| Accuracy, 4 labels | 26/50 (52.0%) | 44/50 (88.0%) | 8/100 (8.0%) | 38/100 (38.0%) |
+| Outcome accuracy, all labels | 29/59 (49.2%) | 52/59 (88.1%) | 8/100 (8.0%) | 38/100 (38.0%) |
+| Wrong True/False | 0 | 0 | 0 | 0 |
+| Can't verify share (claim rows) | 7/51 (13.7%) | 2/51 (3.9%) | 24/100 (24.0%) | 55/100 (55.0%) |
+| Silent/skip share (claim rows) | 18/51 (35.3%) | 3/51 (5.9%) | 72/100 (72.0%) | 9/100 (9.0%) |
+| Can't verify + skips | 49.0% | 9.8% | 96.0% | 64.0% |
+| Errors and timeouts | 0 | 0 | 0 | 0 |
+| Latency median / P95 | 0.92 s / 5.95 s | 1.19 s / 3.60 s | 0.27 s / 6.77 s | 2.35 s / 5.14 s |
+| Exa searches per check | 0.68* | 0.64 | 0.52* | 1.25 |
+| Exa /contents requests per check | 0.63* | 0 | 0.72* | 0 |
+| Jev calls per check | 1.66* | 2.02 | 1.52* | 2.45 |
+
+\* The baseline sends no `usage` field, so a preload on its server process counted its calls from outbound HTTP (host, path and status only). The same count on the candidate matched its reported usage exactly: Jev 364/364, Exa 163/163.
+
+**Ship rule: PASS.**
+
+- EVERYDAY wrong True/False not higher: 0/59 to 0/59.
+- HARD wrong True/False not higher: 0/100 to 0/100.
+- EVERYDAY Can't verify + skips lower: 49.0% to 9.8%.
+- EVERYDAY median 1.19 s < 4 s and P95 3.60 s < 10 s.
+- HARD median 2.35 s < 4 s and P95 5.14 s < 10 s.
+
+The candidate answered True or False on 44 EVERYDAY cases (27 True, 17 False) and 23 HARD cases (11 True, 12 False), and none of them crossed the true/false line. One HARD False is gold Misleading (misl-404). No case the baseline got right got worse on the candidate. 23 EVERYDAY cases and 30 HARD cases went from wrong to right, among them the seven `context-*` pronoun cases, dev-eiffel-context, dev-nasa-moon, dev-attributed-recent, dev-prediction and dev-hearsay-bulls.
+
+An earlier candidate run at `3f716b9` failed the ship rule on one case: hard true-066 (gold Supported) came back False because the evidence named the US affiliate of the organisation in the claim. The judge now treats a claim that names a closely related body (an affiliate, a national branch, a parent body) in place of the exact one as misleading, and true-066 ends Can't verify (`below_threshold`).
+
+Still open:
+
+- The kept privacy questions hold some public facts: `private_or_personal` on 8 HARD rows and on EVERYDAY myth-07, data-02 and context-01; `private_life_not_checked` on 8 HARD rows.
+- everyday nonclaim-02 is labelled not_a_claim in the reference set, but it is a forecast, which Q2b treats as a claim. The candidate answered Can't verify.
+- False myths ending Can't verify after two searches: everyday myth-04 and dev-ipo. dev-great-wall came back Misleading.
+- Google Fact Check Tools was skipped on both runs (no `GOOGLE_FACTCHECK_API_KEY`), and neither set has a weather case, so Open-Meteo never ran. Wikimedia returned 11 rate-limit responses during the candidate run.
 
 Smoke run on branch `claude/fc-port-asr-eval` (base pipeline, before the admission, sources and verdict ports merge), live mode on a loopback server, first three EVERYDAY claims, 14 November 2026 ([report](../fixtures/evaluation/live-runs/2026-11-14T171438Z-smoke-fc-port-asr-eval.md)). It shows the script runs end to end against live providers; three cases measure nothing about accuracy.
 

@@ -1,0 +1,671 @@
+{
+  "schemaVersion": 1,
+  "label": "candidate-everyday",
+  "startedAt": "2026-11-14T18:08:53.480Z",
+  "finishedAt": "2026-11-14T18:10:35.068Z",
+  "completed": true,
+  "stoppedReason": null,
+  "server": {
+    "kind": "loopback",
+    "mode": "live"
+  },
+  "sets": [
+    "everyday"
+  ],
+  "limit": null,
+  "joins": 2,
+  "licence": "HARD is the AVeriTeC held-out sample (CC BY-NC 4.0), read in place from the reference app checkout. Reports keep only ids, labels and metrics; no claim text, context, checked text or summary is stored.",
+  "metrics": {
+    "everyday": {
+      "set": "everyday",
+      "cases": 59,
+      "fourLabel": {
+        "count": 44,
+        "total": 50,
+        "share": 0.88
+      },
+      "outcome": {
+        "count": 52,
+        "total": 59,
+        "share": 0.8813559322033898
+      },
+      "wrongTrueFalse": 0,
+      "trueCalledFalse": 0,
+      "falseCalledTrue": 0,
+      "cantVerify": {
+        "count": 2,
+        "total": 51,
+        "share": 0.0392156862745098
+      },
+      "skips": {
+        "count": 3,
+        "total": 51,
+        "share": 0.058823529411764705
+      },
+      "errors": 0,
+      "latencyMs": {
+        "median": 1192,
+        "p95": 3600,
+        "measured": 59
+      },
+      "exaSearchesPerCheck": 0.6440677966101694,
+      "jevCallsPerCheck": 2.016949152542373,
+      "usageRows": 59,
+      "fieldUnsupported": 0,
+      "confusion": {
+        "false": {
+          "false": 17,
+          "cant_verify": 2,
+          "not_a_claim": 2,
+          "misleading": 1
+        },
+        "true": {
+          "true": 27,
+          "not_a_claim": 1
+        },
+        "not_a_claim": {
+          "not_a_claim": 6,
+          "cant_verify": 1
+        },
+        "speculation": {
+          "speculation": 1
+        },
+        "needs_confirmation": {
+          "needs_confirmation": 1
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "set": "everyday",
+      "id": "myth-01",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1871,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "myth-02",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2045,
+      "jevCalls": 3,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "myth-03",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1271,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "myth-04",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 3507,
+      "jevCalls": 4,
+      "exaSearches": 2
+    },
+    {
+      "set": "everyday",
+      "id": "myth-05",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1192,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "myth-06",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1229,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "myth-07",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 286,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "myth-08",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3600,
+      "jevCalls": 3,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 5496,
+      "jevCalls": 4,
+      "exaSearches": 2
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1214,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2715,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-04",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1006,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-05",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1738,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-06",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1659,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-07",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1095,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-08",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2976,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "plain-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2523,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "plain-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2367,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "plain-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1736,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "plain-04",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1002,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-01",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "latencyMs": 206,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-02",
+      "expected": "not_a_claim",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 2641,
+      "jevCalls": 3,
+      "exaSearches": 2
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-03",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "latencyMs": 171,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-04",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "latencyMs": 273,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "context-01",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 255,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "context-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1043,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "context-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1030,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "context-04",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1992,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "context-05",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 4008,
+      "jevCalls": 3,
+      "exaSearches": 2
+    },
+    {
+      "set": "everyday",
+      "id": "context-06",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 987,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "context-07",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2388,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "context-08",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2419,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "data-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2094,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "data-02",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 199,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "data-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 202,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "data-04",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1858,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "data-05",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2268,
+      "jevCalls": 3,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "data-06",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 918,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "calc-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 422,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "calc-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 441,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "calc-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 477,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "calc-04",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 407,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "calc-05",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 434,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "calc-06",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 458,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-affair",
+      "expected": "speculation",
+      "predicted": "speculation",
+      "reasonCode": "private_life_not_checked",
+      "latencyMs": 282,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-ipo",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 2729,
+      "jevCalls": 4,
+      "exaSearches": 2
+    },
+    {
+      "set": "everyday",
+      "id": "dev-goldfish",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2116,
+      "jevCalls": 3,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-great-wall",
+      "expected": "false",
+      "predicted": "misleading",
+      "reasonCode": "omitted_condition",
+      "latencyMs": 3136,
+      "jevCalls": 3,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-helsinki",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1312,
+      "jevCalls": 2,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-eiffel-context",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1137,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-nasa-moon",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 717,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-opinion",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "latencyMs": 263,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-question",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "latencyMs": 195,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-prediction",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "latencyMs": 277,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-misheard",
+      "expected": "needs_confirmation",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "latencyMs": 260,
+      "jevCalls": 1,
+      "exaSearches": 0
+    },
+    {
+      "set": "everyday",
+      "id": "dev-attributed-recent",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2199,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-everest",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1155,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-sydney-capital",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1006,
+      "jevCalls": 2,
+      "exaSearches": 1
+    },
+    {
+      "set": "everyday",
+      "id": "dev-hearsay-bulls",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2064,
+      "jevCalls": 2,
+      "exaSearches": 1
+    }
+  ]
+}
