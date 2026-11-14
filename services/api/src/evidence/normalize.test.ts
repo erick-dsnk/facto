@@ -79,6 +79,17 @@ describe('evidence normalization', () => {
     expect(selected.excerpt).toContain(record);
   });
 
+  it('centers expanded lowercase tokens while preserving original Unicode offsets', () => {
+    const proposition = 'İZMİR';
+    const record = 'Source record R-17 identifies the registered place name and its provenance.';
+    const text = `${'🦉 Unrelated navigation. '.repeat(75)}${proposition}${' Supporting notes. '.repeat(30)}${record}${' Appendix notes.'.repeat(120)}`;
+    const selected = selectExcerpt({ url: 'https://synthetic.example.org/record', text }, proposition)!;
+    expect(codePoints(selected.excerpt).length).toBeLessThanOrEqual(2000);
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(selected.excerpt).toContain(proposition);
+    expect(selected.excerpt).toContain(record);
+  });
+
   it.each([false, true])('preserves nearby opposing and qualified context on either side of the centered proposition (%s)', reverse => {
     const affirmative = 'The Aster bridge opened in 1889.';
     const qualification = 'However, public access did not begin until 1890; the earlier date refers only to a private ceremony.';
