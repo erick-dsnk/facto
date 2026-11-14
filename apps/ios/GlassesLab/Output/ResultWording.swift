@@ -158,13 +158,19 @@ struct ResultCard: Equatable, Sendable {
   var excerpt: String
   var sourceName: String?
   var hint: String
+  /// Backend explanation, distinct from the claim being checked.
+  var detailText: String?
+  /// Omitted unless the input mode is known by the caller.
+  var captureLabel: String?
 
-  init(kind: CardKind, verdictWord: String, excerpt: String, sourceName: String?, hint: String) {
+  init(kind: CardKind, verdictWord: String, excerpt: String, sourceName: String?, hint: String, detailText: String? = nil, captureLabel: String? = nil) {
     self.kind = kind
     self.verdictWord = verdictWord
     self.excerpt = excerpt
     self.sourceName = sourceName
     self.hint = hint
+    self.detailText = detailText
+    self.captureLabel = captureLabel
   }
 
   /// A card for a claim result.
@@ -175,7 +181,9 @@ struct ResultCard: Equatable, Sendable {
       verdictWord: ResultWording.verdictWord(for: kind),
       excerpt: CardText.excerpt(result.checkedText, maxCodePoints: ResultWording.maxExcerptCodePoints),
       sourceName: ResultWording.bestSourceName(for: result),
-      hint: ResultWording.hint(for: kind)
+      hint: ResultWording.hint(for: kind),
+      detailText: result.summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        ? nil : CardText.excerpt(result.summary, maxCodePoints: 140)
     )
   }
 
@@ -188,7 +196,8 @@ struct ResultCard: Equatable, Sendable {
       verdictWord: ResultWording.verdictWord(for: kind),
       excerpt: claimText.map { CardText.excerpt($0, maxCodePoints: ResultWording.maxExcerptCodePoints) } ?? "",
       sourceName: nil,
-      hint: ResultWording.hint(for: kind)
+      hint: ResultWording.hint(for: kind),
+      detailText: ResultWording.line(for: outcome)
     )
   }
 

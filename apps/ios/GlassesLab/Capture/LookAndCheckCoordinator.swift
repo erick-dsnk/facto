@@ -65,6 +65,9 @@ final class LookAndCheckCoordinator {
   private(set) var lastOutcome: Outcome?
   /// Called on the main actor after every finished check, for the UI or speech.
   @ObservationIgnored var onOutcome: ((Outcome) -> Void)?
+  @ObservationIgnored var onAccepted: (@MainActor () -> Void)?
+  @ObservationIgnored var canCapture: (@MainActor () -> Bool)?
+  @ObservationIgnored var onCancelledCapture: (@MainActor () async -> Void)?
   /// Runs after OCR, before the first chunk is submitted. Return false when the session
   /// can't take checks (the check fails with "session_paused"). LiveModel resumes a session
   /// the server paused after a reconnect here, for voice and button triggers alike.
@@ -78,6 +81,7 @@ final class LookAndCheckCoordinator {
   @ObservationIgnored private let now: () -> Date
   @ObservationIgnored private let debugLog: DebugLog
   @ObservationIgnored private var listener: Task<Void, Never>?
+  @ObservationIgnored private var operationGeneration = UUID()
   @ObservationIgnored private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "LookAndCheck")
 
   init(
@@ -115,44 +119,61 @@ final class LookAndCheckCoordinator {
   }
 
   func stop() {
+    operationGeneration = UUID()
     listener?.cancel()
     listener = nil
+  }
+
+  func waitUntilIdle() async {
+    while isRunning && !Task.isCancelled {
+      try? await Task.sleep(for: .milliseconds(20))
+    }
   }
 
   /// Starts a check in the background. Returns false when one is already running.
   @discardableResult
   func trigger(_ source: TriggerSource) -> Bool {
+    guard canCapture?() ?? true else { return false }
     guard !isRunning else {
       log.info("trigger ignored, check running, source=\(source.rawValue, privacy: .public)")
       debugLog.log("lookcheck.ignored", ["source": source.rawValue, "trigger": source.debugName, "phase": "\(phase)"])
       return false
     }
     phase = .capturing
-    Task { await self.run(source: source) }
+    onAccepted?()
+    let generation = operationGeneration
+    Task { await self.run(source: source, generation: generation) }
     return true
   }
 
   /// Runs one check and returns its outcome, or nil when a check is already running.
   @discardableResult
   func performCheck(source: TriggerSource) async -> Outcome? {
+    guard canCapture?() ?? true else { return nil }
     guard !isRunning else {
       log.info("trigger ignored, check running, source=\(source.rawValue, privacy: .public)")
       debugLog.log("lookcheck.ignored", ["source": source.rawValue, "trigger": source.debugName, "phase": "\(phase)"])
       return nil
     }
     phase = .capturing
-    return await run(source: source)
+    onAccepted?()
+    return await run(source: source, generation: operationGeneration)
   }
 
   // MARK: Pipeline
 
   /// Expects `phase` already set to `.capturing` so a second trigger is refused at once.
   @discardableResult
-  private func run(source: TriggerSource) async -> Outcome {
-    // Ties this check's debug log entries together: trigger, photo, OCR, chunks, outcome.
+  private func run(source: TriggerSource, generation: UUID) async -> Outcome {
+    // Keep the diagnostic trace across cancellation-safe capture and submission.
     let trace = String(UUID().uuidString.prefix(8)).lowercased()
     let started = ProcessInfo.processInfo.systemUptime
-    let outcome = await pipeline(source: source, trace: trace)
+    let outcome = await pipeline(source: source, generation: generation, trace: trace)
+    guard generation == operationGeneration else {
+      await onCancelledCapture?()
+      phase = .idle
+      return .failed(reason: "cancelled")
+    }
     phase = .idle
     lastOutcome = outcome
     debugOutcome(outcome, trace: trace, started: started)
@@ -180,7 +201,9 @@ final class LookAndCheckCoordinator {
     return String(requestId[..<dash])
   }
 
-  private func pipeline(source: TriggerSource, trace: String) async -> Outcome {
+  private func pipeline(source: TriggerSource, generation: UUID, trace: String) async -> Outcome {
+    func current() -> Bool { !Task.isCancelled && operationGeneration == generation }
+    guard current() else { return .failed(reason: "cancelled") }
     log.info("look-and-check start source=\(source.rawValue, privacy: .public)")
     debugLog.log("lookcheck.start", [
       "trace": trace, "source": source.rawValue, "trigger": source.debugName,
@@ -200,6 +223,7 @@ final class LookAndCheckCoordinator {
       let captureStarted = ProcessInfo.processInfo.systemUptime
       do {
         jpeg = try await photo.captureStillDuringStream()
+        guard current() else { return .failed(reason: "cancelled") }
       } catch {
         log.error("photo capture failed: \(String(describing: type(of: error)), privacy: .public)")
         debugLog.log("lookcheck.photo_failed", [
@@ -215,6 +239,7 @@ final class LookAndCheckCoordinator {
       let ocrStarted = ProcessInfo.processInfo.systemUptime
       do {
         ocr = try await recognizer.recognizeText(in: jpeg)
+        guard current() else { return .failed(reason: "cancelled") }
       } catch {
         log.error("ocr failed: \(String(describing: type(of: error)), privacy: .public)")
         debugLog.log("lookcheck.ocr_failed", [
@@ -252,10 +277,12 @@ final class LookAndCheckCoordinator {
     if let prepareSubmit, !(await prepareSubmit()) {
       return .failed(reason: "session_paused")
     }
+    guard current() else { return .failed(reason: "cancelled") }
     let photoSegment = WireID.makeSegmentId(prefix: "photo")
     let requestBase = WireID.makeRequestId(prefix: "ocr")
     var submitted: [String] = []
     for (index, chunk) in split.chunks.enumerated() {
+      guard current() else { return .failed(reason: "cancelled") }
       let requestId = "\(requestBase)-\(index + 1)"
       let segmentId = "\(photoSegment)-\(index + 1)"
       let confidence = min(max(ocr.meanConfidence, 0), 1)
@@ -293,6 +320,7 @@ final class LookAndCheckCoordinator {
           // The session moved on while this chunk was in flight (a reconnect raised the
           // epoch): once it is active again, one retry with the current ids.
           if let prepareSubmit, !(await prepareSubmit()) { throw error }
+          guard current() else { return .failed(reason: "cancelled") }
           guard let retry = envelope(), retry != first else { throw error }
           log.info("ocr chunk \(index + 1, privacy: .public) retrying with epoch \(retry.sessionEpoch, privacy: .public)")
           debugLog.log("lookcheck.retry", [

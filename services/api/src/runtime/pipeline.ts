@@ -1,7 +1,8 @@
+import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import {
   claimFrame, MODEL_VERSION, POLICY_VERSION, PipelineError, PROVIDER_LIMITS, sourceQuery, sourceQueryText,
-  type AcceptedClaim, type AdmissionPayload, type CheckUsage, type ClaimFrame, type ClaimResult, type Evidence, type Judgment, type ProviderContext, type ProviderKind,
+  type AcceptedClaim, type AdmissionPayload, type DisplaySource, type CheckUsage, type ClaimFrame, type ClaimResult, type Evidence, type Judgment, type ProviderContext, type ProviderKind,
   type ResultDecision, type TextInput, type VerdictDecision,
 } from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from './adapters.js';
@@ -13,10 +14,31 @@ import { corroborationNeeded, mergeCorroboration, supportingSites } from '../pol
 import { AttemptBudget, abortable, assertWithinDeadline } from './budget.js';
 import { ClaimCache, type CachedDecision } from './claim-cache.js';
 import { fingerprint, type RequestRecord, type Session } from './session.js';
-import { claimResultSchema } from '../../../../packages/contracts/src/wire.js';
+import { claimResultSchema, claimSourcesSchema } from '../../../../packages/contracts/src/wire.js';
 import { containsContactData } from '../input/claims/spans.js';
 
 type Job = { session: Session; record: RequestRecord };
+
+/** claim.sources progress: the sites Exa returned, one per hostname, at most four. Never the provider itself. */
+export function sourceSites(records: Evidence[]): DisplaySource[] {
+  const sites = new Map<string, DisplaySource>();
+  for (const record of records) {
+    let hostname: string;
+    try { hostname = new URL(record.url).hostname.toLowerCase(); } catch { continue; }
+    if (!/^[a-z0-9.-]{1,253}$/.test(hostname) || sites.has(hostname)) continue;
+    sites.set(hostname, { id: createHash('sha256').update(hostname).digest('hex').slice(0, 24), hostname, title: (record.title.trim() || hostname).slice(0, 160), stage: 'ready', provider: 'exa' });
+    if (sites.size === 4) break;
+  }
+  return [...sites.values()];
+}
+const reportedEvidence = new WeakMap<object, Evidence[]>();
+/** After each Exa search of the sources flow returns: report every site found so far for this claim. */
+function reportPaidSources(context: ProviderContext, found: Evidence[]) {
+  if (!context.reportSources) return;
+  const all = [...(reportedEvidence.get(context) ?? []), ...found];
+  reportedEvidence.set(context, all);
+  context.reportSources(sourceSites(all));
+}
 export type RuntimeMetric = {
   durationMs: number; stageMs: { admission: number; retrieval: number; judgment: number };
   state: RequestRecord['state']; jevAttempts: number; searchAttempts: number; contentAttempts: number; inputTokens: number;
@@ -69,7 +91,7 @@ export class PipelineRuntime {
       previous.controller.abort(new PipelineError('superseded')); clearTimeout(previous.timer);
       previous.state = 'cancelled';
       const presented = [...previous.results.values()].some(result => result.presentation.action !== 'silent');
-      if (previous.results.size) session.emit('claim.superseded', { reasonCode: 'corrected', presentation: { action: presented && !session.preferences.muted && (previous.input.userInitiated || session.preferences.automaticNotifications) ? 'respond' : 'silent', reasonCode: 'correction_status' } }, previous.input);
+      session.emit('claim.superseded', { reasonCode: 'corrected', presentation: { action: presented && !session.preferences.muted && (previous.input.userInitiated || session.preferences.automaticNotifications) ? 'respond' : 'silent', reasonCode: 'correction_status' } }, previous.input);
       previous.results.clear();
     }
     // Revisions and continuations share the original deadline and attempt budget.
@@ -187,8 +209,16 @@ export class PipelineRuntime {
           session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input, claim.id);
           record.state = 'done'; return;
         }
-        const checking: AdmissionPayload = { admissionAction: 'check', reasonCode: 'eligible_public_claim', ...(sources ? { route: frame.route, subject } : {}) };
+        const checking: AdmissionPayload = {
+          admissionAction: 'check', reasonCode: 'eligible_public_claim', claimText: claim.checkedText, mode: input.mode, userInitiated: input.userInitiated,
+          ...(sources ? { route: frame.route, subject } : {}),
+        };
         session.emit('claim.checking', checking, input, claim.id);
+        // claim.sources: up to four source sites for the display, only while this request still owns its output.
+        const reportSources = (progressSources: DisplaySource[]) => {
+          const progress = claimSourcesSchema.safeParse({ sources: progressSources });
+          if (progress.success && session.current(record) && this.now() < record.acceptedAt + 10_000) session.emit('claim.sources', progress.data, input, claim.id);
+        };
         // Notification identity is the complete admitted proposition, independent of
         // capture mode/context. Keep factual cache identity separate.
         const notificationKey = claim.checkedText;
@@ -215,6 +245,7 @@ export class PipelineRuntime {
             const laterUncached = admission.claims.slice(index + 1).filter(needsProviders).length;
             const reserved = Math.min(laterUncached, Math.max(0, PROVIDER_LIMITS.jev - record.budget.jev - 1));
             const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+            claimContext.reportSources = reportSources;
             const outcome = await this.checkWithSources({ claim, frame, claimContext, timed, halted, acceptedAt: record.acceptedAt, laterUncached });
             if (!outcome) return;
             result = build(outcome.decision, outcome.evidence);
@@ -235,6 +266,7 @@ export class PipelineRuntime {
             const laterUncached = admission.claims.slice(index + 1).filter(needsProviders).length;
             const reserved = Math.min(laterUncached, Math.max(0, PROVIDER_LIMITS.jev - record.budget.jev - 1));
             const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+            claimContext.reportSources = reportSources;
             const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, claimContext));
             if (halted()) return;
             let judgment = evidence.length ? await timed('judgment', () => this.adapters.judge(claim, evidence, claimContext)) : {
@@ -352,6 +384,7 @@ export class PipelineRuntime {
       let paid;
       try {
         paid = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'primary' }, claimContext));
+        reportPaidSources(claimContext, paid.evidence);
       } catch (error) {
         assertWithinDeadline(claimContext);
         // A definitive answer from the free sources stands without the search, but is not kept. A provider error is
@@ -409,11 +442,13 @@ export class PipelineRuntime {
       // One site alone backs it: search once more without that site.
       const excludeSites = supportingSites(round.verdict.tally);
       const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'corroboration', excludeSites }, claimContext));
+      reportPaidSources(claimContext, extra.evidence);
       if (halted()) return 'halted';
       const merged = mergeCorroboration(round.judgment.evidence, extra.evidence, excludeSites, record => sources.traits(record, frame.attribution).site);
       return merged.length ? judgeRound(raw(merged)) : round;
     }
     const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'alternate' }, claimContext));
+    reportPaidSources(claimContext, extra.evidence);
     if (halted()) return 'halted';
     const incoming = sources.rank([], extra.evidence, frame.future);
     const combined = round ? retainAlternateEvidence(round.inputs, incoming, claim.checkedText, round.judgment) : incoming;
