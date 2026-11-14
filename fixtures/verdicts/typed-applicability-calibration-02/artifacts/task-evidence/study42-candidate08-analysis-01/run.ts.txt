@@ -1,0 +1,16 @@
+/** Reads frozen files and prints analysis only; never dispatches or writes. */
+import { readFileSync, readdirSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { analyze, hash, type Plan, type Report } from './analysis.js';
+const [planArg,reportArg]=process.argv.slice(2);
+if(!planArg||!reportArg)throw Error('usage: run.ts PLAN REPORT');
+const planPath=resolve(planArg),reportPath=resolve(reportArg);
+const read=(path:string)=>JSON.parse(readFileSync(path,'utf8'));
+const plan=read(planPath) as Plan,report=read(reportPath) as Report;
+const contextsPath=String(plan.contextsPath),requestsPath=String(plan.requestsPath);
+const sourceHashes=plan.sourceHashes as Record<string,string>;
+for(const path of [contextsPath,requestsPath])if(!sourceHashes[path]||hash(readFileSync(path,'utf8'))!==sourceHashes[path])throw Error('frozen_input_changed:'+path);
+const captures=read(requestsPath),contexts=read(contextsPath);
+const observed=readdirSync(dirname(reportPath)).filter(name=>name.startsWith('observed-')&&name.endsWith('.json')).map(name=>read(join(dirname(reportPath),name)));
+const result=analyze(plan,report,captures.calls,contexts.contexts,observed);
+console.log(JSON.stringify({inputFiles:{plan:{path:planPath,sha256:hash(readFileSync(planPath,'utf8'))},report:{path:reportPath,sha256:hash(readFileSync(reportPath,'utf8'))},requests:{path:requestsPath,sha256:sourceHashes[requestsPath]},contexts:{path:contextsPath,sha256:sourceHashes[contextsPath]}},...result},null,2));

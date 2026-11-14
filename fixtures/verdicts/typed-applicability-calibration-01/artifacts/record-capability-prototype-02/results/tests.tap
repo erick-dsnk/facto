@@ -1,0 +1,352 @@
+TAP version 13
+# Subtest: v2 audit binds supplied full retained material, raw graph and actual assessment state separately
+ok 1 - v2 audit binds supplied full retained material, raw graph and actual assessment state separately
+  ---
+  duration_ms: 6.727583
+  type: 'test'
+  ...
+# Subtest: same-ID companion excerpt replacement invalidates the old token despite recomputed input digest
+ok 2 - same-ID companion excerpt replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 10.176308
+  type: 'test'
+  ...
+# Subtest: same-ID companion URL replacement invalidates the old token despite recomputed input digest
+ok 3 - same-ID companion URL replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 5.323238
+  type: 'test'
+  ...
+# Subtest: same-ID companion title replacement invalidates the old token despite recomputed input digest
+ok 4 - same-ID companion title replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 8.63033
+  type: 'test'
+  ...
+# Subtest: same-ID companion publisher replacement invalidates the old token despite recomputed input digest
+ok 5 - same-ID companion publisher replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 6.684529
+  type: 'test'
+  ...
+# Subtest: same-ID companion publicationDate replacement invalidates the old token despite recomputed input digest
+ok 6 - same-ID companion publicationDate replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 10.95445
+  type: 'test'
+  ...
+# Subtest: same-ID companion retrievalDate replacement invalidates the old token despite recomputed input digest
+ok 7 - same-ID companion retrievalDate replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 2.018611
+  type: 'test'
+  ...
+# Subtest: same-ID companion textBasis replacement invalidates the old token despite recomputed input digest
+ok 8 - same-ID companion textBasis replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 3.36566
+  type: 'test'
+  ...
+# Subtest: same-ID companion provenanceMetadata replacement invalidates the old token despite recomputed input digest
+ok 9 - same-ID companion provenanceMetadata replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 2.055196
+  type: 'test'
+  ...
+# Subtest: same-ID companion nestedTransportMetadata replacement invalidates the old token despite recomputed input digest
+ok 10 - same-ID companion nestedTransportMetadata replacement invalidates the old token despite recomputed input digest
+  ---
+  duration_ms: 8.834377
+  type: 'test'
+  ...
+# Subtest: same-ID companion mutation cannot reuse an assessment bound to previous material
+ok 11 - same-ID companion mutation cannot reuse an assessment bound to previous material
+  ---
+  duration_ms: 1.682725
+  type: 'test'
+  ...
+# Subtest: target evidence must match the exact target material in the full snapshot
+ok 12 - target evidence must match the exact target material in the full snapshot
+  ---
+  duration_ms: 0.530699
+  type: 'test'
+  ...
+# Subtest: same-ID prior version body is bound even when the final retained material is unchanged
+ok 13 - same-ID prior version body is bound even when the final retained material is unchanged
+  ---
+  duration_ms: 2.341437
+  type: 'test'
+  ...
+# Subtest: removing a nonretained bridge and its links changes the binding instead of silently filtering it away
+ok 14 - removing a nonretained bridge and its links changes the binding instead of silently filtering it away
+  ---
+  duration_ms: 2.754148
+  type: 'test'
+  ...
+# Subtest: graph edge direction, relation and assessment metadata remain material
+ok 15 - graph edge direction, relation and assessment metadata remain material
+  ---
+  duration_ms: 10.462079
+  type: 'test'
+  ...
+# Subtest: assessment-only result, identity, revision and question changes invalidate the token
+ok 16 - assessment-only result, identity, revision and question changes invalidate the token
+  ---
+  duration_ms: 7.707128
+  type: 'test'
+  ...
+# Subtest: same text under a new claim revision invalidates the token and stale assessment input
+ok 17 - same text under a new claim revision invalidates the token and stale assessment input
+  ---
+  duration_ms: 2.379514
+  type: 'test'
+  ...
+# Subtest: changed exact claim cannot borrow a context or frozen frame from the previous claim
+ok 18 - changed exact claim cannot borrow a context or frozen frame from the previous claim
+  ---
+  duration_ms: 0.579674
+  type: 'test'
+  ...
+# Subtest: up to12 raw graph versions survive although only two records are selected;13 is rejected without truncation
+ok 19 - up to12 raw graph versions survive although only two records are selected;13 is rejected without truncation
+  ---
+  duration_ms: 1.937208
+  type: 'test'
+  ...
+# Subtest: missing version nodes, duplicate keys, wrong retained mapping and dangling graph links reject
+ok 20 - missing version nodes, duplicate keys, wrong retained mapping and dangling graph links reject
+  ---
+  duration_ms: 1.2081
+  type: 'test'
+  ...
+# Subtest: snapshot data is copied before hashing so post-issuance caller mutation cannot alter the stored binding
+ok 21 - snapshot data is copied before hashing so post-issuance caller mutation cannot alter the stored binding
+  ---
+  duration_ms: 0.664641
+  type: 'test'
+  ...
+# Subtest: caller digest alone and legacy IDs-only context cannot stand in for complete bounded state
+ok 22 - caller digest alone and legacy IDs-only context cannot stand in for complete bounded state
+  ---
+  duration_ms: 0.501666
+  type: 'test'
+  ...
+# Subtest: record and graph arrays reject sparse entries, accessors and custom prototypes before traversal
+ok 23 - record and graph arrays reject sparse entries, accessors and custom prototypes before traversal
+  ---
+  duration_ms: 0.820846
+  type: 'test'
+  ...
+# Subtest: bounded JSON rejects accessors, prototypes, cycles, undefined, nonfinite numbers and negative zero
+ok 24 - bounded JSON rejects accessors, prototypes, cycles, undefined, nonfinite numbers and negative zero
+  ---
+  duration_ms: 0.364309
+  type: 'test'
+  ...
+# Subtest: bounded JSON rejects excessive depth, key count, string bytes and aggregate context bytes
+ok 25 - bounded JSON rejects excessive depth, key count, string bytes and aggregate context bytes
+  ---
+  duration_ms: 13.368356
+  type: 'test'
+  ...
+# Subtest: all22 frozen applicability cases and four opposed-value pairs preserve labels without assigning verdicts
+ok 26 - all22 frozen applicability cases and four opposed-value pairs preserve labels without assigning verdicts
+  ---
+  duration_ms: 293.995004
+  type: 'test'
+  ...
+# Subtest: caller-authored and serialized manifests, snapshots and frames cannot forge trust
+ok 27 - caller-authored and serialized manifests, snapshots and frames cannot forge trust
+  ---
+  duration_ms: 3.231307
+  type: 'test'
+  ...
+# Subtest: source instructions, unknown fields, accessors and inherited objects fail before reading a getter
+ok 28 - source instructions, unknown fields, accessors and inherited objects fail before reading a getter
+  ---
+  duration_ms: 5.269778
+  type: 'test'
+  ...
+# Subtest: unknown receipt, arbitrary hash, path traversal and URL-shaped aliases do not resolve
+ok 29 - unknown receipt, arbitrary hash, path traversal and URL-shaped aliases do not resolve
+  ---
+  duration_ms: 10.481268
+  type: 'test'
+  ...
+# Subtest: proof from another record and noncanonical source URLs cannot use a valid receipt
+ok 30 - proof from another record and noncanonical source URLs cannot use a valid receipt
+  ---
+  duration_ms: 5.283018
+  type: 'test'
+  ...
+# Subtest: changed, clipped, whitespace-normalized and Unicode-substituted text cannot retain exact proof
+ok 31 - changed, clipped, whitespace-normalized and Unicode-substituted text cannot retain exact proof
+  ---
+  duration_ms: 6.42709
+  type: 'test'
+  ...
+# Subtest: omitting the Sunday exception cannot use the complete operative legal-record receipt
+ok 32 - omitting the Sunday exception cannot use the complete operative legal-record receipt
+  ---
+  duration_ms: 2.705676
+  type: 'test'
+  ...
+# Subtest: title or heading alone cannot acquire capability from actual record contents
+ok 33 - title or heading alone cannot acquire capability from actual record contents
+  ---
+  duration_ms: 5.509509
+  type: 'test'
+  ...
+# Subtest: same-document OLD quoted definition cannot be substituted for operative NEW unit
+ok 34 - same-document OLD quoted definition cannot be substituted for operative NEW unit
+  ---
+  duration_ms: 2.718775
+  type: 'test'
+  ...
+# Subtest: asserted-value disagreement preserves scope while geography and relation substitutions fail
+ok 35 - asserted-value disagreement preserves scope while geography and relation substitutions fail
+  ---
+  duration_ms: 30.511353
+  type: 'test'
+  ...
+# Subtest: current/latest remains unavailable for any timestamp even with canonical frozen body
+ok 36 - current/latest remains unavailable for any timestamp even with canonical frozen body
+  ---
+  duration_ms: 3.541174
+  type: 'test'
+  ...
+# Subtest: unresolved time and future proof time fail closed
+ok 37 - unresolved time and future proof time fail closed
+  ---
+  duration_ms: 5.983574
+  type: 'test'
+  ...
+# Subtest: changed exact claim text or choosing a different frozen frame cannot transfer a claim binding
+ok 38 - changed exact claim text or choosing a different frozen frame cannot transfer a claim binding
+  ---
+  duration_ms: 2.119863
+  type: 'test'
+  ...
+# Subtest: health, disputed and unknown risks do not acquire the ordinary-record route
+ok 39 - health, disputed and unknown risks do not acquire the ordinary-record route
+  ---
+  duration_ms: 2.234546
+  type: 'test'
+  ...
+# Subtest: full context, contradiction and origin bridge are retained and bound; a conflict is never resolved by capability
+ok 40 - full context, contradiction and origin bridge are retained and bound; a conflict is never resolved by capability
+  ---
+  duration_ms: 4.145244
+  type: 'test'
+  ...
+# Subtest: token serialization, evidence replacement and frame replacement cannot forge or reuse authorization
+ok 41 - token serialization, evidence replacement and frame replacement cannot forge or reuse authorization
+  ---
+  duration_ms: 7.124271
+  type: 'test'
+  ...
+# Subtest: snapshot, frame and capability handles are bound to one installed-manifest instance
+ok 42 - snapshot, frame and capability handles are bound to one installed-manifest instance
+  ---
+  duration_ms: 52.152437
+  type: 'test'
+  ...
+# Subtest: local reuse preserves original proof time and grants neither freshness nor extra independent origin
+ok 43 - local reuse preserves original proof time and grants neither freshness nor extra independent origin
+  ---
+  duration_ms: 7.083359
+  type: 'test'
+  ...
+# Subtest: evidence absence, duplicate context IDs and invalid origin links fail closed
+ok 44 - evidence absence, duplicate context IDs and invalid origin links fail closed
+  ---
+  duration_ms: 1.791428
+  type: 'test'
+  ...
+# Subtest: excerpt bounds count Unicode codepoints and reject excessive retained text
+ok 45 - excerpt bounds count Unicode codepoints and reject excessive retained text
+  ---
+  duration_ms: 0.326271
+  type: 'test'
+  ...
+# Subtest: Unicode exact alignment uses validated UTF16 offsets and ambiguous units fail
+ok 46 - Unicode exact alignment uses validated UTF16 offsets and ambiguous units fail
+  ---
+  duration_ms: 0.27224
+  type: 'test'
+  ...
+# Subtest: manifest and receipt byte tampering is detected without accepting caller-supplied hashes
+ok 47 - manifest and receipt byte tampering is detected without accepting caller-supplied hashes
+  ---
+  duration_ms: 80.856803
+  type: 'test'
+  ...
+# Subtest: tampered raw body or extraction bytes fail closed
+ok 48 - tampered raw body or extraction bytes fail closed
+  ---
+  duration_ms: 36.502443
+  type: 'test'
+  ...
+# Subtest: loaded snapshots are immutable dated bytes; newly loading changed disk bytes fails
+ok 49 - loaded snapshots are immutable dated bytes; newly loading changed disk bytes fails
+  ---
+  duration_ms: 53.64224
+  type: 'test'
+  ...
+# Subtest: symlink artifact, parent and install root are rejected
+ok 50 - symlink artifact, parent and install root are rejected
+  ---
+  duration_ms: 96.441227
+  type: 'test'
+  ...
+# Subtest: oversized individual files fail before content decoding
+ok 51 - oversized individual files fail before content decoding
+  ---
+  duration_ms: 37.209208
+  type: 'test'
+  ...
+# Subtest: admin-installed revocation blocks resolution rather than trusting a prior alias
+ok 52 - admin-installed revocation blocks resolution rather than trusting a prior alias
+  ---
+  duration_ms: 54.932464
+  type: 'test'
+  ...
+# Subtest: even trusted-admin malformed installs cannot claim production authorization or duplicate IDs
+ok 53 - even trusted-admin malformed installs cannot claim production authorization or duplicate IDs
+  ---
+  duration_ms: 28.071964
+  type: 'test'
+  ...
+# Subtest: receipt proof mismatches and weakened material spans reject even with rehashed admin test manifests
+ok 54 - receipt proof mismatches and weakened material spans reject even with rehashed admin test manifests
+  ---
+  duration_ms: 101.990616
+  type: 'test'
+  ...
+# Subtest: wrong exact record unit hash and incomplete issuer proof references reject at installation
+ok 55 - wrong exact record unit hash and incomplete issuer proof references reject at installation
+  ---
+  duration_ms: 71.912786
+  type: 'test'
+  ...
+# Subtest: aggregate artifact limit is enforced across distinct content addresses
+ok 56 - aggregate artifact limit is enforced across distinct content addresses
+  ---
+  duration_ms: 95.272452
+  type: 'test'
+  ...
+# Subtest: retiring an installation immediately invalidates its existing handles and capability tokens
+ok 57 - retiring an installation immediately invalidates its existing handles and capability tokens
+  ---
+  duration_ms: 36.026006
+  type: 'test'
+  ...
+1..57
+# tests 57
+# suites 0
+# pass 57
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1762.63325

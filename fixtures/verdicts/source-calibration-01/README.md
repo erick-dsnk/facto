@@ -1,0 +1,27 @@
+# Open content-basis calibration corpus
+
+This corpus tests whether a model identifies a retained evidential basis, separately from truth, authority, relevance, scope, publication independence and high-risk corroboration. It is development material, not a sealed factual evaluation or proof of calibrated reliability.
+
+The core has 48 proposition/passage units from 12 public source families: four research reports, four formal or maintained records, and four historical accounts. Each family supplies two related proposition tests plus two matched controls. The 48 observations are therefore correlated. Source families are kept entirely within development (16 units) or validation (32 units). Validation means a predeclared public partition; it is not the project's private heldout set. No private sealed cases or original heldouts were opened.
+
+Thirty core passages are exact contiguous substrings of the retained connector extraction, including six title-only reductions. Eighteen are explicitly synthetic controls; their text is never represented as an actual source quote and their model-facing URLs use `calibration.invalid`. Synthetic origin-pair metadata likewise does not represent real websites. Actual quotations preserve the extraction's markdown, whitespace and mathematical notation; the <=2,000 Unicode-code-point limit is validated. An origin HTTP200 response is an availability observation, not proof that its raw HTML contains an identical connector extraction or that its information is true. `origin-excerpt-checks.json` records the stricter normalized-text check: 19/38 actual core+extension excerpts matched the original HTML text literally; the remaining 19 may reflect linked full-paper content or markup/normalization and must not be described as byte-verified original quotes. Every selected source's original response body and hash is retained locally. The abandoned UN Charter source returned403 and is recorded but unused; Cornell Article I replaces it.
+
+Two AI agents annotated independently before any project-provider outputs, retaining first and second labels. The curator accepted six second-review revisions: Q07/Q11/Q15/Q19/Q31/Q43 contain named research methods/findings or precise formal/catalog record content despite brevity or promotional framing. Treating them as negative solely because they are synthetic, short or in an advertisement would be a labeling error. This is a content-basis decision only; it does not verify authenticity, world truth or independent origins.
+
+The frozen primary cohort has45 usable labels:30 substantive,9 non-substantive,6 insufficient. Q23/Q39/Q47 remain unresolved concise-reference boundaries. Their provisional negative labels are retained for traceability, but `excludeFromPrimary` is true: execute them as predeclared, report their predictions and both-label sensitivity, and exclude them from primary confusion matrices. Never pick whichever label favors a model. This is not the originally intended24/24 balance; independent annotation changed that count before calls.
+
+Eight additional genuine routine-reference passages cover geography, chemistry, animal descriptions, climate and a matched mountain-height caption/declaration. First labels: six negative and two positive. Second labels: all eight positive, with four concise cases explicitly flagged. These are not executed in the current bounded experiment and do not supply favorable evidence for a policy change. The disagreement is preserved: concrete asserted detail alone must not be silently equated with demonstrated record provenance. A separate rubric decision and independently reviewed calibration would be needed before making these examples a release gate.
+
+Sixteen origin-pair controls have complete label agreement: eight common-origin, four distinct-underlying-record, four unclear. They use openly synthetic records or synthetic mirrors of exact public passages. They test recognition of explicit retained cues, not actual publication independence. Development and validation controls use different underlying paper/record identifiers. They are separate from the48-unit content-basis experiment.
+
+## Files and execution contract
+
+- `units.unlabeled.json`:48 frozen core inputs. Only id, proposition, title, URL and excerpt enter model requests.
+- `annotation-adjudicated.json`: primary labels, exclusions and revision reasons.
+- `adjudication.json`: independent-review completion, predeclared exclusions and experiment limits.
+- `manifest.json`: hashes of inputs, all annotations, provenance and adjudication.
+- `boundary.*`: eight unexecuted genuine-reference boundary units and independent disagreement.
+- `origin-pairs.*`: sixteen separately labeled synthetic provenance controls.
+- `sources.json`, `*.source.md`, `*.origin.html`: retained public-source provenance; raw files are research evidence, not project-provider responses.
+
+Root predeclared all48 core inputs for baseline and candidate, one pass per arm, maximum16 actual Jev calls, zero Exa project calls, bounded tokens/bytes/wall time and no retries. The runner separately supplied by assessment_coverage must enforce those limits, omit annotations from model state and write durable accounting. Corpus creation made zero project-key calls. Connected public web lookup was used for source curation; its cost is not part of the subsequent Jev experiment's provider-accounting denominator. Do not claim that a synthetic-control gain establishes safe ordinary-reference coverage or wire a production policy solely on this experiment.

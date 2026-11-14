@@ -1,0 +1,37 @@
+from pathlib import Path
+from html.parser import HTMLParser
+from datetime import datetime,timezone
+import urllib.request,urllib.error,json,hashlib,re,sys
+base=Path('/workspace/task-evidence/record-capability-design');out=base/'origin-fetches';logfile=out/'requests.jsonl';budgetfile=out/'budget.json'
+budget=json.loads(budgetfile.read_text())if budgetfile.exists()else{'actualGETs':0,'retainedBytes':0}
+urls=sys.argv[1:]
+class R(urllib.request.HTTPRedirectHandler):
+ def redirect_request(self,req,fp,code,msg,headers,newurl):
+  if budget['actualGETs']>=20 or len(hops)>=3:raise RuntimeError('public request/redirect cap')
+  budget['actualGETs']+=1;hops.append({'status':code,'from':req.full_url,'to':newurl});return super().redirect_request(req,fp,code,msg,headers,newurl)
+class Text(HTMLParser):
+ def __init__(self):super().__init__();self.skip=0;self.parts=[]
+ def handle_starttag(self,t,a):
+  if t in ['script','style','noscript']:self.skip+=1
+ def handle_endtag(self,t):
+  if t in ['script','style','noscript']:self.skip=max(0,self.skip-1)
+ def handle_data(self,d):
+  if not self.skip:self.parts.append(d)
+for url in urls:
+ if budget['actualGETs']>=20:raise RuntimeError('request cap')
+ budget['actualGETs']+=1;hops=[];row={'requestedUrl':url,'requestedAt':datetime.now(timezone.utc).isoformat(),'method':'GET','authenticated':False,'automaticRetry':False,'logicalOrdinal':sum(1 for _ in logfile.open())+1 if logfile.exists()else 1};raw=b''
+ try:
+  with urllib.request.build_opener(R).open(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (independent public document capability research)'}),timeout=20)as resp:
+   raw=resp.read(2097153);row.update(status=resp.status,finalUrl=resp.url,contentType=resp.headers.get('Content-Type'),truncated=len(raw)>2097152)
+ except urllib.error.HTTPError as e:raw=e.read(2097153);row.update(status=e.code,finalUrl=e.url,contentType=e.headers.get('Content-Type'),error=str(e),truncated=len(raw)>2097152)
+ except Exception as e:row.update(status=None,error=str(e),truncated=False)
+ raw=raw[:2097152];budget['retainedBytes']+=len(raw)
+ if budget['retainedBytes']>12582912:raise RuntimeError('retained byte cap')
+ key=hashlib.sha256(url.encode()).hexdigest()[:16];body=out/(key+'.body');body.write_bytes(raw);decoded=raw.decode('utf-8',errors='replace')
+ if 'text/plain' in str(row.get('contentType')):visible=decoded
+ else:
+  p=Text();p.feed(decoded);visible=' '.join(' '.join(p.parts).split())
+ text=out/(key+'.text.txt');text.write_text(visible);row.update(completedAt=datetime.now(timezone.utc).isoformat(),redirects=hops,bytes=len(raw),bodyFile=str(body),bodySHA256=hashlib.sha256(raw).hexdigest(),textFile=str(text),textSHA256=hashlib.sha256(visible.encode()).hexdigest());title=re.search('<title[^>]*>(.*?)</title>',decoded,re.S|re.I);row['title']=re.sub(r'\s+',' ',title[1])if title else None
+ (out/(key+'.json')).write_text(json.dumps(row,indent=2)+'\n')
+ with logfile.open('a')as f:f.write(json.dumps(row)+'\n')
+ budgetfile.write_text(json.dumps(budget,indent=2)+'\n');print(url,row.get('status'),row.get('title'),len(raw),flush=True)

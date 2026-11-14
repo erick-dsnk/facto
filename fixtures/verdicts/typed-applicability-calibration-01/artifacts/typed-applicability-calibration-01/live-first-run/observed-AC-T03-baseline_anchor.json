@@ -1,0 +1,546 @@
+{
+  "callId": "AC-T03:baseline_anchor",
+  "judgment": {
+    "label": "contradicted",
+    "probabilities": {
+      "supported": 0.01,
+      "contradicted": 0.73,
+      "misleading": 0.24,
+      "insufficient_evidence": 0.02
+    },
+    "evidence": [
+      {
+        "id": "receipt-RA02",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:36.004097+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "Canada Day Marginal note: Canada Day 2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". Marginal note: When July 1 is a Sunday (2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". R.S., c. H-7, s. 2",
+        "sourceGroup": "justice.gc.ca",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      },
+      {
+        "id": "receipt-RA03",
+        "url": "https://www.pulitzer.org/winners/louise-erdrich",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:36.908946+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "The 2021 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Night Watchman , by Louise Erdrich (Harper)",
+        "sourceGroup": "pulitzer.org",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      },
+      {
+        "id": "record-c08",
+        "url": "https://www.ons.gov.uk/aboutus/whatwedo",
+        "title": "What we do - Office for National Statistics",
+        "publisher": "Office for National Statistics",
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:38.621374+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "What we do Our main responsibilities are collecting, analysing and disseminating statistics about the UK's economy, society and population. Statistics We produce a range of economic, social and population statistics, published in over 600 releases a year. Extra information is available on request.",
+        "sourceGroup": "ons.gov.uk",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      },
+      {
+        "id": "AC-T03-evidence",
+        "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:38.230237+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "Population and household estimates, England and Wales: Census 2021 Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. This is not the latest release. View latest release Contact: Email Michael Roskams Release date: 28 June 2022 Next release: To be announced Table of contents Main points Population growth of England and Wales between 2011 and 2021 Population sizes and changes for regions and local authorities Age and sex of the population Population and land area Number of households Future publications Population and household estimates, England and Wales: data Glossary Measuring the data Strengths and limitations Related links Print this Statistical bulletin Download as PDF View all data used in this Statistical bulletin 1. Main points This page is also available in Welsh (Cymraeg). On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300 (56,489,800 in England and 3,107,500 in Wales); this was the largest population ever recorded through a census in England and Wales.",
+        "sourceGroup": "ons.gov.uk",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": true,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "contradicts",
+        "stanceProbability": 0.86
+      },
+      {
+        "id": "receipt-RA01",
+        "url": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "title": "Saved record passage",
+        "publisher": null,
+        "publishedAt": null,
+        "retrievedAt": "2026-11-14T05:00:34.462385+00:00",
+        "contentBasis": "page_text",
+        "excerpt": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document.",
+        "sourceGroup": "rfc-editor.org",
+        "echoGroup": null,
+        "sourceRole": "unknown",
+        "directlyAddressesClaim": false,
+        "matchesTimePlaceAndPopulation": false,
+        "stance": "unrelated",
+        "stanceProbability": 1
+      }
+    ],
+    "selectedEvidenceIds": [
+      "AC-T03-evidence"
+    ],
+    "misleadingReason": "omitted_condition",
+    "misleadingEvidenceIds": [],
+    "checkedText": "According to the 28 June 2022 first rounded Census 2021 release, the usual-resident population of England and Wales on 22 March 2021 was 59,597,300.",
+    "sourceAssessments": {
+      "receipt-RA02": {
+        "contentBasis": "unclear",
+        "confidence": 0.060000000000000005
+      },
+      "receipt-RA03": {
+        "contentBasis": "unclear",
+        "confidence": 0.03
+      },
+      "record-c08": {
+        "contentBasis": "unclear",
+        "confidence": 0.1
+      },
+      "AC-T03-evidence": {
+        "contentBasis": "original_record",
+        "confidence": 0.9500000000000001
+      },
+      "receipt-RA01": {
+        "contentBasis": "unclear",
+        "confidence": 0.060000000000000005
+      }
+    },
+    "claimRisk": {
+      "level": "ordinary",
+      "confidence": 0.96
+    },
+    "originAssessments": [
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "receipt-RA03"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.62
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "record-c08"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.74
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "AC-T03-evidence"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.77
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA02",
+          "receipt-RA01"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.64
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA03",
+          "record-c08"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.56
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA03",
+          "AC-T03-evidence"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.87
+      },
+      {
+        "evidenceIds": [
+          "receipt-RA03",
+          "receipt-RA01"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.6
+      },
+      {
+        "evidenceIds": [
+          "record-c08",
+          "AC-T03-evidence"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.75
+      },
+      {
+        "evidenceIds": [
+          "record-c08",
+          "receipt-RA01"
+        ],
+        "relationship": "unclear",
+        "confidence": 0.5
+      },
+      {
+        "evidenceIds": [
+          "AC-T03-evidence",
+          "receipt-RA01"
+        ],
+        "relationship": "distinct_origins",
+        "confidence": 0.89
+      }
+    ]
+  },
+  "answers": {
+    "verdict": {
+      "choice": "contradicted",
+      "probabilities": {
+        "supported": 0.01,
+        "contradicted": 0.73,
+        "misleading": 0.24,
+        "insufficient_evidence": 0.02
+      }
+    },
+    "selected_evidence": {
+      "choice": "e3",
+      "probabilities": {
+        "none": 0.06,
+        "e0": 0,
+        "e1": 0,
+        "e2": 0,
+        "e3": 0.94,
+        "e4": 0
+      }
+    },
+    "misleading_reason": {
+      "choice": "omitted_condition",
+      "probabilities": {
+        "none": 0.18,
+        "omitted_condition": 0.68,
+        "outdated_fact": 0.05,
+        "exaggeration": 0.09
+      }
+    },
+    "claim_risk": {
+      "choice": "ordinary",
+      "probabilities": {
+        "ordinary": 0.96,
+        "health_safety": 0,
+        "disputed": 0.01,
+        "unknown": 0.03
+      }
+    },
+    "e0_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e0_relevant": {
+      "noul": 0.01
+    },
+    "e0_scope": {
+      "noul": 0.01
+    },
+    "e0_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.99,
+        "omitted_condition": 0.01,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e0_context_established": {
+      "noul": 0.01
+    },
+    "e0_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.05,
+        "attributable_research": 0,
+        "substantive_secondary": 0.01,
+        "bare_assertion": 0.16,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.78
+      }
+    },
+    "e1_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e1_relevant": {
+      "noul": 0.01
+    },
+    "e1_scope": {
+      "noul": 0.01
+    },
+    "e1_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 1,
+        "omitted_condition": 0,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e1_context_established": {
+      "noul": 0.02
+    },
+    "e1_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.02,
+        "attributable_research": 0,
+        "substantive_secondary": 0.01,
+        "bare_assertion": 0.17,
+        "attributed": 0,
+        "promotional": 0.01,
+        "unclear": 0.79
+      }
+    },
+    "e2_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e2_relevant": {
+      "noul": 0.03
+    },
+    "e2_scope": {
+      "noul": 0.09
+    },
+    "e2_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.99,
+        "omitted_condition": 0.01,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e2_context_established": {
+      "noul": 0.06
+    },
+    "e2_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.04,
+        "attributable_research": 0,
+        "substantive_secondary": 0.06,
+        "bare_assertion": 0.32,
+        "attributed": 0,
+        "promotional": 0.01,
+        "unclear": 0.57
+      }
+    },
+    "e3_stance": {
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.12,
+        "contradicts": 0.86,
+        "unrelated": 0.02
+      }
+    },
+    "e3_relevant": {
+      "noul": 0.85
+    },
+    "e3_scope": {
+      "noul": 0.48
+    },
+    "e3_context_reason": {
+      "choice": "omitted_condition",
+      "probabilities": {
+        "none": 0.11,
+        "omitted_condition": 0.78,
+        "outdated_fact": 0.05,
+        "exaggeration": 0.06
+      }
+    },
+    "e3_context_established": {
+      "noul": 0.4
+    },
+    "e3_content_basis": {
+      "choice": "original_record",
+      "probabilities": {
+        "original_record": 0.66,
+        "attributable_research": 0.02,
+        "substantive_secondary": 0.27,
+        "bare_assertion": 0.03,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.02
+      }
+    },
+    "e4_stance": {
+      "choice": "unrelated",
+      "probabilities": {
+        "supports": 0,
+        "contradicts": 0,
+        "unrelated": 1
+      }
+    },
+    "e4_relevant": {
+      "noul": 0.01
+    },
+    "e4_scope": {
+      "noul": 0.01
+    },
+    "e4_context_reason": {
+      "choice": "none",
+      "probabilities": {
+        "none": 0.99,
+        "omitted_condition": 0.01,
+        "outdated_fact": 0,
+        "exaggeration": 0
+      }
+    },
+    "e4_context_established": {
+      "noul": 0.02
+    },
+    "e4_content_basis": {
+      "choice": "unclear",
+      "probabilities": {
+        "original_record": 0.05,
+        "attributable_research": 0,
+        "substantive_secondary": 0.01,
+        "bare_assertion": 0.14,
+        "attributed": 0,
+        "promotional": 0,
+        "unclear": 0.8
+      }
+    },
+    "e0_e1_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.62,
+        "unclear": 0.38
+      }
+    },
+    "e0_e2_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.26,
+        "unclear": 0.74
+      }
+    },
+    "e0_e3_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.77,
+        "unclear": 0.23
+      }
+    },
+    "e0_e4_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.64,
+        "unclear": 0.36
+      }
+    },
+    "e1_e2_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.44,
+        "unclear": 0.56
+      }
+    },
+    "e1_e3_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.87,
+        "unclear": 0.13
+      }
+    },
+    "e1_e4_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.6,
+        "unclear": 0.4
+      }
+    },
+    "e2_e3_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0.11,
+        "distinct_origins": 0.14,
+        "unclear": 0.75
+      }
+    },
+    "e2_e4_origin": {
+      "choice": "unclear",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.5,
+        "unclear": 0.5
+      }
+    },
+    "e3_e4_origin": {
+      "choice": "distinct_origins",
+      "probabilities": {
+        "common_origin": 0,
+        "distinct_origins": 0.89,
+        "unclear": 0.11
+      }
+    }
+  },
+  "unavailable": [],
+  "dispatch": {
+    "requestSHA256": "65c7f1cf77bb9f8de4b4aa1dee1d78ea7c1cc0c07fb6530fc44fbb73020aec35",
+    "answersSHA256": "6553d63e39495284a4a28d2396c9ab91bef39d123eda8f79888a375eb3450446",
+    "baselineBytes": 40971,
+    "augmentationBytes": 0,
+    "actualBytes": 40971,
+    "attempts": 1,
+    "questionMap": [],
+    "model": "jev-latest",
+    "productionWired": false
+  },
+  "completedActualAsk": {
+    "requestSHA256": "65c7f1cf77bb9f8de4b4aa1dee1d78ea7c1cc0c07fb6530fc44fbb73020aec35",
+    "answersSHA256": "6553d63e39495284a4a28d2396c9ab91bef39d123eda8f79888a375eb3450446",
+    "judgmentSHA256": "20cbcd6f7df5adc190d13f0dd014505f5d03927dc68a17b03a1c78d904e29817",
+    "rawGeneration": "97b8ba725162d66450e08c43913921a781560aa235e71b093e26b6f00aa6fc01",
+    "preAskMaterialGeneration": "db2bead832a311dc120552b07d4244fe3d06aa46b75aa98e2cd2f00f6a12c27d",
+    "derivedGraphGeneration": "8d8f76d07edbe88882c3dcabb25ad4b45e0a15c05889a1118c4f38ae88ea2df7",
+    "actualAskConsumed": true,
+    "authorityGranted": false
+  },
+  "eligibility": []
+}

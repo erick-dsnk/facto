@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "final_stack_review",
+  "reviewedAt": "2026-11-14T05:07:03.213011+00:00",
+  "verdict": "approved_for_root_predeclared_once_only_structural_diagnostic",
+  "providerCallsByReviewer": 0,
+  "frozenSource": {
+    "commit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+    "dirty": false,
+    "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42"
+  },
+  "planCanonicalSHA256": "9e8b780d5db6f9b3cf4efeb0f8aa87af916a2128206a496e715415cf1b67735a",
+  "reviewedFileSHA256": {
+    "runner.ts": "990bffaa3bb30e621e71860ffeea64f961e5e51bd0c75ce0abe3065aaaa646b6",
+    "runner.test.ts": "a79feb0e070ea3abd61766309766165b10d264f9138918d3fcb8ca4c161e7e3d",
+    "diagnostic18-plan.json": "5ecfe2a17252ac2a1b6a45190deba55006ba1a5d36e1b2f56035c06d23e20219",
+    "contexts.json": "8c307240989e38533e6e73c79d900499bbd65d075e4ec6204ea841b16b3d5d09",
+    "target-labels-adjudicated.json": "1d363c1b2797a78cd96e1d28cf3fcddc7a4df1b3512637bf514e71bd06c3fc86",
+    "target-adjudication.json": "bb5364d78a5bd6e9294aa4ba9849fee45d4da5a26491688d58def629376b9e4c"
+  },
+  "checks": [
+    "All six full contexts are byte-value identical to their original saved public report evidence-stage arrays, with original report hashes verified.",
+    "Every original/reversed full condition preserves all canonical IDs and source material; reversal changes order only. Isolated target is a separately labeled shadow diagnostic.",
+    "Expected full model state matches the frozen08 judge serialization exactly; only bounded source ID/URL/title/date/contentBasis/excerpt fields enter model state. Stale scores, labels and control expectations are not model state.",
+    "Canonical source IDs bind each positional content-basis question and selected-evidence option. Results are mapped back to canonical IDs.",
+    "All source/runner and input hashes match the frozen plan; independent full-scope source hash and clean expected HEAD were also verified immediately before this review.",
+    "Eighteen calls fit645016 total request bytes, maximum58205 bytes each. Caps remain18 Jev,0 Exa,200000 input tokens with24000 pending reservation,65536 bytes per request,1048576 total bytes and120seconds.",
+    "Frozen client retry seam is disabled by canConsume:false for subsequent attempts; unknown usage, terminal failure, reservation exhaustion, measured overrun or wall expiry stops further dispatch.",
+    "Exclusive output directory and durable per-attempt checkpoints preserve partial results; no default provider action.",
+    "Five primary content controls are scored; T03 remains explicitly ambiguous/excluded with both annotation views retained."
+  ],
+  "causalLimitations": [
+    "No candidate prompt or questionKey alias: exact frozen08 baseline only.",
+    "Historical-to-new differences are requery/staleness observations, not causal gains. Only within-new-run full/order/isolated contrasts diagnose context sensitivity.",
+    "One call per condition/context; no retry, repeat, tuning or population-calibration inference.",
+    "Order sensitivity cannot by itself distinguish ID misbinding, position effects or semantic interference.",
+    "Reversing an odd-sized set can leave a middle target at the same alias; report original/reversed target positions rather than claim complete position randomization.",
+    "Isolated-target policy results are shadow diagnostics and must never replace full-context judgments or suppress conflicts/origin bridges.",
+    "BD11 chronology remains a predeclared excluded boundary unless independently adjudicated otherwise; record genre never supplies missing first/discipline qualifiers.",
+    "BIPM earlier pass uses a different excerpt; no inference from its earlier-to-final score change."
+  ],
+  "additionalLimitations": [
+    "One observation per condition cannot distinguish stochastic variability, source-position effects, semantic interference or a specific binding defect.",
+    "Historical-to-new changes are requery drift observations; only new-run conditions are compared structurally.",
+    "No isolated-target verdict can replace the full-set result or remove known conflicts/dependence bridges from production.",
+    "This diagnostic adds no factual accuracy, new source verification or release-readiness credit."
+  ],
+  "blockingFindings": []
+}
