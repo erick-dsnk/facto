@@ -21,6 +21,11 @@ describe('version 1 golden contracts', () => {
     expect(eventEnvelopeSchema.safeParse(fixture('event-waiting')).success).toBe(true);
     expect(eventEnvelopeSchema.safeParse({ ...(events[1] as object), payload: {} }).success).toBe(false);
   });
+  it('validates the capture.request event added compatibly to version 1', () => {
+    const capture = fixture('event-capture-request') as Record<string, unknown>;
+    expect(eventEnvelopeSchema.safeParse(capture).success).toBe(true);
+    expect(eventEnvelopeSchema.safeParse({ ...capture, payload: {} }).success).toBe(false);
+  });
   it('rejects invented citations and spans that do not select the checked text', () => {
     const result = claimResultSchema.parse(fixture('result-manual-supported'));
     expect(claimResultSchema.safeParse({ ...result, selectedEvidenceIds: ['invented'] }).success).toBe(false);

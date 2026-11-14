@@ -247,10 +247,15 @@ describe('bounded pipeline runtime', () => {
     expect(events.some(e => e.type === 'claim.result')).toBe(false);
   });
 
-  it('enforces automatic cooldown and tombstone capacity without evicting attempt budgets', () => {
-    const { session, runtime } = setup();
-    runtime.submit(session, input(session, 'a', { userInitiated: false }));
+  it('starts the automatic cooldown at an admitted claim, never at a skipped sentence', async () => {
+    const { session, runtime, events } = setup();
+    runtime.submit(session, input(session, 'filler', { userInitiated: false, text: 'I felt tired after lunch.' })); await flush();
+    expect(events.some(e => e.requestId === 'filler' && e.type === 'claim.skipped')).toBe(true);
+    runtime.submit(session, input(session, 'a', { userInitiated: false })); await flush();
+    expect(events.some(e => e.requestId === 'a' && e.type === 'claim.result')).toBe(true);
     expect(() => runtime.submit(session, input(session, 'b', { userInitiated: false }))).toThrow('automatic_cooldown');
+    await vi.advanceTimersByTimeAsync(4_000);
+    expect(runtime.submit(session, input(session, 'c', { userInitiated: false }))).toMatchObject({ duplicate: false });
     session.pause();
   });
 

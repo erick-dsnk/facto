@@ -1,0 +1,22 @@
+# Allow-list: the image gets only what the server needs at runtime.
+# Everything else (node_modules, .git, .env*, docs, the iOS app, deploy/cloudflare) stays out.
+*
+
+!package.json
+!package-lock.json
+!tsconfig.json
+!services/api/package.json
+!services/api/src/
+!packages/contracts/src/
+# GET / reads this file from disk.
+!apps/console/index.html
+
+# Tests are not needed at runtime.
+**/*.test.ts
+
+# Never ship env files or keys, even if one appears inside an allowed folder.
+**/.env
+**/.env.*
+**/.dev.vars*
+**/*.pem
+**/*.key

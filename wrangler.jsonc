@@ -1,0 +1,53 @@
+// Cloudflare Worker + Container for the live backend (issue #43). Deploy steps: README.md, "Deploy (Cloudflare)".
+// Run wrangler from deploy/cloudflare (it pins the wrangler version): npm run deploy.
+// Relative paths in this file resolve from the repo root, where this file lives.
+{
+  "$schema": "./deploy/cloudflare/node_modules/wrangler/config-schema.json",
+
+  // With the account's workers.dev subdomain this fixes the public URL:
+  // https://actually-api.<subdomain>.workers.dev. Renaming it changes the URL.
+  "name": "actually-api",
+  "main": "./deploy/cloudflare/src/index.ts",
+  // Must not be newer than the workerd bundled with the pinned wrangler (4.156.0 ships 2026-10-23).
+  "compatibility_date": "2026-10-23",
+  "workers_dev": true,
+  // Durable Objects get no preview URLs, so keep them off to avoid a deploy warning.
+  "preview_urls": false,
+  "observability": { "enabled": true },
+
+  "containers": [
+    {
+      "class_name": "ApiContainer",
+      // The Durable Object picks the image and instance size in ctx.container.start().
+      // This setting cannot be changed after the first deploy.
+      "scheduling_policy": "durable_object",
+      "images": {
+        // Exposed to the Durable Object as ctx.container.images.api. The build context is the repo root,
+        // because the server reads apps/console/index.html and imports packages/contracts.
+        "api": { "dockerfile": "./Dockerfile", "build_context": "." }
+      }
+    }
+  ],
+
+  "durable_objects": {
+    "bindings": [{ "name": "API", "class_name": "ApiContainer" }],
+    // A deploy resets the Durable Object right away, which closes open WebSockets (clients reconnect).
+    // The container and its in-memory sessions keep running unless the image or config changed.
+    "code_update_strategy": { "mode": "immediate" }
+  },
+
+  // Declares the Durable Object class (replaces "migrations"; the two cannot be combined).
+  "exports": {
+    "ApiContainer": { "type": "durable-object", "storage": "sqlite" }
+  },
+
+  // Non-secret settings. The Durable Object copies these and the secrets below into the container env.
+  "vars": {
+    "PIPELINE_MODE": "live",
+    "TRUST_PROXY": "1"
+  }
+
+  // Secrets, set with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc` from deploy/cloudflare.
+  // Never put their values in this file:
+  //   JEV_API_KEY, EXA_API_KEY, DEEPGRAM_API_KEY, DEMO_JOIN_CODE, DEMO_JOIN_EXPIRES_AT, ALLOWED_ORIGINS
+}

@@ -52,7 +52,8 @@
         "audio.ready",
         "audio.stopped",
         "transcript.partial",
-        "transcript.final"
+        "transcript.final",
+        "capture.request"
       ]
     },
     "serverAt": {
@@ -73,5 +74,5 @@
     "payload"
   ],
   "additionalProperties": false,
-  "description": "Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt."
+  "description": "Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR."
 }
