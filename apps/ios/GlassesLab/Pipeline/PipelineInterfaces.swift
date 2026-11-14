@@ -6,7 +6,9 @@ import Security
 //
 // Rules that apply to every implementation:
 // - Provider keys (Deepgram, JEV, Exa) live on the backend only. The app never holds them.
-// - Never log raw audio, transcripts or OCR text. Log ids, types and lengths.
+// - Never log raw audio, transcripts or OCR text. Log ids, types and lengths. The exception is
+//   the on-device DebugLog (Debug/DebugLog.swift): while its toggle is on it keeps photos, OCR
+//   text and transcripts on the phone for 24 hours. Audio bytes are never kept.
 // - Stay compatible with contract v1 (Contracts/ContractsV1.swift).
 
 // MARK: - Session channel (Networking)
@@ -63,7 +65,8 @@ protocol CheckSubmitter: AnyObject {
 /// `camera.stop()` belongs only to the user's own Stop stream action.
 @MainActor
 protocol PhotoCapturing: AnyObject {
-  /// JPEG bytes. Keep them in memory and discard after OCR; never write them to disk.
+  /// JPEG bytes. Keep them in memory and discard after OCR. The only copy written to disk is
+  /// the debug log's, made by `LookAndCheckCoordinator` while that log is on.
   func captureStillDuringStream() async throws -> Data
 }
 

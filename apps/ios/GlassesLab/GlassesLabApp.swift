@@ -10,6 +10,14 @@ struct GlassesLabApp: App {
   @State private var live: LiveModel
 
   init() {
+    let debugLog = DebugLog.shared
+    debugLog.startAutomaticPruning()
+    let info = Bundle.main.infoDictionary
+    debugLog.log("app.launch", [
+      "version": info?["CFBundleShortVersionString"] as Any,
+      "build": info?["CFBundleVersion"] as Any,
+      "os": ProcessInfo.processInfo.operatingSystemVersionString,
+    ])
     do {
       try Wearables.configure()
     } catch {
