@@ -42,6 +42,9 @@ deploy() {
     return 1
   fi
 
+  # Wake phrase libraries (not in git). A no-op once they are in Vendor/.
+  scripts/fetch-wake-word-libs.sh
+
   if [[ ! -d GlassesLab.xcodeproj || project.yml -nt GlassesLab.xcodeproj ]]; then
     log "project.yml changed: regenerating the Xcode project"
     xcodegen generate --quiet
