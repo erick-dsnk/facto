@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_exa_full_unit_acquisition_feasibility_plan",
+  "status": "plan_only_no_network_authorization",
+  "createdAt": "2026-11-14T06:18:19.319320+00:00",
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "sourceRoot": "/workspace/junction-2026",
+  "sourcePins": [
+    {
+      "path": "/workspace/junction-2026/services/api/src/providers/exa/retrieval.ts",
+      "bytes": 4693,
+      "sha256": "2953cac66278020ee100958536bec170dbc485a590403d7c8fe64d971062388f"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/providers/exa/client.ts",
+      "bytes": 3839,
+      "sha256": "c1cd881d14572016bca568d3f0477830336c3122b0dd16feb422bd76c178f376"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/evidence/normalize.ts",
+      "bytes": 19611,
+      "sha256": "e7f9e5663a07011107bb44d912b1d28175e2b60e1427c81820ae5d7a129d7ae9"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/runtime/budget.ts",
+      "bytes": 2500,
+      "sha256": "28ee252e38806b17bd11ed3b727216e3cb807f41dacbe4e1e8f5a6a8de3e412b"
+    },
+    {
+      "path": "/workspace/junction-2026/services/api/src/runtime/provider-retry.ts",
+      "bytes": 3320,
+      "sha256": "ebb83ff0a5ce0bb469906ac4f86dead40f42fe6732939353aed11dd868b91e7f"
+    },
+    {
+      "path": "/workspace/junction-2026/packages/contracts/src/index.ts",
+      "bytes": 4891,
+      "sha256": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32"
+    },
+    {
+      "path": "/workspace/junction-2026/packages/contracts/src/wire.ts",
+      "bytes": 4191,
+      "sha256": "024ab8b2e899b4d705ee1b1b40ca89e549e0caa5dde9b498a7f1ad7c0c31aafd"
+    },
+    {
+      "path": "/workspace/junction-2026/package.json",
+      "bytes": 1034,
+      "sha256": "f9a98677f10d181a6d85e6da9091e13fec69778ae356eb45b95df33d2cfa6939"
+    },
+    {
+      "path": "/workspace/junction-2026/package-lock.json",
+      "bytes": 149136,
+      "sha256": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/package.json",
+      "bytes": 2722,
+      "sha256": "b6cc9e534a20be91b2e1a91e01c6e06c9f4be526c9d4b134dbe79c927585641b"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/dist/index.mjs",
+      "bytes": 142291,
+      "sha256": "bc4a6cb214c3a306578d444be147695a22e4aa07f8828c107d75d136f150cc5b"
+    },
+    {
+      "path": "/workspace/junction-2026/node_modules/exa-js/dist/index.js",
+      "bytes": 147237,
+      "sha256": "03cf33dae9aee925a12812d540899eda66e44dd95067b635f3f0f030daa027ce"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/bind.ts",
+      "bytes": 1454,
+      "sha256": "3fb74cc1ec343de11796bea75f20d6d018d3471f693881e7bf5ee95f935a56e9"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/types.ts",
+      "bytes": 18260,
+      "sha256": "bb4f27979d9442c7a15f5f8c217bd1f06621bbb12941086865910d13fdbbbc09"
+    }
+  ],
+  "sdk": {
+    "name": "exa-js",
+    "version": "2.28.0",
+    "transport": "Actual current createRetriever \u2192 AbortableExa \u2192 official Exa SDK search/getContents serialization with bounded observing fetch."
+  },
+  "queriesPath": "/workspace/task-evidence/record-acquisition-feasibility-plan-01/queries.json",
+  "queriesSHA256": "f7f1232cba5690069d397d91c422d39700ba8320b146e60806f56836af985f5c",
+  "registeredUnitsPath": "/workspace/task-evidence/record-acquisition-feasibility-plan-01/registered-units.json",
+  "registeredUnitsSHA256": "00e0e5c5bec65ecf1869ca3023b2b774c3256c4aa7795df8812b00fa091da24f",
+  "actualRetriever": {
+    "queryStrategy": null,
+    "searchOptions": {
+      "type": "auto",
+      "numResults": 5,
+      "objectiveSource": "pinned RETRIEVAL_OBJECTIVE",
+      "highlightsQuerySource": "pinned buildHighlightQuery(literal publicQuery)",
+      "highlightsMaxCharacters": 4000
+    },
+    "optionalContentsOptions": {
+      "textMaxCharacters": 12000,
+      "highlightsMaxCharacters": 4000,
+      "livecrawl": "preferred",
+      "livecrawlTimeout": 1500
+    },
+    "retainedRecordsMax": 6,
+    "retainedPerRegistrableDomainMax": 2,
+    "retainedExcerptCodepointsMax": 2000,
+    "customRankOrReceiptAwareSelection": false
+  },
+  "limits": {
+    "declaredFamilies": 4,
+    "jevActualAttempts": 0,
+    "searchActualAttemptsTotal": 4,
+    "searchActualAttemptsPerFamily": 1,
+    "contentsActualAttemptsTotal": 12,
+    "contentsActualAttemptsPerFamily": 3,
+    "deadlineMsPerFamily": 10000,
+    "serialFamilies": true,
+    "maximumSumOfFamilyNetworkWindowsMs": 40000,
+    "requestBytesPerActualAttempt": 65536,
+    "requestBytesTotal": 1048576,
+    "responseBytesPerActualAttempt": 262144,
+    "responseBytesTotal": 4194304,
+    "searchRetries": 0,
+    "contentsRetries": "Existing at-most-one retry only within the original3actualcontents slots and inherited deadline; no extra slots or laterfamily borrowing."
+  },
+  "freshOutput": {
+    "root": "/workspace/task-evidence/record-acquisition-feasibility-01",
+    "report": "/workspace/task-evidence/record-acquisition-feasibility-01/report.json",
+    "journal": "/workspace/task-evidence/record-acquisition-feasibility-01/journal.jsonl",
+    "checkpoint": "/workspace/task-evidence/record-acquisition-feasibility-01/checkpoint.json",
+    "rawResponses": "/workspace/task-evidence/record-acquisition-feasibility-01/sdk-responses"
+  },
+  "futureExecutionContract": {
+    "collectorImports": [
+      "createRetriever",
+      "AttemptBudget",
+      "abortable",
+      "assertWithinDeadline"
+    ],
+    "jevImportOrClient": false,
+    "projectKey": "Future authorized execution may read only server-held EXA_API_KEY; no values/headerssaved. Plan/previews read none.",
+    "classification": "Not executed; exactpublicquery structuralcarrier is a manually declared componentdiagnostic, not an observed admission result.",
+    "sourceBeforeAfter": "Require exactclean commit and allpinned bytes before reserving outputs and eachfamily; afterrunverify; source drift stopsunstarted work.",
+    "durability": "Atomically reserve freshoutputroot/report beforedispatch; journal predispatchreservation and settle actualcounts; preserve partials/errors; neveroverwrite/replay.",
+    "observer": "Validate final SDK serialized POST/search/contents at actual HTTP boundary; save exact publicquery/options/bodySHA/bytes and bounded rawresponse bytes/statuses/HTTPattempt counts, nevercredentials. Tap the same bounded response stream, no unbounded clone/re-read or extra request.",
+    "guard": "AnyJev operation denied; search1/contents3 perquery +global4/12; consume actual attempts, not logicalpagecalls; exact absolute10s at dispatch/completion/return plus abort watchdog.",
+    "stop": "Stop unstarted families for outer API401/403 auth, source/query drift, unknown dispatch/bodysettlement, storage failure or globalcap. A completedfullyaccounted perquery acquisitionerror/timeout remainsamiss and maycontinueonlyafterallHTTP/bodyworksettled/cancelled, no unknownreservations. PerURLerrors inHTTP200 are sourceaccess limits."
+  },
+  "offlineAnalysis": {
+    "primaryDenominator": "Fourdeclared registeredfamilies, including errors/incomplete/unobserved; no successful-only denominator.",
+    "strictBinding": "Own-family exact registered canonicalURL AND retained excerpt exactUTF8bytes equal entireauditedunit, crosschecked by unchanged bindExcerpt materialSpans entireunit.",
+    "missDiagnostics": [
+      "canonicalURLnotretained",
+      "canonicalURLretainedbutexcerptdifferent",
+      "exactunittextatother/unregisteredURL",
+      "exactunitproperlyinside largerretainedexcerpt butnotbindableasreturned",
+      "targetexcerptproperlyinsideunitbutmissingmaterialspans",
+      "SDKrawpagecontainsunitbutproductionretainedexcerptdoesnot",
+      "requesterror/unobserved/unknown"
+    ],
+    "noTextRepair": "No whitespace/case/Unicode/HTML/ellipsis normalization, unreviewedaliases, excerpttrimming, nearby-fieldcompletion, newwholeunitdefinition orcase-specific reranking. Raw/retainedexactpresence diagnostics never substitute forreturned binding.",
+    "crossFamily": "Record supplementary matches to anyregisteredunit separately; no wrongfamily credit.",
+    "truthOrPromotion": "No truth verdict, stance/contentquality assessment, currentorigin/version proof, independentcorroboration, factualcoverage/latency gain orcapabilityactivation inferred. SDKcached/livecrawlpreferred material is not freshcanonical VerifiedSnapshot.",
+    "timingAndCost": "Measure isolatedretriever durationinclSDK bodyread; no admission/Jev stage so notendtoendpipeline latency. Retain returnedpartialcosts/statuses/unknowns; Exa internalupstream requests notobservable are unknown."
+  },
+  "scaffoldingReferences": [
+    "/workspace/stack-16/fixtures/retrieval/public-acquisition-diagnostic.ts",
+    "/workspace/task-evidence/public-contents-diagnostic-01/runner.mts",
+    "/workspace/junction-2026/apps/console/src/live/observe.ts"
+  ],
+  "networkCallsDuringPlan": 0,
+  "rootReviewRequiredBeforeNetwork": true,
+  "offlineSerializationPreviewPath": "/workspace/task-evidence/record-acquisition-feasibility-plan-01/sdk-offline-previews.json",
+  "offlineSerializationPreviewSHA256": "5aafc82cb275e77b66da77796ad5018480a804d562877db8da6ddbe02e046e42"
+}

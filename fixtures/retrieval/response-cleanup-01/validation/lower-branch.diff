@@ -1,0 +1,38 @@
+diff --git a/services/api/src/providers/exa/client.ts b/services/api/src/providers/exa/client.ts
+index aec470b..371ee28 100644
+--- a/services/api/src/providers/exa/client.ts
++++ b/services/api/src/providers/exa/client.ts
+@@ -3,9 +3,14 @@ import { PipelineError } from '../../../../../packages/contracts/src/index.js';
+ 
+ const MAX_RESPONSE_BYTES = 256 * 1024;
+ 
++/** Cleanup must not replace or delay an already established provider error. */
++function discardBody(body: ReadableStream<Uint8Array> | ReadableStreamDefaultReader<Uint8Array> | null): void {
++  void body?.cancel().catch(() => undefined);
++}
++
+ async function boundedJson(response: Response): Promise<unknown> {
+   if (Number(response.headers.get('content-length')) > MAX_RESPONSE_BYTES || !response.body) {
+-    await response.body?.cancel();
++    discardBody(response.body);
+     throw new PipelineError('malformed_exa_response');
+   }
+   const reader = response.body.getReader();
+@@ -21,7 +26,7 @@ async function boundedJson(response: Response): Promise<unknown> {
+     }
+     return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
+   } catch (error) {
+-    await reader.cancel().catch(() => undefined);
++    discardBody(reader);
+     if (error instanceof PipelineError) throw error;
+     throw new PipelineError('malformed_exa_response');
+   } finally { reader.releaseLock(); }
+@@ -45,7 +50,7 @@ export class AbortableExa extends Exa {
+         redirect: 'error',
+       });
+       if (!response.ok) {
+-        await response.body?.cancel();
++        discardBody(response.body);
+         if (response.status === 401 || response.status === 403) throw new PipelineError('exa_authentication_failed');
+         if (response.status === 429) throw new PipelineError('exa_rate_limited', true);
+         throw new PipelineError('exa_unavailable', response.status >= 500);

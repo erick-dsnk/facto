@@ -1,0 +1,25 @@
+
+> check
+> npm run lint && npm run typecheck && npm test
+
+
+> lint
+> eslint packages services apps --no-warn-ignored
+
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> vitest run
+
+
+ RUN  v5.1.0 /workspace/exa-envelope-guard
+
+
+ Test Files  30 passed (30)
+      Tests  621 passed (621)
+   Start at  08:04:49
+   Duration  18.21s (tests 88%, import 9%, transform 2%)
+

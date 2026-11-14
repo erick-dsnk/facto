@@ -1,0 +1,43 @@
+{
+  "kind": "locator_archive_local_integration_review",
+  "archiveManifestSHA256": "f49f58e71a1799b85435e27cabbccf93a194da229d59acb19b2d86f0766fd3af",
+  "independentReviewSHA256": "6c79470f404790669f7372705ab57373d16aa72c2d996f79a77edee8ec180258",
+  "independentReview": {
+    "kind": "independent_minimal_shared_portability_verification",
+    "archiveManifestSHA256": "f49f58e71a1799b85435e27cabbccf93a194da229d59acb19b2d86f0766fd3af",
+    "sharedManifestSHA256": "ce456f11f46f8f56dd2decaaa2c037c9de894957bcf4e7a2cfb37954c8ef5a38",
+    "sharedSourceMapSHA256": "f0e7b2536d0f5270a676e285f4bfe9c7ffbd6bee879f551622cac09df732c852",
+    "originalPathsVerified": 142,
+    "localPayloadBlobs": 117,
+    "requiredSharedReferenceMappings": 11,
+    "uniqueRequiredSharedPayloads": 10,
+    "relocatedSharedFiles": 12,
+    "allOriginalWorkspaceOpensBlockedByAuditHook": true,
+    "successfulWorkspaceOpenAttempts": 0,
+    "standardLibraryVerifierOnly": true,
+    "archivedRunnerParserOrTestsExecuted": false,
+    "providerCalls": 0,
+    "networkCalls": 0,
+    "actualObservationDenominatorPreserved": 1,
+    "actualContents": 1,
+    "literalEdges": 0,
+    "possibleTargets": 0,
+    "currentOriginOrAuthorityCredit": false,
+    "fullPredecessorMaterializationClaim": false,
+    "sourcePackageUnmodified": true,
+    "decision": "approved_compact_inert_archive_portability",
+    "methodDisclosure": "Agent packaging/accounting review; reviewer has prior PUBLIC source/acquisition/catalog review authorship. No blind external source-correctness claim.",
+    "projectKeysRead": false
+  },
+  "rootPortableVerification": {
+    "originalPathsVerified": 142,
+    "sharedReferences": 11,
+    "providerCalls": 0,
+    "originalWorkspaceReads": 0,
+    "archivedCodeExecuted": 0
+  },
+  "published": false,
+  "newProviderCalls": 0,
+  "factualCoverageCredit": 0,
+  "note": "Exact archive bytes preserved. Full independent review harness remains in task-evidence; embedded review is its unchanged parsed report, not a claim to package all review artifacts."
+}
