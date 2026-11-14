@@ -47,7 +47,8 @@ export class TranscriptContext {
 
 export const VOICE_TRIGGER_PHRASES = ['check this', 'can you check this', 'could you check this', 'is this true', 'fact check this', 'factcheck this'];
 const LEADING_FILLER = '(?:hey|ok|okay|um|uh|so|please|alright)';
-const TRAILING_FILLER = '(?:please|now|for me)';
+// A short bounded tail ("check this one", "check this photo for me"); open-ended continuations stay claims.
+const TRAILING_FILLER = '(?:please|now|for me|one|photo|picture|image|sign)';
 const triggerPattern = new RegExp(`^(?:${LEADING_FILLER} )*(?:${VOICE_TRIGGER_PHRASES.join('|')})(?: ${TRAILING_FILLER})*$`);
 
 /** Lowercase, hyphens to spaces, punctuation removed, whitespace collapsed. */
@@ -55,7 +56,7 @@ export const normalizeUtterance = (text: string) => text.normalize('NFKC').toLow
   .replace(/[-‐-―]/g, ' ').replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, ' ').trim();
 
 /**
- * True when the whole sentence is a "check this" command, optionally wrapped in filler words.
+ * True when the whole sentence is a "check this" command, optionally wrapped in filler words or followed by a short object word.
  * A claim that merely contains the phrase ("I need to check this report") is not a trigger.
  */
 export const isVoiceTrigger = (text: string) => triggerPattern.test(normalizeUtterance(text));

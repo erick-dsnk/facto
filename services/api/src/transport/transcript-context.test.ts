@@ -51,10 +51,10 @@ describe('conversation context ring', () => {
 });
 
 describe('voice trigger', () => {
-  it.each(['Check this.', 'Can you check this?', 'could you check this', 'Is this true?', 'Fact-check this!', 'fact check this', 'Hey, check this, please.', 'Okay, is this true?', 'Can you check this for me?'])('matches %s', text => {
+  it.each(['Check this.', 'Can you check this?', 'could you check this', 'Is this true?', 'Fact-check this!', 'fact check this', 'Hey, check this, please.', 'Okay, is this true?', 'Can you check this for me?', 'Check this one.', 'Can you check this photo for me?', 'Check this sign, please.'])('matches %s', text => {
     expect(isVoiceTrigger(text)).toBe(true);
   });
-  it.each(['I need to check this report before Friday.', 'The Eiffel Tower opened in 1889, is this true?', 'Check this out.', 'This is true.', ''])('ignores %s', text => {
+  it.each(['I need to check this report before Friday.', 'The Eiffel Tower opened in 1889, is this true?', 'Check this out.', 'Is this true for Finland?', 'Check this one about taxes.', 'This is true.', ''])('ignores %s', text => {
     expect(isVoiceTrigger(text)).toBe(false);
   });
   it('normalizes punctuation, case, hyphens and spacing', () => {

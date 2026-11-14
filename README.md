@@ -20,7 +20,7 @@ Start with **[docs/PLAYBOOK.md](docs/PLAYBOOK.md)**.
 The API runs as one Railway service in EU West. `railway.json` sets the start command (`npm start`, which runs `tsx`, now a runtime dependency), the `/health` healthcheck and a single replica, because sessions live in memory.
 
 1. Create the service from this repo and enable auto-deploy from `main`.
-2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`.
+2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
 3. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset. Railway terminates TLS, so clients use `https://` and `wss://` on the Railway domain.
 4. Check `GET /health` on the public domain. It reports mode and provider readiness without credentials.
 
