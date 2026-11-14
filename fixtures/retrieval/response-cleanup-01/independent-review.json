@@ -1,0 +1,24 @@
+{
+  "kind": "independent_exa_cleanup_primary_error_review",
+  "createdAt": "2026-11-14T06:44:21.259526+00:00",
+  "verdict": "approved_narrow_patch_pending_parent_integration_and_gate",
+  "sourceSHA256": "584ae2700ea3023090e84c525e9d55f2c7bb1adcca200b30a2817a85c3d72f72",
+  "testSHA256": "46aac901d78baf7233f2e103d7755261dbc78f8a060889f6ea9e02c823b34835",
+  "independentFocusedTestsPassed": 16,
+  "workerFullGate": "lint/typecheck+242tests13files reported; not redundantly rerun by reviewer",
+  "combinedProjection": "Exact helper plus same3await-cancel replacements reconstructed independently using stdlib verifier;20runtime tests reviewed, worker passed. Newer integrated HTTP charging/retry implementation must be retained during merge.",
+  "verified": [
+    "Known oversized Content-Length error remains malformed_exa_response even if native response body cancellation rejects after peer reset.",
+    "NonOK HTTP status classifications/retry flags remain primary; cleanup rejection suppressed and cancellation initiated without awaiting potentially pending cleanup.",
+    "Reader overflow/read failures retain existing primary classification; finally still releases reader lock.",
+    "Explicit cancellation remains primary via original signal checks; helper has no budget,retry,deadline,requestschema,source-policy,threshold changes.",
+    "Localhost native response regression independently replayed among16 focusedtests; injected pending/rejected cancel controls explicitly identified as injection-only behavior.",
+    "Combined projection uses actual inherited AttemptBudget/provider retry and preserves0expired attempts,1auth/malformed attempt,atmost2transient attempts,cancellation and absolute deadline controls."
+  ],
+  "riskBoundary": [
+    "Concrete production defect is native known-error normalization masking, not an established native transport hang or arbitrary remote denial of service.",
+    "Best-effort cancellation initiation is not certification of remote closure for arbitrary injected transports.",
+    "No project-provider calls or new public-source requests from reviewer; only injected/localhost tests.",
+    "Root owns commit/merge and will defer propagation until pinned acquisition probe completes."
+  ]
+}
