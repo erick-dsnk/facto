@@ -113,6 +113,12 @@ struct ContentView: View {
           MockDisplayPreview(display: mockDisplay)
             .frame(height: 300)
             .clipShape(RoundedRectangle(cornerRadius: 12))
+          #if DEBUG
+          NativeCardPreviewControls(
+            wearables: wearables, display: display,
+            captureOrLiveActive: camera.hasSession || live.isConnected
+          )
+          #endif
         }
       } else {
         ForEach(WearablesModel.MockModel.allCases) { model in
