@@ -166,6 +166,8 @@ describe('evidence normalization', () => {
     expect(query).toContain(JSON.stringify(checked));
     expect(query).toContain('Retrieval objective:');
     expect(query).toContain('supports, challenges, or qualifies');
+    expect(query).toContain('underlying named records');
+    expect(query).toContain('identified keeper and provenance');
     expect(query).not.toContain('private salary');
   });
 
