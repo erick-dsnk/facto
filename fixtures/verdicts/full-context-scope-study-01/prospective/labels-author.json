@@ -1,0 +1,693 @@
+{
+  "kind": "frozen_author_direct_scope_stance_labels",
+  "createdAt": "2026-11-14T05:39:55.020408+00:00",
+  "inputSHA256": "43b1be4002c43d8d8d2fd7d52060c1a19b1d7c4045c88038b80777cddbe925d0",
+  "labels": [
+    {
+      "caseId": "SC01",
+      "evidenceId": "SC01-target",
+      "isTarget": true,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Recipient: Mira Vale",
+      "supportingSpanCodepoints": {
+        "start": 37,
+        "end": 57
+      },
+      "rationale": "Same recipient/year is insufficient for a career-wide first assertion. The target must not borrow ordinal 2 from the companion ledger.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "34b358b9d86c4a83698cfd37fd082ac88e7743718c6f92873004e803df931415",
+      "excerptSHA256": "440687280f6f05aa107b52585e6c5eb3873375b3ebcd517eebd2517d7c6aff7c",
+      "materialRoleNote": "First is an asserted ordinal value over the same award series; complete earlier history or an explicit ordinal is material.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC01",
+      "evidenceId": "ordinal-ledger",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "numbered 2",
+      "supportingSpanCodepoints": {
+        "start": 76,
+        "end": 86
+      },
+      "rationale": "The same series and 1984 award have an explicit second-place career ordinal, refuting first; do not reject scope because that compared value differs.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "34b358b9d86c4a83698cfd37fd082ac88e7743718c6f92873004e803df931415",
+      "excerptSHA256": "383f907914d2c61f16270bb2fce345f9c32a08a74a04b09c0c61dc9b06d64c07",
+      "materialRoleNote": "First is an asserted ordinal value over the same award series; complete earlier history or an explicit ordinal is material.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC01",
+      "evidenceId": "ordinal-decoy",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Award: Harbor Ribbon",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 20
+      },
+      "rationale": "A first ordinal for another award series does not establish the Bellwether career ordinal.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "34b358b9d86c4a83698cfd37fd082ac88e7743718c6f92873004e803df931415",
+      "excerptSHA256": "6a359d5194e512137bfa1b26f86c5cd187eb8881b934b33c232d5620a9d38a47",
+      "materialRoleNote": "First is an asserted ordinal value over the same award series; complete earlier history or an explicit ordinal is material.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC02",
+      "evidenceId": "SC02-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "Career ordinal within the Bellwether Medal series: second",
+      "supportingSpanCodepoints": {
+        "start": 59,
+        "end": 116
+      },
+      "rationale": "The target itself associates the same award/recipient/year with a second ordinal. First is a wrong compared value, not a different temporal scope.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "34b358b9d86c4a83698cfd37fd082ac88e7743718c6f92873004e803df931415",
+      "excerptSHA256": "063fdeee53a3a2b5f3b9fe969f8a79d9f25dfbd80e4250df1320eaf54fb174b9",
+      "materialRoleNote": "The claim and series universe remain unchanged; only the target now retains the ordinal association.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC02",
+      "evidenceId": "ordinal-ledger",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "numbered 2",
+      "supportingSpanCodepoints": {
+        "start": 76,
+        "end": 86
+      },
+      "rationale": "The same series and 1984 award have an explicit second-place career ordinal, refuting first; do not reject scope because that compared value differs.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "34b358b9d86c4a83698cfd37fd082ac88e7743718c6f92873004e803df931415",
+      "excerptSHA256": "383f907914d2c61f16270bb2fce345f9c32a08a74a04b09c0c61dc9b06d64c07",
+      "materialRoleNote": "The claim and series universe remain unchanged; only the target now retains the ordinal association.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC02",
+      "evidenceId": "ordinal-decoy",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Award: Harbor Ribbon",
+      "supportingSpanCodepoints": {
+        "start": 0,
+        "end": 20
+      },
+      "rationale": "A first ordinal for another award series does not establish the Bellwether career ordinal.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "34b358b9d86c4a83698cfd37fd082ac88e7743718c6f92873004e803df931415",
+      "excerptSHA256": "6a359d5194e512137bfa1b26f86c5cd187eb8881b934b33c232d5620a9d38a47",
+      "materialRoleNote": "The claim and series universe remain unchanged; only the target now retains the ordinal association.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC03",
+      "evidenceId": "SC03-target",
+      "isTarget": true,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Locality: Harbor Ward",
+      "supportingSpanCodepoints": {
+        "start": 20,
+        "end": 41
+      },
+      "rationale": "Harbor Ward alone does not supply Port Vale City. Nearby complete evidence must not become a field in this target.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "c1ea7e31d9be09d98a9ac1c13b8a26399f023a85297e87c2b68aca1e849a5d13",
+      "excerptSHA256": "082ec23461bfbd963df09b52106d9b55b471279631503f8a44dbbf398b26c5ca",
+      "materialRoleNote": "City membership is material; a broad or narrower locality label needs an explicit retained bridge.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC03",
+      "evidenceId": "geo-mapped-companion",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "the museum site is within that city boundary",
+      "supportingSpanCodepoints": {
+        "start": 79,
+        "end": 123
+      },
+      "rationale": "The complete companion independently retains the museum-to-ward-to-city association in its own passage.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "c1ea7e31d9be09d98a9ac1c13b8a26399f023a85297e87c2b68aca1e849a5d13",
+      "excerptSHA256": "f02356ce4898ce1c7516dbcdd62f77c2ac13b8360db097459c00f8603632b7e9",
+      "materialRoleNote": "City membership is material; a broad or narrower locality label needs an explicit retained bridge.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC03",
+      "evidenceId": "geo-region-only",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Renwick Province includes Port Vale City and Dunley Town",
+      "supportingSpanCodepoints": {
+        "start": 37,
+        "end": 93
+      },
+      "rationale": "Province-only geography cannot establish a specific city without a retained mapping.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "c1ea7e31d9be09d98a9ac1c13b8a26399f023a85297e87c2b68aca1e849a5d13",
+      "excerptSHA256": "73848a1663f1f1ef222ab95033772bff7e34487992da8ef932d4c31bd180cd10",
+      "materialRoleNote": "City membership is material; a broad or narrower locality label needs an explicit retained bridge.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC04",
+      "evidenceId": "SC04-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "Harbor Ward lies wholly within Port Vale City",
+      "supportingSpanCodepoints": {
+        "start": 43,
+        "end": 88
+      },
+      "rationale": "The target itself now supplies the locality-to-city mapping and includes the named site.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "c1ea7e31d9be09d98a9ac1c13b8a26399f023a85297e87c2b68aca1e849a5d13",
+      "excerptSHA256": "d6d26e0099ed319ebbb971a91075e41e5e2f31834d45bddd17a42a3ca7303120",
+      "materialRoleNote": "The mapping is in the target, not inferred from source title or the companion.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC04",
+      "evidenceId": "geo-mapped-companion",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "the museum site is within that city boundary",
+      "supportingSpanCodepoints": {
+        "start": 79,
+        "end": 123
+      },
+      "rationale": "The complete companion independently retains the museum-to-ward-to-city association in its own passage.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "c1ea7e31d9be09d98a9ac1c13b8a26399f023a85297e87c2b68aca1e849a5d13",
+      "excerptSHA256": "f02356ce4898ce1c7516dbcdd62f77c2ac13b8360db097459c00f8603632b7e9",
+      "materialRoleNote": "The mapping is in the target, not inferred from source title or the companion.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC04",
+      "evidenceId": "geo-region-only",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Renwick Province includes Port Vale City and Dunley Town",
+      "supportingSpanCodepoints": {
+        "start": 37,
+        "end": 93
+      },
+      "rationale": "Province-only geography cannot establish a specific city without a retained mapping.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "c1ea7e31d9be09d98a9ac1c13b8a26399f023a85297e87c2b68aca1e849a5d13",
+      "excerptSHA256": "73848a1663f1f1ef222ab95033772bff7e34487992da8ef932d4c31bd180cd10",
+      "materialRoleNote": "The mapping is in the target, not inferred from source title or the companion.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC05",
+      "evidenceId": "SC05-target",
+      "isTarget": true,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "was signed on 1 May 1910",
+      "supportingSpanCodepoints": {
+        "start": 26,
+        "end": 50
+      },
+      "rationale": "A matching day on a signing event does not answer the entry-into-force assertion. The companion's operative date cannot repair it.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "38a93190c77e9c19dd1f5044472d43be4759f3b17aedbd66bc12bee1b153a4d8",
+      "excerptSHA256": "3315a7391631672be860995c9bc82372221166e686ac4b855f17962ba1c9bcd7",
+      "materialRoleNote": "The event date is a compared value only after the event verb/referent matches.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC05",
+      "evidenceId": "event-register",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "Entry into force: 1 June 1910",
+      "supportingSpanCodepoints": {
+        "start": 55,
+        "end": 84
+      },
+      "rationale": "The operative register directly reports the requested event. Its different date refutes the claim without a scope failure.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "38a93190c77e9c19dd1f5044472d43be4759f3b17aedbd66bc12bee1b153a4d8",
+      "excerptSHA256": "b5d80d4f7399c40430d76d5ac4bd71ca07184970b3cf86374be141cb99f64c62",
+      "materialRoleNote": "The event date is a compared value only after the event verb/referent matches.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC05",
+      "evidenceId": "event-ceremony",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "commemorative ceremony",
+      "supportingSpanCodepoints": {
+        "start": 2,
+        "end": 24
+      },
+      "rationale": "Ceremony date is a distinct event and does not establish entry into force.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "38a93190c77e9c19dd1f5044472d43be4759f3b17aedbd66bc12bee1b153a4d8",
+      "excerptSHA256": "5f3c4df3527466679d6747a99c6979a8a2c3fea8bc1ad45d6504cc56496fddb0",
+      "materialRoleNote": "The event date is a compared value only after the event verb/referent matches.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC06",
+      "evidenceId": "SC06-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "Entry into force: 1 June 1910",
+      "supportingSpanCodepoints": {
+        "start": 35,
+        "end": 64
+      },
+      "rationale": "The target now reports the exact requested event and a different compared date. Preserve contradiction rather than refusing scope because of date disagreement.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "38a93190c77e9c19dd1f5044472d43be4759f3b17aedbd66bc12bee1b153a4d8",
+      "excerptSHA256": "3882b324d57f2a76bc7d640268015f9a4c2e364f5c9bdc8c7a2eb4dfbf545872",
+      "materialRoleNote": "No reporting-period/edition change; the date is a value of the same entry-into-force event.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC06",
+      "evidenceId": "event-register",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "Entry into force: 1 June 1910",
+      "supportingSpanCodepoints": {
+        "start": 55,
+        "end": 84
+      },
+      "rationale": "The operative register directly reports the requested event. Its different date refutes the claim without a scope failure.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "38a93190c77e9c19dd1f5044472d43be4759f3b17aedbd66bc12bee1b153a4d8",
+      "excerptSHA256": "b5d80d4f7399c40430d76d5ac4bd71ca07184970b3cf86374be141cb99f64c62",
+      "materialRoleNote": "No reporting-period/edition change; the date is a value of the same entry-into-force event.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC06",
+      "evidenceId": "event-ceremony",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "commemorative ceremony",
+      "supportingSpanCodepoints": {
+        "start": 2,
+        "end": 24
+      },
+      "rationale": "Ceremony date is a distinct event and does not establish entry into force.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "38a93190c77e9c19dd1f5044472d43be4759f3b17aedbd66bc12bee1b153a4d8",
+      "excerptSHA256": "5f3c4df3527466679d6747a99c6979a8a2c3fea8bc1ad45d6504cc56496fddb0",
+      "materialRoleNote": "No reporting-period/edition change; the date is a value of the same entry-into-force event.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC07",
+      "evidenceId": "SC07-target",
+      "isTarget": true,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "School groups may use the east door when",
+      "supportingSpanCodepoints": {
+        "start": 50,
+        "end": 90
+      },
+      "rationale": "The target fragment withholds the operative condition. Do not import confirmed-booking restrictions from the complete companion.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "5af30273a8dfe262cabe0e6b097bb2865466cba3e386a373497a203e02440fe6",
+      "excerptSHA256": "10879bd049e4b787ce6949aebd8cfed1525b4cb58684b8a3cb37281406647f1d",
+      "materialRoleNote": "A full same-rule counterexample may refute a universal statement; an absent condition is not completed from other evidence.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC07",
+      "evidenceId": "condition-operative",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "School groups without a confirmed booking must use the west door",
+      "supportingSpanCodepoints": {
+        "start": 136,
+        "end": 200
+      },
+      "rationale": "The full rule explicitly supplies an unbooked-group counterexample under the same opening-day circumstances, refuting all groups.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "5af30273a8dfe262cabe0e6b097bb2865466cba3e386a373497a203e02440fe6",
+      "excerptSHA256": "bc740acf8e201f494479a83d5d26cc77271f5c5ca14fec6622518be629a3c1d8",
+      "materialRoleNote": "A full same-rule counterexample may refute a universal statement; an absent condition is not completed from other evidence.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC07",
+      "evidenceId": "condition-staff",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Staff may use the east door on closed days",
+      "supportingSpanCodepoints": {
+        "start": 50,
+        "end": 92
+      },
+      "rationale": "Staff on closed days differ materially from school groups on public opening days.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "5af30273a8dfe262cabe0e6b097bb2865466cba3e386a373497a203e02440fe6",
+      "excerptSHA256": "4147d67c5ef518d1ae18719971d986943760c5b6849cbc1ce5603f3c7e833dd7",
+      "materialRoleNote": "A full same-rule counterexample may refute a universal statement; an absent condition is not completed from other evidence.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC08",
+      "evidenceId": "SC08-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "Unbooked school groups must use the west door",
+      "supportingSpanCodepoints": {
+        "start": 136,
+        "end": 181
+      },
+      "rationale": "The target contains the same-day rule and its explicit exception. The unbooked group is a genuine counterexample to all, not an out-of-scope population invented elsewhere.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "5af30273a8dfe262cabe0e6b097bb2865466cba3e386a373497a203e02440fe6",
+      "excerptSHA256": "339b2c986132469450675c9d6e52830cdf3512c48496f1db0a0882e64793306e",
+      "materialRoleNote": "Universal all is a compared claim that can be contradicted by an explicit in-scope exception.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC08",
+      "evidenceId": "condition-operative",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "School groups without a confirmed booking must use the west door",
+      "supportingSpanCodepoints": {
+        "start": 136,
+        "end": 200
+      },
+      "rationale": "The full rule explicitly supplies an unbooked-group counterexample under the same opening-day circumstances, refuting all groups.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "5af30273a8dfe262cabe0e6b097bb2865466cba3e386a373497a203e02440fe6",
+      "excerptSHA256": "bc740acf8e201f494479a83d5d26cc77271f5c5ca14fec6622518be629a3c1d8",
+      "materialRoleNote": "Universal all is a compared claim that can be contradicted by an explicit in-scope exception.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC08",
+      "evidenceId": "condition-staff",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Staff may use the east door on closed days",
+      "supportingSpanCodepoints": {
+        "start": 50,
+        "end": 92
+      },
+      "rationale": "Staff on closed days differ materially from school groups on public opening days.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "5af30273a8dfe262cabe0e6b097bb2865466cba3e386a373497a203e02440fe6",
+      "excerptSHA256": "4147d67c5ef518d1ae18719971d986943760c5b6849cbc1ce5603f3c7e833dd7",
+      "materialRoleNote": "Universal all is a compared claim that can be contradicted by an explicit in-scope exception.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC09",
+      "evidenceId": "SC09-target",
+      "isTarget": true,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Anniversary booklet, 16 pages",
+      "supportingSpanCodepoints": {
+        "start": 20,
+        "end": 49
+      },
+      "rationale": "The metadata title echoes the claim but the actual retained body lacks its operative record fields. The complete companion must not fill them.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "f106c006b3326e5f90123631971e317eea5924e2c6fd21c80d7c0b6ce0fb9d38",
+      "excerptSHA256": "8b852d492659fedaa067a2315e3af07a642c5680483ae59720b06b1ff78b7c87",
+      "materialRoleNote": "Title/year metadata is not an in-body event-date record.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC09",
+      "evidenceId": "metadata-register",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "Event: municipal incorporation. Event year: 1890",
+      "supportingSpanCodepoints": {
+        "start": 54,
+        "end": 102
+      },
+      "rationale": "The companion body explicitly associates the named municipality with incorporation and 1890.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "f106c006b3326e5f90123631971e317eea5924e2c6fd21c80d7c0b6ce0fb9d38",
+      "excerptSHA256": "938036ba909237694be7764b6c99ae5c7fedee9b5dea912aa95ebcb55a838e12",
+      "materialRoleNote": "Title/year metadata is not an in-body event-date record.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC09",
+      "evidenceId": "metadata-decoy",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "annual harbor festival",
+      "supportingSpanCodepoints": {
+        "start": 41,
+        "end": 63
+      },
+      "rationale": "Festival year is a different event relation, even though entity/year match.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "f106c006b3326e5f90123631971e317eea5924e2c6fd21c80d7c0b6ce0fb9d38",
+      "excerptSHA256": "1c2c3717cdc8762872f863a3059fd047cfb9fe70a9572a931ea3c5130c124dc6",
+      "materialRoleNote": "Title/year metadata is not an in-body event-date record.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC10",
+      "evidenceId": "SC10-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "Event type: municipal incorporation. Event year: 1890",
+      "supportingSpanCodepoints": {
+        "start": 57,
+        "end": 110
+      },
+      "rationale": "The same relation and compared year are explicitly associated in the target body labels, rather than supplied by the title.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "f106c006b3326e5f90123631971e317eea5924e2c6fd21c80d7c0b6ce0fb9d38",
+      "excerptSHA256": "c46aa2881e5f92f204d35178d760208ce10c2f082978684dd3a3252405809c93",
+      "materialRoleNote": "Body labels and values must stay associated with the named entity/event.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC10",
+      "evidenceId": "metadata-register",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "Event: municipal incorporation. Event year: 1890",
+      "supportingSpanCodepoints": {
+        "start": 54,
+        "end": 102
+      },
+      "rationale": "The companion body explicitly associates the named municipality with incorporation and 1890.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "f106c006b3326e5f90123631971e317eea5924e2c6fd21c80d7c0b6ce0fb9d38",
+      "excerptSHA256": "938036ba909237694be7764b6c99ae5c7fedee9b5dea912aa95ebcb55a838e12",
+      "materialRoleNote": "Body labels and values must stay associated with the named entity/event.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC10",
+      "evidenceId": "metadata-decoy",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "annual harbor festival",
+      "supportingSpanCodepoints": {
+        "start": 41,
+        "end": 63
+      },
+      "rationale": "Festival year is a different event relation, even though entity/year match.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "f106c006b3326e5f90123631971e317eea5924e2c6fd21c80d7c0b6ce0fb9d38",
+      "excerptSHA256": "1c2c3717cdc8762872f863a3059fd047cfb9fe70a9572a931ea3c5130c124dc6",
+      "materialRoleNote": "Body labels and values must stay associated with the named entity/event.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC11",
+      "evidenceId": "SC11-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "Number of loans recorded: 17",
+      "supportingSpanCodepoints": {
+        "start": 44,
+        "end": 72
+      },
+      "rationale": "The target matches museum/period/measure and states the negated number. Negation does not remove scope.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "84f6527cb3dbfddccb8c21188f4b57ae6c1ef8276993917997f2aeb9970d0a6a",
+      "excerptSHA256": "bd1eb324e60f581c63d83cb68906b9009be3d7ed4c3ee46cfed8fe0bb5316725",
+      "materialRoleNote": "Count is a compared value; 2024 versus 2023 is material reporting period.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC11",
+      "evidenceId": "negation-audit",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "register: 17",
+      "supportingSpanCodepoints": {
+        "start": 87,
+        "end": 99
+      },
+      "rationale": "The same-year audit asserts the exact negated count; it contradicts the claim and must remain visible even when another record differs.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "84f6527cb3dbfddccb8c21188f4b57ae6c1ef8276993917997f2aeb9970d0a6a",
+      "excerptSHA256": "0f33c2ecb1e86c13b8739ec93c884c5a26057f2605da5354b5dade86f43aea36",
+      "materialRoleNote": "Count is a compared value; 2024 versus 2023 is material reporting period.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC11",
+      "evidenceId": "negation-other-year",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Reporting year: 2023",
+      "supportingSpanCodepoints": {
+        "start": 22,
+        "end": 42
+      },
+      "rationale": "A different reporting year is material scope, not an alternate count for the 2024 register.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "84f6527cb3dbfddccb8c21188f4b57ae6c1ef8276993917997f2aeb9970d0a6a",
+      "excerptSHA256": "88f79b6697045d714b81c89277a3c4f22b2345ef15a4a2fa7afb587628940683",
+      "materialRoleNote": "Count is a compared value; 2024 versus 2023 is material reporting period.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC12",
+      "evidenceId": "SC12-target",
+      "isTarget": true,
+      "expectedScope": true,
+      "expectedStance": "supports",
+      "supportingSpan": "Number of loans recorded: 19",
+      "supportingSpanCodepoints": {
+        "start": 44,
+        "end": 72
+      },
+      "rationale": "The complete target states 19 for the same count/period, supporting not 17. Do not refuse scope because the asserted compared value differs. The audit companion is credible contrary evidence in this synthetic context.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "84f6527cb3dbfddccb8c21188f4b57ae6c1ef8276993917997f2aeb9970d0a6a",
+      "excerptSHA256": "2d2234125ac4d4cfa9825b117e8125d0b694b48633e2d355d482a7002d31c590",
+      "materialRoleNote": "SC12 deliberately retains an in-scope conflict; target-level stance must not suppress companion evidence or authorize a definitive full-pool result.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC12",
+      "evidenceId": "negation-audit",
+      "isTarget": false,
+      "expectedScope": true,
+      "expectedStance": "contradicts",
+      "supportingSpan": "register: 17",
+      "supportingSpanCodepoints": {
+        "start": 87,
+        "end": 99
+      },
+      "rationale": "The same-year audit asserts the exact negated count; it contradicts the claim and must remain visible even when another record differs.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "84f6527cb3dbfddccb8c21188f4b57ae6c1ef8276993917997f2aeb9970d0a6a",
+      "excerptSHA256": "0f33c2ecb1e86c13b8739ec93c884c5a26057f2605da5354b5dade86f43aea36",
+      "materialRoleNote": "SC12 deliberately retains an in-scope conflict; target-level stance must not suppress companion evidence or authorize a definitive full-pool result.",
+      "preserveFullContextConflictVeto": true
+    },
+    {
+      "caseId": "SC12",
+      "evidenceId": "negation-other-year",
+      "isTarget": false,
+      "expectedScope": false,
+      "expectedStance": "unrelated",
+      "supportingSpan": "Reporting year: 2023",
+      "supportingSpanCodepoints": {
+        "start": 22,
+        "end": 42
+      },
+      "rationale": "A different reporting year is material scope, not an alternate count for the 2024 register.",
+      "ambiguity": null,
+      "excludeFromPrimary": false,
+      "propositionSHA256": "84f6527cb3dbfddccb8c21188f4b57ae6c1ef8276993917997f2aeb9970d0a6a",
+      "excerptSHA256": "88f79b6697045d714b81c89277a3c4f22b2345ef15a4a2fa7afb587628940683",
+      "materialRoleNote": "SC12 deliberately retains an in-scope conflict; target-level stance must not suppress companion evidence or authorize a definitive full-pool result.",
+      "preserveFullContextConflictVeto": true
+    }
+  ],
+  "truthVerdictsAssigned": false,
+  "applicabilityReceiptLabelsAssigned": false
+}
