@@ -25,11 +25,15 @@ const claimStructure = {
   unclear: 'It is unclear whether the exact candidate is one proposition or multiple propositions.'
 };
 
-export function createClassifier(client: JevClient): PipelineAdapters['classify'] {
+/** Below this capture confidence (average ASR word confidence, or OCR) a check asks for confirmation. */
+export const DEFAULT_MIN_CAPTURE_CONFIDENCE = 0.8;
+
+export function createClassifier(client: JevClient, options: { minCaptureConfidence?: number } = {}): PipelineAdapters['classify'] {
+  const minCaptureConfidence = options.minCaptureConfidence ?? DEFAULT_MIN_CAPTURE_CONFIDENCE;
   return async (input, context) => {
     const unresolved = (reasonCode: string): AdmissionResult => ({ action: input.userInitiated ? 'needs_confirmation' : 'wait', reasonCode, claims: [] });
     if (input.capture.final === false) return unresolved('interim_capture');
-    if (input.capture.confidence !== null && input.capture.confidence < 0.8) return { action: 'needs_confirmation', reasonCode: 'capture_uncertain', claims: [] };
+    if (input.capture.confidence !== null && input.capture.confidence < minCaptureConfidence) return { action: 'needs_confirmation', reasonCode: 'capture_uncertain', claims: [] };
     const candidates = generateCandidates(input.text);
     const wholeSpan = candidates[0]?.span;
     const questions: Record<string, JevQuestion> = {};
