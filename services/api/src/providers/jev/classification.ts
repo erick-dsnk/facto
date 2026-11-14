@@ -174,7 +174,9 @@ function assess(plan: Plan, answers: Record<string, JevAnswer>, input: TextInput
   const privateSpan = contact || privateLifeScore >= ADMISSION_THRESHOLDS.privateLife || privateData >= ADMISSION_THRESHOLDS.privateData || deterministicIssue(candidate.text) !== null;
   const scope = noul(answers[`${id}_preserves_scope`]);
   const scopeHolds = !proper || candidate.contentOf !== undefined || (typeof scope === 'number' && scope >= ADMISSION_THRESHOLDS.preservesScope);
-  const complete = selfContained >= ADMISSION_THRESHOLDS.selfContained;
+  // Jev answers each question on its own, so a subject it picked fills the missing referent even when completeness came back low.
+  const subject = chosenName(answers[`${id}_subject`], plan.subjects);
+  const complete = selfContained >= ADMISSION_THRESHOLDS.selfContained || subject !== null;
   const route = decideRoute(answers[`${id}_route`], candidate.text, now);
   const attributionChoice = answers[`${id}_attribution`].choice as AttributionChoice;
   const source = chosenName(answers[`${id}_source`], plan.sources);
@@ -184,7 +186,7 @@ function assess(plan: Plan, answers: Record<string, JevAnswer>, input: TextInput
   const claim: AcceptedClaim = {
     id: `${input.requestId}-r${input.revision}-${id}`, originalText: input.text, checkedText: candidate.text, sourceSpan: candidate.span,
     admission: { assertionStatus: 'asserted', hasPracticalConsequence: practical ?? null, matchedSelectedTopic: null, admissionAction: 'check', reasonCode: 'eligible_public_claim' },
-    route, subject: chosenName(answers[`${id}_subject`], plan.subjects), attribution,
+    route, subject, attribution,
     future: (noul(answers[`${id}_future`]) ?? 0) >= ADMISSION_THRESHOLDS.future,
     rumour: (noul(answers[`${id}_rumour`]) ?? 0) >= ADMISSION_THRESHOLDS.rumour,
     privateLife, subjectMissing: !complete,
