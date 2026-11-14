@@ -19,21 +19,23 @@ final class BackendClientTests: XCTestCase {
 
   // MARK: Helpers
 
-  private func makeClient(joinCode: String = "demo-join", policy: ReconnectPolicy = ReconnectPolicy(openTimeout: 1)) -> BackendClient {
+  private func makeClient(joinCode: String = "demo-join", policy: ReconnectPolicy = ReconnectPolicy(retryCycleDelay: nil, openTimeout: 1), sleep: (@Sendable (TimeInterval) async throws -> Void)? = nil) -> BackendClient {
     let timeline = timeline!
     return BackendClient(
       config: BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: joinCode),
       urlSession: MockURLProtocol.session(),
       policy: policy,
       webSocketFactory: sockets.factory,
-      sleep: timeline.sleep,
+      sleep: sleep ?? timeline.sleep,
       uptime: { timeline.now }
     )
   }
 
+  private var futureExpiry: String { ISO8601DateFormatter().string(from: Date().addingTimeInterval(300)) }
+
   private func sessionCreatedBody(epoch: Int = 1) -> Data {
     Data("""
-    {"schemaVersion":1,"sessionId":"session-1","token":"\(token)","sessionEpoch":\(epoch),"expiresAt":"2026-11-14T10:05:00.000Z",
+    {"schemaVersion":1,"sessionId":"session-1","token":"\(token)","sessionEpoch":\(epoch),"expiresAt":"\(futureExpiry)",
      "capabilities":{"mode":"fixture","text":true,"audio":false},
      "budgets":{"deadlineMs":10000,"running":2,"queued":3,"jev":3,"searchesPerClaim":2}}
     """.utf8)
@@ -80,7 +82,7 @@ final class BackendClientTests: XCTestCase {
 
     XCTAssertEqual(client.sessionId, "session-1")
     XCTAssertEqual(client.sessionEpoch, 1)
-    XCTAssertEqual(client.expiresAt, "2026-11-14T10:05:00.000Z")
+    XCTAssertNotNil(client.expiresAt)
     XCTAssertEqual(client.capabilities?.audio, false)
     XCTAssertFalse(response.description.contains(token))
 
@@ -197,7 +199,7 @@ final class BackendClientTests: XCTestCase {
     serve()
     let silent = FakeWebSocket()
     sockets.enqueue(silent)
-    let client = makeClient(policy: ReconnectPolicy(openTimeout: 0.05, initialOpenTimeout: 0.05))
+    let client = makeClient(policy: ReconnectPolicy(delays: [], retryCycleDelay: nil, openTimeout: 0.05, initialOpenTimeout: 0.05))
     do {
       try await client.connect()
       XCTFail("Expected an error")
@@ -212,7 +214,7 @@ final class BackendClientTests: XCTestCase {
     serve()
     let slow = FakeWebSocket()
     sockets.enqueue(slow)
-    let client = makeClient(policy: ReconnectPolicy(openTimeout: 0.05, initialOpenTimeout: 1))
+    let client = makeClient(policy: ReconnectPolicy(retryCycleDelay: nil, openTimeout: 0.05, initialOpenTimeout: 1))
     Task {
       try? await Task.sleep(nanoseconds: 200_000_000)
       slow.push(json: EventJSON.ready(id: "ready-1"))
@@ -453,7 +455,7 @@ final class BackendClientTests: XCTestCase {
     replacement.push(json: EventJSON.ready(id: "ready-2", epoch: 2, active: false))
     sockets.enqueue(halfOpen)
     sockets.enqueue(replacement)
-    let client = makeClient(policy: ReconnectPolicy(openTimeout: 1, pingInterval: 0.05, pingTimeout: 0.05))
+    let client = makeClient(policy: ReconnectPolicy(retryCycleDelay: nil, openTimeout: 1, pingInterval: 0.05, pingTimeout: 0.05))
     try await client.connect()
 
     await waitUntil { client.lastReconnect != nil && client.connectionState == .connected }
@@ -465,9 +467,9 @@ final class BackendClientTests: XCTestCase {
     XCTAssertFalse(replacement.cancelled, "a socket that answers pings stays up")
   }
 
-  func testDroppedSocketMovesListeningToReconnectingAndResumesWithoutARestart() async throws {
+  func testNativeListeningStopsOnSocketLossAndDoesNotRestartWhenTransportReturns() async throws {
     let (client, socket) = try await connectedClient()
-    let streamer = AudioStreamer(channel: client)
+    let streamer = AudioStreamer(channel: client, resumesAfterReconnect: false)
     var stops: [AudioStreamerStopReason] = []
     streamer.onStopped = { stops.append($0) }
     streamer.start()
@@ -478,21 +480,17 @@ final class BackendClientTests: XCTestCase {
     let replacement = FakeWebSocket()
     sockets.enqueue(replacement)
     socket.fail()
-    // Frames sent while the socket is gone fail; that is a connection loss, not an audio fault.
-    for _ in 0..<10 { streamer.appendPCM16(Data(repeating: 0x11, count: 1_280)) }
-    await waitUntil { streamer.phase == .reconnecting }
+    await waitUntil { streamer.phase == .stopped(.noConnection) }
     XCTAssertEqual(client.connectionState, .reconnecting(attempt: 1))
-
+    for _ in 0..<10 { streamer.appendPCM16(Data(repeating: 0x11, count: 1_280)) }
     replacement.push(json: EventJSON.ready(id: "ready-2", epoch: 2, active: false))
-    await waitUntil { streamer.phase == .awaitingReady(generation: 2) }
+    await waitUntil { client.connectionState == .connected }
     await streamer.waitUntilSent()
-    let types = replacement.sent.compactMap { frame -> String? in
-      guard case .text(let text) = frame else { return nil }
-      return (try? JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any])?["type"] as? String
-    }
-    XCTAssertEqual(types, ["session.resume", "audio.start"])
-    XCTAssertTrue(stops.isEmpty)
-    XCTAssertEqual(streamer.generation, 2, "the dead socket cost no restarts")
+    XCTAssertEqual(streamer.phase, .stopped(.noConnection))
+    XCTAssertEqual(stops, [.noConnection])
+    XCTAssertEqual(streamer.generation, 1)
+    XCTAssertTrue(replacement.sent.isEmpty, "A restored transport must send neither session.resume nor audio.start")
+    await client.close()
   }
 
   func testReconnectGivesUpAfterThreeAttemptsWithBoundedBackoff() async throws {
@@ -511,28 +509,258 @@ final class BackendClientTests: XCTestCase {
     )
   }
 
-  func testReconnectStopsWhenTheTokenIsRejected() async throws {
+  func testNetworkRecoveryContinuesAfterABoundedRetryCycle() async throws {
+    serve()
+    let original = FakeWebSocket()
+    original.push(json: EventJSON.ready(id: "original-ready"))
+    sockets.enqueue(original)
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "fresh-ready", epoch: 2, active: false))
+    let factory = sockets!
+    let clock = timeline!
+    let client = makeClient(policy: ReconnectPolicy(retryCycleDelay: 15, openTimeout: 1), sleep: { seconds in
+      if seconds == 15 { factory.enqueue(fresh) }
+      try await clock.sleep(seconds)
+    })
+    try await client.connect()
+    original.fail()
+    await waitUntil { client.connectionState == .connected && client.lastReconnect != nil }
+    XCTAssertEqual(timeline.sleeps, [0.5, 1, 2, 15, 0.5])
+    XCTAssertEqual(sockets.requests.count, 5)
+    XCTAssertTrue(fresh.sent.isEmpty)
+    await client.close()
+  }
+
+  func testRepeatedForegroundRestorationKeepsAHealthySocket() async throws {
+    let (client, socket) = try await connectedClient()
+    try await client.resume()
+    try await client.resume()
+    XCTAssertEqual(sockets.requests.count, 1)
+    XCTAssertFalse(socket.cancelled)
+    XCTAssertEqual(client.connectionState, .connected)
+    await client.close()
+  }
+
+  func testSuspendDuringRetryPreventsAnyLaterAttempt() async throws {
+    serve()
+    let original = FakeWebSocket()
+    original.push(json: EventJSON.ready(id: "original-ready"))
+    sockets.enqueue(original)
+    let client = makeClient(sleep: { _ in try await Task.sleep(nanoseconds: 10_000_000_000) })
+    try await client.connect()
+    original.fail()
+    await waitUntil { client.connectionState == .reconnecting(attempt: 1) }
+    client.suspend()
+    await Task.yield()
+    XCTAssertEqual(sockets.requests.count, 1)
+    XCTAssertEqual(client.connectionState, .disconnected(reason: "suspended"))
+    await client.close()
+  }
+
+  func testExpiredRetainedSessionIsReplacedBeforeOpeningASocket() async throws {
+    var creates = 0
+    MockURLProtocol.handler = { request, _ in
+      if request.httpMethod == "POST" {
+        creates += 1
+        let expiry = creates == 1 ? "2000-01-01T00:00:00Z" : "2099-01-01T00:00:00Z"
+        return (201, Data("""
+        {"sessionId":"session-\(creates)","token":"token-\(creates)","sessionEpoch":1,"expiresAt":"\(expiry)"}
+        """.utf8))
+      }
+      return (204, Data())
+    }
+    let client = makeClient()
+    try await client.createSession()
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "fresh-ready", session: "session-2"))
+    sockets.enqueue(fresh)
+    try await client.connect()
+    XCTAssertEqual(creates, 2)
+    XCTAssertEqual(sockets.requests.count, 1)
+    XCTAssertEqual(sockets.requests.first?.value(forHTTPHeaderField: "Authorization"), "Bearer token-2")
+    await client.close()
+  }
+
+  func testRejectedStoredBearerIsReplacedWithoutAskingForTheJoinCodeAgain() async throws {
     let (client, socket) = try await connectedClient()
     let rejected = FakeWebSocket(handshakeStatusCode: 401)
     rejected.fail(URLError(.badServerResponse))
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "fresh-ready"))
     sockets.enqueue(rejected)
-
+    sockets.enqueue(fresh)
     socket.fail()
-
-    await waitUntil { client.connectionState == .disconnected(reason: "unauthorized") }
-    XCTAssertEqual(timeline.sleeps, [0.5])
-    XCTAssertNil(client.sessionId, "A rejected session is forgotten so the next connect starts fresh")
+    await waitUntil { sockets.requests.count == 3 && client.connectionState == .connected }
+    XCTAssertFalse(client.requiresAuthentication)
+    XCTAssertEqual(MockURLProtocol.recorded.filter { $0.request.httpMethod == "POST" }.count, 2)
+    await client.close()
   }
 
-  func testTerminalSessionEndDoesNotReconnect() async throws {
+  func testExpiredSessionRenewsWithoutWaitingForTheServerToCloseTheSocket() async throws {
     let (client, socket) = try await connectedClient()
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "renewed-ready"))
+    sockets.enqueue(fresh)
     socket.push(json: EventJSON.ended(id: "end-1", epoch: 2, reason: "expired"))
-    socket.fail(URLError(.cancelled))
+    await waitUntil { sockets.requests.count == 2 && client.connectionState == .connected }
+    XCTAssertTrue(socket.cancelled)
+    XCTAssertEqual(MockURLProtocol.recorded.filter { $0.request.httpMethod == "POST" }.count, 2)
+    await client.close()
+  }
 
-    await waitUntil { client.connectionState == .disconnected(reason: "expired") }
-    XCTAssertTrue(timeline.sleeps.isEmpty)
+  func testExpiryDeadlineRenewsEvenWithoutAServerEndedEvent() async throws {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    let deadline = formatter.string(from: Date().addingTimeInterval(0.25))
+    var creates = 0
+    MockURLProtocol.handler = { request, _ in
+      guard request.httpMethod == "POST" else { return (204, Data()) }
+      creates += 1
+      let expiry = creates == 1 ? deadline : "2099-01-01T00:00:00Z"
+      return (201, Data("""
+      {"sessionId":"session-\(creates)","token":"token-\(creates)","sessionEpoch":1,"expiresAt":"\(expiry)"}
+      """.utf8))
+    }
+    let original = FakeWebSocket()
+    original.push(json: EventJSON.ready(id: "original-ready"))
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "fresh-ready", session: "session-2"))
+    sockets.enqueue(original)
+    sockets.enqueue(fresh)
+    let client = makeClient()
+    let events = Collector(client.events())
+    try await client.connect()
+    await waitUntil { client.sessionId == "session-2" && client.connectionState == .connected }
+    XCTAssertTrue(original.cancelled)
+    XCTAssertEqual(creates, 2)
+    XCTAssertTrue(fresh.sent.isEmpty)
+    original.push(json: EventJSON.checking(id: "stale-after-expiry"))
+    await Task.yield()
+    XCTAssertFalse(events.values.contains { $0.eventId == "stale-after-expiry" })
+    await client.close()
+  }
+
+  func testNewlyCreatedBearerRejectionStopsWithoutCreatingRepeatedSessions() async throws {
+    let (client, original) = try await connectedClient()
+    for _ in 0..<2 {
+      let rejected = FakeWebSocket(handshakeStatusCode: 403)
+      rejected.fail(URLError(.badServerResponse))
+      sockets.enqueue(rejected)
+    }
+    original.fail()
+    await waitUntil { client.requiresAuthentication }
+    XCTAssertEqual(sockets.requests.count, 3)
+    XCTAssertEqual(MockURLProtocol.recorded.filter { $0.request.httpMethod == "POST" }.count, 2)
+    XCTAssertNil(client.sessionId)
+    let count = sockets.requests.count
+    try await client.resume()
+    XCTAssertEqual(sockets.requests.count, count)
+    await client.close()
+  }
+
+  func testRevokedJoinCodeStopsRetriesAndForegroundResumeUntilExplicitConnect() async throws {
+    let (client, socket) = try await connectedClient()
+    MockURLProtocol.handler = { _, _ in (403, Data(#"{"error":"unauthorized"}"#.utf8)) }
+    socket.push(json: EventJSON.ended(id: "end-1", epoch: 2, reason: "expired"))
+    await waitUntil { client.requiresAuthentication }
+    let requestCount = MockURLProtocol.recorded.count
+    XCTAssertNil(client.sessionId)
+    XCTAssertEqual(client.connectionState, .disconnected(reason: "unauthorized"))
+    try await client.resume()
+    await Task.yield()
+    XCTAssertEqual(MockURLProtocol.recorded.count, requestCount)
+    serve()
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "authorized-ready"))
+    sockets.enqueue(fresh)
+    try await client.connect()
+    XCTAssertFalse(client.requiresAuthentication)
+    XCTAssertEqual(client.connectionState, .connected)
+    await client.close()
+  }
+
+  func testSuspendStopsAnOpeningSocketAndResumeRetainsTheSession() async throws {
+    serve()
+    let waiting = FakeWebSocket()
+    sockets.enqueue(waiting)
+    let client = makeClient()
+    let initial = Task { try await client.connect() }
+    await waitUntil { waiting.resumed }
+    client.suspend()
+    do { try await initial.value; XCTFail("Expected cancellation") } catch { }
+    XCTAssertTrue(waiting.cancelled)
+    XCTAssertEqual(client.connectionState, .disconnected(reason: "suspended"))
+    let restored = FakeWebSocket()
+    restored.push(json: EventJSON.ready(id: "restored-ready", epoch: 2, active: false))
+    sockets.enqueue(restored)
+    try await client.resume()
+    XCTAssertEqual(client.connectionState, .connected)
+    XCTAssertEqual(MockURLProtocol.recorded.filter { $0.request.httpMethod == "POST" }.count, 1)
+    XCTAssertTrue(restored.sent.isEmpty, "Transport restoration sends no audio or capture controls")
+    await client.close()
+  }
+
+  func testLateCreateResponseAfterCloseCannotOverwriteANewerConnection() async throws {
+    let gate = DispatchSemaphore(value: 0)
+    let started = expectation(description: "old session POST started")
+    let oldBody = Data(#"{"sessionId":"old-session","token":"old-token","sessionEpoch":1,"expiresAt":"2099-01-01T00:00:00Z"}"#.utf8)
+    let newBody = Data(#"{"sessionId":"new-session","token":"new-token","sessionEpoch":1,"expiresAt":"2099-01-01T00:00:00Z"}"#.utf8)
+    var posts = 0
+    MockURLProtocol.handler = { request, _ in
+      guard request.httpMethod == "POST" else { return (204, Data()) }
+      posts += 1
+      if posts == 1 {
+        started.fulfill()
+        _ = gate.wait(timeout: .now() + 2)
+        return (201, oldBody)
+      }
+      return (201, newBody)
+    }
+    let client = makeClient()
+    // Standalone creation is deliberately not the managed connect task; this exercises
+    // the generation check even when the HTTP completion cannot be cancelled directly.
+    let oldCreate = Task { try await client.createSession() }
+    await fulfillment(of: [started], timeout: 1)
+    await client.close()
+    let fresh = FakeWebSocket()
+    fresh.push(json: EventJSON.ready(id: "new-ready", session: "new-session"))
+    sockets.enqueue(fresh)
+    let newConnect = Task { try await client.connect() }
+    gate.signal()
+    do { _ = try await oldCreate.value; XCTFail("Expected stale creation to be discarded") } catch { }
+    try await newConnect.value
+    XCTAssertEqual(client.sessionId, "new-session")
+    XCTAssertEqual(client.connectionState, .connected)
+    XCTAssertFalse(client.requiresAuthentication)
+    XCTAssertEqual(sockets.requests.count, 1)
+    XCTAssertTrue(MockURLProtocol.recorded.contains { $0.request.httpMethod == "DELETE" && $0.request.url?.path == "/v1/sessions/old-session" })
+    await client.close()
+  }
+
+  func testExplicitClosePreventsForegroundResume() async throws {
+    let (client, _) = try await connectedClient()
+    await client.close()
+    let requests = MockURLProtocol.recorded.count
+    try await client.resume()
+    XCTAssertEqual(MockURLProtocol.recorded.count, requests)
     XCTAssertEqual(sockets.requests.count, 1)
     XCTAssertNil(client.sessionId)
+  }
+
+  func testCancelledInitialConnectNeverSchedulesARetry() async throws {
+    serve()
+    let waiting = FakeWebSocket()
+    sockets.enqueue(waiting)
+    let client = makeClient()
+    let initial = Task { try await client.connect() }
+    await waitUntil { waiting.resumed }
+    initial.cancel()
+    do { try await initial.value; XCTFail("Expected cancellation") } catch { }
+    XCTAssertEqual(client.connectionState, .disconnected(reason: "cancelled"))
+    XCTAssertTrue(timeline.sleeps.isEmpty)
+    try await client.resume()
+    XCTAssertEqual(sockets.requests.count, 1)
+    await client.close()
   }
 
   func testConnectReplacesAStoredSessionTheServerNoLongerKnows() async throws {
@@ -541,7 +769,7 @@ final class BackendClientTests: XCTestCase {
       guard request.httpMethod == "POST", request.url?.path == "/v1/sessions" else { return (204, Data()) }
       created += 1
       let body = """
-      {"sessionId":"session-\(created)","token":"tok-\(created)","sessionEpoch":1,"expiresAt":"2026-11-14T10:05:00.000Z"}
+      {"sessionId":"session-\(created)","token":"tok-\(created)","sessionEpoch":1,"expiresAt":"2099-11-14T10:05:00.000Z"}
       """
       return (201, Data(body.utf8))
     }

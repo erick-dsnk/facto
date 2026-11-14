@@ -12,6 +12,74 @@ final class DisplayModel {
   var sessionState: DeviceSessionState = .idle
   var displayState: DisplayState = .stopped
   var taps = 0
+  var onReady: (@MainActor () -> Void)?
+  private(set) var wantsConnection: Bool
+  @ObservationIgnored private let defaults: UserDefaults
+  @ObservationIgnored private var appActive = false
+  @ObservationIgnored private var authorized = false
+  @ObservationIgnored private var hasEligibleDevice = false
+  @ObservationIgnored private var sessionGeneration = UUID()
+  @ObservationIgnored private var recoveryTask: Task<Void, Never>?
+  @ObservationIgnored private var recoveryTaskID = UUID()
+  @ObservationIgnored private var selectorTask: Task<Void, Never>?
+
+  init(defaults: UserDefaults = .standard) {
+    self.defaults = defaults
+    self.wantsConnection = defaults.object(forKey: "nativeDisplay.restoreConnection") as? Bool ?? true
+    selectorTask = Task { [weak self] in
+      guard let selector = self?.deviceSelector else { return }
+      for await identifier in selector.activeDeviceStream() {
+        guard let self else { return }
+        self.hasEligibleDevice = identifier != nil
+        self.recoverIfEligible()
+      }
+    }
+  }
+
+  func setRecoveryAvailability(active: Bool, authorized: Bool) {
+    appActive = active
+    self.authorized = authorized
+    recoverIfEligible()
+  }
+
+  private var recoveryEligible: Bool {
+    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled
+  }
+
+  private func recoverIfEligible() {
+    guard recoveryEligible else {
+      recoveryTask?.cancel()
+      recoveryTask = nil
+      stopConnection()
+      return
+    }
+    guard session == nil else { return }
+    attemptConnection()
+    scheduleRecovery()
+  }
+
+  private func scheduleRecovery() {
+    guard recoveryEligible, displayState != .started, recoveryTask == nil else { return }
+    let id = UUID()
+    recoveryTaskID = id
+    recoveryTask = Task { [weak self] in
+      defer { if self?.recoveryTaskID == id { self?.recoveryTask = nil } }
+      while !Task.isCancelled {
+        for delay in [1.0, 2.0, 4.0, 8.0] {
+          try? await Task.sleep(for: .seconds(delay))
+          guard !Task.isCancelled, let self, self.recoveryEligible else { return }
+          if self.displayState == .started { return }
+          if self.session == nil { self.attemptConnection() }
+        }
+        // Bounded attempt bursts with cooldown while this foreground association remains
+        // eligible. Unavailable device, explicit disconnect or suspension cancels the task.
+        if let self, self.recoveryEligible, self.displayState != .started, self.session != nil { self.stopConnection() }
+        try? await Task.sleep(for: .seconds(15))
+        guard !Task.isCancelled, self?.recoveryEligible == true else { return }
+      }
+    }
+  }
+
   var lastError: String?
 
   private(set) var webDisplayEnabled = false
@@ -20,7 +88,12 @@ final class DisplayModel {
   /// Release only DAT display output; camera/microphone capture belongs to CameraModel.
   func setWebDisplayEnabled(_ enabled: Bool) {
     webDisplayEnabled = enabled
-    if enabled { disconnect() }
+    if enabled {
+      recoveryTask?.cancel()
+      recoveryTask = nil
+      recoveryTaskID = UUID()
+      stopConnection()
+    } else { recoverIfEligible() }
   }
 
   /// Created once so it has already found a display-capable device when you tap Connect.
@@ -30,6 +103,72 @@ final class DisplayModel {
   @ObservationIgnored private var session: DeviceSession?
   @ObservationIgnored private var display: Display?
   @ObservationIgnored private let tokens = ListenerTokenBag()
+  /// DAT replaces a whole layout. All home, fixture, card and acknowledgement sends share
+  /// this queue so a slower old send cannot overwrite a newer card.
+  @ObservationIgnored private var outputTask: Task<Void, Never>?
+  @ObservationIgnored private var outputGeneration = UUID()
+  @ObservationIgnored private var feedbackTask: Task<Void, Never>?
+  @ObservationIgnored private var feedbackID: UUID?
+  @ObservationIgnored private var triggerFeedback: NativeTriggerFeedback?
+  @ObservationIgnored private var latestCard: ResultCard?
+  private struct Searching {
+    let claimText: String
+    let captureLabel: String?
+    let sources: [ClaimSourcesPayload.Source]
+  }
+  @ObservationIgnored private var latestSearch: Searching?
+  @ObservationIgnored private var latestRepeat: (@Sendable () -> Void)?
+  @ObservationIgnored private var latestDismiss: (@Sendable () -> Void)?
+
+  private func resetLiveOutput() {
+    feedbackTask?.cancel()
+    feedbackTask = nil
+    feedbackID = nil
+    triggerFeedback = nil
+    latestCard = nil
+    latestSearch = nil
+    latestRepeat = nil
+    latestDismiss = nil
+    outputGeneration = UUID()
+  }
+
+  private func sendSerialized(_ operation: @escaping @MainActor (Display) async throws -> Void) async {
+    guard !webDisplayEnabled, let display else { return }
+    let previous = outputTask
+    let generation = UUID()
+    outputGeneration = generation
+    let task = Task { [weak self] in
+      await previous?.value
+      guard let self, self.outputGeneration == generation, !self.webDisplayEnabled,
+            self.display === display else { return }
+      do {
+        try await operation(display)
+      } catch {
+        if self.outputGeneration == generation { self.lastError = "Send: \(error.localizedDescription)" }
+      }
+    }
+    outputTask = task
+    await task.value
+  }
+
+  private func renderLiveOutput() async {
+    let feedback = triggerFeedback
+    let card = latestCard
+    let search = latestSearch
+    let onRepeat = latestRepeat
+    let onDismiss = latestDismiss
+    await sendSerialized { display in
+      if let feedback {
+        try await display.send(NativeTriggerFeedbackBuilder.build(feedback))
+      } else if let card {
+        try await display.send(DisplayCardBuilder.build(card, onRepeat: onRepeat, onDismiss: onDismiss))
+      } else if let search {
+        try await display.send(NativeLensCardLayout.searching(claimText: search.claimText, captureLabel: search.captureLabel, sources: search.sources))
+      } else {
+        try await display.clearDisplay()
+      }
+    }
+  }
 
   #if DEBUG
   private(set) var nativePreviewFixture: NativeCardPreviewFixture?
@@ -39,7 +178,11 @@ final class DisplayModel {
 
   /// A mock-specific session keeps this experiment away from physical glasses.
   func startNativePreview(_ fixture: NativeCardPreviewFixture, device: DeviceIdentifier) {
-    guard !webDisplayEnabled, session == nil || nativePreviewFixture != nil else { return }
+    guard !webDisplayEnabled else { return }
+    // Automatic native output may already own the simulated display. An explicit DEBUG
+    // fixture replaces only that output; the supplied mock selector cannot target hardware.
+    if session != nil && nativePreviewFixture == nil { stopConnection() }
+    resetLiveOutput()
     nativePreviewFixture = fixture
     nativePreviewSourceCount = 0
     lastError = nil
@@ -58,7 +201,7 @@ final class DisplayModel {
 
   /// Serialized sends: replacing/replaying a demo cannot let its old result arrive later.
   private func sendNativePreview() {
-    guard let fixture = nativePreviewFixture, let display, !webDisplayEnabled else { return }
+    guard let fixture = nativePreviewFixture, display != nil, !webDisplayEnabled else { return }
     let previous = nativePreviewTask
     previous?.cancel()
     let generation = UUID()
@@ -67,18 +210,23 @@ final class DisplayModel {
       await previous?.value
       guard let self, !Task.isCancelled, self.nativePreviewGeneration == generation else { return }
       do {
-        try await display.send(NativeCardPreviewBuilder.build(fixture))
-        if fixture == .searching {
+        await self.sendSerialized { try await $0.send(NativeCardPreviewBuilder.build(fixture)) }
+        if fixture == .listening || fixture == .checking {
+          let feedback: NativeTriggerFeedback = fixture == .listening ? .listening : .checking
+          try await Task.sleep(for: .seconds(feedback.duration))
+          guard !Task.isCancelled, self.nativePreviewGeneration == generation, !self.webDisplayEnabled else { return }
+          await self.sendSerialized { try await $0.clearDisplay() }
+        } else if fixture == .searching {
           for count in 1...4 {
             try await Task.sleep(for: .milliseconds(700))
             guard !Task.isCancelled, self.nativePreviewGeneration == generation, !self.webDisplayEnabled else { return }
             self.nativePreviewSourceCount = count
-            try await display.send(NativeCardPreviewBuilder.build(.searching, sourceCount: count))
+            await self.sendSerialized { try await $0.send(NativeCardPreviewBuilder.build(.searching, sourceCount: count)) }
           }
           try await Task.sleep(for: .milliseconds(1400))
           guard !Task.isCancelled, self.nativePreviewGeneration == generation, !self.webDisplayEnabled else { return }
           self.nativePreviewFixture = .supported
-          try await display.send(NativeCardPreviewBuilder.build(.supported))
+          await self.sendSerialized { try await $0.send(NativeCardPreviewBuilder.build(.supported)) }
         }
       } catch is CancellationError {
         // Replay, mode switching and disconnect cancel the fixture sequence.
@@ -100,10 +248,16 @@ final class DisplayModel {
   #endif
 
   func connect() {
+    wantsConnection = true
+    defaults.set(true, forKey: "nativeDisplay.restoreConnection")
+    attemptConnection()
+    scheduleRecovery()
+  }
+
+  private func attemptConnection() {
     guard !webDisplayEnabled, session == nil else { return }
     lastError = nil
     do {
-      // Only picks glasses that have a display.
       let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
       try observeAndStart(newSession)
     } catch {
@@ -113,25 +267,40 @@ final class DisplayModel {
   }
 
   private func observeAndStart(_ newSession: DeviceSession) throws {
+    sessionGeneration = UUID()
+    let generation = sessionGeneration
     session = newSession
     newSession.statePublisher.listen { [weak self] state in
-      Task { @MainActor in self?.handleSession(state) }
+      Task { @MainActor in
+        guard let self, self.sessionGeneration == generation else { return }
+        self.handleSession(state)
+      }
     }.store(in: tokens)
     newSession.errorPublisher.listen { [weak self] error in
-      Task { @MainActor in self?.lastError = "Session: \(error.localizedDescription)" }
+      Task { @MainActor in
+        guard let self, self.sessionGeneration == generation else { return }
+        self.lastError = "Session: \(error.localizedDescription)"
+        self.stopConnection()
+        self.scheduleRecovery()
+      }
     }.store(in: tokens)
     try newSession.start()
   }
 
   func disconnect() {
-    #if DEBUG
-    cancelNativePreview()
-    #endif
-    if let display {
-      display.stop()
-    } else {
-      session?.stop()
-    }
+    wantsConnection = false
+    defaults.set(false, forKey: "nativeDisplay.restoreConnection")
+    recoveryTask?.cancel()
+    recoveryTask = nil
+    stopConnection()
+  }
+
+  private func stopConnection() {
+    let oldDisplay = display
+    let oldSession = session
+    clear()
+    if let oldDisplay { oldDisplay.stop() }
+    oldSession?.stop()
   }
 
   private func handleSession(_ state: DeviceSessionState) {
@@ -141,6 +310,7 @@ final class DisplayModel {
       attachDisplay()
     case .stopped:
       clear()
+      scheduleRecovery()
     default:
       break
     }
@@ -154,8 +324,12 @@ final class DisplayModel {
     do {
       let newDisplay = try session.addDisplay()
       display = newDisplay
+      let generation = sessionGeneration
       newDisplay.statePublisher.listen { [weak self] state in
-        Task { @MainActor in self?.handleDisplay(state) }
+        Task { @MainActor in
+          guard let self, self.sessionGeneration == generation else { return }
+          self.handleDisplay(state)
+        }
       }.store(in: tokens)
       newDisplay.start()
     } catch {
@@ -174,17 +348,21 @@ final class DisplayModel {
         return
       }
       #endif
+      recoveryTask?.cancel()
+      recoveryTask = nil
       Task { await sendHome() }
+      onReady?()
     case .stopped:
-      // Stopping the display detaches it; end the session too.
-      display = nil
-      session?.stop()
+      stopConnection()
+      scheduleRecovery()
     default:
       break
     }
   }
 
   private func clear() {
+    sessionGeneration = UUID()
+    resetLiveOutput()
     #if DEBUG
     cancelNativePreview()
     #endif
@@ -195,52 +373,77 @@ final class DisplayModel {
     displayState = .stopped
   }
 
-  /// Each send replaces the whole screen, so always send the full layout.
+  /// A connected native display is quiet until there is a current eligible card or action.
   func sendHome() async {
-    guard !webDisplayEnabled, let display else { return }
+    guard !webDisplayEnabled, display != nil, triggerFeedback == nil, latestCard == nil, latestSearch == nil else { return }
     #if DEBUG
     guard nativePreviewFixture == nil else { return }
     #endif
-    let taps = self.taps
-    let view = FlexBox(direction: .column, spacing: 12) {
-      Text("Glasses Lab", style: .heading)
-      Text("Taps received: \(taps)", style: .body)
-      Text("Pinch or tap the button", style: .meta, color: .secondary)
-      FlexBox(direction: .row, spacing: 8, alignment: .center, crossAlignment: .center) {
-        Button(label: "Tap me", onClick: { [weak self] in
-          Task { @MainActor in
-            guard let self else { return }
-            self.taps += 1
-            await self.sendHome()
-          }
-        })
-      }
-    }
-    .padding(24)
-
-    do {
-      try await display.send(view)
-    } catch {
-      lastError = "Send: \(error.localizedDescription)"
-    }
+    await sendSerialized { try await $0.clearDisplay() }
   }
+
 }
 
 extension DisplayModel: LensDisplaying {
-  /// Live mode: the result card on the lens, or a cleared lens when `card` is nil.
+  /// A new result always replaces an acknowledgement. Expired acknowledgement timers never
+  /// restore a captured old card: only the current card remains eligible for restoration.
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
-    guard !webDisplayEnabled, let display else { return }
+    guard !webDisplayEnabled, display != nil else { return }
     #if DEBUG
     guard nativePreviewFixture == nil else { return }
     #endif
-    do {
-      if let card {
-        try await display.send(DisplayCardBuilder.build(card, onRepeat: onRepeat, onDismiss: onDismiss))
-      } else {
-        try await display.clearDisplay()
-      }
-    } catch {
-      lastError = "Send: \(error.localizedDescription)"
+    feedbackTask?.cancel()
+    feedbackTask = nil
+    feedbackID = nil
+    triggerFeedback = nil
+    latestCard = card
+    latestSearch = nil
+    latestRepeat = onRepeat
+    latestDismiss = onDismiss
+    await renderLiveOutput()
+  }
+
+  func showSearching(claimText: String, captureLabel: String?, sources: [ClaimSourcesPayload.Source]) async {
+    guard isConnected else { return }
+    #if DEBUG
+    guard nativePreviewFixture == nil else { return }
+    #endif
+    feedbackTask?.cancel()
+    feedbackTask = nil
+    feedbackID = nil
+    triggerFeedback = nil
+    latestCard = nil
+    latestSearch = Searching(claimText: claimText, captureLabel: captureLabel, sources: sources)
+    await renderLiveOutput()
+  }
+
+  func showTriggerFeedback(_ feedback: NativeTriggerFeedback) async {
+    guard isConnected else { return }
+    #if DEBUG
+    guard nativePreviewFixture == nil else { return }
+    #endif
+    feedbackTask?.cancel()
+    let id = UUID()
+    feedbackID = id
+    triggerFeedback = feedback
+    await renderLiveOutput()
+    guard feedbackID == id else { return }
+    feedbackTask = Task { [weak self] in
+      try? await Task.sleep(for: .seconds(feedback.duration))
+      guard !Task.isCancelled, let self, self.feedbackID == id else { return }
+      self.feedbackTask = nil
+      self.feedbackID = nil
+      self.triggerFeedback = nil
+      await self.renderLiveOutput()
     }
+  }
+
+  func clearTriggerFeedback() async {
+    guard feedbackID != nil else { return }
+    feedbackTask?.cancel()
+    feedbackTask = nil
+    feedbackID = nil
+    triggerFeedback = nil
+    await renderLiveOutput()
   }
 }
