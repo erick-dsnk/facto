@@ -4,7 +4,7 @@ import {
   attributionLabel, BASIS_LABELS, claimFrame, NON_CLAIM_SUMMARIES, PROVIDER_LIMITS, SPECULATION_SUMMARIES, sliceSpan, sourceQuery, sourceQueryText,
   textInputSchema, type AcceptedClaim, type ClaimResult
 } from './index.js';
-import { admissionPayloadSchema, claimResultSchema, eventEnvelopeSchema, evidenceSchema } from './wire.js';
+import { admissionPayloadSchema, claimResultSchema, displaySnapshotSchema, eventEnvelopeSchema, evidenceSchema } from './wire.js';
 
 const fixture = (name: string): unknown => JSON.parse(readFileSync(new URL(`../fixtures/${name}.json`, import.meta.url), 'utf8'));
 describe('version 1 golden contracts', () => {
@@ -28,6 +28,17 @@ describe('version 1 golden contracts', () => {
     const capture = fixture('event-capture-request') as Record<string, unknown>;
     expect(eventEnvelopeSchema.safeParse(capture).success).toBe(true);
     expect(eventEnvelopeSchema.safeParse({ ...capture, payload: {} }).success).toBe(false);
+  });
+  it('validates bounded correlated source progress and reconnect display snapshot', () => {
+    const sourceEvent = fixture('event-claim-sources') as Record<string, unknown>;
+    expect(eventEnvelopeSchema.safeParse(sourceEvent).success).toBe(true);
+    expect(eventEnvelopeSchema.safeParse({ ...sourceEvent, revision: undefined }).success).toBe(false);
+    const source = (sourceEvent.payload as { sources: unknown[] }).sources[0];
+    expect(eventEnvelopeSchema.safeParse({ ...sourceEvent, payload: { sources: Array(5).fill(source) } }).success).toBe(false);
+    const snapshot = displaySnapshotSchema.parse(fixture('display-snapshot'));
+    expect(displaySnapshotSchema.safeParse({ ...snapshot, state: { ...snapshot.state, claimText: '🙂'.repeat(800) } }).success).toBe(true);
+    expect(displaySnapshotSchema.safeParse({ ...snapshot, state: { ...snapshot.state, claimText: '🙂'.repeat(801) } }).success).toBe(false);
+    expect(displaySnapshotSchema.safeParse({ ...(fixture('display-snapshot') as object), state: null }).success).toBe(true);
   });
   it('rejects invented citations and spans that do not select the checked text', () => {
     const result = claimResultSchema.parse(fixture('result-manual-supported'));

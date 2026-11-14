@@ -99,6 +99,8 @@ export interface ProviderContext {
   /** Runtime contexts report whether one more attempt fits the deadline and allowance. */
   canConsume?(kind: ProviderKind, claimId?: string): boolean;
   deadlineAt?: number;
+  /** claim.sources progress for the display: source sites found so far. Set by the runtime per claim. */
+  reportSources?(sources: DisplaySource[]): void;
 }
 export class PipelineError extends Error {
   constructor(public code: string, public retryable = false) { super(code); this.name = 'PipelineError'; }
@@ -164,7 +166,7 @@ export type ClaimResult = ResultDecision & {
   durationMs: number; cached: boolean; policyVersion: string; modelVersion: string; presentation: Presentation;
   route?: ClaimRoute; subject?: string | null; usage?: CheckUsage;
 };
-export type EventType = 'session.ready' | 'session.ended' | 'claim.detected' | 'claim.waiting' | 'claim.skipped' | 'claim.needs_confirmation' | 'claim.checking' | 'claim.result' | 'claim.superseded' | 'check.cancelled' | 'pipeline.error' | 'audio.ready' | 'audio.stopped' | 'transcript.partial' | 'transcript.final' | 'capture.request';
+export type EventType = 'session.ready' | 'session.ended' | 'claim.detected' | 'claim.waiting' | 'claim.skipped' | 'claim.needs_confirmation' | 'claim.checking' | 'claim.result' | 'claim.sources' | 'claim.superseded' | 'check.cancelled' | 'pipeline.error' | 'audio.ready' | 'audio.stopped' | 'transcript.partial' | 'transcript.final' | 'capture.request';
 export type EventEnvelope = {
   schemaVersion: 1; eventId: string; eventSeq: number; sessionId: string; sessionEpoch: number; requestId?: string; claimId?: string; revision?: number;
   type: EventType; serverAt: string; payload: unknown;
@@ -179,6 +181,8 @@ export type AdmissionPayload = {
   /** claim.checking: how the admitted claim is routed and what it is about. */
   route?: ClaimRoute; subject?: string | null;
   usage?: CheckUsage;
+  /** claim.checking: the admitted claim and how it was captured, for the display's checking card. */
+  claimText?: string; mode?: TextInput['mode']; userInitiated?: boolean;
 };
 export interface PipelineAdapters {
   classify(input: TextInput, context: ProviderContext): Promise<AdmissionResult>;
@@ -220,3 +224,12 @@ export interface EvidenceSources {
   rank(free: Evidence[], paid: Evidence[], future?: boolean): Evidence[];
   traits(evidence: Evidence, attribution: AttributionFrame | null): SourceTraits;
 }
+/** Source-site progress, not a claim that the search provider is evidence. */
+export type DisplaySource = { id: string; hostname: string; title: string; stage: 'found' | 'reading' | 'ready'; provider: 'exa' };
+export type DisplayState = {
+  requestId: string; claimId: string; revision: number; claimText: string;
+  mode: TextInput['mode']; userInitiated: boolean; phase: 'checking' | 'result';
+  sources: DisplaySource[]; result?: ClaimResult;
+};
+export type DisplayGrant = { schemaVersion: 1; sessionId: string; sessionEpoch: number; displayToken: string; expiresAt: string; streamPath: string };
+export type DisplaySnapshot = { schemaVersion: 1; type: 'display.snapshot'; sessionId: string; sessionEpoch: number; eventSeq: number; active: boolean; expiresAt: string; state: DisplayState | null };

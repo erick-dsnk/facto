@@ -135,6 +135,29 @@ describe('evidence-sources pipeline', () => {
     expect(u.results()[0]).toMatchObject({ verdict: 'insufficient_evidence', usage: { exaSearches: 2 } });
   });
 
+  it('reports the sites each Exa search found as claim.sources, one per hostname, at most four', async () => {
+    const judge = scriptedJudge(() => ({ label: 'insufficient_evidence', p: 0.9 }));
+    const t = setup({ judge, script: { paid: {
+      primary: [ev('a', 'a.example'), ev('a2', 'a.example'), ev('b', 'b.example')],
+      alternate: [ev('c', 'c.example'), ev('d', 'd.example'), ev('e', 'e.example')],
+    } } });
+    t.runtime.submit(t.session, input(t.session)); await flush();
+    const progress = t.events.filter(event => event.type === 'claim.sources');
+    // One event after each search, each listing every site found so far for this claim.
+    expect(progress.map(event => (event.payload as { sources: { hostname: string }[] }).sources.map(source => source.hostname))).toEqual([
+      ['a.example', 'b.example'], ['a.example', 'b.example', 'c.example', 'd.example'],
+    ]);
+    expect(progress.every(event => event.requestId === 'req' && event.claimId === 'req-claim-0' && event.revision === 1)).toBe(true);
+    expect((progress[0].payload as { sources: unknown[] }).sources[0]).toMatchObject({ hostname: 'a.example', title: 'Synthetic a', stage: 'ready', provider: 'exa' });
+    // The free sources are not search results and are never shown as sites; the checking card carries the claim and capture.
+    const free = setup({ judge: scriptedJudge(() => ({ label: 'supported', p: 0.9, stances: { wiki: ['supports', 0.95] } })), script: { free: [ev('wiki', 'en.wikipedia.org', 'wikipedia')] } });
+    free.runtime.submit(free.session, input(free.session)); await flush();
+    expect(free.events.some(event => event.type === 'claim.sources')).toBe(false);
+    expect(free.events.find(event => event.type === 'claim.checking')?.payload).toMatchObject({ claimText: 'Helsinki is the capital of Finland.', mode: 'typed', userInitiated: true });
+    everyEventValid(t.events);
+    everyEventValid(free.events);
+  });
+
   it('V4: corroborates a single untrusted supporting site by searching once more without it', async () => {
     const judge = scriptedJudge(evidence => ({ label: 'supported', p: 0.9, stances: Object.fromEntries(evidence.filter(source => source.id !== 'parking').map(source => [source.id, ['supports', 0.9]])) }));
     const t = setup({ judge, script: { paid: { primary: [ev('one', 'localnews.example'), ev('parking', 'parking.example')], corroboration: [ev('one', 'localnews.example'), ev('two', 'othertown.example')] } } });

@@ -45,6 +45,7 @@
         "claim.skipped",
         "claim.needs_confirmation",
         "claim.checking",
+        "claim.sources",
         "claim.result",
         "claim.superseded",
         "check.cancelled",
@@ -74,5 +75,5 @@
     "payload"
   ],
   "additionalProperties": false,
-  "description": "Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. claim.checking, claim.skipped and claim.needs_confirmation carry admissionAction and reasonCode, and optionally presentation, kind (skipped/needs_confirmation only), summary, route, subject and usage. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR."
+  "description": "Version 1 server envelope. A claim.result payload conforms to claim-result.schema.json and includes requestId, claimId, revision. claim.waiting carries admissionAction=wait, reasonCode and ISO waitExpiresAt. claim.checking, claim.skipped and claim.needs_confirmation carry admissionAction and reasonCode, and optionally presentation, kind (skipped/needs_confirmation only), summary, route, subject and usage; claim.checking also carries claimText (at most 800 Unicode code points), mode and userInitiated for the display. claim.sources carries up to four safe source-site progress entries and requires requestId/claimId/revision. capture.request carries reasonCode (voice_trigger) and asks the app to take one photo for OCR."
 }

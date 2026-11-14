@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
 import { readFile } from 'node:fs/promises';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
 import { PROVIDER_LIMITS, PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from '../runtime/adapters.js';
@@ -10,6 +10,7 @@ import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
 import type { DebugFeed } from '../runtime/debug-feed.js';
 import { audioStartSchema, type AsrAdapter } from './audio.js';
 import { AudioBridge } from './audio-bridge.js';
+import { displayEventVisible } from '../runtime/display.js';
 import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
 
 export type ServerOptions = {
@@ -41,12 +42,13 @@ export async function buildServer(options: ServerOptions) {
   const runtime = new PipelineRuntime(options.adapters, now, undefined, options.mode === 'fixture' ? 'fixture' : 'jev-latest');
   const audioBridges = new Map<string, AudioBridge>();
   // One stream per session. A newer authenticated connection replaces a stale one (half-open after a network blip).
+  const displayGrants = new Map<string, { token: string; expiresAt: number; observers: Set<(code?: number) => void> }>();
   const connections = new Map<string, () => void>();
   const app = Fastify({ logger: false, bodyLimit: 16_384, ...(options.trustProxy ? { trustProxy: (_address: string, hop: number) => hop < options.trustProxy! } : {}), ...(options.tls ? { https: options.tls } : {}) });
-  await app.register(websocket, { options: { maxPayload: 16_384, handleProtocols: protocols => protocols.has('actually-v1') ? 'actually-v1' : false } });
-  const allowedOrigins = new Set(options.allowedOrigins ?? ['http://localhost:3000', 'http://127.0.0.1:3000']);
+  await app.register(websocket, { options: { maxPayload: 16_384, handleProtocols: protocols => protocols.has('actually-display-v1') ? 'actually-display-v1' : protocols.has('actually-v1') ? 'actually-v1' : false } });
+  const allowedOrigins = new Set(options.allowedOrigins ?? ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:3030', 'http://127.0.0.1:3030']);
   const joinAttempts = new Map<string, { count: number; until: number }>();
-  const sweep = setInterval(() => { store.sweep(); for (const [ip, rate] of joinAttempts) if (rate.until <= now()) joinAttempts.delete(ip); }, 1000);
+  const sweep = setInterval(() => { store.sweep(); for (const [id, grant] of displayGrants) if (grant.expiresAt <= now() || !store.sessions.has(id)) { for (const close of grant.observers) close(); displayGrants.delete(id); } for (const [ip, rate] of joinAttempts) if (rate.until <= now()) joinAttempts.delete(ip); }, 1000);
   sweep.unref();
   app.addHook('onClose', async () => {
     clearInterval(sweep);
@@ -54,6 +56,8 @@ export async function buildServer(options: ServerOptions) {
       const stopping = audioBridges.get(id)?.stop(); store.delete(id); await stopping?.catch(() => undefined);
     }
     audioBridges.clear();
+    for (const grant of displayGrants.values()) for (const close of grant.observers) close();
+    displayGrants.clear();
   });
   app.addHook('onRequest', async (request, reply) => {
     const origin = request.headers.origin;
@@ -76,6 +80,25 @@ export async function buildServer(options: ServerOptions) {
   }
   app.get('/health', async () => ({ status: 'ok', mode: options.mode, schemaVersion: 1, providers: { checking: options.mode === 'live' ? 'configured_unverified' : 'fixture', asr: options.asr ? 'configured_unverified' : 'not_configured' } }));
   app.get('/', async (_request, reply) => reply.type('text/html').send(await readFile(new URL('../../../../apps/console/index.html', import.meta.url), 'utf8')));
+  // Serve the built observer on the API origin. Only generated asset basenames
+  // are accepted; no general filesystem path or SPA fallback is exposed.
+  app.get('/display', async (_request, reply) => reply.redirect('/display/'));
+  app.get('/display/', async (_request, reply) => {
+    try { return reply.type('text/html').send(await readFile(new URL('../../../../dist/glasses/index.html', import.meta.url), 'utf8')); }
+    catch { return reply.code(503).send({ error: 'display_not_built' }); }
+  });
+  app.get('/display/favicon.png', async (_request, reply) => {
+    try { return reply.type('image/png').send(await readFile(new URL('../../../../dist/glasses/favicon.png', import.meta.url))); }
+    catch { return reply.code(404).send({ error: 'not_found' }); }
+  });
+  app.get('/display/assets/:file', async (request, reply) => {
+    const file = (request.params as { file: string }).file;
+    const extension = /^[A-Za-z0-9_-]+\.(js|css|png|svg|webp|woff2)$/.exec(file)?.[1];
+    if (!extension) return reply.code(404).send({ error: 'not_found' });
+    const types: Record<string, string> = { js: 'text/javascript', css: 'text/css', png: 'image/png', svg: 'image/svg+xml', webp: 'image/webp', woff2: 'font/woff2' };
+    try { return reply.header('Cache-Control', 'public, max-age=31536000, immutable').type(types[extension]).send(await readFile(new URL(`../../../../dist/glasses/assets/${file}`, import.meta.url))); }
+    catch { return reply.code(404).send({ error: 'not_found' }); }
+  });
   app.post('/v1/sessions', async (request, reply) => {
     const rate = joinAttempts.get(request.ip);
     if (!rate || rate.until <= now()) {
@@ -91,6 +114,56 @@ export async function buildServer(options: ServerOptions) {
       session.listeners.add(event => feed.push(event.type, { requestId: event.requestId, revision: event.revision, claimId: event.claimId, payload: event.payload }, session.id));
     }
     return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, token: session.token, sessionEpoch: session.epoch, expiresAt: new Date(session.expiresAt).toISOString(), capabilities: { mode: options.mode, text: true, audio: !!options.asr }, budgets: { deadlineMs: 10_000, running: 2, queued: 3, jev: PROVIDER_LIMITS.jev, searchesPerClaim: PROVIDER_LIMITS.search } });
+  });
+  app.post('/v1/sessions/:sessionId/display-grant', async (request, reply) => {
+    const session = authenticated(request.params, request.headers.authorization);
+    const previous = displayGrants.get(session.id);
+    if (previous) for (const close of previous.observers) close(4002);
+    const grant = { token: randomBytes(32).toString('base64url'), expiresAt: Math.min(now() + 300_000, session.expiresAt), observers: new Set<(code?: number) => void>() };
+    displayGrants.set(session.id, grant);
+    return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, sessionEpoch: session.epoch, displayToken: grant.token, expiresAt: new Date(grant.expiresAt).toISOString(), streamPath: `/v1/sessions/${session.id}/display-stream` });
+  });
+  app.delete('/v1/sessions/:sessionId/display-grant', async (request, reply) => {
+    const session = authenticated(request.params, request.headers.authorization);
+    const grant = displayGrants.get(session.id);
+    if (grant) { for (const close of grant.observers) close(4003); displayGrants.delete(session.id); }
+    return reply.code(204).send();
+  });
+  const displayAccess = (sessionId: string, protocols: string[]) => {
+    const session = store.sessions.get(sessionId);
+    const grant = displayGrants.get(sessionId);
+    const token = protocols.find(value => value.startsWith('display.'))?.slice(8);
+    if (!protocols.includes('actually-display-v1') || !session || session.expiresAt <= now() || !grant || grant.expiresAt <= now() || !token || !equalSecret(token, grant.token)) throw new PipelineError('unauthorized');
+    return { session, grant };
+  };
+  app.get('/v1/sessions/:sessionId/display-stream', {
+    websocket: true,
+    preValidation: (request, _reply, done) => {
+      displayAccess(paramsSchema.parse(request.params).sessionId, String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(value => value.trim())); done();
+    }
+  }, (socket, request) => {
+    const { session, grant } = displayAccess(paramsSchema.parse(request.params).sessionId, String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(value => value.trim()));
+    if (grant.observers.size >= 4) { socket.close(1008, 'Display capacity'); return; }
+    let closed = false;
+    const cleanup = () => { if (closed) return; closed = true; session.displayListeners.delete(send); grant.observers.delete(close); };
+    const close = (code = 4001) => { cleanup(); socket.close(code, code === 4002 ? 'Display grant replaced' : code === 4003 ? 'Display grant revoked' : 'Display grant ended'); };
+    const send: Session['displayListeners'] extends Set<infer T> ? T : never = (event, state, previous) => {
+      if (closed || socket.readyState !== 1) return;
+      if (grant.expiresAt <= now() || session.expiresAt <= now() || displayGrants.get(session.id) !== grant) { close(); return; }
+      const clearedSilent = event.type === 'claim.result' && previous !== null && state === null;
+      if (!clearedSilent && !displayEventVisible(event, state, previous)) return;
+      if (socket.bufferedAmount > 65_536) { cleanup(); socket.close(1008, 'Slow consumer'); return; }
+      socket.send(JSON.stringify(clearedSilent ? { ...event, type: 'check.cancelled', payload: { reasonCode: 'not_presented' } } : event));
+      if (event.type === 'session.ended' && ['deleted', 'expired'].includes((event.payload as { reasonCode: string }).reasonCode)) close(1000);
+    };
+    grant.observers.add(close); session.displayListeners.add(send);
+    const state = session.displayState;
+    // The snapshot is per observer, never emitted onto the owner/audio stream.
+    socket.send(JSON.stringify({ schemaVersion: 1, type: 'display.snapshot', sessionId: session.id, sessionEpoch: session.epoch, eventSeq: session.sequence,
+      active: session.active, expiresAt: new Date(grant.expiresAt).toISOString(), state: session.active && (!state?.result || Date.parse(state.result.expiresAt) > now()) ? state : null }));
+    socket.on('close', cleanup); socket.on('error', cleanup);
+    // Read only: neither JSON controls nor binary audio can reach the session.
+    socket.on('message', () => { cleanup(); socket.close(1008, 'Read-only display'); });
   });
   app.post('/v1/sessions/:sessionId/checks', async (request, reply) => {
     const session = authenticated(request.params, request.headers.authorization);

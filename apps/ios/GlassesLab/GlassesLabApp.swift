@@ -8,6 +8,8 @@ struct GlassesLabApp: App {
   @State private var display: DisplayModel
   @State private var audioLab = AudioLabModel()
   @State private var live: LiveModel
+  @Environment(\.scenePhase) private var scenePhase
+  private let networkRecovery = NativeNetworkRecovery()
 
   init() {
     let debugLog = DebugLog.shared
@@ -35,6 +37,23 @@ struct GlassesLabApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView(wearables: wearables, camera: camera, display: display, audioLab: audioLab, live: live)
+        .task {
+          networkRecovery.start { Task { await live.restoreConnection() } }
+          display.setRecoveryAvailability(active: scenePhase == .active, authorized: wearables.registration == .registered)
+          await live.setGlassesAuthorized(wearables.registration == .registered && !wearables.devices.isEmpty)
+          await live.setAppActive(scenePhase == .active)
+        }
+        .onChange(of: scenePhase) { _, phase in
+          display.setRecoveryAvailability(active: phase == .active, authorized: wearables.registration == .registered)
+          Task { await live.setAppActive(phase == .active) }
+        }
+        .onChange(of: wearables.registration) { _, registration in
+          display.setRecoveryAvailability(active: scenePhase == .active, authorized: registration == .registered)
+          Task { await live.setGlassesAuthorized(registration == .registered && !wearables.devices.isEmpty) }
+        }
+        .onChange(of: wearables.devices.isEmpty) { _, empty in
+          Task { await live.setGlassesAuthorized(wearables.registration == .registered && !empty) }
+        }
         .onOpenURL { url in
           // Meta AI calls back here after registration and permission prompts.
           guard
