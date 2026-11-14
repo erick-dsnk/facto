@@ -15,15 +15,18 @@ describe('evaluate:providers arguments', () => {
     const cli = parseCli(['--providers', 'laya', '--modes', 'admission,judge', '--prompt-pack', 'laya=/tmp/a.json', '--admission-cases', 'a.json', '--cases', 'c.json', '--evidence', 'e.json', '--laya-deadline-ms', '30000', '--lock', '/tmp/l', '--summary', 's.json', '--dataset', 'holdout']);
     expect(cli).toMatchObject({ kind: 'run', packFiles: { laya: '/tmp/a.json' }, options: { admissionCasesPath: 'a.json', casesPath: 'c.json', evidencePath: 'e.json', layaDeadlineMs: 30000, lockPath: '/tmp/l', summaryPath: 's.json', dataset: 'holdout' } });
   });
-  it('rejects bad pack flags, unknown flags and a Laya deadline in pipeline mode', () => {
+  it('rejects bad pack flags, unknown flags ', () => {
     expect(() => parsePackFlag('jev', ['jev'])).toThrow('invalid_prompt_pack_flag');
     expect(() => parsePackFlag('jev=a,jev=b', ['jev'])).toThrow('invalid_prompt_pack_flag');
     expect(() => parsePackFlag('laya=a', ['jev'])).toThrow(/unused_provider/);
     expect(parsePackFlag('jev=a.json,laya=b.json', ['jev', 'laya'])).toEqual({ jev: 'a.json', laya: 'b.json' });
     expect(() => parseCli(['--nope'])).toThrow(/unknown_argument/);
     expect(() => parseCli(['--providers'])).toThrow(/missing_value/);
-    expect(() => parseCli(['--laya-deadline-ms', '30000'])).toThrow('laya_deadline_not_for_pipeline');
     expect(() => parseCli(['--dataset', 'train'])).toThrow('invalid_dataset');
+  });
+  it('accepts a Laya deadline in pipeline mode', () => {
+    const cli = parseCli(['--providers', 'laya', '--modes', 'pipeline', '--laya-deadline-ms', '60000']);
+    expect(cli).toMatchObject({ kind: 'run', options: { layaDeadlineMs: 60000, deadlineMs: 10000 } });
   });
   it('requires --evidence-out to acquire and never writes the frozen baseline', async () => {
     expect(() => parseCli(['--acquire'])).toThrow('acquire_requires_evidence_out');

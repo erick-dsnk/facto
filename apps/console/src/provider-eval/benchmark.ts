@@ -116,10 +116,10 @@ export function settledOutcome(terminals: Pick<EventEnvelope, 'type' | 'payload'
   const mapped = labelTerminal({ type: terminal.type as 'claim.result', payload: terminal.payload });
   return { predicted: mapped.label, reasonCode: mapped.reasonCode, ...(terminal.type === 'pipeline.error' ? { error: mapped.reasonCode ?? 'pipeline_error' } : {}) };
 }
-export async function pipelineCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number, pack?: PromptPack): Promise<Observation> {
+export async function pipelineCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number, pack?: PromptPack, deadlineMs = 10_000): Promise<Observation> {
   const asks: AskObservation[] = []; const client = instrument(provider, asks); const classifier = createClassifier(client, pack);
   const observation: Observation = { provider, mode: 'pipeline', id: sample.id, repetition, expected: sample.expected, ambiguousLabel: 'ambiguousLabel' in sample ? sample.ambiguousLabel : undefined, alternativeExpected: 'alternativeExpected' in sample ? sample.alternativeExpected : undefined, predicted: 'error', reasonCode: null, durationMs: 0, asks, events: [] };
-  const runtime = new PipelineRuntime({ classify: async (input, context) => { const result = await classifier(input, context); observation.admission = { action: result.action, claims: result.claims.length, checkedTexts: result.claims.map(claim => claim.checkedText) }; return result; }, judge: createJudge(client, pack), ...(pack ? { verdictRules: pack.judge.policy } : {}), retrieve: async () => { throw new PipelineError('unexpected_legacy_retrieval'); }, sources: replaySources(frozen), cache: new ClaimCache() }, Date.now, () => performance.now(), provider === 'jev' ? MODEL_VERSION : 'laya-20260512');
+  const runtime = new PipelineRuntime({ classify: async (input, context) => { const result = await classifier(input, context); observation.admission = { action: result.action, claims: result.claims.length, checkedTexts: result.claims.map(claim => claim.checkedText) }; return result; }, judge: createJudge(client, pack), ...(pack ? { verdictRules: pack.judge.policy } : {}), retrieve: async () => { throw new PipelineError('unexpected_legacy_retrieval'); }, sources: replaySources(frozen), cache: new ClaimCache() }, Date.now, () => performance.now(), provider === 'jev' ? MODEL_VERSION : 'laya-20260512', deadlineMs);
   const session = new Session(Date.now); const requestId = randomUUID(); const input = makeInput({ text: sample.text, context: [], mode: 'typed', confidence: 1 }, session.id, requestId); const start = performance.now();
   const terminals: EventEnvelope[] = [];
   session.listeners.add(event => { if (event.requestId !== requestId) return; observation.events!.push(event.type); if (['claim.result', 'pipeline.error', 'claim.skipped', 'claim.needs_confirmation', 'check.cancelled'].includes(event.type)) terminals.push(event); });
@@ -180,7 +180,7 @@ export type RunOptions = {
   /** Prompt pack per provider; a provider without one uses the built-in pack. */
   packs?: Record<string, PromptPack>; packFiles?: Record<string, string>;
   admissionCasesPath?: string; casesPath?: string; evidencePath?: string;
-  /** Eval only: the per-request deadline for Laya admission and judgment calls. Pipeline mode keeps the runtime's own 10 s. */
+  /** Eval only: the per-request deadline for Laya admission and judgment calls. Pipeline mode passes it to the runtime for Laya only; Jev keeps 10 s. */
   layaDeadlineMs?: number;
   /** A cross-process lock directory held for every Laya case (the deadline starts after it is acquired). */
   lockPath?: string; summaryPath?: string; dataset?: 'dev' | 'holdout';
@@ -205,7 +205,7 @@ export async function run(options: RunOptions) {
       const release = isLaya && options.lockPath ? await acquireLock(options.lockPath) : undefined;
       let row: Observation;
       try {
-        row = mode === 'admission' ? await admissionCase(provider, sample as EvalCase, repetition, isLaya ? layaDeadline : 10_000, pack) : !evidence ? (() => { throw new Error('missing_frozen_case'); })() : mode === 'pipeline' ? await pipelineCase(provider, sample as CohortCase, evidence, repetition, pack) : await judgeCase(provider, sample as CohortCase, evidence, repetition, deadline, options.layaLimits, pack);
+        row = mode === 'admission' ? await admissionCase(provider, sample as EvalCase, repetition, isLaya ? layaDeadline : 10_000, pack) : !evidence ? (() => { throw new Error('missing_frozen_case'); })() : mode === 'pipeline' ? await pipelineCase(provider, sample as CohortCase, evidence, repetition, pack, isLaya ? layaDeadline : 10_000) : await judgeCase(provider, sample as CohortCase, evidence, repetition, deadline, options.layaLimits, pack);
         if (evidence?.acquisition.errors.length && mode !== 'admission') { row.acquisitionErrors = evidence.acquisition.errors; row.predicted = 'error'; row.error = 'acquisition_failure'; }
         rows.push(row); await flush(); if (isLaya && row.error === 'timeout') { row.postDeadlineDrainMs = await waitForLayaIdle(); await flush(); }
       } finally { await release?.(); }

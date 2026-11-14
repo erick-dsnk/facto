@@ -181,3 +181,24 @@ describe('evidence-sources deadlines', () => {
     await vi.advanceTimersByTimeAsync(10_000); expect(s.events.filter(event => event.type === 'pipeline.error')).toHaveLength(1);
   });
 });
+
+describe('injectable pipeline deadline', () => {
+  afterEach(() => vi.useRealTimers());
+  async function hung(deadlineMs?: number) {
+    vi.useFakeTimers(); vi.setSystemTime(NOW);
+    const session = new Session(Date.now), events: EventEnvelope[] = []; session.listeners.add(event => events.push(event));
+    const adapters = { ...fixtureAdapters(), classify: () => new Promise<never>(() => {}) };
+    const runtime = deadlineMs === undefined ? new PipelineRuntime(adapters) : new PipelineRuntime(adapters, Date.now, () => performance.now(), 'test', deadlineMs);
+    runtime.submit(session, { schemaVersion: 1, requestId: 'req', sessionId: session.id, sessionEpoch: session.epoch, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.',
+      language: 'en', capturedAt: new Date(NOW).toISOString(), capture: { source: 'typed_fixture', segmentId: 'seg', confidence: 1 }, context: [], userInitiated: true });
+    return { events, timedOut: () => events.some(event => event.type === 'pipeline.error') };
+  }
+  it('keeps the 10 s deadline by default', async () => {
+    const p = await hung(); await vi.advanceTimersByTimeAsync(9_900); expect(p.timedOut()).toBe(false);
+    await vi.advanceTimersByTimeAsync(200); expect(p.timedOut()).toBe(true);
+  });
+  it('applies an injected deadline', async () => {
+    const p = await hung(60_000); await vi.advanceTimersByTimeAsync(30_000); expect(p.timedOut()).toBe(false);
+    await vi.advanceTimersByTimeAsync(30_100); expect(p.timedOut()).toBe(true);
+  });
+});

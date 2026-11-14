@@ -98,7 +98,7 @@ Pass a pack file per provider to the harness with `--prompt-pack jev=PATH,laya=P
 | `--cases FILE` | Pipeline/judge cases (`cohort.json` format). Its SHA-256 must match the evidence file's `cohortSHA256`. |
 | `--evidence FILE` | Frozen evidence to replay (default `frozen-evidence.json`). |
 | `--acquire --evidence-out FILE` | Acquire live Exa evidence for `--cases` into FILE. `--evidence-out` is required and the original `frozen-evidence.json` is refused. |
-| `--laya-deadline-ms N` | Eval only: per-request deadline for Laya admission and judge calls (default 10000). Not allowed with `pipeline` mode, whose runtime keeps its own 10 s. |
+| `--laya-deadline-ms N` | Eval only: per-request deadline for Laya admission, judge and pipeline runs (default 10000). Jev always keeps 10 s. With `--lock` the clock starts after the lock is acquired. |
 | `--lock PATH` | Cross-process `fs.mkdir` spin-lock held for each Laya case, so concurrent harness processes serialize Laya inference. A case's deadline clock starts after the lock is acquired. Locks of dead owners or older than 15 minutes are broken. The lock covers the whole case (all of its HTTP calls, any timeout drain). |
 | `--summary PATH` | Write the per-provider metrics array below. |
 | `--dataset dev\|holdout` | Label recorded in the summary (default `dev`). |
@@ -133,3 +133,7 @@ npm run evaluate:providers -- --providers laya --modes admission,pipeline,judge 
 # Acquire new evidence without touching the frozen baseline
 npm run evaluate:providers -- --acquire --cases data/cohort-dev.json --evidence-out data/evidence-dev.json
 ```
+
+## Shared-code changes
+
+- `services/api/src/runtime/pipeline.ts`: `PipelineRuntime` takes an optional last constructor argument `deadlineMs` (default 10 s, so production is unchanged); only `evaluate:providers --laya-deadline-ms` sets it, for Laya pipeline runs. Flag this in the PR.

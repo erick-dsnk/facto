@@ -65,7 +65,7 @@ export class PipelineRuntime {
   /** Bounded sanitized diagnostics; deliberately excludes input, queries, tokens and IDs. */
   readonly metrics: RuntimeMetric[] = [];
   private readonly cache: ClaimCache;
-  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string) {
+  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string, /** Per-request deadline. Production keeps 10 s; only a Laya evaluation run raises it. */ private readonly deadlineMs = 10_000) {
     this.cache = adapters.cache ?? sharedClaimCache;
   }
 
@@ -106,7 +106,7 @@ export class PipelineRuntime {
         session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'wait_expired' }, input);
       } else this.error(session, record, 'timeout');
       record.state = 'done'; record.controller.abort(new PipelineError('timeout')); this.pump();
-    }, Math.max(0, 10_000 - (this.now() - acceptedAt)));
+    }, Math.max(0, this.deadlineMs - (this.now() - acceptedAt)));
     record.timer.unref();
     this.queue.push({ session, record }); this.pump();
     return { requestId: input.requestId, duplicate: false };
@@ -135,7 +135,7 @@ export class PipelineRuntime {
   private async run({ session, record }: Job) {
     const { input } = record;
     const started = record.acceptedMonotonic;
-    const ctx = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000);
+    const ctx = record.budget.context(record.controller.signal, this.now, record.acceptedAt + this.deadlineMs);
     const stageMs = { admission: 0, retrieval: 0, judgment: 0 };
     const timed = async <T>(stage: Stage, call: () => Promise<T>): Promise<T> => {
       const start = this.monotonic();
@@ -170,7 +170,7 @@ export class PipelineRuntime {
       if (admission.action !== 'check') {
         if (admission.action === 'wait' && !input.userInitiated && record.continuationCount < 1) {
           record.state = 'waiting'; clearTimeout(record.timer);
-          const remaining = Math.min(8_000, 10_000 - (this.now() - record.acceptedAt));
+          const remaining = Math.min(8_000, this.deadlineMs - (this.now() - record.acceptedAt));
           session.emit('claim.waiting', { admissionAction: 'wait', reasonCode: admission.reasonCode, waitExpiresAt: new Date(this.now() + remaining).toISOString() }, input);
           record.timer = setTimeout(() => {
             if (!session.current(record)) return;
@@ -196,7 +196,7 @@ export class PipelineRuntime {
         if (sources) return !ClaimCache.cacheable(frame) || this.cache.get(sharedKey(later)) === undefined;
         const cached = session.cache.get(sessionKey(later.checkedText));
         // A near-expiry cache entry may disappear while this claim runs.
-        return !cached || cached.expiresAt <= record.acceptedAt + 10_000;
+        return !cached || cached.expiresAt <= record.acceptedAt + this.deadlineMs;
       };
       for (const [index, candidate] of admission.claims.entries()) {
         // A correction must not mint fresh provider allowances through a new ID.
@@ -217,7 +217,7 @@ export class PipelineRuntime {
         // claim.sources: up to four source sites for the display, only while this request still owns its output.
         const reportSources = (progressSources: DisplaySource[]) => {
           const progress = claimSourcesSchema.safeParse({ sources: progressSources });
-          if (progress.success && session.current(record) && this.now() < record.acceptedAt + 10_000) session.emit('claim.sources', progress.data, input, claim.id);
+          if (progress.success && session.current(record) && this.now() < record.acceptedAt + this.deadlineMs) session.emit('claim.sources', progress.data, input, claim.id);
         };
         // Notification identity is the complete admitted proposition, independent of
         // capture mode/context. Keep factual cache identity separate.
@@ -244,7 +244,7 @@ export class PipelineRuntime {
             if (!ctx.canConsume('jev')) throw new PipelineError('jev_budget_exhausted');
             const laterUncached = admission.claims.slice(index + 1).filter(needsProviders).length;
             const reserved = Math.min(laterUncached, Math.max(0, PROVIDER_LIMITS.jev - record.budget.jev - 1));
-            const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+            const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + this.deadlineMs, reserved);
             claimContext.reportSources = reportSources;
             const outcome = await this.checkWithSources({ claim, frame, claimContext, timed, halted, acceptedAt: record.acceptedAt, laterUncached });
             if (!outcome) return;
@@ -265,7 +265,7 @@ export class PipelineRuntime {
             if (!ctx.canConsume('jev')) throw new PipelineError('jev_budget_exhausted');
             const laterUncached = admission.claims.slice(index + 1).filter(needsProviders).length;
             const reserved = Math.min(laterUncached, Math.max(0, PROVIDER_LIMITS.jev - record.budget.jev - 1));
-            const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+            const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + this.deadlineMs, reserved);
             claimContext.reportSources = reportSources;
             const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, claimContext));
             if (halted()) return;
@@ -276,7 +276,7 @@ export class PipelineRuntime {
             let decision = decideVerdict(judgment);
             if (decision.verdict === 'insufficient_evidence' && this.adapters.retrieveAlternate && !laterUncached
               && claimContext.canConsume('jev') && claimContext.canConsume('search', claim.id)
-              && record.acceptedAt + 10_000 - this.now() >= SECOND_SEARCH_MIN_REMAINING_MS) {
+              && record.acceptedAt + this.deadlineMs - this.now() >= SECOND_SEARCH_MIN_REMAINING_MS) {
               const additional = await timed('retrieval', () => this.adapters.retrieveAlternate!(claim, claimContext));
               if (halted()) return;
               const combined = retainAlternateEvidence(evidence, additional, claim.checkedText, judgment);
@@ -413,7 +413,7 @@ export class PipelineRuntime {
     assertWithinDeadline(claimContext);
     const decided = round?.verdict.decision.verdict ?? 'insufficient_evidence';
     if (decided === 'insufficient_evidence' && !job.laterUncached && claimContext.canConsume('search', claim.id) && claimContext.canConsume('jev')) {
-      if (job.acceptedAt + 10_000 - this.now() < SECOND_SEARCH_MIN_REMAINING_MS) {
+      if (job.acceptedAt + this.deadlineMs - this.now() < SECOND_SEARCH_MIN_REMAINING_MS) {
         // No time for one more search: the abstention stands, but more time might have settled it.
         cacheable = false;
       } else {

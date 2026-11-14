@@ -5,7 +5,7 @@ import type { LayaLimits, RunOptions } from './benchmark.js';
 export const HELP = `evaluate:providers --acquire --evidence-out PATH [--cases PATH] | --providers jev,laya --modes admission,pipeline,judge [--limit N] [--repetitions N] --output PATH
   [--deadline-ms 10000] [--laya-max-len 1024 --laya-head-max-len 512 (Laya judge diagnostic only)]
   [--prompt-pack jev=PATH,laya=PATH] [--admission-cases PATH] [--cases PATH] [--evidence PATH]
-  [--laya-deadline-ms N (admission/judge only)] [--lock PATH] [--summary PATH] [--dataset dev|holdout]`;
+  [--laya-deadline-ms N (Laya only)] [--lock PATH] [--summary PATH] [--dataset dev|holdout]`;
 
 export type Cli = { kind: 'help' } | { kind: 'acquire'; limit?: number; casesPath?: string; evidenceOut: string } | { kind: 'run'; options: RunOptions; packFiles: Record<string, string> };
 
@@ -43,7 +43,6 @@ export function parseCli(args: string[]): Cli {
   const deadlineMs = integer('deadline-ms', 10000, 1000, 120000, 'invalid_deadline')!;
   if (deadlineMs !== 10000 && modes.some(mode => mode !== 'judge')) throw new Error('extended_deadline_judge_only');
   const layaDeadlineMs = integer('laya-deadline-ms', undefined, 1000, 120000, 'invalid_laya_deadline');
-  if (layaDeadlineMs !== undefined && layaDeadlineMs !== 10000 && modes.includes('pipeline')) throw new Error('laya_deadline_not_for_pipeline');
   const layaLimits: LayaLimits | undefined = values.has('laya-max-len') ? { maxLen: Number(str('laya-max-len')), headMaxLen: Number(str('laya-head-max-len') ?? '512') } : undefined;
   if (values.has('laya-head-max-len') && !layaLimits) throw new Error('missing_laya_max_len');
   if (layaLimits && (providers.some(value => value !== 'laya') || modes.some(value => value !== 'judge') || !Number.isSafeInteger(layaLimits.maxLen) || !Number.isSafeInteger(layaLimits.headMaxLen) || layaLimits.maxLen < 512 || layaLimits.maxLen > 8192 || layaLimits.headMaxLen < 32 || layaLimits.headMaxLen >= layaLimits.maxLen)) throw new Error('invalid_context_diagnostic');
