@@ -1,0 +1,50 @@
+{
+  "kind": "pre_live_mock_validation",
+  "planCanonicalSHA256": "699582a0b64569f73b20376521be7aa6bfc4b1439d06ae6182e5942b21ab5de3",
+  "independentSyntheticTestsPassed": 10,
+  "authorRunnerTestsReplayedPassed": 6,
+  "strictTypeScript": "passed",
+  "providerCalls": 0,
+  "sourceRequests": 0,
+  "checks": [
+    {
+      "kind": "complete42",
+      "reportSHA256": "3b3eef44a7ad12857951792cd6ef29c14c13b4c66513a2b46eb04139c0f66cdf",
+      "analysisSHA256": "c62c5ff603ed49f426969c2d4867b24cce7fb36805fc2a2ccd3acad789ffa184",
+      "declared": 42,
+      "completedResults": 42,
+      "missingResults": 0,
+      "rawObserved": 37,
+      "baselineNotRun": true,
+      "authorScoringAgrees": true,
+      "observedButUnscored": 0,
+      "providerCalls": 0
+    },
+    {
+      "kind": "unknown-usage",
+      "reportSHA256": "6a2c49c13d9eefd8dc5d84b53c32fc0e369c4ddfd2a1ded69cd3737fb07393cc",
+      "analysisSHA256": "2a48528e53681bfb19004cb6d8fdf03ebd2ecf799817f47e3684692364fb5faa",
+      "declared": 42,
+      "completedResults": 0,
+      "missingResults": 42,
+      "rawObserved": 0,
+      "baselineNotRun": true,
+      "authorScoringAgrees": true,
+      "observedButUnscored": 1,
+      "providerCalls": 0
+    },
+    {
+      "kind": "provider-failure",
+      "reportSHA256": "d958b0f982581134eed0281966fcf0bf9b51bef96b597aae3c5b7f9b0a5ff532",
+      "analysisSHA256": "ccb29e7395c8e5313978e7943e4c1ba7749121a4487912c7a757b4909262679a",
+      "declared": 42,
+      "completedResults": 0,
+      "missingResults": 42,
+      "rawObserved": 0,
+      "baselineNotRun": true,
+      "authorScoringAgrees": true,
+      "observedButUnscored": 0,
+      "providerCalls": 0
+    }
+  ]
+}
