@@ -12,7 +12,7 @@ The [actual-provider automatic campaign](automatic-development-2026-11-14.md) re
 
 The auxiliary candidate08 acquisition comparator has a [separate threshold correction](broader-acquisition-comparison-correction.md): substance/common-origin confidence 0.85, stance 0.8. Its recorded-assessment yield is not independently verified coverage; primary 6/12 raw and 4/12 fully verified results are unchanged. The original hashed packages remain immutable.
 
-Frozen09 included per-target recovery/status diagnostics, richer contained-highlight retention and stream-lifecycle fixes. Its joint repeated-corpus result does not isolate any fix effect. The later deferred-variant fallback fix belongs only to the current 530-test integration and is outside that live freeze.
+Frozen09 included per-target recovery/status diagnostics, richer contained-highlight retention and stream-lifecycle fixes. Its joint repeated-corpus result does not isolate any fix effect. The later deferred-variant fallback fix belongs only to the current 530-test integration and is outside that live freeze. For exact-head attribution, `e88b41e` passed 483 tests on the runtime branch; the combined evaluation branch including that commit passed 530 tests. The frozen candidate09 report's phrase “Later integration `e88b41e`” refers to this combined integration, not a 530-test gate on the runtime branch itself.
 
 ## Earlier combined freeze and sealed results
 
