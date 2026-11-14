@@ -40,7 +40,7 @@ State the current scope: English, bounded public propositions, a foreground prot
 
 ## 7. What we measured
 
-Current integration passes lint/typecheck and **530 tests across 25 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; a later deferred-variant fallback fix is outside that freeze and has no live credit here.
+Current integration passes lint/typecheck and **547 tests across 26 files**. The latest completed [candidate09](broader-development-candidate09.md) freeze, `9a5e80d`, passed 525 tests; later evidence-retention and absolute-deadline fixes are outside that freeze and have no live credit here.
 
 On the repeated OPEN broader corpus, candidate09 produced **4/12 correct definitive unique facts**, **3/12 with every selected reference verified**, eight abstentions and no operational error. It admitted 13/13 eligible occurrences and delivered 16/16 terminals. The mixed BD07 repeat abstained and adds zero unique facts. An initial guard halt and reviewed artifact-only continuation preserved batch 1 and continued only unstarted batches 2–4.
 
