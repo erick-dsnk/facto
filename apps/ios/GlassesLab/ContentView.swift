@@ -9,10 +9,12 @@ struct ContentView: View {
   @Bindable var camera: CameraModel
   let display: DisplayModel
   let audioLab: AudioLabModel
+  let live: LiveModel
 
   var body: some View {
     NavigationStack {
       List {
+        LiveSections(live: live, camera: camera, display: display)
         connectionSection
         mockSection
         cameraSection
