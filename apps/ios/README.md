@@ -105,3 +105,37 @@ The SDK picks the video link from Info.plist. With the External Accessory keys (
 - Bluetooth bandwidth limits the stream. The SDK lowers resolution first, then frame rate, never below 15 fps. Lower settings give cleaner frames.
 
 Docs: <https://wearables.developer.meta.com/docs/develop/> · SDK and samples: <https://github.com/facebook/meta-wearables-dat-ios> (a copy with the CameraAccess and DisplayAccess samples is in `~/Desktop/meta-wearables-dat-ios`).
+
+## Polished web display with the native companion
+
+The companion remains the capture/controller app. Wake phrase listening, “Hey Facto, check this”,
+spoken “check this” while streaming, and the phone Check this button all use the same existing
+camera/OCR/backend pipeline. The web app only observes the current session and cannot request a
+photo, upload audio, change preferences, pause, or delete the session.
+
+1. Connect Live to the hosted backend with the join code on the phone.
+2. In **Glasses display**, choose **Web display**. This releases only the native DAT display
+   session; the camera/microphone pipeline and phone mirror continue normally.
+3. Tap **Create temporary display link**. The default app URL is the backend URL plus `/display/`,
+   which serves the built web UI. Override it with an HTTPS UI deployment if needed.
+4. Use **Share display link** with your Meta Web Apps launcher/device workflow to open the link
+   on Meta Ray-Ban Display. **Preview on this phone** opens a phone preview; it does not launch
+   a web app on the glasses. There is no undocumented native auto-launch API in this app.
+5. Run a trigger on the companion. The web UI receives the same check, source progress, and
+   result over the reader stream. Phone Dismiss cancels the current displayed request through
+   the owner API, which also clears the web HUD. Repeat speaks on the companion; history replay
+   renders on the phone mirror only.
+
+The link contains a dedicated read-only display token in its URL fragment, never the owner
+bearer token or join code. It expires within five minutes (or when its parent session expires),
+is kept in memory only, and is cleared by the companion on disconnect/reconnect or epoch change.
+Generate a fresh link after session renewal. Switching back to Native display first revokes all
+web readers; if revocation fails the companion stays in Web display mode with native output
+blocked, preserving capture and listening until you retry. Native display remains the default and is connected using the existing DAT
+controls. A web app URL and API URL must use HTTPS; loopback HTTP is allowed only for local dev
+(`localhost:3030` UI and `localhost:3000` API). A phone's localhost points to that phone, so use a
+reachable HTTPS host for real glasses/phone testing.
+
+Native unit coverage is in `WebDisplayConnectionTests`, the display-grant cases in
+`BackendClientTests`, and output-mode/source-progress cases in `LiveModelTests`. Run these with
+the Xcode test command above; Linux TypeScript checks do not compile or run the iOS app.

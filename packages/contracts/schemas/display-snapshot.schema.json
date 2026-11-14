@@ -1,0 +1,393 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "type": {
+      "type": "string",
+      "const": "display.snapshot"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sessionEpoch": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "eventSeq": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "state": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "claimId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "claimText": {
+              "type": "string",
+              "maxLength": 800
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "ocr",
+                "audio",
+                "typed"
+              ]
+            },
+            "userInitiated": {
+              "type": "boolean"
+            },
+            "phase": {
+              "type": "string",
+              "enum": [
+                "checking",
+                "result"
+              ]
+            },
+            "sources": {
+              "maxItems": 4,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "hostname": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253,
+                    "pattern": "^[a-z0-9.-]+$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "maxLength": 160
+                  },
+                  "stage": {
+                    "type": "string",
+                    "enum": [
+                      "found",
+                      "reading",
+                      "ready"
+                    ]
+                  },
+                  "provider": {
+                    "type": "string",
+                    "const": "exa"
+                  }
+                },
+                "required": [
+                  "id",
+                  "hostname",
+                  "title",
+                  "stage",
+                  "provider"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "result": {
+              "type": "object",
+              "properties": {
+                "verdict": {
+                  "type": "string",
+                  "enum": [
+                    "supported",
+                    "contradicted",
+                    "misleading",
+                    "insufficient_evidence"
+                  ]
+                },
+                "reasonCode": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "selectedEvidenceIds": {
+                  "maxItems": 6,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "originalText": {
+                  "type": "string"
+                },
+                "checkedText": {
+                  "type": "string"
+                },
+                "sourceSpan": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "end": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "evidence": {
+                  "maxItems": 6,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "publisher": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "publishedAt": {
+                        "anyOf": [
+                          {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "format": "date",
+                                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                              },
+                              {
+                                "type": "string",
+                                "format": "date-time",
+                                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "retrievedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "contentBasis": {
+                        "type": "string",
+                        "enum": [
+                          "highlight",
+                          "page_text"
+                        ]
+                      },
+                      "excerpt": {
+                        "type": "string"
+                      },
+                      "sourceGroup": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "echoGroup": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "sourceRole": {
+                        "type": "string",
+                        "enum": [
+                          "primary",
+                          "secondary",
+                          "unknown"
+                        ]
+                      },
+                      "directlyAddressesClaim": {
+                        "type": "boolean"
+                      },
+                      "matchesTimePlaceAndPopulation": {
+                        "type": "boolean"
+                      },
+                      "stance": {
+                        "type": "string",
+                        "enum": [
+                          "supports",
+                          "contradicts",
+                          "unrelated"
+                        ]
+                      },
+                      "stanceProbability": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "url",
+                      "title",
+                      "publisher",
+                      "publishedAt",
+                      "retrievedAt",
+                      "contentBasis",
+                      "excerpt",
+                      "sourceGroup",
+                      "echoGroup",
+                      "sourceRole",
+                      "directlyAddressesClaim",
+                      "matchesTimePlaceAndPopulation",
+                      "stance",
+                      "stanceProbability"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "checkedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "durationMs": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cached": {
+                  "type": "boolean"
+                },
+                "policyVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "modelVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "presentation": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "silent",
+                        "notify",
+                        "respond"
+                      ]
+                    },
+                    "reasonCode": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "reasonCode"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "verdict",
+                "reasonCode",
+                "selectedEvidenceIds",
+                "summary",
+                "originalText",
+                "checkedText",
+                "sourceSpan",
+                "evidence",
+                "checkedAt",
+                "expiresAt",
+                "durationMs",
+                "cached",
+                "policyVersion",
+                "modelVersion",
+                "presentation"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "requestId",
+            "claimId",
+            "revision",
+            "claimText",
+            "mode",
+            "userInitiated",
+            "phase",
+            "sources"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "type",
+    "sessionId",
+    "sessionEpoch",
+    "eventSeq",
+    "active",
+    "expiresAt",
+    "state"
+  ],
+  "additionalProperties": false,
+  "description": "Read-only display reconnect snapshot. claimText is bounded to 800 Unicode code points. Checking state is manual; result state requires a non-silent result. Epoch and event sequence replace prior state without replay."
+}

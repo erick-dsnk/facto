@@ -10,7 +10,7 @@
     <title>Actually — Display</title>
     <script>
       // The wearable route has a fixed device viewport; only the developer shell is responsive.
-      if (new URLSearchParams(location.search).get('display') !== '1' && new URLSearchParams(location.search).get('inspect') !== '1') {
+      if (new URLSearchParams(location.search).get('display') !== '1' && new URLSearchParams(location.search).get('inspect') !== '1' && new URLSearchParams(location.search).get('live') !== '1') {
         document.querySelector('meta[name="viewport"]').content = 'width=device-width, initial-scale=1.0';
       }
     </script>

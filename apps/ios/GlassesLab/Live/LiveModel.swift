@@ -35,6 +35,15 @@ protocol LiveBackend: SessionChannel, CheckSubmitter {
   var onUnreadableEvent: (@MainActor (_ type: String?) -> Void)? { get set }
   func connect() async throws
   func close() async
+  func requestDisplayGrant() async throws -> DisplayGrant
+  func revokeDisplayGrants() async throws
+  func cancel(requestId: String) async throws
+}
+
+extension LiveBackend {
+  func requestDisplayGrant() async throws -> DisplayGrant { throw WebDisplayLinkError.unavailable }
+  func revokeDisplayGrants() async throws { throw WebDisplayLinkError.unavailable }
+  func cancel(requestId: String) async throws { throw WebDisplayLinkError.unavailable }
 }
 
 extension BackendClient: LiveBackend {}
@@ -43,6 +52,9 @@ extension BackendClient: LiveBackend {}
 @MainActor
 protocol LiveCamera: PhotoCapturing {
   var isStreaming: Bool { get }
+  var hasSession: Bool { get }
+  var onCaptureStarting: (@MainActor () -> Void)? { get set }
+  var onCaptureSessionEnded: (@MainActor () -> Void)? { get set }
   /// Quality for a stream that Live mode starts, including one started by "Check this".
   var liveQuality: StreamQuality { get set }
   var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)? { get set }
@@ -57,7 +69,12 @@ protocol LiveCamera: PhotoCapturing {
 @MainActor
 protocol LensDisplaying: AnyObject {
   var isConnected: Bool { get }
+  func setWebDisplayEnabled(_ enabled: Bool)
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async
+}
+
+extension LensDisplaying {
+  func setWebDisplayEnabled(_ enabled: Bool) {}
 }
 
 /// ResultPresenter keeps its playback reporter weakly and fixes it at init. The relay lives as
@@ -256,6 +273,9 @@ final class LiveModel {
       if wakeWordEnabled {
         refreshWake()
       } else {
+        // Invalidate a suspended startup synchronously; its SDK await may finish before
+        // the cleanup task gets its next turn on the main actor.
+        wakeStartTask?.cancel()
         Task { await self.endWakeSession() }
       }
     }
@@ -297,6 +317,61 @@ final class LiveModel {
   }
   var checkPhase: LookAndCheckCoordinator.Phase { coordinator?.phase ?? .idle }
   var isChecking: Bool { checkPhase != .idle }
+
+  let webDisplay: WebDisplayConnection
+  private(set) var isSwitchingDisplay = false
+  @ObservationIgnored private var displayModeGeneration = 0
+  @ObservationIgnored private var displayHandoffGeneration = 0
+  @ObservationIgnored private var displayHandoff: Task<Void, Never>?
+  var displayOutputMode: DisplayOutputMode = .native {
+    didSet {
+      guard displayOutputMode != oldValue else { return }
+      displayModeGeneration += 1
+      let generation = displayModeGeneration
+      webDisplay.invalidate()
+      if displayOutputMode == .web {
+        display?.setWebDisplayEnabled(true)
+      } else {
+        // Readers must be disconnected before native output can take over the lens.
+        // Keep capture/listening running if the network cannot confirm revocation.
+        let switchingBackend = backend
+        let previousHandoff = displayHandoff
+        isSwitchingDisplay = true
+        displayHandoffGeneration = generation
+        displayHandoff = Task { [weak self] in
+          if let previousHandoff { await previousHandoff.value }
+          guard let self else { return }
+          defer {
+            if self.displayHandoffGeneration == generation { self.isSwitchingDisplay = false }
+          }
+          do {
+            if let switchingBackend { try await switchingBackend.revokeDisplayGrants() }
+          } catch {
+            guard self.displayModeGeneration == generation, self.backend === switchingBackend else { return }
+            self.displayOutputMode = .web
+            self.notice = "Couldn't revoke the web display. Capture continues; retry Native display when the connection is available."
+            return
+          }
+          guard self.displayModeGeneration == generation, self.displayOutputMode == .native,
+                self.backend === switchingBackend else { return }
+          self.display?.setWebDisplayEnabled(false)
+          self.lensUpdates?.yield(self.lens.card)
+        }
+      }
+    }
+  }
+
+  private(set) var webDisplayRequestId: String?
+
+  /// A phone-only action. No owner token or join code enters the generated browser URL.
+  func prepareWebDisplay() async {
+    // An older revoke must finish before a newly selected web reader can be minted.
+    while isSwitchingDisplay, let displayHandoff { await displayHandoff.value }
+    guard displayOutputMode == .web, let backend, isConnected else { return }
+    if webDisplay.appURLText.isEmpty { webDisplay.appURLText = backend.config.baseURL.appending(path: "display/").absoluteString }
+    webDisplay.updateSession(id: backend.sessionId, epoch: backend.sessionEpoch)
+    await webDisplay.prepare(apiURL: backend.config.baseURL) { try await backend.requestDisplayGrant() }
+  }
 
   let history: ResultHistory
   let lens: LensCardViewModel
@@ -345,6 +420,10 @@ final class LiveModel {
   /// it started has been stopped again.
   @ObservationIgnored private var wakeSession = false
   @ObservationIgnored private var wakeStartedStream = false
+  @ObservationIgnored private var wakeSessionID: UUID?
+  @ObservationIgnored private var wakeStartTask: Task<Void, Never>?
+  @ObservationIgnored private var wakeCleanupTask: Task<Void, Never>?
+  @ObservationIgnored private var manualCaptureStarting = false
   @ObservationIgnored private var wakeTimer: Task<Void, Never>?
   @ObservationIgnored private var wakeStarting = false
   /// Why the detector couldn't start. Cleared by toggling the option or by Connect.
@@ -381,6 +460,7 @@ final class LiveModel {
     makeBackend: (@MainActor (BackendConfig) -> LiveBackend)? = nil
   ) {
     let config = BackendConfig.load(from: defaults, secrets: secrets)
+    self.webDisplay = WebDisplayConnection(defaults: defaults)
     self.baseURLText = config.baseURL.absoluteString
     self.joinCode = config.joinCode
     self.demoQuality = defaults.object(forKey: Self.demoQualityKey) as? Bool ?? true
@@ -419,6 +499,14 @@ final class LiveModel {
     camera.liveQuality = quality
     camera.onStreamStopped = { [weak self] byUser in self?.streamStopped(byUser: byUser) }
     camera.onAudioBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
+    camera.onCaptureStarting = { [weak self] in
+      guard let self else { return }
+      self.pauseWakeDetector()
+      if self.wakeWordEnabled && !self.wakeSession {
+        self.wakeState = .blocked("Paused while the glasses session is on.")
+      }
+    }
+    camera.onCaptureSessionEnded = { [weak self] in self?.refreshWake() }
     wakeListener.onWake = { [weak self] command in self?.wakeHeard(command) }
     startLensPump()
     refreshWake()
@@ -493,6 +581,9 @@ final class LiveModel {
 
   /// The user's Disconnect: stops listening, then closes and deletes the session.
   func disconnect() async {
+    webDisplay.updateSession(id: nil, epoch: nil)
+    webDisplayRequestId = nil
+    await endWakeSession()
     stopListening()
     await streamer?.waitUntilSent()
     coordinator?.stop()
@@ -508,6 +599,28 @@ final class LiveModel {
 
   /// Starts the glasses stream with mic audio (when needed) and streams audio to the backend.
   func startListening() async {
+    await endWakeSession()
+    await startListening(wakeID: nil)
+  }
+
+  /// Serializes manual camera controls after any cancelled wake startup and its cleanup.
+  /// This prevents an old wake task from stopping a stream the user starts afterwards.
+  func performManualCapture(_ operation: @MainActor () async -> Void) async {
+    await endWakeSession()
+    manualCaptureStarting = true
+    pauseWakeDetector()
+    defer {
+      manualCaptureStarting = false
+      refreshWake()
+    }
+    await operation()
+  }
+
+  private func startListening(wakeID: UUID?) async {
+    func current() -> Bool {
+      !Task.isCancelled && (wakeID == nil || wakeSessionID == wakeID)
+    }
+    guard current() else { return }
     guard isConnected, let streamer else {
       notice = "Connect to the backend first."
       return
@@ -531,11 +644,12 @@ final class LiveModel {
       notice = (error as? LiveStreamError)?.message ?? "The glasses stream didn't start."
       return
     }
+    guard current() else { return }
     guard await ensureSessionActive() else {
       notice = "The backend session is paused. Disconnect and connect again."
       return
     }
-    guard isConnected, self.streamer === streamer else { return }
+    guard current(), isConnected, self.streamer === streamer else { return }
     streamer.start()
     syncListening()
     startTicker()
@@ -557,23 +671,38 @@ final class LiveModel {
   /// The app's "Check this" button: photo from the running stream, OCR on the phone, text to
   /// the checker.
   func checkThis() async {
+    if let cleanup = wakeCleanupTask { await cleanup.value }
     guard isConnected, let coordinator else {
       checkMessage = "Connect to the backend first."
       return
     }
     guard !coordinator.isRunning else { return }
+    // A photo requested while idle owns a bounded wake session too. Track the full capture
+    // task so disabling wake cannot finish cleanup before a delayed photo startup returns.
+    if wakeWordEnabled, !wakeSession, !camera.isStreaming {
+      beginWakeSession()
+      let wakeID = wakeSessionID
+      wakeStartTask = Task {
+        await self.checkThis(wakeID: wakeID)
+        self.wakeStartTask = nil
+        guard !Task.isCancelled, self.wakeSessionID == wakeID else { return }
+        self.startWakeTimer(after: self.wakeCheckWindow)
+      }
+    } else {
+      await checkThis(wakeID: nil)
+    }
+  }
+
+  private func checkThis(wakeID: UUID?) async {
+    guard !Task.isCancelled, wakeID == nil || wakeSessionID == wakeID,
+      isConnected, let coordinator, !coordinator.isRunning else { return }
     checkMessage = nil
     guard await ensureSessionActive() else {
       checkMessage = "The backend session is paused. Disconnect and connect again."
       return
     }
-    // Tapped while waiting for the wake phrase: the photo needs the stream, so this counts as a
-    // short wake session and the stream is stopped again once the check is done.
-    if wakeWordEnabled, !wakeSession, !camera.isStreaming {
-      beginWakeSession()
-      startWakeTimer(after: wakeCheckWindow)
-    }
-    coordinator.trigger(.button)
+    guard !Task.isCancelled, wakeID == nil || wakeSessionID == wakeID else { return }
+    await coordinator.performCheck(source: .button)
   }
 
   // MARK: Output controls
@@ -583,7 +712,21 @@ final class LiveModel {
   }
 
   func dismissCard() {
-    presenter.dismissCard()
+    guard displayOutputMode == .web, let requestId = webDisplayRequestId, let backend else {
+      presenter.dismissCard()
+      return
+    }
+    Task { [weak self] in
+      do {
+        try await backend.cancel(requestId: requestId)
+        // A newer claim may have arrived while the cancellation was in flight.
+        guard let self, self.webDisplayRequestId == requestId else { return }
+        self.webDisplayRequestId = nil
+        self.presenter.dismissCard()
+      } catch {
+        self?.notice = "Couldn't dismiss the glasses card. Check the backend connection."
+      }
+    }
   }
 
   /// Opening a history entry shows its card again, without speech.
@@ -629,6 +772,8 @@ final class LiveModel {
 
   /// Drops the current backend after a config change.
   private func tearDown() async {
+    webDisplay.updateSession(id: nil, epoch: nil)
+    webDisplayRequestId = nil
     stopListening()
     coordinator?.stop()
     cancelCheckTimers()
@@ -644,6 +789,10 @@ final class LiveModel {
   }
 
   private func handle(_ state: ChannelConnectionState) {
+    if state != .connected {
+      webDisplay.updateSession(id: nil, epoch: nil)
+      webDisplayRequestId = nil
+    }
     connection = state
     refreshWake()
     if case .disconnected(let reason) = state, Self.renewableEndReasons.contains(reason) {
@@ -655,6 +804,8 @@ final class LiveModel {
   private func handle(_ event: ServerEvent) {
     switch event.payload {
     case .sessionReady(let payload):
+      webDisplayRequestId = nil
+      webDisplay.updateSession(id: event.sessionId, epoch: event.sessionEpoch)
       sessionActive = payload.active
       speechAvailable = payload.audio
       // Every session starts with the server's defaults (automatic alerts off), so the
@@ -666,12 +817,21 @@ final class LiveModel {
         resume(epoch: event.sessionEpoch)
       }
     case .sessionEnded(let payload):
+      webDisplayRequestId = nil
+      webDisplay.updateSession(id: nil, epoch: nil)
       sessionActive = false
       if Self.renewableEndReasons.contains(payload.reasonCode) {
         if streamer?.phase.isActive ?? false { listenAfterRenewal = true }
         notice = "The backend ended the session (\(payload.reasonCode)). Opening a new one…"
       }
+    case .claimChecking(let payload):
+      if payload.userInitiated == true { webDisplayRequestId = event.requestId }
     case .claimResult(let result):
+      if result.presentation.action == .respond || result.presentation.action == .notify {
+        webDisplayRequestId = event.requestId
+      } else if event.requestId == webDisplayRequestId {
+        webDisplayRequestId = nil
+      }
       let manual = isUserInitiated(event.requestId)
       guard let identity = ClaimIdentity(event: event) else {
         // claim.result always carries all three ids; without them it can't be tracked. A
@@ -683,6 +843,7 @@ final class LiveModel {
       resolveManual(event.requestId, hadResult: true)
       presenter.present(result, presentation: result.presentation, userInitiated: manual, identity: identity)
     case .claimNeedsConfirmation, .claimSkipped:
+      if event.requestId == webDisplayRequestId { webDisplayRequestId = nil }
       // An explicit request always gets an answer; automatic ones stay quiet (skips) or in
       // history (needs confirmation).
       if isUserInitiated(event.requestId) {
@@ -691,6 +852,7 @@ final class LiveModel {
         presenter.presentOutcome(.needsConfirmation(heard: true), userInitiated: false)
       }
     case .pipelineError(let payload):
+      if event.requestId == webDisplayRequestId { webDisplayRequestId = nil }
       if let requestId = event.requestId {
         if isUserInitiated(requestId) {
           resolveManual(requestId, failed: true)
@@ -703,6 +865,7 @@ final class LiveModel {
         notice = "Backend error: \(payload.reasonCode)"
       }
     case .claimSuperseded(let payload):
+      if event.requestId == webDisplayRequestId { webDisplayRequestId = nil }
       resolveCheck(event.requestId)
       if let requestId = event.requestId {
         // "That statement was corrected" only while listening: never after the user's Stop.
@@ -710,6 +873,10 @@ final class LiveModel {
         presenter.supersede(requestId: requestId, revision: event.revision, announce: announce)
       }
     case .checkCancelled:
+      if event.requestId == webDisplayRequestId {
+        webDisplayRequestId = nil
+        if displayOutputMode == .web { presenter.dismissCard() }
+      }
       if isUserInitiated(event.requestId) { resolveManual(event.requestId, cancelled: true) }
     case .captureRequest:
       // LookAndCheckCoordinator takes the photo itself; this is only the phone-side note.
@@ -986,7 +1153,9 @@ final class LiveModel {
     let blocked: String? =
       if !isConnected { "Connect to the backend to arm it." }
       else if listening.isActive || isStartingStream { "Paused while listening." }
+      else if wakeStartTask != nil || wakeCleanupTask != nil || manualCaptureStarting { "Waiting for the glasses session to finish." }
       else if camera.isStreaming { "Paused while the glasses stream is on. Stop the stream to arm it." }
+      else if camera.hasSession { "Paused while the glasses session is on." }
       else { nil }
     if let blocked {
       pauseWakeDetector()
@@ -1007,6 +1176,8 @@ final class LiveModel {
     Task {
       do {
         try await self.wake.start()
+      } catch is CancellationError {
+        // A capture or setting change superseded the microphone permission request.
       } catch {
         self.wakeFailure = (error as? WakeWordError)?.message ?? "The wake phrase detector didn't start."
         self.log.error("wake detector failed to start")
@@ -1019,7 +1190,7 @@ final class LiveModel {
 
   /// Stops the detector and gives the audio session back to spoken output.
   private func pauseWakeDetector() {
-    guard wake.isRunning else { return }
+    guard wake.isRunning || wakeStarting else { return }
     wake.stop()
     configureAudioSession()
   }
@@ -1027,6 +1198,7 @@ final class LiveModel {
   private func beginWakeSession() {
     pauseWakeDetector()
     wakeSession = true
+    wakeSessionID = UUID()
     wakeStartedStream = !camera.isStreaming
     wakeState = .awake
   }
@@ -1034,21 +1206,31 @@ final class LiveModel {
   /// The detector heard the phrase. "Hey Facto" starts listening for a bounded window;
   /// "Hey Facto, check this" takes a photo and checks it, like the Check this button.
   private func wakeHeard(_ command: WakeCommand) {
-    guard wakeWordEnabled, !wakeSession, isConnected else { return }
+    guard wakeWordEnabled, !wakeSession, wakeStartTask == nil, wakeCleanupTask == nil,
+      !manualCaptureStarting, !camera.hasSession, !camera.isStreaming, isConnected else { return }
     // A chime is not playback, so it is not reported to the backend.
     if !isMuted { chime.playChime() }
     if command == .checkThis {
       log.info("wake phrase: check this")
       // checkThis() releases the detector's microphone, starts the short wake session and
       // stops the stream again once the check is done.
-      Task { await self.checkThis() }
+      beginWakeSession()
+      let wakeID = wakeSessionID
+      wakeStartTask = Task {
+        await self.checkThis(wakeID: wakeID)
+        self.wakeStartTask = nil
+        guard !Task.isCancelled, self.wakeSessionID == wakeID else { return }
+        self.startWakeTimer(after: self.wakeCheckWindow)
+      }
       return
     }
     log.info("wake phrase: starting to listen")
     beginWakeSession()
-    Task {
-      await self.startListening()
-      guard self.wakeSession else { return }
+    let wakeID = wakeSessionID
+    wakeStartTask = Task {
+      await self.startListening(wakeID: wakeID)
+      self.wakeStartTask = nil
+      guard !Task.isCancelled, self.wakeSessionID == wakeID else { return }
       if self.streamer?.phase.isActive ?? false {
         self.startWakeTimer(after: self.wakeWindow)
       } else {
@@ -1077,24 +1259,39 @@ final class LiveModel {
   /// Ends a wake session: stops listening and the stream it started, then waits for the phrase
   /// again (if the option is still on).
   private func endWakeSession() async {
+    if let cleanup = wakeCleanupTask {
+      await cleanup.value
+      return
+    }
     guard wakeSession else {
       refreshWake()
       return
     }
     wakeSession = false
+    wakeSessionID = nil
     wakeTimer?.cancel()
     wakeTimer = nil
+    let startup = wakeStartTask
+    startup?.cancel()
+    let ownsStream = wakeStartedStream
+    wakeStartedStream = false
     if let streamer, streamer.phase.isActive {
       streamer.stop()
       presenter.stopOutput()
       syncListening()
     }
-    let stopStream = wakeStartedStream && camera.isStreaming
-    wakeStartedStream = false
-    if stopStream {
-      log.info("wake session over: stopping the stream")
-      await camera.stopLiveStream()
+    // DAT startup may ignore task cancellation while a permission sheet or device session
+    // is pending. Keep ownership until it returns, then end even a partially started session.
+    let cleanup = Task {
+      await startup?.value
+      if ownsStream {
+        self.log.info("wake session over: stopping the stream")
+        await self.camera.stopLiveStream()
+      }
     }
+    wakeCleanupTask = cleanup
+    await cleanup.value
+    wakeCleanupTask = nil
     refreshWake()
   }
 
@@ -1120,9 +1317,9 @@ final class LiveModel {
     let onDismiss: @Sendable () -> Void = { [weak self] in
       Task { @MainActor in self?.dismissCard() }
     }
-    lensPump = Task {
+    lensPump = Task { [weak self] in
       for await card in updates {
-        guard let display, display.isConnected else { continue }
+        guard self?.displayOutputMode == .native, let display, display.isConnected else { continue }
         await display.showCard(card, onRepeat: card == nil ? nil : onRepeat, onDismiss: card == nil ? nil : onDismiss)
       }
     }
