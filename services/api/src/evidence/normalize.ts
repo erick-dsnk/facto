@@ -82,7 +82,7 @@ function comparePassageScores(a: ReturnType<typeof passageScore>, b: ReturnType<
 }
 
 /** Whether a result is promising enough to spend one bounded page-text request on. */
-export function needsPageText(page: RetrievedPage, claim: string): boolean {
+export function needsPageText(page: RetrievedPage, claim: string, enrichContentBasis = false): boolean {
   const highlights = (page.highlights ?? []).filter(text => text.trim().length > 0);
   const titleScore = relevance(page.title ?? '', subjectTerms(claim));
   if (!highlights.length) return titleScore > 0;
@@ -90,6 +90,9 @@ export function needsPageText(page: RetrievedPage, claim: string): boolean {
   // Do not spend the three-page allowance on pages whose highlights do not even
   // overlap the checked proposition. They remain unjudged and cannot support it.
   if (best.score.subject === 0) return titleScore > 0 || highlights.some(text => codePoints(text).length < 80);
+  // A policy-approved second pass can need the underlying basis even when the
+  // highlight already repeats every claim token. This does not change normal retrieval.
+  if (enrichContentBasis) return true;
   if (codePoints(best.text).length < 80) return true;
   // Evaluate critical details only in the best subject-matching highlight. A
   // separate unrelated highlight must not make this page look complete.
