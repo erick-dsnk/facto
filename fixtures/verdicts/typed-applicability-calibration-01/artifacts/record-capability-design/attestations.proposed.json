@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "attestations": [
+    {
+      "attestationId": "RA01",
+      "schemaVersion": 1,
+      "status": "proposed_reviewed_corpus_only_not_production_authorization",
+      "issuer": {
+        "id": "ietf-rfc-editor",
+        "name": "IETF/IESG, published and archived by the RFC Editor",
+        "identityAndCompetenceProofRef": "IP01",
+        "additionalIdentityProofRefs": [
+          "XP01"
+        ]
+      },
+      "document": {
+        "canonicalId": "RFC8174",
+        "canonicalUrl": "https://www.rfc-editor.org/rfc/rfc8174.txt",
+        "documentClass": "normative_definition",
+        "version": "May2017; BCP14 update to RFC2119",
+        "versionScope": {
+          "document": "RFC8174",
+          "version": "May2017",
+          "jurisdiction": "IETF documents invoking BCP14",
+          "section": "2 NEW replacement text"
+        }
+      },
+      "capability": {
+        "relationClasses": [
+          "normative_keyword_interpretation"
+        ],
+        "permittedFieldRoles": [
+          "defined_keyword",
+          "capitalization_condition",
+          "interpretation_rule",
+          "exception"
+        ],
+        "ordinaryDocumentRelationOnly": true,
+        "doesNotEstablish": [
+          "general truth outside the documented relation",
+          "empirical efficacy or health/safety benefit",
+          "independent corroboration",
+          "exactly matching the asserted answer"
+        ]
+      },
+      "recordUnits": [
+        {
+          "locator": "section2-new",
+          "extractionStart": 3793,
+          "extractionEnd": 4746,
+          "offsetUnit": "unicode_code_points",
+          "contentSHA256": "8cf4b86442f938c62bfbfc59b503852d793874234abe594a671225ebacd0b60c",
+          "content": "   === NEW ===\n   In many IETF documents, several words, when they are in all capitals\n   as shown below, are used to signify the requirements in the\n   specification.  These capitalized words can bring significant clarity\n   and consistency to documents because their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document."
+        }
+      ],
+      "retrievalProofRef": "RP01",
+      "bodySHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+      "extractionSHA256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+      "extractionMethod": "Exact UTF-8 RFC plain text; whitespace preserved.",
+      "originFamily": "RFC8174",
+      "review": {
+        "method": "independent AI-agent public-source review; further second review pending",
+        "humanApprovalClaimed": false,
+        "candidateImplementationRead": false
+      },
+      "reusePolicy": {
+        "mustMatchTrustedCanonicalBodyOrRecordHash": true,
+        "freshAccessMayNotBeInvented": true,
+        "changedRecordRequiresNewReview": true,
+        "claimScopeMustMatchPinnedVersion": true,
+        "requireExactTrustedCanonicalBodyHash": true,
+        "recordOnlyDigestReusePermitted": false,
+        "changedHTMLMayNotReuseReceiptWithoutNewReview": true
+      },
+      "limitations": [
+        "No conclusion about software implementation compliance."
+      ]
+    },
+    {
+      "attestationId": "RA02",
+      "schemaVersion": 1,
+      "status": "proposed_reviewed_corpus_only_not_production_authorization",
+      "issuer": {
+        "id": "canada-minister-justice",
+        "name": "Minister of Justice / Department of Justice Canada",
+        "identityAndCompetenceProofRef": "IP02",
+        "additionalIdentityProofRefs": [
+          "XP02"
+        ]
+      },
+      "document": {
+        "canonicalId": "CA-RSC1985-H5",
+        "canonicalUrl": "https://laws-lois.justice.gc.ca/eng/acts/H-5/FullText.html",
+        "documentClass": "operative_legal_text",
+        "version": "consolidation-current-to-2026-10-19; last-amended-2018-03-01",
+        "versionScope": {
+          "document": "CA-RSC1985-H5",
+          "version": "consolidation-current-to-2026-10-19",
+          "jurisdiction": "Canada",
+          "section": "2"
+        }
+      },
+      "capability": {
+        "relationClasses": [
+          "statutory_holiday_rule"
+        ],
+        "permittedFieldRoles": [
+          "holiday",
+          "day_condition",
+          "exception",
+          "jurisdiction"
+        ],
+        "ordinaryDocumentRelationOnly": true,
+        "doesNotEstablish": [
+          "general truth outside the documented relation",
+          "empirical efficacy or health/safety benefit",
+          "independent corroboration",
+          "exactly matching the asserted answer"
+        ]
+      },
+      "recordUnits": [
+        {
+          "locator": "section2",
+          "extractionStart": 1167,
+          "extractionEnd": 1551,
+          "offsetUnit": "unicode_code_points",
+          "contentSHA256": "793b9981dfdd54d7a537de616f25cfce930d7f8f3079d211b7b8e7530b58a079",
+          "content": "Canada Day Marginal note: Canada Day 2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". Marginal note: When July 1 is a Sunday (2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day \". R.S., c. H-7, s. 2"
+        }
+      ],
+      "retrievalProofRef": "RP02",
+      "bodySHA256": "a05ae0d874c0bed1278e4f7237b13c0c16db57404391ee54094cc1bb8def167f",
+      "extractionSHA256": "c8ddfbd45b5ed9f4337d6a5c0d3b1c042832789592ac43fa10000b9a55a119d0",
+      "extractionMethod": "Whitespace-normalized visible HTML using stored HTMLParser capture; no model rewriting.",
+      "originFamily": "CA-RSC1985-H5",
+      "review": {
+        "method": "independent AI-agent public-source review; further second review pending",
+        "humanApprovalClaimed": false,
+        "candidateImplementationRead": false
+      },
+      "reusePolicy": {
+        "mustMatchTrustedCanonicalBodyOrRecordHash": true,
+        "freshAccessMayNotBeInvented": true,
+        "changedRecordRequiresNewReview": true,
+        "claimScopeMustMatchPinnedVersion": true,
+        "requireExactTrustedCanonicalBodyHash": true,
+        "recordOnlyDigestReusePermitted": false,
+        "changedHTMLMayNotReuseReceiptWithoutNewReview": true
+      },
+      "limitations": [
+        "Consolidated text is evidence; original enactments/amendments prevail on inconsistency; no legal-application advice or claim about later unobserved changes."
+      ]
+    },
+    {
+      "attestationId": "RA03",
+      "schemaVersion": 1,
+      "status": "proposed_reviewed_corpus_only_not_production_authorization",
+      "issuer": {
+        "id": "pulitzer-prize-board-columbia",
+        "name": "Pulitzer Prize Board, administered at Columbia University",
+        "identityAndCompetenceProofRef": "IP03",
+        "additionalIdentityProofRefs": [],
+        "identityLimitations": "Publisher administration/award records identify Pulitzer Board/Columbia; two attempted Columbia URL crosschecks returned404 and are not identity proof. Independent reviewer should flag any residual identity-assurance limitation."
+      },
+      "document": {
+        "canonicalId": "Pulitzer-2021-Fiction-winner",
+        "canonicalUrl": "https://www.pulitzer.org/winners/louise-erdrich",
+        "documentClass": "award_register",
+        "version": "2021 award edition; snapshot at recorded access time",
+        "versionScope": {
+          "document": "Pulitzer-2021-Fiction-winner",
+          "version": "2021",
+          "awardCategory": "Fiction"
+        }
+      },
+      "capability": {
+        "relationClasses": [
+          "award_outcome_fields"
+        ],
+        "permittedFieldRoles": [
+          "award_edition",
+          "category",
+          "winning_work",
+          "recipient"
+        ],
+        "ordinaryDocumentRelationOnly": true,
+        "doesNotEstablish": [
+          "general truth outside the documented relation",
+          "empirical efficacy or health/safety benefit",
+          "independent corroboration",
+          "exactly matching the asserted answer"
+        ]
+      },
+      "recordUnits": [
+        {
+          "locator": "2021-Fiction-winning-work",
+          "extractionStart": 724,
+          "extractionEnd": 963,
+          "offsetUnit": "unicode_code_points",
+          "contentSHA256": "463907cae24bef330d298ee50f2c06e65aa6f29e60c4382c1110dbc0f4697ba9",
+          "content": "The 2021 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Night Watchman , by Louise Erdrich (Harper)"
+        }
+      ],
+      "retrievalProofRef": "RP03",
+      "bodySHA256": "364f2adfe7b0f124c9baa8bcaa9370b87fdfe808533c2f29e4933792b0661877",
+      "extractionSHA256": "2fe5fd853ed375bc05efdcd2e8090dc62766df248d3c431ab11b726d54c89ca7",
+      "extractionMethod": "Whitespace-normalized visible HTML using stored HTMLParser capture; no model rewriting.",
+      "originFamily": "Pulitzer-2021-Fiction-winner",
+      "review": {
+        "method": "independent AI-agent public-source review; further second review pending",
+        "humanApprovalClaimed": false,
+        "candidateImplementationRead": false
+      },
+      "reusePolicy": {
+        "mustMatchTrustedCanonicalBodyOrRecordHash": true,
+        "freshAccessMayNotBeInvented": true,
+        "changedRecordRequiresNewReview": true,
+        "claimScopeMustMatchPinnedVersion": true,
+        "requireExactTrustedCanonicalBodyHash": true,
+        "recordOnlyDigestReusePermitted": false,
+        "changedHTMLMayNotReuseReceiptWithoutNewReview": true
+      },
+      "limitations": [
+        "Winning-work record does not prove book merit, sales, publication date or reader effects."
+      ]
+    },
+    {
+      "attestationId": "RA04",
+      "schemaVersion": 1,
+      "status": "proposed_reviewed_corpus_only_not_production_authorization",
+      "issuer": {
+        "id": "uk-office-national-statistics",
+        "name": "Office for National Statistics",
+        "identityAndCompetenceProofRef": "IP04",
+        "additionalIdentityProofRefs": [
+          "XP03"
+        ]
+      },
+      "document": {
+        "canonicalId": "ONS-Census2021-EW-population-first-release-20220628",
+        "canonicalUrl": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021",
+        "documentClass": "official_statistical_report",
+        "version": "28June2022 first rounded release; explicitly not latest",
+        "versionScope": {
+          "document": "ONS-Census2021-EW-population-first-release-20220628",
+          "version": "2022-06-28 rounded first release",
+          "geography": "England and Wales",
+          "referenceDate": "2021-03-21",
+          "population": "usual residents",
+          "measure": "population estimate",
+          "precision": "early rounded estimate"
+        }
+      },
+      "capability": {
+        "relationClasses": [
+          "reported_population_estimate"
+        ],
+        "permittedFieldRoles": [
+          "measure",
+          "geography",
+          "reference_date",
+          "population",
+          "estimate",
+          "rounding_release"
+        ],
+        "ordinaryDocumentRelationOnly": true,
+        "doesNotEstablish": [
+          "general truth outside the documented relation",
+          "empirical efficacy or health/safety benefit",
+          "independent corroboration",
+          "exactly matching the asserted answer"
+        ]
+      },
+      "recordUnits": [
+        {
+          "locator": "main-points-first-rounded-release",
+          "extractionStart": 1952,
+          "extractionEnd": 3067,
+          "offsetUnit": "unicode_code_points",
+          "contentSHA256": "29826b0a9e0a4421db8924cb8a7822a821e0d463432fe766f5ac86bfbca38810",
+          "content": "Population and household estimates, England and Wales: Census 2021 Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. This is not the latest release. View latest release Contact: Email Michael Roskams Release date: 28 June 2022 Next release: To be announced Table of contents Main points Population growth of England and Wales between 2011 and 2021 Population sizes and changes for regions and local authorities Age and sex of the population Population and land area Number of households Future publications Population and household estimates, England and Wales: data Glossary Measuring the data Strengths and limitations Related links Print this Statistical bulletin Download as PDF View all data used in this Statistical bulletin 1. Main points This page is also available in Welsh (Cymraeg). On Census Day, 21 March 2021, the size of the usual resident population in England and Wales was 59,597,300 (56,489,800 in England and 3,107,500 in Wales); this was the largest population ever recorded through a census in England and Wales."
+        }
+      ],
+      "retrievalProofRef": "RP04",
+      "bodySHA256": "f4e134377b6b46147023b5bf7bf57e3f9cc746238ad6891b4e7a47fbc98aea1c",
+      "extractionSHA256": "9c4d4fbbbaa610ceea7f700121035ab30dde35e11d8e177577706b90af8a7c0a",
+      "extractionMethod": "Whitespace-normalized visible HTML using stored HTMLParser capture; no model rewriting.",
+      "originFamily": "ONS-Census2021-EW-population-first-release-20220628",
+      "review": {
+        "method": "independent AI-agent public-source review; further second review pending",
+        "humanApprovalClaimed": false,
+        "candidateImplementationRead": false
+      },
+      "reusePolicy": {
+        "mustMatchTrustedCanonicalBodyOrRecordHash": true,
+        "freshAccessMayNotBeInvented": true,
+        "changedRecordRequiresNewReview": true,
+        "claimScopeMustMatchPinnedVersion": true,
+        "requireExactTrustedCanonicalBodyHash": true,
+        "recordOnlyDigestReusePermitted": false,
+        "changedHTMLMayNotReuseReceiptWithoutNewReview": true
+      },
+      "limitations": [
+        "Explicitly an old rounded census release, estimates not exact counts; not UK-wide population and not a current/latest estimate."
+      ]
+    }
+  ],
+  "noStoredVerdicts": true,
+  "noHostWideCapabilities": true,
+  "productionAuthorized": false
+}

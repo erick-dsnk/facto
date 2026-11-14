@@ -1,0 +1,52 @@
+{
+  "kind": "open_development_batch_plan",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "manifestSHA256": "708232974c3357053c129c93443ddca9c81d0ce9e7580b7cafc90cba19a0e39f",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "cases": [
+    {
+      "label": "BD10",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BD11",
+      "allowedPublic": [
+        "Wilhelm Conrad Röntgen received the first Nobel Prize in Physics in 1901."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BD12",
+      "allowedPublic": [
+        "The Great Barrier Reef lies off the west coast of Australia."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BDC04",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true
+    }
+  ]
+}

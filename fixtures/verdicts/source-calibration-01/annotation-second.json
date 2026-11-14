@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "role": "independent_second_annotation",
+  "annotator": "final_stack_review",
+  "createdAt": "2026-11-14T04:12:24.833964+00:00",
+  "inputPath": "/workspace/task-evidence/source-calibration/units.unlabeled.json",
+  "inputSHA256": "126f19f9ed9c31800ab1a691d7af0cb0c6f12176779e92d377467843281e9905",
+  "rubricSHA256": "56a0de7fe53b98a1d9ecc58db6df9f48cf77098ea600064bcb7296173368b6cd",
+  "firstLabelsViewed": false,
+  "providerOutputsViewed": false,
+  "keyedCalls": 0,
+  "method": "Retained proposition and excerpt with untrusted identification metadata only; no origin URLs opened or research truth adjudicated. Manual independent reasoning; transformations were disclosed in the supplied unlabeled packet.",
+  "annotations": [
+    {
+      "id": "Q01",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "low-latency searches for generic gravitational-wave transients",
+      "rationale": "Names detectors, signal, timing, acquisition and analysis methods; identifiable research observations.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q02",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "reported within three minutes of data acquisition",
+      "rationale": "Research passage specifies acquisition/reporting procedure and subsequent analyses.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q03",
+      "label": "non_substantive",
+      "subtype": "isolated_assertion_in_promotion",
+      "supportingSubstring": "Our premium service is the most trustworthy",
+      "rationale": "Promotion repeats the event assertion without research observations, a source record or explanatory account.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q04",
+      "label": "non_substantive",
+      "subtype": "mere_attribution",
+      "supportingSubstring": "A visitor commenting on the exhibition said",
+      "rationale": "Only reports a visitor statement; no basis for the underlying event proposition.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q05",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "integrated luminosities of approximately 4.8 fb-1",
+      "rationale": "Specific experiment, data-collection periods, energies, analysis channels and observation statistics.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q06",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "significance of 5.9 standard deviations",
+      "rationale": "Actual research account states the measured observation, statistical significance and methods.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q07",
+      "label": "substantive",
+      "subtype": "minimal_attributed_research_method",
+      "supportingSubstring": "2012 ATLAS Higgs search used about 4.8 inverse femtobarns",
+      "rationale": "Boundary: the single retained sentence itself identifies a particular experiment, acquired data quantity, energy and collection year. It is an attributable research-method statement; length or synthetic provenance alone cannot remove those details.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q08",
+      "label": "insufficient",
+      "subtype": "title_only",
+      "supportingSubstring": "Observation of a new particle",
+      "rationale": "Only title; no retained dataset or methodological statement.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q09",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "Our model achieves 28.4 BLEU",
+      "rationale": "Research passage states task, architecture, measured result, comparator and other experiments.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q10",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "dispensing with recurrence and convolutions entirely",
+      "rationale": "Identifiable architecture/method account bears directly on the proposition even though it contradicts it.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q11",
+      "label": "substantive",
+      "subtype": "minimal_named_research_finding_in_promotion",
+      "supportingSubstring": "Transformer paper reports 28.4 BLEU on WMT 2014 English-to-German translation",
+      "rationale": "Boundary: promotional surroundings do not erase an identifiable named-paper finding with its benchmark and measurement. This is a limited content-basis positive, not verification of the paper attribution or advertised guide.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q12",
+      "label": "non_substantive",
+      "subtype": "mere_attribution",
+      "supportingSubstring": "A visitor commenting on the exhibition said",
+      "rationale": "Visitor quotation supplies no independent account of the cited paper findings.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q13",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "evaluation of networks of increasing depth",
+      "rationale": "Original research account explains architecture, depth intervention and challenge outcomes.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q14",
+      "label": "substantive",
+      "subtype": "attributable_research",
+      "supportingSubstring": "first and the second places in the localisation and classification tracks respectively",
+      "rationale": "Research account gives specific comparative outcomes; opposite mapping in proposition does not change content basis.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q15",
+      "label": "substantive",
+      "subtype": "minimal_attributed_research_method",
+      "supportingSubstring": "VGG study evaluated convolutional networks with 16 to 19 weight layers",
+      "rationale": "Boundary: names a study and its concrete evaluated architecture/depth range. The rubric says attributable methods qualify; study identity is abbreviated and no result/comparator is retained, so adjudicate before binary use.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q16",
+      "label": "insufficient",
+      "subtype": "title_only",
+      "supportingSubstring": "Very Deep Convolutional Networks",
+      "rationale": "Title alone supplies no retained depth evaluation.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q17",
+      "label": "substantive",
+      "subtype": "formal_record_transcription",
+      "supportingSubstring": "transcription of the Stone Engraving",
+      "rationale": "Specifies the transcribed artifact and reproduces the heading plus substantive adjacent text.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q18",
+      "label": "substantive",
+      "subtype": "formal_record_transcription",
+      "supportingSubstring": "The unanimous Declaration of the thirteen united States of America",
+      "rationale": "Exact document transcription supports assessment of document wording.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q19",
+      "label": "substantive",
+      "subtype": "minimal_named_formal_record_description",
+      "supportingSubstring": "transcribed Declaration of Independence is headed In Congress, July 4, 1776",
+      "rationale": "Boundary: explicitly identifies a formal text and reports its precise heading. Under the rubric a named formal text can establish its recorded wording; promotion does not automatically negate this content, although authenticity is unverified.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q20",
+      "label": "non_substantive",
+      "subtype": "mere_attribution",
+      "supportingSubstring": "A visitor commenting on the exhibition said",
+      "rationale": "Visitor comment asserts the document heading without reproducing or describing a checked document record independently.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q21",
+      "label": "substantive",
+      "subtype": "maintained_descriptive_record",
+      "supportingSubstring": "Prize share: 1/4",
+      "rationale": "Structured named award record gives year, category, motivation and share.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q22",
+      "label": "substantive",
+      "subtype": "maintained_descriptive_record",
+      "supportingSubstring": "Also awarded: Nobel Prize in Chemistry 1911",
+      "rationale": "Structured prize record lists the additional award directly.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q23",
+      "label": "non_substantive",
+      "subtype": "isolated_award_assertion",
+      "supportingSubstring": "Marie Curie received a one-quarter share",
+      "rationale": "Only repeats a biographical award assertion, without the maintained record structure or an identified record/account. Borderline concise-reference case.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q24",
+      "label": "insufficient",
+      "subtype": "title_only",
+      "supportingSubstring": "Marie Curie – Facts",
+      "rationale": "Only a title and publisher label.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q25",
+      "label": "substantive",
+      "subtype": "dated_announcement_record",
+      "supportingSubstring": "PRESS RELEASE January 9, 2007",
+      "rationale": "Dated release records the announcement itself; promotional adjectives do not prevent evidence that the announcement occurred.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q26",
+      "label": "substantive",
+      "subtype": "announcement_text_record",
+      "supportingSubstring": "large multi-touch display",
+      "rationale": "The proposition concerns what the announcement describes; retained dated release supplies the description. It does not independently prove superiority claims.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q27",
+      "label": "non_substantive",
+      "subtype": "isolated_assertion_in_promotion",
+      "supportingSubstring": "Our premium service is the most trustworthy",
+      "rationale": "Guide advertising repeats an announcement date without retaining the announcement record or contextual account.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q28",
+      "label": "non_substantive",
+      "subtype": "mere_attribution",
+      "supportingSubstring": "A visitor commenting on the exhibition said",
+      "rationale": "Visitor statement is not a retained announcement record.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q29",
+      "label": "substantive",
+      "subtype": "formal_record_transcription",
+      "supportingSubstring": "Congress of the United States, which shall consist of a Senate and House of Representatives",
+      "rationale": "Numbered legal sections provide actual operative text and adjacent requirements.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q30",
+      "label": "substantive",
+      "subtype": "formal_record_transcription",
+      "supportingSubstring": "attained to the age of twenty five years",
+      "rationale": "Retained legal section directly supplies age requirement, even though proposition gives a different age.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q31",
+      "label": "substantive",
+      "subtype": "minimal_named_formal_record_description",
+      "supportingSubstring": "Article I of the US Constitution provides for a Congress",
+      "rationale": "Boundary: names a particular formal legal article and describes its institutional composition. Rubric explicitly permits a named formal record description; no original authority or authenticity conclusion follows.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q32",
+      "label": "insufficient",
+      "subtype": "title_only",
+      "supportingSubstring": "Article I | U.S. Constitution",
+      "rationale": "Only title/citation; operative clause missing.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q33",
+      "label": "substantive",
+      "subtype": "substantive_historical_account",
+      "supportingSubstring": "President Abraham Lincoln issued the Emancipation Proclamation on January 1, 1863",
+      "rationale": "Detailed chronology explains preliminary/final declarations, purpose, jurisdiction and limitations.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q34",
+      "label": "substantive",
+      "subtype": "substantive_historical_account",
+      "supportingSubstring": "leaving slavery untouched in the loyal border states",
+      "rationale": "Historical account specifies geographic limits contrary to the proposition.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q35",
+      "label": "non_substantive",
+      "subtype": "isolated_assertion_in_promotion",
+      "supportingSubstring": "Our premium service is the most trustworthy",
+      "rationale": "Advertising repeats event/date without a historical account or identified underlying record.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q36",
+      "label": "non_substantive",
+      "subtype": "mere_attribution",
+      "supportingSubstring": "A visitor commenting on the exhibition said",
+      "rationale": "Only a visitor belief about the event/date.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q37",
+      "label": "substantive",
+      "subtype": "substantive_historical_account",
+      "supportingSubstring": "852 feet in 59 seconds",
+      "rationale": "Flight sequence, named participants, conditions, camera observation and fourth-flight details provide a substantive account.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q38",
+      "label": "substantive",
+      "subtype": "substantive_historical_account",
+      "supportingSubstring": "The brothers took turns flying three more times that day",
+      "rationale": "Detailed chronological account bears on who piloted the flights, regardless of proposition polarity.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q39",
+      "label": "non_substantive",
+      "subtype": "isolated_event_assertion",
+      "supportingSubstring": "Wilbur Wright flew 852 feet in 59 seconds",
+      "rationale": "Only repeats the target outcome/date with no identified record or wider account. Borderline concise historical-reference case.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q40",
+      "label": "insufficient",
+      "subtype": "title_only",
+      "supportingSubstring": "1903-The First Flight",
+      "rationale": "Title alone omits fourth-flight measurements and pilot account.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q41",
+      "label": "substantive",
+      "subtype": "named_record_historical_account",
+      "supportingSubstring": "1839 entry of the gem collection catalog",
+      "rationale": "Identifies the underlying catalog entry and explains what information it does and does not retain.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q42",
+      "label": "substantive",
+      "subtype": "named_record_historical_account",
+      "supportingSubstring": "catalog does not reveal",
+      "rationale": "Same identified catalog account states its limitations, bearing directly against the price-record proposition.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q43",
+      "label": "substantive",
+      "subtype": "minimal_named_record_description_in_promotion",
+      "supportingSubstring": "1839 gem collection catalog contains a reference to the Hope Diamond",
+      "rationale": "Boundary: identifies a particular catalog/year/entry content. The named-record rule can qualify this limited description despite promotional surroundings; it does not establish record authenticity or actual source independence.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q44",
+      "label": "non_substantive",
+      "subtype": "mere_attribution",
+      "supportingSubstring": "A visitor commenting on the exhibition said",
+      "rationale": "Visitor quote, rather than a record-based account by the passage author, supplies the only assertion.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q45",
+      "label": "substantive",
+      "subtype": "substantive_historical_account",
+      "supportingSubstring": "On Sunday, September 2, 1666",
+      "rationale": "Account supplies chronology, origin location, buildings affected and damage extent.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q46",
+      "label": "substantive",
+      "subtype": "substantive_historical_account",
+      "supportingSubstring": "including most of the civic buildings, old St. Paul’s Cathedral",
+      "rationale": "Substantive damage account supplies specific affected buildings and quantitative context.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    },
+    {
+      "id": "Q47",
+      "label": "non_substantive",
+      "subtype": "isolated_event_assertion",
+      "supportingSubstring": "The Great Fire of London began in September 1666.",
+      "rationale": "Single bare date assertion; no record attribution or explanatory historical account. Borderline concise-reference case.",
+      "ambiguityFlag": true,
+      "eligibleForBinaryGateBeforeAdjudication": false
+    },
+    {
+      "id": "Q48",
+      "label": "insufficient",
+      "subtype": "title_only",
+      "supportingSubstring": "Great Fire of London | Great Plague",
+      "rationale": "Only a title; no event-date passage retained.",
+      "ambiguityFlag": false,
+      "eligibleForBinaryGateBeforeAdjudication": true
+    }
+  ],
+  "reviewNotes": [
+    "Initial packet has systematic matched transforms and repeated passages/propositions. Those are not independent validation cases.",
+    "Six minimal named-study/record descriptions were provisionally content-positive because the rubric explicitly permits attributable methods/findings and descriptions of named formal records. They are flagged for pre-provider adjudication rather than forced into generic-negative labels.",
+    "Three plain concise fact assertions were provisionally negative but flagged because descriptive-reference boundaries need explicit operational rules.",
+    "Do not let promotional surroundings alone turn a retained dated announcement or particular named-record finding into a content-negative; judge the target proposition. Conversely content-positive never means true, authoritative or independent."
+  ]
+}

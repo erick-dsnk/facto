@@ -1,0 +1,18 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { captureSelectionMaterial, inspectMaterial, captureRuntimeOwner, inspectOwnerBinding } from '../capability-selection-seam-01/material.js';
+import { Session, type RequestRecord } from '../../stack-20/services/api/src/runtime/session.js';
+import { AttemptBudget } from '../../stack-20/services/api/src/runtime/budget.js';
+import type { Evidence } from '../../stack-20/packages/contracts/src/index.js';
+import type { AssessedJudgment } from '../../stack-20/services/api/src/policy/assessment.js';
+const claim='The Meridian bridge opened in 1889.';
+const record:Evidence={id:'alpha',url:'https://alpha.org/record',title:'Register',publisher:null,publishedAt:null,retrievedAt:'2026-11-14T10:00:00Z',contentBasis:'highlight',excerpt:'Register M17 records that the Meridian bridge opened in 1889.',sourceGroup:'alpha.org',echoGroup:null,sourceRole:'unknown',directlyAddressesClaim:true,matchesTimePlaceAndPopulation:true,stance:'supports',stanceProbability:.99};
+const judgment=(checkedText:string):AssessedJudgment=>({checkedText,label:'supported',probabilities:{supported:1,contradicted:0,misleading:0,insufficient_evidence:0},evidence:[record],selectedEvidenceIds:['alpha'],misleadingReason:null,sourceAssessments:{alpha:{contentBasis:'original_record',confidence:1}},claimRisk:{level:'ordinary',confidence:1},originAssessments:[]});
+test('prior assessment of another exact claim must not be accepted merely because evidence bytes match',()=>{
+ assert.throws(()=>captureSelectionMaterial({existing:[record],incoming:[],checkedText:claim,priorJudgment:judgment('The Meridian bridge opened to public traffic in 1900.')}));
+});
+test('material for another claim must not become owned by an unrelated current request slot',()=>{
+ const material=captureSelectionMaterial({existing:[record],incoming:[],checkedText:claim,priorJudgment:judgment(claim)});const snapshot=inspectMaterial(material);const now=()=>Date.parse('2026-11-14T10:00:00Z');const session=new Session(now);
+ const request:RequestRecord={input:{schemaVersion:1,sessionId:session.id,sessionEpoch:1,requestId:'other',revision:1,text:'Helsinki is the capital of Finland.',context:[],mode:'typed',language:'en',capturedAt:new Date(now()).toISOString(),capture:{source:'typed_fixture',segmentId:'seg',confidence:1},userInitiated:true},fingerprint:'fixture',budget:new AttemptBudget(),controller:new AbortController(),acceptedAt:now(),acceptedMonotonic:0,state:'running',continuationCount:0,results:new Map()};session.requests.set('other',request);
+ assert.throws(()=>{const owner=captureRuntimeOwner(material,{session,record:request,claimSlot:0,readMaterialGeneration:()=>snapshot.materialGeneration,readInstallGeneration:()=> 'install1'});console.log(JSON.stringify({acceptedOwner:inspectOwnerBinding(owner),materialClaim:snapshot.exactCheckedText,requestText:request.input.text}));});
+});

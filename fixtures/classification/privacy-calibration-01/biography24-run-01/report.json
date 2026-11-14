@@ -1,0 +1,4082 @@
+{
+  "schemaVersion": 1,
+  "planHash": "3be69ebb7626cf4248ad7338e011e071dc29af1ca9c946876d1d8d7b4c600b96",
+  "stopReason": "completed",
+  "completedAllCalls": true,
+  "durationMs": 5608,
+  "totals": {
+    "consumedJev": 48,
+    "actualStartedJev": 48,
+    "actualStartedExa": 0,
+    "requestBytes": 463846,
+    "responseBytes": 57686,
+    "measuredInputTokens": 114314,
+    "usageKnownCalls": 48,
+    "usageUnknownCalls": 0
+  },
+  "cost": {
+    "exaUsd": 0,
+    "jevUsd": null,
+    "reason": "Output tokens and Jev pricing unavailable; no invented total cost."
+  },
+  "metrics": {
+    "open_development": {
+      "baseline": {
+        "planned": 24,
+        "observed": 24,
+        "missingOrFailed": 0,
+        "publicUnits": 14,
+        "publicExactAdmissions": 2,
+        "privateUnits": 12,
+        "privateLeakUnits": 0,
+        "exactAll": 12,
+        "decisions": [
+          {
+            "id": "P22",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.89
+          },
+          {
+            "id": "P15",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.97
+          },
+          {
+            "id": "P10",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.07
+          },
+          {
+            "id": "P02",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.31
+          },
+          {
+            "id": "P11",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.08
+          },
+          {
+            "id": "P06",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.1
+          },
+          {
+            "id": "P14",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.95
+          },
+          {
+            "id": "P09",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.3
+          },
+          {
+            "id": "P12",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.29
+          },
+          {
+            "id": "P21",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.92
+          },
+          {
+            "id": "P24",
+            "expectedPrivate": true,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.94
+          },
+          {
+            "id": "P07",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.38
+          },
+          {
+            "id": "P04",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "needs_confirmation",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.05
+          },
+          {
+            "id": "P13",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P23",
+            "expectedPrivate": true,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.97
+          },
+          {
+            "id": "P01",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.42
+          },
+          {
+            "id": "P20",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P05",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.1
+          },
+          {
+            "id": "P17",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.93
+          },
+          {
+            "id": "P16",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P19",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.96
+          },
+          {
+            "id": "P18",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.97
+          },
+          {
+            "id": "P08",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.35
+          },
+          {
+            "id": "P03",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.16
+          }
+        ]
+      },
+      "candidate": {
+        "planned": 24,
+        "observed": 24,
+        "missingOrFailed": 0,
+        "publicUnits": 14,
+        "publicExactAdmissions": 12,
+        "privateUnits": 12,
+        "privateLeakUnits": 0,
+        "exactAll": 22,
+        "decisions": [
+          {
+            "id": "P22",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.93
+          },
+          {
+            "id": "P15",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P10",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.01
+          },
+          {
+            "id": "P02",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P11",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P06",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.01
+          },
+          {
+            "id": "P14",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.96
+          },
+          {
+            "id": "P09",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P12",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P21",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.86
+          },
+          {
+            "id": "P24",
+            "expectedPrivate": true,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.96
+          },
+          {
+            "id": "P07",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P04",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "needs_confirmation",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P13",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P23",
+            "expectedPrivate": true,
+            "expectedPublicCount": 1,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": false,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P01",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.06
+          },
+          {
+            "id": "P20",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.99
+          },
+          {
+            "id": "P05",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.05
+          },
+          {
+            "id": "P17",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.97
+          },
+          {
+            "id": "P16",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.98
+          },
+          {
+            "id": "P19",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.97
+          },
+          {
+            "id": "P18",
+            "expectedPrivate": true,
+            "expectedPublicCount": 0,
+            "action": "skip",
+            "admittedCount": 0,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.95
+          },
+          {
+            "id": "P08",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          },
+          {
+            "id": "P03",
+            "expectedPrivate": false,
+            "expectedPublicCount": 1,
+            "action": "check",
+            "admittedCount": 1,
+            "exact": true,
+            "privateLeak": false,
+            "wholePrivacyScore": 0.02
+          }
+        ]
+      }
+    }
+  },
+  "observations": [
+    {
+      "unitId": "P22",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.49,
+            "personal_experience": 0.29,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.22,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.89
+        },
+        "span_0_private_data": {
+          "noul": 0.89
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.96,
+            "nonliteral_or_quoted": 0.03,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.2
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.61,
+            "multiple_propositions": 0.38,
+            "unclear": 0.01
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P22",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.49,
+            "personal_experience": 0.32,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.19,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.87
+        },
+        "span_0_private_data": {
+          "noul": 0.93
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.95,
+            "nonliteral_or_quoted": 0.03,
+            "unclear": 0.02
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.15
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.6,
+            "multiple_propositions": 0.39,
+            "unclear": 0.01
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P15",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.91,
+            "personal_experience": 0.07,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.01,
+            "incomplete_or_unclear": 0.01
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.78
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.98,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.85
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.94,
+            "multiple_propositions": 0.06,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P15",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.92,
+            "personal_experience": 0.07,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.01
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.81
+        },
+        "span_0_private_data": {
+          "noul": 0.97
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.98,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.83
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.95,
+            "multiple_propositions": 0.05,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P10",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P10-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 71
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.15,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.07
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.15
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P10",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P10-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 71
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.14,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.98
+        },
+        "span_0_private_data": {
+          "noul": 0.01
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.14
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P02",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P02-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 60
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.14,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.14
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P02",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.31
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.14
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P11",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P11-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 68
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.12,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.08
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.12
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P11",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P11-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 68
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.14,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.14
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P06",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P06-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 50
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.09,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.01
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.09
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P06",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.1
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.07
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P14",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.92,
+            "personal_experience": 0.05,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.03,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.95
+        },
+        "span_0_private_data": {
+          "noul": 0.95
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.81
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0.26,
+            "multiple_propositions": 0.74,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P14",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.95,
+            "personal_experience": 0.04,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.01,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.95
+        },
+        "span_0_private_data": {
+          "noul": 0.96
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.8
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0.33,
+            "multiple_propositions": 0.67,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P09",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P09-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 59
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.12,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.12
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P09",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.3
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.13
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P12",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.98
+        },
+        "span_0_private_data": {
+          "noul": 0.29
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.18
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.94,
+            "multiple_propositions": 0.06,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P12",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P12-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 83
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.19,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.19
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.96,
+            "multiple_propositions": 0.04,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P21",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "personal_experience",
+          "probabilities": {
+            "public_fact": 0.03,
+            "personal_experience": 0.97,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.86
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.18
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.95,
+            "multiple_propositions": 0.05,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P21",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "personal_experience",
+          "probabilities": {
+            "public_fact": 0.02,
+            "personal_experience": 0.98,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.92
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.17
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.95,
+            "multiple_propositions": 0.05,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P24",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.52,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.48,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.76
+        },
+        "span_0_private_data": {
+          "noul": 0.94
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.66
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0,
+            "multiple_propositions": 1,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.94,
+            "personal_experience": 0.01,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.02,
+            "incomplete_or_unclear": 0.03
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.72
+        },
+        "span_1_private_data": {
+          "noul": 0.94
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.77
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.97
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.93,
+            "multiple_propositions": 0.07,
+            "unclear": 0
+          }
+        },
+        "span_2_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.99,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.01
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.94
+        },
+        "span_2_private_data": {
+          "noul": 0.54
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.26
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.97
+        },
+        "span_2_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.7,
+            "multiple_propositions": 0.29,
+            "unclear": 0.01
+          }
+        },
+        "span_3_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.19,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.81
+          }
+        },
+        "span_3_self_contained": {
+          "noul": 0.32
+        },
+        "span_3_private_data": {
+          "noul": 0.63
+        },
+        "span_3_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.7,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.28
+          }
+        },
+        "span_3_has_practical_consequence": {
+          "noul": 0.25
+        },
+        "span_3_preserves_scope": {
+          "noul": 0.42
+        },
+        "span_3_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.65,
+            "multiple_propositions": 0.12,
+            "unclear": 0.23
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P24",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P24-r1-span_2",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 67,
+              "end": 136
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.28,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.53,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.47,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.76
+        },
+        "span_0_private_data": {
+          "noul": 0.96
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.72
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0,
+            "multiple_propositions": 1,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.92,
+            "personal_experience": 0.02,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.03,
+            "incomplete_or_unclear": 0.03
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.71
+        },
+        "span_1_private_data": {
+          "noul": 0.95
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.79
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.97
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.98,
+            "multiple_propositions": 0.02,
+            "unclear": 0
+          }
+        },
+        "span_2_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.99,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.01
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.94
+        },
+        "span_2_private_data": {
+          "noul": 0.08
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.28
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.97
+        },
+        "span_2_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.71,
+            "multiple_propositions": 0.28,
+            "unclear": 0.01
+          }
+        },
+        "span_3_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.18,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.82
+          }
+        },
+        "span_3_self_contained": {
+          "noul": 0.39
+        },
+        "span_3_private_data": {
+          "noul": 0.08
+        },
+        "span_3_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.65,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.33
+          }
+        },
+        "span_3_has_practical_consequence": {
+          "noul": 0.23
+        },
+        "span_3_preserves_scope": {
+          "noul": 0.4
+        },
+        "span_3_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.72,
+            "multiple_propositions": 0.14,
+            "unclear": 0.14
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P07",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P07-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 69
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.1,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.1
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P07",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.98
+        },
+        "span_0_private_data": {
+          "noul": 0.38
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.1
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P04",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "needs_confirmation",
+        "reasonCode": "incomplete_or_unclear",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.05
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.08
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0.11,
+            "multiple_propositions": 0.89,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.34,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.66
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.15
+        },
+        "span_1_private_data": {
+          "noul": 0.04
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.64,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.34
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.07
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.68
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.52,
+            "multiple_propositions": 0.08,
+            "unclear": 0.4
+          }
+        },
+        "span_2_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.54,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.46
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.42
+        },
+        "span_2_private_data": {
+          "noul": 0.03
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.78,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.21
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.1
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.6
+        },
+        "span_2_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.78,
+            "multiple_propositions": 0.1,
+            "unclear": 0.12
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P04",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "needs_confirmation",
+        "reasonCode": "incomplete_or_unclear",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.08
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0.12,
+            "multiple_propositions": 0.88,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.44,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.56
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.14
+        },
+        "span_1_private_data": {
+          "noul": 0.02
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.64,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.34
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.06
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.66
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.76,
+            "multiple_propositions": 0.04,
+            "unclear": 0.2
+          }
+        },
+        "span_2_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.51,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.49
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.42
+        },
+        "span_2_private_data": {
+          "noul": 0.02
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.79,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.2
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.09
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.53
+        },
+        "span_2_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.76,
+            "multiple_propositions": 0.16,
+            "unclear": 0.08
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P13",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.73,
+            "personal_experience": 0.27,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.85
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P13",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.75,
+            "personal_experience": 0.25,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.97,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.02
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.86
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.97,
+            "multiple_propositions": 0.03,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P23",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "mixed",
+          "probabilities": {
+            "public_fact": 0,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 1,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.91
+        },
+        "span_0_private_data": {
+          "noul": 0.97
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.72
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0,
+            "multiple_propositions": 1,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "personal_experience",
+          "probabilities": {
+            "public_fact": 0.21,
+            "personal_experience": 0.78,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.01,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.87
+        },
+        "span_1_private_data": {
+          "noul": 0.96
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.87
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.95
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.93,
+            "multiple_propositions": 0.07,
+            "unclear": 0
+          }
+        },
+        "span_2_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.96
+        },
+        "span_2_private_data": {
+          "noul": 0.03
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.07
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.97
+        },
+        "span_2_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0.2,
+            "multiple_propositions": 0.8,
+            "unclear": 0
+          }
+        },
+        "span_3_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.35,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.65
+          }
+        },
+        "span_3_self_contained": {
+          "noul": 0.19
+        },
+        "span_3_private_data": {
+          "noul": 0.09
+        },
+        "span_3_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.7,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.28
+          }
+        },
+        "span_3_has_practical_consequence": {
+          "noul": 0.06
+        },
+        "span_3_preserves_scope": {
+          "noul": 0.56
+        },
+        "span_3_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.55,
+            "multiple_propositions": 0.02,
+            "unclear": 0.43
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P23",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "mixed",
+          "probabilities": {
+            "public_fact": 0,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 1,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.9
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.74
+        },
+        "span_0_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0,
+            "multiple_propositions": 1,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "personal_experience",
+          "probabilities": {
+            "public_fact": 0.18,
+            "personal_experience": 0.81,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.01,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.87
+        },
+        "span_1_private_data": {
+          "noul": 0.98
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.89
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.95
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.98,
+            "multiple_propositions": 0.02,
+            "unclear": 0
+          }
+        },
+        "span_2_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.96
+        },
+        "span_2_private_data": {
+          "noul": 0.04
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.06
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.96
+        },
+        "span_2_claim_structure": {
+          "choice": "multiple_propositions",
+          "probabilities": {
+            "one_coherent": 0.24,
+            "multiple_propositions": 0.76,
+            "unclear": 0
+          }
+        },
+        "span_3_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.39,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.61
+          }
+        },
+        "span_3_self_contained": {
+          "noul": 0.29
+        },
+        "span_3_private_data": {
+          "noul": 0.05
+        },
+        "span_3_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.72,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.26
+          }
+        },
+        "span_3_has_practical_consequence": {
+          "noul": 0.06
+        },
+        "span_3_preserves_scope": {
+          "noul": 0.63
+        },
+        "span_3_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.57,
+            "multiple_propositions": 0.02,
+            "unclear": 0.41
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P01",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P01-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 69
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.21,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.98
+        },
+        "span_0_private_data": {
+          "noul": 0.06
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.21
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.76,
+            "multiple_propositions": 0.23,
+            "unclear": 0.01
+          }
+        },
+        "span_1_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.54,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.46
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.51
+        },
+        "span_1_private_data": {
+          "noul": 0.05
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.79,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.2
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.35
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.73
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.84,
+            "multiple_propositions": 0.07,
+            "unclear": 0.09
+          }
+        },
+        "span_2_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.07,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.93
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.14
+        },
+        "span_2_private_data": {
+          "noul": 0.03
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.71,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.27
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.08
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.57
+        },
+        "span_2_claim_structure": {
+          "choice": "unclear",
+          "probabilities": {
+            "one_coherent": 0.47,
+            "multiple_propositions": 0.01,
+            "unclear": 0.52
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P01",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.42
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.18
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.83,
+            "multiple_propositions": 0.17,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.52,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.48
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.45
+        },
+        "span_1_private_data": {
+          "noul": 0.37
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.73,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.25
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.33
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.79
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.81,
+            "multiple_propositions": 0.08,
+            "unclear": 0.11
+          }
+        },
+        "span_2_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.08,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.92
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.15
+        },
+        "span_2_private_data": {
+          "noul": 0.07
+        },
+        "span_2_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.72,
+            "nonliteral_or_quoted": 0.02,
+            "unclear": 0.26
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.09
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.57
+        },
+        "span_2_claim_structure": {
+          "choice": "unclear",
+          "probabilities": {
+            "one_coherent": 0.43,
+            "multiple_propositions": 0.01,
+            "unclear": 0.56
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P20",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.98,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.02,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.68
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.84,
+            "multiple_propositions": 0.16,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P20",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.97,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.03,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.99
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.7
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.83,
+            "multiple_propositions": 0.17,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P05",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P05-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 73
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.14,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.05
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.14
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 1,
+            "multiple_propositions": 0,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.21,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.79
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.14
+        },
+        "span_1_private_data": {
+          "noul": 0.04
+        },
+        "span_1_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.48,
+            "nonliteral_or_quoted": 0.04,
+            "unclear": 0.48
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.15
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.54
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.73,
+            "multiple_propositions": 0.01,
+            "unclear": 0.26
+          }
+        },
+        "span_2_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.03,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.97
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.12
+        },
+        "span_2_private_data": {
+          "noul": 0.02
+        },
+        "span_2_assertion_status": {
+          "choice": "unclear",
+          "probabilities": {
+            "asserted": 0.43,
+            "nonliteral_or_quoted": 0.05,
+            "unclear": 0.52
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.05
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.21
+        },
+        "span_2_claim_structure": {
+          "choice": "unclear",
+          "probabilities": {
+            "one_coherent": 0.28,
+            "multiple_propositions": 0,
+            "unclear": 0.72
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P05",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.1
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.12
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        },
+        "span_1_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.21,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.79
+          }
+        },
+        "span_1_self_contained": {
+          "noul": 0.12
+        },
+        "span_1_private_data": {
+          "noul": 0.06
+        },
+        "span_1_assertion_status": {
+          "choice": "unclear",
+          "probabilities": {
+            "asserted": 0.47,
+            "nonliteral_or_quoted": 0.04,
+            "unclear": 0.49
+          }
+        },
+        "span_1_has_practical_consequence": {
+          "noul": 0.14
+        },
+        "span_1_preserves_scope": {
+          "noul": 0.52
+        },
+        "span_1_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.73,
+            "multiple_propositions": 0.01,
+            "unclear": 0.26
+          }
+        },
+        "span_2_kind": {
+          "choice": "incomplete_or_unclear",
+          "probabilities": {
+            "public_fact": 0.05,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.95
+          }
+        },
+        "span_2_self_contained": {
+          "noul": 0.16
+        },
+        "span_2_private_data": {
+          "noul": 0.03
+        },
+        "span_2_assertion_status": {
+          "choice": "unclear",
+          "probabilities": {
+            "asserted": 0.42,
+            "nonliteral_or_quoted": 0.05,
+            "unclear": 0.53
+          }
+        },
+        "span_2_has_practical_consequence": {
+          "noul": 0.05
+        },
+        "span_2_preserves_scope": {
+          "noul": 0.25
+        },
+        "span_2_claim_structure": {
+          "choice": "unclear",
+          "probabilities": {
+            "one_coherent": 0.29,
+            "multiple_propositions": 0,
+            "unclear": 0.71
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P17",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.99,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0.01
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.93
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.98,
+            "nonliteral_or_quoted": 0.01,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.62
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.86,
+            "multiple_propositions": 0.14,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P17",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.97
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.63
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.86,
+            "multiple_propositions": 0.14,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P16",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.86,
+            "personal_experience": 0.03,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.11,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.87
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.77
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.82,
+            "multiple_propositions": 0.18,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P16",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.87,
+            "personal_experience": 0.02,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.11,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.9
+        },
+        "span_0_private_data": {
+          "noul": 0.98
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 0.99,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0.01
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.77
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.83,
+            "multiple_propositions": 0.17,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P19",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.95,
+            "personal_experience": 0.04,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.01,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.96
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.78
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.92,
+            "multiple_propositions": 0.08,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P19",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.96,
+            "personal_experience": 0.04,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.96
+        },
+        "span_0_private_data": {
+          "noul": 0.97
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.79
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.92,
+            "multiple_propositions": 0.08,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P18",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.93,
+            "personal_experience": 0.04,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.03,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.95
+        },
+        "span_0_private_data": {
+          "noul": 0.95
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.5
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.85,
+            "multiple_propositions": 0.15,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P18",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 0.9,
+            "personal_experience": 0.06,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0.04,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.95
+        },
+        "span_0_private_data": {
+          "noul": 0.97
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.48
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.85,
+            "multiple_propositions": 0.15,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P08",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.35
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.12
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P08",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P08-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 77
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.12,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.12
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P03",
+      "arm": "candidate",
+      "status": "completed",
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": [
+          {
+            "id": "P03-r1-span_0",
+            "originalText": "[control input retained separately]",
+            "checkedText": "[exact control span retained separately]",
+            "sourceSpan": {
+              "start": 0,
+              "end": 86
+            },
+            "admission": {
+              "assertionStatus": "asserted",
+              "hasPracticalConsequence": 0.09,
+              "matchedSelectedTopic": null,
+              "admissionAction": "check",
+              "reasonCode": "eligible_public_claim"
+            }
+          }
+        ]
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.02
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.09
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    },
+    {
+      "unitId": "P03",
+      "arm": "baseline",
+      "status": "completed",
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": []
+      },
+      "answers": {
+        "span_0_kind": {
+          "choice": "public_fact",
+          "probabilities": {
+            "public_fact": 1,
+            "personal_experience": 0,
+            "opinion": 0,
+            "prediction": 0,
+            "question_or_instruction": 0,
+            "mixed": 0,
+            "incomplete_or_unclear": 0
+          }
+        },
+        "span_0_self_contained": {
+          "noul": 0.97
+        },
+        "span_0_private_data": {
+          "noul": 0.16
+        },
+        "span_0_assertion_status": {
+          "choice": "asserted",
+          "probabilities": {
+            "asserted": 1,
+            "nonliteral_or_quoted": 0,
+            "unclear": 0
+          }
+        },
+        "span_0_has_practical_consequence": {
+          "noul": 0.1
+        },
+        "span_0_claim_structure": {
+          "choice": "one_coherent",
+          "probabilities": {
+            "one_coherent": 0.99,
+            "multiple_propositions": 0.01,
+            "unclear": 0
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "kind": "root_exact_once_bounded_study_authorization",
+  "createdAt": "2026-11-14T07:01:51.523Z",
+  "planPath": "/workspace/task-evidence/typed-applicability-calibration-02/corrected08-42-plan.json",
+  "planCanonicalSHA256": "699582a0b64569f73b20376521be7aa6bfc4b1439d06ae6182e5942b21ab5de3",
+  "planFileSHA256": "fd76dd23d370c777f9b5112a11efb5d786a059e7ddf1a1861c5e7a1645242d83",
+  "runnerSHA256": "a98f6cff11260bff1134b3f63ea42efa4f61fa372b3d9d3fa7a4152e403cda2f",
+  "reviews": [
+    {
+      "path": "/workspace/task-evidence/corrected08-42-independent-final-plan-review.json",
+      "sha256": "f82bdf1273a22b36623594fea6a5615a95ff63f5ca9705d53a682679b170acfb"
+    },
+    {
+      "path": "/workspace/task-evidence/study42-corrected08-runtime-review/review.json",
+      "sha256": "2f7e9fbb731b66a7a06720a7ec2dd688478b5aa67cf60ddbeb64952adbba00b4"
+    },
+    {
+      "path": "/workspace/task-evidence/study42-scoring-integration-review/review.json",
+      "sha256": "17edcd1004ce99a5d90d20bdfbd24250cea9b09b6e8351dc8d4ab0b1c21bd01a"
+    },
+    {
+      "path": "/workspace/task-evidence/applicability08-visible-binding-review/review.json",
+      "sha256": "2e7d0522ce1507188740df7c805ffb758fdd2ac72cf1f9ec4a8092fe3a5b9665"
+    }
+  ],
+  "sourcePinsVerified": 46,
+  "soleOutput": "/workspace/task-evidence/typed-applicability-calibration-02/live-first-run",
+  "authorizedExecutor": "assessment_coverage",
+  "limits": {
+    "maxCalls": 42,
+    "maxInputTokens": 640000,
+    "pendingReserve": 24000,
+    "maxRequestBytes": 65536,
+    "maxTotalRequestBytes": 3145728,
+    "maxResponseBytesPerCall": 128000,
+    "maxTotalResponseBytes": 1048576,
+    "wallMs": 60000
+  },
+  "blocks": [
+    {
+      "blockId": "block1",
+      "limits": {
+        "maxCalls": 11,
+        "maxInputTokens": 160000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 481303,
+        "maxTotalResponseBytes": 262144
+      }
+    },
+    {
+      "blockId": "block2",
+      "limits": {
+        "maxCalls": 11,
+        "maxInputTokens": 160000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 518076,
+        "maxTotalResponseBytes": 262144
+      }
+    },
+    {
+      "blockId": "block3",
+      "limits": {
+        "maxCalls": 10,
+        "maxInputTokens": 160000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 465956,
+        "maxTotalResponseBytes": 262144
+      }
+    },
+    {
+      "blockId": "block4",
+      "limits": {
+        "maxCalls": 10,
+        "maxInputTokens": 160000,
+        "pendingReserve": 24000,
+        "maxTotalRequestBytes": 479238,
+        "maxTotalResponseBytes": 262144
+      }
+    }
+  ],
+  "maxJevActualAttempts": 42,
+  "maxExaActualAttempts": 0,
+  "execution": "Execute frozen corrected08 candidate-only runner exactly once. Preserve all first-run failures, missing rows, reservations and unknown usage. No retry, rerun, resume, replacement, borrowing or promotion.",
+  "interpretation": "Distinct OPEN development observation of42cases across4families, original34+identity8 and2offline binding controls. Baseline not run/N/A. No paired07 causal comparison, pooling, authority, currentproof, factualcoverage or readiness credit. Independently audit every observed definitive/selected source."
+}

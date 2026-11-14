@@ -1,0 +1,78 @@
+{
+  "kind": "sequential_exact_head_offline_gate_receipts",
+  "order": [
+    17,
+    15
+  ],
+  "attemptsPerBranch": 1,
+  "records": [
+    {
+      "issue": 17,
+      "worktree": "/workspace/stack-17",
+      "head": "610b735864cd1b2b238136ae11130d42ccd5a122",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "startedAt": "2026-11-14T09:47:13.280269+00:00",
+      "state": "completed",
+      "attempt": 1,
+      "sourceEditsByAgent": 0,
+      "providerCallsByAgent": 0,
+      "completedAt": "2026-11-14T09:47:21.581793+00:00",
+      "exitCode": 0,
+      "headAfter": "610b735864cd1b2b238136ae11130d42ccd5a122",
+      "gitStatusBefore": "",
+      "gitStatusAfter": "",
+      "logSHA256": "bb6b3a9ccf0fc73cb65d20dedd696b66765dae2ca38f784b97f43d9925d1e6fe",
+      "logBytes": 554,
+      "summaryCounts": {
+        "testFiles": {
+          "passed": 15,
+          "total": 15
+        },
+        "tests": {
+          "passed": 382,
+          "total": 382
+        }
+      },
+      "ranOnce": true
+    },
+    {
+      "issue": 15,
+      "worktree": "/workspace/stack-15",
+      "head": "baaa95bf15d3551ad7370da9f6f3cbcd28da8830",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "startedAt": "2026-11-14T09:47:21.608532+00:00",
+      "state": "completed",
+      "attempt": 1,
+      "sourceEditsByAgent": 0,
+      "providerCallsByAgent": 0,
+      "completedAt": "2026-11-14T09:47:29.590031+00:00",
+      "exitCode": 0,
+      "headAfter": "baaa95bf15d3551ad7370da9f6f3cbcd28da8830",
+      "gitStatusBefore": "",
+      "gitStatusAfter": "",
+      "logSHA256": "25a32b858be1ecf5f87e2fa0ce819b3c808e8dcd880b69aeb7cb96244ddc6c58",
+      "logBytes": 553,
+      "summaryCounts": {
+        "testFiles": {
+          "passed": 15,
+          "total": 15
+        },
+        "tests": {
+          "passed": 416,
+          "total": 416
+        }
+      },
+      "ranOnce": true
+    }
+  ],
+  "providerCallsByAgent": 0,
+  "sourceEditsByAgent": 0
+}

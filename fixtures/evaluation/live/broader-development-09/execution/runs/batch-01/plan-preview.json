@@ -1,0 +1,50 @@
+{
+  "kind": "open_development_batch_plan",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "manifestSHA256": "755fcccac694f94db05743d6723e4a123e3003f79c01142d8a2d5551c5cf1e99",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "cases": [
+    {
+      "label": "BD01",
+      "allowedPublic": [
+        "The Great Fire of London occurred in 1666."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BD02",
+      "allowedPublic": [
+        "Magna Carta was first issued in 1216."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BD03",
+      "allowedPublic": [
+        "Mount Kilimanjaro is located in Tanzania."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BDC01",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true
+    }
+  ]
+}

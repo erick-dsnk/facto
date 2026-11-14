@@ -1,0 +1,17 @@
+{
+  "kind": "offline_request_reconstruction_no_dispatch",
+  "recordedCase": "OR05-gibraltar",
+  "sourceCommit": "7f029154970d62f9f8024fb9849bbd8a56daf8ec",
+  "requestBytes": 67506,
+  "requestSHA256": "820b3f0c9de9398feaa817b1b2fed94285ea6df0eb6e967c682b4513d6d8efce",
+  "questions": 55,
+  "evidenceRecords": 6,
+  "recordedLimit": 65536,
+  "note": "Reconstructs blocked alternate-judgment payload from recorded public evidence; no model request/retry and no modification to frozen plan or first run. This harness cap is not a production provider outbound limit.",
+  "precedingInitialJudgment": {
+    "verdict": "contradicted",
+    "probability": 0.89,
+    "productionThreshold": 0.9,
+    "policyOutcome": "below_threshold; alternate attempted within original budget"
+  }
+}

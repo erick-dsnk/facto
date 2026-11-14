@@ -1,0 +1,28 @@
+
+> check
+> npm run lint && npm run typecheck && npm test
+
+
+> lint
+> eslint packages services apps --no-warn-ignored
+
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> vitest run
+
+
+ RUN  v5.1.0 /workspace/junction-2026-current
+
+
+ Test Files  34 passed (34)
+      Tests  684 passed (684)
+   Start at  10:10:05
+   Duration  18.88s (tests 87%, import 11%, transform 2%)
+
+    Isolate  34 workers spawned · ~96ms startup each (spawn + environment, per file)
+             at least ~990ms faster with isolate: false — reuses workers across files instead of one per file
+

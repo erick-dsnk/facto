@@ -1,0 +1,297 @@
+{
+  "kind": "independent_ai_selected_citation_audit",
+  "reviewer": "independent_agent",
+  "reviewedAt": "2026-11-14T04:42:02.662940+00:00",
+  "scope": "Exact selected retained citations from actual automatic development first run 08; open development, not blind evaluation. No unselected evidence substituted.",
+  "inputs": {
+    "packet": "/workspace/task-evidence/automatic08-selected-citations.json",
+    "packetSHA256": "fd82719e9c6d5a80c4748ed4102fc9b2d566956c97024578c537a5208b1aab9c",
+    "sourceRun": "/workspace/task-evidence/automatic-development-first-run08.json",
+    "sourceRunSHA256": "d9065e26c43183b13d165a9560f638c57c982d9274530d75860d590cdb410fc9",
+    "plan": "/workspace/task-evidence/automatic-development-plan08.json",
+    "planSHA256": "0460836cfdb1e9bb41dfb5706e8499c7d2a9c811335b8cf071dc328857ed3ad5"
+  },
+  "counts": {
+    "selectedCitationOccurrences": 14,
+    "uniqueSelectedURLs": 6,
+    "reviewedResultOccurrences": 4,
+    "uniqueCheckedPropositions": 2,
+    "verifiedOccurrences": 14,
+    "unsupportedOccurrences": 0,
+    "inaccessibleOccurrences": 0,
+    "freshPublicHttpRequests": 6,
+    "projectProviderCalls": 0
+  },
+  "caseAccounting": [
+    {
+      "caseLabel": "AD01-disabled-contradiction",
+      "expectedClaimId": "BD10",
+      "selectedCitationOccurrences": 4
+    },
+    {
+      "caseLabel": "AD02-selected-topic-notify",
+      "expectedClaimId": "BD10",
+      "selectedCitationOccurrences": 4
+    },
+    {
+      "caseLabel": "AD04-low-priority-silent",
+      "expectedClaimId": "BD10",
+      "selectedCitationOccurrences": 4
+    },
+    {
+      "caseLabel": "AD06-muted-manual",
+      "expectedClaimId": "BD07",
+      "selectedCitationOccurrences": 2
+    }
+  ],
+  "sources": [
+    {
+      "evidenceId": "ev-6a6fe886686c4d654057",
+      "url": "https://www.federalregister.gov/agencies/smithsonian-institution",
+      "excerptSHA256": "b681e556c772beaaff5e0536f2f53c50982b8fb713e2cb119674f9d93c247a93",
+      "retainedExcerpt": "The Smithsonian Institution was created by an act of Congress on August 10, 1846 (20 U.S.C. 41 et seq.), to carry out the terms of the will of British scientist James Smithson (1765-1829), who in 1826 had bequeathed his entire estate to the United States ``to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.'' On July 1, 1836, Congress accepted the legacy and pledged the faith of the United States to the charitable trust.",
+      "originProof": {
+        "requestedUrl": "https://www.federalregister.gov/agencies/smithsonian-institution",
+        "fetchedAt": "2026-11-14T04:38:11.276937+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 1,
+        "status": 200,
+        "finalUrl": "https://www.federalregister.gov/agencies/smithsonian-institution",
+        "contentType": "text/html; charset=utf-8",
+        "truncated": false,
+        "bytes": 41198,
+        "bodySHA256": "2020a8631473f01f44fac318bd9ec8868371212e133632d2c027a603ccb22852",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/6a6fe886686c4d65.body",
+        "title": " Federal Register :: Agencies - Smithsonian Institution ",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/6a6fe886686c4d65.text.txt",
+        "textSHA256": "cacd22e535eadaf2cfe5b6f1cdea3a4d90c3fbb562159085d7f73f474b49e526"
+      },
+      "segmentAlignment": {
+        "method": "Split only explicit blank-line ... blank-line omission markers; NFKC lowercase word-token sequences, ignoring punctuation and markup. Every retained segment occurs in order in saved fresh visible text. This is word-sequence equivalence, not byte identity. Reviewer inspected the decisive wording and context independently.",
+        "segments": 1,
+        "allSegmentsMatchedInOrder": true,
+        "normalizedCharacterOffsets": [
+          3105
+        ]
+      },
+      "assessment": {
+        "basis": "The agency description explicitly identifies the US congressional act, its exact date and 20 U.S.C. 41 et seq.; it does not merely assert prestige or repeat the claim.",
+        "relation": "Contradicts the claimed British royal charter as the instrument creating the same Smithsonian Institution in 1846. British donor nationality is distinct from legal establishment.",
+        "retainedQualifyingQuote": "The Smithsonian Institution was created by an act of Congress on August 10, 1846 (20 U.S.C. 41 et seq.)",
+        "originFamily": "Federal Register agency description; underlying US establishment act",
+        "limits": "Does not establish a separate independent observation from the underlying statute also summarized by the other sources."
+      },
+      "status": "verified"
+    },
+    {
+      "evidenceId": "ev-0731d2680f6821d2a03e",
+      "url": "https://www.si.edu/about/history",
+      "excerptSHA256": "554c2f626a1a58fd2b0249b80507e445788433f3dd39037d77ee241d14e80d58",
+      "retainedExcerpt": "The Smithsonian Institution was established with funds from James Smithson (1765–1829), a British scientist who left his estate to the United States to found “at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge.” On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk.\n\nCongress authorized acceptance of the Smithson bequest on July 1, 1836, but it took another ten years of debate before the Smithsonian was founded. Once established, the Smithsonian became part of the process of developing an American national identity—an identity rooted in exploration, innovation, and a unique American style. That process continues today as the Smithsonian looks toward the future.\n\n...\n\nSmithson, the illegitimate child of a wealthy Englishman, had traveled much during his life, but had never once set foot on American soil. Why, then, would he decide to give the entirety of his sizable estate—which totaled half a million dollars, or 1/66 of the United States' entire federal budget at the time—to a country that was foreign to him?\n\nSome speculate it was because he was denied his father's legacy. Others argue that he was inspired by the United States' experiment with democracy. Some attribute his philanthropy to ideals inspired by such organizations as the Royal Institution, which was dedicated to using scientific knowledge to improve human conditions. Smithson never wrote about or discussed his bequest with friends or colleagues, so we are left to speculate on the ideals and motivations of a gift that has had such significant impact on the arts, humanities, and sciences in the United States.\n\n...\n\nSmithson died in 1829, and six years later, President Andrew Jackson announced the bequest to Congress. On July 1, 1836, Congress accepted the legacy bequeathed to the nation and pledged the faith of the United States to the charitable",
+      "originProof": {
+        "requestedUrl": "https://www.si.edu/about/history",
+        "fetchedAt": "2026-11-14T04:38:11.277629+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 2,
+        "status": 200,
+        "finalUrl": "https://www.si.edu/about/history",
+        "contentType": "text/html; charset=UTF-8",
+        "truncated": false,
+        "bytes": 65756,
+        "bodySHA256": "4b7ecaa96a9794dee1596c4edf41efe6d552dabdb13d417e148d06cc9d68c1b2",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/0731d2680f6821d2.body",
+        "title": "Our History | Smithsonian Institution",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/0731d2680f6821d2.text.txt",
+        "textSHA256": "89f6a5bf9b0b9ba5940f3fb58b6eb23f38fd22d2afe21a3d977218f3340b10c9"
+      },
+      "segmentAlignment": {
+        "method": "Split only explicit blank-line ... blank-line omission markers; NFKC lowercase word-token sequences, ignoring punctuation and markup. Every retained segment occurs in order in saved fresh visible text. This is word-sequence equivalence, not byte identity. Reviewer inspected the decisive wording and context independently.",
+        "segments": 3,
+        "allSegmentsMatchedInOrder": true,
+        "normalizedCharacterOffsets": [
+          1349,
+          2269,
+          3418
+        ]
+      },
+      "assessment": {
+        "basis": "An institutional historical account identifies the Senate organizing act and presidential signature, in a dated sequence separating the 1836 bequest acceptance from the 1846 founding.",
+        "relation": "The organizing-act passage contradicts British royal-charter creation of the same institution in 1846.",
+        "retainedQualifyingQuote": "On August 10, 1846, the U.S. Senate passed the act organizing the Smithsonian Institution, which was signed into law by President James K. Polk.",
+        "originFamily": "Smithsonian institutional history; underlying US establishment act",
+        "limits": "Shares a publisher and underlying founding record with the Smithsonian factsheet. Speculation about the donor’s motives is not relied upon."
+      },
+      "status": "verified"
+    },
+    {
+      "evidenceId": "ev-9ba7133657edfc20c794",
+      "url": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+      "excerptSHA256": "4713e30bff6c89cf11a86ef051600e20e3f3443806e56e2c6ccc651396bc0d1d",
+      "retainedExcerpt": "In 1826, British scientist James Smithson drew up his last will and testament, naming his nephew as beneficiary. Smithson stipulated that, should the nephew die without heirs (as he would in 1835), the estate should go “to the United States of America, to found at Washington, under the name of the Smithsonian Institution, an establishment for the increase and diffusion of knowledge among men.”\n\n...\n\nThe United States government was soon notified of this extraordinary bequest, and President Andrew Jackson announced the bequest to Congress, which accepted the legacy bequeathed to the nation and pledged the faith of the United States to the charitable trust July 1, 1836. The estate was awarded to the United States May 9, 1838. In September 1838, Smithson’s legacy, which amounted to more than 100,000 gold sovereigns, was delivered to the mint at Philadelphia. Recoined in U.S. currency, the gift amounted to more than $500,000.\n\nThe motives behind Smithson’s bequest remain mysterious. He never traveled to the United States and seems to have had no correspondence with anyone here. Some have suggested that his bequest was motivated in part by revenge against the rigidities of British society, which had denied Smithson, who was illegitimate, the right to use his father’s name. Others have suggested it reflected his interest in the Enlightenment ideals of democracy and universal education.\n\nAfter eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian. Since its founding, the Smithsonian has become the world’s largest museum, education and research complex, with 21 museums, the National Zoo and nine research facilities.\n\nIn 1865, only a decade after the completion of the Smithsonian’s first building, the “Castle,” the building’s top floor was destroyed in a fire; among the losses were Smithson’s diar",
+      "originProof": {
+        "requestedUrl": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+        "fetchedAt": "2026-11-14T04:38:11.278112+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 3,
+        "status": 200,
+        "finalUrl": "https://www.si.edu/newsdesk/factsheets/brief-history-smithsonian-institution",
+        "contentType": "text/html; charset=UTF-8",
+        "truncated": false,
+        "bytes": 75922,
+        "bodySHA256": "d705a1ddc21a56b4b7711e07b980b16d2fc5b706a8d91146e45c8bfb0241684f",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/9ba7133657edfc20.body",
+        "title": "A Brief History of the Smithsonian Institution | Smithsonian Institution",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/9ba7133657edfc20.text.txt",
+        "textSHA256": "bd56ba82f01ed61dd63d3b1a1fe535e64c714887a351409042678fc59b2647eb"
+      },
+      "segmentAlignment": {
+        "method": "Split only explicit blank-line ... blank-line omission markers; NFKC lowercase word-token sequences, ignoring punctuation and markup. Every retained segment occurs in order in saved fresh visible text. This is word-sequence equivalence, not byte identity. Reviewer inspected the decisive wording and context independently.",
+        "segments": 2,
+        "allSegmentsMatchedInOrder": true,
+        "normalizedCharacterOffsets": [
+          1721,
+          2593
+        ]
+      },
+      "assessment": {
+        "basis": "The factsheet identifies an Act of Congress signed by a named president on a specific day as the establishing instrument and describes the resulting trust governance.",
+        "relation": "Directly contradicts creation by British royal charter; the relevant event is the 1846 establishment, not the earlier British bequest.",
+        "retainedQualifyingQuote": "After eight years of sometimes heated debate, an Act of Congress signed by President James K. Polk Aug. 10, 1846, established the Smithsonian Institution as a trust to be administered by a Board of Regents and a Secretary of the Smithsonian.",
+        "originFamily": "Smithsonian institutional history; underlying US establishment act",
+        "limits": "Same publisher as si.edu/about/history; neither four URLs nor two Smithsonian pages establishes four independent origins."
+      },
+      "status": "verified"
+    },
+    {
+      "evidenceId": "ev-eb0bdcebbd68c35e5e3a",
+      "url": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+      "excerptSHA256": "56617513f2810dcab0311251e9dbed706c1c9db996f915562e24387cca1a3eba",
+      "retainedExcerpt": "sion of knowledge among men.” \n\n On this date, the House passed legislation to establish the Smithsonian Institution, a research and cultural organization dedicated to science and the arts. Funding for the Smithsonian had come from a wealthy Englishman named James Smithson who had bequeathed his estate to the federal government with instructions to establish an institution in the nation’s capital “for the increase and diffusion of knowledge among men.” When word of Smithson’s gift reached the United States in late 1835, the House established a select committee, chaired by Representative John Quincy Adams of Massachusetts, to consider the terms of Smithson’s will. In 1836, Adams and the committee recommended that Congress pass legislation to allow President Andrew Jackson to appoint an agent to collect the bequest in London. But legal complications in England meant it took more than two years for the money to arrive in the United States. Over much of the next decade, lawmakers and everyday citizens debated what to do with the gift. Adams fought to create an astronomical observatory with the Smithsonian fund. Others petitioned to create a national university or an institute of agriculture. Some in Congress questioned the constitutionality of the gift altogether. In early 1846, the new chairman of the select committee on Smithson’s gift, Representative Robert Dale Owen of Indiana, submitted a bill to establish the Smithsonian Institution. During debate, Owen said the House had no choice but to use the proceeds of Smithson’s estate to charter the new institution. “We have no more right to put off . . . the appropriation of such a fund, than we have to direct it to our own private purposes,” he argued. On April 29, 1846, the House took up business on the Smithsonian once more, making minor adjustments to the bill text as different Representatives reviewed it. The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+      "originProof": {
+        "requestedUrl": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+        "fetchedAt": "2026-11-14T04:38:11.278659+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 4,
+        "status": 200,
+        "finalUrl": "https://history.house.gov/Historical-Highlights/1800-1850/Smithsonian-Institution-Established/",
+        "contentType": "text/html; charset=utf-8",
+        "truncated": false,
+        "bytes": 44725,
+        "bodySHA256": "1905b617f04c6134468d30ee2f6d695dd18e4bc92af9f7c290cfa7cd305043ba",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/eb0bdcebbd68c35e.body",
+        "title": " Smithsonian Institution Established | US House of Representatives: History, Art & Archives ",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/eb0bdcebbd68c35e.text.txt",
+        "textSHA256": "d2f8d34ac60fdb1b51d7dac4d2603fb1abd21af26d6510131726b865f14fa9a0"
+      },
+      "segmentAlignment": {
+        "method": "Split only explicit blank-line ... blank-line omission markers; NFKC lowercase word-token sequences, ignoring punctuation and markup. Every retained segment occurs in order in saved fresh visible text. This is word-sequence equivalence, not byte identity. Reviewer inspected the decisive wording and context independently.",
+        "segments": 1,
+        "allSegmentsMatchedInOrder": true,
+        "normalizedCharacterOffsets": [
+          4203
+        ]
+      },
+      "assessment": {
+        "basis": "The legislative historical account identifies the establishing bill, committee, House vote (85 to 76), and presidential enactment date.",
+        "relation": "Contradicts a British royal charter as the source of legal creation. The text’s word “charter” refers to the US legislative process, not a British royal instrument.",
+        "retainedQualifyingQuote": "The final version passed the House 85 to 76. President James K. Polk signed the bill into law on August 10, 1846.",
+        "originFamily": "US House historical account; underlying US establishment act",
+        "limits": "A different institutional account of the same legislation, not proof of another independent foundational event. The excerpt begins midword but retains the complete decisive sentences."
+      },
+      "status": "verified"
+    },
+    {
+      "evidenceId": "ev-f72fcf7616e02e44a3fd",
+      "url": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+      "excerptSHA256": "004b9ba2cdb4e42679e3dca4a033ff4a7b484307376b5c456f8596727fa00ad0",
+      "retainedExcerpt": "Maritime trade in the Americas before the Panama Canal opened 107 years ago required sailing around Cape Horn, the southernmost tip of South America, a voyage that could take up to two months. Today, sailing from US East Coast to Asia through the Panama Canal takes approximately 26 days, compared to 43 days for voyages through Cape Horn, 37 days through Cape of Good Hope, or 33 days if transiting through the Suez Canal.\n\nToday, the Canal has facilitated more than 1.1 million transits, connecting more than 180 maritime routes, and 1,920 ports in 170 countries. It has also grown to serve as the Green Route by continuously expanding its environmental protections, incentives and offerings as a more sustainable option for shipping lines. Since its opening in 1914, the Canal has contributed to the reduction of more than 850 million tons of carbon dioxide (CO2) through its service to shipping lines.\n\nAs we look ahead to the future, take a look back at key moments in the Canal’s 107-year history:\n\n##### AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific. Two hundred people were on board, including Captain John Constantine and the President of Panama, Belisario Porras.\n\n##### MAY 12, 1963 – 24/7 Operation\n\nThe Panama Canal starts operations 24 hours a day, seven days a week. This was made possible with the installation of fluorescent lighting at the locks and the Culebra Cut, allowing night transits and increasing overall transits to the waterway.",
+      "originProof": {
+        "requestedUrl": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+        "fetchedAt": "2026-11-14T04:38:11.279062+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 5,
+        "status": 200,
+        "finalUrl": "https://pancanal.com/en/history-in-pictures-107-years-of-the-panama-canal/",
+        "contentType": "text/html; charset=UTF-8",
+        "truncated": false,
+        "bytes": 153226,
+        "bodySHA256": "65ee11cbb85a7768311f5d52590470823b3bfa4297f83bd38606de871743449f",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/f72fcf7616e02e44.body",
+        "title": "History in Pictures: 107 Years of the Panama Canal - Autoridad del Canal de Panamá",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/f72fcf7616e02e44.text.txt",
+        "textSHA256": "ffc306b0f704d61e848925a21ba3a34614f00df0feb09b8dbda8d5f80d282ebf"
+      },
+      "segmentAlignment": {
+        "method": "Split only explicit blank-line ... blank-line omission markers; NFKC lowercase word-token sequences, ignoring punctuation and markup. Every retained segment occurs in order in saved fresh visible text. This is word-sequence equivalence, not byte identity. Reviewer inspected the decisive wording and context independently.",
+        "segments": 1,
+        "allSegmentsMatchedInOrder": true,
+        "normalizedCharacterOffsets": [
+          1783
+        ]
+      },
+      "assessment": {
+        "basis": "The canal operator’s historical chronology gives a specifically dated inauguration and identifies the SS Ancon transit and participants.",
+        "relation": "Supports the same Panama Canal opening to world trade in 1914: the dated inauguration is described as opening to the world.",
+        "retainedQualifyingQuote": "AUGUST 15, 1914 – The Inauguration of the Panama Canal\n\nThe Panama Canal opens to the world with the transit of the SS Ancon transiting from the Atlantic to the Pacific.",
+        "originFamily": "Panama Canal Authority historical chronology",
+        "limits": "The surrounding marketing and CO2 claims are not relied upon or independently verified. This review is about the opening year, not every retained statement."
+      },
+      "status": "verified"
+    },
+    {
+      "evidenceId": "ev-9f6b071f258ff2a1591d",
+      "url": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+      "excerptSHA256": "ab0b27f55ee718428b59345b8d865c52d2d143eeae3983d7607241a4ab7b6779",
+      "retainedExcerpt": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight. The canal sliced nearly 8,000 miles off the Cape Horn route through much safer waters, and it was an immediate hit with the world's shippers at the dawn of the First World War.\n\nThe steamship SS \"Ancon\" was the first ship to traverse the Panama Canal on August 15, 1914. From the museum's Maritime Ralph E. Cropley Collection.\n\nBefore World War I, all oceangoing shipping transiting between the Atlantic and Pacific oceans had to take the arduous route around Cape Horn at the southern tip of South America. It was—and still is—one of the most dangerous ocean passages in the world, on account of extreme winds, waters, and weather. Unforgiving rocks invisible in the area's frequent fog made winter voyages challenging, and from the 16th century to the present day, hundreds of ships developed leaks and had to turn back, tore out their bottoms and  sank, or simply disappeared.\n\n...\n\nDiscussions about cutting canals across various points in South America had been ongoing for centuries, but nothing was ever accomplished. The region was unhealthy, portions were unexplored, and sometimes the local populations were hostile to outsiders. Then a railway was built across the Panama Isthmus in 1855 to accommodate the California Gold Rush, and a report produced for the American government advocated cutting a canal across Panama at the Isthmus.\n\nBanking on their success with the Suez Canal, a French effort started cutting the Panama Canal in 1881. It proved nearly impossible to construct, and poor planning, mismanagement, and mosquito-borne diseases were some of the factors leading to bankruptcy of various French corporations. The United States took over in 1904 and completed the difficult engineering project ten years later.\n\n...\n\nTo honor the occasion, a quick review was in order of the museum'",
+      "originProof": {
+        "requestedUrl": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+        "fetchedAt": "2026-11-14T04:38:11.279532+00:00",
+        "freshRequest": true,
+        "method": "GET",
+        "requestOrdinal": 6,
+        "status": 200,
+        "finalUrl": "https://www.americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal",
+        "contentType": "text/html; charset=UTF-8",
+        "truncated": false,
+        "bytes": 47568,
+        "bodySHA256": "0c17f7741d767f0dcad21092d54ee7af6882c5315eebbcc063f5d00b785fe153",
+        "bodyFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/9f6b071f258ff2a1.body",
+        "title": "It&#039;s your birthday, Panama Canal! | National Museum of American History",
+        "textFile": "/workspace/task-evidence/automatic08-citation-audit/origin-fetches/9f6b071f258ff2a1.text.txt",
+        "textSHA256": "67159e527ae774683619e59114d5fd5eed879c1624de58b128ce90d899d4c9c0"
+      },
+      "segmentAlignment": {
+        "method": "Split only explicit blank-line ... blank-line omission markers; NFKC lowercase word-token sequences, ignoring punctuation and markup. Every retained segment occurs in order in saved fresh visible text. This is word-sequence equivalence, not byte identity. Reviewer inspected the decisive wording and context independently.",
+        "segments": 3,
+        "allSegmentsMatchedInOrder": true,
+        "normalizedCharacterOffsets": [
+          377,
+          1581,
+          2492
+        ]
+      },
+      "assessment": {
+        "basis": "A named museum author’s historical account gives the exact commercial opening date and vessel; the retained caption identifies the museum’s Maritime Ralph E. Cropley Collection.",
+        "relation": "Explicitly supports the Panama Canal opening for business in 1914, matching the checked world-trade proposition.",
+        "retainedQualifyingQuote": "On August 15, 1914, the Panama Canal officially opened for business with the passage of the American steamship SS  Ancon, which had been acquired by the Panama Railroad Company to haul freight.",
+        "originFamily": "Smithsonian National Museum of American History account and cited collection",
+        "limits": "Does not certify the broader “first ship” caption or other incidental historical claims. A different publisher from the operator does not by itself prove fully independent historical sourcing."
+      },
+      "status": "verified"
+    }
+  ],
+  "limitations": [
+    "Independent AI agent review, not human review and not a separate blinded factual evaluation.",
+    "The three BD10 cases repeat one proposition and four citations; they are not three new factual discoveries.",
+    "The two si.edu Smithsonian founding pages share a publisher, and all four founding accounts concern the same congressional act. No claim of four independent origins.",
+    "The canal operator and museum accounts are distinct publishers; full historical source independence was not established.",
+    "Verification is bounded to the selected excerpts’ material relation to the checked proposition. Incidental source statements were not exhaustively fact-checked.",
+    "No new opposing-source search or retrieval-completeness audit. AD03 and AD05 have no selected citations in this packet and receive no review objects.",
+    "All source proofs are new HTTP requests recorded with original fetch times; no prior fetch was relabeled fresh."
+  ]
+}

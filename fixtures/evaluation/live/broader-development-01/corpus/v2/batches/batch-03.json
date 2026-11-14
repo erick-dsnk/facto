@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "broader-development-2026-11-14-v2-batch-3",
+  "cases": [
+    {
+      "label": "BD07",
+      "text": "The Panama Canal opened to world trade in 1914.",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD08",
+      "text": "The first modern Olympic Games were held in Paris in 1896.",
+      "allowedPublic": [
+        "The first modern Olympic Games were held in Paris in 1896."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD08",
+            "acceptedTexts": [
+              "The first modern Olympic Games were held in Paris in 1896."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BD09",
+      "text": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+      "allowedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD09",
+            "acceptedTexts": [
+              "UNESCO's Constitution was adopted in London on 16 November 1945."
+            ],
+            "verdict": "supported",
+            "domain": "institutional_record"
+          }
+        ]
+      }
+    },
+    {
+      "label": "BDC03",
+      "text": "The treaty was signed in",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "needs_confirmation",
+        "claims": []
+      }
+    }
+  ]
+}

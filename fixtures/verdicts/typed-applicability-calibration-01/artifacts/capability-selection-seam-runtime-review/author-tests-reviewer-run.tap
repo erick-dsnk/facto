@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: retained records remain actual selector output; all original/incoming versions retain exact fields and time
+ok 1 - retained records remain actual selector output; all original/incoming versions retain exact fields and time
+  ---
+  duration_ms: 10.722816
+  type: 'test'
+  ...
+# Subtest: opaque handles cannot be forged, serialized or mutated and caller mutation cannot change snapshot
+ok 2 - opaque handles cannot be forged, serialized or mutated and caller mutation cannot change snapshot
+  ---
+  duration_ms: 1.617978
+  type: 'test'
+  ...
+# Subtest: unchanged material is stable; Unicode, whitespace, keeper, timestamp and supplied raw metadata change generation
+ok 3 - unchanged material is stable; Unicode, whitespace, keeper, timestamp and supplied raw metadata change generation
+  ---
+  duration_ms: 4.43293
+  type: 'test'
+  ...
+# Subtest: raw graph retains omitted bridge and both versions after its current text changes
+ok 4 - raw graph retains omitted bridge and both versions after its current text changes
+  ---
+  duration_ms: 7.93097
+  type: 'test'
+  ...
+# Subtest: complete twelve-version graph accepted; excessive raw inventory or projection width fails without truncation
+ok 5 - complete twelve-version graph accepted; excessive raw inventory or projection width fails without truncation
+  ---
+  duration_ms: 15.218903
+  type: 'test'
+  ...
+# Subtest: stale prior material and material accessors fail before a snapshot can be issued
+ok 6 - stale prior material and material accessors fail before a snapshot can be issued
+  ---
+  duration_ms: 0.673535
+  type: 'test'
+  ...
+# Subtest: identical recurring raw versions remain two explicit occurrences without inventing selected phase
+ok 7 - identical recurring raw versions remain two explicit occurrences without inventing selected phase
+  ---
+  duration_ms: 0.446413
+  type: 'test'
+  ...
+# Subtest: permuted raw inventory changes generation even if selected source identities are unchanged
+ok 8 - permuted raw inventory changes generation even if selected source identities are unchanged
+  ---
+  duration_ms: 2.263701
+  type: 'test'
+  ...
+# Subtest: saved public09 pools preserve actual current selector output and every raw version, without old verdict transfer
+ok 9 - saved public09 pools preserve actual current selector output and every raw version, without old verdict transfer
+  ---
+  duration_ms: 2328.793146
+  type: 'test'
+  ...
+# Subtest: runtime owner captures actual claim slot, request, inherited deadline and independent install generation
+ok 10 - runtime owner captures actual claim slot, request, inherited deadline and independent install generation
+  ---
+  duration_ms: 2.312715
+  type: 'test'
+  ...
+# Subtest: late completion under cancel cannot cross owner gate or populate a cache
+ok 11 - late completion under cancel cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 1.408848
+  type: 'test'
+  ...
+# Subtest: late completion under epoch cannot cross owner gate or populate a cache
+ok 12 - late completion under epoch cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.681718
+  type: 'test'
+  ...
+# Subtest: late completion under replace cannot cross owner gate or populate a cache
+ok 13 - late completion under replace cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.701367
+  type: 'test'
+  ...
+# Subtest: late completion under session_expiry cannot cross owner gate or populate a cache
+ok 14 - late completion under session_expiry cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.662288
+  type: 'test'
+  ...
+# Subtest: late completion under deadline cannot cross owner gate or populate a cache
+ok 15 - late completion under deadline cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.504741
+  type: 'test'
+  ...
+# Subtest: late completion under material cannot cross owner gate or populate a cache
+ok 16 - late completion under material cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.563449
+  type: 'test'
+  ...
+# Subtest: late completion under install cannot cross owner gate or populate a cache
+ok 17 - late completion under install cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.447305
+  type: 'test'
+  ...
+# Subtest: late completion under done cannot cross owner gate or populate a cache
+ok 18 - late completion under done cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.545842
+  type: 'test'
+  ...
+# Subtest: same evidence does not make an old owner suitable for another claim slot or cache generation
+ok 19 - same evidence does not make an old owner suitable for another claim slot or cache generation
+  ---
+  duration_ms: 0.603349
+  type: 'test'
+  ...
+# Subtest: exact prior claim identity is mandatory; initial-only material needs no fake assessment
+ok 20 - exact prior claim identity is mandatory; initial-only material needs no fake assessment
+  ---
+  duration_ms: 0.722519
+  type: 'test'
+  ...
+# Subtest: current request ownership cannot bind unrelated claim material, wrong slot or altered source span
+ok 21 - current request ownership cannot bind unrelated claim material, wrong slot or altered source span
+  ---
+  duration_ms: 0.687275
+  type: 'test'
+  ...
+# Subtest: admitted public span uses Unicode scalar offsets and does not add surrounding text to material
+ok 22 - admitted public span uses Unicode scalar offsets and does not add surrounding text to material
+  ---
+  duration_ms: 0.591332
+  type: 'test'
+  ...
+# Subtest: a successful await grants no assessment and still needs a synchronous gate immediately before commit
+ok 23 - a successful await grants no assessment and still needs a synchronous gate immediately before commit
+  ---
+  duration_ms: 0.555076
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2761.05272

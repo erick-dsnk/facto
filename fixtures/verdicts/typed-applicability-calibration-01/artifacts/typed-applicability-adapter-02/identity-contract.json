@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "wireField": "trusted_record_identity",
+  "fields": ["canonicalDocumentId", "versionId", "documentClass", "provenanceMode"],
+  "provenanceMode": "dated_reviewed_snapshot",
+  "source": "resolveReceipt from an admin-pinned InstalledManifest plus matching private VerifiedSnapshot proof and exact entire-unit excerpt binding",
+  "purpose": "Identify only the canonical document/version containing this exact quoted unit",
+  "notEvidenceFor": ["publication date", "adoption date", "current legal force", "population or reference date", "award result", "ordinal", "exception", "condition", "real-world effect"],
+  "operativeFacts": "Must remain established by complete aligned quoted contents, never supplied by identity labels",
+  "callerOrModelSuppliedIdentity": "rejected",
+  "productionWired": false
+}

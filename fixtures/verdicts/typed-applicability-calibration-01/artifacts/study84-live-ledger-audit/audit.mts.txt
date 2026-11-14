@@ -1,0 +1,78 @@
+// Read-only actual-run audit; no providers, network or executable runner imported.
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {canonical} from '/workspace/task-evidence/record-capability-prototype-02/src/types.js';
+const base='/workspace/task-evidence/typed-applicability-calibration-01',live=base+'/live-first-run',out='/workspace/task-evidence/study84-live-ledger-audit';
+const sha=(v:string|Uint8Array)=>createHash('sha256').update(v).digest('hex');
+const read=(p:string)=>JSON.parse(fs.readFileSync(p,'utf8'));
+const paths=[base+'/root-authorization.json',base+'/applicability42-plan.json',live+'/run-start.json',live+'/report.json',live+'/checkpoints.jsonl'];
+const hashes=Object.fromEntries(paths.map(p=>[p,sha(fs.readFileSync(p))]));
+assert.equal(hashes[base+'/root-authorization.json'],'a3ae86d7714e3b7c70d0b26e37e3ffe60685563dc9751a093a1813a6656f601a');
+assert.equal(hashes[live+'/report.json'],'5e39c5fbdab55e902d82b91e2cc5e7385af03a1f7e1c7c08e3ba4c76737cf153');
+assert.equal(hashes[live+'/checkpoints.jsonl'],'2d250065d00f5b22d15a28778416fbc02d2dad9f3384fcc9021ced800e67b802');
+const auth=read(paths[0]!),plan=read(paths[1]!),start=read(paths[2]!),report=read(paths[3]!);
+assert.equal(sha(JSON.stringify(plan)),'6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0');
+assert.equal(auth.planCanonicalSHA256,sha(JSON.stringify(plan)));assert.equal(auth.soleOutput,live);
+assert.equal(start.planSHA256,auth.planCanonicalSHA256);assert.equal(start.transportMode,'live');assert.equal(start.noRetries,true);
+assert.ok(Date.parse(auth.createdAt)<Date.parse(start.startedAt));
+for(const[p,h]of Object.entries(plan.sourceHashes))assert.equal(sha(fs.readFileSync(p)),h,`source pin ${p}`);
+const pub=read(base+'/publication-manifest.json');
+for(const[p,h]of Object.entries(pub.files))assert.equal(sha(fs.readFileSync(base+'/'+p)),h,`publication pin ${p}`);
+const requests=read(plan.requestsPath),contexts=read(plan.contextsPath),calls=plan.guard.calls;
+const contextById=new Map(contexts.contexts.map((c:any)=>[c.unit.id,c]));
+const captures=new Map(requests.calls.map((c:any)=>[c.callId,c]));
+const events=fs.readFileSync(live+'/checkpoints.jsonl','utf8').trim().split('\n').map(l=>JSON.parse(l));
+assert.equal(calls.length,84);assert.equal(report.rows.length,84);assert.equal(report.guard.terminals.length,84);assert.equal(events.length,504);
+assert.equal(report.completedAllCalls,true);assert.equal(report.stop,null);assert.equal(report.projectProviderCalls,84);assert.equal(report.actualExaCalls,0);assert.equal(report.transportMode,'live');assert.equal(report.planSHA256,auth.planCanonicalSHA256);
+assert.equal(report.guard.status,'completed');assert.equal(report.guard.primaryFailure,null);assert.deepEqual(report.guard.failedCallIds,[]);assert.deepEqual(report.guard.missingCallIds,[]);assert.equal(report.guard.unknownUsage,false);
+assert.deepEqual(report.guard.completedCallIds,calls.map((c:any)=>c.callId));
+const initialCounters=()=>({reservedCalls:0,actualStartedJev:0,actualStartedExa:0,requestBytes:0,responseBytes:0,measuredInputTokens:0,usageKnownCalls:0,usageUnknownCalls:0});
+const totals=initialCounters(),blocks=Object.fromEntries(plan.guard.blocks.map((b:any)=>[b.blockId,initialCounters()]));
+const eventTypes=['call_reserved','request_prepared','request_started','response_headers','usage_observed','call_terminal'];
+const intervals:number[]=[],http:Record<string,number>={},perCall:any[]=[];let elapsed=0;
+for(let i=0;i<84;i++){
+ const call=calls[i],row=report.rows[i],terminal=report.guard.terminals[i],capture:any=captures.get(call.callId),ctx:any=contextById.get(row.unitId),chunk=events.slice(i*6,i*6+6);
+ assert.equal(row.callId,call.callId);assert.equal(terminal.callId,call.callId);assert.equal(capture.callId,call.callId);
+ assert.deepEqual(chunk.map((e:any)=>e.type),eventTypes);assert.ok(chunk.every((e:any)=>e.callId===call.callId));
+ assert.equal(sha(capture.body),call.requestSHA256);assert.equal(Buffer.byteLength(capture.body),call.requestBytes);
+ assert.equal(row.dispatch.requestSHA256,call.requestSHA256);assert.equal(row.dispatch.actualBytes,call.requestBytes);assert.equal(row.dispatch.attempts,1);assert.equal(row.runtimeChargedAttempts,1);
+ assert.equal(row.dispatch.answersSHA256,sha(canonical(row.answers)));assert.equal(row.completedActualAsk.requestSHA256,call.requestSHA256);assert.equal(row.completedActualAsk.answersSHA256,row.dispatch.answersSHA256);assert.equal(row.completedActualAsk.judgmentSHA256,sha(canonical(row.judgment)));assert.equal(row.completedActualAsk.actualAskConsumed,true);assert.equal(row.completedActualAsk.authorityGranted,false);
+ const wire=JSON.parse(capture.body);assert.equal(wire.state.checked_proposition,ctx.unit.exactClaimText);assert.equal(wire.state.semantic_as_of,ctx.unit.asOf);
+ assert.deepEqual(wire.state.evidence.map((e:any)=>[e.id,e.url,e.excerpt]),ctx.records.map((e:any)=>[e.id,e.url,e.excerpt]));
+ assert.equal(row.nativeGraph.nativeContextAvailable,true);assert.equal(row.nativeGraph.completeAtSelectorInputBoundary,true);assert.equal(row.nativeGraph.upstreamProviderBodiesComplete,false);
+ assert.equal(terminal.status,'completed');assert.equal(terminal.failure,null);assert.equal(terminal.unknownUsage,false);assert.equal(terminal.actualStartedJev,1);assert.equal(terminal.requestBytes,call.requestBytes);assert.equal(terminal.measuredInputTokens,row.runtimeMeasuredInputTokens);assert.ok(Number.isSafeInteger(terminal.measuredInputTokens)&&terminal.measuredInputTokens>=0);
+ assert.ok(terminal.responseBytes<=plan.guard.limits.maxResponseBytesPerCall);assert.ok(call.requestBytes<=plan.guard.limits.maxRequestBytes);
+ const b=blocks[call.blockId],lim=plan.guard.blocks.find((b:any)=>b.blockId===call.blockId).limits;
+ assert.ok(totals.measuredInputTokens+plan.guard.limits.pendingReserve<=plan.guard.limits.maxInputTokens);assert.ok(b.measuredInputTokens+lim.pendingReserve<=lim.maxInputTokens);
+ totals.reservedCalls++;b.reservedCalls++;
+ for(let j=0;j<6;j++){
+  const e=chunk[j],s=e.snapshot;assert.ok(s.elapsedMs>=elapsed);elapsed=s.elapsedMs;assert.ok(s.elapsedMs<plan.guard.limits.wallMs);assert.equal(s.primaryFailure,null);assert.equal(s.unknownUsage,false);
+  if(j===2){totals.actualStartedJev++;b.actualStartedJev++;totals.requestBytes+=call.requestBytes;b.requestBytes+=call.requestBytes;}
+  if(j===3){http[String(e.statusCode)]=(http[String(e.statusCode)]??0)+1;assert.equal(e.statusCode,200);}
+  if(j===4){for(const v of [totals,b]){v.responseBytes+=terminal.responseBytes;v.measuredInputTokens+=terminal.measuredInputTokens;v.usageKnownCalls++;}}
+  assert.deepEqual(s.totals,totals);assert.deepEqual(s.perBlock,blocks);
+  assert.equal(s.pendingInputTokenReserve,j<4?24000:0);
+  assert.equal(s.inFlightCallId,j===5?null:call.callId);
+  assert.deepEqual(s.completedCallIds,calls.slice(0,i+(j===5?1:0)).map((c:any)=>c.callId));
+  if(j===1||j===2){assert.equal(e.requestSHA256,call.requestSHA256);assert.equal(e.requestBytes,call.requestBytes);}
+ }
+ assert.ok(b.actualStartedJev<=lim.maxCalls&&b.measuredInputTokens<=lim.maxInputTokens&&b.requestBytes<=lim.maxTotalRequestBytes&&b.responseBytes<=lim.maxTotalResponseBytes);
+ const observed=read(live+`/observed-${row.unitId}-${row.arm}.json`),individual=read(live+`/${String(i+1).padStart(2,'0')}-${row.unitId}-${row.arm}.json`);
+ assert.equal(canonical(individual),canonical(row));for(const k of ['judgment','answers','dispatch','unavailable','completedActualAsk','eligibility'])assert.equal(canonical(observed[k]),canonical(row[k]));
+ for(const grant of row.eligibility){assert.equal(grant.requestSHA256,call.requestSHA256);assert.equal(grant.answersSHA256,row.dispatch.answersSHA256);assert.equal(grant.claimSHA256,sha(ctx.unit.exactClaimText));assert.equal(grant.excerptSHA256,sha(row.judgment.evidence.find((e:any)=>e.id===grant.evidenceId).excerpt));assert.equal(grant.productionWired,false);assert.equal(grant.recordCapabilityIssued,false);assert.equal(grant.verdictAssigned,false);assert.equal(grant.temporalAuthorization,false);assert.equal(grant.independentCorroborationCredit,false);}
+ const ms=chunk[5].snapshot.elapsedMs-chunk[0].snapshot.elapsedMs;intervals.push(ms);perCall.push({callId:call.callId,blockId:call.blockId,requestSHA256:call.requestSHA256,requestBytes:call.requestBytes,responseBytes:terminal.responseBytes,inputTokens:terminal.measuredInputTokens,reservedToTerminalMs:ms,httpStatus:chunk[3].statusCode});
+}
+assert.deepEqual(totals,report.guard.totals);assert.deepEqual(blocks,report.guard.perBlock);assert.equal(report.guard.elapsedMs,events.at(-1).snapshot.elapsedMs);
+assert.equal(totals.actualStartedJev,84);assert.equal(totals.actualStartedExa,0);assert.equal(totals.measuredInputTokens,846340);assert.equal(totals.requestBytes,3758808);assert.equal(totals.responseBytes,512132);assert.equal(totals.usageKnownCalls,84);assert.equal(totals.usageUnknownCalls,0);
+assert.equal(report.runtimeLedger.consumedJevAttempts,84);assert.equal(report.runtimeLedger.measuredInputTokens,846340);
+const offline=read(live+'/offline-binding-controls.json');assert.deepEqual(offline,report.offlineBindingControls);assert.equal(offline.length,2);assert.ok(offline.every((v:any)=>v.available===false&&v.actualJevAttempts===0&&v.actualExaAttempts===0));
+const partial=read(live+'/partial-report.json');assert.equal(canonical(partial.rows),canonical(report.rows));assert.equal(canonical(partial.guard),canonical(report.guard));
+const definite=report.rows.filter((r:any)=>r.policy.verdict!=='insufficient_evidence').map((r:any)=>({callId:r.callId,claim:(contextById.get(r.unitId) as any).unit.exactClaimText,verdict:r.policy.verdict,selectedEvidence:r.policy.selectedEvidenceIds.map((id:string)=>r.judgment.evidence.find((e:any)=>e.id===id))}));
+const pairChanges:any[]=[];
+for(const ctx of contexts.contexts){const rows=report.rows.filter((r:any)=>r.unitId===ctx.unit.id),b=rows.find((r:any)=>r.arm==='baseline_anchor'),c=rows.find((r:any)=>r.arm==='applicability'),expanded=c.policy.selectedEvidenceIds.filter((id:string)=>!b.policy.selectedEvidenceIds.includes(id));if(c.policy.verdict!==b.policy.verdict||expanded.length)pairChanges.push({id:ctx.unit.id,claim:ctx.unit.exactClaimText,baseline:b.policy,candidate:c.policy,expandedIds:expanded});}
+for(const[p,h]of Object.entries(hashes))assert.equal(sha(fs.readFileSync(p)),h,`input changed during audit ${p}`);
+const sorted=[...intervals].sort((a,b)=>a-b),nearest=(q:number)=>sorted[Math.ceil(q*sorted.length)-1];
+const result={decision:'PASSED_actual_ledger_integrity_no_execution_or_accuracy_claim',inputs:hashes,planCanonicalSHA256:auth.planCanonicalSHA256,all44SourcePinsAndPublicationFilesUnchanged:true,actualCalls:84,actualExaCalls:0,eventCount:504,eventsPerCall:eventTypes,httpStatuses:http,totals,perBlock:blocks,elapsedMs:report.guard.elapsedMs,reservedToTerminalTiming:{minMs:sorted[0],maxMs:sorted.at(-1),p50NearestRankMs:nearest(.5),p95NearestRankMs:nearest(.95)},runtimeLedger:report.runtimeLedger,offlineBindingControls:offline,all84ActualBodiesMatchFrozenCapture:true,all84AnswersAndJudgmentsMatchPrivateActualAskHashes:true,allObservedAndNumberedRowsMatchFinalReport:true,allPreDispatchReservesAndPerBlockCapsSatisfied:true,failed:0,missing:0,unknownUsage:0,definitiveRows:definite.length,pairPolicyOrSelectionChanges:pairChanges.length,perCall,limitations:['Provider usage is observed reported input usage, not independent billing verification.','Timing is guard reserved-to-terminal and campaign wall time, not a dedicated acceptedAt-to-completion runtime trace. Runtime deadline checks were enforced by frozen reviewed adapter.','Ledger success establishes no semantic accuracy, source verification, factual coverage or promotion; these are separately reviewed.','No dispatches, reruns or source fetches by this auditor.']};
+fs.writeFileSync(out+'/ledger-audit.json',JSON.stringify(result,null,2)+'\n',{flag:'wx'});fs.writeFileSync(out+'/source-review-handoff.json',JSON.stringify({reportSHA256:hashes[live+'/report.json'],definitive:definite,pairChanges},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({actualCalls:84,events:504,tokens:totals.measuredInputTokens,requestBytes:totals.requestBytes,responseBytes:totals.responseBytes,elapsedMs:report.guard.elapsedMs,maxCallMs:sorted.at(-1),definitiveRows:definite.length,changedPairs:pairChanges.length,runtimeLedger:report.runtimeLedger}));

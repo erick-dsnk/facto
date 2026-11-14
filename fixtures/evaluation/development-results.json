@@ -1,21 +1,32 @@
 {
   "schemaVersion": 1,
-  "mode": "deterministic_fixture",
+  "mode": "scripted_fixtures_plus_injected_runtime",
   "split": "development",
   "policyVersion": "glasses-p0.1",
   "modelVersion": "jev-latest-scripted-answers",
   "counts": {
     "selected": 36,
-    "passed": 34,
+    "passed": 36,
     "failed": 0,
-    "notRun": 2,
+    "notRun": 0,
     "heldoutReserved": 12
   },
   "coverage": {
     "admission": 33,
     "verdict": 17,
     "presentation": 17,
-    "providerErrors": 1
+    "providerErrors": 1,
+    "runtimeTransport": 2,
+    "runtimeDeadline": 1,
+    "runtimeCorrections": 1
+  },
+  "measurement": {
+    "scriptedFixtures": 34,
+    "injectedRuntimeTransport": 2,
+    "runtimeDurationsMs": {
+      "E33": 202,
+      "E43": 10036
+    }
   },
   "presentationConfusion": {
     "respond": {
@@ -218,15 +229,17 @@
   },
   "limitations": [
     "Scripted model answers test control flow, not model accuracy.",
+    "Injected runtime providers exercise composed authenticated HTTP/WebSocket transport, revision cancellation and deadlines, not provider semantics or reliability.",
     "Synthetic evidence is not a checked live citation.",
-    "No provider network, wearable capture, listening duration or actual speech measurement.",
-    "Held-outs are excluded unless explicitly selected; do not tune thresholds on their outcomes."
+    "No real provider network, wearable capture, listening duration or actual speech measurement.",
+    "The 12 held-out cases remain excluded unless explicitly selected; do not tune thresholds on their outcomes."
   ],
   "observations": [
     {
       "id": "E01",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -238,6 +251,7 @@
       "id": "E02",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -249,6 +263,7 @@
       "id": "E03",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -260,6 +275,7 @@
       "id": "E04",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -271,6 +287,7 @@
       "id": "E05",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -282,6 +299,7 @@
       "id": "E06",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -293,6 +311,7 @@
       "id": "E07",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -304,6 +323,7 @@
       "id": "E08",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -315,6 +335,7 @@
       "id": "E09",
       "category": "personal",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -326,6 +347,7 @@
       "id": "E13",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -341,6 +363,7 @@
       "id": "E14",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -356,6 +379,7 @@
       "id": "E15",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -371,6 +395,7 @@
       "id": "E16",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -386,6 +411,7 @@
       "id": "E17",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -401,6 +427,7 @@
       "id": "E18",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -416,6 +443,7 @@
       "id": "E19",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -431,6 +459,7 @@
       "id": "E20",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -446,6 +475,7 @@
       "id": "E21",
       "category": "public",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -461,6 +491,7 @@
       "id": "E25",
       "category": "mixed",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -476,6 +507,7 @@
       "id": "E26",
       "category": "mixed",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -491,6 +523,7 @@
       "id": "E27",
       "category": "mixed",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -502,6 +535,7 @@
       "id": "E28",
       "category": "mixed",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -513,6 +547,7 @@
       "id": "E29",
       "category": "mixed",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -524,6 +559,7 @@
       "id": "E30",
       "category": "mixed",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -534,15 +570,23 @@
     {
       "id": "E33",
       "category": "capture",
-      "status": "not_run",
-      "testedStages": [],
+      "status": "pass",
+      "method": "injected_runtime_transport",
+      "testedStages": [
+        "fastify_http",
+        "authenticated_websocket",
+        "runtime_revision_cancellation",
+        "correction_confirmation",
+        "auth_and_operational_error_boundary"
+      ],
       "mismatches": [],
-      "note": "Requires runtime or real-device scenario runner; not counted as a passing policy fixture."
+      "durationMs": 202
     },
     {
       "id": "E34",
       "category": "capture",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -554,6 +598,7 @@
       "id": "E35",
       "category": "capture",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -565,6 +610,7 @@
       "id": "E36",
       "category": "capture",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission"
       ],
@@ -576,6 +622,7 @@
       "id": "E37",
       "category": "capture",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -591,6 +638,7 @@
       "id": "E38",
       "category": "capture",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -607,6 +655,7 @@
       "id": "E41",
       "category": "service",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -623,6 +672,7 @@
       "id": "E42",
       "category": "service",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -638,15 +688,23 @@
     {
       "id": "E43",
       "category": "service",
-      "status": "not_run",
-      "testedStages": [],
+      "status": "pass",
+      "method": "injected_runtime_transport",
+      "testedStages": [
+        "fastify_http",
+        "authenticated_websocket",
+        "runtime_provider_deadline",
+        "deadline_cancellation",
+        "auth_and_operational_error_boundary"
+      ],
       "mismatches": [],
-      "note": "Requires runtime or real-device scenario runner; not counted as a passing policy fixture."
+      "durationMs": 10036
     },
     {
       "id": "E44",
       "category": "service",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "provider_error_validation"
       ],
@@ -657,6 +715,7 @@
       "id": "E45",
       "category": "service",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",
@@ -673,6 +732,7 @@
       "id": "E46",
       "category": "service",
       "status": "pass",
+      "method": "scripted_policy_fixture",
       "testedStages": [
         "admission",
         "verdict",

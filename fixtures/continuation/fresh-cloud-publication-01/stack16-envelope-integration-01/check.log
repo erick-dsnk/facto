@@ -1,0 +1,28 @@
+
+> check
+> npm run lint && npm run typecheck && npm test
+
+
+> lint
+> eslint packages services apps --no-warn-ignored
+
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> vitest run
+
+
+ RUN  v5.1.0 /workspace/stack-16-envelope-integration
+
+
+ Test Files  14 passed (14)
+      Tests  283 passed (283)
+   Start at  09:27:13
+   Duration  1.72s (import 42%, tests 38%, transform 18%, worker 2%)
+
+    Isolate  14 workers spawned · ~98ms startup each (spawn + environment, per file)
+             at least ~360ms faster with isolate: false — reuses workers across files instead of one per file
+

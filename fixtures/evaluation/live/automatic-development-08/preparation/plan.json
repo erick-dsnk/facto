@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_automatic_presentation_plan",
+  "createdAt": "2026-11-14T04:25:32.051413+00:00",
+  "status": "prepared_not_executed",
+  "freezeRequired": true,
+  "expectedFrozenCommit": null,
+  "expectedSourceSHA256": null,
+  "sourceCodeChanges": false,
+  "providerCallsByAuthor": 0,
+  "originalOrPrivateHeldoutRead": false,
+  "executionMode": "Six sequential one-case campaigns, each with a fresh authenticated HTTP/WebSocket session. Do not execute the catalog as one shared-session campaign.",
+  "automaticDispatchSpacingMs": 4100,
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 180000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 24,
+      "search": 12,
+      "contents": 18
+    },
+    "wallMs": 90000
+  },
+  "limitsScope": "One cumulative cap across all six isolated campaigns, including authentication/server overhead, spacing, failed attempts and any retries. No per-case cap reset.",
+  "denominators": {
+    "inputs": 6,
+    "automaticInputs": 5,
+    "manualInputs": 1,
+    "eligibleOccurrences": 5,
+    "uniqueExistingFactsReused": 3,
+    "newFactualAccuracyDenominator": 0,
+    "repeatedCaseIds": {
+      "BD10": 3
+    },
+    "presentationScenarios": 6
+  },
+  "selectionDisclosure": "BD10 requested explicitly to exercise real notification and reused across permission/priority conditions. Author inspected public baseline outcome labels: BD10 contradicted, BD09 and BD07 supported; these known development outcomes informed branch selection. This is a diagnostic action cohort, not independent accuracy validation.",
+  "sourceArtifacts": {
+    "v2/live-manifest.json": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512",
+    "v2/cases.json": "52babda66404dffdbe87d06fc9addba3eabdafad466d26c47d6c297c84368c62",
+    "v2/independent-source-label-review.json": "5c21af8507cf5e4b5fcf8a112fc9b5d4a114094d6c699b633ce1d96af57c98bb",
+    "sources.json": "dc6d5588055ba5fb77bd543862e9159312c3971063fa6bd42afeeed54895101c"
+  },
+  "orderedScenarios": [
+    "AD01-disabled-contradiction",
+    "AD02-selected-topic-notify",
+    "AD03-supported-silent",
+    "AD04-low-priority-silent",
+    "AD05-personal-skip",
+    "AD06-muted-manual"
+  ],
+  "completionRules": [
+    "Run only after root records final clean source commit/hash and full check.",
+    "Each case gets a new session/server through a separate runLiveCampaign invocation; capture HTTP401 probes and correlated terminal receipt.",
+    "Before each invocation subtract all prior dispatched attempts, request bytes, measured plus unknown reserved tokens, and elapsed wall time from the cohort budget; never clamp exhausted capacity upward.",
+    "Abort the cohort on any local/transport stop, unknown completed Jev usage, actual overrun, or exhaustion. Preserve all received reports; do not rerun or replace a case to obtain notify.",
+    "Enforce at least4100ms between automatic HTTP dispatches across isolated invocations. Count this waiting in cohort wall time, record it separately from processing latency.",
+    "AD02 passes only with a real claim.result whose verdict is contradicted and presentation is notify/selected_topic_contradiction. An abstention or operational failure prevents this branch from being exercised.",
+    "Verdict-dependent silence scenarios require the declared verdict and exact reason code; an abstention that happens to be silent is inconclusive for that target branch.",
+    "AD04 additionally requires numeric practical-consequence below0.8 with no selected topic. Unknown or high priority is separately reported, not called a low-priority pass.",
+    "AD05 requires private_or_personal skip, silent presentation and zero Exa attempts. AD06 requires a permitted manual check with muted silence, not a rejected request.",
+    "All retained selected references require fresh external exact-scope review before claiming source-verified factual correctness; copied ground-truth records do not supply that review.",
+    "No factual outputs from this cohort enlarge the broader-development or release factual denominator. Report latency, cold status, attempts, bytes, tokens, costs, privacy and all six action outcomes separately."
+  ]
+}

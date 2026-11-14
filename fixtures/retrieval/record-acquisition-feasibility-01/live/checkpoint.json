@@ -1,0 +1,680 @@
+{
+  "kind": "record_acquisition_checkpoint",
+  "mode": "live",
+  "completed": false,
+  "sourceCommit": "7ab8f41ddc151092f4afcb0fd751a7202f9f80f7",
+  "planSHA256": "28636878d0e41d99ecec5033459d5fa0e2710884ab525029edcd0b6797333251",
+  "collectorSHA256": "98f5985c0dbff4f48c0457c42a3d76671426bf1d5cbea3cf23420656ba390958",
+  "limits": {
+    "declaredFamilies": 4,
+    "jevActualAttempts": 0,
+    "searchActualAttemptsTotal": 4,
+    "searchActualAttemptsPerFamily": 1,
+    "contentsActualAttemptsTotal": 12,
+    "contentsActualAttemptsPerFamily": 3,
+    "deadlineMsPerFamily": 10000,
+    "serialFamilies": true,
+    "maximumSumOfFamilyNetworkWindowsMs": 40000,
+    "requestBytesPerActualAttempt": 65536,
+    "requestBytesTotal": 1048576,
+    "responseBytesPerActualAttempt": 262144,
+    "responseBytesTotal": 4194304,
+    "searchRetries": 0,
+    "contentsRetries": "Existing at-most-one retry only within the original3actualcontents slots and inherited deadline; no extra slots or laterfamily borrowing."
+  },
+  "totals": {
+    "httpBoundaryAttempts": 9,
+    "networkCalls": 9,
+    "jevCalls": 0,
+    "search": 4,
+    "contents": 5,
+    "consumedAllowances": {
+      "search": 4,
+      "contents": 5,
+      "jev": 0
+    },
+    "requestBytes": 6426,
+    "responseBytes": 121753,
+    "pendingDispatchReservations": 0,
+    "knownPartialCostUSD": 0.038,
+    "attemptsWithUnknownCost": 0,
+    "totalCostUSD": 0.038
+  },
+  "fatal": null,
+  "cases": [
+    {
+      "id": "AQ01",
+      "familyAlias": "RA01",
+      "publicQuery": "RFC 8174 BCP 14 requirement keyword interpretation",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-9f03e92e40a681514fd3",
+          "url": "https://www.oasis-open.org/policies-guidelines/keyword-guidelines-for-oasis-specifications-and-standards/",
+          "title": "Keyword Guidelines for OASIS Specifications and Standards - OASIS Open",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:05.657Z",
+          "excerpt": "Keywords establish the requirements that implementers follow in conforming to OASIS specifications and standards.\n\nThis guide explains how to use two of the more popular keyword sets, [IETF BCP14] (consisting of both [RFC2119] and [RFC8174]) and [ISO/IEC Directives]. After explaining the basic rules for each keyword set, we provide examples of the keywords in use in OASIS specifications.\n\nIn general, OASIS standards-track documents should use the capitalized IETF keywords, unless the developers expect to submit the final OASIS Standard to a standards body requiring the ISO/IEC keywords.\n\n### 1.1 Changes from earlier OASIS guidelines – IETF keywords\n\nIncorporated IETF RFC 8174 and the expansion of BCP 14 to include RFC 8174 as well as RFC 2119.\n\nBeyond simply adding a reference to RFC8174, the expansion of BCP 14 involves changes to the text describing the use of keywords in a specification:\n\n- Adds the keyword phrase “NOT RECOMMENDED”\n- Extends the text describing the usage of RFC 2119 or BCP 14 keywords to include the phrase “when, and only when, they appear in all capitals, as shown here.”\n\n...\n\nThe term keywords as used in OASIS specifications or standards means terms specified either by [IETF BCP14] or the [ISO/IEC Directives]. Every OASIS specification or standard will choose (and use) one or the other. The two keyword sets are never mixed in a specification or standard.\n\nKeywords identify the requirements for conforming to a specification or standard. RFC 2119 gives the following guidance on keywords (called “imperatives”):\n\n> Imperatives of the type defined in this memo must be used with care and sparingly. In particular, they MUST only be used where it is actually required for interoperation or to limit behavior which has potential for causing harm (e.g., limiting retransmissions) For example, they must not be used to try to impose a particular method on implementors where the method is not required for interoperability. RFC2119\n\n...\n\n“Normative” text includ",
+          "contentBasis": "highlight",
+          "sourceGroup": "oasis-open.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-8f3e84ea0541e881ec1d",
+          "url": "https://www.rfc-editor.org/info/rfc8174/",
+          "title": "RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words | RFC Editor",
+          "publisher": null,
+          "publishedAt": "2017-05-18T01:59:04.000Z",
+          "retrievedAt": "2026-11-14T06:44:05.657Z",
+          "excerpt": "cause their meanings are well defined.\n   This document defines how those words are interpreted in IETF\n   documents when the words are in all capitals.\n\n   o  These words can be used as defined here, but using them is not\n      required.  Specifically, normative text does not require the use\n      of these key words.  They are used for clarity and consistency\n      when that is what's wanted, but a lot of normative text does not\n      use them and is still normative.\n\n   o  The words have the meanings specified herein only when they are in\n      all capitals.\n\n   o  When these words are not capitalized, they have their normal\n      English meanings and are not affected by this document.\n\n   Authors who follow these guidelines should incorporate this phrase\n   near the beginning of their document:\n\n      The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL\n      NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"NOT RECOMMENDED\",\n      \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as\n      described in BCP 14 [RFC2119] [RFC8174] when, and only when, they\n      appear in all capitals, as shown here.\n\n   === END ===\n\nLeiba                     Best Current Practice                 [Page 3]\n```\n\n```\n\nRFC 8174                 RFC 2119 Clarification                 May 2017\n\n3.  IANA Considerations\n\n   This document does not require any IANA actions.\n\n4.  Security Considerations\n\n   This document is purely procedural; there are no related security\n   considerations.\n\n5.  Normative References\n\n   [RFC2119]  Bradner, S., \"Key words for use in RFCs to Indicate\n              Requirement Levels\", BCP 14, RFC 2119,\n              DOI 10.17487/RFC2119, March 1997,\n              <http://www.rfc-editor.org/info/rfc2119>.\n\nAuthor's Address\n\n   Barry Leiba\n   Huawei Technologies\n\n   Phone: +1 646 827 0648\n   Email: barryleiba@computer.org\n   URI:   http://internetmessagingtechnology.org/\n\nLeiba                     Best Current Practice                 [Page 4]\n\n```",
+          "contentBasis": "page_text",
+          "sourceGroup": "rfc-editor.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-68d2d12d5fa4c62b2261",
+          "url": "https://www.rfc-editor.org/info/bcp14/",
+          "title": "BCP 14 subseries contains 2 RFCs | RFC Editor",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:05.657Z",
+          "excerpt": "## RFC 8174: BCP 14: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words\n\n#### Abstract \n\nRFC 2119 specifies common key words that may be used in protocol specifications. This document aims to reduce the ambiguity by clarifying that only UPPERCASE usage of the key words have the defined special meanings.\n\n...\n\n## RFC 2119: BCP 14: Key words for use in RFCs to Indicate Requirement Levels\n\n- S. Bradner\n\n#### Abstract \n\nIn many standards track documents several words are used to signify the requirements in the specification. These words are often capitalized. This document defines these words as they should be interpreted in IETF documents. This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.",
+          "contentBasis": "highlight",
+          "sourceGroup": "rfc-editor.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-cfaa9eec4884811379d5",
+          "url": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+          "title": "IESG Statement on Clarifying the Use of BCP 14 Key Words",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:05.657Z",
+          "excerpt": " certain key words to specify requirement levels for various normative assertions in technical specifications. Other standards organizations have also adopted the use of BCP 14 in their specifications.\n\nNotably, BCP 14 recommends these key words be used “sparingly” and mandates they not be used unless they are “actually required for interoperation or to limit behavior which has potential for causing harm.”\n\nOver time, the use of these key words has become less crisp, and they are now used in additional ways in Internet-Drafts. The IESG provides the following clarifying guidance on the interpretation and use of BCP 14. However, this guidance is not exhaustive, and other questionable uses of BCP 14 may be identified as documents are processed by the IESG.\n\n## Key words not required for normative guidance\n\nThere is occasionally a misunderstanding that BCP 14 key words are the only way to make normative expressions in an RFC. This is incorrect. For instance, the sentence “The client sends a CR and LF after a command” is a normative statement, describing an interoperability requirement, that does not use a BCP 14 key word. BCP 14 is an optional tool, and not strictly necessary.\n\n## Common Additional Uses of Key Words\n\nAs stated above, BCP 14 defined its key words to support assertions around requirements related to interoperability of a protocol and avoidance of potential harm in potential misuse of a protocol. Since its publication, the practice of using of its key words to specify the following additional types of requirements has become generally accepted by the IESG:\n\n- Operational requirements, especially around mandatory logging and configuration needed to produce successful deployments \n- Minimum components of a benchmarking framework for the results to be compared \n- RFC 2119 specifically refers to use of these key words on standards track documents, but their use has also become common – and is useful – in experimental documents. They are also seen in informatio",
+          "contentBasis": "page_text",
+          "sourceGroup": "ietf.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:44:04.006Z",
+      "completedAt": "2026-11-14T06:44:05.703Z",
+      "elapsedMs": 1697,
+      "allowances": {
+        "search": 1,
+        "contents": 3
+      }
+    },
+    {
+      "id": "AQ02",
+      "familyAlias": "RA02",
+      "publicQuery": "Canada Holidays Act section 2 Canada Day Sunday",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-47e6eb26a484c3acd717",
+          "url": "https://ehlaw.ca/july-1st-a-sunday-holidays-act-bumps-canada-day-to-july-2nd/",
+          "title": "July 1st a Sunday? Holidays Act “Bumps” Canada Day to July 2nd - Emond Harnden",
+          "publisher": null,
+          "publishedAt": "2018-06-26T13:38:45.000Z",
+          "retrievedAt": "2026-11-14T06:44:07.120Z",
+          "excerpt": "# July 1st a Sunday? Holidays Act “Bumps” Canada Day to July 2nd\n\nThe federal Holidays Act provides that July1st is a legal holiday, kept and observed under the name “Canada Day”. This year July 1st falls on a Sunday which, for most employees, would not be a regular working day. As a result, Canada Day is “bumped” to July 2nd. This can lead to some confusion on the parts of both employers and employees as to what holiday benefits employees are entitled to and on which day.\n\n#### When July 1st is a Sunday\n\nAs noted above, the Holidays Act states that July 1st is the legal holiday known as Canada Day. However, the Act specifically addresses the instances where July 1st falls on a Sunday. Subsection 2(2) states:\n\nWhen July 1 is a Sunday (2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of “Canada Day”.\n\nAs a result, for the year 2018, Monday, July 2nd, will be observed as Canada Day. The Ontario Employment Standards Act (the “ESA”) sets out the holiday entitlements of employees for public holidays such as Canada Day.\n\n#### When a public holiday is a working day\n\nFor most employees Monday, July 2nd would be a regular working day. Section 26 of the ESA provides:\n\nPublic holiday ordinarily a working day 26. (1) If a public holiday falls on a day that would ordinarily be a working day for an employee and the employee is not on vacation that day, the employer shall give the employee the day off work and pay him or her public holiday pay for that day.\n\nAs readers of Focus will know, effective July 1, 2018, the calculation of public holiday pay reverts to the former formula that was in place prior to the Bill 148 changes to the ESA (Ontario government announces that public holiday pay calculations will change (again) effective July 1, 2018). An employee’s public holiday pay will be equal to the total amount of the regular wages earned and vacation pay payable to the employee in the four weeks before ",
+          "contentBasis": "highlight",
+          "sourceGroup": "ehlaw.ca",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-ff73123fdb3afe75eb77",
+          "url": "https://www.ottawaemploymentlaw.com/2018/07/holidays-on-sunday.html",
+          "title": "Holidays on Sunday - Labour Pains",
+          "publisher": null,
+          "publishedAt": "2018-07-03T00:00:00.000Z",
+          "retrievedAt": "2026-11-14T06:44:07.120Z",
+          "excerpt": "(and without knowledge of what those days mean) are \"Family Day\" and December 26. \n\nSo when is “Canada Day” anyway? \n\n### Legislation Act, 2006\n\nThe answer is not as clear as one may want. In fact, the Employment Standards Act, 2000 does not provide any definition of those dates. \n\nThe answer is buried in the Legislation Act, 2006, SO 2006, c 21, Sch F. \n\nPursuant to sections 87 and 88 of that law, “holiday” means \n\n1. Sunday. \n2. New Year’s Day. \n3. Family Day. \n4. Good Friday. \n5. Easter Monday. \n6. Victoria Day. \n7. Canada Day. \n8. Labour Day. \n9. Thanksgiving Day. \n10. Remembrance Day. \n11. Christmas Day. \n12. Boxing Day. \n13. Any day fixed as a holiday by proclamation of the Governor General or Lieutenant Governor. \n\nBut it is within subsection (3) – (5) of section 88 that things get really fun. \n\nSubsection 88(3) provides, “When New Year’s Day falls on a Sunday, the following Monday is also a holiday.” \n\nSubsection 88(4) says, “In accordance with the Holidays Act (Canada), when July 1 is a Sunday, Canada Day falls on July 2. \n\nSubsection 88(5) will tell you that, “When Christmas Day falls on a Saturday, the following Monday is also a holiday, and when it falls on a Sunday, the following Tuesday is also a holiday.” \n\nSo, that means: \n\n- If January 1 falls on a Sunday, employees are entitled to two public holidays, i.e. January 1 and January 2. \n- If July 1 falls on a Sunday, then July 1 is not a “public holiday” under the Employment Standards Act, 2000 (and other statutes) nor is it even “Canada Day”; July 2 is. (For what it’s worth the party on Parliament Hill including the fireworks still go off on the 1st.) \n- If Christmas Day, December 25th, falls on a Saturday or Sunday, then all of December 25-27 are public holidays. \n\nAs always, everyone’s situation is different. The above is not intended to be legal advice for any particular situation. It is always prudent to seek professional legal advice before making any decisions with respect to your own case. \n\nPho",
+          "contentBasis": "highlight",
+          "sourceGroup": "ottawaemploymentlaw.com",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-5aed7db0b2ea3075df25",
+          "url": "https://laws-lois.justice.gc.ca/eng/acts/H-5/section-2.html",
+          "title": "Holidays Act",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:07.120Z",
+          "excerpt": "Holidays Act\n\n# Holidays Act (R.S.C., 1985, c. H-5)\n\nFull Document: \n\n- HTML Full Document: Holidays Act (Accessibility Buttons available) | \n- XML Full Document: Holidays Act [4 KB] | \n- PDF Full Document: Holidays Act [91 KB]\n\nAct current to 2026-10-19 and last amended on 2018-03-01. Previous Versions\n\nMarginal note: Canada Day\n\n- 2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day\".\n- Marginal note: When July 1 is a Sunday\n\n(2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \" Canada Day\".\n\n- R.S., c. H-7, s. 2\n- 1980-81-82-83, c. 124, s. 1",
+          "contentBasis": "highlight",
+          "sourceGroup": "justice.gc.ca",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-ac4f043ef658d650cc8c",
+          "url": "https://gowlingwlg.com/en/insights-resources/articles/2018/canada-day-and-the-holidays-act",
+          "title": "Canada day and the Holidays Act",
+          "publisher": null,
+          "publishedAt": "2018-06-27T00:00:00.000Z",
+          "retrievedAt": "2026-11-14T06:44:07.120Z",
+          "excerpt": "Published 27 June 2018\n\nProvinces across the country give employees a day off work on July 1st each year to celebrate Canada Day, the anniversary of the July 1, 1867 enactment of the legislation creating our great country. However, in 2018, July 1 falls on a Sunday. According to a little-known piece of federal legislation, the Holidays Act, RSC 1985, c H-5, in any year when July 1 falls on a Sunday, the holiday will be observed on July 2.\n\nFor employers in most provinces and territories, this means that Monday, July 2, 2018 must be observed as the statutory holiday, and Sunday, July 1, 2018 is to be treated like any other Sunday. In addition, employers must be cognizant of applicable shops closing legislation that may require closure on either Sunday, July 1 or Monday, July 2. For instance, in both Manitoba and New Brunswick, where Canada Day is observed on Monday, July 2 this year, retail closing legislation may require a business to be closed on Monday, but open as usual on Sunday. As a result, many retail employees will have to work on Canada Day and will miss out the chance to celebrate the holiday with family and friends. For business not affected by retail closing legislation, and those provinces without retail closing legislation (e.g. British Columbia, Alberta and Saskatchewan), businesses can choose to be open on Monday, but must pay eligible employees premium pay for all hours worked. Another issue arises for provinces with Sunday closing laws, which require certain businesses to be closed on Sunday, July 1 in addition to the closure on Monday, July 2 in observance of the Canada Day holiday, hurting the bottom line. \n\nThe problems set out above have been solved in Nova Scotia, which recently passed legislation defining Canada Day in its employment standards and retail closing legislation as July 1, even when it falls on a Sunday.\n\nThe only other province observing the holiday on Sunday, July 1 in 2018 is Newfoundland and Labrador, which celebrates “Memoria",
+          "contentBasis": "highlight",
+          "sourceGroup": "gowlingwlg.com",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-25dceba815a86f80aa23",
+          "url": "https://www.canlii.org/en/ca/laws/stat/rsc-1985-c-h-5/latest/rsc-1985-c-h-5.html",
+          "title": "Holidays Act, RSC 1985, c H-5",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:07.120Z",
+          "excerpt": "# Holidays Act, RSC 1985, c H-5\n\nFrench Version\n\nRSS\n\nCurrent version: in force since 2018-03-01\n\nLink to the latest version :\n\nhttps://canlii.ca/t/7vh4\n\nStable link to this version :\n\nhttps://canlii.ca/t/533r3\n\nCitation to this version:\n\nHolidays Act, RSC 1985, c H-5, < https://canlii.ca/t/533r3> retrieved on 2025-04-27\n\nCurrency:\n\nThis statute is current to 2025-03-03 according to the Justice Laws Web Site\n\nAn Act respecting Holidays\n\n## Short Title\n\nShort title\n\n1 This Act may be cited as the Holidays Act.\n\n- R.S., c. H-7, s. 1\n\n## Canada Day\n\nCanada Day\n\n2 (1) July 1, not being a Sunday, is a legal holiday and shall be kept and observed as such throughout Canada under the name of \"Canada Day\".\n\nWhen July 1 is a Sunday\n\n(2) When July 1 is a Sunday, July 2 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \"Canada Day\".\n\n- 1980-81-82-83, c. 124, s. 1\n- R.S., c. H-7, s. 2\n\n## Remembrance Day\n\nRemembrance Day\n\n3 November 11, being the day in the year 1918 on which the Great War was triumphantly concluded by an armistice, is a legal holiday and shall be kept and observed as such throughout Canada under the name of “Remembrance Day”.\n\n- 2018, c. 3, s. 1\n- R.S., 1985, c. H-5, s. 3\n\n## Victoria Day\n\nVictoria Day\n\n4 The first Monday immediately preceding May 25 is a legal holiday and shall be kept and observed as such throughout Canada under the name of \"Victoria Day\".\n\n- R.S., c. H-7, s. 4",
+          "contentBasis": "highlight",
+          "sourceGroup": "canlii.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:44:05.722Z",
+      "completedAt": "2026-11-14T06:44:07.130Z",
+      "elapsedMs": 1408,
+      "allowances": {
+        "search": 1,
+        "contents": 0
+      }
+    },
+    {
+      "id": "AQ03",
+      "familyAlias": "RA03",
+      "publicQuery": "2021 Pulitzer Prize Fiction winner record",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-5d3676cd31a09dface5f",
+          "url": "https://www.pulitzer.org/winners/louise-erdrich",
+          "title": "Louise Erdrich | The Pulitzer Prizes",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:10.113Z",
+          "excerpt": "Circle Award (twice), and has been a finalist for the Pulitzer Prize. She has received the Library of Congress Prize in American Fiction, the prestigious PEN/Saul Bellow Award for Achievement in American Fiction, and the Dayton Literary Peace Prize. Louise Erdrich, a member of the Turtle Mountain band of Chippewa, lives in Minnesota with her daughters and is the owner of Birchbark Books, a small independent bookstore.\n\n## Finalists\n\nNominated as finalists in Fiction in 2021:\n\n### Daniel Mason\n\n A collection of stories with themes of class division, the artist's role in society and our need for love and belonging, reflecting a prowess with language and a mastery of the short form. \n\n### Percival Everett\n\n A novel of narrative ingenuity that includes both a heartbreaking illness and a crime story in its exploration of discontent, loss and the possibility of redemption. \n\n### Oscar Villalon(Chair)\n\n Managing Editor, ZYZZYVA, San Francisco \n\n### Edwidge Danticat\n\n Author, Miami \n\n### Hernan Diaz*\n\n Author; Associate Director, Hispanic Institute for Latin American and Iberian Cultures, Columbia University \n\n### C. E. Morgan\n\n Writing Fellow, Harvard Divinity School \n\n### Kenneth Warren\n\n Fairfax M. Cone Distinguished Service Professor of English, University of Chicago \n\n* Past Pulitzer Prize winner\n\n## Winners in Fiction\n\nA spare and devastating exploration of abuse at a reform school in Jim Crow-era Florida that is ultimately a powerful tale of human perseverance, dignity and redemption.\n\nAn ingeniously structured narrative that branches and canopies like the trees at the core of the story whose wonder and connectivity echo those of the humans living amongst them.\n\nA generous book, musical in its prose and expansive in its structure and range, about growing older and the essential nature of love.\n\nFor a smart melding of realism and allegory that combines the violence of slavery and the drama of escape in a myth that speaks to contemporary America.\n\n## 2021 Prize Winners",
+          "contentBasis": "highlight",
+          "sourceGroup": "pulitzer.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-0f776367c786db46391c",
+          "url": "https://www.pulitzer.org/prize-winners-by-year/2021",
+          "title": "2021 Prize Winners and Finalists | The Pulitzer Prizes",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:10.113Z",
+          "excerpt": "2021 Prize Winners and Finalists | The Pulitzer Prizes\n\n# 2021 Pulitzer Prizes\n\n## Journalism\n\n Category \n\n Winners \n\n Finalists\n\n...\n\n### Robert Greene of the Los Angeles Times\n\nAlan Wirzbicki and Rachelle G. Cohen of The Boston Globe\n\n## Books, Drama & Music\n\n Category \n\n Winners \n\n Finalists \n\n Fiction \n\n Fiction \n\n### The Night Watchman, by Louise Erdrich (Harper)\n\n A majestic, polyphonic novel about a community’s efforts to halt the proposed displacement and elimination of several Native American tribes in the 1950s, rendered with dexterity and imagination. \n\nFinalists:\n\nTelephone, by Percival Everett (Graywolf Press)\n\nA Registry of My Passage Upon the Earth, by Daniel Mason (Little, Brown and Company)\n\n Drama \n\n Drama \n\n### The Hot Wing King, by Katori Hall\n\n A funny, deeply felt consideration of Black masculinity and how it is perceived, filtered through the experiences of a loving gay couple and their extended family as they prepare for a culinary competition. \n\nFinalists:\n\nCircle Jerk, by Michael Breslin and Patrick Foley",
+          "contentBasis": "highlight",
+          "sourceGroup": "pulitzer.org",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-dcb4243cf807184deaf2",
+          "url": "https://news.columbia.edu/index%2Ephp/pulitzer-prizes-2021",
+          "title": "2021 Pulitzer Prize Winners | Columbia News",
+          "publisher": null,
+          "publishedAt": "2021-06-11T00:00:00.000Z",
+          "retrievedAt": "2026-11-14T06:44:10.113Z",
+          "excerpt": "# 2021 Pulitzer Prize Winners \n\nColumbia University announced the 2021 Pulitzer Prizes, awarded on the recommendation of the Pulitzer Prize Board.\n\nJune 11, 2021\n\n \n\nAt 1:00PM ET today, the 105th annual Pulitzer Prizes in Journalism, Letters, Drama and Music were announced via streamed video. As Pulitzer Prize board co-chair, Stephen Engelberg, said, \"For the second, and we hope last year, we're coming to you via remote production.\"\n\nPrior to the announcement, the board co-chairs, Stephen Engelberg and Mindy Marqués, spoke about how COVID impacted the Pulitzer judging and celebrations. Since theaters were shuttered during the pandemic, the judges considered plays that had not yet been performed and also those that were shown online. The in-person luncheon for both the 2020 and 2021 winners will be held this fall in New York City as COVID rates continue to fall and restrictions are lifted.\n\n...\n\n## Letters and Drama\n\nFiction The Night Watchman by Louise Erdrich (Harper)\n\nDrama The Hot Wing King by Katori Hall\n\nHistory Franchise: The Golden Arches in Black America by Marcia Chatelain (Liveright/Norton)\n\nBiography The Dead Are Arising: The Life of Malcolm X by the late Les Payne and Tamara Payne (Liveright/Norton)\n\nPoetry Postcolonial Love Poem by Natalie Diaz (Graywolf Press)\n\nGeneral Nonfiction Wilmington’s Lie: The Murderous Coup of 1898 and the Rise of White Supremacy by David Zucchino (Atlantic Monthly Press)\n\n...\n\n## Special Citation\n\nDarnella Frazier",
+          "contentBasis": "highlight",
+          "sourceGroup": "columbia.edu",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-40dacc2ecdf00d9a3bfa",
+          "url": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+          "title": "Pulitzer Prizes: A Guide to the Winning Books and Finalists",
+          "publisher": null,
+          "publishedAt": "2021-06-11T18:37:44.000Z",
+          "retrievedAt": "2026-11-14T06:44:10.113Z",
+          "excerpt": "Pulitzer Prizes: A Guide to the Winning Books and Finalists - The New York Times\n\nAdvertisement\n\nSKIP ADVERTISEMENT\n\nYou have a preview view of this article while we are checking your access. When we have confirmed access, the full article content will load.\n\nFifteen books were recognized as winners or finalists for the Pulitzer Prize on Friday, in the categories of fiction, general history, biography, poetry and general nonfiction\n\nImage\n\nFiction\n\n## ‘The Night Watchman,’ by Louise Erdrich (Harper/HarperCollins Publishers)\n\nThis novel follows members of the Chippewa in the 1950s, as Congress weighs a bill to “emancipate” Indigenous people from their lands and their tribal affiliations. The title character was modeled after Erdrich’s grandfather, who sent voluminous letters to Washington in an effort to save his tribe. Our reviewer called the book “a magisterial epic that brings her power of witness to every page.”\n\nFinalist: “ A Registry of My Passage Upon the Earth,” by Daniel Mason",
+          "contentBasis": "page_text",
+          "sourceGroup": "nytimes.com",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:44:07.144Z",
+      "completedAt": "2026-11-14T06:44:10.121Z",
+      "elapsedMs": 2977,
+      "allowances": {
+        "search": 1,
+        "contents": 1
+      }
+    },
+    {
+      "id": "AQ04",
+      "familyAlias": "RA04",
+      "publicQuery": "ONS Census 2021 England and Wales population first release",
+      "status": "returned",
+      "evidence": [
+        {
+          "id": "ev-add19264a458a9d68f0e",
+          "url": "https://www.gov.uk/government/publications/census-2021-first-results-england-and-wales/population-and-household-estimates-england-and-wales-census-2021",
+          "title": "Population and household estimates, England and Wales: Census 2021 - GOV.UK",
+          "publisher": null,
+          "publishedAt": "2022-06-28T12:21:40.000Z",
+          "retrievedAt": "2026-11-14T06:44:11.639Z",
+          "excerpt": "..\n\nChanges in the size of the population are caused by births, deaths, and internal and international migration. Using data on live births and deaths registrations, as well as migration estimates, can provide a more detailed understanding of the components of population change since 2011. These may not align perfectly with census estimates for a number of reasons – see the Strengths and limitations section for further information.\n\n...\n\n### Reference date\n\nThe census provides estimates of the characteristics of all people and households in England and Wales on Census Day, 21 March 2021. It is carried out every 10 years and gives us the most accurate estimate of all the people and households in England and Wales.\n\nWe are responsible for carrying out the census in England and Wales, but will also release outputs for the UK in partnership with the Welsh Government, the National Records of Scotland (NRS) and the Northern Ireland Statistics and Research Agency (NISRA). The census in Northern Ireland was also conducted on 21 March 2021, whereas Scotland’s census was moved to 20 March 2022. All UK census offices are working closely together to understand how this difference in reference dates will impact UK-wide population and housing statistics, in terms of both timing and scope.\n\n### Response rate\n\nThe person response rate is the number of usual residents for whom individual details were provided on a returned questionnaire, divided by the estimated usual resident population.\n\nThe person response rate for Census 2021 was 97% of the usual resident population of England and Wales, and over 88% in all local authorities. The majority of returns (89%) were received online. The response rate exceeded our target of 94% overall and 80% in all local authorities.\n\n### Parliamentary requirements\n\nThis bulletin was shared with the relevant Ministers in both the UK Government and Welsh Government on Monday 27 June, to meet the requirements within Section 4 of the Census Act 1920 tha",
+          "contentBasis": "highlight",
+          "sourceGroup": "www.gov.uk",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-b5b2de61530a9005f89e",
+          "url": "https://www.data.gov.uk/dataset/ada77bff-b6d8-4702-a990-8630c3674465/2021-census-first-release1",
+          "title": "2021 census first release - National Data Library",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:11.639Z",
+          "excerpt": "# 2021 census first release \n\n Publisher \n\n Greater London Authority \n\n Updated \n\n 25 September 2026\n\n...\n\n## Summary\n\nOn 28 June 2022 ONS released the first results from the 2011 Census of England and Wales comprising for each local authority the estimated population at census day (21 March 2021) and the number of households. Population estimates are by five-year age band and sex. Estimates of responses rates for each local authority were also published.\n\nRead our blog post which describes how the census data relates to other population estimates and some of the pitfalls to avoid when interpreting the numbers.\n\n## Data links\n\n| Link | Format | Preview | Updated |\n| --- | --- | --- | --- |\n| Figures (1 MB) | ZIP | – | 25/9/2026 |\n| 2021 census first release.pdf (5 MB) | PDF | – | 25/9/2026 |",
+          "contentBasis": "highlight",
+          "sourceGroup": "data.gov.uk",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-3199da3e77accbfda420",
+          "url": "https://www.ons.gov.uk/releases/initialfindingsfromthe2021censusinenglandandwales",
+          "title": "First results from Census 2021 in England and Wales\n      - Office for National Statistics",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:11.639Z",
+          "excerpt": "First results from Census 2021 in England and Wales - Office for National Statistics \n\n# First results from Census 2021 in England and Wales \n\n Release date: 28 June 2022 11:00am \n\n## Summary\n\nRounded population and household estimates for England and Wales from Census 2021.\n\n## Publications\n\n- Population and household estimates, Wales: Census 2021 \n\n Census 2021 rounded population and household estimates for local authorities in Wales, by sex and five-year age group. \n- Population and household estimates, England and Wales: Census 2021 \n\n Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. \n\n## Data\n\n- Population and household estimates, Wales: Census 2021 \n\n Census 2021 rounded population and household estimates for local authorities in Wales, by sex and five-year age group. \n- Population and household estimates, England and Wales: Census 2021 \n\n Census 2021 rounded population and household estimates for local authorities in England and Wales, by sex and five-year age group. \n\n## Methodology\n\n- Maximising the quality of Census 2021 population estimates \n\n How we maximised the quality of Census 2021 population estimates during the processing and quality assurance of the final statistics. \n- Compare age-sex estimates from Census 2021 to areas within England and Wales \n\n Interactive tool to help local authorities compare age-sex estimates and comparator data from Census 2021 to other areas within England and Wales. \n- Quality and methodology information (QMI) for Census 2021 \n\n Details the strengths, limitations, uses, users and methods used for Census 2021, England and Wales.\n\n...\n\n## About the data\n\nThis release includes data from Census 2021.\n\nThese are accredited official statistics. They have been independently reviewed by the Office for Statistics Regulation (OSR) and found to comply with the standards of trustworthiness, quality and value in the Code of Practice for Statistics. This",
+          "contentBasis": "highlight",
+          "sourceGroup": "ons.gov.uk",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        },
+        {
+          "id": "ev-998ff05e37b4e9cde619",
+          "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+          "title": "Population and household estimates, England and Wales",
+          "publisher": null,
+          "publishedAt": null,
+          "retrievedAt": "2026-11-14T06:44:11.639Z",
+          "excerpt": "ities. \n\n#### Quality\n\nBecause of the impact of removing rounding and applying further statistical processes, there may be some very \nsmall differences for some local authorities between the rounded and unrounded population and household \nestimates. \nMore quality and methodology information on strengths, limitations, appropriate uses and how the data were \ncreated is available in the Quality and Methodology Information (QMI) for Census 2021. Further information on \nour quality assurance processes is provided in our Maximising the quality of Census 2021 population estimates \nreport. \n\n### 4 . Related links\n\nPopulation and household estimates, England and Wales: Census 2021 \nBulletin | Released 28 June 2022 \nCensus 2021 rounded population estimates for areas in England and Wales, by sex and five-year age group. \nVoices of our ageing population: Living longer lives \nDigital article | Released 2 November 2022 \nWhy does population ageing matter and what do the Census 2021 data tell us? \nCensus maps \nInteractive content | Released 2 November 2022 \nInteractive map tool that visualises Census 2021 data on different topics down to a local authority area and \nneighbourhood level. \nCensus 2021 dictionary \nSupporting information | Released 28 October 2022 \nVariables, definitions and classifications to help when using Census 2021 data. \nCompare age-sex estimates from Census 2021 to areas within England and Wales \nMethodology | Released 28 June 2022 \nAn interactive tool to compare local authorities in England and Wales using age-sex estimates and quality \nassurance information. \nDemography and migration in Wales (Census 2021) \nHeadline release | Released 2 November 2022 \nA summary by Welsh Government of Census 2021 data about demography and migration in Wales. \n\n### 5 . Cite this statistical bulletin\n\nOffice for National Statistics (ONS), released 2 November 2022, ONS website, statistical bulletin, Population and household estimates, England and Wales: Census 2021, unrounded data",
+          "contentBasis": "page_text",
+          "sourceGroup": "ons.gov.uk",
+          "echoGroup": null,
+          "sourceRole": "unknown",
+          "directlyAddressesClaim": false,
+          "matchesTimePlaceAndPopulation": false,
+          "stance": "unrelated",
+          "stanceProbability": null
+        }
+      ],
+      "startedAt": "2026-11-14T06:44:10.136Z",
+      "completedAt": "2026-11-14T06:44:11.657Z",
+      "elapsedMs": 1521,
+      "allowances": {
+        "search": 1,
+        "contents": 1
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "id": "attempt-01",
+      "familyId": "AQ01",
+      "kind": "search",
+      "requestBytes": 950,
+      "requestSHA256": "a4d5a47e64be2052c69677b6879aaff5d62221395e8f184c5b2a4d3c4bc6d7f1",
+      "requestFile": "sdk-responses/attempt-01-request.json",
+      "reservedAt": "2026-11-14T06:44:04.010Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 22304,
+      "storedResponseBytes": 22304,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.007,
+      "dispatchedAt": "2026-11-14T06:44:04.011Z",
+      "responseSHA256": "5f7cec71bccc39f0fd7649174902179dce8acec537f15c323581a1ac9827c1eb",
+      "responseFile": "sdk-responses/attempt-01-response.json",
+      "costReturned": {
+        "total": 0.007,
+        "search": {
+          "neural": 0.007
+        }
+      },
+      "settledAt": "2026-11-14T06:44:05.144Z"
+    },
+    {
+      "id": "attempt-02",
+      "familyId": "AQ01",
+      "kind": "contents",
+      "requestBytes": 476,
+      "requestSHA256": "c2d9b77b87cd88403ecc6fbea2d3d15c3aba13886a47948255dbfa573fb969b4",
+      "requestFile": "sdk-responses/attempt-02-request.json",
+      "reservedAt": "2026-11-14T06:44:05.155Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 11210,
+      "storedResponseBytes": 11210,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.002,
+      "dispatchedAt": "2026-11-14T06:44:05.157Z",
+      "responseSHA256": "215e1539e1157ab7f4a0eae785ba0b2f3497d722c1630eae49e5554b0e303370",
+      "responseFile": "sdk-responses/attempt-02-response.json",
+      "costReturned": {
+        "total": 0.002,
+        "contents": {
+          "text": 0.001,
+          "highlights": 0.001
+        }
+      },
+      "sourceStatuses": [
+        {
+          "id": "https://www.rfc-editor.org/info/rfc8174/",
+          "status": "success",
+          "source": "cached"
+        }
+      ],
+      "settledAt": "2026-11-14T06:44:05.279Z"
+    },
+    {
+      "id": "attempt-03",
+      "familyId": "AQ01",
+      "kind": "contents",
+      "requestBytes": 476,
+      "requestSHA256": "7c1e611f96dfa076f8ebafba507e069ccda66285640eef1bc593079c191c8f35",
+      "requestFile": "sdk-responses/attempt-03-request.json",
+      "reservedAt": "2026-11-14T06:44:05.357Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 9781,
+      "storedResponseBytes": 9781,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.002,
+      "dispatchedAt": "2026-11-14T06:44:05.360Z",
+      "responseSHA256": "a363e4306a660180d342426d0ec930a40003ca1aa5baec72d46b0b1e2f162e7c",
+      "responseFile": "sdk-responses/attempt-03-response.json",
+      "costReturned": {
+        "total": 0.002,
+        "contents": {
+          "text": 0.001,
+          "highlights": 0.001
+        }
+      },
+      "sourceStatuses": [
+        {
+          "id": "https://www.rfc-editor.org/info/rfc2119/",
+          "status": "success",
+          "source": "cached"
+        }
+      ],
+      "settledAt": "2026-11-14T06:44:05.526Z"
+    },
+    {
+      "id": "attempt-04",
+      "familyId": "AQ01",
+      "kind": "contents",
+      "requestBytes": 539,
+      "requestSHA256": "396d15aa43e7fe67e346a3ddfe8721dce6a65a0456dd7f98f18b562717fe4281",
+      "requestFile": "sdk-responses/attempt-04-request.json",
+      "reservedAt": "2026-11-14T06:44:05.530Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 10372,
+      "storedResponseBytes": 10372,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.002,
+      "dispatchedAt": "2026-11-14T06:44:05.532Z",
+      "responseSHA256": "a18ae8eb75a29c36329a80d123dd5e018534dae0f43904c456d2180bf26cc6a4",
+      "responseFile": "sdk-responses/attempt-04-response.json",
+      "costReturned": {
+        "total": 0.002,
+        "contents": {
+          "text": 0.001,
+          "highlights": 0.001
+        }
+      },
+      "sourceStatuses": [
+        {
+          "id": "https://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/01/",
+          "status": "success",
+          "source": "cached"
+        }
+      ],
+      "settledAt": "2026-11-14T06:44:05.655Z"
+    },
+    {
+      "id": "attempt-05",
+      "familyId": "AQ02",
+      "kind": "search",
+      "requestBytes": 944,
+      "requestSHA256": "adff2cea031d603e7e7ce86b290f4b72be037fadf2905e5a6db00fcae4f15077",
+      "requestFile": "sdk-responses/attempt-05-request.json",
+      "reservedAt": "2026-11-14T06:44:05.723Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 15507,
+      "storedResponseBytes": 15507,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.007,
+      "dispatchedAt": "2026-11-14T06:44:05.724Z",
+      "responseSHA256": "990d9ae927d7d726abd5cdb1ecb6fcf035f1f746dc6871b7b5aad03f2c5344fb",
+      "responseFile": "sdk-responses/attempt-05-response.json",
+      "costReturned": {
+        "total": 0.007,
+        "search": {
+          "neural": 0.007
+        }
+      },
+      "settledAt": "2026-11-14T06:44:07.116Z"
+    },
+    {
+      "id": "attempt-06",
+      "familyId": "AQ03",
+      "kind": "search",
+      "requestBytes": 932,
+      "requestSHA256": "3469b7af84000d526801c04d5411fe49476844c5b2cc19bab9a1e043aca02928",
+      "requestFile": "sdk-responses/attempt-06-request.json",
+      "reservedAt": "2026-11-14T06:44:07.145Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 14106,
+      "storedResponseBytes": 14106,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.007,
+      "dispatchedAt": "2026-11-14T06:44:07.147Z",
+      "responseSHA256": "663d69345231a4bb8ff1fd78605892aa4241d10f1878233c3861ad51c6530c3e",
+      "responseFile": "sdk-responses/attempt-06-response.json",
+      "costReturned": {
+        "total": 0.007,
+        "search": {
+          "neural": 0.007
+        }
+      },
+      "settledAt": "2026-11-14T06:44:08.476Z"
+    },
+    {
+      "id": "attempt-07",
+      "familyId": "AQ03",
+      "kind": "contents",
+      "requestBytes": 520,
+      "requestSHA256": "f28924ea1d35c8a67cf336cbab135ccdde167a2b8023f898ab6c14bb63e3474d",
+      "requestFile": "sdk-responses/attempt-07-request.json",
+      "reservedAt": "2026-11-14T06:44:08.482Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 2969,
+      "storedResponseBytes": 2969,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.002,
+      "dispatchedAt": "2026-11-14T06:44:08.483Z",
+      "responseSHA256": "e82b3032932e6313e2692b048af14381a9084aa97b50f447cd7c90efd02a5436",
+      "responseFile": "sdk-responses/attempt-07-response.json",
+      "costReturned": {
+        "total": 0.002,
+        "contents": {
+          "text": 0.001,
+          "highlights": 0.001
+        }
+      },
+      "sourceStatuses": [
+        {
+          "id": "https://www.nytimes.com/2021/06/11/books/pulitzer-prize-books.html?smid=tw-nytbooks&smtyp=cur",
+          "status": "success",
+          "source": "cached"
+        }
+      ],
+      "settledAt": "2026-11-14T06:44:10.111Z"
+    },
+    {
+      "id": "attempt-08",
+      "familyId": "AQ04",
+      "kind": "search",
+      "requestBytes": 966,
+      "requestSHA256": "6785c754e9ad570db8bed3e17eb2d23fda4261c5334b69cf80ff8c46c56c2647",
+      "requestFile": "sdk-responses/attempt-08-request.json",
+      "reservedAt": "2026-11-14T06:44:10.138Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 22538,
+      "storedResponseBytes": 22538,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.007,
+      "dispatchedAt": "2026-11-14T06:44:10.139Z",
+      "responseSHA256": "9004ea2ce3a74d3a6b97153faaa640a10df39ca9a4a1154693464a55ffce7457",
+      "responseFile": "sdk-responses/attempt-08-response.json",
+      "costReturned": {
+        "total": 0.007,
+        "search": {
+          "neural": 0.007
+        }
+      },
+      "settledAt": "2026-11-14T06:44:11.517Z"
+    },
+    {
+      "id": "attempt-09",
+      "familyId": "AQ04",
+      "kind": "contents",
+      "requestBytes": 623,
+      "requestSHA256": "36ea37e361374e2c9f19fab610c736f773422268841397583aef5d7a45dde12f",
+      "requestFile": "sdk-responses/attempt-09-request.json",
+      "reservedAt": "2026-11-14T06:44:11.524Z",
+      "dispatched": true,
+      "settled": true,
+      "status": 200,
+      "responseBytes": 12966,
+      "storedResponseBytes": 12966,
+      "bodyComplete": true,
+      "bodyCleanup": "drained",
+      "costUSD": 0.002,
+      "dispatchedAt": "2026-11-14T06:44:11.526Z",
+      "responseSHA256": "591078d4496c8a342941fb7e1939bf0a832f3525f5c9e368d64b6b30372dc889",
+      "responseFile": "sdk-responses/attempt-09-response.json",
+      "costReturned": {
+        "total": 0.002,
+        "contents": {
+          "text": 0.001,
+          "highlights": 0.001
+        }
+      },
+      "sourceStatuses": [
+        {
+          "id": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021unroundeddata/pdf",
+          "status": "success",
+          "source": "cached"
+        }
+      ],
+      "settledAt": "2026-11-14T06:44:11.637Z"
+    }
+  ]
+}

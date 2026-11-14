@@ -1,0 +1,49 @@
+{
+  "source": {
+    "commit": "7f029154970d62f9f8024fb9849bbd8a56daf8ec",
+    "dirty": false,
+    "sourceSHA256": "d81de5984903f607d4e6b8342f1777b3dc105f893f27e2739c98308d86f57147"
+  },
+  "changed": [
+    "apps/console/src/live/observe.cleanup.test.ts",
+    "apps/console/src/live/observe.ts",
+    "services/api/src/policy/assessment.ts",
+    "services/api/src/policy/judgment.test.ts",
+    "services/api/src/policy/ordinary-reference.test.ts",
+    "services/api/src/policy/sources.ts",
+    "services/api/src/providers/jev/client-cleanup.test.ts",
+    "services/api/src/providers/jev/client.ts",
+    "services/api/src/providers/jev/judgment.test.ts",
+    "services/api/src/providers/jev/judgment.ts"
+  ],
+  "protectedChanges": [],
+  "gate": {
+    "lint": "pass",
+    "typecheck": "pass",
+    "tests": 684,
+    "testFiles": 34,
+    "durationMs": 18880
+  },
+  "development": {
+    "selected": 36,
+    "passed": 36,
+    "failed": 0,
+    "notRun": 0,
+    "heldoutReserved": 12
+  },
+  "presentation": {
+    "passed": 21,
+    "total": 21
+  },
+  "independentPolicyChecks": 13,
+  "independentFreezeChecks": 6,
+  "providerCallsByValidator": 0,
+  "hashes": {
+    "validation-final-check.log": "db5f710b59e773883ac04999be52c7015510b0a911aac1996f0e6d04b3843fea",
+    "validation-final-development.json": "a756ca741400dc34a42fc1252605d47666d93ee0b11e6d918bea4ec95c6ca0ad",
+    "validation-offline.test.mts": "a1fa58cc2ea4c7b9ba5ae4a546874c9ef79a2e2a083a3a073e6109a75451ab94",
+    "validation-executor.test.mts": "fafbc8cf18887af69deb6fc91d2a9d5efcc2c886b404fae87a4e7ce078b31758",
+    "validation-offline.tap": "e7b495e1f542a2317971f53a820bdf2714a7027672f658328811a760b98ab38a",
+    "validation-executor.tap": "83a705ad1ecea2a1b643264865f753a8d7ea51b0c06b968a43a4205d392a042e"
+  }
+}

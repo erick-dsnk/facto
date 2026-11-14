@@ -1,0 +1,44 @@
+✔ complete84 inventory executes22/22/20/20 once, counts actual bodies and declared classes (174.309481ms)
+✔ zero input usage is known, not falsy or missing (3.765636ms)
+✔ actual body mutation stops before HTTP, keeps local failure distinct from unknown usage (0.59673ms)
+✔ provider failure retains code while unknown usage is separately reported (0.6566ms)
+✔ a successful answer without measured usage fails closed and stops remaining calls (0.947208ms)
+✔ invalid, fractional, negative and non-numeric usage never becomes known (2.359326ms)
+✔ valid usage remains charged when answer interpretation fails later (1.09432ms)
+✔ the same lease cannot dispatch twice or consume a retry (3.355528ms)
+✔ skipping or reordering a declared call stops the campaign without dispatch (0.326993ms)
+✔ block token reserves cannot borrow campaign or other block capacity (0.674637ms)
+✔ actual token overrun is fully counted and keeps a local cap failure (0.697742ms)
+✔ response overrun counts the received chunk, aborts actual signal and detaches cancellation (0.836411ms)
+✔ block aggregate response bytes cannot borrow another block response budget (1.02874ms)
+✔ hung fetch ignoring abort settles on campaign timer and aborts runtime owner (15.769819ms)
+✔ hung reader and hanging cancel cannot hold campaign finalization open (1.455715ms)
+✔ late headers after deadline are cancelled without mutating finalized accounting (1.210214ms)
+✔ late EOF cannot introduce usage or a completed answer after timeout (1.403816ms)
+✔ chunk received after logical deadline but before timer firing is counted before rejection (1.312929ms)
+✔ failure preserves declared positive/negative/uncertain denominators and missing classes (1.533371ms)
+✔ plan is cloned and external mutation cannot authorize a changed request (0.576999ms)
+✔ malformed inventories, byte caps and noncontiguous block order are rejected offline (0.66385ms)
+✔ runtime-owner cancellation settles abort-ignoring work and prevents later accounting (1.660903ms)
+✔ synchronous campaign timer cannot dispatch after it has already stopped the guard (0.420754ms)
+✔ checkpoint failure after actual dispatch preserves actual count and aborts work (0.933797ms)
+✔ normal HTTP error-body cancellation does not manufacture a local failure (0.944884ms)
+✔ provider normalization cannot erase an actual local body guard failure (0.38496ms)
+✔ work returning without the predeclared HTTP dispatch cannot complete a call (0.301234ms)
+✔ active checkpoints expose the pending reserve and cannot mutate internal state (0.807908ms)
+✔ validated pre-dispatch checkpoint completes before HTTP and starts no call if storage fails (0.625994ms)
+✔ actual transport sees successful prepared checkpoint before its first invocation (0.686524ms)
+✔ an asynchronous storage callback cannot be mistaken for a completed checkpoint (3.208286ms)
+✔ a slow pre-dispatch checkpoint is followed by a fresh deadline check before HTTP (0.79614ms)
+✔ post-dispatch checkpoint failure cancels a late body without awaiting hanging cleanup (1.019467ms)
+✔ header-checkpoint failure cancels the original body before reader ownership (1.383124ms)
+✔ missing checkpoint observer is rejected before any execution (0.418901ms)
+✔ observer mutation cannot change validated actual URL, body, method or headers (1.503877ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 676.763659

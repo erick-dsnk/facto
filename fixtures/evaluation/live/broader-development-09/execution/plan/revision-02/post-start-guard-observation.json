@@ -1,0 +1,7 @@
+{
+  "observedAt": "2026-11-14T05:10:51.700549+00:00",
+  "exitCode": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/workspace/task-evidence/candidate09-open-development-plan/revision-02/preflight.py\", line 145, in <module>\n    main()\n  File \"/workspace/task-evidence/candidate09-open-development-plan/revision-02/preflight.py\", line 137, in main\n    assert not exists(batch[key]), f'Existing output/checkpoint; never overwrite or replay: {batch[key]}'\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Existing output/checkpoint; never overwrite or replay: /workspace/task-evidence/broader-candidate09-01.json\n",
+  "meaning": "Exact originalfreeze bindings passed; absent-output guard correctly blocked batch01 because root had already dispatched. No report body was read, noAPIcalls or report edits."
+}
