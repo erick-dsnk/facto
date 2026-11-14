@@ -101,7 +101,8 @@ describe('Exa retrieval boundary', () => {
   it('builds a neutral alternate query from the admitted claim while preserving every qualifier', () => {
     const admitted = 'According to the 2024 report, the bridge did not open before May.';
     const query = buildAlternateQuery(admitted, 'balanced_evidence');
-    expect(query).toContain(JSON.stringify(admitted));
+    expect(query).toContain(admitted);
+    expect(query).not.toContain(JSON.stringify(admitted));
     expect(RETRIEVAL_OBJECTIVE).toContain('supports, challenges, or qualifies');
     expect(query).not.toContain('private salary');
     expect(() => buildAlternateQuery(' ', 'balanced_evidence')).toThrow('claim_not_admitted');
