@@ -25,6 +25,7 @@ export const DEVELOPMENT_CASES: LiveCase[] = [
   { label: 'L6-existential', text: 'There are eight planets in the Solar System.', allowedPublic: ['There are eight planets in the Solar System.'] },
   { label: 'L7-wait-expiry', text: 'The population is', allowedPublic: [], automatic: true, final: false },
   { label: 'L8-first-person', text: 'I think Helsinki is the capital of Norway.', allowedPublic: ['I think Helsinki is the capital of Norway.', 'Helsinki is the capital of Norway.'] },
+  { label: 'L9-opinion', text: 'I prefer tea to coffee.', allowedPublic: [] },
 ];
 
 type WireObservation = {
