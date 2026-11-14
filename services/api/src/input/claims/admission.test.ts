@@ -67,6 +67,38 @@ describe('bounded exact public admission', () => {
     expect(result.claims[0].admission.hasPracticalConsequence).toBeNull();
   });
 
+  it('asks the independently reviewed public-record/privacy distinction on the exact candidate', async () => {
+    const text = 'SYNTHETIC artist Asha Vale published Blue Sky in 1984.';
+    const client = fixtureClient(() => ({}));
+    await createClassifier(client)(input(text), context());
+    const request = vi.mocked(client.ask).mock.calls[0][0];
+    const question = request.questions.span_0_private_data;
+    const approved = "Does this exact candidate disclose private or sensitive information about an identifiable person that should not go to web search? A person's name together with a public role, published work, official act, or publicly conferred award is not private merely because it identifies them. Still mark health/medical history, personal finances/account details, home/private contact/location, credentials/identity-document details, and private lived events/anecdotes as private, including for public figures and when phrased as reported or publicly known. Assess the actual information and context; a name/title/public-figure label alone neither establishes privacy nor waives it. When privacy status is uncertain, do not infer safety from fame or apparent searchability.";
+    expect(question.type).toBe('noul');
+    expect(question.instructions.endsWith(approved)).toBe(true);
+    expect(question.instructions).toMatch(/^Assess ONLY candidates\[0\]\.text \(span_0\)\./);
+    expect(request.state).toMatchObject({ originalText: text });
+  });
+
+  it.each([[.099, 'check'], [.10, 'skip']] as const)('keeps strict privacy admission at %s for a named public-work proposition', async (privacy, action) => {
+    const text = 'SYNTHETIC artist Asha Vale published Blue Sky in 1984.';
+    const result = await createClassifier(fixtureClient(() => ({ private: privacy })))(input(text), context());
+    expect(result.action).toBe(action);
+    expect(result.claims.map(claim => claim.checkedText)).toEqual(action === 'check' ? [text] : []);
+  });
+
+  it.each([
+    'SYNTHETIC famous actor Asha Vale lives at home address 17 Imaginary Lane.',
+    'SYNTHETIC famous actor Asha Vale has a private medical diagnosis.',
+    'SYNTHETIC famous actor Asha Vale has a personal account balance of 1200 units.',
+    'SYNTHETIC famous actor Asha Vale privately told me about a family argument.',
+  ])('keeps sensitive public-figure information excluded despite a public_fact classification: %s', async text => {
+    // Scripted scores test the gate; the frozen paired public-development
+    // experiment measures whether the real provider recognizes this boundary.
+    const result = await createClassifier(fixtureClient(() => ({ private: .99 })))(input(text), context());
+    expect(result).toMatchObject({ action: 'skip', reasonCode: 'private_or_personal', claims: [] });
+  });
+
   it('keeps the configured completeness boundary at 0.85', async () => {
     const text = 'The Colosseum is in Rome.';
     const below = await createClassifier(fixtureClient(() => ({ self: 0.84 })))(input(text), context());
