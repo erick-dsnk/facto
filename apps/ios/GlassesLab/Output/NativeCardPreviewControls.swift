@@ -34,7 +34,8 @@ struct NativeCardPreviewControls: View {
         Button("Stop native fixture", role: .destructive) { display.disconnect() }
       }
       if let port = wearables.nativePreviewServerPort {
-        Text("Native simulator: http://127.0.0.1:\(port)/")
+        // String(port): Text interpolation would add locale grouping ("9,000").
+        Text("Native simulator: http://127.0.0.1:\(String(port))/")
           .font(.caption).textSelection(.enabled)
         Button("Stop native simulator server") { wearables.stopNativePreviewServer() }
       } else {
@@ -50,6 +51,8 @@ struct NativeCardPreviewControls: View {
           .font(.caption).foregroundStyle(.secondary)
       }
     }
+    // Several buttons share one List row; without this, a tap fires every button in the row.
+    .buttonStyle(.borderless)
     .onChange(of: captureOrLiveActive) { _, active in
       if active, display.nativePreviewFixture != nil { display.disconnect() }
     }
