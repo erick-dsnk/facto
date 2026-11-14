@@ -75,6 +75,24 @@ describe('bounded exact public admission', () => {
     expect(atBoundary.action).toBe('check');
   });
 
+  it.each([
+    'All mammals lay eggs.',
+    'No metal expands when heated.',
+    'Water always boils at 100°C.'
+  ])('admits the exact complete literal proposition without repairing its truth or scope: %s', async text => {
+    const result = await createClassifier(fixtureClient(() => ({})))(input(text), context());
+    expect(result.action).toBe('check');
+    expect(result.claims.map(claim => claim.checkedText)).toEqual([text]);
+  });
+
+  it.each([
+    'They always lay eggs.',
+    'Unemployment is 7%.'
+  ])('retains incomplete referent/statistic backstops despite generous semantic scores: %s', async text => {
+    const result = await createClassifier(fixtureClient(() => ({})))(input(text), context());
+    expect(result).toMatchObject({ action: 'wait', reasonCode: 'incomplete_or_unclear', claims: [] });
+  });
+
   it('binds structural questions to exact candidate spans', async () => {
     const client = fixtureClient(() => ({}));
     await createClassifier(client)(input('The Eiffel Tower opened in 1889. Helsinki is in Finland.'), context());
