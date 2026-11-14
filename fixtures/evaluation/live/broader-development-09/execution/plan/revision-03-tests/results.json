@@ -1,0 +1,66 @@
+{
+  "kind": "offline_guard_mutation_tests",
+  "guardSHA256": "29366ed02b7911301dc0a5947341091d3136caf283e48bace5617d09a4dde349",
+  "completedReportSHA256": "3e8296a92808620eb29c054b39755a92fb38bfdd4d406fa40e779a9fcc5c8367",
+  "tests": [
+    {
+      "name": "actual_completed_batch01",
+      "expectedAccept": true,
+      "actualAccept": true
+    },
+    {
+      "name": "explicit_null_diagnostic",
+      "expectedAccept": true,
+      "actualAccept": true
+    },
+    {
+      "name": "actual_privacy_issue",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "missing_issue",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "malformed_row",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "malformed_diagnostic_container",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "call_budget_overrun",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "token_budget_overrun",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "source_hash_mismatch",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "negative_auth_probe_accepted",
+      "expectedAccept": false,
+      "actualAccept": false
+    },
+    {
+      "name": "local_stop",
+      "expectedAccept": false,
+      "actualAccept": false
+    }
+  ],
+  "passed": 11,
+  "providerCalls": 0,
+  "pipelineImported": false,
+  "sourceFilesModified": 0
+}

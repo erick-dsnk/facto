@@ -1,0 +1,50 @@
+{
+  "kind": "open_development_batch_plan",
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "manifestSHA256": "8c42e6eaace67ce1fa5e01a90f007509ed961096a00ec77ede075c714cae16da",
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 650000,
+    "inputTokens": 140000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 16,
+      "search": 8,
+      "contents": 12
+    },
+    "wallMs": 90000
+  },
+  "cases": [
+    {
+      "label": "BD07",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BD08",
+      "allowedPublic": [
+        "The first modern Olympic Games were held in Paris in 1896."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BD09",
+      "allowedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "automatic": false,
+      "final": true
+    },
+    {
+      "label": "BDC03",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true
+    }
+  ]
+}

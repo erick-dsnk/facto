@@ -1,0 +1,54 @@
+{
+  "kind": "candidate09_final_combined_public_summary",
+  "assembledAt": "2026-11-14T05:22:15.360587+00:00",
+  "frozenCommit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+  "frozenGate": {
+    "tests": 525,
+    "files": 25,
+    "developmentPassed": 36,
+    "presentationPassed": 21
+  },
+  "uniqueFacts": {
+    "expected": 12,
+    "correctDefinitive": 4,
+    "fullySelectedSourceVerified": 3,
+    "abstained": 8,
+    "operationalErrors": 0,
+    "wrongDefinitive": 0
+  },
+  "occurrences": {
+    "expected": 13,
+    "correctDefinitive": 4,
+    "fullySelectedSourceVerified": 3,
+    "abstained": 9,
+    "admitted": 13
+  },
+  "terminals": 16,
+  "mixedRepeat": {
+    "case": "BDC04",
+    "repeats": "BD07",
+    "result": "abstained",
+    "additionalUniqueFactCredit": 0
+  },
+  "selectedCitationReview": {
+    "authoritativePath": "citations/review-v2.json",
+    "sha256": "787fef61a0c2251a755a89c076bc0f9ff8f83559ac83ff615d13c4222f66f92b",
+    "rows": 11,
+    "verified": 10,
+    "unsupported": 0,
+    "inaccessible": 1,
+    "historicalReviewPreserved": "citations/review-v1.json"
+  },
+  "executionPackageManifestSHA256": "e89a52ac3eb50079b414cbedfeceb19ef24f41c0a684d5285723f4517223ee2a",
+  "sourceVerifiedLabels": [
+    "BD03",
+    "BD10",
+    "BD12"
+  ],
+  "exclusions": [
+    "Later e88b41e deferred-variant fallback/current530-test integration not in frozen09 and not live-evaluated here.",
+    "OPEN repeated corpus, not blind or causal.",
+    "No overview document edited in this package."
+  ]
+}
