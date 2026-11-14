@@ -42,6 +42,9 @@ final class ResultPresenter: ResultPresenting {
   let lens: LensCardViewModel
   /// Suppresses speech and chimes. Never turns a muted card into speech later.
   var isMuted = false
+  /// True when no lens shows the card (Ray-Ban Meta, or Display glasses not attached): an
+  /// overheard alert is then spoken after its chime, or the wearer learns nothing.
+  var alertsAreSpoken: () -> Bool = { false }
   /// Speech rate for spoken answers; lower it for slower speech.
   var speechRate: Float = SystemSpeechSpeaker.defaultRate
 
@@ -191,6 +194,10 @@ final class ResultPresenter: ResultPresenting {
       lens.show(card)
       if isMuted {
         delivery = .cardOnly
+      } else if alertsAreSpoken() {
+        chime.playChime()
+        speak(line)
+        delivery = .spoken
       } else {
         chime.playChime()
         delivery = .chimed
