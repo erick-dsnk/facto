@@ -1,0 +1,30 @@
+{
+  "kind": "compact_locator_archive_build_validation",
+  "originalPaths": 142,
+  "localPayloadBlobs": 117,
+  "sharedReferences": 11,
+  "fullPredecessorMaterializationClaim": false,
+  "networkCalls": 0,
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "archivedCodeExecuted": 0,
+  "secretScan": {
+    "configuredValuesChecked": 3,
+    "source": "process environment and explicit project .env/.env.local locations only",
+    "configuredDotenvFilesRead": 0,
+    "payloadsScanned": 128,
+    "gzipPayloadsDecoded": 27,
+    "matchingOccurrences": 0,
+    "valuesOrNamesPrinted": false,
+    "providerCalls": 0,
+    "networkCalls": 0,
+    "qualification": "A zero configured count is not a full configured-value audit; root must supply its own final scan if secrets are loaded elsewhere."
+  },
+  "portableVerifier": "passed final local and relocated/minimal-shared checks; final external receipt kept outside immutable package",
+  "firstUtilityFailurePreserved": "build-history/portable-first.log",
+  "activeUtilityOnly": "verify.py",
+  "originalsUnchanged": "All142 selected original byte hashes rechecked; no original source writes.",
+  "firstDiffCheckPreserved": "build-history/diff-check-first.log.gz",
+  "losslessPostplanEncodingAdjustments": 1,
+  "diffCheck": "passed after losslessly gzip-encoding only original failed-review log; exact decoded SHA unchanged"
+}
