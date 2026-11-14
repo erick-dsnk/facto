@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { PipelineError, type AcceptedClaim, type Evidence, type ProviderContext } from '../../../../packages/contracts/src/index.js';
 import type { JevAnswer, JevClient, JevRequest } from '../providers/jev/client.js';
 import { createJudge } from '../providers/jev/judgment.js';
+import { decideVerdict } from './verdict.js';
 
 const text = 'Lightning never strikes the same place twice.';
 const claim: AcceptedClaim = { id: 'claim-1', originalText: text, checkedText: text, sourceSpan: { start: 0, end: Array.from(text).length }, admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_fact', hasPracticalConsequence: null, matchedSelectedTopic: null } };
@@ -86,6 +87,23 @@ describe('typed joint judgment adapter', () => {
     const result = await createJudge({ ask: async request => answer(request) })(claim, retained, context);
     expect(result.sourceAssessments[retained[0].id].contentBasis).toBe('original_record');
     expect(result.evidence[0].sourceRole).toBe('unknown');
+  });
+  it.each([[.84, 'insufficient_evidence'], [.85, 'contradicted']] as const)('keeps the scope threshold for contrary evidence at %s', async (scope, expected) => {
+    const client: JevClient = { ask: async request => ({ ...answer(request), e0_scope: { noul: scope } }) };
+    const result = await createJudge(client)(claim, evidence, context);
+    expect(result.evidence[0].stance).toBe('contradicts');
+    expect(decideVerdict(result).verdict).toBe(expected);
+  });
+  it.each([
+    [{ original_record: .4, attributable_research: .2, substantive_secondary: .35, bare_assertion: .05, attributed: 0, promotional: 0, unclear: 0 }, 'original_record', .95],
+    [{ original_record: .15, attributable_research: .1, substantive_secondary: .2, bare_assertion: .55, attributed: 0, promotional: 0, unclear: 0 }, 'bare_assertion', .45],
+    [{ original_record: .1, attributable_research: .05, substantive_secondary: .15, bare_assertion: 0, attributed: 0, promotional: .7, unclear: 0 }, 'promotional', .3],
+  ] as const)('measures probability of any substantive basis without accepting bare or promotional mass', async (probabilities, choice, expected) => {
+    const client: JevClient = { ask: async request => ({ ...answer(request), e0_content_basis: { choice, probabilities } }) };
+    const result = await createJudge(client)(claim, evidence, context);
+    expect(result.sourceAssessments[evidence[0].id].contentBasis).toBe(choice);
+    expect(result.sourceAssessments[evidence[0].id].confidence).toBeCloseTo(expected);
+    expect(decideVerdict(result).verdict).toBe(expected >= .85 ? 'contradicted' : 'insufficient_evidence');
   });
   it('handles retained IDs that coincide with object prototype names as ordinary own keys', async () => {
     const retained = [{ ...evidence[0], id: '__proto__' }];
