@@ -31,7 +31,7 @@ The API runs as one Cloudflare Container behind a Worker (issue #43). The Worker
 
 ### Configuration
 
-Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `DEEPGRAM_KEYTERMS` (optional comma list of extra names for Deepgram keyterm prompting, added to Facto, Anthropic, Nvidia, Jensen Huang, Meta, Ray-Ban and OpenAI; empty adds nothing) and `DEBUG_TRANSCRIPTS=1` (logs every final Deepgram result with per-word confidence as `[asr:final]` lines, which includes what bystanders said; set it to `0` once debugging is done). The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
+Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `DEEPGRAM_KEYTERMS` (optional comma list of extra names for Deepgram keyterm prompting, added to Facto, Anthropic, Nvidia, Jensen Huang, Meta, Ray-Ban and OpenAI; empty adds nothing) and `DEBUG_TRANSCRIPTS` (empty, so off; `1` logs every final Deepgram result with per-word confidence as `[asr:final]` lines, which includes what bystanders said, so an operator sets it only for a debugging session). The in-memory feed at `GET /v1/debug/feed` additionally needs the secret `DEBUG_FEED_KEY` (16+ characters, sent as `x-debug-key`). The join code never opens it, without the key the route does not exist and nothing is recorded, and a session's entries are purged when it is deleted or expires. The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
 
 Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc`. Wrangler prompts for the value. Never commit or paste values anywhere:
 

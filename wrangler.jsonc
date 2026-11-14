@@ -48,12 +48,13 @@
     // Optional comma list of extra names for Deepgram keyterm prompting, added to the built-in list
     // (Facto, Anthropic, Nvidia, Jensen Huang, Meta, Ray-Ban, OpenAI). Empty adds nothing.
     "DEEPGRAM_KEYTERMS": "",
-    // "1" logs every final Deepgram result with per-word confidence (what bystanders said). Debug only.
-    "DEBUG_TRANSCRIPTS": "1"
+    // Off unless an operator turns it on for a debugging session: "1" logs every final Deepgram result
+    // with per-word confidence (what bystanders said). Never commit it as "1".
+    "DEBUG_TRANSCRIPTS": ""
   }
 
   // Secrets, set with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc` from deploy/cloudflare.
   // Never put their values in this file:
   //   JEV_API_KEY, EXA_API_KEY, DEEPGRAM_API_KEY, GOOGLE_FACTCHECK_API_KEY (optional), DEMO_JOIN_CODE,
-  //   DEMO_JOIN_EXPIRES_AT, ALLOWED_ORIGINS
+  //   DEMO_JOIN_EXPIRES_AT, ALLOWED_ORIGINS, DEBUG_FEED_KEY (optional, debugging only)
 }

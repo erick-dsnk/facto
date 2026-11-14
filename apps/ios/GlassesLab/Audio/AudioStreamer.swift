@@ -124,6 +124,7 @@ enum AudioStreamerPhase: Equatable, Sendable {
 ///   Otherwise it stops with `.noConnection`. A failed send counts as a connection loss, so a
 ///   dead socket never spends the restart budget.
 /// - It never logs audio, transcripts or any payload text: only generations, counts and codes.
+///   The debug log gets the same: state changes, frame counts and reasons, never audio bytes.
 @MainActor
 final class AudioStreamer: PlaybackReporting {
   static let reconnectGrace: TimeInterval = 5
@@ -182,6 +183,9 @@ final class AudioStreamer: PlaybackReporting {
   private let maxBufferedFrames: Int
   private let converter = PCM16Converter()
   private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "audio-streamer")
+  private let debugLog: DebugLog
+  /// Binary frames handed to the channel since the current generation was requested.
+  private var framesSent = 0
 
   private var framer: PCM16Framer?
   /// PCM16 bytes received while waiting for `audio.ready`. Framed on `audio.ready`, so the
@@ -203,13 +207,15 @@ final class AudioStreamer: PlaybackReporting {
     source: CaptureSource = .glassesStreamAudio,
     clock: AudioStreamerClock? = nil,
     reconnectGrace: TimeInterval = AudioStreamer.reconnectGrace,
-    maxBufferedFrames: Int = AudioWireFormat.maxBufferedFrames
+    maxBufferedFrames: Int = AudioWireFormat.maxBufferedFrames,
+    debugLog: DebugLog = .shared
   ) {
     self.channel = channel
     self.source = source
     self.clock = clock ?? SystemAudioStreamerClock()
     self.reconnectGrace = reconnectGrace
     self.maxBufferedFrames = maxBufferedFrames
+    self.debugLog = debugLog
   }
 
   // MARK: Public API
@@ -218,6 +224,7 @@ final class AudioStreamer: PlaybackReporting {
   /// connecting, the streamer waits up to the reconnect window for it.
   func start() {
     guard !phase.isActive else { return }
+    debug("audio.listen_start", ["connection": "\(channel.connectionState)"])
     restartTimes = []
     expectsTrailingError = false
     subscribe()
@@ -228,6 +235,7 @@ final class AudioStreamer: PlaybackReporting {
       finish(.noConnection, sendAudioStop: false)
     case .idle, .connecting, .reconnecting:
       phase = .waitingForConnection
+      debug("audio.waiting_for_connection")
       startGraceTimer()
     }
   }
@@ -277,6 +285,7 @@ final class AudioStreamer: PlaybackReporting {
   /// Spoken output started: close the generation so the ASR never hears our own voice.
   func playbackStarted() {
     isPlaybackActive = true
+    debug("audio.playback_started")
     if phase.hasOpenGeneration {
       dropQueuedAudio()
       phase = .pausedForPlayback
@@ -289,6 +298,7 @@ final class AudioStreamer: PlaybackReporting {
   /// Spoken output ended: report it, then open a strictly higher generation.
   func playbackEnded() {
     isPlaybackActive = false
+    debug("audio.playback_ended")
     if channel.connectionState == .connected, phase != .reconnecting, let epoch = currentEpoch {
       enqueue(.control(.playbackEnded(epoch: epoch)))
     }
@@ -343,6 +353,7 @@ final class AudioStreamer: PlaybackReporting {
       flushHandshakeAudio(generation: current)
     case .audioStopped(let payload):
       guard phase.hasOpenGeneration, payload.streamGeneration == generation else { return }
+      debug("audio.server_stopped", ["reason": payload.reasonCode, "streamGeneration": payload.streamGeneration as Any])
       restartGeneration(reasonCode: payload.reasonCode, sendAudioStop: false)
       expectsTrailingError = phase.hasOpenGeneration && Self.stopCodesWithTrailingError.contains(payload.reasonCode)
     case .pipelineError(let payload):
@@ -352,8 +363,10 @@ final class AudioStreamer: PlaybackReporting {
       guard event.requestId == nil, case .awaitingReady = phase, Self.startRejectionCodes.contains(payload.reasonCode) else { return }
       if expectsTrailingError {
         expectsTrailingError = false
+        debug("audio.start_rejected", ["reason": payload.reasonCode, "ignored": "trailing_error"])
         return
       }
+      debug("audio.start_rejected", ["reason": payload.reasonCode])
       restartGeneration(reasonCode: payload.reasonCode, sendAudioStop: true)
     default:
       break
@@ -383,6 +396,7 @@ final class AudioStreamer: PlaybackReporting {
     log.info(
       "audio generation \(current, privacy: .public) ready, flushed \(frames.count, privacy: .public) frames, dropped \(droppedBytes / AudioWireFormat.payloadBytes, privacy: .public)"
     )
+    debug("audio.ready", ["flushedFrames": frames.count, "droppedFrames": droppedBytes / AudioWireFormat.payloadBytes])
   }
 
   private func beginGeneration(epoch: Int? = nil) {
@@ -393,12 +407,15 @@ final class AudioStreamer: PlaybackReporting {
     dropQueuedAudio()
     if isPlaybackActive {
       phase = .pausedForPlayback
+      debug("audio.generation_deferred", ["reason": "playback"])
       return
     }
     generation += 1
+    framesSent = 0
     enqueue(.audioStart(AudioStartControl(sessionEpoch: epoch, streamGeneration: generation, source: source)))
     phase = .awaitingReady(generation: generation)
     log.info("audio generation \(self.generation, privacy: .public) requested")
+    debug("audio.generation_requested", ["epoch": epoch])
   }
 
   /// Closes the current generation after an unplanned failure and opens a higher one, within
@@ -408,10 +425,12 @@ final class AudioStreamer: PlaybackReporting {
     restartTimes = restartTimes.filter { now - $0 < Self.restartWindow }
     restartTimes.append(now)
     if restartTimes.count > Self.maxRestartsPerWindow {
+      debug("audio.restart_budget_spent", ["reason": reasonCode, "restartsInWindow": restartTimes.count])
       finish(.audioUnavailable(reasonCode: reasonCode), sendAudioStop: sendAudioStop)
       return
     }
     log.info("audio generation \(self.generation, privacy: .public) restarting: \(reasonCode, privacy: .public)")
+    debug("audio.restart", ["reason": reasonCode, "restartsInWindow": restartTimes.count, "sendAudioStop": sendAudioStop])
     dropQueuedAudio()
     if sendAudioStop, let epoch = currentEpoch {
       enqueue(.control(.audioStop(epoch: epoch)))
@@ -436,10 +455,12 @@ final class AudioStreamer: PlaybackReporting {
       beginGeneration(epoch: epoch)
     }
     log.info("audio auto-resumed with generation \(self.generation, privacy: .public)")
+    debug("audio.auto_resumed", ["epoch": epoch, "sessionWasActive": payload.active])
     onAutoResumed?()
   }
 
   private func enterReconnecting() {
+    debug("audio.reconnecting", ["discardedFrames": outbox.lazy.filter(\.isBinary).count, "discardedHandshakeBytes": handshakePCM.count])
     outbox.removeAll()
     dropQueuedAudio()
     expectsTrailingError = false
@@ -460,6 +481,7 @@ final class AudioStreamer: PlaybackReporting {
     expectsTrailingError = false
     phase = .stopped(reason)
     log.info("audio stopped: \(reason.code, privacy: .public)")
+    debug("audio.stopped", ["reason": reason.code])
     onStopped?(reason)
   }
 
@@ -527,7 +549,9 @@ final class AudioStreamer: PlaybackReporting {
         switch item {
         case .control(let message): try await channel.sendControl(message)
         case .audioStart(let message): try await channel.sendControl(message)
-        case .binary(let frame): try await channel.sendBinary(frame)
+        case .binary(let frame):
+          try await channel.sendBinary(frame)
+          framesSent += 1
         }
       } catch {
         handleSendFailure(error)
@@ -541,6 +565,7 @@ final class AudioStreamer: PlaybackReporting {
   private func handleSendFailure(_ error: Error) {
     let local = Self.isLocalSendFailure(error)
     log.error("audio send failed in phase \(String(describing: self.phase), privacy: .public) local=\(local, privacy: .public)")
+    debug("audio.send_failed", ["local": local, "error": String(describing: error), "queued": outbox.count])
     guard phase.hasOpenGeneration || phase == .pausedForPlayback else {
       outbox.removeAll()
       return
@@ -553,6 +578,17 @@ final class AudioStreamer: PlaybackReporting {
     } else {
       outbox.removeAll()
     }
+  }
+
+  /// Counts and reasons only, never audio bytes. Every entry carries the phase, the generation
+  /// and the frames sent in it.
+  private func debug(_ kind: String, _ payload: [String: Any] = [:]) {
+    guard debugLog.isEnabled else { return }
+    var payload = payload
+    payload["phase"] = String(describing: phase)
+    payload["generation"] = generation
+    payload["framesSent"] = framesSent
+    debugLog.log(kind, payload)
   }
 
   /// A send that failed before reaching the socket. Every other failure (not connected, a
