@@ -1,0 +1,38 @@
+{
+  "kind": "provider_documented_question_visibility_findings",
+  "createdAt": "2026-11-14 06:42:28 UTC",
+  "retrieval": {
+    "method": "Exa connected web_fetch_exa public documentation lookup",
+    "toolCalls": 3,
+    "requestedURLs": 6,
+    "projectProviderTestCalls": 0,
+    "notPartOfApplicability84OrAcquisitionProbe": true,
+    "underlyingProviderRequestsAndCost": "not observed"
+  },
+  "sources": [
+    {
+      "url": "https://docs.typesafe.ai/primitives.md",
+      "excerpts": [
+        "Question IDs are for your code. They are not sent to the model. Write the complete question in `instructions`, even when the ID seems self-explanatory.",
+        "Every question in a request sees the same state, is evaluated independently, and returns a typed answer under the ID you chose.",
+        "When a question is about one of those parts, name it in the `instructions` with a dot-and-index path to its key, including the backticks. The model then knows which part of the state to judge."
+      ]
+    },
+    {
+      "url": "https://docs.typesafe.ai/concepts/state.md",
+      "excerpts": [
+        "Each request evaluates one state against one or more questions. All questions see the same state and are evaluated independently."
+      ]
+    },
+    {
+      "url": "https://docs.typesafe.ai/primitives/choice",
+      "excerpts": [
+        "You choose the question id, `department` in this case. The answer is returned under the same id. The model never sees the question id."
+      ]
+    }
+  ],
+  "finding": "Prior whole-request audit found eN aliases in selected_evidence criteria and baseline instructions. Under the documented independent-question interface this does not establish a model-visible binding for a separate generic applicability question. That question does not name its actual target ID or state path and cannot rely on its hidden aN question ID to identify its mapping row.",
+  "scope": "Experimental adapters01–07 only. Baseline source questions name actual evidence IDs and do not share this omission. Frozen first84 results and all original reviews remain unchanged. Preserve an addendum superseding only the inference from whole-wire resolvability to model-visible binding.",
+  "nextStep": "Offline minimal explicit target and record-identity state-path correction, complete unchanged surrounding context and unchanged question/criteria semantics/thresholds/labels. No provider calls authorized by this artifact.",
+  "causality": "This is documented interface-contract evidence, not proof that it caused the observed0/18 thresholded positive passes."
+}
