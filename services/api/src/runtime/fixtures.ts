@@ -1,4 +1,5 @@
 import { type PipelineAdapters, codePoints, PipelineError } from '../../../../packages/contracts/src/index.js';
+import type { AssessedJudgment } from '../policy/assessment.js';
 
 /** Deliberately synthetic. Never used when PIPELINE_MODE=live. */
 export function fixtureAdapters(): PipelineAdapters {
@@ -15,13 +16,17 @@ export function fixtureAdapters(): PipelineAdapters {
       ctx.consume('search', claim.id);
       if (claim.checkedText.startsWith('There is not')) return [];
       return ['one', 'two'].map((name, i) => ({ id: `fixture-${name}`, url: `https://fixture-${name}.example/evidence`, title: `Synthetic fixture ${name}`, publisher: null, publishedAt: null, retrievedAt: new Date(ctx.now()).toISOString(), contentBasis: 'highlight' as const,
-        excerpt: i ? 'This is separate synthetic evidence for testing the app event contract.' : 'This fabricated test passage is not live evidence or a source for a real-world claim.', sourceGroup: `fixture-${name}.example`, echoGroup: null, sourceRole: 'secondary' as const,
+        excerpt: claim.checkedText.startsWith('Helsinki')
+          ? i ? 'SYNTHETIC TEST RECORD: an independent geographic directory lists Finland with Helsinki as its national capital and seat of central government.' : 'SYNTHETIC TEST RECORD: a fictional parliamentary location register identifies Helsinki as Finland’s capital and records the national government there.'
+          : i ? 'SYNTHETIC TEST RECORD: a fictional university field-study log records two separate lightning impacts on the same marked tower during a single storm.' : 'SYNTHETIC TEST RECORD: a fictional meteorological observation table documents repeated lightning strikes at identical tower coordinates on several dates.', sourceGroup: `fixture-${name}.example`, echoGroup: null, sourceRole: 'secondary' as const,
         directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance: claim.checkedText.startsWith('Helsinki') ? 'supports' as const : 'contradicts' as const, stanceProbability: .99 }));
     },
-    async judge(claim, evidence, ctx) {
+    async judge(claim, evidence, ctx): Promise<AssessedJudgment> {
       ctx.consume('jev');
       const supported = claim.checkedText.startsWith('Helsinki');
-      return { checkedText: claim.checkedText, label: supported ? 'supported' : 'contradicted', probabilities: { supported: supported ? .99 : .001, contradicted: supported ? .001 : .99, misleading: .001, insufficient_evidence: .008 }, evidence, selectedEvidenceIds: evidence.map(e => e.id), misleadingReason: null };
+      return { checkedText: claim.checkedText, label: supported ? 'supported' : 'contradicted', probabilities: { supported: supported ? .99 : .001, contradicted: supported ? .001 : .99, misleading: .001, insufficient_evidence: .008 }, evidence, selectedEvidenceIds: evidence.map(e => e.id), misleadingReason: null,
+        sourceAssessments: Object.fromEntries(evidence.map(source => [source.id, { contentBasis: 'original_record', confidence: .99 }])),
+        claimRisk: { level: 'ordinary', confidence: .99 }, originAssessments: evidence.length === 2 ? [{ evidenceIds: [evidence[0].id, evidence[1].id], relationship: 'distinct_origins', confidence: .99 }] : [] };
     }
   };
 }
