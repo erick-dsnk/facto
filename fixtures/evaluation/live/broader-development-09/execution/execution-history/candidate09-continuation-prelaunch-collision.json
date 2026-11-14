@@ -1,0 +1,11 @@
+{
+  "kind": "candidate09_continuation_prelaunch_collision",
+  "phase": "before_wrapper_or_provider_invocation",
+  "error": "FileExistsError while exclusively creating candidate09-root-continuation-review.json",
+  "cause": "Root had already written the authorization artifact. Existing bytes were preserved.",
+  "resolution": "Read and verified the existing root authorization against the fixed commit/source/freeze hash, v3 guard, independent review and original batch1 hash, then started the separately journaled authorized continuation.",
+  "providerCallsBeforeThisFailure": 0,
+  "batch1Rerun": false,
+  "existingAuthorizationSHA256": "83c2b8dbad17fd324ad68827f730f3e34004a4b4e0ab5721c5dcf38c215db4c0",
+  "evidence": "Original tool result preserved in task transcript; successful continuation starts in candidate09-continuation-execution-guards.jsonl at2026-11-14T05:13:20.003069+00:00."
+}

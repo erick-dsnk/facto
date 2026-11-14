@@ -1,0 +1,186 @@
+ .../exa-envelope-guard-01/ARCHIVE-MANIFEST.json    |  221 ++
+ fixtures/retrieval/exa-envelope-guard-01/README.md |   15 +
+ .../exa-envelope-guard-01/after-focused.log        |    9 +
+ .../retrieval/exa-envelope-guard-01/before.log     |  248 +++
+ .../retrieval/exa-envelope-guard-01/commit.json    |   12 +
+ .../development-and-presentation.json              |  749 +++++++
+ .../retrieval/exa-envelope-guard-01/full-check.log |   25 +
+ .../independent-runtime/MANIFEST.json              |    8 +
+ .../independent-runtime/boundary-first.log         |   22 +
+ .../independent-runtime/boundary.test.mts.txt      |   56 +
+ .../independent-runtime/package.json               |    1 +
+ .../independent-runtime/review.json                |   44 +
+ .../normalize-envelope.test.ts.txt                 |   49 +
+ .../exa-envelope-guard-01/normalize.before.ts.txt  |  326 +++
+ .../exa-envelope-guard-01/normalize.ts.txt         |  340 +++
+ .../exa-envelope-guard-01/original-path-map.json   |  256 +++
+ .../retrieval/exa-envelope-guard-01/owned.diff     |  125 ++
+ .../exa-envelope-guard-01/retrieval.test.ts.txt    |  373 ++++
+ .../saved-response-compatibility/MANIFEST.json     |   28 +
+ .../saved-response-compatibility/README.md         |   11 +
+ .../baseline-normalize.original.txt                |  326 +++
+ .../baseline-normalize.ts.txt                      |  326 +++
+ .../candidate-normalize.original.txt               |  340 +++
+ .../candidate-normalize.ts.txt                     |  340 +++
+ .../integrity-validation.json                      |   21 +
+ .../saved-response-compatibility/package.json      |    1 +
+ .../saved-response-compatibility/replay.ts.txt     |   84 +
+ .../saved-response-compatibility/report.json       | 1127 ++++++++++
+ .../saved-response-compatibility/source-pins.json  |   33 +
+ .../acquisition-01-request.json.gz                 |  Bin 0 -> 511 bytes
+ .../acquisition-01-response.json.gz                |  Bin 0 -> 6890 bytes
+ .../acquisition-02-request.json.gz                 |  Bin 0 -> 336 bytes
+ .../acquisition-02-response.json.gz                |  Bin 0 -> 2502 bytes
+ .../acquisition-03-request.json.gz                 |  Bin 0 -> 340 bytes
+ .../acquisition-03-response.json.gz                |  Bin 0 -> 2254 bytes
+ .../acquisition-04-request.json.gz                 |  Bin 0 -> 375 bytes
+ .../acquisition-04-response.json.gz                |  Bin 0 -> 2653 bytes
+ .../acquisition-05-request.json.gz                 |  Bin 0 -> 503 bytes
+ .../acquisition-05-response.json.gz                |  Bin 0 -> 5342 bytes
+ .../acquisition-06-request.json.gz                 |  Bin 0 -> 502 bytes
+ .../acquisition-06-response.json.gz                |  Bin 0 -> 5802 bytes
+ .../acquisition-07-request.json.gz                 |  Bin 0 -> 366 bytes
+ .../acquisition-07-response.json.gz                |  Bin 0 -> 1090 bytes
+ .../acquisition-08-request.json.gz                 |  Bin 0 -> 516 bytes
+ .../acquisition-08-response.json.gz                |  Bin 0 -> 6738 bytes
+ .../acquisition-09-request.json.gz                 |  Bin 0 -> 399 bytes
+ .../acquisition-09-response.json.gz                |  Bin 0 -> 3076 bytes
+ .../saved-response-inputs/capture-manifest-1.json  |  135 ++
+ .../saved-response-inputs/capture-manifest-2.json  |   60 +
+ .../locator-01-request.json.gz                     |  Bin 0 -> 161 bytes
+ .../locator-01-response.json.gz                    |  Bin 0 -> 2506 bytes
+ .../exa-envelope-guard-01/validation.json          |   44 +
+ .../retrieval/exa-envelope-guard-01/verify.py.txt  |   39 +
+ .../locator-material-availability-01-review.json   |   43 +
+ .../locator-material-availability-01/MANIFEST.json |  140 ++
+ .../locator-material-availability-01/README.md     |   23 +
+ .../build-history/NOTE.md                          |    1 +
+ .../build-history/diff-check-first.log.gz          |  Bin 0 -> 166 bytes
+ .../build-history/encoding-adjustment.json         |   11 +
+ .../build-history/portable-first.log               |    4 +
+ .../original-path-map.json                         | 2136 ++++++++++++++++++
+ .../packaging-validation.json                      |   30 +
+ ...e474cc2b3faaca6cbe8070f754cc09ac95714f24d84d916 |   28 +
+ ...41c23117921912f77a4d291902a88614f4ddd6b321c1ec9 |   55 +
+ ...fc7a5d84cf8f32ef5d1e7cb381e46ecc0d9f7d15173dcb1 |    4 +
+ ...5f0b030a498b50ca8ff20c5fa0a7c97c883cb0b6b7328bf |   22 +
+ ...695b8a91c649f3ef6c098b2a7cd3ede12b751b77d7ce070 |   13 +
+ ...d730cc49c13f0dbfbfd1d7ac5a550cce82981e6e1182948 |   84 +
+ ...0581277e371404acd575075860f2983ddf9c37f8.txt.gz |  Bin 0 -> 6558 bytes
+ ...31b72c549217e7a897d13b0b1d0b63dc49e553a900373d1 |   56 +
+ ...dcf5e36dc03d4c05e3885f6379a2baaef68b304b.txt.gz |  Bin 0 -> 3399 bytes
+ ...ed37a20547dbe587142eb838cedfbd4662caafa3941ca86 |  130 ++
+ ...41c58d63cb4898e0b5be983e0a430bcea6ed476e612370e |    1 +
+ ...7fda3fc7b9cd218749164d74468186b549f54acebcb47d6 |   23 +
+ ...c41158f0a74d20b6c68e4a61397510c2d95e830f57efef6 |  100 +
+ ...55908c63917e2fc319f939a33ec8d717f3f5b2abde56d2b |    1 +
+ ...01f6e6a3d04ed6eb1c1a986a7a3718e564c3b178f4a562c |   11 +
+ ...f5886734d930a4587520a876bdfcd131411a423990ca3f8 |    1 +
+ ...edd2c548dfc0cc6b5aea2f676a17456af267411193ca3a8 |  160 ++
+ ...9e8dfd3c2b304e4db917e40bdbf88dc232b5cdb4.txt.gz |  Bin 0 -> 6544 bytes
+ ...b3c20af60ef997a9b53793f902561e393816ec0cc543408 |    1 +
+ ...4f850f5e8281dbfe7de6ad4f4bfbebcf2370d7ae5963cdb |    1 +
+ ...dea072eb3be6f3590d742c17d7abe897078da4a382f7aa1 |  130 ++
+ ...7e5b8b4de565b91d6dd6164e36b733745a8c776dd53eac5 |   47 +
+ ...04bae3449787a0baefd262c661413a37e35fcb3fff619fc |   83 +
+ ...7ba62285b1f839eb68ba87858e388de4f2d96520ac89de9 |   83 +
+ ...855ebe2eec79bab76a66229c7bf603127ec06e941df2cf7 |   24 +
+ ...9f9a7034ed1532127042c1210b39c66027ca9dcb9def1fc |  130 ++
+ ...012242f992c0c20cdacf7da70b5204a8a19b5318.txt.gz |  Bin 0 -> 3714 bytes
+ ...fee241caa9a8e79bc44ef394bb12414b084df5e2c40b030 |   83 +
+ ...b91399dbbb0ecfb88dca5ab9111e981966cc65d5.txt.gz |  Bin 0 -> 4112 bytes
+ ...c2ab232d3d811379348d41e7e63427c81268f569.txt.gz |  Bin 0 -> 3600 bytes
+ ...6fa47eb791ba270f871ab4558dc0a5eff34a43c2.txt.gz |  Bin 0 -> 1514 bytes
+ ...3e81391d9ca4fbc1acb7333d16614ba5cfe3edee8e6d130 |   18 +
+ ...8f125d6161dba675324912f0157d2f2ba6ade009.txt.gz |  Bin 0 -> 4456 bytes
+ ...2ead2b6d4e187db6a783811ba32acf97451aa028dc276ac |   28 +
+ ...a1cecc94b2873e160ac0290ba7a3f1830e03e4ca5bf2009 |    4 +
+ ...5b9e7101ce32c4e14055d88607099ca6feec6fe3a822899 |   57 +
+ ...e7e53ff3a2aa70de4dedca59b0121a4022ebd91530a4abd |  125 ++
+ ...5f47aff70ae1527a524896daff9ffe941f1043ade7d6f46 |   19 +
+ ...53b49fc70658621a5dd8004a4199e2eb120a76499faac4f |    1 +
+ ...4d1c252954b5ed306e70495c73db12d4825adbd9ab1fdbd |   27 +
+ ...c07fd66838fa45dfe325d919be9f677f3bd874a41d91a78 |   83 +
+ ...c0f9927c8fa8dd566e08d004bd3f94feb2cc62f536c6.gz |  Bin 0 -> 7162 bytes
+ ...e54ab23b017e1c497680501564375944f0102495561b0f4 |  100 +
+ ...6fd6c1da3f2bdfa37e25d503a9ebb7ec5d3a13977b83c69 |   83 +
+ ...0129b924bd0adb8b3863f8c3dde72a2b3fa31f2a47e6e37 |  100 +
+ ...e2a2c5f1f6714e6fe73853df205af9d628bdf9fe8fc95b0 |    4 +
+ ...ef73df0ce62bd4365ee6228324bc5b94310ef305.txt.gz |  Bin 0 -> 3709 bytes
+ ...af2f78e8b9bed7586f852fa63aa2bbe244ce71e3369e551 |    1 +
+ ...aca067ea5e266dc1e8f661569b3e90aabad7cd10dd5e8ca |  125 ++
+ ...fb13d3b949c4351d4de8ff0b7d2e18d93c5cf5e4448ff48 |   83 +
+ ...7ccdbc9da77a6c4dbf07cea496472814b803559b06a18ab |   60 +
+ ...c3abe1d995b2566d243960a31542ab072dd773e0067e2fb |    4 +
+ ...1b0a69d4d0d0f06f2507a4ff364cf552ff08e95774c0.gz |  Bin 0 -> 2728 bytes
+ ...be2fdf1441ac5e941aa12c23029cd29480933f122e56.gz |  Bin 0 -> 3780 bytes
+ ...b2fa4a02bcd354bddd8badf235677f4535b7e2cd.txt.gz |  Bin 0 -> 872 bytes
+ ...296f9f4c39919d3958dff6fce9f7a88bba3e7fe0f9a2738 |    1 +
+ ...13a34d04293fb41fe4b7a5fa7c64a1fd0a2984f49478.gz |  Bin 0 -> 7806 bytes
+ ...6868e5e0a7cd73a8b4d1c2fa67a1aae6c8f2a397195b.gz |  Bin 0 -> 8829 bytes
+ ...c72da4f215ebc21cf1e294aeef3b45d2583562d846ab035 |    1 +
+ ...62955466e548264db0167a6593b05c6747a10de1d0a63b9 |  100 +
+ ...a0b69e09b102ffc5b338b05349cacf2b9745343accabffd |    1 +
+ ...a6838bb14474977af89ad330ad18ffb97186a3d5d02b0e4 |    1 +
+ ...df466f34acf65350b4148bc8e4271548869ce6d0f42dee8 |  159 ++
+ ...9d62b9a7c7a1fda557d7574a0f962d32762605dd19572d8 |   18 +
+ ...f81b0b7ad0f15a3e71e1d963b5f92bd7d72de8af0c76e1e |   58 +
+ ...d15fbab8dfaeb1ce08a1a84b6d8efca2abba3068.txt.gz |  Bin 0 -> 3521 bytes
+ ...c75df358e2bc521ab9d316fb371816f10845f04c9c8387c |    1 +
+ ...2a3255a360143ca5476b9cbf08a66d4956f510a03f8b8de |   83 +
+ ...db22d93b832f0cb74a2a86999d7e64befcd03a7c505e9de |   14 +
+ ...b9a85263674aa60a6fe3971e169b026ae9a06b2231583db |  130 ++
+ ...8fdd56ae4ccd7c10c88008e96c2bc24ef9cf38bdccb0a90 |   83 +
+ ...e99f21ec42acde002c23168768286b63098c388dc5d94d1 |    4 +
+ ...cb4913c4d7100cf70269a0f067ce928e210304331ec4563 |    1 +
+ ...ef77d7256a1d88f26df3d5abefc74d0ff472aa285dc0bd8 |   16 +
+ ...d6de356cebaf2330f2d65672afe1165dd86d7aebaa291e4 |    1 +
+ ...04cf82ad8348d4ae08520052482b239495f21b98a0af.gz |  Bin 0 -> 7891 bytes
+ ...855b9e72c49b1a0fd35071d8eea8d31b946a01e1806175e |   11 +
+ ...05a12294488ed92b8e8f93215258444bbeb5130984740ab |   78 +
+ ...0084861d11fbf13ae6034ae9c752bf2935391995165803b |    1 +
+ ...384d9e3eb7afcea368fea0253f59bc68482c7ee6bb34ebf |   25 +
+ ...6114afd5aa602442bbb9c9611974cb3d407f7389d67275c |   55 +
+ ...b67ff3e159aefbffe20b3cdc9a0a756a3ceb8cd5c67d278 |  130 ++
+ ...42ac21fbefed232a1a6e6a446c2dcd89898040953f8d.gz |  Bin 0 -> 26647 bytes
+ ...543305fdb65f1e5d0b764368637060b83e399eeb29ee.gz |  Bin 0 -> 1270 bytes
+ ...731f1c86fccdf80da406ec65aaa00218a2f51a505ca8686 |   49 +
+ ...b6d0f718d5266401038a4aba32b308a994a39ecad3f8c5b |  130 ++
+ ...31ec32aa6d72c687b17da9c85b82cf87509e345b37cc4b7 |    2 +
+ ...9ecc421c2f8ecbffcf67dfed5aa0d1b197ac0dda757f523 |  147 ++
+ ...caca9446fa96bd75f706ce937e62713a3513518601be2f6 |    7 +
+ ...c8cb6f44cdb83655a2a7616766e622a96c3e5ddfab2a141 |   83 +
+ ...41028cf9362ba55acab995373149704deb8ed7f22df7e9e |    1 +
+ ...291c2d531404b8844a9d422cbb1ca99276ad7be8ecc778f |    1 +
+ ...890e7be3ede7cad62159993fedb05cba5051d46f27a955a |    4 +
+ ...c28d4ee5621fdc74a3730ca1a99008524d041acb.txt.gz |  Bin 0 -> 1283 bytes
+ ...1cd6f58d2c6d02c78a31524d8e2b233cafd17a1df54843d |    4 +
+ ...6d4a13146cc2c84aba10cd0cb67309f753b14ffb13da25f |   27 +
+ ...6450e8f6c235b1e99f8b40b70931db0804eb53e9a80e4ce |   83 +
+ ...d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed |    1 +
+ ...5cfa0e07c2d9026bd54a0f9fa104da19107e24ff.txt.gz |  Bin 0 -> 2168 bytes
+ ...87e1615e933c1345e43ed88a893262aed24e042c10fdb5e |    1 +
+ ...709c7f0aac89258a734c87a88eb16bd9164a377641e7e10 |    4 +
+ ...316ddcf05b097405d3ca7dcdc5ea662e0497c96ecd3864c |   26 +
+ ...9eea75b793a895e433debfe9d0410b31364092e2.txt.gz |  Bin 0 -> 1087 bytes
+ ...c9fc0bb3ccc0c1102cb9675a4c5ed42f40c16db05e834c2 |  154 ++
+ ...1f4d4ea9ab64f97a5d232955eed7a46ba5e2f9217ee0381 |    9 +
+ ...a5d319071159eb7441b0d6ce4fb3acd4a0dc2278d3aec4d |    9 +
+ ...fc4fc0fbac4520249a78bbdc6312b3d3339ca39372b3118 |   27 +
+ ...1dea52740bbefb285678329e4033e718dfcd100c1585559 |   41 +
+ ...c6e3c7f5bae35190768e1ec406efe5b6585fca5c7d03f5e |   83 +
+ ...0d789383fbb16600e377c07e4753d7d56e4eb3ae70fd55f |    6 +
+ ...6e8197fd5a3250dfe37c6bc6f4543a468ba7474fb796169 |   61 +
+ ...53fc90600d4c18e1ab419f883547d273d112783dc047248 |    7 +
+ ...dc35c65a49040169f6d3915af28b0ac082731390.txt.gz |  Bin 0 -> 362 bytes
+ ...c423efce37d85f79c98f1ba0c7288553021c3c24.txt.gz |  Bin 0 -> 4300 bytes
+ ...d115b09859f3433b91215577beca14fa0bc7dd379404.gz |  Bin 0 -> 6875 bytes
+ ...c9363b13658910c548468bce50f94336cfc6e82b.txt.gz |  Bin 0 -> 3445 bytes
+ ...4e51fff57b80109c61d00665679afe50f9a02ad3cda0758 |   29 +
+ .../predecessor-coverage.json                      | 2298 ++++++++++++++++++++
+ .../locator-material-availability-01/summary.json  |   32 +
+ .../locator-material-availability-01/verify.py     |   45 +
+ .../api/src/evidence/normalize-envelope.test.ts    |   49 +
+ services/api/src/evidence/normalize.ts             |   32 +-
+ services/api/src/providers/exa/retrieval.test.ts   |   37 +
+ 185 files changed, 14827 insertions(+), 9 deletions(-)

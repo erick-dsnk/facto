@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "kind": "authenticated_http_websocket_live_development",
+  "startedAt": "2026-11-14T02:40:53.057Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.1",
+  "metadata": {
+    "commit": "d72c8c5821e8aa049de5f21de15e313d0a16f778",
+    "dirty": false,
+    "sourceSHA256": "0d5920b0768fb8da8470e8369f3e50f6a84e3a5997229261f8d1afcf9e9c2770",
+    "authProbe": "exa"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 180000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 24,
+      "search": 12,
+      "contents": 18
+    },
+    "wallMs": 150000
+  },
+  "predeclaredCases": [
+    {
+      "label": "L1-opera",
+      "allowedPublic": [
+        "The Sydney Opera House opened in 1973."
+      ],
+      "automatic": false,
+      "final": true,
+      "cancellation": false
+    }
+  ],
+  "counts": {
+    "declared": 1,
+    "observed": 1,
+    "terminalReceipts": 1,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 1
+  },
+  "completed": true,
+  "auth": {
+    "unauthorizedJoinStatus": 401,
+    "unauthorizedCheckStatus": 401,
+    "unauthorizedWebsocketStatus": 401
+  },
+  "transportFailure": null,
+  "totals": {
+    "attempts": 2,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 1,
+      "search": 1,
+      "contents": 0
+    },
+    "requestBytes": 5435,
+    "measuredInputTokens": 1472,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 1472,
+    "knownCostUSD": null,
+    "attemptsWithUnknownCost": 2,
+    "elapsedMs": 1029
+  },
+  "cases": [
+    {
+      "label": "L1-opera",
+      "status": "observed",
+      "httpStatus": 202,
+      "terminalReceived": true,
+      "terminalType": "pipeline.error",
+      "durationMs": 790,
+      "mismatch": [],
+      "events": [
+        {
+          "type": "claim.detected",
+          "eventSeq": 2,
+          "revision": 1,
+          "receivedMs": 24
+        },
+        {
+          "type": "claim.checking",
+          "eventSeq": 3,
+          "revision": 1,
+          "claimId": "L1-opera-892f69b0-claim-0",
+          "receivedMs": 414,
+          "reasonCode": "eligible_public_claim",
+          "admissionAction": "check"
+        },
+        {
+          "type": "pipeline.error",
+          "eventSeq": 4,
+          "revision": 1,
+          "claimId": "L1-opera-892f69b0-claim-0",
+          "receivedMs": 790,
+          "reasonCode": "exa_authentication_failed"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "attempts": [
+        {
+          "kind": "jev",
+          "ordinal": 1,
+          "dispatched": true,
+          "requestBytes": 5325,
+          "startedMs": 253.07981799999993,
+          "durationMs": 386,
+          "inputTokens": 1472,
+          "unknownInputTokenReservation": 0,
+          "status": 200,
+          "outcome": "response",
+          "costUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "public_fact",
+              "probabilities": {
+                "public_fact": 1,
+                "personal_experience": 0,
+                "opinion": 0,
+                "prediction": 0,
+                "question_or_instruction": 0,
+                "mixed": 0,
+                "incomplete_or_unclear": 0
+              }
+            },
+            "span_0_self_contained": {
+              "noul": 0.97
+            },
+            "span_0_private_data": {
+              "noul": 0.02
+            },
+            "span_0_assertion_status": {
+              "choice": "asserted",
+              "probabilities": {
+                "asserted": 1,
+                "nonliteral_or_quoted": 0,
+                "unclear": 0
+              }
+            },
+            "span_0_has_practical_consequence": {
+              "noul": 0.11
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "search",
+          "ordinal": 2,
+          "dispatched": true,
+          "requestBytes": 110,
+          "startedMs": 643.7022709999999,
+          "durationMs": 374,
+          "inputTokens": null,
+          "unknownInputTokenReservation": 0,
+          "status": 401,
+          "outcome": "response",
+          "costUSD": null,
+          "query": "The Sydney Opera House opened in 1973."
+        }
+      ],
+      "stageMs": {
+        "admission": 405.365362,
+        "retrieval": 377.36980600000015,
+        "judgment": 0
+      },
+      "evidence": [],
+      "admittedPublic": [
+        "The Sydney Opera House opened in 1973."
+      ],
+      "deterministicPublicIssues": [
+        {
+          "text": "The Sydney Opera House opened in 1973.",
+          "issue": null
+        }
+      ],
+      "localStops": [],
+      "runtime": {
+        "state": "done",
+        "jevConsumed": 1,
+        "searchConsumed": 1,
+        "contentsConsumed": 0,
+        "inputTokens": 1472
+      },
+      "usage": {
+        "measuredInputTokens": 1472,
+        "unknownInputTokenReservations": 0,
+        "requestBytes": 5435,
+        "knownCostUSD": null,
+        "attemptsWithUnknownCost": 2
+      }
+    }
+  ],
+  "limitations": [
+    "Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.",
+    "24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.",
+    "A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.",
+    "Known costs are partial when any attempt has unknown cost. No prices are invented.",
+    "No held-out bodies, raw private text, provider prompts, session credentials or keys are retained. Native/iOS/ASR paths are untested."
+  ]
+}

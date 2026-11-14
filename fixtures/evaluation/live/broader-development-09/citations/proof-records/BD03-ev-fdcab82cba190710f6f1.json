@@ -1,0 +1,53 @@
+{
+  "caseLabel": "BD03",
+  "evidenceId": "ev-fdcab82cba190710f6f1",
+  "url": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+  "excerptSHA256": "673b21adeb8b18f5de5db8336bd79c178e406a0bc44209413642cf5839c25f5d",
+  "mode": "exact_prior_proof_reuse",
+  "reuseDecisionAt": "2026-11-14T05:15:38.129983+00:00",
+  "originalReviewedAt": "2026-11-14T04:33:33.261511+00:00",
+  "originalOriginCompletedAt": "2026-11-14T04:32:18.649522+00:00",
+  "priorReviewPath": "/workspace/task-evidence/broader-candidate08-citation-review.json",
+  "originMetadataPath": "/workspace/task-evidence/broader-candidate08-citation-work/origin-fetches/fdcab82cba190710.json",
+  "originalOriginMetadata": {
+    "id": "fdcab82cba190710",
+    "requestedUrl": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+    "requestedAt": "2026-11-14T04:32:17.908271+00:00",
+    "method": "GET",
+    "projectKeysUsed": false,
+    "providerIndexedRetrievalUsed": false,
+    "completedAt": "2026-11-14T04:32:18.649522+00:00",
+    "httpStatus": 200,
+    "finalUrl": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+    "responseHeaders": {
+      "date": "Sat, 14 Nov 2026 04:32:18 GMT",
+      "server": "envoy",
+      "last-modified": "Mon, 15 Nov 2021 16:23:03 GMT",
+      "etag": "\"2143e-5d0d63917e7c0\"",
+      "content-length": "136254",
+      "content-type": "application/pdf"
+    },
+    "redirects": [],
+    "responseBodyFile": "fdcab82cba190710.body",
+    "responseBodyBytes": 136254,
+    "responseBodySHA256": "dc5da66031d45692568412ffea0040cf965e869a4ec070dda5badc3e07eba383",
+    "bodyTruncated": false,
+    "textExtraction": "pdftotext -layout",
+    "extractedTextFile": "fdcab82cba190710.text.txt",
+    "extractedTextSHA256": "e78da2efb19586bb1981a2b6c4ce7c1bb15c45253d286135c7d4bf431cfec10b",
+    "extractedTextCodepoints": 25065
+  },
+  "selectedExcerpt": "KILIMANJARO NATIONAL PARK TANZANIA At 5,963 meters Kilimanjaro is the highest point in Africa. This massive volcano stands in splendid isolation above the surrounding plains, with its (fast-melting) snowy peak looming over the savannah. The mountain is encircled by mountain forest. Numerous mammals, many of them endangered species, live in the Park.\n\nCOUNTRY COUNTRY The United Republic of Tanzania\n\nNAME Kilimanjaro National Park\n\nNATURAL WORLD HERITAGE SITE NATURAL WORLD HERITAGE SITE 1987: Inscribed on the World Heritage List under Natural Criterion vii.\n\nIUCN MANAGEMENT CATEGORY IUCN MANAGEMENT CATEGORY II National Park\n\nBIOGEOGRAPHICAL PROVINCE BIOGEOGRAPHICAL PROVINCE Somalian (3.14.07) / East African Highlands (3.21.12)\n\nGEOGRAPHICAL LOCATION GEOGRAPHICAL LOCATION The National Park and Forest Reserve on Mount Kilimanjaro lie very near the border between Tanzania and Kenya north of Moshi in the north centre of the country. The National Park comprises the whole of the mountain above 2700m, including some of the montane forest, and six access corridors through the forest belt below. The whole area lies between 2\u00b0 45' to 3\u00b0 25'S and 37\u00b0 00' to 37\u00b0 43'E.\n\nDATES AND HISTORY OF ESTABLISHMENT DATES AND HISTORY OF ESTABLISHMENT 1910s: Mt Kilimanjaro and its forests declared a game reserve by the German colonial government;\n\n1921: The area was gazetted as a Forest Reserve, confirmed by subsequent legislation;\n\n1973: The mountain above the tree line (~2700m) reclassified as a National Park by Government Notice 50 and opened to public access in 1977.\n\nLAND TENURE LAND TENURE Government, in Kilimanjaro province. Administered by the Tanzania National Parks Authority.\n\nAREA National Park: 75,353 ha, surrounded by a Forest Reserve of 107,828 ha.\n\nALTITUDE ALTITUDE 1,830m (Marangu Gate) to 5,895m (Kibo,Uhuru Peak)\n\nPHYSICAL FEATURES PHYSICAL FEATURES Kilimanjaro is a giant stratovolcano and one of the largest volcanoes and largest isolated mountains in the world. It is the high",
+  "status": "verified",
+  "priorReview": {
+    "caseLabel": "BD03",
+    "expectedClaimId": "BD03",
+    "evidenceId": "ev-fdcab82cba190710f6f1",
+    "url": "https://tools.thecpag.org/sites/default/files/2019-03/Kilimanjaro_NP2011WCMC.pdf",
+    "excerptSHA256": "673b21adeb8b18f5de5db8336bd79c178e406a0bc44209413642cf5839c25f5d",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:33:33.261511+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh GET to exact selected URL returned HTTP 200 seven-page PDF. Country field, title and geographical-location paragraphs explicitly associate the named mountain/park with Tanzania. Selected extraction repeats some headings and truncates the next section, but tested relation is retained. Mirror-hosted compilation dates June 1987, updated through May 2011; metadata does not supply a named author. References explicitly say principal source was original World Heritage nomination. It shares that origin with selected UNESCO/IUCN document, so not independent merely by domain. Conflicting height numbers are outside the country claim."
+  }
+}

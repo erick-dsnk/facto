@@ -1,0 +1,33 @@
+{
+  "kind": "independent_candidate09_predispatch_review",
+  "reviewedAt": "2026-11-14T05:12:06.066640+00:00",
+  "verdict": "approved_revision03_for_only_unstarted_batches_02_to_04",
+  "manifestHashes": {
+    "candidate09-open-development-plan": "3dae919d0e8c297d15d3d79aa1458f4612771ecb09ce82dc0f7da54eade8dfe4",
+    "revision-02": "918cd6c22ea6f0c615cb177b1f224465f05a7b5650cfea7a2eb0c2cffa63c87d",
+    "revision-03": "1c3c494c6082eacbcd5c4c7c58f1d8b6067a7cc5909d0b1b594ab86b632e7bac",
+    "revision-03-tests": "ff950057265e2a2f5435fbbfff748364c284312d3cc8c135ddeae2dfa603e43f"
+  },
+  "exactSource": {
+    "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+    "sourceSHA256": "9de0531baa85af7bac2d1940b28c91136dce6c455bcafe24e3cf7b1d8739f9ad",
+    "freezeSHA256": "f12a85c3a308882c52e9c4f271cea80ae0479ba49a29a5fc0f2951d28ea0cdf1"
+  },
+  "checks": [
+    "Original plan, revision02, revision03 and test manifests all hash-verified; immutable predecessors preserved.",
+    "Independent read-only preflight before batch2 with require-preview passed.",
+    "Eleven offline completed-report mutation tests independently rerun and passed.",
+    "Revision03 accepts explicit issue:null rows and empty lists; rejects malformed container/rows, missing issue and non-null issues.",
+    "Revision02 exact freeze-file/commit/source pins retained; all other accounting, auth, transport, storage, privacy and budget guards retained.",
+    "Protected paths independently verified unchanged against initial 2cd89adf6ddc3ecc4020227645b861bd7731256d.",
+    "12 unique facts, 16 inputs, 13 eligible occurrences; mixed BD07 repeat adds no unique fact; source audit/full-selected verification and repeated OPEN/noncausal caveats remain."
+  ],
+  "chronology": "Batch01 was already dispatched and completed under original guard/root exact pins before revision03 review. This is no retrospective approval and no instruction to rerun it. Root owns dispatch authorization; run the pinned revision03 guard before each remaining batch.",
+  "limitations": [
+    "New containment availability regression is acknowledged; frozen09 is unchanged and cannot claim a later fix.",
+    "Passing local 525/25 and 36+21 fixture checks are distinct from live useful coverage or backend readiness.",
+    "No source labels or expected values were changed."
+  ],
+  "providerCalls": 0,
+  "productionFilesModified": 0
+}

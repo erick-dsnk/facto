@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "AD01-disabled-contradiction",
+  "cases": [
+    {
+      "label": "AD01-disabled-contradiction",
+      "text": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": true,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ],
+        "presentationActions": [
+          "silent"
+        ]
+      }
+    }
+  ]
+}

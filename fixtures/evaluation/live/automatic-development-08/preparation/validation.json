@@ -1,0 +1,18 @@
+{
+  "createdAt": "2026-11-14T04:29:15.952233+00:00",
+  "status": "prepared_not_executed",
+  "sourceCodeEdits": false,
+  "providerCalls": 0,
+  "tests": {
+    "command": "node --test /workspace/task-evidence/automatic-development/run-cohort.test.mts",
+    "passed": 6,
+    "failed": 0,
+    "scope": "synthetic cumulative-accounting callbacks only"
+  },
+  "strictManifestValidation": {
+    "catalogCases": 6,
+    "isolatedManifests": 6,
+    "validatedManifests": 7
+  },
+  "sourceFreezeStatus": "Awaiting root-supplied clean commit/hash and completed full check; no live execution authorized by this artifact alone."
+}

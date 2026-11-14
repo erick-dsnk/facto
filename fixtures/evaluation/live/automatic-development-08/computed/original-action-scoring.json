@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-14T04:35:55.917512+00:00",
+  "kind": "open_automatic_presentation_observation",
+  "executedOnce": true,
+  "sourceCommit": "aefb9e7c5f0f3d0e332eea5d8748878b3f6cf75c",
+  "sourceSHA256": "09c18944f1eba27dd09293a31511824014cbea0f92057c7c7e5b6445fcb70d42",
+  "manifestSHA256": "2c223938aa63f555bc4ae9e0c09fbd43381071ace2a13778cdbedea9cd2ca8d0",
+  "wrapperSHA256": "243a4398b26f11b036d2e33d7506846b33675b5ce28294dc2ac9821838d0fff1",
+  "runSHA256": "d9065e26c43183b13d165a9560f638c57c982d9274530d75860d590cdb410fc9",
+  "journalSHA256": "0f28afc16ad8387c929007521934ee85c15a1c7c7d1704b2cf6c1883b2a14240",
+  "operationalCompleted": true,
+  "counts": {
+    "scenarios": 6,
+    "observed": 6,
+    "actionPassed": 5,
+    "actionInconclusive": 1,
+    "actionFailed": 0,
+    "terminalReceipts": 6,
+    "actualAttempts": 21,
+    "http200Attempts": 21,
+    "journalRecords": 48,
+    "dispatchCheckpoints": 21,
+    "finishedAttemptCheckpoints": 21,
+    "caseCheckpoints": 6
+  },
+  "totals": {
+    "attempts": 21,
+    "calls": {
+      "jev": 12,
+      "search": 6,
+      "contents": 3
+    },
+    "requestBytes": 289105,
+    "measuredInputTokens": 69270,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 69270,
+    "knownCostUSD": 0.048,
+    "attemptsWithUnknownCost": 12,
+    "elapsedMs": 19989
+  },
+  "scheduling": [
+    {
+      "label": "AD01-disabled-contradiction",
+      "delayMs": 0
+    },
+    {
+      "label": "AD02-selected-topic-notify",
+      "delayMs": 4098
+    },
+    {
+      "label": "AD03-supported-silent",
+      "delayMs": 4094
+    },
+    {
+      "label": "AD04-low-priority-silent",
+      "delayMs": 4094
+    },
+    {
+      "label": "AD05-personal-skip",
+      "delayMs": 4094
+    },
+    {
+      "label": "AD06-muted-manual",
+      "delayMs": 0
+    }
+  ],
+  "cases": [
+    {
+      "label": "AD01-disabled-contradiction",
+      "sourceCaseId": "BD10",
+      "actionScenarioOutcome": "passed",
+      "issues": [],
+      "inconclusiveReasons": [],
+      "terminalType": "claim.result",
+      "verdict": "contradicted",
+      "presentation": {
+        "action": "silent",
+        "reasonCode": "notifications_disabled"
+      },
+      "priorityAssessments": [
+        {
+          "question": "span_0_has_practical_consequence",
+          "value": 0.21
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "admittedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "cold": true,
+      "calls": {
+        "jev": 2,
+        "search": 1,
+        "contents": 0
+      },
+      "measuredInputTokens": 10436,
+      "requestBytes": 44063,
+      "durationMs": 535,
+      "sourceVerification": "pending"
+    },
+    {
+      "label": "AD02-selected-topic-notify",
+      "sourceCaseId": "BD10",
+      "actionScenarioOutcome": "passed",
+      "issues": [],
+      "inconclusiveReasons": [],
+      "terminalType": "claim.result",
+      "verdict": "contradicted",
+      "presentation": {
+        "action": "notify",
+        "reasonCode": "selected_topic_contradiction"
+      },
+      "priorityAssessments": [
+        {
+          "question": "span_0_has_practical_consequence",
+          "value": 0.18
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "admittedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "cold": true,
+      "calls": {
+        "jev": 2,
+        "search": 1,
+        "contents": 0
+      },
+      "measuredInputTokens": 10436,
+      "requestBytes": 44063,
+      "durationMs": 594,
+      "sourceVerification": "pending"
+    },
+    {
+      "label": "AD03-supported-silent",
+      "sourceCaseId": "BD09",
+      "actionScenarioOutcome": "inconclusive",
+      "issues": [],
+      "inconclusiveReasons": [
+        "abstention prevents the declared verdict-dependent branch from being exercised"
+      ],
+      "terminalType": "claim.result",
+      "verdict": "insufficient_evidence",
+      "presentation": {
+        "action": "silent",
+        "reasonCode": "automatic_noncontradiction"
+      },
+      "priorityAssessments": [
+        {
+          "question": "span_0_has_practical_consequence",
+          "value": 0.09
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "admittedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "cold": true,
+      "calls": {
+        "jev": 3,
+        "search": 2,
+        "contents": 3
+      },
+      "measuredInputTokens": 23034,
+      "requestBytes": 95365,
+      "durationMs": 1128,
+      "sourceVerification": "not_applicable"
+    },
+    {
+      "label": "AD04-low-priority-silent",
+      "sourceCaseId": "BD10",
+      "actionScenarioOutcome": "passed",
+      "issues": [],
+      "inconclusiveReasons": [],
+      "terminalType": "claim.result",
+      "verdict": "contradicted",
+      "presentation": {
+        "action": "silent",
+        "reasonCode": "insufficient_priority"
+      },
+      "priorityAssessments": [
+        {
+          "question": "span_0_has_practical_consequence",
+          "value": 0.18
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "admittedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "cold": true,
+      "calls": {
+        "jev": 2,
+        "search": 1,
+        "contents": 0
+      },
+      "measuredInputTokens": 10436,
+      "requestBytes": 44063,
+      "durationMs": 416,
+      "sourceVerification": "pending"
+    },
+    {
+      "label": "AD05-personal-skip",
+      "sourceCaseId": "BDC01",
+      "actionScenarioOutcome": "passed",
+      "issues": [],
+      "inconclusiveReasons": [],
+      "terminalType": "claim.skipped",
+      "verdict": null,
+      "presentation": {
+        "action": "silent",
+        "reasonCode": "private_or_personal"
+      },
+      "priorityAssessments": [
+        {
+          "question": "span_0_has_practical_consequence",
+          "value": 0.52
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "reasonCode": "private_or_personal",
+        "claims": 0
+      },
+      "admittedPublic": [],
+      "cold": null,
+      "calls": {
+        "jev": 1,
+        "search": 0,
+        "contents": 0
+      },
+      "measuredInputTokens": 1685,
+      "requestBytes": 6505,
+      "durationMs": 158,
+      "sourceVerification": "not_applicable"
+    },
+    {
+      "label": "AD06-muted-manual",
+      "sourceCaseId": "BD07",
+      "actionScenarioOutcome": "passed",
+      "issues": [],
+      "inconclusiveReasons": [],
+      "terminalType": "claim.result",
+      "verdict": "supported",
+      "presentation": {
+        "action": "silent",
+        "reasonCode": "muted"
+      },
+      "priorityAssessments": [
+        {
+          "question": "span_0_has_practical_consequence",
+          "value": 0.21
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "reasonCode": "eligible_public_claim",
+        "claims": 1
+      },
+      "admittedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "cold": true,
+      "calls": {
+        "jev": 2,
+        "search": 1,
+        "contents": 0
+      },
+      "measuredInputTokens": 13243,
+      "requestBytes": 55046,
+      "durationMs": 469,
+      "sourceVerification": "pending"
+    }
+  ],
+  "privacy": {
+    "privateControlTextAbsentFromReportAndJournal": true,
+    "credentialsAbsentFromReportAndJournal": true,
+    "rawOriginalTextAbsent": true,
+    "personalExaAttempts": 0
+  },
+  "auth": {
+    "isolatedSessions": 6,
+    "allUnauthorizedJoinCheckWebsocketProbes401": true
+  },
+  "limitations": [
+    "Action passes establish observed presentation behavior; selected-source grounding review is still pending.",
+    "AD03 abstention is inconclusive for the predeclared supported-silence scenario; no rerun or substituted case was made.",
+    "This cohort adds zero facts to the accuracy denominator; BD10 is repeated across three isolated sessions.",
+    "Five factual result occurrences are cold but not independent factual samples.",
+    "Known costs are partial;12Jev attempts have unknown cost.",
+    "No iOS, ASR, hardware delivery or production deployment was exercised."
+  ]
+}

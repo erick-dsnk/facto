@@ -1,0 +1,52 @@
+{
+  "caseLabel": "BD08",
+  "evidenceId": "ev-6280e6fe9e9d162a80e3",
+  "url": "http://isoh.org/wp-content/uploads/2015/03/265.pdf",
+  "excerptSHA256": "f7c1cee3f7e4f8a8dddb05760bb62a9aa3b28e66cf529c5b72498450b0a712ed",
+  "mode": "exact_prior_proof_reuse",
+  "reuseDecisionAt": "2026-11-14T05:15:38.129983+00:00",
+  "originalReviewedAt": "2026-11-14T04:38:04.966271+00:00",
+  "originalOriginCompletedAt": "2026-11-14T04:35:25.402320+00:00",
+  "priorReviewPath": "/workspace/task-evidence/broader-candidate08-citation-review.json",
+  "originMetadataPath": "/workspace/task-evidence/broader-candidate08-citation-work/origin-fetches/6280e6fe9e9d162a.json",
+  "originalOriginMetadata": {
+    "id": "6280e6fe9e9d162a",
+    "requestedUrl": "http://isoh.org/wp-content/uploads/2015/03/265.pdf",
+    "requestedAt": "2026-11-14T04:35:25.191015+00:00",
+    "method": "GET",
+    "projectKeysUsed": false,
+    "providerIndexedRetrievalUsed": false,
+    "completedAt": "2026-11-14T04:35:25.402320+00:00",
+    "httpStatus": 200,
+    "finalUrl": "http://isoh.org/wp-content/uploads/2015/03/265.pdf",
+    "responseHeaders": {
+      "content-type": "application/pdf",
+      "last-modified": "Sun, 05 Mar 2017 19:34:28 GMT",
+      "content-length": "240991",
+      "date": "Sat, 14 Nov 2026 04:35:25 GMT",
+      "server": "envoy"
+    },
+    "redirects": [],
+    "responseBodyFile": "6280e6fe9e9d162a.body",
+    "responseBodyBytes": 240991,
+    "responseBodySHA256": "b108f01f8c3fcc6519a46a67f6521a30dd39ab30e836a6859a73f6b17685f3ed",
+    "bodyTruncated": false,
+    "textExtraction": "pdftotext -layout",
+    "extractedTextFile": "6280e6fe9e9d162a.text.txt",
+    "extractedTextSHA256": "6291fa2e435613a42b9debb3c3e7f8e0f66a5aab6d1301c38890a4593549d7a9",
+    "extractedTextCodepoints": 45183
+  },
+  "selectedExcerpt": "Union. Maurice Ketels 3 and Charles De Reine were present on behalf of the F\u00e9d\u00e9ration Belge des Soci\u00e9t\u00e9s de Courses \u00e0 Pied (Belgian Federation of Running Clubs). The Brussels Athletic and Running Club was represented by the president Adolphe Ziane 4 was also in Paris. The Ligue P\u00e9destre Belge (Belgian Pedestrian League) counterpart of the F\u00e9d\u00e9ration des Soci\u00e9t\u00e9s de Courses \u00e0 Pied, responded positively to the initiative but did not send a representative to Paris. The Belgian representatives were not mere observers but actively worked to make the Congress a success. In particular, Jules Hansez from the Belgian Cycling Union made an impression with his views during discussions about the amateur versus professional sporting theme. The most important decision that was taken at the Congress was the revival of the Olympic Games. Baron de Coubertin proposed that the first modern Olympic Games be organised in Paris in 1900 but participants at the Congress thought that this was too far away. The leader of the Greek delegation, Demetrios Vikelas, proposed that the Games be held in Athens four years earlier. On 23 June 1894, the Congress resolved to organise the Olympic Games in 1896 in Athens and four years later, in 1900, to hold them in Paris on the occasion of the World\u2019s Fair.\n\n...\n\nThe Olympic Games were held in Athens from 6 April to 15 April 1896. Count Maxime de Bousies, the Belgian Member of the International Olympic Committee (IOC) did not succeed in persuading the Belgian sports associations to the idea of sending athletes to the Greek capital. Perhaps they were deterred by the cost of the long journey and unfamiliarity with this new event. Nevertheless there were Belgian athletes that wanted to go to Athens. Fencer Delhass\u00e9 requested informa tion from various government agencies with a view to\n\n...\n\nThe grand ceremony to crown the victors was held on 15 April. The King entered the stadium at 10.30 a.m., accompanied by the Duke of Sparta, Crown Prince Constantine an",
+  "status": "verified",
+  "priorReview": {
+    "caseLabel": "BD08",
+    "expectedClaimId": "BD08",
+    "evidenceId": "ev-6280e6fe9e9d162a80e3",
+    "url": "http://isoh.org/wp-content/uploads/2015/03/265.pdf",
+    "excerptSHA256": "f7c1cee3f7e4f8a8dddb05760bb62a9aa3b28e66cf529c5b72498450b0a712ed",
+    "status": "verified",
+    "reviewedAt": "2026-11-14T04:38:04.966271+00:00",
+    "reviewer": "independent_agent",
+    "note": "Fresh exact selected HTTP URL returned HTTP 200 complete PDF Belgium and the Olympic Games in Athens 1896, by Willy Schoevaerts, hosted by International Society of Olympic Historians. It explicitly distinguishes Coubertin\u2019s initial Paris 1900 proposal from 1894 Congress decision Athens 1896/Paris 1900 and states Games held Athens 6\u201315 April 1896. Historical secondary article with attribution, not an 1896 official event ledger. Multi-column PDF extraction interleaves some text; the tested first-modern host/year relation is explicit and scope-matched."
+  }
+}

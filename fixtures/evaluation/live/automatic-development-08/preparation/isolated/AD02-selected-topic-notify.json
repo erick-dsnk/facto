@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "AD02-selected-topic-notify",
+  "cases": [
+    {
+      "label": "AD02-selected-topic-notify",
+      "text": "The Smithsonian Institution was created by a British royal charter in 1846.",
+      "allowedPublic": [
+        "The Smithsonian Institution was created by a British royal charter in 1846."
+      ],
+      "automatic": true,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD10",
+            "acceptedTexts": [
+              "The Smithsonian Institution was created by a British royal charter in 1846."
+            ],
+            "verdict": "contradicted",
+            "domain": "institutional_record"
+          }
+        ],
+        "presentationActions": [
+          "notify"
+        ]
+      },
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": [
+          "Smithsonian Institution"
+        ]
+      }
+    }
+  ]
+}

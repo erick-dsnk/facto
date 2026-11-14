@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "kind": "deterministic-cache-selector-integration",
+  "recordedAt": "2026-11-14T06:05:22.723600+00:00",
+  "codeCommit": "e0f63700c2536400e3d0413a790e6e2a976847a1",
+  "cacheFixCommit": "8117b4fd5251ad70e0913e0d5ca4f5e0b055452e",
+  "selectorCommit": "192b8f7539bbb72030060e906ff1d9c0d9bb50c8",
+  "inertScopeArchiveCommit": "20a3a2ae7210fd045918cf449cf105182474a597",
+  "rootGate": {
+    "head": "e0f63700c2536400e3d0413a790e6e2a976847a1",
+    "repository": "/workspace/junction-2026",
+    "startedAt": "2026-11-14T06:00:20.673095+00:00",
+    "completedAt": "2026-11-14T06:00:45.628656+00:00",
+    "exitCode": 0,
+    "logSHA256": "1e8a512d647f026ad3537186e44063ccdc8feb722f1705d10aab885291369568",
+    "testSummary": [
+      "Test Files  28 passed (28)",
+      "Tests  564 passed (564)"
+    ],
+    "headUnchanged": true
+  },
+  "rootGateCounts": {
+    "tests": 564,
+    "files": 28
+  },
+  "runtimeWorkingTreeGate": {
+    "baseHead": "8117b4fd5251ad70e0913e0d5ca4f5e0b055452e",
+    "statusBefore": " M services/api/src/runtime/alternate-evidence.ts\n?? services/api/src/runtime/alternate-evidence.context.test.ts\n",
+    "statusAfter": " M services/api/src/runtime/alternate-evidence.ts\n?? services/api/src/runtime/alternate-evidence.context.test.ts\n",
+    "filesBefore": [
+      {
+        "path": "services/api/src/runtime/alternate-evidence.ts",
+        "bytes": 17174,
+        "sha256": "874ea11b7f7c2edc8fbb70f77da627dc2212aa923f312c366c137096aec7aea5"
+      },
+      {
+        "path": "services/api/src/runtime/alternate-evidence.context.test.ts",
+        "bytes": 12511,
+        "sha256": "4edbd35a7d84ae2d36d85ce529f8a508d573dc8a70f0643cf5954d3dc84f916f"
+      },
+      {
+        "path": "services/api/src/runtime/pipeline.ts",
+        "bytes": 16315,
+        "sha256": "82c7a3c78d7b3b1127d731be86ac7862afd1a13f29c0580e20471d62e25eea34"
+      },
+      {
+        "path": "services/api/tests/runtime/cache-identity.test.ts",
+        "bytes": 8693,
+        "sha256": "3b4d998bee263bb2a88e8a4ea07e99bbba740b436d3f93dd43559f7eabd16a8c"
+      }
+    ],
+    "filesAfter": [
+      {
+        "path": "services/api/src/runtime/alternate-evidence.ts",
+        "bytes": 17174,
+        "sha256": "874ea11b7f7c2edc8fbb70f77da627dc2212aa923f312c366c137096aec7aea5"
+      },
+      {
+        "path": "services/api/src/runtime/alternate-evidence.context.test.ts",
+        "bytes": 12511,
+        "sha256": "4edbd35a7d84ae2d36d85ce529f8a508d573dc8a70f0643cf5954d3dc84f916f"
+      },
+      {
+        "path": "services/api/src/runtime/pipeline.ts",
+        "bytes": 16315,
+        "sha256": "82c7a3c78d7b3b1127d731be86ac7862afd1a13f29c0580e20471d62e25eea34"
+      },
+      {
+        "path": "services/api/tests/runtime/cache-identity.test.ts",
+        "bytes": 8693,
+        "sha256": "3b4d998bee263bb2a88e8a4ea07e99bbba740b436d3f93dd43559f7eabd16a8c"
+      }
+    ],
+    "sourceBytesStable": true,
+    "tests": 517,
+    "files": 24,
+    "lint": "passed",
+    "typecheck": "passed",
+    "exitCode": 0,
+    "logSHA256": "a6cdfbb67450984133b6dfb817d0a696b732ce15e050069b0aa2b268c155b11b",
+    "attribution": "Tested dirty selector worktree based at committed cache8117b4f; not a claimed clean gate on selector192b8f7. Allfour tested filehashes match clean rootintegration."
+  },
+  "evaluation": {
+    "exitCode": 0,
+    "exitCodeReceipt": "Root observed actual session67912 completion exit0; chunk752570 was only a completionpoll, not experimentruntime.",
+    "counts": {
+      "selected": 36,
+      "passed": 36,
+      "failed": 0,
+      "notRun": 0,
+      "heldoutReserved": 12
+    },
+    "presentation": {
+      "passed": 21,
+      "total": 21
+    },
+    "logSHA256": "643f155ed4b4034d2705c8ada7bfe51224f8b952d368dc2219be3c5d2afd17c0"
+  },
+  "cacheIdentityEvidence": {
+    "dedicatedRegressions": 6,
+    "standaloneConfirmedPreFixScenarios": 5,
+    "preFixWrongCachedDefinitiveScenarios": 3,
+    "preFixWrongNotificationSuppressions": 2,
+    "postFixSameScenarioFailures": 0,
+    "claimIdentity": "Exact admitted checkedText preserves case and quoted whitespace; exactrepeat factualcache and context/mode-independent duplicate suppression remain.",
+    "thresholdOrContractChanges": false
+  },
+  "selectorEvidence": {
+    "retainedParityPools": 151,
+    "savedPublicPools": 11,
+    "syntheticAndPermutationPools": 140,
+    "newContextTests": 11,
+    "retainedOutputChanged": false,
+    "normalizedInputVersionsAndDependenceExported": true,
+    "rawProviderCompletenessClaimed": false,
+    "capabilityActivation": false
+  },
+  "scope48Archive": {
+    "prospectiveContexts": 12,
+    "prospectiveTargetScopeMatchesPerArm": 7,
+    "prospectiveTargetScopeMatchesAcceptedPerArm": 7,
+    "prospectiveTargetMismatchesPerArm": 5,
+    "prospectiveMismatchFalseAcceptsPerArm": 0,
+    "prospectiveTargetStanceMatchesPerArm": 12,
+    "existingDiagnosticsPooledWithProspective": false,
+    "adverseBD10PolicyCells": 2,
+    "adverseChange": "Previouslycontradicted Smithsonian result becomesabstention inbothorders.",
+    "newFullySourceVerifiedFactualGain": false,
+    "productionPromptPromoted": false,
+    "newProviderCallsDuringThisPublication": 0
+  },
+  "artifactBindings": [
+    {
+      "path": "/workspace/task-evidence/case-sensitive-cache-repro/before-freeze.json",
+      "sha256": "1b4559a0e269c62687f1bdd03a01d8dcfb1a2917cae9b0b2330041aa913c98d1"
+    },
+    {
+      "path": "/workspace/task-evidence/case-sensitive-cache-repro/MANIFEST.json",
+      "sha256": "44002ac550b3554f33fb6bb26854028e098c5d5a36cc62e17e8a0694085ae4aa"
+    },
+    {
+      "path": "/workspace/task-evidence/cache-identity-independent-runtime-review.json",
+      "sha256": "449c406459c59c55e95a1561533b6e22c34c5eb605f239f482bfb7cb46910af5"
+    },
+    {
+      "path": "/workspace/task-evidence/selector-seam-implementation-01/manifest.json",
+      "sha256": "e3af0b28e92888ffc5238cbcca9e419a126d0d2fc8987c80ea7546cdb0b94ea1"
+    },
+    {
+      "path": "/workspace/task-evidence/selector-seam-runtime-review/review.json",
+      "sha256": "543d806b27a42587255a9dceadc33d591e4e331097a5efa654d25ddd2b91eec1"
+    },
+    {
+      "path": "/workspace/junction-2026/fixtures/verdicts/full-context-scope-study-01/archive-manifest.json",
+      "sha256": "9c5b6319930effbd3fbd98c54df31f23920e4339f6dba0ea1ede5b6e0f48ca85"
+    },
+    {
+      "path": "/workspace/junction-2026/fixtures/verdicts/full-context-scope-study-01/README.md",
+      "sha256": "cf89b9800df50301acad187c4efba669c472091c990e128bfe5bb6e5f042e37f"
+    },
+    {
+      "path": "/workspace/junction-2026/fixtures/evaluation/live/deadline-integration-01/validation.json",
+      "sha256": "443366d72a9c371bdef53df640342fed7b5e8eed791de7c01ce5aa8858c2ffc6"
+    },
+    {
+      "path": "/workspace/junction-2026/fixtures/evaluation/live/broader-development-09/MANIFEST.json",
+      "sha256": "f038a0826b52bdbe7afa4a6640aad11f9c5ad3fd1f3d49450f18358547cff305"
+    }
+  ],
+  "limitations": [
+    "Only deterministic/injected/parity evidence for cache/selector; no new live-provider factual credit.",
+    "Frozen candidate09 still525tests/25files,4/12raw3/12fullyverified,8abstain0operational, unchanged.",
+    "Prototype02/material/applicability work remains unwired; exporting selector metadata does not activate authority.",
+    "Scope48 is an alreadyexecuted archived OPENstudy, not a call made bythispublication; it had no prospectivegain and two adverse existingBD10policycells.",
+    "Historical deadline500/547 gates and all sealed/originalreservedrecords remainunchanged."
+  ]
+}

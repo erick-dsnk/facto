@@ -1,0 +1,44 @@
+{
+  "commit": "9a5e80d88bd1d93e4a1c194d23bc1a59662af135",
+  "steps": [
+    {
+      "name": "install",
+      "command": [
+        "npm",
+        "ci"
+      ],
+      "startedAt": "2026-11-14T05:07:31.942201+00:00",
+      "finishedAt": "2026-11-14T05:07:34.814669+00:00",
+      "exitCode": 0,
+      "log": "/workspace/task-evidence/candidate09-install.log",
+      "sha256": "df8e75cced302b86ea99d002c2a422a42f1b154116c42a118781e66d9e4dd387"
+    },
+    {
+      "name": "check",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "startedAt": "2026-11-14T05:07:34.815061+00:00",
+      "finishedAt": "2026-11-14T05:07:59.334693+00:00",
+      "exitCode": 0,
+      "log": "/workspace/task-evidence/candidate09-check.log",
+      "sha256": "d5287bea213ec4e033bc3f9986316a452b909fb8e2918711ded4d756ea7cf726"
+    },
+    {
+      "name": "evaluate",
+      "command": [
+        "npm",
+        "run",
+        "evaluate"
+      ],
+      "startedAt": "2026-11-14T05:07:59.335937+00:00",
+      "finishedAt": "2026-11-14T05:08:10.195443+00:00",
+      "exitCode": 0,
+      "log": "/workspace/task-evidence/candidate09-evaluate.log",
+      "sha256": "0218f143934ce183f1e6bcca5efdd4148f3ce4fc3cc03a591043d6bd2676fe29"
+    }
+  ],
+  "providerCalls": 0
+}

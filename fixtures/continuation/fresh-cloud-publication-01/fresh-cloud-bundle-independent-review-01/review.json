@@ -1,0 +1,45 @@
+{
+  "kind": "independent_fresh_cloud_continuation_restore_review",
+  "decision": "approved_for_byte_identical_publication_and_offline_restore",
+  "bundleManifestSHA256": "a065c49bcd6a07328685c41daf4c1514de227274b8f26a49051e2e4a80daf157",
+  "restoreSHA256": "a65fa37f25be8904b92e93c5ec04b3ebeb5bf32f662b8287d02c5a1807485dce",
+  "completedCaptureManifestSHA256": "c693f6fe5ae4bdb1f05b624c9e8df72144775b02ecbb59db4f2cb077719667df",
+  "requiredChecklistSHA256": "d53234a1d5299a01d3f27f5aa5552449cf52b9dc8475c253ec4b309f042ff67c",
+  "finalPackage": {
+    "restoredPaths": 1120,
+    "deduplicatedBlobs": 927,
+    "rawBytes": 18865046,
+    "gzipBytes": 2710197
+  },
+  "independentChecks": [
+    "14 package-only isolated adversarial cases pass against FINAL a065 freeze: exact extraction and final verification, repeat identical bytes, missing/corrupt blobs, package and destination symlinks/hardlinks, destination conflict, traversal/absolute/backslash/env paths.",
+    "Restorer subprocess runs with Python-I audit blocking original /workspace opens, socket connect, subprocess or shell execution; no fallback and no archive source imports.",
+    "All1120 restored bytes/hash/length exact; original cloud root is never extraction target in review.",
+    "Bounded gzip per-file16MiB/total100MiB, safe relative destination prefix, all destinations preflighted before writes, O_EXCL/no differing-byte overwrite reviewed.",
+    "Static literal import coverage found0 missing task-evidence imports;27 Git-mapped imports explicitly require external pinned checkout/npm setup.",
+    "NEW24 source closure1115pins:74 task-evidence restored,13 Git tracked,1028 npm declared externally; no unclassified/missing source pins.",
+    "Historical Git commit trees/package/source objects independently rehashed without substituting current root7333f57 or stack20 03c1ed0.",
+    "Completed NEW24 inert package separately verified from /tmp with574paths/498blobs/full55 livefiles and0 original workspace reads.",
+    "Canonical completed6-file capture hashes/prepared0..1 uncertainty/settled1call ledger and decoded/raw exact bytes independently checked.",
+    "Explicit allowlist/secret pattern report and path inspection contain no env/credential-store/node_modules/private/sealed/heldout body paths; arbitrary unknown embedded credentials cannot be disproved by pattern scans."
+  ],
+  "historicalAndLiveSafety": [
+    "Current additive state marks NEW24 and both locator observations completed once, no rerun/resume, all old authorizations consumed.",
+    "NEW24 24cases/72declared/66asked facets and failed criterion retained; canonical metric negative retained; no promotion/readiness inference.",
+    "Restore writes only bytes and cannot recreate opaque handles, owner/installation trust, transport provenance or authority.",
+    "Git/npm restoration is manual and separately explicit; availability/platform behavior remains an external prerequisite, never assumed or downloaded in this review.",
+    "Full historical manifest replay inputs intentionally omitted and disclosed; blanket old-suite executability not claimed."
+  ],
+  "publicationRequirements": [
+    "Root final published handoff must name exact publication commit and replace PUBLICATION_COMMIT placeholder.",
+    "Root docs/fresh-cloud-continuation.md must supersede frozen dated isolated-only integration paragraph with current restack/gate/publication state, leaving a065 bytes unchanged."
+  ],
+  "testHarnessNote": "An auxiliary first final-Git check assumed current HEAD still equaled historical04ac/9f; concurrent authorized restack invalidated that assumption. Corrected read-only check verified exact named historical Git objects/package/source hashes. No bundle defect or source substitution.",
+  "method": "Independent agent source/metadata inspection and isolated adversarial execution of stdlib restorer/verifier only. Prior public source/catalog/producer/corpus review involvement disclosed; no blind semantic evaluation.",
+  "newProviderCalls": 0,
+  "newNetworkCalls": 0,
+  "projectKeysRead": 0,
+  "archivedSourceExecuted": false,
+  "productionEdits": 0,
+  "restoredOriginalWorkspace": false
+}
