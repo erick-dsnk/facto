@@ -18,7 +18,7 @@ type Script = {
   kind?: SelectionKind | Partial<Record<SelectionKind, number>>; route?: ClaimRoute | Partial<Record<ClaimRoute, number>>;
   attribution?: 'none' | 'named_speaker' | 'named_outlet' | 'hearsay'; source?: string; subject?: string;
   private?: number | null; privateLife?: number | null; rumour?: number | null; future?: number | null; self?: number | null;
-  practical?: number | null; scope?: number | null; structure?: 'one_coherent' | 'multiple_propositions' | 'unclear';
+  practical?: number | null; scope?: number | null; structure?: 'one_coherent' | 'multiple_propositions' | 'unclear'; subjectPrivate?: number | null;
 };
 function distribution(criteria: Record<string, string>, wanted: string | Partial<Record<string, number>>): JevAnswer {
   const keys = Object.keys(criteria);
@@ -45,8 +45,8 @@ function jev(resolve: (text: string, id: string) => Script = () => ({}), mishear
         answers[name] = distribution(question.criteria, wanted);
       } else {
         const value = { private_data: script.private, private_life: script.privateLife, rumour: script.rumour, future: script.future, self_contained: script.self,
-          practical: script.practical, preserves_scope: script.scope }[field];
-        const defaults: Record<string, number | null> = { private_data: 0.01, private_life: 0.01, rumour: 0.01, future: 0.01, self_contained: 0.99, practical: null, preserves_scope: 0.99 };
+          practical: script.practical, preserves_scope: script.scope, subject_private: script.subjectPrivate }[field];
+        const defaults: Record<string, number | null> = { private_data: 0.01, private_life: 0.01, rumour: 0.01, future: 0.01, self_contained: 0.99, practical: null, preserves_scope: 0.99, subject_private: 0.01 };
         answers[name] = { noul: value === undefined ? defaults[field] : value };
       }
     }
@@ -115,13 +115,16 @@ describe('exact candidate spans', () => {
 });
 
 describe('contact and privacy backstops', () => {
-  it.each(['Call me at +1 415 555 0100.', 'Ring (415) 555-0100 now', 'It is 415-555-0100', 'My number is 040 123 4567', 'Text +358401234567', 'Write to jane.doe@example.com'])('finds contact data in %s', text => {
+  it.each(['Call me at +1 415 555 0100.', 'Ring (415) 555-0100 now', 'It is 415-555-0100', 'My number is 040 123 4567', 'Text +358401234567', 'Write to jane.doe@example.com',
+    'Call 4155551234 now.', 'Her number is 555-1234.', 'Ring 555 1234.', 'Write to jane at example dot com', 'Mail jane (at) example [dot] org'])('finds contact data in %s', text => {
     expect(containsContactData(text)).toBe(true);
     expect(deterministicIssue(text)).toBe('private_data');
   });
 
   it.each(['Anthropic will IPO at $2,500,000,000,000.', 'It opened in 1889.', 'About 10 000 000 people live there.', 'The deadline is 2026-11-14.',
-    'The vote was on 14.11.2026.', 'They won in 1999 2000 2001.', 'Pi is 3.14159.', 'Call 911.', 'Unemployment is 7%.'])('does not mistake %s for contact data', text => {
+    'The vote was on 14.11.2026.', 'They won in 1999 2000 2001.', 'Pi is 3.14159.', 'Call 911.', 'Unemployment is 7%.', 'The book is ISBN 978-3-16-148410-0.',
+    'Its number is 978-3-16-148410-0.', 'The war lasted 1914-1918.', 'Earth has 8000000000 people.', 'It cost $2500000000000.', 'The ratio is 123.4567.',
+    'Investors looked at the dot com boom.', 'Look at that dot com bubble.'])('does not mistake %s for contact data', text => {
     expect(containsContactData(text)).toBe(false);
   });
 
@@ -191,6 +194,19 @@ describe('admission decisions', () => {
     expect((await eiffel(false, 'Eiffel Tower')).claims).toMatchObject([{ subject: 'Eiffel Tower', subjectMissing: false }]);
     expect(await eiffel(false)).toEqual({ action: 'skip', reasonCode: 'subject_missing', claims: [] });
     expect((await eiffel(true)).claims).toMatchObject([{ subject: null, subjectMissing: true }]);
+  });
+
+  it('A5: never makes a private person, or a name from a sensitive sentence of the same input, the subject', async () => {
+    const neighbour = (subjectPrivate: number | null) => classify(jev(() => ({ subject: 'Dave Jones', subjectPrivate, self: 0.2 })), input('He moved to Berlin.', true, { context: ['Dave Jones lives next door.'] }));
+    expect((await neighbour(0.9)).claims).toMatchObject([{ subject: null, subjectMissing: true }]);
+    expect((await neighbour(null)).claims).toMatchObject([{ subject: null, subjectMissing: true }]);
+    expect((await neighbour(0.1)).claims).toMatchObject([{ subject: 'Dave Jones', subjectMissing: false }]);
+    // The first sentence is a private-life allegation: its name never travels with the second sentence to a search.
+    const text = 'Dave Jones has cancer. He moved to Berlin.';
+    const client = jev((candidate, id) => id === 'span_0' ? { structure: 'multiple_propositions', privateLife: 0.9 }
+      : candidate.startsWith('Dave') ? { privateLife: 0.9 } : { subject: 'Dave Jones', self: 0.2 });
+    const result = await classify(client, input(text, true));
+    expect(result.claims.find(claim => claim.checkedText === 'He moved to Berlin.')).toMatchObject({ subject: null, subjectMissing: true });
   });
 
   it('A6: a missing subject answers Can\'t verify when asked and stays silent when overheard', async () => {
@@ -278,6 +294,8 @@ describe('admission decisions', () => {
     await expect(classify(missing('span_0_private_data', { noul: null }), input('Helsinki is the capital of Finland.'))).rejects.toMatchObject({ code: 'malformed_provider' });
     await expect(classify(missing('span_0_private_life', { noul: null }), input('Helsinki is the capital of Finland.'))).rejects.toMatchObject({ code: 'malformed_provider' });
     await expect(classify(missing('span_0_self_contained', { noul: null }), input('Helsinki is the capital of Finland.'))).rejects.toMatchObject({ code: 'malformed_provider' });
+    // An unanswered mishearing question fails closed too, rather than reading as heard correctly.
+    await expect(classify(jev(() => ({}), null), fixture)).rejects.toMatchObject({ code: 'malformed_provider' });
   });
 
   it('does not call Jev for an interim capture', async () => {
@@ -415,7 +433,7 @@ describe('ported question wording', () => {
     expect(Object.keys(kind.criteria)).toEqual(['claim', 'opinion', 'prediction', 'question', 'instruction', 'other']);
     expect(kind.criteria.claim).toContain('either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too');
     expect(kind.criteria.claim).toContain('A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it');
-    expect(kind.criteria.prediction).toBe('Only a guess about the future that no plan, announcement, estimate or forecast could confirm or contradict');
+    expect(kind.criteria.prediction).toBe('Only a guess about the future that no plan, announcement, estimate or forecast could confirm or contradict, such as a guess about how the speaker\'s own team, plans or life will turn out');
     expect(kind.criteria.opinion).toContain('Value judgements phrased as predictions are opinions');
     expect(Object.keys(route.criteria)).toEqual(['recent_event', 'named_fact', 'weather', 'calculation', 'general']);
     expect(route.criteria.recent_event).toBe('Breaking news: something said, done or decided, or something that happened, within the last few weeks or happening now, such as an incident, statement, vote, result, death, deal or announcement. Not events of past months or years');

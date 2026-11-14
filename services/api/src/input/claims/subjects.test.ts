@@ -70,6 +70,13 @@ describe('subject candidates', () => {
     expect(subjectCandidates(input(typed), spanOf(typed, 'It opened in 1889.'))).toEqual(['Paris', 'Eiffel Tower']);
   });
 
+  it('offers no names from a sentence with contact data or a first-person private detail', () => {
+    const text = 'He moved to Berlin.';
+    expect(subjectCandidates(input(text, ['My doctor says Jane Smith is ill. Call Tom Hart on 415-555-0100.', 'Angela Merkel visited.']), spanOf(text, text))).toEqual(['Angela Merkel']);
+    const photo = 'Write to Ann Lee at ann@example.com. Eiffel Tower. It opened in 1889.';
+    expect(subjectCandidates(input(photo, [], 'ocr'), spanOf(photo, 'It opened in 1889.'))).toEqual(['Eiffel Tower']);
+  });
+
   it('returns nothing without names and honours the limit', () => {
     expect(subjectCandidates(input('It opened in 1889.'), { start: 0, end: 18 })).toEqual([]);
     const context = ['Helsinki, Oslo, Stockholm, Copenhagen, Reykjavik, Tallinn, Riga, Vilnius, Warsaw and Berlin are capitals.'];

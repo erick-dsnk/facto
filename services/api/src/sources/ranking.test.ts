@@ -140,6 +140,13 @@ describe('S10 traits', () => {
     // Too short to match safely, and a name that is not in the label.
     expect(isOwnSite(item('https://www.bbc.co.uk/a', 'web'), 'BBC')).toBe(false);
     expect(isOwnSite(item('https://www.nytimes.com/a', 'web'), 'Politico')).toBe(false);
+    // A label that only contains the name, and pages on shared hosting, are not the source's own site.
+    expect(isOwnSite(item('https://www.nasaspaceflight.com/a', 'web'), 'NASA')).toBe(false);
+    expect(isOwnSite(item('https://bignasaleaks.com/a', 'web'), 'NASA')).toBe(false);
+    expect(isOwnSite(item('https://nasa.github.io/a', 'web'), 'NASA')).toBe(false);
+    expect(isOwnSite(item('https://politico.blogspot.com/a', 'web'), 'Politico')).toBe(false);
+    expect(isOwnSite(item('https://kushner.substack.com/p/a', 'web'), 'Kushner')).toBe(false);
+    expect(sourceTraits(item('https://nasa.github.io/a', 'web'), frame('NASA'), lists).trusted).toBe(false);
   });
 
   it('attributed news is trusted; unattributed news is not', () => {

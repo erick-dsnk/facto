@@ -95,6 +95,10 @@ describe('gatherFree', () => {
     expect(free.answered).toEqual({ fact_check: null, wikipedia: null, wikidata: null, weather: null, calculation: true });
     expect(encyclopedia.queries).toEqual([]);
     expect(factChecks.queries).toEqual([]);
+    // Routed elsewhere, a claim that happens to parse as a calculation still asks the other sources.
+    const general = await createEvidenceSources(deps({ encyclopedia, factChecks })).gatherFree(query({ text: '7 times 8 is 54.', route: 'general' }), createTestContext());
+    expect(general.answered).toMatchObject({ fact_check: true, wikipedia: true, calculation: true });
+    expect(encyclopedia.queries).toHaveLength(1);
   });
 
   it('S7: a weather claim sends one forecast request; other routes make no weather or Wikidata call', async () => {

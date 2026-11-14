@@ -1,5 +1,6 @@
 import nlp from 'compromise';
 import { codePoints, type SourceSpan, type TextInput } from '../../../../../packages/contracts/src/index.js';
+import { deterministicIssue } from './spans.js';
 
 // Names come from compromise (MIT, runs locally, no network). Jev only ever chooses among them.
 
@@ -91,18 +92,24 @@ export function namedEntities(text: string): string[] {
 
 const stripSpeaker = (line: string) => line.replace(/^Speaker \d+:\s*/u, '');
 
+/** The text without any sentence that holds contact data or a first-person private detail: no name from one becomes a subject. */
+function publicSentences(text: string): string {
+  return [...new Intl.Segmenter('en', { granularity: 'sentence' }).segment(text)].filter(part => deterministicIssue(part.segment) === null).map(part => part.segment).join(' ');
+}
+
 /**
  * Who or what a candidate might be about. A photo offers the rest of its OCR text first, in reading order; spoken and typed
  * input offer the earlier sentences of the same input, nearest first. Then come the context lines, nearest first.
- * Names whose words all occur in the candidate are left out; it already names them.
+ * Names whose words all occur in the candidate are left out; it already names them. A sentence with contact data or a
+ * first-person private detail offers no names.
  */
 export function subjectCandidates(input: TextInput, span: SourceSpan, limit = 8): string[] {
   const points = codePoints(input.text);
-  const before = points.slice(0, span.start).join('');
+  const before = publicSentences(points.slice(0, span.start).join(''));
   const ordered: string[] = input.mode === 'ocr'
-    ? [...namedEntities(before), ...namedEntities(points.slice(span.end).join(''))]
+    ? [...namedEntities(before), ...namedEntities(publicSentences(points.slice(span.end).join('')))]
     : namedEntities(before).reverse();
-  for (const line of [...input.context].reverse()) ordered.push(...namedEntities(stripSpeaker(line)).reverse());
+  for (const line of [...input.context].reverse()) ordered.push(...namedEntities(publicSentences(stripSpeaker(line))).reverse());
   const spanWords = new Set(words(points.slice(span.start, span.end).join('')));
   return mergeNames(ordered.filter(name => !words(name).every(word => spanWords.has(word)))).slice(0, limit);
 }

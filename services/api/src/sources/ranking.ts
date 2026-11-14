@@ -21,15 +21,18 @@ export function evidenceSite(evidence: Evidence, lists: DomainLists): string {
 const letters = (text: string) => text.toLocaleLowerCase('en').normalize('NFD').replace(/[^\p{L}\p{N}]/gu, '');
 
 /**
- * Whether the evidence is on the named source's own site: the source's name, letters only, equals or sits
- * inside the site's registrable label, and has at least four letters (NASA and nasa.gov, Politico and politico.com).
+ * Whether the evidence is on the named source's own site: the source's name, letters only and at least four of
+ * them, equals the site's registrable label (NASA and nasa.gov or science.nasa.gov, Politico and politico.com).
+ * A label that only contains the name (nasaspaceflight.com) and a page on shared hosting (nasa.github.io,
+ * politico.blogspot.com) are not the source's own site.
  */
 export function isOwnSite(evidence: Evidence, source: string): boolean {
   const name = letters(source);
   const host = hostOf(evidence.url);
   if (name.length < 4 || !host) return false;
-  const label = letters(getDomainWithoutSuffix(host, { allowPrivateDomains: true }) ?? '');
-  return label.length > 0 && (label === name || label.includes(name));
+  // A private suffix (github.io, blogspot.com, substack.com) means anyone can publish under that name.
+  if (getDomainWithoutSuffix(host, { allowPrivateDomains: true }) !== getDomainWithoutSuffix(host)) return false;
+  return letters(getDomainWithoutSuffix(host) ?? '') === name;
 }
 
 /**

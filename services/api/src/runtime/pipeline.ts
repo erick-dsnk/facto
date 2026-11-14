@@ -1,6 +1,6 @@
 import { performance } from 'node:perf_hooks';
 import {
-  claimFrame, MODEL_VERSION, POLICY_VERSION, PipelineError, PROVIDER_LIMITS, sourceQuery,
+  claimFrame, MODEL_VERSION, POLICY_VERSION, PipelineError, PROVIDER_LIMITS, sourceQuery, sourceQueryText,
   type AcceptedClaim, type AdmissionPayload, type CheckUsage, type ClaimFrame, type ClaimResult, type Evidence, type Judgment, type ProviderContext, type ProviderKind,
   type ResultDecision, type TextInput, type VerdictDecision,
 } from '../../../../packages/contracts/src/index.js';
@@ -14,6 +14,7 @@ import { AttemptBudget, abortable, assertWithinDeadline } from './budget.js';
 import { ClaimCache, type CachedDecision } from './claim-cache.js';
 import { fingerprint, type RequestRecord, type Session } from './session.js';
 import { claimResultSchema } from '../../../../packages/contracts/src/wire.js';
+import { containsContactData } from '../input/claims/spans.js';
 
 type Job = { session: Session; record: RequestRecord };
 export type RuntimeMetric = {
@@ -299,6 +300,11 @@ export class PipelineRuntime {
    * Q5/Q6: free sources first; a True or False from them ends the check with no Exa search. Otherwise the primary
    * Exa search, then at most one more (corroboration or alternate), never a third. Returns undefined when the
    * request stopped owning its output.
+   *
+   * Can't verify and Speculation say a full look found nothing. A run that hit the deadline throws `timeout`; one
+   * where a source failed, the primary search was never sent or an extra search broke keeps any definitive label,
+   * never becomes Speculation and is never cached. With no primary search and a failed free source there is
+   * nothing to answer from, so it throws `sources_unavailable`.
    */
   private async checkWithSources(job: {
     claim: AcceptedClaim; frame: ClaimFrame; claimContext: ClaimContext; acceptedAt: number; laterUncached: number;
@@ -308,30 +314,40 @@ export class PipelineRuntime {
     const sources = this.adapters.sources!;
     // A source sees only the checked text and subject: never context, private spans or originalText.
     const query = sourceQuery(claim, this.now());
+    // Admission screens both; this backstop keeps contact data from every outbound request whatever happened there.
+    if (containsContactData(sourceQueryText(query))) throw new PipelineError('private_or_personal');
     const traitsOf = (records: Evidence[]) => records.map(record => sources.traits(record, frame.attribution));
     const judgeRound = async (inputs: Evidence[]): Promise<Round> => {
       const judgment = await timed('judgment', () => this.adapters.judge(claim, inputs, claimContext));
       return { inputs, judgment, verdict: assessVerdict(judgment, { traits: traitsOf(judgment.evidence), frame, checkedText: claim.checkedText }) };
     };
-    const finish = (round: Round | undefined, cacheable: boolean): SourcedOutcome => {
-      const decision = withSpeculation(round?.verdict.decision ?? noEvidence, round?.verdict.ruleLabel ?? null, frame, round?.verdict.tally.counts ?? null);
-      return { decision, evidence: round?.judgment.evidence ?? [], cacheable: cacheable && ClaimCache.cacheable(frame) };
+    /** `complete`: every applicable source answered and the evidence found was judged. `cacheable`: nothing was cut short or failed;
+     * a definitive label is kept even after a free source failed, an abstention only after a complete look. */
+    const finish = (round: Round | undefined, complete: boolean, cacheable: boolean): SourcedOutcome => {
+      const decision = round?.verdict.decision ?? noEvidence;
+      const settled = definitive(decision.verdict);
+      return {
+        decision: complete ? withSpeculation(decision, round?.verdict.ruleLabel ?? null, frame, round?.verdict.tally.counts ?? null) : decision,
+        evidence: round?.judgment.evidence ?? [], cacheable: cacheable && (settled || complete) && ClaimCache.cacheable(frame),
+      };
     };
 
     const free = await timed('retrieval', () => sources.gatherFree(query, claimContext));
     if (halted()) return undefined;
-    // A source that failed or ran out of time may answer next time: an abstention resting on it is not kept.
+    // A source that failed or ran out of time may answer next time.
     const degraded = Object.values(free.answered ?? {}).some(answered => answered === false);
-    const keep = (round: Round | undefined) => !degraded || definitive(finish(round, true).decision.verdict);
     let round: Round | undefined;
-    const freeRanked = sources.rank(free.evidence, []);
+    const freeRanked = sources.rank(free.evidence, [], frame.future);
     if (freeRanked.length && claimContext.canConsume('jev')) {
       round = await judgeRound(freeRanked);
       if (halted()) return undefined;
       const label = round.verdict.decision.verdict;
-      if (label === 'supported' || label === 'contradicted') return finish(round, true);
+      if (label === 'supported' || label === 'contradicted') return finish(round, true, true);
     }
 
+    // canConsume is also false once the deadline has passed: that is a timeout, never "nothing more to do".
+    assertWithinDeadline(claimContext);
+    let searched = false;
     if (claimContext.canConsume('search', claim.id)) {
       let paid;
       try {
@@ -340,45 +356,67 @@ export class PipelineRuntime {
         assertWithinDeadline(claimContext);
         // A definitive answer from the free sources stands without the search, but is not kept. A provider error is
         // never presented as Can't verify or Speculation.
-        if (round && definitive(round.verdict.decision.verdict)) return finish(round, false);
+        if (round && definitive(round.verdict.decision.verdict)) return finish(round, false, false);
         throw error;
       }
       if (halted()) return undefined;
-      const ranked = sources.rank(free.evidence, paid.evidence);
+      searched = true;
+      const ranked = sources.rank(free.evidence, paid.evidence, frame.future);
       if (ranked.length && !(round && sameIds(ranked, round.inputs))) {
         if (claimContext.canConsume('jev')) {
           round = await judgeRound(round ? raw(ranked) : ranked);
           if (halted()) return undefined;
         } else if (!round) throw new PipelineError('jev_budget_exhausted');
+        // The search found evidence that could not be judged: the free round stands, but it is no full look.
+        else searched = false;
       }
     }
     if (!round && freeRanked.length) throw new PipelineError('jev_budget_exhausted');
+    if (!searched && degraded && !definitive(round?.verdict.decision.verdict ?? 'insufficient_evidence')) throw new PipelineError('sources_unavailable', true);
+    let complete = searched && !degraded;
+    let cacheable = true;
 
     // At most one more Exa search, only with time and allowance left, and never at a later claim's expense.
+    assertWithinDeadline(claimContext);
     const decided = round?.verdict.decision.verdict ?? 'insufficient_evidence';
-    if (decided === 'insufficient_evidence' && !job.laterUncached && claimContext.canConsume('search', claim.id) && claimContext.canConsume('jev')
-      && job.acceptedAt + 10_000 - this.now() >= SECOND_SEARCH_MIN_REMAINING_MS) {
-      if (round && corroborationNeeded(round.verdict.ruleLabel, round.judgment.label, round.judgment.probabilities, round.verdict.tally.counts)) {
-        // One site alone backs it: search once more without that site.
-        const excludeSites = supportingSites(round.verdict.tally);
-        const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'corroboration', excludeSites }, claimContext));
-        if (halted()) return undefined;
-        const merged = mergeCorroboration(round.judgment.evidence, extra.evidence, excludeSites, record => sources.traits(record, frame.attribution).site);
-        if (merged.length) {
-          round = await judgeRound(raw(merged));
-          if (halted()) return undefined;
-        }
+    if (decided === 'insufficient_evidence' && !job.laterUncached && claimContext.canConsume('search', claim.id) && claimContext.canConsume('jev')) {
+      if (job.acceptedAt + 10_000 - this.now() < SECOND_SEARCH_MIN_REMAINING_MS) {
+        // No time for one more search: the abstention stands, but more time might have settled it.
+        cacheable = false;
       } else {
-        const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'alternate' }, claimContext));
-        if (halted()) return undefined;
-        const incoming = sources.rank([], extra.evidence);
-        const combined = round ? retainAlternateEvidence(round.inputs, incoming, claim.checkedText, round.judgment) : incoming;
-        if (combined.length && !(round && sameIds(combined, round.inputs))) {
-          round = await judgeRound(raw(combined));
-          if (halted()) return undefined;
+        try {
+          const second = await this.secondPass({ claim, frame, query, sources, round, judgeRound, timed, halted, claimContext });
+          if (second === 'halted' || halted()) return undefined;
+          round = second;
+        } catch {
+          // Past the deadline or cancelled, this throws. An optional search or judgment that broke otherwise leaves the
+          // first answer standing: not kept and never Speculation.
+          assertWithinDeadline(claimContext);
+          complete = false;
         }
       }
     }
-    return finish(round, keep(round));
+    return finish(round, complete, cacheable);
+  }
+
+  /** The one extra Exa search: once more without the only supporting site (corroboration), else an alternate search. */
+  private async secondPass(job: {
+    claim: AcceptedClaim; frame: ClaimFrame; query: ReturnType<typeof sourceQuery>; sources: NonNullable<RuntimeAdapters['sources']>; round: Round | undefined;
+    judgeRound: (inputs: Evidence[]) => Promise<Round>; timed: <T>(stage: Stage, call: () => Promise<T>) => Promise<T>; halted: () => boolean; claimContext: ClaimContext;
+  }): Promise<Round | undefined | 'halted'> {
+    const { claim, frame, query, sources, round, judgeRound, timed, halted, claimContext } = job;
+    if (round && corroborationNeeded(round.verdict.ruleLabel, round.judgment.label, round.judgment.probabilities, round.verdict.tally.counts)) {
+      // One site alone backs it: search once more without that site.
+      const excludeSites = supportingSites(round.verdict.tally);
+      const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'corroboration', excludeSites }, claimContext));
+      if (halted()) return 'halted';
+      const merged = mergeCorroboration(round.judgment.evidence, extra.evidence, excludeSites, record => sources.traits(record, frame.attribution).site);
+      return merged.length ? judgeRound(raw(merged)) : round;
+    }
+    const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'alternate' }, claimContext));
+    if (halted()) return 'halted';
+    const incoming = sources.rank([], extra.evidence, frame.future);
+    const combined = round ? retainAlternateEvidence(round.inputs, incoming, claim.checkedText, round.judgment) : incoming;
+    return combined.length && !(round && sameIds(combined, round.inputs)) ? judgeRound(raw(combined)) : round;
   }
 }

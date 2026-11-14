@@ -216,7 +216,7 @@ export type SourceTraits = { site: string; trusted: boolean };
 export interface EvidenceSources {
   gatherFree(query: SourceQuery, context: ProviderContext): Promise<FreeEvidence>;
   searchPaid(query: SourceQuery, request: PaidSearchRequest, context: ProviderContext): Promise<PaidEvidence>;
-  /** Drops unreliable and low-signal sites, puts trusted first, at most 2 per site and 6 in all; free evidence takes at most 3 slots when paid results exist. */
-  rank(free: Evidence[], paid: Evidence[]): Evidence[];
+  /** Drops unreliable and low-signal sites, puts trusted first, at most 2 per site and 6 in all; free evidence takes at most 3 slots when paid results exist. `future`: newest first within each tier. */
+  rank(free: Evidence[], paid: Evidence[], future?: boolean): Evidence[];
   traits(evidence: Evidence, attribution: AttributionFrame | null): SourceTraits;
 }
