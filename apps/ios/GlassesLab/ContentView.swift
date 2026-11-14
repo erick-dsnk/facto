@@ -183,6 +183,53 @@ struct ContentView: View {
       if camera.isStreaming {
         LatencyClock()
       }
+      SwiftUI.Button("Grab sharpest stream frame (instant)") { camera.grabSharpestFrame() }
+        .disabled(!camera.isStreaming)
+      if let info = camera.grabbedFrameInfo {
+        LabeledContent("Frame grab", value: info)
+      }
+      if let grabbed = camera.grabbedFrame {
+        SwiftUI.Image(uiImage: grabbed)
+          .resizable()
+          .scaledToFit()
+          .clipShape(RoundedRectangle(cornerRadius: 12))
+      }
+      Picker("Photo size", selection: $camera.photoResolution) {
+        Text("Small (480p class)").tag(PhotoResolution.small)
+        Text("Medium (720p class)").tag(PhotoResolution.medium)
+        Text("Large (1080p class)").tag(PhotoResolution.large)
+        Text("Full 4032×3024").tag(PhotoResolution.full)
+      }
+      .disabled(camera.isCapturingPhoto)
+      Picker("Photo quality", selection: $camera.photoQuality) {
+        Text("Low (smallest file)").tag(PhotoQuality.low)
+        Text("Medium").tag(PhotoQuality.medium)
+        Text("High (largest file)").tag(PhotoQuality.high)
+      }
+      .disabled(camera.isCapturingPhoto)
+      SwiftUI.Button(camera.isCapturingPhoto ? "Taking photo…" : "Take photo") {
+        Task { await camera.capturePhoto() }
+      }
+      .disabled(camera.sessionState != .started || camera.isCapturingPhoto)
+      if let status = camera.photoStatus {
+        LabeledContent("Photo", value: status)
+      }
+      if !camera.photoLog.isEmpty {
+        VStack(alignment: .leading, spacing: 2) {
+          ForEach(Array(camera.photoLog.enumerated()), id: \.offset) { _, line in
+            Text(line).font(.caption2.monospaced()).textSelection(.enabled)
+          }
+        }
+      }
+      if let info = camera.photoInfo {
+        LabeledContent("Last photo", value: info)
+      }
+      if let photo = camera.photo {
+        SwiftUI.Image(uiImage: photo)
+          .resizable()
+          .scaledToFit()
+          .clipShape(RoundedRectangle(cornerRadius: 12))
+      }
       if let error = camera.lastError {
         Text(error).font(.footnote).foregroundStyle(.red)
       }
