@@ -1,10 +1,12 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
+import { createHash } from 'node:crypto';
+import { z } from 'zod';
 import { PipelineError, type Evidence, type ProviderContext } from '../../../../packages/contracts/src/index.js';
 import { createJevClient, validateAnswers, type JevAnswer, type JevRequest } from '../../../../services/api/src/providers/jev/client.js';
 import { createClassifier } from '../../../../services/api/src/providers/jev/classification.js';
 import { createJudge } from '../../../../services/api/src/providers/jev/judgment.js';
 import { createRetriever } from '../../../../services/api/src/providers/exa/retrieval.js';
-import { buildAlternateQuery } from '../../../../services/api/src/evidence/normalize.js';
+import { buildAlternateQuery, buildHighlightQuery, normalizeUrl, RETRIEVAL_OBJECTIVE } from '../../../../services/api/src/evidence/normalize.js';
 import { abortable } from '../../../../services/api/src/runtime/budget.js';
 import type { RuntimeAdapters } from '../../../../services/api/src/runtime/adapters.js';
 import type { AssessedJudgment } from '../../../../services/api/src/policy/assessment.js';
@@ -13,7 +15,31 @@ import { CampaignBudget, HarnessStop, type Attempt } from './budget.js';
 const object = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const safeNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0;
 
-export type ObservedAttempt = Attempt & { query?: string; contentURLs?: string[]; answers?: Record<string, JevAnswer> };
+const highlightsSchema = z.object({ query: z.string(), maxCharacters: z.literal(4000) }).strict();
+const searchRequestSchema = z.object({ query: z.string(), type: z.literal('auto'), numResults: z.union([z.literal(5), z.literal(8)]),
+  objective: z.literal(RETRIEVAL_OBJECTIVE), contents: z.object({ highlights: highlightsSchema }).strict() }).strict();
+const contentsRequestSchema = z.object({ urls: z.array(z.string().max(4096).refine(url => normalizeUrl(url) !== null)).length(1),
+  text: z.object({ maxCharacters: z.literal(12000) }).strict(), highlights: highlightsSchema,
+  livecrawl: z.literal('preferred'), livecrawlTimeout: z.literal(1500) }).strict();
+
+/** Every outbound retrieval string is constrained, including SDK nested fields.
+ * A future provider option must be explicitly audited before it can dispatch. */
+export function retrievalRequestIsPublic(kind: 'search' | 'contents', value: unknown, allowedPublic: string[]): boolean {
+  if (allowedPublic.length !== 1) return false;
+  const text = allowedPublic[0];
+  if (kind === 'search') {
+    const parsed = searchRequestSchema.safeParse(value);
+    if (!parsed.success) return false;
+    const request = parsed.data;
+    return request.contents.highlights.query === buildHighlightQuery(text)
+      && ((request.query === text && request.numResults === 5)
+        || (request.query === buildAlternateQuery(text, 'balanced_evidence') && request.numResults === 8));
+  }
+  const parsed = contentsRequestSchema.safeParse(value);
+  return parsed.success && parsed.data.highlights.query === buildHighlightQuery(text);
+}
+
+export type ObservedAttempt = Attempt & { query?: string; retrievalTextSHA256?: { objective?: string; highlightQuery: string }; contentURLs?: string[]; answers?: Record<string, JevAnswer> };
 export type RequestObservation = {
   label: string; attempts: ObservedAttempt[]; stageMs: { admission: number; retrieval: number; judgment: number };
   admission?: { action: string; reasonCode: string; claims: number }; admittedPublic: string[]; rejectedAdmissionCount: number;
@@ -77,15 +103,29 @@ export function observedProviders(options: {
     if (!kind) { const error = new HarnessStop('unexpected_provider_endpoint'); stopObservation(observation, error); throw error; }
     const body = typeof init?.body === 'string' ? init.body : '';
     let decodedRequest: Record<string, unknown>;
-    try { decodedRequest = JSON.parse(body) as Record<string, unknown>; }
+    try {
+      const parsed: unknown = JSON.parse(body);
+      if (!object(parsed)) throw new Error('Outbound body must be an object');
+      decodedRequest = parsed;
+    }
     catch { const error = new HarnessStop('invalid_outbound_json'); stopObservation(observation, error); throw error; }
     let attempt: ObservedAttempt;
     try {
       if (kind === 'search' && (typeof decodedRequest.query !== 'string' || !allowedPublic.some(text => decodedRequest.query === text || decodedRequest.query === buildAlternateQuery(text, 'balanced_evidence')))) throw new HarnessStop('query_not_public');
+      if (kind !== 'jev' && !retrievalRequestIsPublic(kind, decodedRequest, allowedPublic)) throw new HarnessStop('retrieval_request_not_public');
       attempt = options.budget.begin(kind, Buffer.byteLength(body));
     } catch (error) { if (error instanceof HarnessStop) stopObservation(observation, error); throw error; }
-    if (kind === 'search') attempt.query = decodedRequest.query as string;
-    if (kind === 'contents' && Array.isArray(decodedRequest.ids)) attempt.contentURLs = decodedRequest.ids.filter((value): value is string => typeof value === 'string');
+    if (kind === 'search') {
+      attempt.query = decodedRequest.query as string;
+      attempt.retrievalTextSHA256 = {
+        objective: createHash('sha256').update(decodedRequest.objective as string).digest('hex'),
+        highlightQuery: createHash('sha256').update(((decodedRequest.contents as Record<string, unknown>).highlights as Record<string, unknown>).query as string).digest('hex'),
+      };
+    }
+    if (kind === 'contents') {
+      attempt.contentURLs = decodedRequest.urls as string[];
+      attempt.retrievalTextSHA256 = { highlightQuery: createHash('sha256').update((decodedRequest.highlights as Record<string, unknown>).query as string).digest('hex') };
+    }
     observation.attempts.push(attempt);
     try { await options.onBeforeDispatch?.(observation); }
     catch {
