@@ -22,10 +22,39 @@ arbitrary source URLs directly. `EXA_API_KEY` is supplied by server configuratio
 Page text is fetched for at most three promising results when highlights are
 absent/short or omit claim-critical numbers, negation, attribution or qualifiers.
 The deterministic relevance check only selects passages and limits content
-requests; it does not judge truth. Excerpts remain a single exact contiguous span,
-and evidence starts unjudged. A pure balanced alternate-query builder and a
-six-record merge/dedupe helper are provided for future budgeted rejudgment; the
-retriever still makes one exact-claim search and does not wire a second pass.
+requests; it does not judge truth. Initial retrieval searches the exact admitted
+claim with five results. An explicitly configured balanced alternate uses eight
+results and a descriptive record query containing the verbatim admitted claim.
+Both use the supported neutral `objective` and query-directed highlights with a
+4,000-character requested limit. Content enrichment requests 12,000 characters
+of text and 4,000 characters of query-directed highlights together. Existing and
+enriched highlights remain candidates when a page prefix is incidental.
+
+Each invocation makes one search. The caller controls the alternate pass and
+must share the existing two-search/three-content budget. An optional shared
+`canConsume` context stops optional enrichment when that budget is exhausted.
+Neither pass follows retrieved links or executes retrieved instructions.
+
+Excerpts remain one exact contiguous span of at most 2,000 Unicode code points.
+Selection anchors on local subject coverage, then compact subject span and
+source order. It does not rank anchors by agreement with the claim's numbers or
+qualifiers. Nearby preceding/following context is retained when it fits. A distant
+correction, keeper footer, or qualification outside that window can still be
+lost. Selection does not infer currentness, guarantee relation relevance, or
+assert that the entire page was inspected. The synthetic regression with an
+early correction and distant obsolete summary keeps the same correction when
+the checked year is swapped; it does not claim semantic currentness detection.
+
+Local analysis uses overlapping 600-code-point paragraph windows at a 200-point
+stride plus a linear sentence/line scan. Prefix offsets advance incrementally;
+there is no repeated whole-prefix reconstruction. At the parser's maximum
+100,000-character page bound a single long paragraph has at most 500 windows.
+With many short paragraphs there can be more windows, but each input point is
+visited by at most three overlapping windows plus the sentence/line scan, so
+total scanned text remains linear. Individual scoring units are at most 600
+points. A maximum-size unpunctuated-line
+regression covers newline termination. A local 99,835-character stress page took
+about 30 ms; that measurement is not a latency guarantee.
 
 Evidence starts unjudged: source role is unknown, relevance/scope are false and
 stance is unrelated. The judgment and deterministic source policies must qualify
@@ -39,3 +68,7 @@ the source supplied a midnight timestamp.
 
 Live relevance, freshness and citation inspection still require configured Exa
 credentials and a separately recorded live evaluation.
+
+The authorized public acquisition-only diagnostic and independent artifact review
+are recorded in [public-acquisition-01-resumed](public-acquisition-01-resumed/README.md).
+This record contains no Jev judgments and makes no factual-accuracy claim.
