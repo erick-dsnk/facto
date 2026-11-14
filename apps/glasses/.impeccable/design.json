@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T14:45:58.306067+00:00",
+  "title": "Design System: Actually screenshot HUD",
+  "extensions": {
+    "motion": [
+      {
+        "name": "surface-morph",
+        "value": "300ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "Same evidence surface transitions between201\u00d740searchingpill and428\u00d7172resultcard."
+      },
+      {
+        "name": "details-arrive",
+        "value": "240ms cubic-bezier(.25,1,.5,1)",
+        "purpose": "Quote and publisher gently settle by4px; reduced motion disables."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Result card",
+      "kind": "custom",
+      "refersTo": "result-card",
+      "description": "Filled reference-gray verdict, quote and publisher.",
+      "html": "<div class=\"ds-result\"><p class=\"ds-status\"><i class=\"ds-dot\"></i> True <span>\u00b7 official site</span></p><p class=\"ds-quote\">\u201cThe tower can grow up to 15 cm<br>as its iron expands in the heat.\u201d</p><p class=\"ds-publisher\">toureiffel.paris</p></div>",
+      "css": ".ds-result{width:428px;height:172px;box-sizing:border-box;padding:18px 19px;border-radius:20px;background:#4c4f5a;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Segoe UI',sans-serif}.ds-status{font-size:24px;line-height:27px;font-weight:600;color:#99b3a0;margin:0}.ds-status span{font-size:20px;font-weight:450;color:#c8c8d1}.ds-quote{font-weight:400;font-size:22px;line-height:29px;color:#d1d1d7;margin:14px 0 7px}.ds-publisher{font-family:'SF Pro Text',-apple-system,BlinkMacSystemFont,sans-serif;font-size:19px;line-height:24px;color:#efeeed;font-weight:500;margin:0} .ds-dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:#99b3a0;margin-right:7px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The supplied lens interface",
+    "overview": "The user's latest three screenshots are the visual authority. They explicitly restore a muted capture label, a two-line claim and a filled gray result card. The result has a colored dot and verdict, metadata, a short quoted correction and publisher. Searching is a compact gray pill. No conventional wearable buttons accompany either state.",
+    "keyCharacteristics": [
+      "Exact supplied content and line breaks.",
+      "A clearly filled neutral-gray surface.",
+      "Muted True/False color confined to the verdict."
+    ],
+    "rules": [],
+    "dos": [
+      "Do compare True, Searching and False against their corresponding source images.",
+      "Do preserve the supplied line breaks, metadata and publishers.",
+      "Do keep the gray card filled and readable."
+    ],
+    "donts": [
+      "Don't reintroduce View source, Dismiss or other conventional wearable buttons.",
+      "Don't put the glasses photograph or marketing page into the wearable display.",
+      "Don't claim exact optical color reproduction from normal CSS composition."
+    ]
+  }
+}
