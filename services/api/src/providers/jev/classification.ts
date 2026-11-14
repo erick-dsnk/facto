@@ -20,9 +20,9 @@ const quoteUse = {
   unclear: 'It is unclear whether quotation marks identify a name/title or mark a merely repeated proposition.'
 };
 const claimStructure = {
-  one_coherent: 'The whole candidate expresses one coherent proposition; any boundary crosses only details required to state that proposition.',
-  multiple_propositions: 'The whole candidate contains multiple independently meaningful propositions that should be considered as exact subspans.',
-  unclear: 'It is unclear whether the whole candidate is one proposition or multiple propositions.'
+  one_coherent: 'The exact candidate expresses one coherent proposition; any boundary crosses only details required to state that proposition.',
+  multiple_propositions: 'The exact candidate contains multiple independently meaningful propositions that should be considered as exact subspans.',
+  unclear: 'It is unclear whether the exact candidate is one proposition or multiple propositions.'
 };
 
 export function createClassifier(client: JevClient): PipelineAdapters['classify'] {
@@ -47,9 +47,7 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
       if (isProperSubspan) {
         questions[`${candidate.id}_preserves_scope`] = { type: 'noul', instructions: prefix + 'Does this exact subspan preserve any negation, condition, quantifier, attribution, quotation, and other qualifier that actually governs it in originalText? A complete independent sentence or conjunction clause is not made incomplete by an unrelated neighboring private clause or by a discourse connector such as “and” or “but”. Answer yes when the exact span is independently checkable; answer no only when dropping surrounding text would change or detach a qualifier that governs this proposition.' };
       }
-      if (candidate.id === 'span_0') {
-        questions[`${candidate.id}_claim_structure`] = { type: 'choice', instructions: prefix + 'When considering the whole captured candidate, is it one coherent proposition, multiple independently meaningful propositions, or unclear? Even if no safe exact subspan is available, never treat multiple propositions as one claim.', criteria: claimStructure };
-      }
+      questions[`${candidate.id}_claim_structure`] = { type: 'choice', instructions: prefix + 'Is this exact candidate one coherent proposition, multiple independently meaningful propositions, or unclear? A sentence or clause can still contain several propositions. Even if no safe exact subspan is available, never treat multiple propositions as one claim.', criteria: claimStructure };
     }
     const answers = validateAnswers({ answers: await client.ask({
       state: { originalText: input.text, candidates, context: input.context, capture_mode: input.mode, language: input.language, as_of: new Date(context.now()).toISOString().slice(0, 10) }, questions
@@ -70,15 +68,15 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
       const quoteUseChoice = hasQuote ? answers[`${candidate.id}_quote_use`]?.choice : undefined;
       const isProperSubspan = wholeSpan !== undefined && (candidate.span.start > wholeSpan.start || candidate.span.end < wholeSpan.end);
       const preservesScope = isProperSubspan ? answers[`${candidate.id}_preserves_scope`]?.noul : 1;
-      const structure = candidate.id === 'span_0' ? answers[`${candidate.id}_claim_structure`]?.choice : 'one_coherent';
+      const structure = answers[`${candidate.id}_claim_structure`]?.choice;
       if (selfContained === null || privateData === null || selfContained === undefined || privateData === undefined) throw new PipelineError('malformed_provider');
-      if ((hasQuote && quoteUseChoice === undefined) || (isProperSubspan && preservesScope === undefined) || (candidate.id === 'span_0' && structure === undefined)) throw new PipelineError('malformed_provider');
+      if ((hasQuote && quoteUseChoice === undefined) || (isProperSubspan && preservesScope === undefined) || structure === undefined) throw new PipelineError('malformed_provider');
       const issue = deterministicIssue(candidate.text);
       if (issue === 'private_data' || privateData >= 0.1 || kind.choice === 'personal_experience') privateSpans.push(candidate.span);
       hasPrivate ||= issue === 'private_data' || privateData >= 0.1 || kind.choice === 'personal_experience';
       hasNonliteral ||= issue === 'nonliteral' || assertionStatus === 'nonliteral_or_quoted' || quoteUseChoice === 'quoted_proposition';
       hasIncomplete ||= issue === 'incomplete' || kind.choice === 'incomplete_or_unclear' || assertionStatus === 'unclear' || quoteUseChoice === 'unclear' || structure === 'unclear' || (kind.choice === 'public_fact' && selfContained < 0.85);
-      const structureEligible = candidate.id !== 'span_0' || structure === 'one_coherent';
+      const structureEligible = structure === 'one_coherent';
       if (issue || kind.choice !== 'public_fact' || (kind.probabilities?.public_fact ?? 0) < 0.8 || selfContained < 0.85 || privateData >= 0.1 || assertionStatus !== 'asserted' || (hasQuote && quoteUseChoice !== 'name_or_title') || (isProperSubspan && (typeof preservesScope !== 'number' || preservesScope < 0.85)) || !structureEligible) continue;
       admitted.push({
         id: `${input.requestId}-r${input.revision}-${candidate.id}`, originalText: input.text, checkedText: candidate.text, sourceSpan: candidate.span,

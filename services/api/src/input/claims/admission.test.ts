@@ -119,6 +119,29 @@ describe('bounded exact public admission', () => {
     expect(result).toMatchObject({ action: 'skip', reasonCode: 'not_eligible_public_fact', claims: [] });
   });
 
+  it('does not admit a sentence subspan containing several unsplittable propositions', async () => {
+    const text = 'My salary is €4,200. The novel “Dune” was written by Frank Herbert and the film “Titanic” was directed by James Cameron.';
+    const client = fixtureClient(candidate => candidate.includes('salary')
+      ? { kind: 'personal_experience', private: 0.99, structure: 'multiple_propositions' }
+      : { structure: 'multiple_propositions' });
+    const result = await createClassifier(client)(input(text), context());
+    expect(result).toMatchObject({ action: 'skip', reasonCode: 'private_or_personal', claims: [] });
+    const request = vi.mocked(client.ask).mock.calls[0][0];
+    expect(request.questions.span_2_claim_structure?.type).toBe('choice');
+  });
+
+  it.each([
+    'There are eight planets in the Solar System.',
+    'There’s one natural moon of Earth.',
+    "There aren't six planets in the Solar System."
+  ])('admits complete existential propositions while retaining unresolved-place backstops: %s', async text => {
+    expect(deterministicIssue(text)).toBeNull();
+    expect(deterministicIssue('There the water boils at 90 degrees.')).toBe('incomplete');
+    const result = await createClassifier(fixtureClient(() => ({})))(input(text), context());
+    expect(result.action).toBe('check');
+    expect(result.claims.map(claim => claim.checkedText)).toEqual([text]);
+  });
+
   it('requires a proper subspan to preserve the whole utterance scope', async () => {
     const text = 'My salary is €4,000 and Helsinki is the capital of Finland.';
     const result = await createClassifier(fixtureClient(candidate => candidate.includes('Helsinki') ? { scope: 0.2 } : { kind: 'personal_experience', private: 0.99 }))(input(text), context());
