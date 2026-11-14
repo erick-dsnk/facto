@@ -1,7 +1,7 @@
 import { performance } from 'node:perf_hooks';
 import { MODEL_VERSION, POLICY_VERSION, PipelineError, type ClaimResult, type TextInput } from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from './adapters.js';
-import { mergeRetainedEvidence } from '../evidence/normalize.js';
+import { retainAlternateEvidence } from './alternate-evidence.js';
 import { decideVerdict } from '../policy/verdict.js';
 import { decidePresentation, matchSelectedTopic } from '../policy/notifications.js';
 import { AttemptBudget, abortable } from './budget.js';
@@ -162,8 +162,8 @@ export class PipelineRuntime {
             && record.acceptedAt + 10_000 - this.now() >= 3_000) {
             const additional = await timed('retrieval', () => this.adapters.retrieveAlternate!(claim, claimContext));
             if (!session.current(record) || stopIfStale()) return;
-            const combined = mergeRetainedEvidence(evidence, additional, claim.checkedText);
-            const identity = (records: typeof evidence) => JSON.stringify(records.map(source => [source.id, source.url, source.title, source.excerpt, source.publishedAt, source.contentBasis, source.sourceGroup, source.echoGroup]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
+            const combined = retainAlternateEvidence(evidence, additional, claim.checkedText, judgment);
+            const identity = (records: typeof evidence) => JSON.stringify(records.map(source => [source.id, source.url, source.title, source.publisher, source.excerpt, source.publishedAt, source.contentBasis, source.sourceGroup, source.echoGroup]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
             if (combined.length && identity(combined) !== identity(evidence)) {
               // Never carry first-pass model assessments into a new evidence set.
               const raw = combined.map(source => ({ ...source, sourceRole: 'unknown' as const, directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' as const, stanceProbability: 0 }));
