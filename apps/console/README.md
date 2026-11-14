@@ -43,3 +43,32 @@ Automatic selected-topic priority matches whole literal phrases in the admitted 
 Run `npm run evaluate` for the development report. The frozen integration commit `ecda5dafe6254d80d2c173adea4fe9435ce46e68` passed `npm run check` with 291 tests and the harness passed 36/36 cases (34 scripted policy fixtures and two local authenticated HTTP/WebSocket runtime scenarios using injected providers). The final stacked branch passed a fresh install, the same 291-test gate, and 36/36 development scenarios; latest E33/E43 runtimes were 139/10,018 ms. These checks measure control flow, not provider accuracy. By default the runner selects the development split before opening case bodies. Direct live adapter smoke and classification/source-assessment probes are separate historical evidence; the later authenticated live-provider campaign stopped before completion. See the [evaluation report](../../docs/evaluation.md) for the run boundaries, missing temporary artifacts, old held-out exposure caveat, and remaining work. Native glasses and deployment work are outside the current fact-checking scope.
 
 Dependencies are limited to the selected stack: Fastify/WebSocket transport, Zod wire validation, official Exa SDK and `tldts` Public Suffix List grouping; TypeScript/tsx, ESLint and Vitest provide the local gate. Versions and transitive dependencies are pinned by the lockfile.
+
+## Bounded authenticated live development runner
+
+`npm run evaluate:live -- --plan` prints the declaration and limits without starting a server or calling providers. The runner in `src/live/run.ts` starts the production Fastify service on loopback, creates an authenticated session, checks rejected HTTP/WebSocket credentials, and submits typed requests over actual HTTP while observing the authenticated WebSocket. Provider factories and retry logic are the production Jev/Exa implementations; offline tests inject provider HTTP responses at their fetch boundary. No evaluation corpus or held-out body is loaded.
+
+The eight predeclared development inputs cover Sydney Opera House's opening year, the lightning maxim, a synthetic personal anecdote, synthetic private rent beside public Oslo context, the Opera cache repeat in the same session, a complete eight-planets proposition, automatic waiting through expiry, and a first-person Helsinki/Norway assertion. This is a small diagnostic campaign, not an accuracy benchmark. Explicit cancellation, two-claim receipt correlation, alternate retrieval, byte/token stops, retries, content fetches and provider authentication failures also have injected tests.
+
+With server-side keys configured through the environment, execute a fresh campaign with a new durable output filename:
+
+```sh
+npm run evaluate:live -- --live --output artifacts/live/development-2026-11-14-01.json
+```
+
+The output path must be writable and absent before dispatch. The runner reserves it with mode `0600`, then atomically checkpoints sanitized dispatch reservations, completed attempts and completed cases. A final report replaces the checkpoints. Interrupted reports retain `completed: false`; a `dispatch_reserved` checkpoint means dispatch may or may not have happened and retains the conservative allowance. Reusing an existing filename fails before paid calls. Metadata records the current commit, dirty status and a SHA-256 of console/API/contracts source plus package manifests, including untracked harness files. Optional `--commit SHA` rejects a mismatched checkout; it does not hide a dirty tree.
+
+Fresh campaign limits are 24 actual Jev attempts, 12 Exa search attempts, 18 content attempts, 150 seconds, 65,536 bytes per serialized provider request body and 1,000,000 total request-body bytes. Headers and URLs are excluded from byte totals. Every retry and content fetch is counted at the provider HTTP boundary. Runtime consumed allowances are recorded separately from actual dispatched requests, so a locally denied call cannot appear as a paid attempt.
+
+The input-token stopping threshold is 180,000. Each pending Jev attempt reserves an explicit 24,000-token uncertainty allowance, independently of byte accounting; valid provider `usage.input_tokens` replaces it. This allowance is **not** a tokenizer-derived upper bound or a guarantee on provider charges: a response can report more tokens than reserved. An actual overrun stops future dispatch. Missing/invalid usage stays unknown and retains its reservation; once such an attempt finishes, all further provider dispatch is blocked. Returned numeric costs are partial when any cost is unknown; the runner never invents prices. Wall-clock stops, byte/call/token stops and persistence failures are classified separately from provider failures.
+
+The runner always awaits the request/revision-correlated terminal WebSocket event, including after a local stop. `claim.waiting` is intermediate; expiry must arrive. Requests with two admitted claims need both result receipts unless a request-terminal error/cancellation occurs. Reports retain actual arrival times, fresh per-request stage timing/usage, exact admitted public queries, validated named Jev enum/probability/noul answers, retained public evidence, content/risk/origin assessments, selected citations and cache flags. They omit original/private text, rejected clauses, prompts, response bodies, credentials and keys. Outbound queries must equal the current admitted public proposition or its policy-generated alternate; a different predeclared proposition is insufficient.
+
+Provider authentication probes use deliberately invalid dummy keys and the same HTTP/WebSocket path. Run each separately with its own output and fresh limits; the Exa probe uses a configured real Jev key for admission:
+
+```sh
+npm run evaluate:live -- --live --auth-probe jev --output artifacts/live/jev-auth-2026-11-14-01.json
+npm run evaluate:live -- --live --auth-probe exa --output artifacts/live/exa-auth-2026-11-14-01.json
+```
+
+`completed` means all declared transport observations reached their correlated terminals; provider operational errors are reported separately and definitive labels still need citation inspection. The probe additionally requires the target provider's actual HTTP 401 and sanitized terminal authentication error. Check every abstention and independently open every definitive selected citation against the exact proposition before making demo claims. Run `npx vitest run apps/console/src/live` for offline verification; no live provider calls occur in these tests.
