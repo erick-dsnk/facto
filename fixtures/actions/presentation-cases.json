@@ -1,0 +1,23 @@
+[
+  { "id": "manual-supported", "verdict": "supported", "intent": "manual", "expected": "respond", "reason": "explicit_request" },
+  { "id": "automatic-supported", "verdict": "supported", "intent": "automatic", "expected": "silent", "reason": "automatic_noncontradiction" },
+  { "id": "manual-insufficient", "verdict": "insufficient_evidence", "intent": "manual", "expected": "respond", "reason": "explicit_request" },
+  { "id": "automatic-insufficient", "verdict": "insufficient_evidence", "intent": "automatic", "expected": "silent", "reason": "automatic_noncontradiction" },
+  { "id": "automatic-misleading", "verdict": "misleading", "intent": "automatic", "expected": "silent", "reason": "automatic_noncontradiction" },
+  { "id": "practical-contradiction", "verdict": "contradicted", "intent": "automatic", "priority": 0.8, "expected": "notify", "reason": "practical_contradiction" },
+  { "id": "low-priority-contradiction", "verdict": "contradicted", "intent": "automatic", "priority": 0.79, "expected": "silent", "reason": "insufficient_priority" },
+  { "id": "missing-priority", "verdict": "contradicted", "intent": "automatic", "priority": null, "expected": "silent", "reason": "insufficient_priority" },
+  { "id": "stopped-session", "verdict": "contradicted", "intent": "automatic", "priority": 1, "state": { "active": false }, "expected": "silent", "reason": "session_inactive" },
+  { "id": "muted-manual", "verdict": "supported", "intent": "manual", "preferences": { "muted": true }, "expected": "silent", "reason": "muted" },
+  { "id": "superseded-manual", "verdict": "supported", "intent": "manual", "state": { "current": false }, "expected": "silent", "reason": "superseded" },
+  { "id": "expired-result", "verdict": "supported", "intent": "repeat", "state": { "expired": true }, "expected": "silent", "reason": "expired" },
+  { "id": "duplicate-transport", "verdict": "contradicted", "intent": "manual", "state": { "duplicate": true }, "expected": "silent", "reason": "duplicate" },
+  { "id": "intentional-repeat", "verdict": "supported", "intent": "repeat", "state": { "duplicate": true }, "expected": "respond", "reason": "explicit_repeat" },
+  { "id": "repeat-after-stop", "verdict": "supported", "intent": "repeat", "state": { "active": false, "duplicate": true }, "expected": "silent", "reason": "session_inactive" },
+  { "id": "unhealthy-service", "verdict": "contradicted", "intent": "automatic", "priority": 1, "state": { "healthy": false }, "expected": "silent", "reason": "service_unhealthy" },
+  { "id": "notification-budget", "verdict": "contradicted", "intent": "automatic", "priority": 1, "state": { "notificationCount": 3 }, "expected": "silent", "reason": "notification_budget" },
+  { "id": "notifications-disabled", "verdict": "contradicted", "intent": "automatic", "priority": 1, "preferences": { "automaticNotifications": false }, "expected": "silent", "reason": "notifications_disabled" },
+  { "id": "selected-topic", "verdict": "contradicted", "intent": "automatic", "topic": "weather", "preferences": { "selectedTopics": ["weather"] }, "expected": "notify", "reason": "selected_topic_contradiction" },
+  { "id": "unselected-topic", "verdict": "contradicted", "intent": "automatic", "topic": "weather", "expected": "silent", "reason": "insufficient_priority" },
+  { "id": "waiting-candidate", "verdict": "contradicted", "intent": "automatic", "priority": 1, "admissionAction": "wait", "expected": "silent", "reason": "unresolved_admission" }
+]
