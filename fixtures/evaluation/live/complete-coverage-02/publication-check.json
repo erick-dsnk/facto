@@ -1,0 +1,29 @@
+{
+  "kind": "documentation_and_evidence_publication_validation",
+  "validatedAt": "2026-11-14T10:42:02.151749+00:00",
+  "originalLiveCommit": "4f507f84d9f7f8881af62d9a9ae5a82aa0099ceb",
+  "originalLiveSourceSHA256": "d81de5984903f607d4e6b8342f1777b3dc105f893f27e2739c98308d86f57147",
+  "originalReportSHA256": "a227f9a968e32031e39d2a14eb570045435152753a7e122199879bb3777331d6",
+  "sourceDiffAgainstLiveFreeze": [
+    "apps/console/src/live/metrics.test.ts",
+    "apps/console/src/live/metrics.ts"
+  ],
+  "providerRuntimeContractDeviceChanges": 0,
+  "reportingSourceHashesMatchIndependentGate": true,
+  "independentGate": {
+    "tests": 689,
+    "testFiles": 34,
+    "development": 36,
+    "presentation": 21
+  },
+  "knownEnvironmentValuesScanned": 7,
+  "secretValueMatches": 0,
+  "rawControlTextMatches": 0,
+  "forbiddenBodyOrRunnableFiles": 0,
+  "immutableReportAndCitationAuditPreserved": true,
+  "newProviderCalls": 0,
+  "notes": [
+    "Only evaluator metrics/reporting changed after the original provider freeze; no new live accuracy credit.",
+    "Original first report and prospective original plan were not rewritten. Redacted public plan is intentionally nonexecutable."
+  ]
+}

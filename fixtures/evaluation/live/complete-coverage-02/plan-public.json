@@ -1,0 +1,807 @@
+{
+  "schemaVersion": 1,
+  "kind": "nonexecutable_redacted_public_prospective_plan_projection",
+  "name": "complete-coverage-02",
+  "preparedAt": "2026-11-14T10:28:26.660351+00:00",
+  "batches": [
+    [
+      {
+        "label": "CA01",
+        "allowedPublic": [
+          "The storming of the Bastille took place on 14 July 1789."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA01-fact",
+              "acceptedTexts": [
+                "The storming of the Bastille took place on 14 July 1789."
+              ],
+              "verdict": "supported",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "f612ebb67fdc464a15ad7e0ba0c1f8a3bfcc3812a4702b0b00c16cf0c3c46dd1",
+        "originalInputCodePoints": 56
+      },
+      {
+        "label": "CA02",
+        "allowedPublic": [
+          "Constantinople fell to the Ottoman Empire in 1453."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA02-fact",
+              "acceptedTexts": [
+                "Constantinople fell to the Ottoman Empire in 1453."
+              ],
+              "verdict": "supported",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ad21f36f30dbc2b607ce5dc3b6d080b2c4cd6af02a40217c458484190b7091c0",
+        "originalInputCodePoints": 50
+      },
+      {
+        "label": "CA03",
+        "allowedPublic": [
+          "The Treaty of Versailles following World War I was signed in 1914."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA03-fact",
+              "acceptedTexts": [
+                "The Treaty of Versailles following World War I was signed in 1914."
+              ],
+              "verdict": "contradicted",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "b988ba0137e0a697da39bb9badb343cdad6e7e118a48b35d2b4de6c87db002f1",
+        "originalInputCodePoints": 66
+      },
+      {
+        "label": "CA04",
+        "allowedPublic": [
+          "The Wright brothers' first successful powered flight took place in 1905."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA04-fact",
+              "acceptedTexts": [
+                "The Wright brothers' first successful powered flight took place in 1905."
+              ],
+              "verdict": "contradicted",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "b629b596d14867cbab8795f5d1f33b191ab855666050f8dde55f53fd8862cc3e",
+        "originalInputCodePoints": 72
+      },
+      {
+        "label": "CA05",
+        "allowedPublic": [
+          "Lisbon is the capital of Portugal."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA05-fact",
+              "acceptedTexts": [
+                "Lisbon is the capital of Portugal."
+              ],
+              "verdict": "supported",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "824603ac6813b5fb042455df31d232f863b9e9e5fd2b03f23553055c746970be",
+        "originalInputCodePoints": 34
+      },
+      {
+        "label": "CA06",
+        "allowedPublic": [
+          "The Bering Strait separates Asia from North America."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA06-fact",
+              "acceptedTexts": [
+                "The Bering Strait separates Asia from North America."
+              ],
+              "verdict": "supported",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "28cbc3372da73e592f5efaa16149f30670df96dda1ad20a153421db10d5bedd4",
+        "originalInputCodePoints": 52
+      },
+      {
+        "label": "CA07",
+        "allowedPublic": [
+          "Copenhagen is the capital of Sweden."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA07-fact",
+              "acceptedTexts": [
+                "Copenhagen is the capital of Sweden."
+              ],
+              "verdict": "contradicted",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "e4dc5cc6a9215d8b9ddd562a8aaea2684924c91ca240c608d3060a0ab66f4c65",
+        "originalInputCodePoints": 36
+      },
+      {
+        "label": "CA08",
+        "allowedPublic": [
+          "The Suez Canal directly connects the Mediterranean Sea to the Pacific Ocean."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CA08-fact",
+              "acceptedTexts": [
+                "The Suez Canal directly connects the Mediterranean Sea to the Pacific Ocean."
+              ],
+              "verdict": "contradicted",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ed98a44a0fdca17fbc95a078e1849e77b32b212a72c8e1b0b32f6686e151de1d",
+        "originalInputCodePoints": 76
+      },
+      {
+        "label": "CB01",
+        "allowedPublic": [
+          "In modern computing, a byte consists of eight bits."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB01-fact",
+              "acceptedTexts": [
+                "In modern computing, a byte consists of eight bits."
+              ],
+              "verdict": "supported",
+              "domain": "technology"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "0a3b8dfe5bafecdbe1f119b99e94f07aa3bebdcfb2fa86dc9985e5cdb64fcb4b",
+        "originalInputCodePoints": 51
+      },
+      {
+        "label": "CB02",
+        "allowedPublic": [
+          "The World Wide Web was invented by Tim Berners-Lee."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB02-fact",
+              "acceptedTexts": [
+                "The World Wide Web was invented by Tim Berners-Lee."
+              ],
+              "verdict": "supported",
+              "domain": "technology"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "fad9675bca1b5169f7ea7f7960ae5971a2d75d587a19fbc826409987430651ac",
+        "originalInputCodePoints": 51
+      },
+      {
+        "label": "CB03",
+        "allowedPublic": [
+          "Mercury is the planet closest to the Sun."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB03-fact",
+              "acceptedTexts": [
+                "Mercury is the planet closest to the Sun."
+              ],
+              "verdict": "supported",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "f392087d3b27777e08f875dd4b20b4bfb7ea4a4a6defe278f1131fd0b88cbc44",
+        "originalInputCodePoints": 41
+      },
+      {
+        "label": "CB04",
+        "allowedPublic": [
+          "Sound waves require a material medium to travel."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB04-fact",
+              "acceptedTexts": [
+                "Sound waves require a material medium to travel."
+              ],
+              "verdict": "supported",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "1591c8caf210ec00652df07ec01902186a500b59c4ca9e470eac3f3979b3c119",
+        "originalInputCodePoints": 48
+      },
+      {
+        "label": "CT01",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "2198032917c7d65b7584bd24a84d557728d233f72ae4cd797fd7a8c58303c766",
+        "originalInputCodePoints": 39
+      },
+      {
+        "label": "CT02",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "121bdddb6451e7f81b824010f09e4a5c8337bfc50dde26a35f4b878e46977d17",
+        "originalInputCodePoints": 37
+      },
+      {
+        "label": "CT03",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "a52191306f0a0f21ecd8d1f1201a7694bb406dedf010e670e49c4651ffe165b6",
+        "originalInputCodePoints": 40
+      },
+      {
+        "label": "CT04",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "aefba7af1771641b8f94b0751483259f5c3d593cfd20031d349c078774f8c856",
+        "originalInputCodePoints": 47
+      }
+    ],
+    [
+      {
+        "label": "CB05",
+        "allowedPublic": [
+          "The first artificial satellite, Sputnik 1, was launched in 1967."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB05-fact",
+              "acceptedTexts": [
+                "The first artificial satellite, Sputnik 1, was launched in 1967."
+              ],
+              "verdict": "contradicted",
+              "domain": "technology"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "7a21f4bacdaa3d80641ae4a79814c03e649984b8d2fabe3a9025e23e0c8cd85b",
+        "originalInputCodePoints": 64
+      },
+      {
+        "label": "CB06",
+        "allowedPublic": [
+          "The programming language Python was created by Dennis Ritchie."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB06-fact",
+              "acceptedTexts": [
+                "The programming language Python was created by Dennis Ritchie."
+              ],
+              "verdict": "contradicted",
+              "domain": "technology"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ea752173071adae7bf26ca597eed9fd34920ad3a95f7971da68230d0e1b33f1a",
+        "originalInputCodePoints": 62
+      },
+      {
+        "label": "CB07",
+        "allowedPublic": [
+          "An electron has a positive electric charge."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB07-fact",
+              "acceptedTexts": [
+                "An electron has a positive electric charge."
+              ],
+              "verdict": "contradicted",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "0f981e5eea0b92620e61104a5cb1a3954c855adaa0bc18d85279feab259c52ef",
+        "originalInputCodePoints": 43
+      },
+      {
+        "label": "CB08",
+        "allowedPublic": [
+          "Jupiter has a solid surface like Earth's."
+        ],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [
+            {
+              "id": "CB08-fact",
+              "acceptedTexts": [
+                "Jupiter has a solid surface like Earth's."
+              ],
+              "verdict": "contradicted",
+              "domain": "science"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "8711bd54d21c767f71ff39acc32e486f6e504a784d019f57f497dfce2fc8b03e",
+        "originalInputCodePoints": 41
+      },
+      {
+        "label": "CC01",
+        "allowedPublic": [
+          "Pablo Picasso painted Guernica in 1937."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC01-fact",
+              "acceptedTexts": [
+                "Pablo Picasso painted Guernica in 1937."
+              ],
+              "verdict": "supported",
+              "domain": "arts"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "0f95e311a25b843b53b635115960f067c660ae95a69e8722d8f525e5db4d1a1c",
+        "originalInputCodePoints": 39
+      },
+      {
+        "label": "CC02",
+        "allowedPublic": [
+          "Verdi's opera Aida had its world premiere in Paris in 1871."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC02-fact",
+              "acceptedTexts": [
+                "Verdi's opera Aida had its world premiere in Paris in 1871."
+              ],
+              "verdict": "contradicted",
+              "domain": "arts"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ff8eb640edeba97238ab8891a772f5bd3056e84f6f3a7373aa87402f75bb37ca",
+        "originalInputCodePoints": 59
+      },
+      {
+        "label": "CC03",
+        "allowedPublic": [
+          "Madagascar is an island country in the Atlantic Ocean."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC03-fact",
+              "acceptedTexts": [
+                "Madagascar is an island country in the Atlantic Ocean."
+              ],
+              "verdict": "contradicted",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "bfdb9053a42ad8a045ceccca0e1b346e6a8eef7d98df2382f5222cc61bc2e54e",
+        "originalInputCodePoints": 54
+      },
+      {
+        "label": "CC04",
+        "allowedPublic": [
+          "Quito is the capital of Ecuador."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC04-fact",
+              "acceptedTexts": [
+                "Quito is the capital of Ecuador."
+              ],
+              "verdict": "supported",
+              "domain": "geography"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "a5a7e93cca2b500983ac37414e386254f7461fc17ded9650cdd45935de544f31",
+        "originalInputCodePoints": 32
+      },
+      {
+        "label": "CC05",
+        "allowedPublic": [
+          "The Rosetta Stone was discovered in 1799."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC05-fact",
+              "acceptedTexts": [
+                "The Rosetta Stone was discovered in 1799."
+              ],
+              "verdict": "supported",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "7889d9e5c0010d3fc7daa01ce3a70eeca7dc5614cb23761283fb0ad222271399",
+        "originalInputCodePoints": 41
+      },
+      {
+        "label": "CC06",
+        "allowedPublic": [
+          "The fall of the Berlin Wall occurred in 1991."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC06-fact",
+              "acceptedTexts": [
+                "The fall of the Berlin Wall occurred in 1991."
+              ],
+              "verdict": "contradicted",
+              "domain": "history"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "c6da5a3ee52f34e30cd7f3b7da41e6ca16fb75c02a0f40bcb4509542f51b0895",
+        "originalInputCodePoints": 45
+      },
+      {
+        "label": "CC07",
+        "allowedPublic": [
+          "Badminton debuted as an Olympic medal sport at the 1992 Summer Games."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC07-fact",
+              "acceptedTexts": [
+                "Badminton debuted as an Olympic medal sport at the 1992 Summer Games."
+              ],
+              "verdict": "supported",
+              "domain": "sport"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "41078baad5a53423196425f2a0c7dbc0757508a556b35a74ebfe84af5e097742",
+        "originalInputCodePoints": 69
+      },
+      {
+        "label": "CC08",
+        "allowedPublic": [
+          "Brazil hosted the first FIFA World Cup in 1930."
+        ],
+        "expected": {
+          "claims": [
+            {
+              "id": "CC08-fact",
+              "acceptedTexts": [
+                "Brazil hosted the first FIFA World Cup in 1930."
+              ],
+              "verdict": "contradicted",
+              "domain": "sport"
+            }
+          ],
+          "admissionAction": "check",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "7337fbb9d6356b36a7147b6816eeead0796b7f50bdf6724e9819c25fdfe4c611",
+        "originalInputCodePoints": 47
+      },
+      {
+        "label": "CT05",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "31e47b5a319ebace1cff8daa1ade4be67332e1d27744ba237806595a8637e6e6",
+        "originalInputCodePoints": 57
+      },
+      {
+        "label": "CT06",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "skip",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "e4960e414c48654c9b94ed64deadee7aa9351b0359810f5418bf529e220b0c0e",
+        "originalInputCodePoints": 51
+      },
+      {
+        "label": "CT07",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "needs_confirmation",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "ff05f7becb70a6ccb2471f462c015cf0584af05147d893b5c5dc9abd929bb57b",
+        "originalInputCodePoints": 29
+      },
+      {
+        "label": "CT08",
+        "allowedPublic": [],
+        "automatic": false,
+        "final": true,
+        "expected": {
+          "claims": [],
+          "admissionAction": "needs_confirmation",
+          "presentationActions": [
+            "respond"
+          ]
+        },
+        "originalInputSHA256": "1121b13cab0c5ab4e975b04ad4d9eb91d211056951b56355845f2568229854bf",
+        "originalInputCodePoints": 39
+      }
+    ]
+  ],
+  "limits": {
+    "requestBytes": 524288,
+    "totalRequestBytes": 134217728,
+    "inputTokens": 16000000,
+    "unknownInputTokensPerAttempt": 128000,
+    "calls": {
+      "jev": 96,
+      "search": 48,
+      "contents": 72
+    },
+    "wallMs": 600000
+  },
+  "perBatchLimits": {
+    "requestBytes": 524288,
+    "totalRequestBytes": 67108864,
+    "inputTokens": 8000000,
+    "unknownInputTokensPerAttempt": 128000,
+    "calls": {
+      "jev": 48,
+      "search": 24,
+      "contents": 36
+    },
+    "wallMs": 300000
+  },
+  "sourceCommit": "4f507f84d9f7f8881af62d9a9ae5a82aa0099ceb",
+  "expected": {
+    "facts": 24,
+    "true": 12,
+    "false": 12,
+    "controls": 8,
+    "terminals": 32
+  },
+  "prospectiveCriteria": {
+    "targetCorrectDefinitive": 20,
+    "targetFullyContentVerified": 20,
+    "wrongDefinitives": "Report every wrong verdict and continue this synthetic evaluation; do not alter labels or remove denominator.",
+    "controls": "6skip2needsconfirmation, all manual respond, zero retrieval for8controls",
+    "denominator": "All24 declared eligible facts, including abstentions, errors and unrun;8controls separate",
+    "stop": "Only safety/private-query guard, authentication, actual resource budget, persistence failure or missing usage. Record wrong factual answers and ordinary operational failures while completing the cohort when safe."
+  },
+  "execution": {
+    "maximumExecutions": 1,
+    "executor": "root",
+    "batches": 2,
+    "batchSize": 16,
+    "resume": false,
+    "rerun": false,
+    "providerRetries": "Existing runtime only, within3Jev/2search/3contents perinput shared10second deadline; every actual attempt charged",
+    "globalBudget": "Two fixed disjoint half-budget quotas sum to global authorization; second batch prohibited after incomplete/localstop/unknownusage; global wall checked before dispatch and remaining time passed to batch",
+    "scope": "OPEN development, no blind claim/no pooling/no causal comparison. Previous stopped campaign preserved without resumption."
+  },
+  "truthPreparation": {
+    "part-a.json": "84f6ae30220c56d3dd4b8dc35ca4d9c298e5117090ecd7348dd80e33c15757bd",
+    "part-b.json": "8366782b97fff529820d37f77de04fde0edc2a5a61e73a3441130bf7b5b82c8d",
+    "part-c.json": "3960abc04202a01a8eb8bd321c0f55f5698e591eb9ec45c4953b13feb91316d6",
+    "controls.json": "302fa88442afc4538ef040c65640b5596a251cb37a40da71b918f15ab4bc49e4",
+    "notes-a.md": "1076c0d4590c0e0cd031bc67c6f9129a17d4723a2b2e2b2abda8e90495497aaf",
+    "notes-b.md": "910c9742108278e3ddae65a8d165b72c7924a96f705d01484ceb883b1057348b",
+    "notes-c.md": "d17d4c5cc6c06a07fec766588d0b13f180ed1f2e6c0932978f8d6ef22d21f8c1"
+  },
+  "privacy": "Allcontrols synthetic. Neverpublish rawcontrol input, provider prompts, credentials or rejected context. Exactpublicqueries only.",
+  "citationVerification": "Every original selected ID/URL/excerpt inspected; no replacement sources. Agent method, accesslimits and provenance uncertainty disclosed.",
+  "cost": "Actual usage/requestbytes/attempts, partial cost and unknowns reported; no fabricated model pricing; responsebytes aggregate unmeasured.",
+  "projectionNotes": [
+    "Raw authored input omitted for every case, including synthetic private controls. Public allowlists and expected outcomes retained.",
+    "The original frozen plan SHA-256 is in freeze.json. Projection bytes are intentionally different and are not executable authorization."
+  ]
+}

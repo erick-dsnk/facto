@@ -80,13 +80,42 @@ export function summarizeCampaign(cases: LiveCase[], reports: MetricReport[], re
     cachedResults: outcomes.filter(item => item.cached === true).length,
     definitiveCoverage: ratio(outcomes.filter(item => item.result === 'correct').length, outcomes.length),
     sourceVerifiedCoverage: ratio(outcomes.filter(item => item.result === 'correct' && item.sourceVerification === 'verified').length, outcomes.length) });
+  // Binary truth errors use expected supported/contradicted labels only. A
+  // missing, duplicated or invalid result is not an observed negative outcome.
+  const binaryCounts = (outcomes: typeof claimOutcomes) => {
+    const definitive = outcomes.filter(item => (item.result === 'correct' || item.result === 'wrong')
+      && ['supported', 'contradicted', 'misleading'].includes(item.verdict ?? ''));
+    const abstained = outcomes.filter(item => item.result === 'abstained' && item.verdict === 'insufficient_evidence').length;
+    const notObserved = outcomes.filter(item => item.result === 'not_observed').length;
+    return { declared: outcomes.length, completed: definitive.length + abstained, definitive: definitive.length, abstained,
+      noResult: outcomes.length - definitive.length - abstained - notObserved, notObserved };
+  };
+  const trueGold = claimOutcomes.filter(item => item.expectedVerdict === 'supported');
+  const falseGold = claimOutcomes.filter(item => item.expectedVerdict === 'contradicted');
+  const trueGoldCounts = binaryCounts(trueGold), falseGoldCounts = binaryCounts(falseGold);
+  const falseAlarms = trueGold.filter(item => item.result === 'wrong' && ['contradicted', 'misleading'].includes(item.verdict ?? '')).length;
+  const falseSupports = falseGold.filter(item => item.result === 'wrong' && item.verdict === 'supported').length;
+  const errorRates = (count: number, counts: ReturnType<typeof binaryCounts>) => ({ count,
+    completedChecks: { numerator: count, denominator: counts.completed, rate: ratio(count, counts.completed) },
+    definitiveOnly: { numerator: count, denominator: counts.definitive, rate: ratio(count, counts.definitive) } });
+  const factualErrorRates = {
+    unit: 'One expected proposition matched to exactly one valid factual result; completed checks include abstentions, definitive-only checks exclude them.',
+    trueGold: trueGoldCounts, falseGold: falseGoldCounts,
+    falseAlarm: { definition: 'Expected supported (true), predicted contradicted or misleading.', ...errorRates(falseAlarms, trueGoldCounts) },
+    falseSupport: { definition: 'Expected contradicted (false), predicted supported.', ...errorRates(falseSupports, falseGoldCounts) },
+    excludedGoldMisleading: binaryCounts(claimOutcomes.filter(item => item.expectedVerdict === 'misleading')),
+    limitations: ['Gold misleading is not interpreted as a binary truth label; unlabeled cases are excluded.',
+      'No-result, duplicate-result, malformed-verdict and not-observed outcomes are excluded from both observed denominators, never counted as true negatives.',
+      'Abstentions remain visible and in completed-check denominators; lower error rates with more abstention do not establish useful coverage.',
+      'These empirical finite-cohort rates do not estimate population accuracy or certify source verification.'],
+  };
   return {
     labeledCases: cases.filter(sample => sample.expected).length, unlabeledCases: cases.filter(sample => !sample.expected).length,
     admission: { unit: 'final admitted exact proposition, matched once per expected claim; unsafe attempts counted without retaining their text', truePositives, falsePositives, falseNegatives, unobservedExpected,
       precision: ratio(truePositives, truePositives + falsePositives), recall: ratio(truePositives, truePositives + falseNegatives) },
     factual: summarize(claimOutcomes), byDomain: Object.fromEntries([...new Set(claimOutcomes.map(item => item.domain))].map(domain => [domain, summarize(claimOutcomes.filter(item => item.domain === domain))])),
     byExpectedVerdict: Object.fromEntries([...new Set(claimOutcomes.map(item => item.expectedVerdict))].map(verdict => [verdict, summarize(claimOutcomes.filter(item => item.expectedVerdict === verdict))])),
-    actions: { admissionActionChecks, admissionActionMatches, presentationChecks, presentationMatches }, claimOutcomes,
+    actions: { admissionActionChecks, admissionActionMatches, presentationChecks, presentationMatches }, claimOutcomes, factualErrorRates,
     limitations: ['Admission metrics score final admitted propositions, not every overlapping internal candidate or model probability.',
       'Not-observed expected claims remain misses in declared-cohort recall and coverage; report unobservedExpected separately.',
       'Correct verdicts receive no source-verified coverage credit until every selected retained reference has explicit external review.',
