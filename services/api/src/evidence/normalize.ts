@@ -100,12 +100,19 @@ export function needsPageText(page: RetrievedPage, claim: string): boolean {
 /** Select an exact contiguous passage. Never concatenate independent snippets into a quote. */
 export function selectExcerpt(page: RetrievedPage, claim: string): { excerpt: string; contentBasis: Evidence['contentBasis'] } | null {
   const pageText = page.text?.trim();
-  const passages = pageText ? [pageText] : (page.highlights ?? []).filter(text => text.trim().length > 0);
+  // A bounded page fetch may contain unrelated navigation while the indexed
+  // highlight came from later in the page. Retain that fallback, but prefer
+  // fetched context whenever it addresses the subject: a refutation can use
+  // different dates or wording than the claim and must not lose on token overlap.
+  const highlights = (page.highlights ?? []).filter(text => text.trim().length > 0);
+  const usePageText = Boolean(pageText && (relevance(pageText, subjectTerms(claim)) > 0
+    || !highlights.some(text => relevance(text, subjectTerms(claim)) > 0)));
+  const passages = usePageText ? [pageText!] : highlights;
   if (!passages.length) return null;
   const ranked = passages.map(text => ({ text, score: passageScore(text, claim) })).sort((a, b) => comparePassageScores(a.score, b.score));
   const chosen = ranked[0].text;
   const points = codePoints(chosen);
-  if (points.length <= 2000) return { excerpt: chosen, contentBasis: pageText ? 'page_text' : 'highlight' };
+  if (points.length <= 2000) return { excerpt: chosen, contentBasis: usePageText ? 'page_text' : 'highlight' };
   // Rank overlapping windows so relevant qualifications late in a page aren't lost to prefix truncation.
   let bestStart = 0;
   let bestScore = passageScore('', claim);
@@ -113,7 +120,7 @@ export function selectExcerpt(page: RetrievedPage, claim: string): { excerpt: st
     const score = passageScore(points.slice(start, start + 2000).join(''), claim);
     if (comparePassageScores(score, bestScore) < 0) { bestScore = score; bestStart = start; }
   }
-  return { excerpt: points.slice(bestStart, bestStart + 2000).join(''), contentBasis: pageText ? 'page_text' : 'highlight' };
+  return { excerpt: points.slice(bestStart, bestStart + 2000).join(''), contentBasis: usePageText ? 'page_text' : 'highlight' };
 }
 
 function textShingles(text: string): Set<string> {
