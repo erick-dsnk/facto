@@ -1,0 +1,144 @@
+{
+  "kind": "prospective_scope_stance_contrast_scoring_plan",
+  "createdAt": "2026-11-14T05:42:22.969140+00:00",
+  "declaredContexts": 12,
+  "recordsPerContext": 3,
+  "targetPrimaryDenominator": 12,
+  "allRecordOccurrenceDenominator": 36,
+  "uniqueRecordIdsAndContentFingerprints": 24,
+  "syntheticFactsCredited": 0,
+  "targetExpectedScopeCounts": {
+    "False": 5,
+    "True": 7
+  },
+  "targetExpectedStanceCounts": {
+    "unrelated": 5,
+    "contradicts": 4,
+    "supports": 3
+  },
+  "allRecordExpectedScopeCounts": {
+    "False": 17,
+    "True": 19
+  },
+  "allRecordExpectedStanceCounts": {
+    "unrelated": 17,
+    "contradicts": 12,
+    "supports": 7
+  },
+  "pairs": [
+    [
+      "SC01",
+      "SC02"
+    ],
+    [
+      "SC03",
+      "SC04"
+    ],
+    [
+      "SC05",
+      "SC06"
+    ],
+    [
+      "SC07",
+      "SC08"
+    ],
+    [
+      "SC09",
+      "SC10"
+    ],
+    [
+      "SC11",
+      "SC12"
+    ]
+  ],
+  "scopeInvariancePair": [
+    "SC11",
+    "SC12"
+  ],
+  "fixedFullRecordOrder": {
+    "SC01": [
+      "SC01-target",
+      "ordinal-ledger",
+      "ordinal-decoy"
+    ],
+    "SC02": [
+      "SC02-target",
+      "ordinal-ledger",
+      "ordinal-decoy"
+    ],
+    "SC03": [
+      "SC03-target",
+      "geo-mapped-companion",
+      "geo-region-only"
+    ],
+    "SC04": [
+      "SC04-target",
+      "geo-mapped-companion",
+      "geo-region-only"
+    ],
+    "SC05": [
+      "SC05-target",
+      "event-register",
+      "event-ceremony"
+    ],
+    "SC06": [
+      "SC06-target",
+      "event-register",
+      "event-ceremony"
+    ],
+    "SC07": [
+      "SC07-target",
+      "condition-operative",
+      "condition-staff"
+    ],
+    "SC08": [
+      "SC08-target",
+      "condition-operative",
+      "condition-staff"
+    ],
+    "SC09": [
+      "SC09-target",
+      "metadata-register",
+      "metadata-decoy"
+    ],
+    "SC10": [
+      "SC10-target",
+      "metadata-register",
+      "metadata-decoy"
+    ],
+    "SC11": [
+      "SC11-target",
+      "negation-audit",
+      "negation-other-year"
+    ],
+    "SC12": [
+      "SC12-target",
+      "negation-audit",
+      "negation-other-year"
+    ]
+  },
+  "syntheticConflictSentinel": "SC12: target19loans supports not17; same-period audit17loans contradicts; full-pool contrary evidence must remain.",
+  "inputProjection": [
+    "context.proposition",
+    "context.records"
+  ],
+  "neverProviderInput": [
+    "caseId",
+    "targetId as a hint",
+    "contrastFamily",
+    "stratum",
+    "labels",
+    "rationales",
+    "author intent",
+    "expectedScope",
+    "expectedStance"
+  ],
+  "interpretation": [
+    "Separate target12 from all-record36; neither supplies a factual truth denominator.",
+    "Do not map record-capability labels to directscope/stance.",
+    "Label uncertainty separately; no quietdrop or replacement afteroutputs.",
+    "Preserve allnon-target source assessments/full-pool conflict and existing safety diagnostics.",
+    "No candidateexecution or productionactivation authorized."
+  ],
+  "calls": 0
+}

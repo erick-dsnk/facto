@@ -1,0 +1,34 @@
+{
+  "kind": "prospective_scope_stance_independent_label_agreement",
+  "createdAt": "2026-11-14T05:43:29.826212+00:00",
+  "authorLabelPath": "/workspace/task-evidence/scope-stance-contrasts-v1/labels-author.json",
+  "authorLabelSHA256": "59a22375d07660696b1725bb9d252f4345cd01939b5978a362deee233d6d2969",
+  "secondLabelPath": "/workspace/task-evidence/scope-stance-contrasts-v1.second-labels.json",
+  "secondLabelSHA256": "58aa684b41d97b823455e98d13244eae382ddb85d61152e737d9c14320b5f34a",
+  "recordOccurrenceComparisons": 36,
+  "scopeAgreement": 36,
+  "stanceAgreement": 36,
+  "targetComparisons": 12,
+  "differences": [],
+  "authorManifestUnchanged": "c88818da1f0eba5e277273347dc2643a30f42776e4ba82840a55baf68ecebba2",
+  "allOriginalCorpusHashesUnchanged": true,
+  "uncertainLabels": 0,
+  "excludedRecords": 0,
+  "targetScope": {
+    "true": 7,
+    "false": 5
+  },
+  "allScope": {
+    "true": 19,
+    "false": 17
+  },
+  "allStance": {
+    "supports": 7,
+    "contradicts": 12,
+    "unrelated": 17
+  },
+  "fullPoolConflictSentinel": "SC12 target19 supports not17; same-period audit17 contradicts. Preserve bothassessments/credibleconflict; no targetanswer grantsafinalverdict.",
+  "disclosure": "Independentsecondlabeler disclosed priorcandidate/runnerfamiliarity; no promptblindness claim. Author didnotreadcandidateappendix/code/outputs.",
+  "factualCoverageCredit": 0,
+  "providerCalls": 0
+}

@@ -1,0 +1,85 @@
+{
+  "kind": "independent_scope48_first_run_review",
+  "reviewedAt": "2026-11-14T05:55:43.101548+00:00",
+  "verdict": "do_not_promote_scope_candidate",
+  "reportSHA256": "4dc4492f880b557973e81c8b4a5e039d37a364efe148bfae5a882f6049ffbdb2",
+  "eventsSHA256": "f611a898001a71b162fcf5bc6ea67020bbd5e89e407d9f164762c9916a5dbaec",
+  "planCanonicalSHA256": "ad0842adae30a8dd51abe03df7cfe938b31b2fbe94caf0cafe57012e827dea07",
+  "accounting": {
+    "consumedJev": 48,
+    "actualStartedJev": 48,
+    "actualStartedExa": 0,
+    "requestBytes": 1761994,
+    "responseBytes": 221576,
+    "measuredInputTokens": 420548,
+    "usageKnownCalls": 48,
+    "usageUnknownCalls": 0
+  },
+  "perStratum": {
+    "prospective": {
+      "consumedJev": 24,
+      "actualStartedJev": 24,
+      "actualStartedExa": 0,
+      "requestBytes": 547316,
+      "responseBytes": 77616,
+      "measuredInputTokens": 123516,
+      "usageKnownCalls": 24,
+      "usageUnknownCalls": 0
+    },
+    "existing_safety_diagnostic": {
+      "consumedJev": 24,
+      "actualStartedJev": 24,
+      "actualStartedExa": 0,
+      "requestBytes": 1214678,
+      "responseBytes": 143960,
+      "measuredInputTokens": 297032,
+      "usageKnownCalls": 24,
+      "usageUnknownCalls": 0
+    }
+  },
+  "checks": [
+    "Independently recomputed scores from raw per-question answers and36 frozen labels; not copied from derived comparison.",
+    "All48 request_sent events match exact frozen plan body hashes/byte counts;48terminals and48actualJev/0Exa,allusageknown,no failure or retries.",
+    "Both prospective arms primary7/7positive0/5falseaccept,12/12stance correct; all-record supplement19/19positive0/17falseaccept,36/36stance correct.",
+    "Primary versus supplement kept separate; descriptive non-targetIDs can cue supplementary scores, and author/second candidate familiarity is disclosed. No blind claim.",
+    "Both synthetic full-pool policies remain abstentions; SC12 keeps conflicting_sources in both arms. No synthetic factual coverage credit."
+  ],
+  "spillovers": {
+    "prospective": {
+      "pairedCells": 12,
+      "cellsWithNonscopeRawChanges": 12,
+      "nonscopeChoiceFlips": 3,
+      "pairedSourceRows": 36,
+      "scopeGateFlips": 0,
+      "substanceGateFlips": 0,
+      "stanceChoiceFlips": 0,
+      "policyVerdictFlips": 0
+    },
+    "existingSafetyDiagnostic": {
+      "pairedCells": 12,
+      "cellsWithNonscopeRawChanges": 12,
+      "nonscopeChoiceFlips": 14,
+      "pairedSourceRows": 62,
+      "scopeGateFlips": 21,
+      "substanceGateFlips": 1,
+      "stanceChoiceFlips": 2,
+      "policyVerdictFlips": 2
+    }
+  },
+  "existingOutcomes": [
+    "Baseline4definitive arm/order cells versus candidate2; existing cells are outcome-informed diagnostics, not a new factual-accuracy denominator.",
+    "BD10 contradiction becomes abstention in BOTHorders. Original all4scopes.92-.93 become.72-.84; reversed onlyFederalRegister remains above.85, losing the qualifying pair.",
+    "BD11 missing-ordinal Nobel speech scope falls.96to.44 and.95to.45; bothbaseline andcandidate alreadyabstain, so no new verified output.",
+    "BD04 reversed remains contradicted in BOTHarms with the exact same two selected passages requiring external continent mapping; candidate scopes.90/.90 do not repair missing retained relation.",
+    "BD03 original remains supported with narrower selected set; reversed abstains in BOTHarms. BD09/BD05 remain abstentions."
+  ],
+  "interpretation": [
+    "No prospective target or supplemental gate gain, plus existing useful-scope loss and unresolved geographic-level safety boundary: do not promote.",
+    "Keep all raw probability/choice/non-scope/policy/source selections; appendix influences joint output distributions even when onlyscope instructions change.",
+    "No pooling with earlier scope16/comparison24 runs, no causal claim from historical drift, no threshold relaxation, rerun, corpus relabel or adaptation authorized.",
+    "No new source fetch performed by this reviewer; retained known continent-mapping limits remain partial, not world-truth error claims.",
+    "Backend readiness and useful coverage remain unmet."
+  ],
+  "providerCallsByReviewer": 0,
+  "productionFilesModified": 0
+}
