@@ -105,4 +105,28 @@ describe('alternate evidence retention through the composed runtime', () => {
     expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 3, searchAttempts: 2 });
     expect(events.some(event => event.type === 'pipeline.error')).toBe(false);
   });
+
+  it('rejudges below-threshold prior records without promoting their scheduling preference into a verdict', async () => {
+    const { session, events, runtime, input, judge } = setup(witnesses(), Array.from({ length: 6 }, (_, index) => noise(`incoming-noise-${index}`)));
+    const originalJudge = judge.getMockImplementation()!;
+    judge.mockImplementation(async (claim, records, context) => {
+      const result = await originalJudge(claim, records, context);
+      for (const record of records.filter(record => record.id.startsWith('old-register-'))) {
+        result.sourceAssessments[record.id].confidence = .78;
+      }
+      return result;
+    });
+    runtime.submit(session, input);
+    await vi.advanceTimersByTimeAsync(2_000);
+
+    expect(judge).toHaveBeenCalledTimes(2);
+    const raw = judge.mock.calls[1][1];
+    expect(raw).toHaveLength(6);
+    expect(raw.filter(record => record.id.startsWith('old-register-'))).toHaveLength(2);
+    expect(raw.filter(record => record.id.startsWith('incoming-noise-'))).toHaveLength(4);
+    expect(raw.every(record => record.sourceRole === 'unknown' && !record.directlyAddressesClaim && !record.matchesTimePlaceAndPopulation && record.stance === 'unrelated' && record.stanceProbability === 0)).toBe(true);
+    expect(events.filter(event => event.type === 'claim.result')).toHaveLength(1);
+    expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence', reasonCode: 'insufficient_independent_evidence', selectedEvidenceIds: [] });
+    expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 3, searchAttempts: 2, durationMs: 2_000 });
+  });
 });
