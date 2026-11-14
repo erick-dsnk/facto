@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_open_synthetic_scope_stance_author_freeze",
+  "frozenAt": "2026-11-14T05:42:22.970248+00:00",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3645,
+      "sha256": "76f24dd84004c7466a74236c143099d63354f6d5c69cb21c474cc6cf30484ce9"
+    },
+    {
+      "path": "annotation-inputs.json",
+      "bytes": 32046,
+      "sha256": "43b1be4002c43d8d8d2fd7d52060c1a19b1d7c4045c88038b80777cddbe925d0"
+    },
+    {
+      "path": "build.py",
+      "bytes": 17522,
+      "sha256": "088b1233d93ce0de1a1f864c786c750ccc661771dcd44bdbde88d3ab2f410750"
+    },
+    {
+      "path": "finalize-draft.py",
+      "bytes": 2462,
+      "sha256": "bf9233e680c78500598b131e00e13ca1f99ce44001feb54629d9b3d6b43720c2"
+    },
+    {
+      "path": "integrity-validation.json",
+      "bytes": 477,
+      "sha256": "4111477c5936be8939b979a111f74cb7488274cf83be6418176f4eff8555f551"
+    },
+    {
+      "path": "labels-author.json",
+      "bytes": 31455,
+      "sha256": "59a22375d07660696b1725bb9d252f4345cd01939b5978a362deee233d6d2969"
+    },
+    {
+      "path": "rubric.md",
+      "bytes": 3544,
+      "sha256": "a431ec47a2b40c11e0ed309708c52b802b44871899e35187b889bed056098005"
+    },
+    {
+      "path": "scoring-plan.json",
+      "bytes": 2984,
+      "sha256": "e0f0efcc5f0f09c02b317dfc3dd5c39d39e8a276c02611ba82ade7fb29c95fab"
+    }
+  ],
+  "neutralSecondLabelInputs": [
+    "annotation-inputs.json",
+    "rubric.md"
+  ],
+  "authorLabels": "labels-author.json",
+  "independentSecondLabels": "Pending separate datedartifact outsidefrozenfolder.",
+  "candidateAppendixCodeOrOutputsRead": false,
+  "syntheticOnly": true,
+  "factualCoverageCredit": 0,
+  "networkProviderCalls": 0,
+  "productionActivationAuthorized": false
+}

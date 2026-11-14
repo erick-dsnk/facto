@@ -128,7 +128,8 @@ export class PipelineRuntime {
         record.state = 'done'; return;
       }
       if (admission.claims.length < 1 || admission.claims.length > 2) throw new PipelineError('malformed_admission');
-      const cacheKey = (text: string) => JSON.stringify([text.replace(/\s+/g, ' ').trim().toLowerCase(), input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
+      // Case and whitespace can change an admitted proposition (MW/mW, quoted identifiers).
+      const cacheKey = (text: string) => JSON.stringify([text, input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
       for (const [index, candidate] of admission.claims.entries()) {
         // A correction must not mint fresh provider allowances through a new ID.
         const claim = { ...candidate, id: `${input.requestId}-claim-${index}` };
@@ -139,11 +140,10 @@ export class PipelineRuntime {
           record.state = 'done'; return;
         }
         session.emit('claim.checking', { admissionAction: 'check', reasonCode: 'eligible_public_claim' }, input, claim.id);
-        const normalizedClaim = claim.checkedText.replace(/\s+/g, ' ').trim().toLowerCase();
         const key = cacheKey(claim.checkedText);
         // Notification identity is the complete admitted proposition, independent of
         // capture mode/context. Keep factual cache identity context-sensitive above.
-        const notificationKey = normalizedClaim;
+        const notificationKey = claim.checkedText;
         const stored = session.cache.get(key);
         let result: ClaimResult;
         let freshResult: ClaimResult | undefined;

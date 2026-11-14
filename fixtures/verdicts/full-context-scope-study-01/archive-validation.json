@@ -1,0 +1,436 @@
+{
+  "kind": "scope48_postrun_integrity_validation",
+  "validatedAt": "2026-11-14T05:57:42.791128+00:00",
+  "status": "passed",
+  "preExecutionFilesUnchanged": 17,
+  "planInputHashesUnchanged": 10,
+  "planSourceHashesUnchanged": 12,
+  "actualUniqueRequestAndTerminalPairs": 48,
+  "everyActualRequestMatchesFrozenBodyHashAndBytes": true,
+  "allCapsSatisfied": true,
+  "measuredInputTokens": 420548,
+  "requestBytes": 1761994,
+  "responseBytes": 221576,
+  "providerCallsDuringValidation": 0,
+  "sourceFetchesDuringValidation": 0,
+  "disposition": "candidate_unwired_do_not_promote",
+  "copiedFilesVerifiedByteForByte": 69,
+  "archiveSourceMapping": [
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/adjudication-binding.json",
+      "archivePath": "adjudication-binding.json",
+      "sha256": "44e0aae2e4aa9a67c28aabe0e86293fa262a51e7699ff9fcdac1572f2f5f75d3",
+      "bytes": 1413
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/candidate.ts",
+      "archivePath": "candidate.ts.txt",
+      "sha256": "a82dba6be286792c8a6b71ef330c948221a22bc418347a2b9f099dfebe4ae420",
+      "bytes": 1908
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/existing-payload-check.json",
+      "archivePath": "existing-payload-check.json",
+      "sha256": "9df0d678af6e8a6e83ce360dfbb0259100c27474d7d85ed0b6133fe0eff78456",
+      "bytes": 5976
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/inspect-existing.ts",
+      "archivePath": "inspect-existing.ts.txt",
+      "sha256": "56c7167c67734f0457ecd7a492b2b6ddcf28fd37cb689527e54bcb6f12acc1b8",
+      "bytes": 2315
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/inspect-prospective.ts",
+      "archivePath": "inspect-prospective.ts.txt",
+      "sha256": "611428fdbbc042969029ae26cead9e762aa43f8783ea6eaf36db59d050491932",
+      "bytes": 1803
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/labels-adjudicated.json",
+      "archivePath": "labels-adjudicated.json",
+      "sha256": "414959bf97d233f88e20d44173413bfa5240c212c2b82ce687447e61fea493cc",
+      "bytes": 28190
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/offline-tests.tap",
+      "archivePath": "offline-tests.tap",
+      "sha256": "e85034ba42bf1de04df72a602beeb7306da3dc995d7c890db87961b95f32f8b1",
+      "bytes": 5064
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/package.json",
+      "archivePath": "package.json",
+      "sha256": "5ae96c9c718373f22037b8591bf8cecb2d903b394717267e270bfdfee857bf28",
+      "bytes": 62
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/plan-draft.md",
+      "archivePath": "plan-draft.md",
+      "sha256": "5981e7c238375c79573a025ad5e2297e14c9fd79b7450ec7e38895e2b419065b",
+      "bytes": 5638
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/pre-execution-manifest.json",
+      "archivePath": "pre-execution-manifest.json",
+      "sha256": "769fa57cb63a061a3b259b2ef78fef5bcc73eb55861ef8cff03418f0add3d125",
+      "bytes": 2518
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/prospective-payload-check.json",
+      "archivePath": "prospective-payload-check.json",
+      "sha256": "24ad171941c481afc7bd85738e1d9ae3bf8301e7c5d18f1c3f0e1f83712cf008",
+      "bytes": 5097
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/readiness.json",
+      "archivePath": "readiness.json",
+      "sha256": "971a3d9afee58a35ef2c421e242ac18a8f89fc0f4b50708949a3f691d0ab2c22",
+      "bytes": 1697
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/root-dispatch-authorization.json",
+      "archivePath": "root-dispatch-authorization.json",
+      "sha256": "526625a07468ff81fe02693edefef42da421cbc9ec98a1a2a25b238b0e0eb600",
+      "bytes": 1399
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/runner.test.ts",
+      "archivePath": "runner.test.ts.txt",
+      "sha256": "a40fbe247b9482701ffb02243214bda6b7257145e0458f231f34cd8d33d2b093",
+      "bytes": 19923
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/runner.ts",
+      "archivePath": "runner.ts.txt",
+      "sha256": "0c737e5354d71fc98fc50b5b9d65431a95f9b408366dfee85c203ab162e51137",
+      "bytes": 37276
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-plan.json",
+      "archivePath": "scope48-plan.json",
+      "sha256": "d4914f6590f098de3a24939686ed4c95df858b1b5cf20a0e4d814e63f26f13a1",
+      "bytes": 347041
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-plan.json.sha256",
+      "archivePath": "scope48-plan.json.sha256",
+      "sha256": "606a4667483a9fe3e14962812c1222cf104687bdca2cc87e0bc1a8e65763e13f",
+      "bytes": 65
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01/comparison.json",
+      "archivePath": "scope48-run-01/comparison.json",
+      "sha256": "40a4f8e7592c10bda9e48e616b2a7bc96a051856c09f281305d5f9a18e6b16cf",
+      "bytes": 500764
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01/comparison.md",
+      "archivePath": "scope48-run-01/comparison.md",
+      "sha256": "199ed78c0f299b34b569b72a5da9726eaba35b4677dc2b8df74d809d4a65b3bd",
+      "bytes": 9668
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01/events.jsonl",
+      "archivePath": "scope48-run-01/events.jsonl",
+      "sha256": "f611a898001a71b162fcf5bc6ea67020bbd5e89e407d9f164762c9916a5dbaec",
+      "bytes": 308740
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01/integrity-validation.json",
+      "archivePath": "scope48-run-01/integrity-validation.json",
+      "sha256": "67f35c27daa241f5137895490032287c8f2b60b73cb4e784d5bbda658df24bf6",
+      "bytes": 581
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01/report.json",
+      "archivePath": "scope48-run-01/report.json",
+      "sha256": "4dc4492f880b557973e81c8b4a5e039d37a364efe148bfae5a882f6049ffbdb2",
+      "bytes": 538817
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/scope48-run-01/result-manifest.json",
+      "archivePath": "scope48-run-01/result-manifest.json",
+      "sha256": "955b0f761f1df53235edc5ff4f9c7af2a2d3a3dff6d88552b871b2da18b3fd52",
+      "bytes": 1148
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/staging.json",
+      "archivePath": "staging.json",
+      "sha256": "b026a63a47cc1f67ded4685d4eaa6f6bc5abf58fd778091496fced1eb9971f57",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/typecheck.txt",
+      "archivePath": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/analysis.md",
+      "archivePath": "proposal/analysis.md",
+      "sha256": "ed2573c8269d1238d1a4df2e5ec267b205785e54a251229a4235a1a7ea9bdf6d",
+      "bytes": 9679
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/candidate-freeze.json",
+      "archivePath": "proposal/candidate-freeze.json",
+      "sha256": "04124646b25100b3bcd1f8fe4e7324db91ed83f7744d339a68494bf69ce610b7",
+      "bytes": 3518
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/input-pins.json",
+      "archivePath": "proposal/input-pins.json",
+      "sha256": "4630a2b533c0a59cef35ef3d598f0fdb53bb39abb762cf59f26dedc1d5371e8c",
+      "bytes": 1860
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/manifest.json",
+      "archivePath": "proposal/manifest.json",
+      "sha256": "5137114b2b2fe4f41a4104b7cc9cbbea6068e284c55c921bcc893e3f4f7a81c9",
+      "bytes": 1207
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/prompt-comparison.json",
+      "archivePath": "proposal/prompt-comparison.json",
+      "sha256": "ac7aa6d26e6fce3499ee240201ae3dfb4235cd2f8f9f3fd2104b259fb9996bcb",
+      "bytes": 2151
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/request-size-projection.json",
+      "archivePath": "proposal/request-size-projection.json",
+      "sha256": "cf438c014fc918ae275b3c45fb7a5ed9103ca820d5336faae2703054b06ea3cf",
+      "bytes": 5142
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/saved-output-analysis.json",
+      "archivePath": "proposal/saved-output-analysis.json",
+      "sha256": "2477ce7c02def40fab6097238f127295895e55283ebb665645e685e7154fccd8",
+      "bytes": 107198
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/scope-appendix.txt",
+      "archivePath": "proposal/scope-appendix.txt",
+      "sha256": "b14af8a6339e2183d74d29b690c1d3f0bb04139c9b4947c1b84cf0a0c5858a32",
+      "bytes": 667
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/MANIFEST.json",
+      "archivePath": "prospective/MANIFEST.json",
+      "sha256": "c88818da1f0eba5e277273347dc2643a30f42776e4ba82840a55baf68ecebba2",
+      "bytes": 1747
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/README.md",
+      "archivePath": "prospective/README.md",
+      "sha256": "76f24dd84004c7466a74236c143099d63354f6d5c69cb21c474cc6cf30484ce9",
+      "bytes": 3645
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/SHA256SUMS",
+      "archivePath": "prospective/SHA256SUMS",
+      "sha256": "a1db2f0f08da7cb1894ed92eab946fbb3820e8e9a26166cfd0f4656ebb904796",
+      "bytes": 741
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/annotation-inputs.json",
+      "archivePath": "prospective/annotation-inputs.json",
+      "sha256": "43b1be4002c43d8d8d2fd7d52060c1a19b1d7c4045c88038b80777cddbe925d0",
+      "bytes": 32046
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/build.py",
+      "archivePath": "prospective/build.py.txt",
+      "sha256": "088b1233d93ce0de1a1f864c786c750ccc661771dcd44bdbde88d3ab2f410750",
+      "bytes": 17522
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/finalize-draft.py",
+      "archivePath": "prospective/finalize-draft.py.txt",
+      "sha256": "bf9233e680c78500598b131e00e13ca1f99ce44001feb54629d9b3d6b43720c2",
+      "bytes": 2462
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/integrity-validation.json",
+      "archivePath": "prospective/integrity-validation.json",
+      "sha256": "4111477c5936be8939b979a111f74cb7488274cf83be6418176f4eff8555f551",
+      "bytes": 477
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/labels-author.json",
+      "archivePath": "prospective/labels-author.json",
+      "sha256": "59a22375d07660696b1725bb9d252f4345cd01939b5978a362deee233d6d2969",
+      "bytes": 31455
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/rubric.md",
+      "archivePath": "prospective/rubric.md",
+      "sha256": "a431ec47a2b40c11e0ed309708c52b802b44871899e35187b889bed056098005",
+      "bytes": 3544
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1/scoring-plan.json",
+      "archivePath": "prospective/scoring-plan.json",
+      "sha256": "e0f0efcc5f0f09c02b317dfc3dd5c39d39e8a276c02611ba82ade7fb29c95fab",
+      "bytes": 2984
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1.second-labels.json",
+      "archivePath": "prospective/scope-stance-contrasts-v1.second-labels.json",
+      "sha256": "58aa684b41d97b823455e98d13244eae382ddb85d61152e737d9c14320b5f34a",
+      "bytes": 20757
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-stance-contrasts-v1.adjudication.json",
+      "archivePath": "prospective/scope-stance-contrasts-v1.adjudication.json",
+      "sha256": "5a8fb65c1d6bd22227f04809828a749911e75a049ae80ea02b443e0348017416",
+      "bytes": 1395
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-study-wall-repro/after.tap",
+      "archivePath": "guard-repros/after.tap",
+      "sha256": "4d7a594a74f94870dce04ef7363a5226da790b4b08a680750acc28313ad53ef7",
+      "bytes": 769
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-study-wall-repro/before.tap",
+      "archivePath": "guard-repros/before.tap",
+      "sha256": "ab51644442b2729ffe2639a01a4f54d84448801e9dd86ac7619cd2a537c5ef85",
+      "bytes": 1864
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope-study-wall-repro/repro.test.ts",
+      "archivePath": "guard-repros/repro.test.ts.txt",
+      "sha256": "609ea6484483e6957d094646da24c51885ce9ac9ede442e43eb966fab785a59d",
+      "bytes": 2639
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope48-independent-plan-review.json",
+      "archivePath": "reviews/scope48-independent-plan-review.json",
+      "sha256": "2c572d44650082594152742159f33faf7e9abc6a37f850a74c35c5da59732179",
+      "bytes": 3167
+    },
+    {
+      "originalPath": "/workspace/task-evidence/scope48-independent-result-review.json",
+      "archivePath": "reviews/scope48-independent-result-review.json",
+      "sha256": "5ebb34a25429595687d2c4ba008a12c1035c06760e02d862d93fe19a38a57f3b",
+      "bytes": 4191
+    },
+    {
+      "originalPath": "/workspace/task-evidence/judgment-context-diagnostic-01/contexts.json",
+      "archivePath": "existing/contexts.json",
+      "sha256": "8c307240989e38533e6e73c79d900499bbd65d075e4ec6204ea841b16b3d5d09",
+      "bytes": 96318
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-basis-comparison-01/comparison24-plan.json",
+      "archivePath": "existing/prior-comparison24-plan.json",
+      "sha256": "9498162c938baffe39b748bd629b0d8bdbde62518e3c895b30bc7794f91977d0",
+      "bytes": 135478
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-basis-comparison-01/comparison24-run-01/report.json",
+      "archivePath": "existing/prior-comparison24-report.json",
+      "sha256": "7c5a09f026a281db34b49cf7aa8187c9bd9c4dafa02273361e694e0722d40d63",
+      "bytes": 328103
+    },
+    {
+      "originalPath": "/workspace/task-evidence/comparison24-independent-source-audit/audit.md",
+      "archivePath": "existing/prior-source-audit/audit.md",
+      "sha256": "4f84049f51b9f6ff41a5ae6634989e5ab4e768ad616fb427f00dfb401cd974ae",
+      "bytes": 6282
+    },
+    {
+      "originalPath": "/workspace/task-evidence/comparison24-independent-source-audit/audit-details.json",
+      "archivePath": "existing/prior-source-audit/audit-details.json",
+      "sha256": "06e5c48f8915c4595fa596026cd52d6ee206212f302d6db1c7557c48fbbefa66",
+      "bytes": 36695
+    },
+    {
+      "originalPath": "/workspace/task-evidence/comparison24-independent-source-audit/MANIFEST.json",
+      "archivePath": "existing/prior-source-audit/MANIFEST.json",
+      "sha256": "6a0e8c98a22b322fe8d3498e929cb4488a81bdb93aa43872f09be14977d0018e",
+      "bytes": 8355
+    },
+    {
+      "originalPath": "/workspace/task-evidence/comparison24-independent-source-audit/selected-citation-audit-bindings.json",
+      "archivePath": "existing/prior-source-audit/selected-citation-audit-bindings.json",
+      "sha256": "d21721f943319b55014d95e4202357707c874a653c8d6035f79acad8d2cec72d",
+      "bytes": 13987
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/packages/contracts/src/index.ts",
+      "archivePath": "source-freeze/packages__contracts__src__index.ts.txt",
+      "sha256": "7af4ebc2f4efc0d015e2f4e47e2f06b7419a66d0bafa26e9212923d7f3e74c32",
+      "bytes": 4891
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/package-lock.json",
+      "archivePath": "source-freeze/package-lock.json.txt",
+      "sha256": "78889c17db034b7c7b8e98bb3f4742d8f2aca6e668f754a7165eefbf6816dd32",
+      "bytes": 149136
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/services/api/src/providers/jev/judgment.ts",
+      "archivePath": "source-freeze/services__api__src__providers__jev__judgment.ts.txt",
+      "sha256": "8a531805d0d4ea1e78f4d3294905b99da286bd47fa6b7e500e87d898aa88dbdb",
+      "bytes": 15698
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/services/api/src/providers/jev/client.ts",
+      "archivePath": "source-freeze/services__api__src__providers__jev__client.ts.txt",
+      "sha256": "de12cdeb0c20075cc9798036904ddd7535b3ad15c8fc982c51ece1ecf5904efc",
+      "bytes": 5947
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/services/api/src/policy/assessment.ts",
+      "archivePath": "source-freeze/services__api__src__policy__assessment.ts.txt",
+      "sha256": "313341f2bdd48b022bc020d4ecbbc7a71df9c4cb0a0d0b8845ba39d848564d14",
+      "bytes": 3056
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/services/api/src/policy/sources.ts",
+      "archivePath": "source-freeze/services__api__src__policy__sources.ts.txt",
+      "sha256": "53936685d64ef666296d5dbde4b423c85f7affdc5f6c4e3676b618d49c5264c5",
+      "bytes": 9102
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/services/api/src/policy/verdict.ts",
+      "archivePath": "source-freeze/services__api__src__policy__verdict.ts.txt",
+      "sha256": "de40566ea3d59ae02b5da4a9d207e42a83c0a25fe6ebb462bebafa4504dd102b",
+      "bytes": 3836
+    },
+    {
+      "originalPath": "/workspace/live-frozen-08/services/api/src/runtime/provider-retry.ts",
+      "archivePath": "source-freeze/services__api__src__runtime__provider-retry.ts.txt",
+      "sha256": "d65996f75af512526a3f4ef5026d07afb1dc675764d27e51bcb753df3b549806",
+      "bytes": 3103
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/runner.ts",
+      "archivePath": "source-freeze/scope-runner.ts.txt",
+      "sha256": "0c737e5354d71fc98fc50b5b9d65431a95f9b408366dfee85c203ab162e51137",
+      "bytes": 37276
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/candidate.ts",
+      "archivePath": "source-freeze/scope-candidate.ts.txt",
+      "sha256": "a82dba6be286792c8a6b71ef330c948221a22bc418347a2b9f099dfebe4ae420",
+      "bytes": 1908
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-proposal-01/candidate-freeze.json",
+      "archivePath": "source-freeze/scope-proposal.json.txt",
+      "sha256": "04124646b25100b3bcd1f8fe4e7324db91ed83f7744d339a68494bf69ce610b7",
+      "bytes": 3518
+    },
+    {
+      "originalPath": "/workspace/task-evidence/full-context-scope-study-01/staging.json",
+      "archivePath": "source-freeze/staging.json.txt",
+      "sha256": "b026a63a47cc1f67ded4685d4eaa6f6bc5abf58fd778091496fced1eb9971f57",
+      "bytes": 480
+    }
+  ],
+  "independentReviewDisposition": "do_not_promote_scope_candidate",
+  "productionFilesModified": 0
+}
