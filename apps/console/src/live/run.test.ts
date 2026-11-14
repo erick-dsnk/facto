@@ -50,6 +50,7 @@ describe('bounded authenticated live campaign with injected provider HTTP', () =
     expect(report.cases[0].events.at(-1)?.type).toBe('claim.result');
     expect(report.cases[0].attempts.filter(attempt => attempt.kind === 'search')).toHaveLength(2);
     expect(report.cases[0].attempts.filter(attempt => attempt.kind === 'contents')).toHaveLength(1);
+    expect(report.cases[0].attempts.find(attempt => attempt.kind === 'contents')?.contentURLs).toEqual(['https://history.example.org/opera']);
     expect(report.cases[0].events.at(-1)?.cached).toBe(false);
     expect(report.cases[1].events.at(-1)?.cached).toBe(true);
     expect(report.cases[1].attempts.map(attempt => attempt.kind)).toEqual(['jev']);
