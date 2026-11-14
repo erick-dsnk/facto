@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "AD06-muted-manual",
+  "cases": [
+    {
+      "label": "AD06-muted-manual",
+      "text": "The Panama Canal opened to world trade in 1914.",
+      "allowedPublic": [
+        "The Panama Canal opened to world trade in 1914."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD07",
+            "acceptedTexts": [
+              "The Panama Canal opened to world trade in 1914."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "presentationActions": [
+          "silent"
+        ]
+      },
+      "preferences": {
+        "muted": true,
+        "automaticNotifications": true,
+        "selectedTopics": [
+          "Panama Canal"
+        ]
+      }
+    }
+  ]
+}

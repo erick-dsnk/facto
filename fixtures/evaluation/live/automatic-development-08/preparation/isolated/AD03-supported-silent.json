@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development",
+  "name": "AD03-supported-silent",
+  "cases": [
+    {
+      "label": "AD03-supported-silent",
+      "text": "UNESCO's Constitution was adopted in London on 16 November 1945.",
+      "allowedPublic": [
+        "UNESCO's Constitution was adopted in London on 16 November 1945."
+      ],
+      "automatic": true,
+      "final": true,
+      "expected": {
+        "admissionAction": "check",
+        "claims": [
+          {
+            "id": "BD09",
+            "acceptedTexts": [
+              "UNESCO's Constitution was adopted in London on 16 November 1945."
+            ],
+            "verdict": "supported",
+            "domain": "institutional_record"
+          }
+        ],
+        "presentationActions": [
+          "silent"
+        ]
+      },
+      "preferences": {
+        "muted": false,
+        "automaticNotifications": true,
+        "selectedTopics": [
+          "UNESCO"
+        ]
+      }
+    }
+  ]
+}

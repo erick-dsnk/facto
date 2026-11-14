@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "final_stack_review",
+  "createdAt": "2026-11-14T04:28:57.156850+00:00",
+  "verdict": "approved_for_predeclared_bounded_open_action_diagnostic_after_source_freeze",
+  "preExecutionReview": true,
+  "providerCallsByReviewer": 0,
+  "privateOrOriginalHeldoutBodiesRead": false,
+  "filesSHA256": {
+    "live-manifest.json": "2c223938aa63f555bc4ae9e0c09fbd43381071ace2a13778cdbedea9cd2ca8d0",
+    "scoring.json": "821cc4539d7d33465d6c64d999ab2ac500a5979044e33d096e6a56be7a4d383b",
+    "plan.json": "b6932e584858c707465c0cfb7994fc777718a68301621b149803605bc974454d",
+    "run-cohort.mts": "243a4398b26f11b036d2e33d7506846b33675b5ce28294dc2ac9821838d0fff1",
+    "run-cohort.test.mts": "95c5fcd9d8a3ab37c7950c9e9ed9cf5866335deb6107adc90abe55eb7dcfb2a5",
+    "review-amendment.json": "55cd9ca7c985a369aea1afffb0afeea5ff29ae0a5c756090e441a34e0d016081"
+  },
+  "actionReview": {
+    "AD01": "Disabled automatic notifications require silent/notifications_disabled; factual contradicted branch must actually be reached.",
+    "AD02": "Enabled literal selected topic on a current qualifying contradiction permits notify/selected_topic_contradiction; abstention is not a notification-branch pass.",
+    "AD03": "Supported automatic result stays silent/automatic_noncontradiction even with selected topic.",
+    "AD04": "Contradiction without selected topic stays silent/insufficient_priority only if recorded numeric practical consequence is below0.8; missing/high priority must be separately reported.",
+    "AD05": "Private personal input skips with silent/private_or_personal, zero Exa and no admitted public span; no factual result or cached:false flag is expected.",
+    "AD06": "Muted manual check may complete its factual result but must present silent/muted, rather than being rejected as a check."
+  },
+  "isolationReview": [
+    "Each sample runs through a new runLiveCampaign invocation, which constructs a new provider budget/server/session/cache. The catalog is not run as one shared-session campaign.",
+    "Repeated BD10 scenarios therefore remain cold diagnostic repeats, not new independent factual accuracy samples.",
+    "Conservative spacing from preceding automatic completion ensures at least4100ms between automatic dispatches; spacing is recorded separately and included in cohort wall time."
+  ],
+  "budgetReview": [
+    "Remaining provider-call, charged-token and request-byte allowances subtract all completed reports; elapsed wall includes authentication/startup/spacing.",
+    "No exhausted dimension is rounded upward. Unknown finalized Jev usage, local/transport failure, incomplete campaign, overrun or wall exhaustion stops subsequent scenarios.",
+    "Within each invocation the existing observed provider dispatcher reserves and records attempts; cumulative wrapper preserves original reports and partial costs.",
+    "The wrapper verifies clean exact source commit/hash and predeclared manifest hash before live execution; live mode is explicit and fresh output/journal paths are exclusive.",
+    "Source-freeze arguments and final full check remain prerequisites; this review made no execution approval outside the root-approved bounds."
+  ],
+  "correction": {
+    "originalFinding": "AD05 initially required a cold claim.result despite expecting a personal skip with no factual result.",
+    "status": "verified corrected before execution",
+    "beforeScoringSHA256": "dfec9094eb761cabd897b2ede1f0114c84d199be39c9afb23f7d7c8431fbe6d4",
+    "afterScoringSHA256": "821cc4539d7d33465d6c64d999ab2ac500a5979044e33d096e6a56be7a4d383b",
+    "originalRetained": "review-predecessor/scoring.v1.json"
+  },
+  "limitations": [
+    "Known public outcome labels informed diagnostic case selection; no blindness or general action accuracy claim.",
+    "No scenario enlarges the broader-development or independent release factual denominator.",
+    "Verdict-dependent silence is inconclusive if the run abstains or fails operationally; source-groundtruth labels do not force retrieved evidence to qualify.",
+    "Selected live citations need a separate actual-content/source-scope review; prior source records do not pre-verify new outputs.",
+    "This is static manifest/wrapper review and verification of the author correction. Author-reported6/6 wrapper tests and strict loaders were inspected, not rerun by this reviewer.",
+    "Backend presentation events do not establish wearable speech/display delivery, false alerts per listening minute or deliberate user source opens."
+  ],
+  "blockingFindings": []
+}

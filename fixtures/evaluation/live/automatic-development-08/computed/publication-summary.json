@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "publication_summary_after_citation_review",
+  "sourceRunSHA256": "d9065e26c43183b13d165a9560f638c57c982d9274530d75860d590cdb410fc9",
+  "actionScoring": {
+    "passed": 5,
+    "inconclusive": 1,
+    "failed": 0,
+    "inconclusiveCase": "AD03-supported-silent"
+  },
+  "sourceReview": {
+    "reviewer": "independent_agent",
+    "reviewSHA256": "dca97e58485b6e79e18ad71c10ec0b54f45475317ccf0f4764aa41aa125039ba",
+    "selectedOccurrences": 14,
+    "uniqueURLs": 6,
+    "verifiedOccurrences": 14,
+    "sourceVerifiedResultOccurrences": 4,
+    "uniqueVerifiedExistingFacts": 2,
+    "newFactualAccuracyDenominator": 0
+  },
+  "limitations": [
+    "The original action-scoring snapshot predates citation review and retains its original pending labels. This summary and review/validation.json supersede only that pending review status.",
+    "Original six-case action results remain five passes and one inconclusive.",
+    "All three BD10 results repeat one proposition; this action cohort adds no independent factual samples.",
+    "Origin HTTP responses are fresh public requests, not proof of uncached upstream state or independent underlying factual origins.",
+    "Raw bodies remain in the external archive; copied text/metadata hashes retain their original timestamps."
+  ],
+  "byteIdenticalCopies": [
+    {
+      "source": "/workspace/task-evidence/automatic-development-first-run08.json",
+      "packagePath": "runs/report.json",
+      "sha256": "d9065e26c43183b13d165a9560f638c57c982d9274530d75860d590cdb410fc9"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic-development-first-run08.json.journal.jsonl",
+      "packagePath": "runs/journal.jsonl",
+      "sha256": "0f28afc16ad8387c929007521934ee85c15a1c7c7d1704b2cf6c1883b2a14240"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic-development-first-run08.aggregate.json",
+      "packagePath": "computed/original-action-scoring.json",
+      "sha256": "bc39977e117ebfa9198407e6fac1cac91f124b1dd25ac67d6f961b3fa6686902"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic-development-first-run08.md",
+      "packagePath": "computed/original-observation.md",
+      "sha256": "0150b1a3ca27e01157413953364c806974755140f167126cc01e77b5d5ed00ec"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic-development-first-run08.retention.json",
+      "packagePath": "computed/original-retention.json",
+      "sha256": "e5f621bec9b2f01449c8a1837b3212e90e6b3a1e91d9e06927fd188cca2869ea"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic-development-plan08.json",
+      "packagePath": "preparation/executed-plan08.json",
+      "sha256": "0460836cfdb1e9bb41dfb5706e8499c7d2a9c811335b8cf071dc328857ed3ad5"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic08-query-audit.json",
+      "packagePath": "computed/query-audit.json",
+      "sha256": "223badda14468e8ab4ff2ab09d5f02ab427a27401a3eca39b9404fc711f4394a"
+    },
+    {
+      "source": "/workspace/task-evidence/automatic08-selected-citations.json",
+      "packagePath": "review/selected-citations.json",
+      "sha256": "fd82719e9c6d5a80c4748ed4102fc9b2d566956c97024578c537a5208b1aab9c"
+    }
+  ]
+}

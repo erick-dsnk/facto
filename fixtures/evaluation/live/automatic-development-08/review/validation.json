@@ -1,0 +1,77 @@
+{
+  "schemaValid": true,
+  "allReviewsMatchObservedSelectedReferences": true,
+  "reviews": 14,
+  "sourceVerifiedResultOccurrences": 4,
+  "claimOutcomes": [
+    {
+      "caseLabel": "AD01-disabled-contradiction",
+      "expectedClaimId": "BD10",
+      "domain": "institutional_record",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 4
+    },
+    {
+      "caseLabel": "AD02-selected-topic-notify",
+      "expectedClaimId": "BD10",
+      "domain": "institutional_record",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 4
+    },
+    {
+      "caseLabel": "AD03-supported-silent",
+      "expectedClaimId": "BD09",
+      "domain": "institutional_record",
+      "expectedVerdict": "supported",
+      "verdict": "insufficient_evidence",
+      "result": "abstained",
+      "cached": false,
+      "sourceVerification": "not_applicable",
+      "selectedReferences": 0
+    },
+    {
+      "caseLabel": "AD04-low-priority-silent",
+      "expectedClaimId": "BD10",
+      "domain": "institutional_record",
+      "expectedVerdict": "contradicted",
+      "verdict": "contradicted",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 4
+    },
+    {
+      "caseLabel": "AD06-muted-manual",
+      "expectedClaimId": "BD07",
+      "domain": "history",
+      "expectedVerdict": "supported",
+      "verdict": "supported",
+      "result": "correct",
+      "cached": false,
+      "sourceVerification": "verified",
+      "selectedReferences": 2
+    }
+  ],
+  "factual": {
+    "expected": 5,
+    "correctDefinitive": 4,
+    "wrongDefinitive": 0,
+    "abstained": 1,
+    "noResult": 0,
+    "notObserved": 0,
+    "sourceVerifiedCorrect": 4,
+    "coldCorrect": 4,
+    "cachedResults": 0,
+    "definitiveCoverage": 0.8,
+    "sourceVerifiedCoverage": 0.8
+  },
+  "warning": "Metrics below count scenario occurrences; BD10 repeats across three scenarios. Unique reviewed factual propositions=2. Action policy results remain separate."
+}
