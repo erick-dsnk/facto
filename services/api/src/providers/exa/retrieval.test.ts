@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { type AcceptedClaim, type ProviderContext, type ProviderKind } from '../../../../../packages/contracts/src/index.js';
 import { AbortableExa } from './client.js';
 import { createRetriever, type ExaClient } from './retrieval.js';
+import { AttemptBudget } from '../../runtime/budget.js';
 import { buildAlternateQuery } from '../../evidence/normalize.js';
 
 const checkedText = 'The Eiffel Tower opened in 1889.';
@@ -48,6 +49,33 @@ describe('Exa retrieval boundary', () => {
     expect(fake.getContents.mock.calls[0][0]).toEqual(['https://source0.org/fact']);
     expect(calls).toEqual(['search', 'contents', 'contents', 'contents']);
     expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(3);
+  });
+
+  it('keeps search and fetched evidence when a contents retry spends the shared budget before the next candidate', async () => {
+    const urls = ['https://source0.org/fact', 'https://source1.org/fact', 'https://source2.org/fact'];
+    let contentRequests = 0;
+    const fetcher = vi.fn<typeof fetch>(async (_input, init) => {
+      const endpoint = new URL(String(_input)).pathname;
+      if (endpoint === '/search') return new Response(JSON.stringify({ results: urls.map(url => ({ url, highlights: ['1889'] })) }));
+      contentRequests++;
+      if (contentRequests === 1) return new Response('temporary upstream error', { status: 503, headers: { 'retry-after': '0' } });
+      const body = JSON.parse(String(init?.body)) as { urls: string[] };
+      return new Response(JSON.stringify({ results: [{ url: body.urls[0], text: excerpt }] }));
+    });
+    const controller = new AbortController();
+    const now = () => Date.parse('2026-11-14T10:00:00Z');
+    const budget = new AttemptBudget();
+    const context = budget.context(controller.signal, now, now() + 10_000);
+    const retrieve = createRetriever({ apiKey: 'test-key', fetch: fetcher });
+
+    const result = await retrieve(claim, context);
+
+    expect(contentRequests).toBe(3); // failed attempt, its retry, then one more page
+    expect(fetcher).toHaveBeenCalledTimes(4); // search plus exactly the shared three contents attempts
+    expect(budget.contents.get(claim.id)).toBe(3);
+    expect(result).toHaveLength(3); // includes the untouched initial highlight for candidate three
+    expect(result.filter(item => item.contentBasis === 'page_text')).toHaveLength(2);
+    expect(result.some(item => item.url === urls[2] && item.excerpt === '1889')).toBe(true);
   });
 
   it('fetches long highlights that omit dates, negation, attribution or qualifications', async () => {

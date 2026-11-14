@@ -3,7 +3,7 @@ import { PipelineError, type ClaimResult, type EventEnvelope, type EventType, ty
 import { AttemptBudget } from './budget.js';
 
 export type RequestRecord = {
-  input: TextInput; fingerprint: string; budget: AttemptBudget; controller: AbortController; acceptedAt: number;
+  input: TextInput; fingerprint: string; budget: AttemptBudget; controller: AbortController; acceptedAt: number; acceptedMonotonic: number;
   state: 'queued' | 'running' | 'waiting' | 'done' | 'cancelled'; continuationCount: number;
   results: Map<string, ClaimResult>; timer?: ReturnType<typeof setTimeout>;
 };

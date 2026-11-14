@@ -1,5 +1,6 @@
 import { Exa } from 'exa-js';
 import { PipelineError } from '../../../../../packages/contracts/src/index.js';
+import { retryAfterDelay, RetryableProviderError, withProviderRetry } from '../../runtime/provider-retry.js';
 
 const MAX_RESPONSE_BYTES = 256 * 1024;
 
@@ -19,12 +20,13 @@ async function boundedJson(response: Response): Promise<unknown> {
       if (size > MAX_RESPONSE_BYTES) throw new PipelineError('malformed_exa_response');
       chunks.push(value);
     }
-    return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
   } catch (error) {
     await reader.cancel().catch(() => undefined);
     if (error instanceof PipelineError) throw error;
-    throw new PipelineError('malformed_exa_response');
+    throw new RetryableProviderError('exa_unavailable');
   } finally { reader.releaseLock(); }
+  try { return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown; }
+  catch { throw new PipelineError('malformed_exa_response'); }
 }
 
 /**
@@ -34,29 +36,43 @@ async function boundedJson(response: Response): Promise<unknown> {
  * Each check gets its own instance; no global fetch or SDK state is changed.
  */
 export class AbortableExa extends Exa {
-  constructor(private apiKey: string, private signal: AbortSignal, private fetcher: typeof fetch = fetch) { super(apiKey); }
+  constructor(private apiKey: string, private signal: AbortSignal, private fetcher: typeof fetch = fetch,
+    private providerContext?: import('../../../../../packages/contracts/src/index.js').ProviderContext, private claimId?: string) { super(apiKey); }
 
   override async request<T = unknown>(endpoint: string, method: string, body?: unknown): Promise<T> {
     this.signal.throwIfAborted();
     if (!['/search', '/contents'].includes(endpoint) || method !== 'POST') throw new PipelineError('unsupported_exa_operation');
     try {
-      const response = await this.fetcher(`https://api.exa.ai${endpoint}`, {
-        method, headers: { 'x-api-key': this.apiKey, 'content-type': 'application/json' }, body: JSON.stringify(body), signal: this.signal,
-        redirect: 'error',
-      });
-      if (!response.ok) {
-        await response.body?.cancel();
-        if (response.status === 401 || response.status === 403) throw new PipelineError('exa_authentication_failed');
-        if (response.status === 429) throw new PipelineError('exa_rate_limited', true);
-        throw new PipelineError('exa_unavailable', response.status >= 500);
-      }
-      const data = await boundedJson(response);
+      const kind = endpoint === '/search' ? 'search' : 'contents';
+      const data = this.providerContext
+        ? await withProviderRetry(this.providerContext, kind, this.claimId, async () => boundedJson(await this.requestOnce(endpoint, method, body)))
+        : await boundedJson(await this.requestOnce(endpoint, method, body));
       this.signal.throwIfAborted();
       return data as T;
     } catch (error) {
       this.signal.throwIfAborted();
       if (error instanceof PipelineError) throw error;
       throw new PipelineError('exa_unavailable', true);
+    }
+  }
+
+  private async requestOnce(endpoint: string, method: string, body?: unknown): Promise<Response> {
+    try {
+      const response = await this.fetcher(`https://api.exa.ai${endpoint}`, {
+        method, headers: { 'x-api-key': this.apiKey, 'content-type': 'application/json' }, body: JSON.stringify(body), signal: this.signal,
+        redirect: 'error',
+      });
+      if (response.ok) return response;
+      const retryAfter = retryAfterDelay(response.headers.get('retry-after'), this.providerContext?.now() ?? Date.now());
+      await response.body?.cancel().catch(() => undefined);
+      if (response.status === 401 || response.status === 403) throw new PipelineError('exa_authentication_failed');
+      if (response.status === 429) throw new RetryableProviderError('exa_rate_limited', retryAfter);
+      if (response.status >= 500) throw new RetryableProviderError('exa_unavailable', retryAfter);
+      throw new PipelineError('exa_unavailable');
+    } catch (error) {
+      this.signal.throwIfAborted();
+      if (error instanceof PipelineError) throw error;
+      throw new RetryableProviderError('exa_unavailable');
     }
   }
 }
