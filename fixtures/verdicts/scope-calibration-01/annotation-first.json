@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "annotator": "source_calibration AI agent",
+  "implementationOrCandidatePromptViewed": false,
+  "providerOutputsViewed": false,
+  "labels": [
+    {
+      "id": "SC01",
+      "expectedScope": true,
+      "labelReason": "The passage explicitly identifies first publication1818, second edition1823, and a revised later printing. First-publication date is the asserted value, not a requirement that sources themselves describe an1831 first event.",
+      "supportingSpan": "first published anonymously in 1818",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC02",
+      "expectedScope": false,
+      "labelReason": "Only the first edition publication is retained; the claim restricts the referent to the third edition. Do not turn an original-publication date into the later edition’s publication date.",
+      "supportingSpan": "first published anonymously in 1818",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC03",
+      "expectedScope": true,
+      "labelReason": "Same country, census statistic and year; the differing numeric count is the asserted value to test.",
+      "supportingSpan": "36,991,981",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC04",
+      "expectedScope": false,
+      "labelReason": "Retained count is explicitly2021. The claim restricts the observation to the2016 census; no2016 count or population-change evidence is retained.",
+      "supportingSpan": "Population, 2021",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC05",
+      "expectedScope": true,
+      "labelReason": "Retained geographic chain explicitly links South America to the Andes and Aconcagua, including Argentina–Chile location. A different asserted continent is a refutable value, not an automatic scope mismatch.",
+      "supportingSpan": "South America’s primary mountain",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC06",
+      "expectedScope": false,
+      "labelReason": "The same geographical relation is asserted about another mountain. Aconcagua/Andes context does not identify Mont Blanc.",
+      "supportingSpan": "The highest peak in the Andes, Aconcagua",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC07",
+      "expectedScope": true,
+      "labelReason": "Same named standard and effective period; exact conversion factor is the asserted value. A definition’s effective date scopes applicability, while the numerical factor can be contradicted.",
+      "supportingSpan": "1 foot = 0.3048 meter exactly",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC08",
+      "expectedScope": false,
+      "labelReason": "Only the current international-foot definition and its2023 replacement of the survey foot are retained. No1900 conversion or historical survey-foot factor is supplied. Do not transfer the current factor to another standard/period.",
+      "supportingSpan": "international foot definition",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC09",
+      "expectedScope": true,
+      "labelReason": "The retained platypus/monotreme is explicitly a mammal and egg-layer: a member counterexample can refute a universal claim about mammals. A source need not cover every mammal to refute all.",
+      "supportingSpan": "separate order of mammals known as monotremes",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC10",
+      "expectedScope": false,
+      "labelReason": "Retained reproductive evidence concerns mammalian monotremes, not birds. Remembered correctness of the bird assertion is irrelevant to source scope.",
+      "supportingSpan": "order of mammals known as monotremes",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC11",
+      "expectedScope": true,
+      "labelReason": "Same organism, adult population and bone-count relation; numeric disagreement is not a scope mismatch. Typical wording avoids treating anatomical variation as a universal guarantee.",
+      "supportingSpan": "adult human skeleton",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC12",
+      "expectedScope": false,
+      "labelReason": "Only adult bone count is retained. Newborns are a materially different developmental population; newborn count cannot be imported from unretained adjacent text.",
+      "supportingSpan": "adult human skeleton",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC13",
+      "expectedScope": true,
+      "labelReason": "Same substance, phase-transition relation and explicit1atm condition; the asserted temperature can be contradicted.",
+      "supportingSpan": "Boiling point @ 1 atm",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC14",
+      "expectedScope": false,
+      "labelReason": "Retained boiling point is explicitly1atm, not10atm. Sharing a temperature value does not make a different pressure condition match.",
+      "supportingSpan": "Boiling point @ 1 atm",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC15",
+      "expectedScope": true,
+      "labelReason": "Same canal and current length relation; the asserted dimension differs while scope remains the same.",
+      "supportingSpan": "length of the canal is 193.30 Km.",
+      "expectedStanceDiagnostic": "contradicts",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "SC16",
+      "expectedScope": false,
+      "labelReason": "Passage gives opening date, depth and length, not revenue, its currency or reporting year. Same entity and repeated numerals do not establish the same relation.",
+      "supportingSpan": "length of the canal is 193.30 Km.",
+      "expectedStanceDiagnostic": "unrelated_or_insufficient_for_claim",
+      "ambiguityFlag": false,
+      "excludeFromPrimary": false
+    }
+  ]
+}
