@@ -1,0 +1,22 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, writeFileSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { buildPlan, executePlan, hash, type Context, type Label } from '/workspace/task-evidence/full-context-scope-study-01/runner.ts';
+const root=mkdtempSync(join(tmpdir(),'scope-wall-repro-'));const report=join(root,'source.json');writeFileSync(report,'{"synthetic":true}');
+const contexts:Context[]=Array.from({length:18},(_,i)=>({stratum:i<12?'prospective':'existing_safety_diagnostic',caseId:`repro-${i}`,targetId:`repro-${i}-0`,proposition:`Synthetic public claim ${i}.`,records:Array.from({length:3},(_,j)=>({id:`repro-${i}-${j}`,url:`https://repro-${i}-${j}.example/record`,title:'Synthetic record',publisher:null,publishedAt:null,retrievedAt:'2026-11-14T00:00:00Z',excerpt:`Synthetic bounded retained record ${i}/${j}.`,contentBasis:'page_text' as const,sourceGroup:`repro-${i}-${j}.example`,echoGroup:null,sourceRole:'unknown' as const,directlyAddressesClaim:false,matchesTimePlaceAndPopulation:false,stance:'unrelated' as const,stanceProbability:0})),reportPath:report,reportSha256:hash(readFileSync(report)),evidenceStageIndex:0,judgmentOrdinal:0,staleJudgment:{sourceAssessments:{}}}));
+const labels:Label[]=contexts.slice(0,12).flatMap(c=>c.records.map(r=>({caseId:c.caseId,retainedId:r.id,expectedScope:true,expectedStance:'supports'})));
+for(const mode of ['fetch','reader'] as const)test(`wall stop settles when injected ${mode} ignores abort`,async()=>{
+ const plan=await buildPlan(contexts,labels,{});const realSetTimeout=globalThis.setTimeout;
+ // Fire the runner's actual120s controller timer immediately; no provider call.
+ globalThis.setTimeout=((callback:any,delay?:number,...args:any[])=>realSetTimeout(callback,delay===120000?0:delay,...args)) as typeof setTimeout;
+ let settled=false;let result:any;
+ try{
+  const run=executePlan(plan,contexts,join(root,mode),{apiKey:'offline-only',now:()=>0,fetch:async()=>mode==='fetch'?await new Promise<Response>(()=>{}):new Response(new ReadableStream({pull:()=>new Promise<void>(()=>{})}),{status:200})});
+  run.then(r=>{settled=true;result=r;},e=>{settled=true;result={error:String(e)}});
+  await new Promise<void>(resolve=>realSetTimeout(resolve,100));
+  console.log(JSON.stringify({mode,settledWithin100msOfWallAbort:settled,stopReason:result?.stopReason,networkCalls:0,outputRoot:root}));
+  assert.equal(settled,true,'Wall abort must settle the report even when injected transport ignores its signal');
+ }finally{globalThis.setTimeout=realSetTimeout;}
+});
