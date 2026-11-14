@@ -1,0 +1,962 @@
+{
+  "decision": "PASSED_actual_ledger_integrity_no_execution_or_accuracy_claim",
+  "inputs": {
+    "/workspace/task-evidence/typed-applicability-calibration-01/root-authorization.json": "a3ae86d7714e3b7c70d0b26e37e3ffe60685563dc9751a093a1813a6656f601a",
+    "/workspace/task-evidence/typed-applicability-calibration-01/applicability42-plan.json": "66a4d7122469d999cc95928be4567aba56a62e9a75fa5e9a593a2b43923b5880",
+    "/workspace/task-evidence/typed-applicability-calibration-01/live-first-run/run-start.json": "58600c1ce27f8e1676b79fd40fcebd6833db5a10e11afd8ed62633925aed9342",
+    "/workspace/task-evidence/typed-applicability-calibration-01/live-first-run/report.json": "5e39c5fbdab55e902d82b91e2cc5e7385af03a1f7e1c7c08e3ba4c76737cf153",
+    "/workspace/task-evidence/typed-applicability-calibration-01/live-first-run/checkpoints.jsonl": "2d250065d00f5b22d15a28778416fbc02d2dad9f3384fcc9021ced800e67b802"
+  },
+  "planCanonicalSHA256": "6bd9e1c369f3a6410176902b515e3e34df9ffdbe8daf88093506a390848496b0",
+  "all44SourcePinsAndPublicationFilesUnchanged": true,
+  "actualCalls": 84,
+  "actualExaCalls": 0,
+  "eventCount": 504,
+  "eventsPerCall": [
+    "call_reserved",
+    "request_prepared",
+    "request_started",
+    "response_headers",
+    "usage_observed",
+    "call_terminal"
+  ],
+  "httpStatuses": {
+    "200": 84
+  },
+  "totals": {
+    "reservedCalls": 84,
+    "actualStartedJev": 84,
+    "actualStartedExa": 0,
+    "requestBytes": 3758808,
+    "responseBytes": 512132,
+    "measuredInputTokens": 846340,
+    "usageKnownCalls": 84,
+    "usageUnknownCalls": 0
+  },
+  "perBlock": {
+    "block1": {
+      "reservedCalls": 22,
+      "actualStartedJev": 22,
+      "actualStartedExa": 0,
+      "requestBytes": 930722,
+      "responseBytes": 126217,
+      "measuredInputTokens": 210040,
+      "usageKnownCalls": 22,
+      "usageUnknownCalls": 0
+    },
+    "block2": {
+      "reservedCalls": 22,
+      "actualStartedJev": 22,
+      "actualStartedExa": 0,
+      "requestBytes": 997472,
+      "responseBytes": 135600,
+      "measuredInputTokens": 224562,
+      "usageKnownCalls": 22,
+      "usageUnknownCalls": 0
+    },
+    "block3": {
+      "reservedCalls": 20,
+      "actualStartedJev": 20,
+      "actualStartedExa": 0,
+      "requestBytes": 903786,
+      "responseBytes": 123682,
+      "measuredInputTokens": 203388,
+      "usageKnownCalls": 20,
+      "usageUnknownCalls": 0
+    },
+    "block4": {
+      "reservedCalls": 20,
+      "actualStartedJev": 20,
+      "actualStartedExa": 0,
+      "requestBytes": 926828,
+      "responseBytes": 126633,
+      "measuredInputTokens": 208350,
+      "usageKnownCalls": 20,
+      "usageUnknownCalls": 0
+    }
+  },
+  "elapsedMs": 16938,
+  "reservedToTerminalTiming": {
+    "minMs": 145,
+    "maxMs": 351,
+    "p50NearestRankMs": 173,
+    "p95NearestRankMs": 204
+  },
+  "runtimeLedger": {
+    "consumedJevAttempts": 84,
+    "measuredInputTokens": 846340
+  },
+  "offlineBindingControls": [
+    {
+      "id": "AC-B02",
+      "available": false,
+      "reason": "exact_material_alignment_unavailable",
+      "actualJevAttempts": 0,
+      "actualExaAttempts": 0
+    },
+    {
+      "id": "AC-B01",
+      "available": false,
+      "reason": "exact_material_alignment_unavailable",
+      "actualJevAttempts": 0,
+      "actualExaAttempts": 0
+    }
+  ],
+  "all84ActualBodiesMatchFrozenCapture": true,
+  "all84AnswersAndJudgmentsMatchPrivateActualAskHashes": true,
+  "allObservedAndNumberedRowsMatchFinalReport": true,
+  "allPreDispatchReservesAndPerBlockCapsSatisfied": true,
+  "failed": 0,
+  "missing": 0,
+  "unknownUsage": 0,
+  "definitiveRows": 0,
+  "pairPolicyOrSelectionChanges": 0,
+  "perCall": [
+    {
+      "callId": "AC-T02:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "988f51017f58da42947763fd268962970dbac57afad8d4fa745dbfddbc4b7a05",
+      "requestBytes": 40958,
+      "responseBytes": 5682,
+      "inputTokens": 9247,
+      "reservedToTerminalMs": 351,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T02:applicability",
+      "blockId": "block1",
+      "requestSHA256": "8088ec663b5069c365acf82ef0f67f59f44bcad5825450bc2cda64583cac5de9",
+      "requestBytes": 43814,
+      "responseBytes": 5806,
+      "inputTokens": 9895,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X06:applicability",
+      "blockId": "block1",
+      "requestSHA256": "00aecc007e075fb58228722846aa0055ec25f46ef97fdd4aa6cca140d3a0f369",
+      "requestBytes": 44227,
+      "responseBytes": 5837,
+      "inputTokens": 9991,
+      "reservedToTerminalMs": 158,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X06:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "a2733e7d8924728748b1912a1cedac9ca3ff90368770babf561bda439295ce07",
+      "requestBytes": 41455,
+      "responseBytes": 5702,
+      "inputTokens": 9353,
+      "reservedToTerminalMs": 201,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D06:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "4a34004ac6241f4a418211a60e81279fbc117a7a91104ded27a15b7ce5676cdf",
+      "requestBytes": 40943,
+      "responseBytes": 5651,
+      "inputTokens": 9253,
+      "reservedToTerminalMs": 193,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D06:applicability",
+      "blockId": "block1",
+      "requestSHA256": "4a34004ac6241f4a418211a60e81279fbc117a7a91104ded27a15b7ce5676cdf",
+      "requestBytes": 40943,
+      "responseBytes": 5639,
+      "inputTokens": 9253,
+      "reservedToTerminalMs": 182,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N04:applicability",
+      "blockId": "block1",
+      "requestSHA256": "d5076eb46c7e25fe54b6efdf8babf88fcd8197bc284e080ab2d0d4935993ed52",
+      "requestBytes": 43825,
+      "responseBytes": 5788,
+      "inputTokens": 9907,
+      "reservedToTerminalMs": 176,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N04:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "39dac8774447177d0697f67cd1fbf565e4d75367e4ec49480a26d72c6ac82739",
+      "requestBytes": 40969,
+      "responseBytes": 5644,
+      "inputTokens": 9259,
+      "reservedToTerminalMs": 196,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T05:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "cf255bd2f71f3eb4b0adf940e9c582fb4a287987476e204d0433ec3a3f38bda1",
+      "requestBytes": 41037,
+      "responseBytes": 5703,
+      "inputTokens": 9245,
+      "reservedToTerminalMs": 168,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T05:applicability",
+      "blockId": "block1",
+      "requestSHA256": "1c6cad5fcc3fa2fd043c996301bc8610dfbb6a7fc2f994b819703d8cc567df0d",
+      "requestBytes": 43799,
+      "responseBytes": 5851,
+      "inputTokens": 9861,
+      "reservedToTerminalMs": 346,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D03:applicability",
+      "blockId": "block1",
+      "requestSHA256": "ea088c3d58d28a0ddf54e379af70261c48566a4398719a23cc4e5de46133ea2d",
+      "requestBytes": 41431,
+      "responseBytes": 5686,
+      "inputTokens": 9349,
+      "reservedToTerminalMs": 151,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D03:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "ea088c3d58d28a0ddf54e379af70261c48566a4398719a23cc4e5de46133ea2d",
+      "requestBytes": 41431,
+      "responseBytes": 5683,
+      "inputTokens": 9349,
+      "reservedToTerminalMs": 178,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X03:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "97e85df13eb321a8e75d42b1b9355048f5f35accba6740c6b388759f116965a9",
+      "requestBytes": 41525,
+      "responseBytes": 5678,
+      "inputTokens": 9372,
+      "reservedToTerminalMs": 184,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X03:applicability",
+      "blockId": "block1",
+      "requestSHA256": "ff404935e244151917aa34d76f2652d55d43f8228d5af538fba96bbe6925f133",
+      "requestBytes": 44297,
+      "responseBytes": 5821,
+      "inputTokens": 10010,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T06:applicability",
+      "blockId": "block1",
+      "requestSHA256": "c6bd0e01af4fb74f3e6a8c97fb16ecdb01b6ce5b924b5f03480f7f0f2a49e94d",
+      "requestBytes": 43753,
+      "responseBytes": 5807,
+      "inputTokens": 9880,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T06:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "06fbdf2d690e704cefed7d79efe9a480086ad157873ec42556fe4ff435b52edc",
+      "requestBytes": 40897,
+      "responseBytes": 5647,
+      "inputTokens": 9232,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V05:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "2b5d30b78275b350397c400af2d0a1ad11f6d6e44726d9acf86de36a8f7b465a",
+      "requestBytes": 41022,
+      "responseBytes": 5692,
+      "inputTokens": 9245,
+      "reservedToTerminalMs": 154,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V05:applicability",
+      "blockId": "block1",
+      "requestSHA256": "991f671b6401a805a3dc60e511a048800e30b6668bdac705b471b59d1ceeb1d0",
+      "requestBytes": 43784,
+      "responseBytes": 5840,
+      "inputTokens": 9861,
+      "reservedToTerminalMs": 178,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T04:applicability",
+      "blockId": "block1",
+      "requestSHA256": "69b48a7ae026d3672c8178d31d26d83bbb944dc62040a24724f422cadff79f57",
+      "requestBytes": 43794,
+      "responseBytes": 5821,
+      "inputTokens": 9858,
+      "reservedToTerminalMs": 193,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T04:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "35e9f1cdaca857257bb80e2598d2d62e90333bcbf1c23aa0ce6cfe2ec05990ea",
+      "requestBytes": 41032,
+      "responseBytes": 5678,
+      "inputTokens": 9242,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X02:baseline_anchor",
+      "blockId": "block1",
+      "requestSHA256": "98c55e3c86f7a87a427e7a45ffb119d3ac6fd7f4c52f95956682a24983786630",
+      "requestBytes": 41507,
+      "responseBytes": 5704,
+      "inputTokens": 9370,
+      "reservedToTerminalMs": 194,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X02:applicability",
+      "blockId": "block1",
+      "requestSHA256": "34af23eae46908e064bc584487d6ba21f2570c097cbf289e7a4b297c7aa4122a",
+      "requestBytes": 44279,
+      "responseBytes": 5857,
+      "inputTokens": 10008,
+      "reservedToTerminalMs": 202,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V01:applicability",
+      "blockId": "block2",
+      "requestSHA256": "d8d63da176611be8a41a7ab1da133bea82f6f3aa55810a7450e17091e8d0ae6a",
+      "requestBytes": 53932,
+      "responseBytes": 7297,
+      "inputTokens": 12087,
+      "reservedToTerminalMs": 145,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V01:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "a697e2de93f8b13b08b77ba14b65cbc5d94aecba2cf465a6167e4791fd912250",
+      "requestBytes": 51184,
+      "responseBytes": 7161,
+      "inputTokens": 11469,
+      "reservedToTerminalMs": 197,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T03:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "65c7f1cf77bb9f8de4b4aa1dee1d78ea7c1cc0c07fb6530fc44fbb73020aec35",
+      "requestBytes": 40971,
+      "responseBytes": 5677,
+      "inputTokens": 9259,
+      "reservedToTerminalMs": 175,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T03:applicability",
+      "blockId": "block2",
+      "requestSHA256": "0af205181047c032a2c1b4d2f342f4aaea3646aacdda4d4d67ea107ba3493a9d",
+      "requestBytes": 43827,
+      "responseBytes": 5853,
+      "inputTokens": 9907,
+      "reservedToTerminalMs": 188,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O01:applicability",
+      "blockId": "block2",
+      "requestSHA256": "29d5e06733c65d92c83e42d1c094f28752d7e6d315f82f890498202d3c63e856",
+      "requestBytes": 43795,
+      "responseBytes": 5828,
+      "inputTokens": 9860,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O01:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "36bfe247e1baa31370f91a49b53d7cade2e8f45f64201ef061e00e115362fdc9",
+      "requestBytes": 41033,
+      "responseBytes": 5687,
+      "inputTokens": 9244,
+      "reservedToTerminalMs": 150,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N01:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "5cfed618d084003ff06e1b5a466c269a481898d4189d2390f230cbc8ed46d397",
+      "requestBytes": 51184,
+      "responseBytes": 7116,
+      "inputTokens": 11474,
+      "reservedToTerminalMs": 156,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N01:applicability",
+      "blockId": "block2",
+      "requestSHA256": "15af404ac6ca94f10856176f9bf4de605078e19651911db322b7f5c676f4e586",
+      "requestBytes": 53932,
+      "responseBytes": 7268,
+      "inputTokens": 12092,
+      "reservedToTerminalMs": 158,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X04:applicability",
+      "blockId": "block2",
+      "requestSHA256": "c804b98d06fe4fe9767de092273d5fea5b91222e73bd414d28c3595bcafe6d3f",
+      "requestBytes": 44262,
+      "responseBytes": 5850,
+      "inputTokens": 10000,
+      "reservedToTerminalMs": 189,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X04:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "6124e7274d4631db421adecd61d24fee7dc1c6c1843d49768e238175edd95048",
+      "requestBytes": 41490,
+      "responseBytes": 5708,
+      "inputTokens": 9362,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N06:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "af6a788f74df0fc484938612743049393a54a6e0db463928e750131f4dda971b",
+      "requestBytes": 40988,
+      "responseBytes": 5695,
+      "inputTokens": 9233,
+      "reservedToTerminalMs": 171,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N06:applicability",
+      "blockId": "block2",
+      "requestSHA256": "d2c41ae3fdfd8e8a9a0fca8b30f880ebcfade01081ed6362bde362f344226193",
+      "requestBytes": 43750,
+      "responseBytes": 5848,
+      "inputTokens": 9849,
+      "reservedToTerminalMs": 174,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N05:applicability",
+      "blockId": "block2",
+      "requestSHA256": "5c179a94c7cd2d8a604bb9e03a611cd5c842d22815fc32b395a98b905c04fbc3",
+      "requestBytes": 53893,
+      "responseBytes": 7341,
+      "inputTokens": 12079,
+      "reservedToTerminalMs": 164,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N05:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "1c9eb32f8155f71c7b06b37313f5885a8a5cef4528cee7787dd99947901e273c",
+      "requestBytes": 51145,
+      "responseBytes": 7195,
+      "inputTokens": 11461,
+      "reservedToTerminalMs": 174,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X01:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "10c388130c1566876ff7e1792925c1bb5a70e9f38bd57eb5230634fbe412dff1",
+      "requestBytes": 41507,
+      "responseBytes": 5672,
+      "inputTokens": 9370,
+      "reservedToTerminalMs": 176,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X01:applicability",
+      "blockId": "block2",
+      "requestSHA256": "d9830dff4d59ecf9468bd1ff2c98b8793d9d1b94191c1d2a90fa15855c3396ca",
+      "requestBytes": 44279,
+      "responseBytes": 5825,
+      "inputTokens": 10008,
+      "reservedToTerminalMs": 184,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V03:applicability",
+      "blockId": "block2",
+      "requestSHA256": "845403f08f66ca185928ec8b2bc137b433420ab1002d3c14d5ae8581d0a5b630",
+      "requestBytes": 44251,
+      "responseBytes": 5823,
+      "inputTokens": 9994,
+      "reservedToTerminalMs": 228,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V03:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "871cd5242eb83c65803f4c48e21a962f5b4a16bd6cabcbfb727db68aeb39de49",
+      "requestBytes": 41479,
+      "responseBytes": 5680,
+      "inputTokens": 9356,
+      "reservedToTerminalMs": 159,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O03:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "90eb1ec78153f134940f8f96a0aa6199261557abaebb4577b0b2306ae2449214",
+      "requestBytes": 41001,
+      "responseBytes": 5690,
+      "inputTokens": 9234,
+      "reservedToTerminalMs": 159,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O03:applicability",
+      "blockId": "block2",
+      "requestSHA256": "74b74bdeb1e2502c812bb2095eee089b5eaecbb55ebe6351d38f18ec450fd8be",
+      "requestBytes": 43763,
+      "responseBytes": 5834,
+      "inputTokens": 9850,
+      "reservedToTerminalMs": 183,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X05:applicability",
+      "blockId": "block2",
+      "requestSHA256": "a2c99fff3a5b0b7c70938e367586645c7fd15a1666e02ee1a5fabc0f9de4b471",
+      "requestBytes": 44289,
+      "responseBytes": 5855,
+      "inputTokens": 10006,
+      "reservedToTerminalMs": 151,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-X05:baseline_anchor",
+      "blockId": "block2",
+      "requestSHA256": "8d7dd3a08400d49217e94a344a2c03700f12a3af41b5faf6e1c7566061f6b85e",
+      "requestBytes": 41517,
+      "responseBytes": 5697,
+      "inputTokens": 9368,
+      "reservedToTerminalMs": 158,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T01:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "cef5524318d1fa1ef8a9715c88b8a02fd29418854c102e585db8545a881aede4",
+      "requestBytes": 40958,
+      "responseBytes": 5638,
+      "inputTokens": 9247,
+      "reservedToTerminalMs": 204,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-T01:applicability",
+      "blockId": "block3",
+      "requestSHA256": "e86453ed575f88c652f5e77e49bad8997235422e23227d2c02583831e9d0224c",
+      "requestBytes": 43814,
+      "responseBytes": 5773,
+      "inputTokens": 9895,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D05:applicability",
+      "blockId": "block3",
+      "requestSHA256": "387e890d463bd4484da20d5017b5765ad9ca5abcb1e625c230bbed9441ff766c",
+      "requestBytes": 40892,
+      "responseBytes": 5660,
+      "inputTokens": 9228,
+      "reservedToTerminalMs": 191,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D05:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "387e890d463bd4484da20d5017b5765ad9ca5abcb1e625c230bbed9441ff766c",
+      "requestBytes": 40892,
+      "responseBytes": 5666,
+      "inputTokens": 9228,
+      "reservedToTerminalMs": 182,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D01:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "7d51dc2a6ed07dc6ffe77ae93863ce1539bdeca586f38f1d5b9c42d1dac78cbb",
+      "requestBytes": 51186,
+      "responseBytes": 7130,
+      "inputTokens": 11471,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D01:applicability",
+      "blockId": "block3",
+      "requestSHA256": "141fc66a7f4780d734b3b02101d85b18d0a763baa572baec6413248b3055ed12",
+      "requestBytes": 53934,
+      "responseBytes": 7281,
+      "inputTokens": 12089,
+      "reservedToTerminalMs": 181,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O02:applicability",
+      "blockId": "block3",
+      "requestSHA256": "dffc8d5b4bc8d7f365302b65491ae56a6cb4626fbfa3282a070db996088f8c7b",
+      "requestBytes": 43777,
+      "responseBytes": 5835,
+      "inputTokens": 9853,
+      "reservedToTerminalMs": 158,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O02:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "a5c6b4a32768d44405a26853991ab61fcd5e24ecc82071841f941c138feaed2d",
+      "requestBytes": 41015,
+      "responseBytes": 5695,
+      "inputTokens": 9237,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V06:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "6d72806fe5579c5ec44566a96b937013e6bbbc0760924939e858cc9b80aacebd",
+      "requestBytes": 41002,
+      "responseBytes": 5710,
+      "inputTokens": 9241,
+      "reservedToTerminalMs": 152,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V06:applicability",
+      "blockId": "block3",
+      "requestSHA256": "4dddba082f88ba8c255ae922ddef8cb03d57bf36ee92c8995ff74e1df211fd54",
+      "requestBytes": 43764,
+      "responseBytes": 5849,
+      "inputTokens": 9857,
+      "reservedToTerminalMs": 187,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N02:applicability",
+      "blockId": "block3",
+      "requestSHA256": "911345efdac12b3939c326f41d255222a1577077f9918547f5316180902e4e6e",
+      "requestBytes": 53932,
+      "responseBytes": 7296,
+      "inputTokens": 12092,
+      "reservedToTerminalMs": 190,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N02:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "b214eeae017a02891df63652a68484480f66b6f105681ff09f4a3567523e3671",
+      "requestBytes": 51184,
+      "responseBytes": 7224,
+      "inputTokens": 11474,
+      "reservedToTerminalMs": 182,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D04:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "e208b5566b8fe48dae16600280710fb1e0f26f3251be84f1ec449bb5f62c83ff",
+      "requestBytes": 40901,
+      "responseBytes": 5680,
+      "inputTokens": 9229,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D04:applicability",
+      "blockId": "block3",
+      "requestSHA256": "e208b5566b8fe48dae16600280710fb1e0f26f3251be84f1ec449bb5f62c83ff",
+      "requestBytes": 40901,
+      "responseBytes": 5675,
+      "inputTokens": 9229,
+      "reservedToTerminalMs": 179,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D02:applicability",
+      "blockId": "block3",
+      "requestSHA256": "dd44bfdc965361bb8ad254ac647c42af37736b33a059be1eb88244660550906f",
+      "requestBytes": 44254,
+      "responseBytes": 5830,
+      "inputTokens": 10003,
+      "reservedToTerminalMs": 191,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-D02:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "6c4a1bde537bda4963e6f76af9b566d800fdad789eed21214ff1d055a45e2678",
+      "requestBytes": 41482,
+      "responseBytes": 5696,
+      "inputTokens": 9365,
+      "reservedToTerminalMs": 179,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V02:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "1fbe66a95d05c8d2e594aa0357476d8057fb49b31ada5e2e7ad4c0c8b45580af",
+      "requestBytes": 51153,
+      "responseBytes": 7209,
+      "inputTokens": 11462,
+      "reservedToTerminalMs": 173,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V02:applicability",
+      "blockId": "block3",
+      "requestSHA256": "64d057fb669db03f3c8d98a44025030302aef68564ab49fc1dc942b3a1e2de2f",
+      "requestBytes": 53901,
+      "responseBytes": 7335,
+      "inputTokens": 12080,
+      "reservedToTerminalMs": 166,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N03:applicability",
+      "blockId": "block3",
+      "requestSHA256": "52e7acc9a169986fb22d38e637ba53c9ea914120443fb168bd703f0e68986937",
+      "requestBytes": 43803,
+      "responseBytes": 5824,
+      "inputTokens": 9862,
+      "reservedToTerminalMs": 147,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-N03:baseline_anchor",
+      "blockId": "block3",
+      "requestSHA256": "79e59ba2b17e61a351dd8d7a493d504e4166ad2fc450dc9a926fe67e7e91abc0",
+      "requestBytes": 41041,
+      "responseBytes": 5676,
+      "inputTokens": 9246,
+      "reservedToTerminalMs": 168,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O04:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "8f9630137226c75b970d2a2c05f90038310e33dc8eddb4d11829a1409beee001",
+      "requestBytes": 40996,
+      "responseBytes": 5677,
+      "inputTokens": 9236,
+      "reservedToTerminalMs": 217,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-O04:applicability",
+      "blockId": "block4",
+      "requestSHA256": "4a0fb38118dd9c282b501534925936cdeeab4d48eb1ce29e5a8fb32049df158b",
+      "requestBytes": 43758,
+      "responseBytes": 5815,
+      "inputTokens": 9852,
+      "reservedToTerminalMs": 200,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V04:applicability",
+      "blockId": "block4",
+      "requestSHA256": "1826c1ca677a92816969460f16956c5178378cd647080baf2a5e2f87cf51820e",
+      "requestBytes": 43796,
+      "responseBytes": 5847,
+      "inputTokens": 9861,
+      "reservedToTerminalMs": 166,
+      "httpStatus": 200
+    },
+    {
+      "callId": "AC-V04:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "df03308a984ec35a25ab6a1e9bf6e310fdb743cd0717598cde147b8d4051c7e5",
+      "requestBytes": 41034,
+      "responseBytes": 5692,
+      "inputTokens": 9245,
+      "reservedToTerminalMs": 152,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI08:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "14b65a4cbe7deb9acdf18d7811f7484b667e10f1ff54b3e774c7efaa99bff7dc",
+      "requestBytes": 40939,
+      "responseBytes": 5693,
+      "inputTokens": 9241,
+      "reservedToTerminalMs": 177,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI08:applicability",
+      "blockId": "block4",
+      "requestSHA256": "cf94f6b0414082980ba95b98874e921f1dbc6e9f459825764a10b5b4d351d4af",
+      "requestBytes": 43795,
+      "responseBytes": 5832,
+      "inputTokens": 9889,
+      "reservedToTerminalMs": 157,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI05:applicability",
+      "blockId": "block4",
+      "requestSHA256": "d632344d7d371dabfdf790e0eb39c6b18a975e9569961dc669867c809a86efaf",
+      "requestBytes": 53845,
+      "responseBytes": 7297,
+      "inputTokens": 12064,
+      "reservedToTerminalMs": 169,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI05:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "5deee584b9e9bc153cac85e473e1ffe5c92757009062b474dffb10de85196c9b",
+      "requestBytes": 51097,
+      "responseBytes": 7148,
+      "inputTokens": 11446,
+      "reservedToTerminalMs": 164,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI04:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "bee20c0d758b4b3e154bc0297f4b3429dfb83e6107ae862a583d452d7737c71a",
+      "requestBytes": 51078,
+      "responseBytes": 7158,
+      "inputTokens": 11441,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI04:applicability",
+      "blockId": "block4",
+      "requestSHA256": "1660a8f0cbc7a1db22d86bf9ce8969c42c8b6439c7ee54a35132857a7d7a7bba",
+      "requestBytes": 53826,
+      "responseBytes": 7288,
+      "inputTokens": 12059,
+      "reservedToTerminalMs": 157,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI06:applicability",
+      "blockId": "block4",
+      "requestSHA256": "7b2a41848da1fa5a8a40f3ac4ede8eea866f89adc959bbffaf5f0baa1c880699",
+      "requestBytes": 41475,
+      "responseBytes": 5695,
+      "inputTokens": 9356,
+      "reservedToTerminalMs": 161,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI06:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "7b2a41848da1fa5a8a40f3ac4ede8eea866f89adc959bbffaf5f0baa1c880699",
+      "requestBytes": 41475,
+      "responseBytes": 5691,
+      "inputTokens": 9356,
+      "reservedToTerminalMs": 155,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI03:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "68b188d4d10caa066dec4da6afa0b8784995188aab7e99d99b512185c6fe06de",
+      "requestBytes": 40950,
+      "responseBytes": 5635,
+      "inputTokens": 9250,
+      "reservedToTerminalMs": 169,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI03:applicability",
+      "blockId": "block4",
+      "requestSHA256": "a3b1d9487b07d27751a18c20d761b08e087710557592706bb6a78901ba3027ed",
+      "requestBytes": 43806,
+      "responseBytes": 5777,
+      "inputTokens": 9898,
+      "reservedToTerminalMs": 154,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI02:applicability",
+      "blockId": "block4",
+      "requestSHA256": "ec8e2e43e51d835ee7f27720ab7ba4942fcd3479815e3958a18d9eedfeda227f",
+      "requestBytes": 53906,
+      "responseBytes": 7286,
+      "inputTokens": 12076,
+      "reservedToTerminalMs": 184,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI02:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "67d868753fd6ae04de3b1857d4e42f42dd66dee2debdee4c35fa0fd7cb22cc31",
+      "requestBytes": 51158,
+      "responseBytes": 7176,
+      "inputTokens": 11458,
+      "reservedToTerminalMs": 172,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI01:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "46e5a812842e8a8addb55febd164d5175497f2b3e14419a1f1f793f7e1eb039b",
+      "requestBytes": 51161,
+      "responseBytes": 7150,
+      "inputTokens": 11459,
+      "reservedToTerminalMs": 158,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI01:applicability",
+      "blockId": "block4",
+      "requestSHA256": "c0e04c60488f940dd141c438104dc4aba4c78fe63948aa788f4a3e4ae9e21be2",
+      "requestBytes": 53909,
+      "responseBytes": 7258,
+      "inputTokens": 12077,
+      "reservedToTerminalMs": 168,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI07:applicability",
+      "blockId": "block4",
+      "requestSHA256": "9b26f31193fc9b8c432d2753e5e94e02833d79b2452c45761fd5a03c1a9062f4",
+      "requestBytes": 43793,
+      "responseBytes": 5832,
+      "inputTokens": 9851,
+      "reservedToTerminalMs": 161,
+      "httpStatus": 200
+    },
+    {
+      "callId": "DI07:baseline_anchor",
+      "blockId": "block4",
+      "requestSHA256": "c168ee9d00de063234ec570f3fa4ba981a1455b7b8cb1dc0741d096051494221",
+      "requestBytes": 41031,
+      "responseBytes": 5686,
+      "inputTokens": 9235,
+      "reservedToTerminalMs": 161,
+      "httpStatus": 200
+    }
+  ],
+  "limitations": [
+    "Provider usage is observed reported input usage, not independent billing verification.",
+    "Timing is guard reserved-to-terminal and campaign wall time, not a dedicated acceptedAt-to-completion runtime trace. Runtime deadline checks were enforced by frozen reviewed adapter.",
+    "Ledger success establishes no semantic accuracy, source verification, factual coverage or promotion; these are separately reviewed.",
+    "No dispatches, reruns or source fetches by this auditor."
+  ]
+}

@@ -1,0 +1,80 @@
+// Offline reviewer harness. All transport calls are injected; global network is forbidden.
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {syncBuiltinESMExports} from 'node:module';
+import {createHash} from 'node:crypto';
+import {join} from 'node:path';
+import {Session} from '/workspace/stack-20/services/api/src/runtime/session.js';
+import {runStudy,assertSources,validatePlan,type Plan} from '/workspace/task-evidence/typed-applicability-calibration-01/runner.js';
+const root='/workspace/task-evidence/study84-runtime-integration-review/corrected-serialization-check';
+const planPath='/workspace/task-evidence/typed-applicability-calibration-01/applicability42-plan.json';
+const sha=(v:string|Uint8Array)=>createHash('sha256').update(v).digest('hex');
+globalThis.fetch=async()=>{throw Error('offline_global_fetch_forbidden');};
+function plan():Plan{const p=JSON.parse(fs.readFileSync(planPath,'utf8'));validatePlan(p);assertSources(p);return p;}
+function response(init?:RequestInit,mode:'valid'|'missing_usage'|'malformed'='valid'){
+ const request=JSON.parse(String(init?.body));
+ const answers=Object.fromEntries(Object.entries(request.questions).map(([key,value])=>{const q=value as any;if(q.type==='noul')return[key,{noul:.5}];const keys=Object.keys(q.criteria);const choice=key==='claim_risk'?'unknown':key==='selected_evidence'?'none':key==='verdict'?'insufficient_evidence':key.endsWith('_applicability')?'uncertain':keys[keys.length-1]!;return[key,{choice,probabilities:Object.fromEntries(keys.map(k=>[k,k===choice?.99:.01/(keys.length-1)]))}];}));
+ if(mode==='malformed')delete answers.verdict;
+ return Response.json({answers,...(mode==='missing_usage'?{}:{usage:{input_tokens:10}})});
+}
+function output(name:string){const path=join(root,name);assert.equal(fs.existsSync(path),false,`fresh reviewer output required: ${path}`);return path;}
+const options=(fetch:typeof globalThis.fetch)=>({apiKey:'OFFLINE_INJECTED',fetch,transportMode:'offline-mock' as const});
+const journal=(out:string)=>fs.readFileSync(join(out,'checkpoints.jsonl'),'utf8').trim().split('\n').map(x=>JSON.parse(x));
+
+test('actual runner completes exact84 mocked dispatches with durable prepared-before-HTTP and per-arm ownership',async()=>{
+ const p=plan(),out=output('complete84');let calls=0;const signals=new Set<AbortSignal>();
+ const sessions=new Set<Session>(),records=new Set<object>(),budgets=new Set<object>(),originalCurrent=Session.prototype.current;
+ Session.prototype.current=function(record){sessions.add(this);records.add(record);budgets.add(record.budget);return originalCurrent.call(this,record);};
+ let result:any;
+ try{result=await runStudy(p,out,options(async(_url,init)=>{
+  const events=journal(out),last=events.at(-1)!;assert.equal(last.type,'request_prepared');
+  assert.equal(last.callId,p.guard.calls[calls]!.callId);assert.equal(last.snapshot.totals.actualStartedJev,calls);
+  assert.equal(sha(String(init?.body)),p.guard.calls[calls]!.requestSHA256);
+  assert.ok(init?.signal);assert.equal(init.signal.aborted,false);signals.add(init.signal);calls++;return response(init);
+ }));}finally{Session.prototype.current=originalCurrent;}
+ assert.equal(sessions.size,84);assert.equal(records.size,84);assert.equal(budgets.size,84);
+ assert.equal(calls,84);assert.equal(signals.size,84);assert.equal(result.completedAllCalls,true);assert.equal(result.stop,null);
+ assert.equal(result.projectProviderCalls,0);assert.equal(result.actualExaCalls,0);assert.equal(result.rows.length,84);
+ assert.equal(result.guard.totals.actualStartedJev,84);assert.equal(result.guard.totals.measuredInputTokens,840);assert.equal(result.guard.totals.usageUnknownCalls,0);
+ assert.equal(result.guard.missingCallIds.length,0);assert.ok(result.rows.every((r:any)=>r.runtimeChargedAttempts===1&&r.runtimeMeasuredInputTokens===10));
+ assert.equal(new Set(result.rows.map((r:any)=>r.callId)).size,84);
+ assert.equal(sha(JSON.stringify(JSON.parse(fs.readFileSync(join(out,'report.json'),'utf8')))),sha(JSON.stringify(result)));
+ console.log(JSON.stringify({scenario:'complete84',mockDispatches:calls,freshSessions:sessions.size,freshRecords:records.size,freshBudgets:budgets.size,rows:result.rows.length,usage:result.guard.totals.measuredInputTokens}));
+});
+for(const mode of ['missing_usage','malformed'] as const)test(`actual runner halts after first ${mode} receipt and retains measured/unknown accounting`,async()=>{
+ const out=output(mode);let calls=0;const result=await runStudy(plan(),out,options(async(_u,init)=>{calls++;return response(init,mode);}));
+ assert.equal(calls,1);assert.equal(result.rows.length,0);assert.equal(result.completedAllCalls,false);assert.ok(result.stop);
+ assert.equal(result.guard.totals.actualStartedJev,1);assert.equal(result.guard.missingCallIds.length,84);
+ assert.equal(result.guard.totals.usageUnknownCalls,mode==='missing_usage'?1:0);assert.equal(result.guard.totals.measuredInputTokens,mode==='missing_usage'?0:10);
+ assert.ok(fs.existsSync(join(out,'failed-terminal.json')));assert.ok(fs.existsSync(join(out,'report.json')));
+ console.log(JSON.stringify({scenario:mode,stop:result.stop,actual:result.guard.totals.actualStartedJev,unknown:result.guard.totals.usageUnknownCalls,usage:result.guard.totals.measuredInputTokens}));
+});
+for(const stage of ['request_prepared','request_started'] as const)test(`actual runner preserves first receipt when durable ${stage} checkpoint fails`,async()=>{
+ const out=output(`checkpoint-${stage}`);let calls=0,cancels=0,aborted=false,release!:(r:Response)=>void;
+ const pending=new Promise<Response>(resolve=>release=resolve);const original=fs.appendFileSync;
+ fs.appendFileSync=((path:any,data:any,...rest:any[])=>{
+  if(String(path).endsWith('/checkpoints.jsonl')&&JSON.parse(String(data)).type===stage)throw Error('offline_checkpoint_write_failure');
+  return (original as any)(path,data,...rest);
+ }) as typeof fs.appendFileSync;syncBuiltinESMExports();
+ let result:any;
+ try{result=await runStudy(plan(),out,options(async(_url,init)=>{calls++;init?.signal?.addEventListener('abort',()=>{aborted=true;});return pending;}));}
+ finally{fs.appendFileSync=original;syncBuiltinESMExports();}
+ assert.equal(result.stop,'checkpoint_failed');assert.equal(result.rows.length,0);assert.equal(calls,stage==='request_started'?1:0);
+ assert.equal(result.guard.totals.actualStartedJev,calls);assert.equal(result.guard.totals.usageUnknownCalls,calls);
+ const before=sha(fs.readFileSync(join(out,'report.json')));
+ if(calls){assert.equal(aborted,true);release(new Response(new ReadableStream<Uint8Array>({cancel(){cancels++;}})));await new Promise(r=>setTimeout(r,20));assert.equal(cancels,1);}
+ assert.equal(sha(fs.readFileSync(join(out,'report.json'))),before);
+ console.log(JSON.stringify({scenario:stage,actual:calls,lateBodyCancelled:cancels,stop:result.stop}));
+});
+test('local next-unit setup failure closes the guard and saves completed prefix without rerun',async()=>{
+ const p=plan(),contexts=JSON.parse(fs.readFileSync(p.contextsPath,'utf8'));contexts.contexts[1].unit.receiptAlias='OFFLINE_MISSING_RECEIPT';
+ const copyPath=join(root,'setup-failure-contexts.json');fs.writeFileSync(copyPath,JSON.stringify(contexts),{flag:'wx'});
+ const revised={...p,contextsPath:copyPath,sourceHashes:{...p.sourceHashes,[copyPath]:sha(fs.readFileSync(copyPath))}};
+ const out=output('setup-failure');let calls=0;const fetcher:typeof fetch=async(_url,init)=>{calls++;return response(init);};
+ const result=await runStudy(revised,out,options(fetcher));assert.equal(calls,2);assert.equal(result.rows.length,2);assert.equal(result.completedAllCalls,false);assert.ok(result.stop);
+ assert.equal(result.guard.status,'stopped');assert.equal(result.guard.totals.actualStartedJev,2);assert.equal(result.guard.missingCallIds.length,82);
+ assert.ok(fs.existsSync(join(out,'local-stop.json')));assert.ok(fs.existsSync(join(out,'partial-report.json')));assert.ok(fs.existsSync(join(out,'report.json')));
+ await assert.rejects(runStudy(revised,out,options(fetcher)),/fresh_output_required/);assert.equal(calls,2);
+ console.log(JSON.stringify({scenario:'setup-failure',actual:calls,rows:result.rows.length,stop:result.stop,missing:result.guard.missingCallIds.length}));
+});

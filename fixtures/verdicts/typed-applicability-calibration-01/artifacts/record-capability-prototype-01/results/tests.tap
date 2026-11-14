@@ -1,0 +1,202 @@
+TAP version 13
+# Subtest: all22 frozen applicability cases and four opposed-value pairs preserve labels without assigning verdicts
+ok 1 - all22 frozen applicability cases and four opposed-value pairs preserve labels without assigning verdicts
+  ---
+  duration_ms: 221.077629
+  type: 'test'
+  ...
+# Subtest: caller-authored and serialized manifests, snapshots and frames cannot forge trust
+ok 2 - caller-authored and serialized manifests, snapshots and frames cannot forge trust
+  ---
+  duration_ms: 4.296008
+  type: 'test'
+  ...
+# Subtest: source instructions, unknown fields, accessors and inherited objects fail before reading a getter
+ok 3 - source instructions, unknown fields, accessors and inherited objects fail before reading a getter
+  ---
+  duration_ms: 2.435616
+  type: 'test'
+  ...
+# Subtest: unknown receipt, arbitrary hash, path traversal and URL-shaped aliases do not resolve
+ok 4 - unknown receipt, arbitrary hash, path traversal and URL-shaped aliases do not resolve
+  ---
+  duration_ms: 2.594035
+  type: 'test'
+  ...
+# Subtest: proof from another record and noncanonical source URLs cannot use a valid receipt
+ok 5 - proof from another record and noncanonical source URLs cannot use a valid receipt
+  ---
+  duration_ms: 6.819155
+  type: 'test'
+  ...
+# Subtest: changed, clipped, whitespace-normalized and Unicode-substituted text cannot retain exact proof
+ok 6 - changed, clipped, whitespace-normalized and Unicode-substituted text cannot retain exact proof
+  ---
+  duration_ms: 3.119135
+  type: 'test'
+  ...
+# Subtest: omitting the Sunday exception cannot use the complete operative legal-record receipt
+ok 7 - omitting the Sunday exception cannot use the complete operative legal-record receipt
+  ---
+  duration_ms: 2.128965
+  type: 'test'
+  ...
+# Subtest: title or heading alone cannot acquire capability from actual record contents
+ok 8 - title or heading alone cannot acquire capability from actual record contents
+  ---
+  duration_ms: 2.081113
+  type: 'test'
+  ...
+# Subtest: same-document OLD quoted definition cannot be substituted for operative NEW unit
+ok 9 - same-document OLD quoted definition cannot be substituted for operative NEW unit
+  ---
+  duration_ms: 2.042915
+  type: 'test'
+  ...
+# Subtest: asserted-value disagreement preserves scope while geography and relation substitutions fail
+ok 10 - asserted-value disagreement preserves scope while geography and relation substitutions fail
+  ---
+  duration_ms: 12.416652
+  type: 'test'
+  ...
+# Subtest: current/latest remains unavailable for any timestamp even with canonical frozen body
+ok 11 - current/latest remains unavailable for any timestamp even with canonical frozen body
+  ---
+  duration_ms: 2.282206
+  type: 'test'
+  ...
+# Subtest: unresolved time and future proof time fail closed
+ok 12 - unresolved time and future proof time fail closed
+  ---
+  duration_ms: 2.035795
+  type: 'test'
+  ...
+# Subtest: changed exact claim text or choosing a different frozen frame cannot transfer a claim binding
+ok 13 - changed exact claim text or choosing a different frozen frame cannot transfer a claim binding
+  ---
+  duration_ms: 2.187193
+  type: 'test'
+  ...
+# Subtest: health, disputed and unknown risks do not acquire the ordinary-record route
+ok 14 - health, disputed and unknown risks do not acquire the ordinary-record route
+  ---
+  duration_ms: 2.026972
+  type: 'test'
+  ...
+# Subtest: full context, contradiction and origin bridge are retained and bound; a conflict is never resolved by capability
+ok 15 - full context, contradiction and origin bridge are retained and bound; a conflict is never resolved by capability
+  ---
+  duration_ms: 2.544791
+  type: 'test'
+  ...
+# Subtest: token serialization, evidence replacement and frame replacement cannot forge or reuse authorization
+ok 16 - token serialization, evidence replacement and frame replacement cannot forge or reuse authorization
+  ---
+  duration_ms: 2.319782
+  type: 'test'
+  ...
+# Subtest: snapshot, frame and capability handles are bound to one installed-manifest instance
+ok 17 - snapshot, frame and capability handles are bound to one installed-manifest instance
+  ---
+  duration_ms: 49.801469
+  type: 'test'
+  ...
+# Subtest: local reuse preserves original proof time and grants neither freshness nor extra independent origin
+ok 18 - local reuse preserves original proof time and grants neither freshness nor extra independent origin
+  ---
+  duration_ms: 2.839124
+  type: 'test'
+  ...
+# Subtest: evidence absence, duplicate context IDs and invalid origin links fail closed
+ok 19 - evidence absence, duplicate context IDs and invalid origin links fail closed
+  ---
+  duration_ms: 5.383405
+  type: 'test'
+  ...
+# Subtest: excerpt bounds count Unicode codepoints and reject excessive retained text
+ok 20 - excerpt bounds count Unicode codepoints and reject excessive retained text
+  ---
+  duration_ms: 0.356296
+  type: 'test'
+  ...
+# Subtest: Unicode exact alignment uses validated UTF16 offsets and ambiguous units fail
+ok 21 - Unicode exact alignment uses validated UTF16 offsets and ambiguous units fail
+  ---
+  duration_ms: 0.494495
+  type: 'test'
+  ...
+# Subtest: manifest and receipt byte tampering is detected without accepting caller-supplied hashes
+ok 22 - manifest and receipt byte tampering is detected without accepting caller-supplied hashes
+  ---
+  duration_ms: 64.616351
+  type: 'test'
+  ...
+# Subtest: tampered raw body or extraction bytes fail closed
+ok 23 - tampered raw body or extraction bytes fail closed
+  ---
+  duration_ms: 29.722656
+  type: 'test'
+  ...
+# Subtest: loaded snapshots are immutable dated bytes; newly loading changed disk bytes fails
+ok 24 - loaded snapshots are immutable dated bytes; newly loading changed disk bytes fails
+  ---
+  duration_ms: 51.819882
+  type: 'test'
+  ...
+# Subtest: symlink artifact, parent and install root are rejected
+ok 25 - symlink artifact, parent and install root are rejected
+  ---
+  duration_ms: 50.652204
+  type: 'test'
+  ...
+# Subtest: oversized individual files fail before content decoding
+ok 26 - oversized individual files fail before content decoding
+  ---
+  duration_ms: 30.204531
+  type: 'test'
+  ...
+# Subtest: admin-installed revocation blocks resolution rather than trusting a prior alias
+ok 27 - admin-installed revocation blocks resolution rather than trusting a prior alias
+  ---
+  duration_ms: 53.358328
+  type: 'test'
+  ...
+# Subtest: even trusted-admin malformed installs cannot claim production authorization or duplicate IDs
+ok 28 - even trusted-admin malformed installs cannot claim production authorization or duplicate IDs
+  ---
+  duration_ms: 29.294216
+  type: 'test'
+  ...
+# Subtest: receipt proof mismatches and weakened material spans reject even with rehashed admin test manifests
+ok 29 - receipt proof mismatches and weakened material spans reject even with rehashed admin test manifests
+  ---
+  duration_ms: 70.249201
+  type: 'test'
+  ...
+# Subtest: wrong exact record unit hash and incomplete issuer proof references reject at installation
+ok 30 - wrong exact record unit hash and incomplete issuer proof references reject at installation
+  ---
+  duration_ms: 70.09259
+  type: 'test'
+  ...
+# Subtest: aggregate artifact limit is enforced across distinct content addresses
+ok 31 - aggregate artifact limit is enforced across distinct content addresses
+  ---
+  duration_ms: 83.642765
+  type: 'test'
+  ...
+# Subtest: retiring an installation immediately invalidates its existing handles and capability tokens
+ok 32 - retiring an installation immediately invalidates its existing handles and capability tokens
+  ---
+  duration_ms: 25.798999
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1214.384776

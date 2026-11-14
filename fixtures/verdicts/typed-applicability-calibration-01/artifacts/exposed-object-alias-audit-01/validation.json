@@ -1,0 +1,382 @@
+{
+  "kind": "actual_exposed_object_alias_audit_validation",
+  "projectProviderCalls": 0,
+  "networkCalls": 0,
+  "injectedFetchOnly": true,
+  "testsPassed": 18,
+  "runs": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "error": null,
+      "log": "typecheck.log"
+    },
+    {
+      "name": "tests",
+      "exitCode": 0,
+      "error": null,
+      "log": "tests.tap"
+    }
+  ],
+  "frozenPacketsPreserved": [
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05",
+      "manifestSHA256": "724348388680d5991ad1baaa66a8aef87c6a37b287a28d307a869e0efff3f490",
+      "listedFilesVerified": true
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06",
+      "manifestSHA256": "99cd08e960ebe2e1318fa85428819ebe2bb88fcc1fe57a62596259492cf652c3",
+      "listedFilesVerified": true
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02",
+      "manifestSHA256": "9d3f255bdc9ef81253f5b487e4359fff11dab0eeb661780e32f28ec5659b8630",
+      "listedFilesVerified": true
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/README.md",
+      "sha256": "e328cc17c107d0aed51997af70f90a592a1a8bdf118983a6735612ea31f68d85"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/adapter.test.ts",
+      "sha256": "d0c3118e83ef86638367a3db9c0243457c04fb7c07bacbc52b04bcf27320eb38"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/adapter.ts",
+      "sha256": "8c3a12c21a63aa9b28c01c6ba2a7c4d8b2331c7aa5164b3551dde51c57e565ca"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/full-context-byte-preflight.json",
+      "sha256": "706566167538ec6ab174f91e7d4444113891b6e8ee25a8e5f5053ffa90cfc54f"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/identity-contract.json",
+      "sha256": "4582df7c4e2393882dceabb7c718d9cc3ca2d5dff02afb59391e8858f0d134bf"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/offline-tests.log",
+      "sha256": "bda9ed7db1f330b47b08ccc703a6bf3b7a09a7fb5a545468a85e001e33495db9"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/package.json",
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/preflight.ts",
+      "sha256": "116af5962ce0bac44a11a4fa35e3737217c7a6a3f6f8d7e3c5e7d0bb136dc733"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/question.ts",
+      "sha256": "e980f87308bdc932bf6323344a77247cc54e90cbc90a9e9565b615811b9377b3"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/runtime-owner.ts",
+      "sha256": "845b66da332a4949e2b1a7f173459f26bc64ab3d92a03a88636dfe74c390bcfb"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/transport.ts",
+      "sha256": "24a67d3d8ab5fef682d01d5dc93e988103b9e7c248c1c8d3203b839a9ee56da8"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-05/manifest.json",
+      "sha256": "724348388680d5991ad1baaa66a8aef87c6a37b287a28d307a869e0efff3f490"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/README.md",
+      "sha256": "46b6c98f97749e86227fc5be7698e6c2a5de39b715655a9dd694257b358ac639"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/adapter.test.ts",
+      "sha256": "2b8e1883b94b451241a2a04e04ac4b9149cde7b80cfcbb26d36144e3c499f6c2"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/adapter.ts",
+      "sha256": "62c85a09461168ed1caa3cdbac7b6276230aed22f01801d3e1baf282c0acfb9f"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/full-context-byte-preflight.json",
+      "sha256": "706566167538ec6ab174f91e7d4444113891b6e8ee25a8e5f5053ffa90cfc54f"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/identity-contract.json",
+      "sha256": "4582df7c4e2393882dceabb7c718d9cc3ca2d5dff02afb59391e8858f0d134bf"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/offline-tests.log",
+      "sha256": "4f7df3d7fd5c9a672eb1e47a950ba0fefa26aad8e10e09bded95c0cac06700df"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/package.json",
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/preflight.ts",
+      "sha256": "116af5962ce0bac44a11a4fa35e3737217c7a6a3f6f8d7e3c5e7d0bb136dc733"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/question.ts",
+      "sha256": "e980f87308bdc932bf6323344a77247cc54e90cbc90a9e9565b615811b9377b3"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/runtime-owner.ts",
+      "sha256": "845b66da332a4949e2b1a7f173459f26bc64ab3d92a03a88636dfe74c390bcfb"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/transport.ts",
+      "sha256": "24a67d3d8ab5fef682d01d5dc93e988103b9e7c248c1c8d3203b839a9ee56da8"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/version-reference.test.ts",
+      "sha256": "7410d13a848c9488465898208f4abc9769e3078f25278cfb5df68c65a2c561a3"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/version-reference.ts",
+      "sha256": "e9f5fc8fdb3275da6773b72eeed5a50f478b7364c449c945dba84bf4e82f85d2"
+    },
+    {
+      "path": "/workspace/task-evidence/typed-applicability-adapter-06/manifest.json",
+      "sha256": "99cd08e960ebe2e1318fa85428819ebe2bb88fcc1fe57a62596259492cf652c3"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/README.md",
+      "sha256": "60557472af83a25ed0a41386b6c3018064c3a00f8966ab8b4c5e54e1f231903d"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/independent-review-v2.json",
+      "sha256": "eafb68f915d8f17374bd9db4307ac6775d85c499099465b26cf1029c5dd53171"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/029c39370ec7f32e2c93a91772b9c87b17d92be6b159476c0982cec9a208c24c",
+      "sha256": "029c39370ec7f32e2c93a91772b9c87b17d92be6b159476c0982cec9a208c24c"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/113aa99735a2681b656d95af30bfd1cd2f1b01f17cccec5f6bb83e1dd5729853",
+      "sha256": "113aa99735a2681b656d95af30bfd1cd2f1b01f17cccec5f6bb83e1dd5729853"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/2fe5fd853ed375bc05efdcd2e8090dc62766df248d3c431ab11b726d54c89ca7",
+      "sha256": "2fe5fd853ed375bc05efdcd2e8090dc62766df248d3c431ab11b726d54c89ca7"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/3110975f9eaa20c3b086737dacc3e01ebd469a1291a27cbf00dd3130f54dde6a",
+      "sha256": "3110975f9eaa20c3b086737dacc3e01ebd469a1291a27cbf00dd3130f54dde6a"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/364f2adfe7b0f124c9baa8bcaa9370b87fdfe808533c2f29e4933792b0661877",
+      "sha256": "364f2adfe7b0f124c9baa8bcaa9370b87fdfe808533c2f29e4933792b0661877"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/3c2ceb7bfc84cd34720f4a5271338ab9d8280d34bdd1eb250c64306202f2ed8b",
+      "sha256": "3c2ceb7bfc84cd34720f4a5271338ab9d8280d34bdd1eb250c64306202f2ed8b"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/429e36faae025f6314a134b4afc164f260fd18cef64773e2471446b61d5eb8b5",
+      "sha256": "429e36faae025f6314a134b4afc164f260fd18cef64773e2471446b61d5eb8b5"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7",
+      "sha256": "5ca0e2f90be0bc5928ee465f76518fee316dfa775aed885658a29a419cc293b7"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/6605c2885b68ba494a20933880fe94f1416761a49cf6bc91730abc59c2e91e1b",
+      "sha256": "6605c2885b68ba494a20933880fe94f1416761a49cf6bc91730abc59c2e91e1b"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/80df6f1048caea9aacd9b26c0280310e7f63087c7b3de2b1c9860a1f9aa9c1c6",
+      "sha256": "80df6f1048caea9aacd9b26c0280310e7f63087c7b3de2b1c9860a1f9aa9c1c6"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/8b6da908cdb6403589a2adf625a52939213b71556b23beabecf9180bd1ca7b63",
+      "sha256": "8b6da908cdb6403589a2adf625a52939213b71556b23beabecf9180bd1ca7b63"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/8e3e34658976777fd08846f702435b5729e6598d054a98a07e4bf2beed6cec97",
+      "sha256": "8e3e34658976777fd08846f702435b5729e6598d054a98a07e4bf2beed6cec97"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/9c4d4fbbbaa610ceea7f700121035ab30dde35e11d8e177577706b90af8a7c0a",
+      "sha256": "9c4d4fbbbaa610ceea7f700121035ab30dde35e11d8e177577706b90af8a7c0a"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/a05ae0d874c0bed1278e4f7237b13c0c16db57404391ee54094cc1bb8def167f",
+      "sha256": "a05ae0d874c0bed1278e4f7237b13c0c16db57404391ee54094cc1bb8def167f"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/a4b2c3ad519429daee96a3a4d5a3722648096d072d11d78acfb9c2a381c34fc5",
+      "sha256": "a4b2c3ad519429daee96a3a4d5a3722648096d072d11d78acfb9c2a381c34fc5"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/ac5dd5cfdbeec11418017de9398099242b633fba761e3ed45c0adce37fb66fa8",
+      "sha256": "ac5dd5cfdbeec11418017de9398099242b633fba761e3ed45c0adce37fb66fa8"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/b82d60a1a3b72cb1dd75bbce37d9642144f1bd6f84fbd6c781f556473e7e2bec",
+      "sha256": "b82d60a1a3b72cb1dd75bbce37d9642144f1bd6f84fbd6c781f556473e7e2bec"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/c42a37389997b2e93398362045a02afeef5c93d912658037ba5f41c307c04d4f",
+      "sha256": "c42a37389997b2e93398362045a02afeef5c93d912658037ba5f41c307c04d4f"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/c8ddfbd45b5ed9f4337d6a5c0d3b1c042832789592ac43fa10000b9a55a119d0",
+      "sha256": "c8ddfbd45b5ed9f4337d6a5c0d3b1c042832789592ac43fa10000b9a55a119d0"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/cf080699100723d787ce9cf4df0dde62f77ee494f17e07ae69ffef386a5d58a6",
+      "sha256": "cf080699100723d787ce9cf4df0dde62f77ee494f17e07ae69ffef386a5d58a6"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/d0518843e4d1015e4ccb499a9d0b2bf03d28b4820a49fa6d8c9f50bd976c53b1",
+      "sha256": "d0518843e4d1015e4ccb499a9d0b2bf03d28b4820a49fa6d8c9f50bd976c53b1"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/e414506a92817dfee1664d33561e8a8c264a10951794a88fb8adfa9b55a7e473",
+      "sha256": "e414506a92817dfee1664d33561e8a8c264a10951794a88fb8adfa9b55a7e473"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/f4e134377b6b46147023b5bf7bf57e3f9cc746238ad6891b4e7a47fbc98aea1c",
+      "sha256": "f4e134377b6b46147023b5bf7bf57e3f9cc746238ad6891b4e7a47fbc98aea1c"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/artifacts/fb90334435ccaf5f395ec7e0b9dc893528a2aad49b1d6d3b3d064928092a34ef",
+      "sha256": "fb90334435ccaf5f395ec7e0b9dc893528a2aad49b1d6d3b3d064928092a34ef"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/manifest.json",
+      "sha256": "7ba7660e882afd1d5cea4ba37784567cde6ba53dc7633eaa065632f79434fcd4"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/receipts/01e35da8ce834669df2f555a268da03e0b80cfa63d141d26eecb678bd8fb9313.json",
+      "sha256": "01e35da8ce834669df2f555a268da03e0b80cfa63d141d26eecb678bd8fb9313"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/receipts/1f348fff4928f3748df40f66b3641d816f652356eaec7e0f6e837262773cdcf2.json",
+      "sha256": "1f348fff4928f3748df40f66b3641d816f652356eaec7e0f6e837262773cdcf2"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/receipts/7a019e1306fa321c557ea6d26b179d29748a489d1931267dd5aee02aef6c4c6e.json",
+      "sha256": "7a019e1306fa321c557ea6d26b179d29748a489d1931267dd5aee02aef6c4c6e"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed/receipts/98830321fd61e5ff25a18c55eb132acee4f5d3eb1932bf6d6a7096feaa621d9b.json",
+      "sha256": "98830321fd61e5ff25a18c55eb132acee4f5d3eb1932bf6d6a7096feaa621d9b"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/installed-manifest.sha256",
+      "sha256": "618bc295ad6e19c1cc63ffd2b1d8ab00e88e60e7b4aace02b40ec93272a96c62"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/package.json",
+      "sha256": "fbbf9283876d884472d02b464f6c31921df828756b4f07a67d0738c0b0a1d3d4"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/preserved-v1.json",
+      "sha256": "db562bc0b7403b8f6bd49c28802555dd305ff7df705d81d5ee961ab437dc126e"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/results/shadow-report.json",
+      "sha256": "07c74ea8d5d3084024739022d4d3fd11f8a87e541daf84a12fafb00386311dc6"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/results/tests.tap",
+      "sha256": "a2a859346f897b88ec1635697ec6035db6c989ff15c5fd3c2580e8434ef8a9bf"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/results/typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/results/v1-v2-comparison.json",
+      "sha256": "a7c3790f821c0c11468378c643c5cf27b59bccdccbfd24c78d0d295855815528"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/results/validation.json",
+      "sha256": "fd45abe1ddfcf19e7a37ac9e4e572fb6185639e6be1e37dedbb0a2e250b1aa3d"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/applicability.ts",
+      "sha256": "901e78b34894e1f9d962db6d32375d398dc3daf2b73bd8a23f3b7428f997ffee"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/bind.ts",
+      "sha256": "3fb74cc1ec343de11796bea75f20d6d018d3471f693881e7bf5ee95f935a56e9"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/evaluate.ts",
+      "sha256": "e6c3fbcc03f6ccc60d11f987a7ca67b47ab76e84a5f973de29853eed1184271b"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/files.ts",
+      "sha256": "5e0da54b39d96550435a1fd76f92fa58a0114a7482b73aa2a6508e20e6896487"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/fixture-context.ts",
+      "sha256": "11436ca241f306e8ce60f5cc18f18bb0fd79c7bdcf475f2dd72f6cdcd21b3f2a"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/install.ts",
+      "sha256": "763e97efb1ccf23b96e4837706228baecbbb803d23e36dee3b1d782b32021aa5"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/manifest.ts",
+      "sha256": "d5fcf8bcf0829ee1d35d6a7ac87246b6b739fe9db386d16ff6a44516547934b1"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/shadow.ts",
+      "sha256": "81ab04e02f7fd2c5612c375e6afdb4c0012c5205c178503a0c4b4d4906713f27"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/snapshot.ts",
+      "sha256": "8f7e4f0e15b3289e919a5204ae5637c95598391f81e8cd68e41ff7877ba46c66"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/src/types.ts",
+      "sha256": "bb4f27979d9442c7a15f5f8c217bd1f06621bbb12941086865910d13fdbbbc09"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/tests/full-context.test.ts",
+      "sha256": "975654aca1bdebca625d2ddc174af7492ce2c4d0ac6c87e916e09d16a2e05490"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/tests/trust-boundary.test.ts",
+      "sha256": "844fc34f2b14718476ba85f7381c5092e8a07cc56598f393b0d3b06a780348c3"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/tsconfig.json",
+      "sha256": "c86cc5ddaa17b5b140cade57e333468759b2113e546706dd4d676a0692cb8c20"
+    },
+    {
+      "path": "/workspace/task-evidence/record-capability-prototype-02/manifest.json",
+      "sha256": "9d3f255bdc9ef81253f5b487e4359fff11dab0eeb661780e32f28ec5659b8630"
+    },
+    {
+      "path": "/workspace/task-evidence/exposed-object-alias-audit-01/audit.test.ts",
+      "sha256": "cc8cad6892571df73a2584676b7df93c2b9d9c0518a1b79c500883d58dd5d51c"
+    },
+    {
+      "path": "/workspace/task-evidence/exposed-object-alias-audit-01/fixture.ts",
+      "sha256": "b843496e999ef972d93c7ca2cfa548d65efde012a59aacf00f063d03552406b3"
+    },
+    {
+      "path": "/workspace/task-evidence/exposed-object-alias-audit-01/tsconfig.json",
+      "sha256": "8010f037413463a1cd53de1169c8d232bc1c8f80f1f96fb24aeb109055989d72"
+    },
+    {
+      "path": "/workspace/task-evidence/exposed-object-alias-audit-01/package.json",
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+    }
+  ],
+  "known05ContextAliasRepeated": false,
+  "sourceAndPacketBytesStable": true
+}

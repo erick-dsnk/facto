@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: retained records remain actual selector output; all original/incoming versions retain exact fields and time
+ok 1 - retained records remain actual selector output; all original/incoming versions retain exact fields and time
+  ---
+  duration_ms: 7.763673
+  type: 'test'
+  ...
+# Subtest: opaque handles cannot be forged, serialized or mutated and caller mutation cannot change snapshot
+ok 2 - opaque handles cannot be forged, serialized or mutated and caller mutation cannot change snapshot
+  ---
+  duration_ms: 1.387052
+  type: 'test'
+  ...
+# Subtest: unchanged material is stable; Unicode, whitespace, keeper, timestamp and supplied raw metadata change generation
+ok 3 - unchanged material is stable; Unicode, whitespace, keeper, timestamp and supplied raw metadata change generation
+  ---
+  duration_ms: 4.808929
+  type: 'test'
+  ...
+# Subtest: raw graph retains omitted bridge and both versions after its current text changes
+ok 4 - raw graph retains omitted bridge and both versions after its current text changes
+  ---
+  duration_ms: 6.420389
+  type: 'test'
+  ...
+# Subtest: complete twelve-version graph accepted; excessive raw inventory or projection width fails without truncation
+ok 5 - complete twelve-version graph accepted; excessive raw inventory or projection width fails without truncation
+  ---
+  duration_ms: 16.442266
+  type: 'test'
+  ...
+# Subtest: stale prior material and material accessors fail before a snapshot can be issued
+ok 6 - stale prior material and material accessors fail before a snapshot can be issued
+  ---
+  duration_ms: 2.313137
+  type: 'test'
+  ...
+# Subtest: identical recurring versions retain both native occurrences and the actual selected original phase
+ok 7 - identical recurring versions retain both native occurrences and the actual selected original phase
+  ---
+  duration_ms: 1.332929
+  type: 'test'
+  ...
+# Subtest: permuted raw inventory changes generation even if selected source identities are unchanged
+ok 8 - permuted raw inventory changes generation even if selected source identities are unchanged
+  ---
+  duration_ms: 2.267127
+  type: 'test'
+  ...
+# Subtest: saved public09 pools preserve actual current selector output and every raw version, without old verdict transfer
+ok 9 - saved public09 pools preserve actual current selector output and every raw version, without old verdict transfer
+  ---
+  duration_ms: 1835.758628
+  type: 'test'
+  ...
+# Subtest: runtime owner captures actual claim slot, request, inherited deadline and independent install generation
+ok 10 - runtime owner captures actual claim slot, request, inherited deadline and independent install generation
+  ---
+  duration_ms: 2.682874
+  type: 'test'
+  ...
+# Subtest: late completion under cancel cannot cross owner gate or populate a cache
+ok 11 - late completion under cancel cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 1.163574
+  type: 'test'
+  ...
+# Subtest: late completion under epoch cannot cross owner gate or populate a cache
+ok 12 - late completion under epoch cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.592613
+  type: 'test'
+  ...
+# Subtest: late completion under replace cannot cross owner gate or populate a cache
+ok 13 - late completion under replace cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.540275
+  type: 'test'
+  ...
+# Subtest: late completion under session_expiry cannot cross owner gate or populate a cache
+ok 14 - late completion under session_expiry cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.648398
+  type: 'test'
+  ...
+# Subtest: late completion under deadline cannot cross owner gate or populate a cache
+ok 15 - late completion under deadline cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.673375
+  type: 'test'
+  ...
+# Subtest: late completion under material cannot cross owner gate or populate a cache
+ok 16 - late completion under material cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.532883
+  type: 'test'
+  ...
+# Subtest: late completion under install cannot cross owner gate or populate a cache
+ok 17 - late completion under install cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.526193
+  type: 'test'
+  ...
+# Subtest: late completion under done cannot cross owner gate or populate a cache
+ok 18 - late completion under done cannot cross owner gate or populate a cache
+  ---
+  duration_ms: 0.541677
+  type: 'test'
+  ...
+# Subtest: same evidence does not make an old owner suitable for another claim slot or cache generation
+ok 19 - same evidence does not make an old owner suitable for another claim slot or cache generation
+  ---
+  duration_ms: 0.579254
+  type: 'test'
+  ...
+# Subtest: exact prior claim identity is mandatory; initial-only material needs no fake assessment
+ok 20 - exact prior claim identity is mandatory; initial-only material needs no fake assessment
+  ---
+  duration_ms: 1.032707
+  type: 'test'
+  ...
+# Subtest: current request ownership cannot bind unrelated claim material, wrong slot or altered source span
+ok 21 - current request ownership cannot bind unrelated claim material, wrong slot or altered source span
+  ---
+  duration_ms: 0.622408
+  type: 'test'
+  ...
+# Subtest: admitted public span uses Unicode scalar offsets and does not add surrounding text to material
+ok 22 - admitted public span uses Unicode scalar offsets and does not add surrounding text to material
+  ---
+  duration_ms: 0.560935
+  type: 'test'
+  ...
+# Subtest: native metadata and every positive edge map directly without reconstructing source-family predicates
+ok 23 - native metadata and every positive edge map directly without reconstructing source-family predicates
+  ---
+  duration_ms: 1.482124
+  type: 'test'
+  ...
+# Subtest: native last-per-pass duplicate selection is exact, even when all material bytes match
+ok 24 - native last-per-pass duplicate selection is exact, even when all material bytes match
+  ---
+  duration_ms: 0.450158
+  type: 'test'
+  ...
+# Subtest: pending initial material binds static supplied dependence but cannot become a completed receipt context
+ok 25 - pending initial material binds static supplied dependence but cannot become a completed receipt context
+  ---
+  duration_ms: 0.370018
+  type: 'test'
+  ...
+# Subtest: pure initial derivation preserves raw generation/material/order and never mints an authority or handle
+ok 26 - pure initial derivation preserves raw generation/material/order and never mints an authority or handle
+  ---
+  duration_ms: 0.991395
+  type: 'test'
+  ...
+# Subtest: initial derivation rejects wrong claim, record mutation, ordering and non-pending native handles
+ok 27 - initial derivation rejects wrong claim, record mutation, ordering and non-pending native handles
+  ---
+  duration_ms: 0.786927
+  type: 'test'
+  ...
+# Subtest: missing bridge/raw version changes raw generation; an old pending snapshot is never silently rewritten
+ok 28 - missing bridge/raw version changes raw generation; an old pending snapshot is never silently rewritten
+  ---
+  duration_ms: 0.723561
+  type: 'test'
+  ...
+# Subtest: changed synthetic response-origin outputs alter only derived graph identity, never pre-ask raw state
+ok 29 - changed synthetic response-origin outputs alter only derived graph identity, never pre-ask raw state
+  ---
+  duration_ms: 1.513251
+  type: 'test'
+  ...
+# Subtest: native initial completion cannot hide a retained-record loss caused by deduplicating initial occurrences
+ok 30 - native initial completion cannot hide a retained-record loss caused by deduplicating initial occurrences
+  ---
+  duration_ms: 0.642438
+  type: 'test'
+  ...
+# Subtest: a successful await grants no assessment and still needs a synchronous gate immediately before commit
+ok 31 - a successful await grants no assessment and still needs a synchronous gate immediately before commit
+  ---
+  duration_ms: 0.682189
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2561.023073

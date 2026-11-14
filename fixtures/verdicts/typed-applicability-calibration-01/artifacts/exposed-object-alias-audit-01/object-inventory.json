@@ -1,0 +1,692 @@
+[
+  {
+    "path": "adapter06.result",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.probabilities",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.evidence",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.judgment.evidence.0",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.evidence.1",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.selectedEvidenceIds",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.judgment.misleadingEvidenceIds",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.judgment.sourceAssessments",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.sourceAssessments.target",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.sourceAssessments.control-0",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.claimRisk",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.originAssessments",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.judgment.originAssessments.0",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.judgment.originAssessments.0.evidenceIds",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.eligibility",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.eligibility.0",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.eligibility.0.token",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.eligibility.0.audit",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.unavailable",
+    "frozen": false,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.claim",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedEvidenceIds",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedRecords",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedRecords.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedRecords.0.metadata",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedRecords.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedRecords.1.metadata",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.retainedNodeKeys",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.0.record",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.0.record.metadata",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.0.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.1.record",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.1.record.metadata",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originNodes.1.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originLinks",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originLinks.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originLinks.0.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originLinks.0.state.nativeReasons",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originLinks.0.state.staticInputReasons",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativeFamilyById",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativeFamilyById.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativeFamilyById.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativePriorOriginAssessments",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativePriorOriginAssessments.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativePriorOriginAssessments.0.evidenceIds",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.originGraphState.nativeCompleteness",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.verdict",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.verdict.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.selected_evidence",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.selected_evidence.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.misleading_reason",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.misleading_reason.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.claim_risk",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.claim_risk.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_stance",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_stance.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_relevant",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_scope",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_context_reason",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_context_reason.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_context_established",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_content_basis",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_content_basis.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_stance",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_stance.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_relevant",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_scope",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_context_reason",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_context_reason.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_context_established",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_content_basis",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e1_content_basis.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_e1_origin",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.e0_e1_origin.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.a0_applicability",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.answers.a0_applicability.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.probabilities",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.evidence",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.evidence.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.evidence.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.selectedEvidenceIds",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.misleadingEvidenceIds",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.sourceAssessments",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.sourceAssessments.target",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.sourceAssessments.control-0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.claimRisk",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.originAssessments",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.originAssessments.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.assessmentContext.assessment.state.judgment.originAssessments.0.evidenceIds",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.completedJudgment",
+    "frozen": false,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.completedJudgment.token",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.completedJudgment.audit",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.dispatch",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.dispatch.questionMap",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.result.dispatch.questionMap.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.result.dispatch.questionMap.0.scopeDimensions",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.material",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.owner",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.context",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.context.signal",
+    "frozen": false,
+    "kind": "native_opaque"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.context.now",
+    "frozen": false,
+    "kind": "callable"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.context.canConsume",
+    "frozen": false,
+    "kind": "callable"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.context.consume",
+    "frozen": false,
+    "kind": "callable"
+  },
+  {
+    "path": "adapter06.dispatchOwnerSnapshot.context.recordUsage",
+    "frozen": false,
+    "kind": "callable"
+  },
+  {
+    "path": "seam02.materialSnapshot",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedEvidence",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedEvidence.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedEvidence.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedRecords",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedRecords.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedRecords.0.metadata",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedRecords.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedRecords.1.metadata",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.retainedNodeKeys",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.originNodes",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.originNodes.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originNodes.0.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originNodes.1",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originNodes.1.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originLinks",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.originLinks.0",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originLinks.0.state",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originLinks.0.state.nativeReasons",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.originLinks.0.state.staticInputReasons",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.originGraphState",
+    "frozen": true,
+    "kind": "record"
+  },
+  {
+    "path": "seam02.materialSnapshot.originGraphState.nativeFamilyById",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.materialSnapshot.originGraphState.nativePriorOriginAssessments",
+    "frozen": true,
+    "kind": "array"
+  },
+  {
+    "path": "seam02.ownerBinding",
+    "frozen": true,
+    "kind": "record"
+  }
+]

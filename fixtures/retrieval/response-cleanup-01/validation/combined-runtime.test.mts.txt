@@ -1,0 +1,106 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { once } from 'node:events';
+import { AbortableExa } from './combined-client.ts';
+import { AttemptBudget } from '/workspace/stack-20/services/api/src/runtime/budget.ts';
+import { PipelineError } from '/workspace/stack-20/packages/contracts/src/index.ts';
+
+const deferred = () => { let resolve!: () => void; const promise = new Promise<void>(done => { resolve = done; }); return { promise, resolve }; };
+function setup(fetcher: typeof fetch, initialNow = 0) {
+  const controller = new AbortController();
+  const budget = new AttemptBudget(); let now = initialNow;
+  const context = budget.context(controller.signal, () => now, 10_000);
+  const client = new AbortableExa('local-test-key', controller.signal, fetcher, context, 'claim');
+  return { client, budget, controller, setNow: (value: number) => { now = value; }, count: () => budget.searches.get('claim') ?? 0 };
+}
+async function expectError(promise: Promise<unknown>, code: string, retryable: boolean) {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await assert.rejects(Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('cleanup blocked primary error')), 250); })]), error => error instanceof PipelineError && error.code === code && error.retryable === retryable);
+  } finally { clearTimeout(timer); }
+}
+
+for (const cleanup of ['pending', 'rejected'] as const) {
+  for (const [status, code, retryable, attempts] of [[401, 'exa_authentication_failed', false, 1], [403, 'exa_authentication_failed', false, 1], [400, 'exa_unavailable', false, 1], [429, 'exa_rate_limited', true, 2], [503, 'exa_unavailable', true, 2]] as const) {
+    test(`combined actual HTTP seam: ${status}, ${cleanup} cleanup, ${attempts} charged attempt(s)`, async () => {
+      const release = deferred(); let dispatched = 0, cancelled = 0;
+      const state = setup((async () => {
+        dispatched++;
+        return new Response(new ReadableStream({ cancel() { cancelled++; return cleanup === 'pending' ? release.promise : Promise.reject(new Error('cleanup details')); } }), { status, headers: { 'retry-after': '0' } });
+      }) as typeof fetch);
+      try { await expectError(state.client.request('/search', 'POST', {}), code, retryable); }
+      finally { release.resolve(); }
+      assert.equal(dispatched, attempts); assert.equal(state.count(), attempts); assert.equal(cancelled, attempts); assert.equal(state.budget.jev, 0);
+    });
+  }
+  for (const size of ['declared', 'streamed'] as const) {
+    test(`combined actual HTTP seam: ${size} oversize, ${cleanup} cleanup, no retry`, async () => {
+      const release = deferred(); let dispatched = 0, cancelled = 0;
+      const state = setup((async () => {
+        dispatched++;
+        return new Response(new ReadableStream({ start(c) { if (size === 'streamed') c.enqueue(new Uint8Array(300_000)); }, cancel() { cancelled++; return cleanup === 'pending' ? release.promise : Promise.reject(new Error('cleanup details')); } }), { headers: size === 'declared' ? { 'content-length': '300000' } : {} });
+      }) as typeof fetch);
+      try { await expectError(state.client.request('/search', 'POST', {}), 'malformed_exa_response', false); }
+      finally { release.resolve(); }
+      assert.equal(dispatched, 1); assert.equal(state.count(), 1); assert.equal(cancelled, 1);
+    });
+  }
+}
+
+test('remaining shared allowance retains provider failure without a suppressed retry charge', async () => {
+  let dispatched = 0;
+  const state = setup((async () => { dispatched++; return new Response('limited', { status: 429, headers: { 'retry-after': '0' } }); }) as typeof fetch);
+  state.budget.consume('search', 'claim');
+  await expectError(state.client.request('/search', 'POST', {}), 'exa_rate_limited', true);
+  assert.equal(dispatched, 1); assert.equal(state.count(), 2);
+});
+
+test('known error at absolute deadline still normalizes timeout, without retry or extra charge', async () => {
+  let dispatched = 0;
+  const state = setup((async () => {
+    dispatched++;
+    return new Response(new ReadableStream({ cancel() { state.setNow(10_000); return new Promise(() => undefined); } }), { status: 503, headers: { 'retry-after': '0' } });
+  }) as typeof fetch);
+  await expectError(state.client.request('/search', 'POST', {}), 'timeout', false);
+  assert.equal(dispatched, 1); assert.equal(state.count(), 1);
+});
+
+test('cancellation during cleanup remains the primary terminal reason', async () => {
+  let dispatched = 0;
+  const state = setup((async () => {
+    dispatched++;
+    return new Response(new ReadableStream({ cancel() { state.controller.abort(new PipelineError('cancelled')); return Promise.reject(new Error('cleanup details')); } }), { status: 401 });
+  }) as typeof fetch);
+  await expectError(state.client.request('/search', 'POST', {}), 'cancelled', false);
+  assert.equal(dispatched, 1); assert.equal(state.count(), 1);
+});
+
+test('pre-dispatch absolute deadline consumes no attempt and performs no HTTP', async () => {
+  let dispatched = 0;
+  const state = setup((async () => { dispatched++; return new Response('{}'); }) as typeof fetch, 10_000);
+  await expectError(state.client.request('/search', 'POST', {}), 'timeout', false);
+  assert.equal(dispatched, 0); assert.equal(state.count(), 0);
+});
+
+test('retry success still consumes exactly the two actual HTTP attempts', async () => {
+  let dispatched = 0;
+  const state = setup((async () => ++dispatched === 1 ? new Response('limited', { status: 429, headers: { 'retry-after': '0' } }) : new Response('{"results":[]}')) as typeof fetch);
+  assert.deepEqual(await state.client.request('/search', 'POST', {}), { results: [] });
+  assert.equal(dispatched, 2); assert.equal(state.count(), 2);
+});
+
+test('combined native HTTP response reset preserves malformed classification and one charge', async () => {
+  const closed = deferred(); let dispatched = 0;
+  const server = createServer((_request, response) => {
+    response.on('close', closed.resolve); response.writeHead(200, { 'content-length': '300000' }); response.write('x'); setTimeout(() => response.destroy(), 5);
+  });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const address = server.address(); assert(address && typeof address !== 'string');
+  const state = setup((async (_url, init) => {
+    dispatched++; assert.equal(init?.signal, state.controller.signal);
+    const response = await fetch(`http://127.0.0.1:${address.port}`, init); await closed.promise; await new Promise(resolve => setTimeout(resolve, 20)); return response;
+  }) as typeof fetch);
+  try { await expectError(state.client.request('/search', 'POST', {}), 'malformed_exa_response', false); assert.equal(dispatched, 1); assert.equal(state.count(), 1); }
+  finally { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); }
+});
