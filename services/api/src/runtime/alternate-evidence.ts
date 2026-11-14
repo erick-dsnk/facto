@@ -38,6 +38,7 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
   const originalById = new Map(original.map(record => [record.id, record]));
   const suppliedOriginal = new Map(existing.map(record => [record.id, record]));
   const suppliedIncoming = new Map(incoming.map(record => [record.id, record]));
+  const containedFallbacks = new Map<string, Evidence>();
   for (const addition of additions) {
     const previous = originalById.get(addition.id);
     // A shorter indexed highlight cannot supersede the surrounding page text
@@ -51,6 +52,7 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
       && previous.publishedAt === addition.publishedAt
       && suppliedOriginal.get(addition.id)?.sourceGroup === suppliedIncoming.get(addition.id)?.sourceGroup) {
       byId.set(addition.id, previous);
+      containedFallbacks.set(addition.id, addition);
     }
   }
   if (additions.every(record => original.some(previous => material(previous) === material(record)))) return original;
@@ -140,18 +142,25 @@ export function retainAlternateEvidence(existing: Evidence[], incoming: Evidence
   // family's first slot ahead of a changed window or a genuinely new sibling.
   const fresh = rank(additions.filter(record => !unchanged.has(record.id)));
   const recurring = rank(additions.filter(record => unchanged.has(record.id)));
-  for (const record of [...protectedOld, ...fresh, ...recurring, ...rankedOld]) {
-    if (seen.has(record.id) || (perDomain.get(record.sourceGroup) ?? 0) >= 2) continue;
-    if (originalById.has(record.id) && oldFamilies.has(family.get(record.id)!) && !protectedOld.includes(record)) continue;
-    const relatives = selected.filter(previous => family.get(previous.id) === family.get(record.id));
-    // This also covers genuinely new incoming records. A dependence path through
-    // an omitted publisher/origin bridge cannot turn into two independent sources.
-    // Multiple records remain possible when their dependence is visible in the
-    // actually retained raw fields (for example shared full-pool echo identities).
-    if (relatives.length && independentSourceCount([...relatives, record]) !== 1) continue;
-    selected.push(record); seen.add(record.id);
-    if (originalById.has(record.id)) oldFamilies.add(family.get(record.id)!);
-    perDomain.set(record.sourceGroup, (perDomain.get(record.sourceGroup) ?? 0) + 1);
+  for (const scheduled of [...protectedOld, ...fresh, ...recurring, ...rankedOld]) {
+    // Richer context can hide a deterministic copy relation visible in the
+    // short indexed passage. Try the actual incoming variant through the same
+    // guards before dropping the ID; never weaken the known-family check.
+    const fallback = containedFallbacks.get(scheduled.id);
+    for (const record of fallback ? [scheduled, fallback] : [scheduled]) {
+      if (seen.has(record.id) || (perDomain.get(record.sourceGroup) ?? 0) >= 2) continue;
+      if (originalById.has(record.id) && oldFamilies.has(family.get(record.id)!) && !protectedOld.includes(scheduled)) continue;
+      const relatives = selected.filter(previous => family.get(previous.id) === family.get(record.id));
+      // This also covers genuinely new incoming records. A dependence path through
+      // an omitted publisher/origin bridge cannot turn into two independent sources.
+      // Multiple records remain possible when their dependence is visible in the
+      // actually retained raw fields (for example shared full-pool echo identities).
+      if (relatives.length && independentSourceCount([...relatives, record]) !== 1) continue;
+      selected.push(record); seen.add(record.id);
+      if (originalById.has(record.id)) oldFamilies.add(family.get(record.id)!);
+      perDomain.set(record.sourceGroup, (perDomain.get(record.sourceGroup) ?? 0) + 1);
+      break;
+    }
     if (selected.length === 6) break;
   }
   // Preserve deterministic full-pool echo identities. Recomputing them after
