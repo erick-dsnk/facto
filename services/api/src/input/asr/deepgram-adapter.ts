@@ -21,9 +21,16 @@ export interface DeepgramSocket {
 export type DeepgramSocketFactory = (url: string, headers: Record<string, string>) => DeepgramSocket;
 /** One diagnostic line: an event name plus numbers and fixed codes. Never text, audio or the key. */
 export type DeepgramLog = (event: string, fields: Record<string, number | string>) => void;
+/** One final Deepgram result with per-word confidence. Debug only: it contains what bystanders said. */
+export type DeepgramTranscriptEntry = {
+  generation: number; start: number; duration: number; transcript: string;
+  averageConfidence: number | null; words: { word: string; confidence: number | null; speaker: number | null }[];
+};
 export type DeepgramOptions = {
   apiKey: string; url?: string; socketFactory?: DeepgramSocketFactory;
   openTimeoutMs?: number; keepAliveMs?: number; closeGraceMs?: number; now?: () => number; log?: DeepgramLog;
+  /** Off unless the server opts in (DEBUG_TRANSCRIPTS=1). Receives every final result with its words. */
+  transcriptLog?: (entry: DeepgramTranscriptEntry) => void;
 };
 
 const defaultSocketFactory: DeepgramSocketFactory = (url, headers) => new WebSocket(url, { headers, handshakeTimeout: 10_000 });
@@ -72,7 +79,8 @@ function toWords(result: z.infer<typeof resultsSchema>): AsrWord[] {
 
 /**
  * Deepgram streaming ASR behind the transport's AsrAdapter seam. One provider socket per stream generation.
- * Raw audio and transcript text are never logged; failures surface only as PipelineError codes.
+ * Raw audio is never logged. Transcript text reaches a log only through the opt-in transcriptLog
+ * (DEBUG_TRANSCRIPTS=1); failures surface only as PipelineError codes.
  */
 export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
   if (!options.apiKey) throw new Error('The Deepgram adapter needs DEEPGRAM_API_KEY.');
@@ -142,6 +150,15 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
         const results = resultsSchema.safeParse(message);
         if (results.success) {
           const words = toWords(results.data);
+          if (results.data.is_final && options.transcriptLog && words.length) {
+            const scored = words.map(word => word.confidence).filter((value): value is number => value !== null);
+            options.transcriptLog({
+              generation, start: results.data.start, duration: results.data.duration,
+              transcript: results.data.channel.alternatives[0]?.transcript ?? '',
+              averageConfidence: scored.length ? scored.reduce((sum, value) => sum + value, 0) / scored.length : null,
+              words: words.map(word => ({ word: word.text, confidence: word.confidence, speaker: word.speaker }))
+            });
+          }
           if (results.data.is_final) assembler.final(words, results.data.start + results.data.duration);
           else assembler.interim(words);
           return;

@@ -8,7 +8,9 @@ import UIKit
 // to the glasses camera and display. Rules from docs/live-pipeline.md that apply here:
 // - The camera stream is never paused or stopped for a photo (decision 5a).
 // - Provider keys never reach the app; it talks only to services/api.
-// - Logs carry ids, codes and counts. Never audio, transcripts or OCR text.
+// - Logs carry ids, codes and counts. Never audio, transcripts or OCR text. The on-device
+//   DebugLog is the exception (Debug/DebugLog.swift): photos, OCR text and transcripts stay
+//   on the phone for 24 hours while its toggle is on.
 
 // MARK: - Seams
 
@@ -319,6 +321,7 @@ final class LiveModel {
     didSet {
       updateKeepAwake()
       if listening.isActive != oldValue.isActive { refreshWake() }
+      if listening != oldValue { debugLog.log("live.listening", ["phase": String(describing: listening)]) }
     }
   }
   private(set) var wakeState: WakeWordState = .off {
@@ -326,9 +329,13 @@ final class LiveModel {
   }
   private(set) var isStartingStream = false
   /// The last non-fatal problem, e.g. a stream that wouldn't start or a backend error code.
-  private(set) var notice: String?
+  private(set) var notice: String? {
+    didSet { if let notice, notice != oldValue { debugLog.log("live.notice", ["text": notice]) } }
+  }
   /// Phone-side status of the last "Check this".
-  private(set) var checkMessage: String?
+  private(set) var checkMessage: String? {
+    didSet { if let checkMessage, checkMessage != oldValue { debugLog.log("live.check_message", ["text": checkMessage]) } }
+  }
   /// Manual checks waiting for an outcome.
   private(set) var pendingChecks: Set<String> = []
   /// From `session.ready` / `session.ended`. Nil until the first event.
@@ -425,6 +432,7 @@ final class LiveModel {
   @ObservationIgnored private let configureAudioSession: () -> Void
   @ObservationIgnored private let idleTimer: (_ keepAwake: Bool) -> Void
   @ObservationIgnored private let uptime: () -> TimeInterval
+  @ObservationIgnored private let debugLog: DebugLog
   @ObservationIgnored private let wake: WakeWordListening
   @ObservationIgnored private let wakeWindow: TimeInterval
   @ObservationIgnored private let wakeCheckWindow: TimeInterval
@@ -490,6 +498,7 @@ final class LiveModel {
     configureAudioSession: (() -> Void)? = nil,
     idleTimer: ((_ keepAwake: Bool) -> Void)? = nil,
     uptime: (() -> TimeInterval)? = nil,
+    debugLog: DebugLog = .shared,
     wakeListener: WakeWordListening? = nil,
     wakeWindow: TimeInterval = LiveModel.defaultWakeWindow,
     wakeCheckWindow: TimeInterval = LiveModel.defaultWakeCheckWindow,
@@ -522,14 +531,15 @@ final class LiveModel {
     self.configureAudioSession = configureAudioSession ?? LiveModel.configureSpokenOutput
     self.idleTimer = idleTimer ?? { UIApplication.shared.isIdleTimerDisabled = $0 }
     self.uptime = uptime ?? { ProcessInfo.processInfo.systemUptime }
-    self.makeBackend = makeBackend ?? { BackendClient(config: $0) }
+    self.debugLog = debugLog
+    self.makeBackend = makeBackend ?? { BackendClient(config: $0, debugLog: debugLog) }
     let history = ResultHistory()
     let lens = LensCardViewModel()
     let relay = PlaybackRelay()
     self.history = history
     self.lens = lens
     self.relay = relay
-    self.presenter = ResultPresenter(speaker: speaker, chime: chime, playback: relay, history: history, lens: lens)
+    self.presenter = ResultPresenter(speaker: speaker, chime: chime, playback: relay, history: history, lens: lens, debugLog: debugLog)
     presenter.isMuted = isMuted
 
     lens.onChange = { [weak self] card in self?.lensChanged(card) }
@@ -563,11 +573,13 @@ final class LiveModel {
     defer { refreshWake() }
     let text = baseURLText.trimmingCharacters(in: .whitespacesAndNewlines)
     guard let url = URL(string: text), url.scheme == "http" || url.scheme == "https", let host = url.host() else {
+      debugLog.log("live.connect_rejected", ["reason": "invalid_url", "url": text])
       connection = .disconnected(reason: "invalid_url")
       return
     }
     // The join code and the session token must never cross the internet in clear text.
     guard url.scheme == "https" || Self.allowsCleartext(host: host) else {
+      debugLog.log("live.connect_rejected", ["reason": "insecure_url", "url": text])
       connection = .disconnected(reason: "insecure_url")
       notice = "Use an https:// URL. Plain http works only for localhost and private network addresses."
       return
@@ -588,10 +600,15 @@ final class LiveModel {
     if !restoring { configureAudioSession() }
     coordinator?.start()
     connection = .connecting
+    debugLog.log("live.connect", ["url": url.absoluteString])
     do {
       try await backend.connect()
     } catch {
       log.error("connect failed \(BackendClient.reasonCode(for: error), privacy: .public)")
+      debugLog.log("live.connect_failed", [
+        "reason": BackendClient.reasonCode(for: error), "error": String(describing: error),
+        "state": String(describing: backend.connectionState),
+      ])
       if case .disconnected(let reason) = backend.connectionState {
         notice = Self.connectFailureNotice(reason)
       }
@@ -891,11 +908,11 @@ final class LiveModel {
   private func build(_ config: BackendConfig) {
     let backend = makeBackend(config)
     backend.onUnreadableEvent = { [weak self] type in self?.unreadableEvent(type) }
-    let streamer = AudioStreamer(channel: backend, clock: audioClock, resumesAfterReconnect: false)
+    let streamer = AudioStreamer(channel: backend, clock: audioClock, resumesAfterReconnect: false, debugLog: debugLog)
     streamer.onStopped = { [weak self] reason in self?.listeningStopped(reason) }
     streamer.onAutoResumed = { [weak self] in self?.autoResumed() }
     relay.target = streamer
-    let coordinator = LookAndCheckCoordinator(channel: backend, photo: camera, recognizer: recognizer, submitter: backend)
+    let coordinator = LookAndCheckCoordinator(channel: backend, photo: camera, recognizer: recognizer, submitter: backend, debugLog: debugLog)
     coordinator.canCapture = { [weak self] in
       guard let self else { return false }
       return self.isAppActive && self.glassesAuthorized && self.wantsBackendConnection && self.isConnected && backend.connectionState == .connected
@@ -1006,6 +1023,7 @@ final class LiveModel {
       // After a disconnect the server pauses the session. While listening, AudioStreamer
       // resumes it (within 5 s). Otherwise resume here so manual checks keep working.
       if !payload.active, !(streamer?.phase.isActive ?? false) {
+        debugDecision(event, "resume_paused_session")
         resume(epoch: event.sessionEpoch)
       }
     case .sessionEnded(let payload):
@@ -1014,6 +1032,7 @@ final class LiveModel {
       webDisplayRequestId = nil
       webDisplay.updateSession(id: nil, epoch: nil)
       sessionActive = false
+      debugDecision(event, "session_ended", ["reason": payload.reasonCode])
       clearRecoveryPresentation()
       notice = "The session ended. Connection recovery does not resume listening; tap Start listening when ready."
     case .claimChecking(let payload):
@@ -1054,9 +1073,11 @@ final class LiveModel {
         // claim.result always carries all three ids; without them it can't be tracked. A
         // check the user asked for still gets an answer.
         log.error("claim.result without ids \(event.logSummary, privacy: .public)")
+        debugDecision(event, "result_without_ids", ["userInitiated": manual])
         resolveManual(event.requestId, failed: true)
         return
       }
+      debugDecision(event, "present_result", ["userInitiated": manual, "action": result.presentation.action.rawValue])
       resolveManual(event.requestId, hadResult: true)
       if let activeSearch = searchState, activeSearch.requestId != event.requestId {
         presenter.present(result, presentation: Presentation(action: .silent, reasonCode: "newer_manual_check"), userInitiated: manual, identity: identity)
@@ -1078,9 +1099,14 @@ final class LiveModel {
       // An explicit request always gets an answer; automatic ones stay quiet (skips) or in
       // history (needs confirmation).
       if isUserInitiated(event.requestId) {
+        debugDecision(event, "manual_check_answered")
         resolveManual(event.requestId)
       } else if event.type == .claimNeedsConfirmation {
+        // Automatic: history only (presentation silent), nothing spoken or shown on the lens.
+        debugDecision(event, "automatic_history_only")
         presenter.presentOutcome(.needsConfirmation(heard: true), userInitiated: false)
+      } else {
+        debugDecision(event, "automatic_skip_ignored")
       }
     case .pipelineError(let payload):
       if event.requestId == searchState?.requestId { clearRecoveryPresentation() }
@@ -1088,13 +1114,17 @@ final class LiveModel {
       if event.requestId == webDisplayRequestId { webDisplayRequestId = nil }
       if let requestId = event.requestId {
         if isUserInitiated(requestId) {
+          debugDecision(event, "manual_check_failed", ["reason": payload.reasonCode])
           resolveManual(requestId, failed: true)
         } else {
+          debugDecision(event, "automatic_history_only", ["reason": payload.reasonCode])
           presenter.presentOutcome(.checkFailed, userInitiated: false)
         }
       } else if Self.quietErrorCodes.contains(payload.reasonCode) {
         log.info("routine backend code \(payload.reasonCode, privacy: .public)")
+        debugDecision(event, "quiet_code", ["reason": payload.reasonCode])
       } else {
+        debugDecision(event, "notice", ["reason": payload.reasonCode])
         notice = "Backend error: \(payload.reasonCode)"
       }
     case .claimSuperseded(let payload):
@@ -1105,6 +1135,7 @@ final class LiveModel {
       if let requestId = event.requestId {
         // "That statement was corrected" only while listening: never after the user's Stop.
         let announce = payload.presentation?.action == .respond && (streamer?.phase.isActive ?? false)
+        debugDecision(event, "supersede", ["announce": announce])
         presenter.supersede(requestId: requestId, revision: event.revision, announce: announce)
       }
     case .checkCancelled:
@@ -1114,9 +1145,12 @@ final class LiveModel {
         webDisplayRequestId = nil
         if displayOutputMode == .web { presenter.dismissCard() }
       }
-      if isUserInitiated(event.requestId) { resolveManual(event.requestId, cancelled: true) }
+      let manual = isUserInitiated(event.requestId)
+      debugDecision(event, manual ? "manual_check_cancelled" : "ignored")
+      if manual { resolveManual(event.requestId, cancelled: true) }
     case .captureRequest:
       // LookAndCheckCoordinator takes the photo itself; this is only the phone-side note.
+      debugDecision(event, "photo_triggered")
       checkMessage = "Heard “check this”."
     default:
       break
@@ -1132,6 +1166,7 @@ final class LiveModel {
         try await backend.sendControl(ControlMessage.resume(epoch: epoch))
       } catch {
         self.log.error("session.resume failed \(BackendClient.reasonCode(for: error), privacy: .public)")
+        self.debugLog.log("live.resume_failed", ["epoch": epoch, "error": String(describing: error)])
         self.notice = "Couldn't resume the backend session. Disconnect and connect again."
       }
     }
@@ -1151,6 +1186,20 @@ final class LiveModel {
         self.log.error("session.preferences failed \(BackendClient.reasonCode(for: error), privacy: .public)")
       }
     }
+  }
+
+  /// What Live mode did with a backend event, for the debug log. The raw event is already
+  /// there (`ws.recv`); this records the branch taken.
+  private func debugDecision(_ event: ServerEvent, _ decision: String, _ extra: [String: Any] = [:]) {
+    guard debugLog.isEnabled else { return }
+    var payload = extra
+    payload["decision"] = decision
+    payload["type"] = event.type.rawValue
+    payload["eventId"] = event.eventId
+    payload["requestId"] = event.requestId as Any
+    payload["claimId"] = event.claimId as Any
+    payload["revision"] = event.revision as Any
+    debugLog.log("live.decision", payload)
   }
 
   private func unreadableEvent(_ type: String?) {
@@ -1174,6 +1223,7 @@ final class LiveModel {
     clearTriggerAcknowledgement()
     listening = .stopped(reason)
     log.info("listening stopped \(reason.code, privacy: .public)")
+    debugLog.log("live.listening_stopped", ["reason": reason.code])
     speakStopReason(reason)
     // Listening failed during a wake session: stop its stream and go back to waiting.
     if wakeSession { Task { await self.endWakeSession() } }
@@ -1195,6 +1245,7 @@ final class LiveModel {
 
   private func streamStopped(byUser: Bool) {
     defer { refreshWake() }
+    debugLog.log("live.stream_stopped", ["byUser": byUser, "listening": String(describing: streamer?.phase ?? .idle)])
     guard let streamer, streamer.phase.isActive else { return }
     if byUser {
       streamer.stop()
@@ -1268,6 +1319,7 @@ final class LiveModel {
     checkTimers[requestId] = nil
     guard pendingChecks.contains(requestId) else { return }
     log.info("manual check timed out req=\(requestId, privacy: .public)")
+    debugLog.log("live.check_timeout", ["requestId": requestId, "timeoutSeconds": checkTimeout])
     resolveManual(requestId, failed: true)
   }
 

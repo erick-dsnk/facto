@@ -402,3 +402,21 @@ describe('Jev wire validation', () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 });
+
+describe('capture confidence threshold', () => {
+  const heard = (confidence: number): TextInput => ({ ...input('Helsinki is the capital of Finland.'), capture: { source: 'glasses_stream_audio', segmentId: 'segment-1', confidence, final: true } });
+
+  it('asks for confirmation below the default of 0.8 without calling Jev', async () => {
+    const client = fixtureClient(() => ({}));
+    expect(await createClassifier(client)(heard(0.7), context())).toMatchObject({ action: 'needs_confirmation', reasonCode: 'capture_uncertain' });
+    expect(client.ask).not.toHaveBeenCalled();
+  });
+
+  it('uses a configured lower threshold, so the same sentence goes on to classification', async () => {
+    const client = fixtureClient(() => ({}));
+    const result = await createClassifier(client, { minCaptureConfidence: 0.6 })(heard(0.7), context());
+    expect(result.reasonCode).not.toBe('capture_uncertain');
+    expect(client.ask).toHaveBeenCalled();
+    expect(await createClassifier(client, { minCaptureConfidence: 0.6 })(heard(0.59), context())).toMatchObject({ reasonCode: 'capture_uncertain' });
+  });
+});

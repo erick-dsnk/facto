@@ -42,11 +42,11 @@ export function decidePresentation(
   if (!preferences.automaticNotifications) return silent('notifications_disabled');
   if (result.verdict !== 'contradicted') return silent('automatic_noncontradiction');
   if (result.admission?.admissionAction !== 'check' || result.admission.assertionStatus !== 'asserted') return silent('unresolved_admission');
+  // Every admitted, asserted contradiction alerts. Priority and selected topic only label the
+  // reason; neither gates the alert, and there is no per-session alert budget.
   const priority = result.admission.hasPracticalConsequence;
   const selectedTopic = result.admission.matchedSelectedTopic;
-  const relevant = (priority !== null && Number.isFinite(priority) && priority >= 0.8 && priority <= 1)
-    || (selectedTopic !== null && preferences.selectedTopics.includes(selectedTopic));
-  if (!relevant) return silent('insufficient_priority');
-  if (!Number.isFinite(state.notificationCount) || state.notificationCount < 0 || state.notificationCount >= 3) return silent('notification_budget');
-  return { action: 'notify', reasonCode: selectedTopic !== null && preferences.selectedTopics.includes(selectedTopic) ? 'selected_topic_contradiction' : 'practical_contradiction' };
+  if (selectedTopic !== null && preferences.selectedTopics.includes(selectedTopic)) return { action: 'notify', reasonCode: 'selected_topic_contradiction' };
+  if (priority !== null && Number.isFinite(priority) && priority >= 0.8 && priority <= 1) return { action: 'notify', reasonCode: 'practical_contradiction' };
+  return { action: 'notify', reasonCode: 'automatic_contradiction' };
 }

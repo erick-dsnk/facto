@@ -16,7 +16,9 @@ final class CameraModel {
   var fps: Double = 0
   var maxGapMs: Double = 0
   var frameCount = 0
-  var lastError: String?
+  var lastError: String? {
+    didSet { if let lastError, lastError != oldValue { DebugLog.shared.log("camera.error", ["message": lastError]) } }
+  }
 
   // Over the Wi-Fi link the glasses hold 720x1280 at 30 fps.
   var resolution: StreamingResolution = .high
@@ -127,6 +129,7 @@ final class CameraModel {
   }
 
   private func handleSession(_ state: DeviceSessionState) {
+    DebugLog.shared.log("camera.session_state", ["state": "\(state)"])
     sessionState = state
     if state == .stopped { clearSession() }
   }
@@ -240,6 +243,7 @@ final class CameraModel {
       droppedAudioBufferCount += 1
       if droppedAudioBufferCount == 1 || droppedAudioBufferCount % 50 == 0 {
         NSLog("[GlassesLab][audio] buffer copy failed, dropped %d so far", droppedAudioBufferCount)
+        DebugLog.shared.log("camera.audio_buffer_dropped", ["droppedSoFar": droppedAudioBufferCount])
       }
     }
   }
@@ -353,6 +357,7 @@ final class CameraModel {
     photoLog.insert(entry, at: 0)
     if photoLog.count > 40 { photoLog.removeLast(photoLog.count - 40) }
     NSLog("[GlassesLab][photo] %@", entry)
+    DebugLog.shared.log("camera.photo_trace", ["line": entry])
   }
 
   /// The SDK's description plus the underlying error it wraps, which carries the real cause.
@@ -429,6 +434,11 @@ final class CameraModel {
     )
     photoStatus = "Done"
     plog("photo arrived: \(data.count / 1024) KB")
+    DebugLog.shared.log("camera.photo_arrived", [
+      "bytes": data.count, "width": Int(image.size.width * image.scale), "height": Int(image.size.height * image.scale),
+      "totalMs": Int(total * 1000), "captureMs": Int(capture * 1000), "transferMs": Int(transfer * 1000),
+      "path": photoPath == .stream ? "stream capture" : "photo API", "forLookAndCheck": !photoWaiters.isEmpty,
+    ])
     finishPhoto()
     resumePhotoWaiters(.success(data))
   }
@@ -467,12 +477,14 @@ final class CameraModel {
   }
 
   func stopStream() {
+    DebugLog.shared.log("camera.stop_stream", ["byUser": true])
     userStoppedStream = true
     // Stopping the camera cascades to its stream and detaches it from the session.
     camera?.stop()
   }
 
   private func handleStream(_ state: StreamState) {
+    DebugLog.shared.log("camera.stream_state", ["state": "\(state)"])
     streamState = state
     if state == .stopped { clearStream() }
   }

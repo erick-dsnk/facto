@@ -9,9 +9,10 @@ import os
 /// or `trigger(_:)` from the glasses capture button, the Neural Band or an app button.
 /// A trigger that arrives while a check is already running is ignored.
 ///
-/// The photo is held in memory only for OCR and is never written to disk. The camera
-/// stream is never paused or stopped here: `PhotoCapturing` takes the still from the
-/// running stream. Logs carry ids, counts and lengths, never OCR text.
+/// The photo is held in memory only for OCR. The camera stream is never paused or stopped
+/// here: `PhotoCapturing` takes the still from the running stream. Logs carry ids, counts and
+/// lengths, never OCR text. The on-device `DebugLog` is the exception: while it is on it saves
+/// the exact JPEG OCR ran on, the OCR result, the chunks and every step's timing.
 @MainActor
 @Observable
 final class LookAndCheckCoordinator {
@@ -20,6 +21,14 @@ final class LookAndCheckCoordinator {
     case voice
     /// The glasses capture button, the Neural Band or an app button.
     case button
+
+    /// What started the check, as the debug log names it.
+    var debugName: String {
+      switch self {
+      case .voice: "capture.request"
+      case .button: "button"
+      }
+    }
   }
 
   enum Phase: Equatable, Sendable {
@@ -70,6 +79,7 @@ final class LookAndCheckCoordinator {
   @ObservationIgnored private let submitter: CheckSubmitter
   @ObservationIgnored private let settings: Settings
   @ObservationIgnored private let now: () -> Date
+  @ObservationIgnored private let debugLog: DebugLog
   @ObservationIgnored private var listener: Task<Void, Never>?
   @ObservationIgnored private var operationGeneration = UUID()
   @ObservationIgnored private let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "LookAndCheck")
@@ -80,7 +90,8 @@ final class LookAndCheckCoordinator {
     recognizer: TextRecognizing,
     submitter: CheckSubmitter,
     settings: Settings = Settings(),
-    now: @escaping () -> Date = Date.init
+    now: @escaping () -> Date = Date.init,
+    debugLog: DebugLog = .shared
   ) {
     self.channel = channel
     self.photo = photo
@@ -88,6 +99,7 @@ final class LookAndCheckCoordinator {
     self.submitter = submitter
     self.settings = settings
     self.now = now
+    self.debugLog = debugLog
   }
 
   var isRunning: Bool { phase != .idle }
@@ -124,6 +136,7 @@ final class LookAndCheckCoordinator {
     guard canCapture?() ?? true else { return false }
     guard !isRunning else {
       log.info("trigger ignored, check running, source=\(source.rawValue, privacy: .public)")
+      debugLog.log("lookcheck.ignored", ["source": source.rawValue, "trigger": source.debugName, "phase": "\(phase)"])
       return false
     }
     phase = .capturing
@@ -139,6 +152,7 @@ final class LookAndCheckCoordinator {
     guard canCapture?() ?? true else { return nil }
     guard !isRunning else {
       log.info("trigger ignored, check running, source=\(source.rawValue, privacy: .public)")
+      debugLog.log("lookcheck.ignored", ["source": source.rawValue, "trigger": source.debugName, "phase": "\(phase)"])
       return nil
     }
     phase = .capturing
@@ -151,7 +165,10 @@ final class LookAndCheckCoordinator {
   /// Expects `phase` already set to `.capturing` so a second trigger is refused at once.
   @discardableResult
   private func run(source: TriggerSource, generation: UUID) async -> Outcome {
-    let outcome = await pipeline(source: source, generation: generation)
+    // Keep the diagnostic trace across cancellation-safe capture and submission.
+    let trace = String(UUID().uuidString.prefix(8)).lowercased()
+    let started = ProcessInfo.processInfo.systemUptime
+    let outcome = await pipeline(source: source, generation: generation, trace: trace)
     guard generation == operationGeneration else {
       await onCancelledCapture?()
       phase = .idle
@@ -159,6 +176,7 @@ final class LookAndCheckCoordinator {
     }
     phase = .idle
     lastOutcome = outcome
+    debugOutcome(outcome, trace: trace, started: started)
     switch outcome {
     case .submitted(let ids, let dropped):
       log.info("look-and-check submitted=\(ids.count, privacy: .public) droppedCodePoints=\(dropped, privacy: .public)")
@@ -183,10 +201,14 @@ final class LookAndCheckCoordinator {
     return String(requestId[..<dash])
   }
 
-  private func pipeline(source: TriggerSource, generation: UUID) async -> Outcome {
+  private func pipeline(source: TriggerSource, generation: UUID, trace: String) async -> Outcome {
     func current() -> Bool { !Task.isCancelled && operationGeneration == generation }
     guard current() else { return .failed(reason: "cancelled") }
     log.info("look-and-check start source=\(source.rawValue, privacy: .public)")
+    debugLog.log("lookcheck.start", [
+      "trace": trace, "source": source.rawValue, "trigger": source.debugName,
+      "sessionId": channel.sessionId as Any, "epoch": channel.sessionEpoch as Any,
+    ])
     guard channel.sessionId != nil, channel.sessionEpoch != nil else {
       return .failed(reason: "no_session")
     }
@@ -195,33 +217,58 @@ final class LookAndCheckCoordinator {
     let capturedAt = now()
     let ocr: OCRResult
     do {
-      // The JPEG lives only in this scope and is released once OCR returns.
+      // The JPEG lives only in this scope and is released once OCR returns. The debug log's
+      // copy on disk is the only one kept.
       let jpeg: Data
+      let captureStarted = ProcessInfo.processInfo.systemUptime
       do {
         jpeg = try await photo.captureStillDuringStream()
         guard current() else { return .failed(reason: "cancelled") }
       } catch {
         log.error("photo capture failed: \(String(describing: type(of: error)), privacy: .public)")
+        debugLog.log("lookcheck.photo_failed", [
+          "trace": trace, "error": String(describing: error), "captureMs": Self.elapsedMs(since: captureStarted),
+        ])
         return .failed(reason: "photo_failed")
       }
       log.info("photo bytes=\(jpeg.count, privacy: .public)")
+      debugLog.logPhoto(jpeg, kind: "lookcheck.photo", id: trace, [
+        "trace": trace, "captureMs": Self.elapsedMs(since: captureStarted),
+      ])
       phase = .recognizing
+      let ocrStarted = ProcessInfo.processInfo.systemUptime
       do {
         ocr = try await recognizer.recognizeText(in: jpeg)
         guard current() else { return .failed(reason: "cancelled") }
       } catch {
         log.error("ocr failed: \(String(describing: type(of: error)), privacy: .public)")
+        debugLog.log("lookcheck.ocr_failed", [
+          "trace": trace, "error": String(describing: error), "ocrMs": Self.elapsedMs(since: ocrStarted),
+        ])
         return .failed(reason: "ocr_failed")
       }
+      debugOCR(ocr, trace: trace, milliseconds: Self.elapsedMs(since: ocrStarted))
     }
     log.info("ocr lines=\(ocr.lineCount, privacy: .public) dropped=\(ocr.droppedLineCount, privacy: .public) codePoints=\(ocr.codePointCount, privacy: .public) meanConfidence=\(ocr.meanConfidence, privacy: .public)")
 
     let visible = ocr.text.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.count
     guard visible >= settings.minimumCharacters, ocr.meanConfidence >= settings.minimumMeanConfidence else {
+      debugLog.log("lookcheck.unreadable", [
+        "trace": trace, "reason": visible < settings.minimumCharacters ? "too_few_characters" : "low_confidence",
+        "visibleCharacters": visible, "minimumCharacters": settings.minimumCharacters,
+        "meanConfidence": ocr.meanConfidence, "minimumMeanConfidence": settings.minimumMeanConfidence,
+      ])
       return .unreadable(message: Self.unreadableMessage)
     }
     let split = OCRChunker.chunk(ocr.text, maxChunks: settings.maxChunks)
-    guard !split.chunks.isEmpty else { return .unreadable(message: Self.unreadableMessage) }
+    debugLog.log("lookcheck.chunks", [
+      "trace": trace, "chunks": split.chunks, "codePoints": split.chunks.map { CodePoints.count($0) },
+      "droppedChunkCount": split.droppedChunkCount, "droppedCodePoints": split.droppedCodePoints,
+    ])
+    guard !split.chunks.isEmpty else {
+      debugLog.log("lookcheck.unreadable", ["trace": trace, "reason": "no_chunks"])
+      return .unreadable(message: Self.unreadableMessage)
+    }
     if split.droppedText {
       log.info("ocr text over the per-photo limit, droppedChunks=\(split.droppedChunkCount, privacy: .public) droppedCodePoints=\(split.droppedCodePoints, privacy: .public)")
     }
@@ -263,6 +310,7 @@ final class LookAndCheckCoordinator {
         try first.validate()
       } catch {
         log.error("ocr chunk \(index + 1, privacy: .public) invalid: \(String(describing: error), privacy: .public)")
+        debugLog.log("lookcheck.chunk_invalid", ["trace": trace, "index": index + 1, "requestId": requestId, "error": String(describing: error)])
         return finish(submitted, chunks: split, failedAt: index, reason: "invalid_input")
       }
       do {
@@ -275,12 +323,18 @@ final class LookAndCheckCoordinator {
           guard current() else { return .failed(reason: "cancelled") }
           guard let retry = envelope(), retry != first else { throw error }
           log.info("ocr chunk \(index + 1, privacy: .public) retrying with epoch \(retry.sessionEpoch, privacy: .public)")
+          debugLog.log("lookcheck.retry", [
+            "trace": trace, "index": index + 1, "requestId": requestId, "error": String(describing: error),
+            "epoch": retry.sessionEpoch, "sessionId": retry.sessionId,
+          ])
           try await submitter.submit(retry)
         }
         submitted.append(requestId)
         log.info("ocr chunk submitted requestId=\(requestId, privacy: .public) codePoints=\(CodePoints.count(chunk), privacy: .public)")
+        debugLog.log("lookcheck.submitted", ["trace": trace, "index": index + 1, "requestId": requestId, "segmentId": segmentId])
       } catch {
         log.error("ocr chunk \(index + 1, privacy: .public) submit failed: \(String(describing: type(of: error)), privacy: .public)")
+        debugLog.log("lookcheck.submit_failed", ["trace": trace, "index": index + 1, "requestId": requestId, "error": String(describing: error)])
         return finish(submitted, chunks: split, failedAt: index, reason: "submit_failed")
       }
     }
@@ -295,6 +349,45 @@ final class LookAndCheckCoordinator {
     case .http(409, let code): return code == "old_epoch" || code == "wrong_session"
     default: return false
     }
+  }
+
+  // MARK: Debug log
+
+  /// Everything Vision returned: the kept text plus each observation with its confidence and
+  /// normalised box (origin bottom-left), including the lines the confidence filter dropped.
+  private func debugOCR(_ ocr: OCRResult, trace: String, milliseconds: Int) {
+    guard debugLog.isEnabled else { return }
+    debugLog.log("lookcheck.ocr", [
+      "trace": trace, "ocrMs": milliseconds, "text": ocr.text, "meanConfidence": ocr.meanConfidence,
+      "lineCount": ocr.lineCount, "droppedLineCount": ocr.droppedLineCount, "codePoints": ocr.codePointCount,
+      "observations": ocr.observations.map { line -> [String: Any] in
+        [
+          "text": line.text, "confidence": Double(line.confidence),
+          "box": [line.boundingBox.minX, line.boundingBox.minY, line.boundingBox.width, line.boundingBox.height].map { Double($0) },
+        ]
+      },
+    ])
+  }
+
+  private func debugOutcome(_ outcome: Outcome, trace: String, started: TimeInterval) {
+    var payload: [String: Any] = ["trace": trace, "totalMs": Self.elapsedMs(since: started)]
+    switch outcome {
+    case .submitted(let requestIds, let droppedCodePoints):
+      payload["outcome"] = "submitted"
+      payload["requestIds"] = requestIds
+      payload["droppedCodePoints"] = droppedCodePoints
+    case .unreadable(let message):
+      payload["outcome"] = "unreadable"
+      payload["message"] = message
+    case .failed(let reason):
+      payload["outcome"] = "failed"
+      payload["reason"] = reason
+    }
+    debugLog.log("lookcheck.outcome", payload)
+  }
+
+  private nonisolated static func elapsedMs(since start: TimeInterval) -> Int {
+    Int((ProcessInfo.processInfo.systemUptime - start) * 1000)
   }
 
   /// A failure partway through: report what was sent, counting unsent chunks as dropped.
