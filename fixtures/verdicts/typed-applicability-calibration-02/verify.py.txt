@@ -1,0 +1,58 @@
+"""Offline portable evidence verification. Original absolute paths are lookup keys only."""
+import argparse, collections, gzip, hashlib, json, pathlib
+root=pathlib.Path(__file__).resolve().parent
+args=argparse.ArgumentParser()
+args.add_argument('--previous',type=pathlib.Path)
+args=args.parse_args()
+mapping=json.loads((root/'original-path-map.json').read_text())
+previous=args.previous or root/mapping['previousArchive']
+sha=lambda b:hashlib.sha256(b).hexdigest()
+manifest=json.loads((root/'ARCHIVE-MANIFEST.json').read_text())
+for name,expected in manifest['files'].items():assert sha((root/name).read_bytes())==expected,name
+assert sha((previous/'ARCHIVE-MANIFEST.json').read_bytes())==mapping['previousManifestSHA256']
+rows={r['originalPath']:r for r in mapping['files']}
+shared={r['originalPath']:r for r in mapping['sharedDependencies']}
+assert not (rows.keys()&shared.keys())
+def raw(path):
+    if path in rows:
+        r=rows[path];data=(root/r['archivedPath']).read_bytes();expected=r['archivedSHA256']
+    else:
+        r=shared[path];data=(previous/r['previousArchivedPath']).read_bytes();expected=r['previousArchivedSHA256']
+    assert sha(data)==expected,path
+    if r['encoding']=='gzip':data=gzip.decompress(data)
+    assert len(data)==r['originalBytes'] and sha(data)==r['originalSHA256'],path
+    return data
+def obj(path):return json.loads(raw(path))
+for path in list(rows)+list(shared):raw(path)
+base='/workspace/task-evidence/typed-applicability-calibration-02/'
+plan=obj(base+'corrected08-42-plan.json')
+assert sha(json.dumps(plan,separators=(',',':'),ensure_ascii=False).encode())=='699582a0b64569f73b20376521be7aa6bfc4b1439d06ae6182e5942b21ab5de3'
+for path,expected in plan['sourceHashes'].items():assert sha(raw(path))==expected,path
+assert len(plan['sourceHashes'])==46 and len(plan['guard']['calls'])==42
+assert [b['limits']['maxCalls']for b in plan['guard']['blocks']]==[11,11,10,10]
+auth=obj(base+'root-authorization.json')
+assert sha(raw(base+'root-authorization.json'))=='07a5bf3d86b8e07a9c2dc2b866d44c72eec13e0b6dbe66555ad9cc730c5f2d7e'
+for review in auth['reviews']:assert sha(raw(review['path']))==review['sha256']
+assert sha(raw(base+'live-first-run/report.json'))=='df43bd3980fc2a330c598a1cdfa98fa356cc143ac785ce1149b2f133e57c14be'
+assert sha(raw(base+'live-first-run/checkpoints.jsonl'))=='d18b5c35856b7e82d0381aa145b96ba3c0359449104e8a03c34d6cadd9d8dd2f'
+report=obj(base+'live-first-run/report.json')
+assert report['completedAllCalls'] and report['stop']is None and len(report['rows'])==42
+assert report['guard']['totals']=={'reservedCalls':42,'actualStartedJev':42,'actualStartedExa':0,'requestBytes':1944573,'responseBytes':258724,'measuredInputTokens':438832,'usageKnownCalls':42,'usageUnknownCalls':0}
+assert report['runtimeLedger']=={'consumedJevAttempts':42,'measuredInputTokens':438832}
+journal=[json.loads(line)for line in raw(base+'live-first-run/checkpoints.jsonl').splitlines()]
+assert len(journal)==252 and collections.Counter(x['type']for x in journal)=={k:42 for k in ['call_reserved','request_prepared','request_started','response_headers','usage_observed','call_terminal']}
+assert sum(p.startswith(base+'live-first-run/')for p in rows)==89
+bycall={r['callId']:r for r in report['rows']}
+for call in obj(base+'requests.08.json')['calls']:
+    assert sha(call['body'].encode())==call['requestSHA256']==bycall[call['callId']]['dispatch']['requestSHA256']
+s=report['scoring']['all']
+assert s['declared']==42 and s['questionAsked']==37 and s['rawTernaryExact']==28
+assert s['combinedAvailabilityAndCoverageGate']=={'positiveDeclared':18,'positiveAccepted':1,'negativeDeclared':18,'negativeAccepted':0,'uncertainDeclared':6,'unsafeUncertainGrants':0}
+assert s['privateTypedEligibility']=={'issued':1,'notCoveredGrants':0,'uncertainGrants':0}
+assert all(r['policy']['verdict']=='insufficient_evidence' and not r['policy']['selectedEvidenceIds']for r in report['rows'])
+assert not report['scoring']['selectedCitationAuditInputs']
+assert collections.Counter(x['cohort']for x in plan['denominatorLabels'])=={'original36':34,'identity8':8}
+adapter='/workspace/task-evidence/typed-applicability-adapter-08/'
+for name,expected in obj(adapter+'manifest.json')['files'].items():assert sha(raw(adapter+name))==expected,name
+for name,expected in obj(base+'publication-manifest.json')['files'].items():assert sha(raw(base+name))==expected,name
+print(json.dumps({'boundFiles':len(manifest['files']),'copiedOriginals':len(rows),'sharedDependencies':len(shared),'planPins':46,'actualLiveFiles':89,'actualJev':42,'actualExa':0,'knownInputTokens':438832,'positivePassesAt85':'1/18','negativeAcceptsAt85':'0/18','uncertainAcceptsAt85':'0/6','definitives':0,'verificationProviderCalls':0}))
