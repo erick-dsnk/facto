@@ -23,6 +23,8 @@ export interface Placement {
 export class Sequence {
   private current = 0;
   private pending: number | null = null;
+  private retryTimer: ReturnType<typeof setTimeout> | undefined;
+  private retries = 0;
   private disposed = false;
   private cssW = 0;
   private cssH = 0;
@@ -37,20 +39,38 @@ export class Sequence {
     video.preload = 'auto';
     video.addEventListener('seeked', this.onSeeked);
     video.addEventListener('loadeddata', this.onLoaded);
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
+    window.addEventListener('focus', this.onResume);
   }
 
   private readonly onSeeked = () => {
-    if (this.pending !== null) {
-      const t = this.pending;
-      this.pending = null;
-      this.seek(t);
-    }
+    this.clearRetry();
+    this.retries = 0;
+    this.flush();
+  };
+
+  private readonly onVisibilityChange = () => {
+    if (document.hidden) this.clearRetry();
+    else this.onResume();
+  };
+
+  private readonly onResume = () => {
+    if (this.disposed || document.hidden) return;
+    // A backgrounded decoder can leave `seeking` true or miss `seeked`. Reissue
+    // the current scroll target instead of waiting on that interrupted seek.
+    this.clearRetry();
+    this.retries = 0;
+    this.pending = this.frameTime(this.current);
+    this.flush(true);
   };
 
   private readonly onLoaded = () => {
+    if (this.disposed) return;
     // iOS only paints a muted inline video after it has played once.
     const p = this.video.play();
-    if (p) p.then(() => this.video.pause()).catch(() => undefined).finally(() => this.draw(this.current));
+    if (p) p.then(() => {
+      if (!this.disposed) this.video.pause();
+    }).catch(() => undefined).finally(() => this.draw(this.current));
   };
 
   /** Start loading the variant's video at the given frame. */
@@ -67,8 +87,11 @@ export class Sequence {
     this.disposed = true;
     this.onDraw = undefined;
     this.pending = null;
+    this.clearRetry();
     this.video.removeEventListener('seeked', this.onSeeked);
     this.video.removeEventListener('loadeddata', this.onLoaded);
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
+    window.removeEventListener('focus', this.onResume);
   }
 
   resize(): void {
@@ -79,13 +102,45 @@ export class Sequence {
   }
 
   private seek(time: number): void {
+    if (this.pending !== time) this.retries = 0;
+    this.pending = time; // only the latest target matters
+    this.flush();
+  }
+
+  private clearRetry(): void {
+    clearTimeout(this.retryTimer);
+    this.retryTimer = undefined;
+  }
+
+  private scheduleRetry(): void {
+    if (this.retryTimer !== undefined || this.retries >= 2) return;
+    this.retryTimer = setTimeout(() => {
+      this.retryTimer = undefined;
+      if (this.disposed || document.hidden || this.pending === null) return;
+      this.retries++;
+      this.flush(this.video.seeking);
+    }, 500);
+  }
+
+  private flush(force = false): void {
     const v = this.video;
-    if (v.readyState < 1) return;
-    if (v.seeking) {
-      this.pending = time; // only the latest target matters
+    if (this.disposed || document.hidden || this.pending === null || v.readyState < 1) return;
+    if (v.seeking && !force) {
+      this.scheduleRetry();
       return;
     }
-    if (Math.abs(v.currentTime - time) > 0.001) v.currentTime = time;
+    if (force || Math.abs(v.currentTime - this.pending) > 0.001) {
+      v.currentTime = this.pending;
+      this.scheduleRetry();
+    } else {
+      this.pending = null;
+      this.clearRetry();
+    }
+  }
+
+  private frameTime(frame: number): number {
+    // Aim for the middle of the frame so rounding never lands on its neighbour.
+    return (Math.round(frame) + 0.5) / this.variant.fps;
   }
 
   /** Show a (fractional) frame and move the HUD to its lens. */
@@ -94,8 +149,7 @@ export class Sequence {
     const last = this.variant.count - 1;
     const f = Math.max(0, Math.min(last, frame));
     this.current = f;
-    // Aim for the middle of the frame so rounding never lands on its neighbour.
-    this.seek((Math.round(f) + 0.5) / this.variant.fps);
+    this.seek(this.frameTime(f));
     this.place(f);
   }
 
