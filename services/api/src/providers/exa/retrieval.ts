@@ -1,5 +1,5 @@
-import { codePoints, PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../packages/contracts/src/index.js';
-import { normalizeEvidence, normalizeUrl, parseExaResponse, selectExcerpt } from '../../evidence/normalize.js';
+import { PipelineError, sliceSpan, type PipelineAdapters } from '../../../../../packages/contracts/src/index.js';
+import { needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse } from '../../evidence/normalize.js';
 import { AbortableExa } from './client.js';
 
 export interface ExaClient {
@@ -25,8 +25,7 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       const url = normalizeUrl(page.url);
       if (!url || seen.has(url)) return false;
       seen.add(url);
-      const excerpt = selectExcerpt(page, claim.checkedText);
-      return !excerpt || codePoints(excerpt.excerpt).length < 80;
+      return needsPageText(page, claim.checkedText);
     }).slice(0, 3);
     for (const page of candidates) {
       context.signal.throwIfAborted();
