@@ -1,0 +1,204 @@
+{
+  "kind": "independent_100_case_accounting_audit",
+  "reportSHA256": "e6cefc9877f271a231b4fd1834df0a9d6609a6dc7b03bed7846667b555a1111d",
+  "checks": {
+    "planBytesMatchFreeze": true,
+    "datasetAndCSVPinsMatch": true,
+    "allSourceMaterialPinsMatch": true,
+    "executorAndAssemblerPinsMatch": true,
+    "captureMetadataMatchesFreeze": true,
+    "currentSourceScopeMatchesFrozenCapture": true,
+    "planCasesDatasetCasesSame": true,
+    "recordsUniqueInFrozenRelativeOrder": true,
+    "exact100DeclaredBalanceAndStyles": true,
+    "exactFrozenLimits": true,
+    "actualCountsMatchCapture": true,
+    "partialCostMatchesCapture": true,
+    "perCaseAccounted": true,
+    "reportedRawOutcomesMatchIndependent": true,
+    "perInputObservedAttemptsWithinLimits": true,
+    "recordedGlobalCallsBytesWithinLimits": true,
+    "noDuplicateTerminalWithinObservedInput": true,
+    "firstReportUnchangedByAnalysis": true
+  },
+  "checksPass": true,
+  "analysis": "/workspace/task-evidence/coverage-100-01/analysis/statistics-initial.json",
+  "accounting": {
+    "calls": {
+      "jev": 194,
+      "search": 94,
+      "contents": 80
+    },
+    "attempts": 368,
+    "pendingDispatchReservations": 0,
+    "requestBytes": 5898368,
+    "measuredInputTokens": 1376217,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 1376217,
+    "knownCostUSD": 0.8180000000000001,
+    "attemptsWithUnknownCost": 194,
+    "responseByteAggregate": null,
+    "campaignWallMs": 246922,
+    "maximumActualRequestBytes": 67801,
+    "jevAttemptsWithUnknownUsage": 0,
+    "attemptOutcomes": {
+      "response": 368
+    }
+  },
+  "factual": {
+    "declared": 80,
+    "completedValidChecks": 79,
+    "definitive": 69,
+    "correctDefinitive": 69,
+    "wrongDefinitive": 0,
+    "abstained": 10,
+    "noResult": 1,
+    "notObserved": 0,
+    "correctDefinitiveCoverage": {
+      "numerator": 69,
+      "denominator": 80,
+      "rate": 0.8625,
+      "wilson95": {
+        "lower": 0.7703289993301339,
+        "upper": 0.9214528567566089,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "conditionalCorrectDefinitive": {
+      "numerator": 69,
+      "denominator": 69,
+      "rate": 1.0,
+      "wilson95": {
+        "lower": 0.9472627418109483,
+        "upper": 1,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "wrongDefinitivePerDeclared": {
+      "numerator": 0,
+      "denominator": 80,
+      "rate": 0.0,
+      "wilson95": {
+        "lower": 0,
+        "upper": 0.0458181295355271,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "confusion": {
+      "known_true": {
+        "supported": 36,
+        "contradicted": 0,
+        "misleading": 0,
+        "insufficient_evidence": 3,
+        "no_result": 1,
+        "not_observed": 0
+      },
+      "known_false": {
+        "supported": 0,
+        "contradicted": 33,
+        "misleading": 0,
+        "insufficient_evidence": 7,
+        "no_result": 0,
+        "not_observed": 0
+      }
+    },
+    "falseAlarm": {
+      "count": 0,
+      "declared": 40,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 39,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.08966685370757144,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 36,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.09641862859446367,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "abstained": 3,
+      "noResult": 1,
+      "notObserved": 0
+    },
+    "falseSupport": {
+      "count": 0,
+      "declared": 40,
+      "completedChecks": {
+        "numerator": 0,
+        "denominator": 40,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.08762160119728664,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "definitiveOnly": {
+        "numerator": 0,
+        "denominator": 33,
+        "rate": 0.0,
+        "wilson95": {
+          "lower": 0,
+          "upper": 0.10426999754245206,
+          "level": 0.95,
+          "method": "Wilson score, descriptive IID-binomial mathematics"
+        }
+      },
+      "abstained": 7,
+      "noResult": 0,
+      "notObserved": 0
+    },
+    "fullySelectedContentVerifiedCorrect": null
+  },
+  "controls": {
+    "declared": 20,
+    "observed": 20,
+    "matchedExpectedAction": 18,
+    "confusion": {
+      "skip": {
+        "skip": 14,
+        "needs_confirmation": 2,
+        "wait": 0,
+        "check": 0,
+        "no_action": 0,
+        "not_observed": 0
+      },
+      "needs_confirmation": {
+        "skip": 0,
+        "needs_confirmation": 4,
+        "wait": 0,
+        "check": 0,
+        "no_action": 0,
+        "not_observed": 0
+      }
+    },
+    "falsePublicAdmission": {
+      "numerator": 0,
+      "denominator": 20,
+      "rate": 0.0,
+      "wilson95": {
+        "lower": 0,
+        "upper": 0.16112515805281938,
+        "level": 0.95,
+        "method": "Wilson score, descriptive IID-binomial mathematics"
+      }
+    },
+    "actualRetrievalAttempts": 0,
+    "factualVerdicts": 0
+  }
+}
