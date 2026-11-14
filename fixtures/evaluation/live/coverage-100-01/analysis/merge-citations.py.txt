@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""Merge reviewed selected-source metrics without rewriting any first capture."""
+import collections
+import copy
+import hashlib
+import importlib.util
+import json
+import pathlib
+
+DIRECTORY = pathlib.Path(__file__).resolve().parent.parent
+spec = importlib.util.spec_from_file_location('initial_metrics', pathlib.Path(__file__).with_name('analyze.py'))
+metrics = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(metrics)
+sha = lambda value: hashlib.sha256(value).hexdigest()
+
+report_bytes = (DIRECTORY / 'run/report.json').read_bytes()
+report = json.loads(report_bytes)
+audit_bytes = (DIRECTORY / 'citations/citation-audit.json').read_bytes()
+audit = json.loads(audit_bytes)
+assert audit['campaignReportSha256'] == sha(report_bytes)
+initial_bytes = (DIRECTORY / 'analysis/statistics-initial.json').read_bytes()
+result = copy.deepcopy(json.loads(initial_bytes))
+assert result['reportSHA256'] == sha(report_bytes)
+
+original = {}
+case_selections = {}
+for record in report['cases']:
+    for event in record['events']:
+        if event['type'] != 'claim.result' or event['verdict'] == 'insufficient_evidence':
+            continue
+        selected = set(event['selectedEvidenceIds'])
+        records = {source['id']: source for source in event['evidence']}
+        assert len(selected) == len(event['selectedEvidenceIds'])
+        case_selections[record['label']] = []
+        for identifier in event['selectedEvidenceIds']:
+            source = records[identifier]
+            key = (record['label'], identifier, source['url'], sha(source['excerpt'].encode()))
+            assert key not in original
+            original[key] = source
+            case_selections[record['label']].append(key)
+
+inspections = {}
+for row in audit['inspections']:
+    key = (row['caseId'], row['evidenceId'], row['url'], row['excerptSha256'])
+    assert key in original and key not in inspections
+    if row.get('supportingPagePassage') is not None:
+        assert sha(row['supportingPagePassage'].encode()) == row['supportingPagePassageSha256']
+    verified = (row['accessStatus'] == 'accessible' and row['exactScopeVerified']
+                and row['retainedExcerptScopeVerified'] and row['fullPageScopeVerified']
+                and row['substantiveVerified'])
+    inspections[key] = {'verified': verified, 'sourceGroup': original[key]['sourceGroup']}
+assert set(inspections) == set(original)
+verified_occurrences = sum(row['verified'] for row in inspections.values())
+assert len(inspections) == audit['summary']['inspectedOccurrences'] == audit['summary']['selectedOccurrences'] == 246
+assert verified_occurrences == audit['summary']['verifiedOccurrences'] == 198
+
+case_metrics = {}
+for label, selected in case_selections.items():
+    verified = [inspections[key] for key in selected if inspections[key]['verified']]
+    case_metrics[label] = {'selected': len(selected), 'verified': len(verified),
+                           'allSelectedVerified': len(verified) == len(selected),
+                           'verifiedPublisherGroups': len({row['sourceGroup'] for row in verified})}
+assert sum(value['allSelectedVerified'] for value in case_metrics.values()) == audit['summary']['fullyVerifiedCases'] == 31
+assert sum(value['verified'] >= 1 for value in case_metrics.values()) == 68
+assert sum(value['verifiedPublisherGroups'] >= 2 for value in case_metrics.values()) == 62
+
+for item in result['claimOutcomes']:
+    if item['label'] in case_metrics:
+        item['selectedSourceAudit'] = case_metrics[item['label']]
+        item['sourceVerification'] = 'all_selected_content_verified' if case_metrics[item['label']]['allSelectedVerified'] else 'incomplete_selected_content_verification'
+    else:
+        item['sourceVerification'] = 'not_applicable_no_definitive_result'
+
+def add_source_metrics(summary, items):
+    correct = [item for item in items if item['result'] == 'correct']
+    full = sum(case_metrics[item['label']]['allSelectedVerified'] for item in correct)
+    one = sum(case_metrics[item['label']]['verified'] >= 1 for item in correct)
+    two = sum(case_metrics[item['label']]['verifiedPublisherGroups'] >= 2 for item in correct)
+    summary['fullySelectedContentVerifiedCorrect'] = metrics.rate(full, len(items))
+    summary['atLeastOneVerifiedSelectedCorrect'] = metrics.rate(one, len(items))
+    summary['atLeastTwoVerifiedPublisherGroupsCorrect'] = metrics.rate(two, len(items))
+
+items = result['claimOutcomes']
+add_source_metrics(result['factual'], items)
+for name, summary in result['byDomain'].items():
+    add_source_metrics(summary, [item for item in items if item['domain'] == name])
+for name, summary in result['byStyle'].items():
+    add_source_metrics(summary, [item for item in items if item['style'] == name])
+add_source_metrics(result['conversationalCombined'], [item for item in items if item['style'] != 'standalone'])
+result['citationAudit'] = {'originalAuditSHA256': sha(audit_bytes), 'selectedOccurrences': 246,
+                          'verifiedOccurrences': 198, 'unverifiedOccurrences': 48,
+                          'accessOrContentFailures': 41, 'accessibleScopeGaps': 7,
+                          'definitiveCasesWithAllSelectedVerified': 31,
+                          'definitiveCasesWithAtLeastOneVerified': 68,
+                          'definitiveCasesWithAtLeastTwoVerifiedPublisherGroups': 62,
+                          'definitiveCasesWithNoVerifiedSelected': [name for name, value in case_metrics.items() if not value['verified']],
+                          'resources': audit['resources'], 'caseMetrics': case_metrics,
+                          'method': 'Independent agent source content/access/retained-scope audit, exact original ID/URL/excerpt/proof hash binding; no unselected replacement.',
+                          'independenceAuthenticated': False,
+                          'limitations': ['Publisher/domain diversity does not authenticate underlying independent origins.',
+                                          'A bounded partial binary may verify a relevant scoped passage without claiming full-document retrieval; two partial binaries are explicitly disclosed.',
+                                          'Source verification does not change original world-truth labels, abstentions or captured evaluation fields.']}
+result['derivation'] = {'initialStatisticsSHA256': sha(initial_bytes), 'citationAuditSHA256': sha(audit_bytes),
+                        'mergeSourceSHA256': sha(pathlib.Path(__file__).read_bytes()),
+                        'providerCalls': 0, 'originalReportUnchanged': (DIRECTORY / 'run/report.json').read_bytes() == report_bytes}
+output = DIRECTORY / 'analysis/statistics-final.json'
+with output.open('x') as file:
+    json.dump(result, file, indent=2); file.write('\n')
+print(json.dumps({'fullSelectedCorrect': result['factual']['fullySelectedContentVerifiedCorrect'],
+                  'atLeastOne': result['factual']['atLeastOneVerifiedSelectedCorrect'],
+                  'atLeastTwoGroups': result['factual']['atLeastTwoVerifiedPublisherGroupsCorrect'],
+                  'originalReportSHA256': sha(report_bytes), 'citationAuditSHA256': sha(audit_bytes),
+                  'finalStatisticsSHA256': sha(output.read_bytes()), 'providerCalls': 0}))

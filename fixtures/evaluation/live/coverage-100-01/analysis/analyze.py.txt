@@ -1,0 +1,321 @@
+#!/usr/bin/env python3
+"""Read a completed first report; derive metrics without network or replay."""
+import argparse
+import collections
+import datetime
+import hashlib
+import json
+import math
+import pathlib
+import statistics
+import subprocess
+
+DIRECTORY = pathlib.Path(__file__).resolve().parent.parent
+REPOSITORY = pathlib.Path('/workspace/junction-2026-current')
+DEFINITIVE = {'supported', 'contradicted', 'misleading'}
+VALID = DEFINITIVE | {'insufficient_evidence'}
+Z95 = 1.959963984540054
+
+
+def sha(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def wilson(k, n):
+    if n == 0:
+        return None
+    assert 0 <= k <= n
+    proportion = k / n
+    denominator = 1 + Z95 * Z95 / n
+    center = (proportion + Z95 * Z95 / (2 * n)) / denominator
+    half = Z95 * math.sqrt(proportion * (1 - proportion) / n + Z95 * Z95 / (4 * n * n)) / denominator
+    return {'lower': max(0, center - half), 'upper': min(1, center + half),
+            'level': 0.95, 'method': 'Wilson score, descriptive IID-binomial mathematics'}
+
+
+def rate(k, n):
+    return {'numerator': k, 'denominator': n, 'rate': k / n if n else None,
+            'wilson95': wilson(k, n)}
+
+
+def latency(records, declared):
+    values = sorted(record['durationMs'] for record in records)
+    terminals = []
+    for record in records:
+        match = [event for event in record['events'] if event['type'] == record['terminalType']]
+        if match:
+            terminals.append(match[-1]['receivedMs'])
+    terminals.sort()
+    return {'declared': declared, 'observedDurations': len(values),
+            'missingDurations': declared - len(values), 'allDeclaredIncluded': len(values) == declared,
+            'medianMs': statistics.median(values) if values else None,
+            'p95Ms': values[math.ceil(.95 * len(values)) - 1] if values else None,
+            'minMs': min(values) if values else None, 'maxMs': max(values) if values else None,
+            'terminalReceiptMedianMs': statistics.median(terminals) if terminals else None,
+            'terminalReceiptP95Ms': terminals[math.ceil(.95 * len(terminals)) - 1] if terminals else None,
+            'method': 'All observed stratum inputs, including abstentions/errors/timeouts; nearest-rank P95 ceil(.95*n); median averages middle pair. Missing durations are never imputed.'}
+
+
+def outcomes(plan_cases, records, metadata):
+    by_label = {record['label']: record for record in records}
+    result = []
+    for sample in plan_cases:
+        expected = sample['expected']['claims']
+        if not expected:
+            continue
+        assert len(expected) == 1
+        expected = expected[0]
+        label = sample['label']
+        record = by_label.get(label)
+        item = {'label': label, 'domain': expected['domain'], 'style': metadata[label]['style'],
+                'expectedVerdict': expected['verdict'], 'verdict': None,
+                'result': 'not_observed' if record is None else 'no_result',
+                'sourceVerification': 'pending_separate_citation_audit', 'selectedReferences': 0}
+        if record:
+            events = [event for event in record['events'] if event['type'] == 'claim.result']
+            accepted = [event for event in events if event.get('checkedPublicText') in expected['acceptedTexts']]
+            if len(events) == len(accepted) == 1 and accepted[0].get('verdict') in VALID:
+                event = accepted[0]
+                item.update(verdict=event['verdict'], selectedReferences=len(event.get('selectedEvidenceIds', [])),
+                            reasonCode=event.get('reasonCode'), cached=event.get('cached'))
+                item['result'] = ('abstained' if event['verdict'] == 'insufficient_evidence'
+                                  else 'correct' if event['verdict'] == expected['verdict'] else 'wrong')
+            elif events:
+                item['invalidResultCount'] = len(events)
+                item['invalidResultReason'] = 'duplicate, wrong exact span, or invalid label; expected proposition not scored as observed negative'
+            item['operationalError'] = any(event['type'] == 'pipeline.error' for event in record['events'])
+            item['localStops'] = record['localStops']
+        result.append(item)
+    return result
+
+
+def summarize(items):
+    counts = collections.Counter(item['result'] for item in items)
+    definitive = counts['correct'] + counts['wrong']
+    completed = definitive + counts['abstained']
+    confusion = {truth: {prediction: 0 for prediction in
+                        ['supported', 'contradicted', 'misleading', 'insufficient_evidence', 'no_result', 'not_observed']}
+                 for truth in ['known_true', 'known_false']}
+    for item in items:
+        row = 'known_true' if item['expectedVerdict'] == 'supported' else 'known_false'
+        confusion[row][item['verdict'] or item['result']] += 1
+    true_items = [item for item in items if item['expectedVerdict'] == 'supported']
+    false_items = [item for item in items if item['expectedVerdict'] == 'contradicted']
+
+    def errors(partition, predictions):
+        numerator = sum(item['verdict'] in predictions for item in partition)
+        answered = sum(item['verdict'] in DEFINITIVE for item in partition)
+        observed = sum(item['verdict'] in VALID for item in partition)
+        return {'count': numerator, 'declared': len(partition),
+                'completedChecks': rate(numerator, observed), 'definitiveOnly': rate(numerator, answered),
+                'abstained': sum(item['result'] == 'abstained' for item in partition),
+                'noResult': sum(item['result'] == 'no_result' for item in partition),
+                'notObserved': sum(item['result'] == 'not_observed' for item in partition)}
+
+    return {'declared': len(items), 'completedValidChecks': completed, 'definitive': definitive,
+            'correctDefinitive': counts['correct'], 'wrongDefinitive': counts['wrong'],
+            'abstained': counts['abstained'], 'noResult': counts['no_result'], 'notObserved': counts['not_observed'],
+            'correctDefinitiveCoverage': rate(counts['correct'], len(items)),
+            'conditionalCorrectDefinitive': rate(counts['correct'], definitive),
+            'wrongDefinitivePerDeclared': rate(counts['wrong'], len(items)),
+            'confusion': confusion,
+            'falseAlarm': errors(true_items, {'contradicted', 'misleading'}),
+            'falseSupport': errors(false_items, {'supported'}),
+            'fullySelectedContentVerifiedCorrect': None}
+
+
+def accounting(attempts):
+    dispatched = [attempt for attempt in attempts if attempt['dispatched']]
+    costs = [attempt['costUSD'] for attempt in dispatched if attempt.get('costUSD') is not None]
+    measured = sum(attempt.get('inputTokens') or 0 for attempt in dispatched)
+    reserve = sum(attempt['unknownInputTokenReservation'] for attempt in dispatched)
+    return {'calls': {kind: sum(attempt['kind'] == kind for attempt in dispatched)
+                      for kind in ['jev', 'search', 'contents']},
+            'attempts': len(dispatched), 'pendingDispatchReservations': sum(not attempt['dispatched'] for attempt in attempts),
+            'requestBytes': sum(attempt['requestBytes'] for attempt in dispatched),
+            'measuredInputTokens': measured, 'unknownInputTokenReservations': reserve,
+            'chargedInputTokens': measured + reserve,
+            'knownCostUSD': sum(costs) if costs else None,
+            'attemptsWithUnknownCost': len(dispatched) - len(costs),
+            'responseByteAggregate': None}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--report', type=pathlib.Path, required=True)
+    parser.add_argument('--output', type=pathlib.Path, required=True)
+    parser.add_argument('--audit-output', type=pathlib.Path)
+    args = parser.parse_args()
+    raw = args.report.read_bytes()
+    report = json.loads(raw)
+    if 'evaluation' not in report or 'allCasesAttempted' not in report or 'phase' in report:
+        raise SystemExit('Refusing an active/intermediate checkpoint; wait for the final first report.')
+    plan = json.loads((DIRECTORY / 'plan.json').read_bytes())
+    dataset = json.loads((DIRECTORY / 'dataset.json').read_bytes())
+    freeze = json.loads((DIRECTORY / 'freeze.json').read_bytes())
+    cases, records = plan['cases'], report['cases']
+    expected = {case['label']: case for case in cases}
+    metadata = dataset['metadataByLabel']
+    facts = [record for record in records if expected[record['label']]['expected']['claims']]
+    controls = [record for record in records if not expected[record['label']]['expected']['claims']]
+    attempts = [attempt for record in records for attempt in record['attempts']]
+    calculated = accounting(attempts)
+    items = outcomes(cases, records, metadata)
+    overall = summarize(items)
+
+    # Fixed helper imports are pure; fetch is forbidden even if future import
+    # initialization changes. Only existing sanitized query/hash records enter.
+    helper = """globalThis.fetch=async()=>{throw Error('analysis_network_forbidden')};
+const{readFile}=await import('node:fs/promises');const{createHash}=await import('node:crypto');
+const{buildAlternateQuery,buildHighlightQuery,RETRIEVAL_OBJECTIVE,normalizeUrl}=await import('./services/api/src/evidence/normalize.ts');
+const{publicCasePlan}=await import('./apps/console/src/live/cases.ts');
+const p=JSON.parse(await readFile(process.argv[1],'utf8'));const r=JSON.parse(await readFile(process.argv[2],'utf8'));
+const sha=x=>createHash('sha256').update(x).digest('hex');const errors=[];let searches=0,contents=0,initial=0,alternate=0;
+for(const record of r.cases){const sample=p.cases.find(x=>x.label===record.label);const admitted=record.admittedPublic??[];
+for(const attempt of record.attempts){if(!attempt.dispatched)continue;
+if(attempt.kind==='search'){searches++;const matching=admitted.find(text=>sample.allowedPublic.includes(text)&&[text,buildAlternateQuery(text,'balanced_evidence')].includes(attempt.query));
+if(!matching||attempt.retrievalTextSHA256?.objective!==sha(RETRIEVAL_OBJECTIVE)||attempt.retrievalTextSHA256?.highlightQuery!==sha(buildHighlightQuery(matching)))errors.push({label:record.label,kind:'search_public_span_or_hash_mismatch'});
+else if(attempt.query===matching)initial++;else alternate++;}
+if(attempt.kind==='contents'){contents++;if(!admitted.some(text=>sample.allowedPublic.includes(text)&&attempt.retrievalTextSHA256?.highlightQuery===sha(buildHighlightQuery(text)))||!attempt.contentURLs?.length||attempt.contentURLs.some(url=>normalizeUrl(url)===null))errors.push({label:record.label,kind:'contents_public_span_or_url_mismatch'});}}}
+console.log(JSON.stringify({searches,contents,initial,alternate,errors,publicCasePlan:p.cases.map(publicCasePlan)}));"""
+    query = json.loads(subprocess.check_output(['node', '--import', 'tsx', '--input-type=module', '-e', helper,
+                                               str(DIRECTORY / 'plan.json'), str(args.report)], cwd=REPOSITORY))
+    checks = {}
+    checks['planBytesMatchFreeze'] = sha((DIRECTORY / 'plan.json').read_bytes()) == freeze['planSHA256']
+    checks['datasetAndCSVPinsMatch'] = sha((DIRECTORY / 'dataset.json').read_bytes()) == plan['datasetSHA256'] and sha((DIRECTORY / 'dataset.csv').read_bytes()) == plan['datasetCSVSHA256']
+    checks['allSourceMaterialPinsMatch'] = all(sha((DIRECTORY / name).read_bytes()) == digest for name, digest in plan['sourceFilesSHA256'].items())
+    checks['executorAndAssemblerPinsMatch'] = sha((DIRECTORY / 'execute.mts').read_bytes()) == freeze['executorSHA256'] == plan['budgetConstantsSourceSHA256'] and sha((DIRECTORY / 'build-dataset.py').read_bytes()) == plan['assemblerSHA256']
+    checks['captureMetadataMatchesFreeze'] = all(report['metadata'][key] == freeze[key] for key in ['commit', 'dirty', 'sourceSHA256']) and report['metadata']['casesSHA256'] == freeze['planSHA256']
+    git = lambda *values: subprocess.check_output(['git', '-C', str(REPOSITORY), *values]).decode()
+    source_hash = hashlib.sha256()
+    source_paths = sorted(path for path in git('ls-files', '-z', '--cached', '--others', '--exclude-standard', '--',
+                                               'apps/console', 'services/api', 'packages/contracts', 'package.json', 'package-lock.json').split('\0') if path)
+    for path in source_paths:
+        source_hash.update(path.encode()); source_hash.update(b'\0')
+        source_hash.update((REPOSITORY / path).read_bytes()); source_hash.update(b'\0')
+    checked_source = {'commit': git('rev-parse', 'HEAD').strip(), 'dirty': bool(git('status', '--porcelain').strip()),
+                      'sourceSHA256': source_hash.hexdigest()}
+    checks['currentSourceScopeMatchesFrozenCapture'] = checked_source['sourceSHA256'] == freeze['sourceSHA256']
+    checks['planCasesDatasetCasesSame'] = dataset['cases'] == cases and report['predeclaredCases'] == query['publicCasePlan']
+    labels = [record['label'] for record in records]
+    checks['recordsUniqueInFrozenRelativeOrder'] = len(labels) == len(set(labels)) and labels == [case['label'] for case in cases if case['label'] in set(labels)]
+    checks['exact100DeclaredBalanceAndStyles'] = len(cases) == 100 and len(items) == 80 and sum(item['expectedVerdict'] == 'supported' for item in items) == 40 and collections.Counter(info['style'] for info in metadata.values()) == {'standalone': 56, 'mixed_private_public': 12, 'first_person_public': 12, 'control': 20}
+    checks['exactFrozenLimits'] = report['limits'] == plan['limits'] and report['perCaseLimits'] == plan['perCaseLimits']
+    checks['actualCountsMatchCapture'] = all(calculated[key] == report['totals'][key] for key in ['calls', 'attempts', 'requestBytes', 'measuredInputTokens', 'unknownInputTokenReservations', 'chargedInputTokens', 'attemptsWithUnknownCost'])
+    checks['partialCostMatchesCapture'] = (calculated['knownCostUSD'] is None and report['totals']['knownCostUSD'] is None) or (calculated['knownCostUSD'] is not None and report['totals']['knownCostUSD'] is not None and math.isclose(calculated['knownCostUSD'], report['totals']['knownCostUSD']))
+    checks['perCaseAccounted'] = all(accounting(record['attempts'])['measuredInputTokens'] == record['usage']['measuredInputTokens'] == record.get('runtime', {}).get('inputTokens', record['usage']['measuredInputTokens']) and accounting(record['attempts'])['requestBytes'] == record['usage']['requestBytes'] for record in records)
+    checks['reportedRawOutcomesMatchIndependent'] = all(overall[key] == report['evaluation']['factual'][key] for key in ['correctDefinitive', 'wrongDefinitive', 'abstained', 'noResult']) and overall['notObserved'] == report['evaluation']['factual']['notObserved']
+    checks['perInputObservedAttemptsWithinLimits'] = all(accounting(record['attempts'])['calls']['jev'] <= 3 and accounting(record['attempts'])['calls']['search'] <= 2 and accounting(record['attempts'])['calls']['contents'] <= 3 for record in records)
+    checks['recordedGlobalCallsBytesWithinLimits'] = all(value <= plan['limits']['calls'][kind] for kind, value in calculated['calls'].items()) and calculated['requestBytes'] <= plan['limits']['totalRequestBytes'] and all(attempt['requestBytes'] <= plan['limits']['requestBytes'] for attempt in attempts if attempt['dispatched'])
+    checks['noDuplicateTerminalWithinObservedInput'] = all(len([event for event in record['events'] if event['type'] in ['claim.result', 'claim.skipped', 'claim.needs_confirmation', 'check.cancelled', 'pipeline.error']]) <= 1 for record in records)
+    checks['firstReportUnchangedByAnalysis'] = args.report.read_bytes() == raw
+
+    def group(items, key):
+        return {value: summarize([item for item in items if item[key] == value]) for value in sorted({item[key] for item in items})}
+
+    control_confusion = {action: {prediction: 0 for prediction in ['skip', 'needs_confirmation', 'wait', 'check', 'no_action', 'not_observed']}
+                         for action in ['skip', 'needs_confirmation']}
+    by_label = {record['label']: record for record in records}
+    control_false_admissions = 0
+    control_retrieval = 0
+    control_matches = 0
+    manual_respond = 0
+    for sample in cases:
+        record = by_label.get(sample['label'])
+        if record:
+            terminal = [event for event in record['events'] if event['type'] == record['terminalType']]
+            manual_respond += bool(terminal and terminal[-1].get('presentation', {}).get('action') == 'respond')
+        if sample['expected']['claims']:
+            continue
+        expected_action = sample['expected']['admissionAction']
+        actual = record.get('admission', {}).get('action', 'no_action') if record else 'not_observed'
+        control_confusion[expected_action][actual] += 1
+        control_matches += actual == expected_action
+        if record:
+            control_false_admissions += bool(record.get('admittedPublic') or record.get('rejectedAdmissionCount'))
+            control_retrieval += sum(attempt['dispatched'] and attempt['kind'] in ['search', 'contents'] for attempt in record['attempts'])
+
+    true_positive = false_positive = false_negative = 0
+    for sample in cases:
+        record = by_label.get(sample['label'])
+        expected_claims = sample['expected']['claims']
+        admitted = record.get('admittedPublic', []) if record else []
+        matched = int(bool(expected_claims and any(text in expected_claims[0]['acceptedTexts'] for text in admitted)))
+        true_positive += matched
+        false_negative += len(expected_claims) - matched
+        false_positive += max(0, len(admitted) - matched) + (record.get('rejectedAdmissionCount', 0) if record else 0)
+
+    def binary_detector(gold, positive_predictions):
+        positives = [item for item in items if item['expectedVerdict'] == gold]
+        tp = sum(item['verdict'] in positive_predictions for item in positives)
+        fp = sum(item['verdict'] in positive_predictions for item in items if item['expectedVerdict'] != gold)
+        fn = len(positives) - tp
+        return {'truePositives': tp, 'falsePositives': fp, 'falseNegatives': fn,
+                'precision': rate(tp, tp + fp), 'recallOverAllDeclaredGoldClass': rate(tp, len(positives)),
+                'f1': 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else None,
+                'definition': 'Coverage-aware one-vs-rest detection: abstentions/no-result/unrun are missed positives for their gold class, never correct true negatives. F1 is 2TP/(2TP+FP+FN), without an invalid binomial interval for F1.'}
+
+    terminal_result_durations = [event['durationMs'] for record in facts for event in record['events']
+                                 if event['type'] == 'claim.result' and event.get('durationMs') is not None]
+
+    result = {'schemaVersion': 1, 'kind': 'independent_100_case_first_run_analysis',
+              'createdAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'reportSHA256': sha(raw), 'planSHA256': freeze['planSHA256'],
+              'datasetSHA256': plan['datasetSHA256'], 'analysisSourceSHA256': sha(pathlib.Path(__file__).read_bytes()),
+              'checkedSource': checked_source,
+              'auditChecks': checks, 'auditChecksPass': all(checks.values()),
+              'captureStatus': {'completed': report['completed'], 'allCasesAttempted': report['allCasesAttempted'],
+                                'haltReason': report['haltReason'], 'counts': report['counts']},
+              'factual': overall, 'byDomain': group(items, 'domain'), 'byStyle': group(items, 'style'),
+              'conversationalCombined': summarize([item for item in items if item['style'] != 'standalone']),
+              'controls': {'declared': 20, 'observed': len(controls), 'matchedExpectedAction': control_matches,
+                           'confusion': control_confusion, 'falsePublicAdmission': rate(control_false_admissions, 20),
+                           'actualRetrievalAttempts': control_retrieval,
+                           'factualVerdicts': sum(event['type'] == 'claim.result' for record in controls for event in record['events'])},
+              'admission': {'truePositives': true_positive, 'falsePositives': false_positive, 'falseNegatives': false_negative,
+                            'precision': rate(true_positive, true_positive + false_positive),
+                            'recall': rate(true_positive, true_positive + false_negative),
+                            'f1': 2 * true_positive / (2 * true_positive + false_positive + false_negative) if 2 * true_positive + false_positive + false_negative else None,
+                            'actionMatches': sum(record.get('admission', {}).get('action') == expected[record['label']]['expected']['admissionAction'] for record in records),
+                            'actionDenominator': 100},
+              'binaryDetection': {'falseClaimAlert': binary_detector('contradicted', {'contradicted', 'misleading'}),
+                                  'trueClaimSupport': binary_detector('supported', {'supported'})},
+              'manualRespondTerminals': manual_respond, 'accounting': {**calculated, 'campaignWallMs': report['totals']['elapsedMs'],
+                              'maximumActualRequestBytes': max((attempt['requestBytes'] for attempt in attempts if attempt['dispatched']), default=None),
+                              'jevAttemptsWithUnknownUsage': sum(attempt['dispatched'] and attempt['kind'] == 'jev' and attempt.get('inputTokens') is None for attempt in attempts),
+                              'attemptOutcomes': dict(collections.Counter(attempt['outcome'] for attempt in attempts if attempt['dispatched']))},
+              'latency': {'allFactualIncludingAbstentionsErrorsTimeouts': latency(facts, 80),
+                          'controlsSeparate': latency(controls, 20), 'allInputs': latency(records, 100),
+                          'maximumObservedServiceResultDurationMs': max(terminal_result_durations, default=None),
+                          'lateServiceResultsAtOrBeyond10000Ms': sum(value >= 10000 for value in terminal_result_durations),
+                          'byStyle': {style: latency([record for record in facts if metadata[record['label']]['style'] == style], sum(item['style'] == style for item in items)) for style in ['standalone', 'mixed_private_public', 'first_person_public']}},
+              'privacyAndQueries': {'guardedPrivacyFailures': report.get('privacyFailures', []),
+                                   'actualPrivacyExposures': report['counts']['actualPrivacyExposures'],
+                                   'queryAudit': {key: value for key, value in query.items() if key != 'publicCasePlan'},
+                                   'method': 'Exact saved search query matched the same admitted public span or its frozen alternate; highlight/objective hashes matched helpers, contents URLs normalized. Raw request bodies remain omitted; full nested option guards are bound by frozen source.'},
+              'claimOutcomes': items,
+              'methodLimits': ['One new OPEN purposive synthetic cohort; no blind population accuracy, historical pooling, causal improvement or readiness claim.',
+                               'Wilson95 intervals are descriptive IID-binomial mathematics; representative independent sampling is not established and source/case dependence may invalidate population coverage.',
+                               'Abstentions are explicit completed checks but never correct definitive decisions or observed true negatives; missing/invalid/unexecuted results are excluded from observed error denominators and retained in declared coverage.',
+                               'Full selected-citation verification remains a separate manual agent content/access/scope/provenance audit; correct world labels do not grant source credit.',
+                               'Conversation-styled inputs use fresh independent sessions, not a real multi-turn or carryover test.',
+                               'Provider-reported usage/cost is not independent billing. Unknown dollar charges are never zero; aggregate response bytes remain unmeasured.',
+                               'No provider request, public source fetch, old evaluation run or report rewrite occurs in this analysis.']}
+    with args.output.open('x') as output:
+        json.dump(result, output, indent=2); output.write('\n')
+    if args.audit_output:
+        with args.audit_output.open('x') as output:
+            json.dump({'kind': 'independent_100_case_accounting_audit', 'reportSHA256': sha(raw),
+                       'checks': checks, 'checksPass': all(checks.values()), 'analysis': str(args.output),
+                       'accounting': result['accounting'], 'factual': result['factual'], 'controls': result['controls']}, output, indent=2)
+            output.write('\n')
+    print(json.dumps({'reportSHA256': sha(raw), 'auditChecksPass': all(checks.values()),
+                      'declaredFacts': 80, 'correctDefinitive': overall['correctDefinitive'],
+                      'wrongDefinitive': overall['wrongDefinitive'], 'abstained': overall['abstained'],
+                      'noResult': overall['noResult'], 'notObserved': overall['notObserved'],
+                      'controlsMatched': control_matches, 'accounting': result['accounting'],
+                      'factualLatency': result['latency']['allFactualIncludingAbstentionsErrorsTimeouts']}))
+
+
+if __name__ == '__main__':
+    main()

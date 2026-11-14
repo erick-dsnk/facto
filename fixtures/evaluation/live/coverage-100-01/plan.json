@@ -1,0 +1,2639 @@
+{
+  "schemaVersion": 1,
+  "kind": "prospective_open_100_input_campaign",
+  "name": "coverage-100-01",
+  "status": "assembled_pending_final_independent_dataset_and_freeze_review",
+  "preparedAgainstCommit": "b21809493aa7a6e3b337391f996a74b2e2f220a0",
+  "cases": [
+    {
+      "label": "AD20",
+      "text": "The 24 Hours of Le Mans is a cycling race.",
+      "allowedPublic": [
+        "The 24 Hours of Le Mans is a cycling race."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD20-fact",
+            "acceptedTexts": [
+              "The 24 Hours of Le Mans is a cycling race."
+            ],
+            "verdict": "contradicted",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL14",
+      "text": "I find classical guitar music more beautiful than heavy metal.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL12",
+      "text": "In my view, rainy holidays are more relaxing than sunny ones.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC16",
+      "text": "The first Apple iPhone was introduced in 2001.",
+      "allowedPublic": [
+        "The first Apple iPhone was introduced in 2001."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC16-fact",
+            "acceptedTexts": [
+              "The first Apple iPhone was introduced in 2001."
+            ],
+            "verdict": "contradicted",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA03",
+      "text": "I think Apollo 11 first landed humans on the Moon in 1969.",
+      "allowedPublic": [
+        "I think Apollo 11 first landed humans on the Moon in 1969.",
+        "Apollo 11 first landed humans on the Moon in 1969."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA03-fact",
+            "acceptedTexts": [
+              "I think Apollo 11 first landed humans on the Moon in 1969.",
+              "Apollo 11 first landed humans on the Moon in 1969."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA02",
+      "text": "The United States Declaration of Independence was adopted in 1776.",
+      "allowedPublic": [
+        "The United States Declaration of Independence was adopted in 1776."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA02-fact",
+            "acceptedTexts": [
+              "The United States Declaration of Independence was adopted in 1776."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD12",
+      "text": "A baseball team has nine players on the field.",
+      "allowedPublic": [
+        "A baseball team has nine players on the field."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD12-fact",
+            "acceptedTexts": [
+              "A baseball team has nine players on the field."
+            ],
+            "verdict": "supported",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD04",
+      "text": "The first part of Don Quixote was published in 1605.",
+      "allowedPublic": [
+        "The first part of Don Quixote was published in 1605."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD04-fact",
+            "acceptedTexts": [
+              "The first part of Don Quixote was published in 1605."
+            ],
+            "verdict": "supported",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB19",
+      "text": "Basalt is a fine-grained extrusive igneous rock.",
+      "allowedPublic": [
+        "Basalt is a fine-grained extrusive igneous rock."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB19-fact",
+            "acceptedTexts": [
+              "Basalt is a fine-grained extrusive igneous rock."
+            ],
+            "verdict": "supported",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA15",
+      "text": "UNICEF was created in 1946.",
+      "allowedPublic": [
+        "UNICEF was created in 1946."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA15-fact",
+            "acceptedTexts": [
+              "UNICEF was created in 1946."
+            ],
+            "verdict": "supported",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB09",
+      "text": "Lake Victoria drains into the White Nile.",
+      "allowedPublic": [
+        "Lake Victoria drains into the White Nile."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB09-fact",
+            "acceptedTexts": [
+              "Lake Victoria drains into the White Nile."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL02",
+      "text": "My clinic file number is ZX-64180.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL19",
+      "text": "Could you tell me which city hosted the 1968 Summer Olympics?",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB15",
+      "text": "I think the Richter earthquake magnitude scale is logarithmic.",
+      "allowedPublic": [
+        "I think the Richter earthquake magnitude scale is logarithmic.",
+        "the Richter earthquake magnitude scale is logarithmic."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB15-fact",
+            "acceptedTexts": [
+              "I think the Richter earthquake magnitude scale is logarithmic.",
+              "the Richter earthquake magnitude scale is logarithmic."
+            ],
+            "verdict": "supported",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC18",
+      "text": "The JPEG image format uses lossless compression only.",
+      "allowedPublic": [
+        "The JPEG image format uses lossless compression only."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC18-fact",
+            "acceptedTexts": [
+              "The JPEG image format uses lossless compression only."
+            ],
+            "verdict": "contradicted",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB20",
+      "text": "Obsidian is a sedimentary rock.",
+      "allowedPublic": [
+        "Obsidian is a sedimentary rock."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB20-fact",
+            "acceptedTexts": [
+              "Obsidian is a sedimentary rock."
+            ],
+            "verdict": "contradicted",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB11",
+      "text": "My hands felt cold earlier. Granite is an igneous rock.",
+      "allowedPublic": [
+        "Granite is an igneous rock."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB11-fact",
+            "acceptedTexts": [
+              "Granite is an igneous rock."
+            ],
+            "verdict": "supported",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA18",
+      "text": "The seat of the International Court of Justice is in Amsterdam.",
+      "allowedPublic": [
+        "The seat of the International Court of Justice is in Amsterdam."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA18-fact",
+            "acceptedTexts": [
+              "The seat of the International Court of Justice is in Amsterdam."
+            ],
+            "verdict": "contradicted",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD11",
+      "text": "The Wimbledon Championships are played on grass courts.",
+      "allowedPublic": [
+        "The Wimbledon Championships are played on grass courts."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD11-fact",
+            "acceptedTexts": [
+              "The Wimbledon Championships are played on grass courts."
+            ],
+            "verdict": "supported",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC09",
+      "text": "A light-year is a unit of time.",
+      "allowedPublic": [
+        "A light-year is a unit of time."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC09-fact",
+            "acceptedTexts": [
+              "A light-year is a unit of time."
+            ],
+            "verdict": "contradicted",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC08",
+      "text": "The SI unit of electric current is the volt.",
+      "allowedPublic": [
+        "The SI unit of electric current is the volt."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC08-fact",
+            "acceptedTexts": [
+              "The SI unit of electric current is the volt."
+            ],
+            "verdict": "contradicted",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD17",
+      "text": "I think a standard rugby union team has thirteen players.",
+      "allowedPublic": [
+        "I think a standard rugby union team has thirteen players.",
+        "a standard rugby union team has thirteen players."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD17-fact",
+            "acceptedTexts": [
+              "I think a standard rugby union team has thirteen players.",
+              "a standard rugby union team has thirteen players."
+            ],
+            "verdict": "contradicted",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD09",
+      "text": "The Thinker was sculpted by Michelangelo.",
+      "allowedPublic": [
+        "The Thinker was sculpted by Michelangelo."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD09-fact",
+            "acceptedTexts": [
+              "The Thinker was sculpted by Michelangelo."
+            ],
+            "verdict": "contradicted",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB06",
+      "text": "The Mekong River empties into the Mediterranean Sea.",
+      "allowedPublic": [
+        "The Mekong River empties into the Mediterranean Sea."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB06-fact",
+            "acceptedTexts": [
+              "The Mekong River empties into the Mediterranean Sea."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA01",
+      "text": "I forgot my lunch today. The Chernobyl nuclear power plant disaster occurred in 1986.",
+      "allowedPublic": [
+        "The Chernobyl nuclear power plant disaster occurred in 1986."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA01-fact",
+            "acceptedTexts": [
+              "The Chernobyl nuclear power plant disaster occurred in 1986."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB16",
+      "text": "Igneous rocks form by the compaction of loose sediments.",
+      "allowedPublic": [
+        "Igneous rocks form by the compaction of loose sediments."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB16-fact",
+            "acceptedTexts": [
+              "Igneous rocks form by the compaction of loose sediments."
+            ],
+            "verdict": "contradicted",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC03",
+      "text": "Mars has two moons, Phobos and Deimos.",
+      "allowedPublic": [
+        "Mars has two moons, Phobos and Deimos."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC03-fact",
+            "acceptedTexts": [
+              "Mars has two moons, Phobos and Deimos."
+            ],
+            "verdict": "supported",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC01",
+      "text": "My bus pass cost 43 euros. Neptune is the farthest planet from the Sun.",
+      "allowedPublic": [
+        "Neptune is the farthest planet from the Sun."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC01-fact",
+            "acceptedTexts": [
+              "Neptune is the farthest planet from the Sun."
+            ],
+            "verdict": "supported",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC13",
+      "text": "HTML stands for HyperText Markup Language.",
+      "allowedPublic": [
+        "HTML stands for HyperText Markup Language."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC13-fact",
+            "acceptedTexts": [
+              "HTML stands for HyperText Markup Language."
+            ],
+            "verdict": "supported",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD10",
+      "text": "The Prado Museum is located in Barcelona.",
+      "allowedPublic": [
+        "The Prado Museum is located in Barcelona."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD10-fact",
+            "acceptedTexts": [
+              "The Prado Museum is located in Barcelona."
+            ],
+            "verdict": "contradicted",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL15",
+      "text": "That monument was completed in 1724.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "needs_confirmation",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL01",
+      "text": "My savings account contains 5812 euros.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA09",
+      "text": "The Battle of Waterloo took place in 1812.",
+      "allowedPublic": [
+        "The Battle of Waterloo took place in 1812."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA09-fact",
+            "acceptedTexts": [
+              "The Battle of Waterloo took place in 1812."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD08",
+      "text": "I think Charles Dickens wrote Hamlet.",
+      "allowedPublic": [
+        "I think Charles Dickens wrote Hamlet.",
+        "Charles Dickens wrote Hamlet."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD08-fact",
+            "acceptedTexts": [
+              "I think Charles Dickens wrote Hamlet.",
+              "Charles Dickens wrote Hamlet."
+            ],
+            "verdict": "contradicted",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC07",
+      "text": "The chemical symbol for silver is Ag.",
+      "allowedPublic": [
+        "The chemical symbol for silver is Ag."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC07-fact",
+            "acceptedTexts": [
+              "The chemical symbol for silver is Ag."
+            ],
+            "verdict": "supported",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB12",
+      "text": "Quartz defines a hardness of 3 on the Mohs scale.",
+      "allowedPublic": [
+        "Quartz defines a hardness of 3 on the Mohs scale."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB12-fact",
+            "acceptedTexts": [
+              "Quartz defines a hardness of 3 on the Mohs scale."
+            ],
+            "verdict": "contradicted",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL05",
+      "text": "My personal phone number ends in 6048.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA04",
+      "text": "Pompeii was destroyed by an eruption of Mount Vesuvius in 79 CE.",
+      "allowedPublic": [
+        "Pompeii was destroyed by an eruption of Mount Vesuvius in 79 CE."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA04-fact",
+            "acceptedTexts": [
+              "Pompeii was destroyed by an eruption of Mount Vesuvius in 79 CE."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL06",
+      "text": "Yesterday I missed my bus and walked home.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC02",
+      "text": "Venus rotates in the same direction as most other planets.",
+      "allowedPublic": [
+        "Venus rotates in the same direction as most other planets."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC02-fact",
+            "acceptedTexts": [
+              "Venus rotates in the same direction as most other planets."
+            ],
+            "verdict": "contradicted",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD19",
+      "text": "In snooker, the black ball is worth five points.",
+      "allowedPublic": [
+        "In snooker, the black ball is worth five points."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD19-fact",
+            "acceptedTexts": [
+              "In snooker, the black ball is worth five points."
+            ],
+            "verdict": "contradicted",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD18",
+      "text": "The standard marathon distance is 40 kilometres.",
+      "allowedPublic": [
+        "The standard marathon distance is 40 kilometres."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD18-fact",
+            "acceptedTexts": [
+              "The standard marathon distance is 40 kilometres."
+            ],
+            "verdict": "contradicted",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD14",
+      "text": "I think the Tour de France was first held in 1903.",
+      "allowedPublic": [
+        "I think the Tour de France was first held in 1903.",
+        "the Tour de France was first held in 1903."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD14-fact",
+            "acceptedTexts": [
+              "I think the Tour de France was first held in 1903.",
+              "the Tour de France was first held in 1903."
+            ],
+            "verdict": "supported",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL16",
+      "text": "Their capital is on the coast.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "needs_confirmation",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB07",
+      "text": "Mount Etna is located on the island of Sicily.",
+      "allowedPublic": [
+        "Mount Etna is located on the island of Sicily."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB07-fact",
+            "acceptedTexts": [
+              "Mount Etna is located on the island of Sicily."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC12",
+      "text": "The default port number for HTTPS is 21.",
+      "allowedPublic": [
+        "The default port number for HTTPS is 21."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC12-fact",
+            "acceptedTexts": [
+              "The default port number for HTTPS is 21."
+            ],
+            "verdict": "contradicted",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA10",
+      "text": "The first confirmed ascent of Mount Everest occurred in 1963.",
+      "allowedPublic": [
+        "The first confirmed ascent of Mount Everest occurred in 1963."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA10-fact",
+            "acceptedTexts": [
+              "The first confirmed ascent of Mount Everest occurred in 1963."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL04",
+      "text": "My annual pension payment is 19440 euros.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL20",
+      "text": "Please compare the dates in these two paragraphs.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA07",
+      "text": "The American Civil War ended in 1861.",
+      "allowedPublic": [
+        "The American Civil War ended in 1861."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA07-fact",
+            "acceptedTexts": [
+              "The American Civil War ended in 1861."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL17",
+      "text": "It has about three million inhabitants.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "needs_confirmation",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC10",
+      "text": "Polaris is located in the constellation Ursa Minor.",
+      "allowedPublic": [
+        "Polaris is located in the constellation Ursa Minor."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC10-fact",
+            "acceptedTexts": [
+              "Polaris is located in the constellation Ursa Minor."
+            ],
+            "verdict": "supported",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB18",
+      "text": "I think the chemical formula of pure halite is KCl.",
+      "allowedPublic": [
+        "I think the chemical formula of pure halite is KCl.",
+        "the chemical formula of pure halite is KCl."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB18-fact",
+            "acceptedTexts": [
+              "I think the chemical formula of pure halite is KCl.",
+              "the chemical formula of pure halite is KCl."
+            ],
+            "verdict": "contradicted",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA19",
+      "text": "The International Committee of the Red Cross is headquartered in Stockholm.",
+      "allowedPublic": [
+        "The International Committee of the Red Cross is headquartered in Stockholm."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA19-fact",
+            "acceptedTexts": [
+              "The International Committee of the Red Cross is headquartered in Stockholm."
+            ],
+            "verdict": "contradicted",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL08",
+      "text": "I spent last weekend painting my kitchen.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD06",
+      "text": "My monthly rent is 913 euros. Pride and Prejudice was written by Charlotte Brontë.",
+      "allowedPublic": [
+        "Pride and Prejudice was written by Charlotte Brontë."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD06-fact",
+            "acceptedTexts": [
+              "Pride and Prejudice was written by Charlotte Brontë."
+            ],
+            "verdict": "contradicted",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC15",
+      "text": "I think the original PlayStation console was released in Japan in 1994.",
+      "allowedPublic": [
+        "I think the original PlayStation console was released in Japan in 1994.",
+        "the original PlayStation console was released in Japan in 1994."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC15-fact",
+            "acceptedTexts": [
+              "I think the original PlayStation console was released in Japan in 1994.",
+              "the original PlayStation console was released in Japan in 1994."
+            ],
+            "verdict": "supported",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC17",
+      "text": "The Linux kernel was created by Linus Torvalds.",
+      "allowedPublic": [
+        "The Linux kernel was created by Linus Torvalds."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC17-fact",
+            "acceptedTexts": [
+              "The Linux kernel was created by Linus Torvalds."
+            ],
+            "verdict": "supported",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL18",
+      "text": "The event happened there in 1867.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "needs_confirmation",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC05",
+      "text": "The Sun is a G-type main-sequence star.",
+      "allowedPublic": [
+        "The Sun is a G-type main-sequence star."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC05-fact",
+            "acceptedTexts": [
+              "The Sun is a G-type main-sequence star."
+            ],
+            "verdict": "supported",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB14",
+      "text": "The ideal chemical formula of the mineral dolomite is CaCO3.",
+      "allowedPublic": [
+        "The ideal chemical formula of the mineral dolomite is CaCO3."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB14-fact",
+            "acceptedTexts": [
+              "The ideal chemical formula of the mineral dolomite is CaCO3."
+            ],
+            "verdict": "contradicted",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB10",
+      "text": "Bogota is the capital of Peru.",
+      "allowedPublic": [
+        "Bogota is the capital of Peru."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB10-fact",
+            "acceptedTexts": [
+              "Bogota is the capital of Peru."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC19",
+      "text": "USB stands for Universal Serial Bus.",
+      "allowedPublic": [
+        "USB stands for Universal Serial Bus."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC19-fact",
+            "acceptedTexts": [
+              "USB stands for Universal Serial Bus."
+            ],
+            "verdict": "supported",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA20",
+      "text": "The headquarters of INTERPOL is in Brussels.",
+      "allowedPublic": [
+        "The headquarters of INTERPOL is in Brussels."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA20-fact",
+            "acceptedTexts": [
+              "The headquarters of INTERPOL is in Brussels."
+            ],
+            "verdict": "contradicted",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB13",
+      "text": "Gypsum is calcium sulfate dihydrate.",
+      "allowedPublic": [
+        "Gypsum is calcium sulfate dihydrate."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB13-fact",
+            "acceptedTexts": [
+              "Gypsum is calcium sulfate dihydrate."
+            ],
+            "verdict": "supported",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD13",
+      "text": "My patient record number is TEST-9284. Basketball was invented by James Naismith.",
+      "allowedPublic": [
+        "Basketball was invented by James Naismith."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD13-fact",
+            "acceptedTexts": [
+              "Basketball was invented by James Naismith."
+            ],
+            "verdict": "supported",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC14",
+      "text": "IPv4 addresses are 128 bits long.",
+      "allowedPublic": [
+        "IPv4 addresses are 128 bits long."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC14-fact",
+            "acceptedTexts": [
+              "IPv4 addresses are 128 bits long."
+            ],
+            "verdict": "contradicted",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL07",
+      "text": "I felt dizzy while waiting in the queue.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL13",
+      "text": "I would rather watch a comedy than a thriller.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL03",
+      "text": "My home address is 47 Imaginary Lane in the fictional town of Lumenvale.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL09",
+      "text": "I received a handmade birthday card this morning.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC06",
+      "text": "I spilled tea on my notebook this morning. The atomic number of carbon is 8.",
+      "allowedPublic": [
+        "The atomic number of carbon is 8."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC06-fact",
+            "acceptedTexts": [
+              "The atomic number of carbon is 8."
+            ],
+            "verdict": "contradicted",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB05",
+      "text": "Mount Elbrus is in the Caucasus Mountains.",
+      "allowedPublic": [
+        "Mount Elbrus is in the Caucasus Mountains."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB05-fact",
+            "acceptedTexts": [
+              "Mount Elbrus is in the Caucasus Mountains."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA13",
+      "text": "The European Court of Human Rights is based in Strasbourg.",
+      "allowedPublic": [
+        "The European Court of Human Rights is based in Strasbourg."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA13-fact",
+            "acceptedTexts": [
+              "The European Court of Human Rights is based in Strasbourg."
+            ],
+            "verdict": "supported",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA11",
+      "text": "The main headquarters of the United Nations is in New York City.",
+      "allowedPublic": [
+        "The main headquarters of the United Nations is in New York City."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA11-fact",
+            "acceptedTexts": [
+              "The main headquarters of the United Nations is in New York City."
+            ],
+            "verdict": "supported",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA05",
+      "text": "Nelson Mandela was released from prison in 1990.",
+      "allowedPublic": [
+        "Nelson Mandela was released from prison in 1990."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA05-fact",
+            "acceptedTexts": [
+              "Nelson Mandela was released from prison in 1990."
+            ],
+            "verdict": "supported",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC20",
+      "text": "I think the C programming language was developed at Microsoft.",
+      "allowedPublic": [
+        "I think the C programming language was developed at Microsoft.",
+        "the C programming language was developed at Microsoft."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC20-fact",
+            "acceptedTexts": [
+              "I think the C programming language was developed at Microsoft.",
+              "the C programming language was developed at Microsoft."
+            ],
+            "verdict": "contradicted",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB02",
+      "text": "My breakfast tasted unpleasant today. The Danube flows into the Caspian Sea.",
+      "allowedPublic": [
+        "The Danube flows into the Caspian Sea."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB02-fact",
+            "acceptedTexts": [
+              "The Danube flows into the Caspian Sea."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL10",
+      "text": "I slept badly after staying up to finish a puzzle.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA06",
+      "text": "I left my bicycle at home today. Johannes Gutenberg developed his movable-type printing press in the eighteenth century.",
+      "allowedPublic": [
+        "Johannes Gutenberg developed his movable-type printing press in the eighteenth century."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA06-fact",
+            "acceptedTexts": [
+              "Johannes Gutenberg developed his movable-type printing press in the eighteenth century."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD07",
+      "text": "Paul Cézanne painted The Starry Night.",
+      "allowedPublic": [
+        "Paul Cézanne painted The Starry Night."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD07-fact",
+            "acceptedTexts": [
+              "Paul Cézanne painted The Starry Night."
+            ],
+            "verdict": "contradicted",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD15",
+      "text": "The Ryder Cup is a golf competition.",
+      "allowedPublic": [
+        "The Ryder Cup is a golf competition."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD15-fact",
+            "acceptedTexts": [
+              "The Ryder Cup is a golf competition."
+            ],
+            "verdict": "supported",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA17",
+      "text": "NATO was founded in 1959.",
+      "allowedPublic": [
+        "NATO was founded in 1959."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA17-fact",
+            "acceptedTexts": [
+              "NATO was founded in 1959."
+            ],
+            "verdict": "contradicted",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB03",
+      "text": "Aconcagua is located in Argentina.",
+      "allowedPublic": [
+        "Aconcagua is located in Argentina."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB03-fact",
+            "acceptedTexts": [
+              "Aconcagua is located in Argentina."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA08",
+      "text": "I think the Titanic sank in 1922.",
+      "allowedPublic": [
+        "I think the Titanic sank in 1922.",
+        "the Titanic sank in 1922."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA08-fact",
+            "acceptedTexts": [
+              "I think the Titanic sank in 1922.",
+              "the Titanic sank in 1922."
+            ],
+            "verdict": "contradicted",
+            "domain": "history"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD02",
+      "text": "Frankenstein was first published in 1818.",
+      "allowedPublic": [
+        "Frankenstein was first published in 1818."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD02-fact",
+            "acceptedTexts": [
+              "Frankenstein was first published in 1818."
+            ],
+            "verdict": "supported",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "CTRL11",
+      "text": "I like minimalist logos more than ornate ones.",
+      "allowedPublic": [],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [],
+        "admissionAction": "skip",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB01",
+      "text": "I misplaced my blue notebook this morning. Lake Tanganyika lies in Africa.",
+      "allowedPublic": [
+        "Lake Tanganyika lies in Africa."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB01-fact",
+            "acceptedTexts": [
+              "Lake Tanganyika lies in Africa."
+            ],
+            "verdict": "supported",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD05",
+      "text": "The Alhambra is in Granada, Spain.",
+      "allowedPublic": [
+        "The Alhambra is in Granada, Spain."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD05-fact",
+            "acceptedTexts": [
+              "The Alhambra is in Granada, Spain."
+            ],
+            "verdict": "supported",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC11",
+      "text": "My desk drawer is full of postcards. The Java programming language was developed at Sun Microsystems.",
+      "allowedPublic": [
+        "The Java programming language was developed at Sun Microsystems."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC11-fact",
+            "acceptedTexts": [
+              "The Java programming language was developed at Sun Microsystems."
+            ],
+            "verdict": "supported",
+            "domain": "computing_technology"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB04",
+      "text": "I think the Atacama Desert is located in Brazil.",
+      "allowedPublic": [
+        "I think the Atacama Desert is located in Brazil.",
+        "the Atacama Desert is located in Brazil."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB04-fact",
+            "acceptedTexts": [
+              "I think the Atacama Desert is located in Brazil.",
+              "the Atacama Desert is located in Brazil."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD01",
+      "text": "My notebook PIN is 4826. Victor Hugo wrote Les Misérables.",
+      "allowedPublic": [
+        "Victor Hugo wrote Les Misérables."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD01-fact",
+            "acceptedTexts": [
+              "Victor Hugo wrote Les Misérables."
+            ],
+            "verdict": "supported",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA16",
+      "text": "I enjoyed my walk this afternoon. The headquarters of the World Health Organization is in Vienna.",
+      "allowedPublic": [
+        "The headquarters of the World Health Organization is in Vienna."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA16-fact",
+            "acceptedTexts": [
+              "The headquarters of the World Health Organization is in Vienna."
+            ],
+            "verdict": "contradicted",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB17",
+      "text": "Calcite defines a hardness of 3 on the Mohs scale.",
+      "allowedPublic": [
+        "Calcite defines a hardness of 3 on the Mohs scale."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB17-fact",
+            "acceptedTexts": [
+              "Calcite defines a hardness of 3 on the Mohs scale."
+            ],
+            "verdict": "supported",
+            "domain": "earth_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA14",
+      "text": "The International Labour Organization was established in 1919.",
+      "allowedPublic": [
+        "The International Labour Organization was established in 1919."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA14-fact",
+            "acceptedTexts": [
+              "The International Labour Organization was established in 1919."
+            ],
+            "verdict": "supported",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD03",
+      "text": "Claude Monet painted the Water Lilies series.",
+      "allowedPublic": [
+        "Claude Monet painted the Water Lilies series."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD03-fact",
+            "acceptedTexts": [
+              "Claude Monet painted the Water Lilies series."
+            ],
+            "verdict": "supported",
+            "domain": "culture_arts"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "HA12",
+      "text": "I think the United Nations Security Council has five permanent members.",
+      "allowedPublic": [
+        "I think the United Nations Security Council has five permanent members.",
+        "the United Nations Security Council has five permanent members."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "HA12-fact",
+            "acceptedTexts": [
+              "I think the United Nations Security Council has five permanent members.",
+              "the United Nations Security Council has five permanent members."
+            ],
+            "verdict": "supported",
+            "domain": "civics"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "GB08",
+      "text": "Geographically, Greenland is part of South America.",
+      "allowedPublic": [
+        "Geographically, Greenland is part of South America."
+      ],
+      "expected": {
+        "claims": [
+          {
+            "id": "GB08-fact",
+            "acceptedTexts": [
+              "Geographically, Greenland is part of South America."
+            ],
+            "verdict": "contradicted",
+            "domain": "geography"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "AD16",
+      "text": "A standard ice hockey puck is spherical.",
+      "allowedPublic": [
+        "A standard ice hockey puck is spherical."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "AD16-fact",
+            "acceptedTexts": [
+              "A standard ice hockey puck is spherical."
+            ],
+            "verdict": "contradicted",
+            "domain": "sport"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    },
+    {
+      "label": "SC04",
+      "text": "I think Saturn's rings are made mostly of solid gold.",
+      "allowedPublic": [
+        "I think Saturn's rings are made mostly of solid gold.",
+        "Saturn's rings are made mostly of solid gold."
+      ],
+      "automatic": false,
+      "final": true,
+      "expected": {
+        "claims": [
+          {
+            "id": "SC04-fact",
+            "acceptedTexts": [
+              "I think Saturn's rings are made mostly of solid gold.",
+              "Saturn's rings are made mostly of solid gold."
+            ],
+            "verdict": "contradicted",
+            "domain": "natural_science"
+          }
+        ],
+        "admissionAction": "check",
+        "presentationActions": [
+          "respond"
+        ]
+      }
+    }
+  ],
+  "styles": {
+    "HA01": "mixed_private_public",
+    "HA02": "standalone",
+    "HA03": "first_person_public",
+    "HA04": "standalone",
+    "HA05": "standalone",
+    "HA06": "mixed_private_public",
+    "HA07": "standalone",
+    "HA08": "first_person_public",
+    "HA09": "standalone",
+    "HA10": "standalone",
+    "HA11": "standalone",
+    "HA12": "first_person_public",
+    "HA13": "standalone",
+    "HA14": "standalone",
+    "HA15": "standalone",
+    "HA16": "mixed_private_public",
+    "HA17": "standalone",
+    "HA18": "standalone",
+    "HA19": "standalone",
+    "HA20": "standalone",
+    "GB01": "mixed_private_public",
+    "GB02": "mixed_private_public",
+    "GB03": "standalone",
+    "GB04": "first_person_public",
+    "GB05": "standalone",
+    "GB06": "standalone",
+    "GB07": "standalone",
+    "GB08": "standalone",
+    "GB09": "standalone",
+    "GB10": "standalone",
+    "GB11": "mixed_private_public",
+    "GB12": "standalone",
+    "GB13": "standalone",
+    "GB14": "standalone",
+    "GB15": "first_person_public",
+    "GB16": "standalone",
+    "GB17": "standalone",
+    "GB18": "first_person_public",
+    "GB19": "standalone",
+    "GB20": "standalone",
+    "SC01": "mixed_private_public",
+    "SC02": "standalone",
+    "SC03": "standalone",
+    "SC04": "first_person_public",
+    "SC05": "standalone",
+    "SC06": "mixed_private_public",
+    "SC07": "standalone",
+    "SC08": "standalone",
+    "SC09": "standalone",
+    "SC10": "standalone",
+    "SC11": "mixed_private_public",
+    "SC12": "standalone",
+    "SC13": "standalone",
+    "SC14": "standalone",
+    "SC15": "first_person_public",
+    "SC16": "standalone",
+    "SC17": "standalone",
+    "SC18": "standalone",
+    "SC19": "standalone",
+    "SC20": "first_person_public",
+    "AD01": "mixed_private_public",
+    "AD02": "standalone",
+    "AD03": "standalone",
+    "AD04": "standalone",
+    "AD05": "standalone",
+    "AD06": "mixed_private_public",
+    "AD07": "standalone",
+    "AD08": "first_person_public",
+    "AD09": "standalone",
+    "AD10": "standalone",
+    "AD11": "standalone",
+    "AD12": "standalone",
+    "AD13": "mixed_private_public",
+    "AD14": "first_person_public",
+    "AD15": "standalone",
+    "AD16": "standalone",
+    "AD17": "first_person_public",
+    "AD18": "standalone",
+    "AD19": "standalone",
+    "AD20": "standalone",
+    "CTRL01": "control",
+    "CTRL02": "control",
+    "CTRL03": "control",
+    "CTRL04": "control",
+    "CTRL05": "control",
+    "CTRL06": "control",
+    "CTRL07": "control",
+    "CTRL08": "control",
+    "CTRL09": "control",
+    "CTRL10": "control",
+    "CTRL11": "control",
+    "CTRL12": "control",
+    "CTRL13": "control",
+    "CTRL14": "control",
+    "CTRL15": "control",
+    "CTRL16": "control",
+    "CTRL17": "control",
+    "CTRL18": "control",
+    "CTRL19": "control",
+    "CTRL20": "control"
+  },
+  "counts": {
+    "inputs": 100,
+    "facts": 80,
+    "true": 40,
+    "false": 40,
+    "controls": 20,
+    "styles": {
+      "mixed_private_public": 12,
+      "standalone": 56,
+      "first_person_public": 12,
+      "control": 20
+    },
+    "domains": {
+      "civics": {
+        "true": 5,
+        "false": 5
+      },
+      "computing_technology": {
+        "true": 5,
+        "false": 5
+      },
+      "culture_arts": {
+        "true": 5,
+        "false": 5
+      },
+      "earth_science": {
+        "true": 5,
+        "false": 5
+      },
+      "geography": {
+        "true": 5,
+        "false": 5
+      },
+      "history": {
+        "true": 5,
+        "false": 5
+      },
+      "natural_science": {
+        "true": 5,
+        "false": 5
+      },
+      "sport": {
+        "true": 5,
+        "false": 5
+      }
+    },
+    "controlActions": {
+      "skip": 16,
+      "needs_confirmation": 4
+    }
+  },
+  "limits": {
+    "requestBytes": 524288,
+    "totalRequestBytes": 536870912,
+    "inputTokens": 16000000,
+    "unknownInputTokensPerAttempt": 128000,
+    "calls": {
+      "jev": 300,
+      "search": 160,
+      "contents": 240
+    },
+    "wallMs": 1800000
+  },
+  "perCaseLimits": {
+    "requestBytes": 524288,
+    "totalRequestBytes": 8388608,
+    "inputTokens": 500000,
+    "unknownInputTokensPerAttempt": 128000,
+    "calls": {
+      "jev": 3,
+      "search": 2,
+      "contents": 3
+    },
+    "wallMs": 60000
+  },
+  "datasetSHA256": "740a2a049a0c2ea36c611fcafcdf96d838e7205847e54a5c1e0375de3d4ab690",
+  "datasetCSVSHA256": "af819ae239cd3c5a39666f5dd357d1c62bf41b81c81713ac7603130a2b6807b1",
+  "sourceFilesSHA256": {
+    "part-a.json": "a0b8d12cbbf203b2ca366cd7abd829c31b9d26e96f5be8362ec95145566cc19b",
+    "part-b.json": "d1cff6c4f1b87c96bf431be37d56195740af7fb8850e9849d598caf56e67e074",
+    "part-c.json": "b97ed6c444cfdb387498e885d753d9ae7ef2c90458e03a25235e94f3ac6c980e",
+    "part-d.json": "edd273bb51eb270416693373576cf40066681514c05860439665b6e3d462f7d1",
+    "controls.json": "00188994280d5ba8cb1b2d3be960d1f93b1bdadd147f398efa216bb893ea93e8",
+    "research-a.md": "d1777f552d6b05194f002894059fb0e5cc13eafcbb61fc442de418745b7bdabd",
+    "research-b.md": "89e0dee418cfff4d4d4e0be10e1d44c8882731835706f9dbaf45b79118748699",
+    "research-c.md": "cfe1f3ec1aa2dd997dc30bb36695fbadcfbc08380496ad0eb0eefce717a39188",
+    "research-d.md": "c2b7fa419e8b33f8f72f1de71e4120138bc28a08129a9c0321c4c1a7ba21790a"
+  },
+  "assemblerSHA256": "b1e598ce19f8941741e00ccd8554633d912e3ffb863e97f81325cf771b3879c2",
+  "budgetConstantsSourceSHA256": "0664c8bd128964965bf3c513d777d64b7abbb66fe123f27eef010a9af7974c6c",
+  "order": {
+    "algorithm": "ascending SHA256(seed + NUL + label), then label",
+    "seed": "junction-coverage-100-01-2026-11-14-v1",
+    "labels": [
+      "AD20",
+      "CTRL14",
+      "CTRL12",
+      "SC16",
+      "HA03",
+      "HA02",
+      "AD12",
+      "AD04",
+      "GB19",
+      "HA15",
+      "GB09",
+      "CTRL02",
+      "CTRL19",
+      "GB15",
+      "SC18",
+      "GB20",
+      "GB11",
+      "HA18",
+      "AD11",
+      "SC09",
+      "SC08",
+      "AD17",
+      "AD09",
+      "GB06",
+      "HA01",
+      "GB16",
+      "SC03",
+      "SC01",
+      "SC13",
+      "AD10",
+      "CTRL15",
+      "CTRL01",
+      "HA09",
+      "AD08",
+      "SC07",
+      "GB12",
+      "CTRL05",
+      "HA04",
+      "CTRL06",
+      "SC02",
+      "AD19",
+      "AD18",
+      "AD14",
+      "CTRL16",
+      "GB07",
+      "SC12",
+      "HA10",
+      "CTRL04",
+      "CTRL20",
+      "HA07",
+      "CTRL17",
+      "SC10",
+      "GB18",
+      "HA19",
+      "CTRL08",
+      "AD06",
+      "SC15",
+      "SC17",
+      "CTRL18",
+      "SC05",
+      "GB14",
+      "GB10",
+      "SC19",
+      "HA20",
+      "GB13",
+      "AD13",
+      "SC14",
+      "CTRL07",
+      "CTRL13",
+      "CTRL03",
+      "CTRL09",
+      "SC06",
+      "GB05",
+      "HA13",
+      "HA11",
+      "HA05",
+      "SC20",
+      "GB02",
+      "CTRL10",
+      "HA06",
+      "AD07",
+      "AD15",
+      "HA17",
+      "GB03",
+      "HA08",
+      "AD02",
+      "CTRL11",
+      "GB01",
+      "AD05",
+      "SC11",
+      "GB04",
+      "AD01",
+      "HA16",
+      "GB17",
+      "HA14",
+      "AD03",
+      "HA12",
+      "GB08",
+      "AD16",
+      "SC04"
+    ],
+    "chosenBeforeProviderObservation": true
+  },
+  "execution": {
+    "executor": "root only, after exact source/plan/dataset/executor/preflight freeze and independent review",
+    "maximumExecutions": 1,
+    "resume": false,
+    "rerun": false,
+    "sessions": "Exactly one fresh isolated cold authenticated HTTP/WebSocket session per input; no context/cache reuse between inputs.",
+    "perInputProviderDeadlineMs": 10000,
+    "providerRetries": "Existing runtime only, within3Jev/2search/3contents attempts and the unchanged10-second deadline. Every attempt is charged.",
+    "continueOrdinaryFailures": "Record wrong labels, abstentions and ordinary operational failures and continue unstarted cases when safe. No replacement input or denominator removal.",
+    "stopConditions": [
+      "Actual unsafe private-query exposure or result-span exposure halts. Guarded unapproved admission/query/span failures are recorded as failures and continue with isolated unstarted cases when safe.",
+      "Provider authentication failure",
+      "Global/per-case hard budget or unknown completed usage",
+      "Source/plan/dataset freeze mismatch",
+      "Durable checkpoint/accounting/cancellation failure"
+    ],
+    "queries": "Exact admitted public allowlist span, or existing balanced_evidence alternate built only from that same span. No ground-truth URL injection or answer-directed rewrite.",
+    "controls": "Empty public allowlists: zero retrieval and no factual verdict, even though authored synthetic inputs are shareable.",
+    "environment": "NODE_USE_ENV_PROXY=1 for actual Node requests; keys only in environment, never printed/published."
+  },
+  "prospectiveMetrics": {
+    "denominators": "All80declared facts40true/40false;20controls separate. No-result/errors/unrun remain in declared coverage; all styles and eight10-fact domains retain their denominators.",
+    "rawAndSourceCoverage": [
+      "Correct definitive/all80",
+      "Wrong definitive/all80 and among definitive",
+      "Abstentions/noResult/notObserved/errors separately",
+      "All-original-selected-citations content-verified correct/all80",
+      "Definitive cases with>=1verifiedselected reference separately; never substitute for fullselected credit"
+    ],
+    "binaryTruthConfusion": "Knowntrue/knownfalse rows; predicted supported/contradicted/misleading/insufficient_evidence/no_result/not_observed columns; abstentions never correct true negatives.",
+    "falseAlarm": "Knowntrue predicted contradicted OR misleading. Report count, declared40, completed valid checks including explicit abstentions, and definitive-only denominators separately.",
+    "falseSupport": "Knownfalse predicted supported. Report count, declared40, completed valid checks including explicit abstentions, and definitive-only denominators separately.",
+    "errorDenominatorCaveat": "Invalid/duplicate/no-result/unobserved observations are never observed negatives. Show their counts; do not claim a low completed-case rate establishes declared-cohort success.",
+    "controlConfusion": "Expected skip/needs_confirmation versus actual action, provider error or missing. Report false public admission/20, actual retrieval attempts/20, manual response and factual verdicts separately.",
+    "styleAndDomain": "Report all coverage/confusion/admission/error rates by eight domains, three factual styles, true/false polarity and conversational combined; no pooling historical cohorts.",
+    "admission": "Exact public-span precision/recall, misses, false admissions and unsafe blocked attempts. First-person full/bare accepted variants match one expected proposition only.",
+    "latency": "All80factual cold per-input duration including abstentions/errors/timeouts; median and nearest-rankP95. Controls20 and wholecampaign wall separate; report any unrun denominator.",
+    "providerAccounting": "Actual dispatched Jev/search/contents attempts, retries, requestbytes, measured usage, pending/unknown reservations, known partial cost and unknown-cost attempts. Response-byte aggregate stays unmeasured unless actually captured.",
+    "citationReview": "Independent agent direct inspection of every originally selected reference: exact ID/URL/excerpt hash, relation/value/scope, access failures, retained proof and provenance/dependence. No unselected substitution or hostshortcut.",
+    "wilson95": {
+      "z": 1.959963984540054,
+      "method": "Wilson score interval for k/n: center=(k/n+z²/(2n))/(1+z²/n); half=z*sqrt((k/n)*(1-k/n)/n+z²/(4n²))/(1+z²/n). Returnnull for n=0.",
+      "applyTo": [
+        "Falsealarm completed valid and definitive-only rates",
+        "Falsesupport completed valid and definitive-only rates",
+        "Correctdefinitive/all80 and allselectedverifiedcorrect/all80",
+        "Falsecontroladmission/20"
+      ],
+      "interpretation": "Mathematical binomial intervals are descriptive under an IID Bernoulli assumption not established by this purposive correlated synthetic cohort. They are not population confidence guarantees."
+    }
+  },
+  "criteria": {
+    "rawCorrectDefinitiveTarget": {
+      "minimum": 64,
+      "denominator": 80
+    },
+    "fullySelectedContentVerifiedTarget": {
+      "minimum": 64,
+      "denominator": 80
+    },
+    "wrongDefinitiveTarget": 0,
+    "privacyControlExpected": 20,
+    "allInputTerminalTarget": 100,
+    "interpretation": "Development targets only; every adverse result/failure is preserved. No target or zero-error observation certifies readiness."
+  },
+  "privacy": "Every input is authored synthetic fiction, explicitly shareable as a reusable dataset. No actual private participant data. Public retrieval remains exact-safe-span only; runtime reports omit private-capable originals.",
+  "scope": "New OPEN prospective campaign. No historical authorization reuse, old study rerun/resumption, baseline causal comparison or blind evaluation claim."
+}

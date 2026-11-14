@@ -1,0 +1,76 @@
+import importlib.util
+import math
+import pathlib
+import unittest
+
+spec = importlib.util.spec_from_file_location('coverage_analysis', pathlib.Path(__file__).with_name('analyze.py'))
+analysis = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(analysis)
+
+
+class AnalysisReview(unittest.TestCase):
+    def test_wilson_empty_and_zero_errors_are_not_zero_population_bounds(self):
+        self.assertIsNone(analysis.wilson(0, 0))
+        interval = analysis.wilson(0, 40)
+        self.assertAlmostEqual(interval['lower'], 0)
+        self.assertAlmostEqual(interval['upper'], analysis.Z95 ** 2 / (40 + analysis.Z95 ** 2))
+        self.assertGreater(interval['upper'], .08)
+        self.assertAlmostEqual(analysis.wilson(40, 40)['lower'], 1 - interval['upper'])
+
+    def test_false_alarm_and_false_support_keep_abstentions_and_missing_separate(self):
+        items = [
+            {'expectedVerdict': 'supported', 'verdict': 'misleading', 'result': 'wrong'},
+            {'expectedVerdict': 'supported', 'verdict': 'insufficient_evidence', 'result': 'abstained'},
+            {'expectedVerdict': 'supported', 'verdict': None, 'result': 'not_observed'},
+            {'expectedVerdict': 'contradicted', 'verdict': 'supported', 'result': 'wrong'},
+            {'expectedVerdict': 'contradicted', 'verdict': 'contradicted', 'result': 'correct'},
+            {'expectedVerdict': 'contradicted', 'verdict': None, 'result': 'no_result'},
+        ]
+        result = analysis.summarize(items)
+        self.assertEqual(result['falseAlarm']['completedChecks']['denominator'], 2)
+        self.assertEqual(result['falseAlarm']['completedChecks']['rate'], .5)
+        self.assertEqual(result['falseAlarm']['definitiveOnly']['rate'], 1)
+        self.assertEqual(result['falseAlarm']['declared'], 3)
+        self.assertEqual(result['falseAlarm']['notObserved'], 1)
+        self.assertEqual(result['falseSupport']['completedChecks']['rate'], .5)
+        self.assertEqual(result['falseSupport']['noResult'], 1)
+        self.assertEqual(result['correctDefinitiveCoverage']['denominator'], 6)
+        self.assertEqual(result['correctDefinitive'], 1)
+        self.assertEqual(result['wrongDefinitive'], 2)
+
+    def test_two_accepted_first_person_variants_are_one_expected_claim(self):
+        sample = {'label': 'synthetic', 'expected': {'claims': [{'domain': 'test', 'verdict': 'supported',
+                  'acceptedTexts': ['I think the synthetic assertion.', 'the synthetic assertion.']}]}}
+        record = {'label': 'synthetic', 'localStops': [], 'events': [{'type': 'claim.result',
+                  'checkedPublicText': 'the synthetic assertion.', 'verdict': 'supported',
+                  'selectedEvidenceIds': []}]}
+        values = analysis.outcomes([sample], [record], {'synthetic': {'style': 'first_person_public'}})
+        self.assertEqual(len(values), 1)
+        self.assertEqual(values[0]['result'], 'correct')
+        record['events'].append(dict(record['events'][0]))
+        self.assertEqual(analysis.outcomes([sample], [record], {'synthetic': {'style': 'first_person_public'}})[0]['result'], 'no_result')
+
+    def test_latency_includes_failure_duration_and_exposes_missing(self):
+        records = [{'durationMs': value, 'terminalType': 'pipeline.error',
+                    'events': [{'type': 'pipeline.error', 'receivedMs': value}]} for value in [1, 10000, 20]]
+        result = analysis.latency(records, 4)
+        self.assertEqual(result['medianMs'], 20)
+        self.assertEqual(result['p95Ms'], 10000)
+        self.assertEqual(result['missingDurations'], 1)
+        self.assertFalse(result['allDeclaredIncluded'])
+
+    def test_dispatch_accounting_preserves_unknown_usage_and_cost(self):
+        attempt = {'kind': 'jev', 'dispatched': True, 'inputTokens': None,
+                   'unknownInputTokenReservation': 128000, 'requestBytes': 123, 'costUSD': None}
+        pending = {**attempt, 'dispatched': False, 'requestBytes': 500}
+        values = analysis.accounting([attempt, pending])
+        self.assertEqual(values['attempts'], 1)
+        self.assertEqual(values['pendingDispatchReservations'], 1)
+        self.assertEqual(values['requestBytes'], 123)
+        self.assertEqual(values['chargedInputTokens'], 128000)
+        self.assertIsNone(values['knownCostUSD'])
+        self.assertEqual(values['attemptsWithUnknownCost'], 1)
+
+
+if __name__ == '__main__':
+    unittest.main()
