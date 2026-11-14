@@ -115,8 +115,14 @@ export function qualifyingSourceSet(evidence: Evidence[], checkedText: string | 
   const families = sourceFamilies(retainedEvidence, assessment.originAssessments);
   const strong = assessment.claimRisk.level !== 'ordinary' || assessment.claimRisk.confidence < ASSESSMENT_THRESHOLD || highRiskLanguage.test(checkedText);
   if (!strong) {
-    const assessed = direct.filter(source => substantive(assessment, source.id));
-    if (assessed.some(source => isAuthoritativeForClaim(source, checkedText, registry))) return assessed;
+    // A developed descriptive reference account need not name an underlying
+    // primary record for ordinary facts. It still needs corroboration; the new
+    // category never inherits a registry's single-source authority exception.
+    const assessed = direct.filter(source => substantive(assessment, source.id)
+      || (Object.hasOwn(assessment.sourceAssessments, source.id)
+        && assessment.sourceAssessments[source.id].contentBasis === 'ordinary_reference'
+        && assessment.sourceAssessments[source.id].confidence >= ASSESSMENT_THRESHOLD));
+    if (assessed.some(source => substantive(assessment, source.id) && isAuthoritativeForClaim(source, checkedText, registry))) return assessed;
     return new Set(assessed.map(source => families.get(source.id))).size >= 2 ? assessed : [];
   }
   const assessed = direct.filter(source => substantive(assessment, source.id));

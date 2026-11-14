@@ -93,7 +93,7 @@ describe('typed joint judgment adapter', () => {
     const retained = [{ ...evidence[0], title, excerpt: 'Lightning definitely strikes the same place repeatedly. No underlying record is identified.' }];
     const ask = vi.fn(async (request: JevRequest) => ({
       ...answer(request),
-      e0_content_basis: { choice: 'bare_assertion', probabilities: { original_record: 0, attributable_research: 0, substantive_secondary: 0, bare_assertion: 1, attributed: 0, promotional: 0, unclear: 0 } },
+      e0_content_basis: { choice: 'bare_assertion', probabilities: { original_record: 0, attributable_research: 0, substantive_secondary: 0, ordinary_reference: 0, bare_assertion: 1, attributed: 0, promotional: 0, unclear: 0 } },
     }));
     const result = await createJudge({ ask })(claim, retained, context);
     const state = ask.mock.calls[0][0].state as { evidence: { title: string; excerpt: string }[] };
@@ -109,9 +109,9 @@ describe('typed joint judgment adapter', () => {
     expect(decideVerdict(result).verdict).toBe(expected);
   });
   it.each([
-    [{ original_record: .4, attributable_research: .2, substantive_secondary: .35, bare_assertion: .05, attributed: 0, promotional: 0, unclear: 0 }, 'original_record', .95],
-    [{ original_record: .15, attributable_research: .1, substantive_secondary: .2, bare_assertion: .55, attributed: 0, promotional: 0, unclear: 0 }, 'bare_assertion', .45],
-    [{ original_record: .1, attributable_research: .05, substantive_secondary: .15, bare_assertion: 0, attributed: 0, promotional: .7, unclear: 0 }, 'promotional', .3],
+    [{ original_record: .4, attributable_research: .2, substantive_secondary: .35, ordinary_reference: 0, bare_assertion: .05, attributed: 0, promotional: 0, unclear: 0 }, 'original_record', .95],
+    [{ original_record: .15, attributable_research: .1, substantive_secondary: .2, ordinary_reference: 0, bare_assertion: .55, attributed: 0, promotional: 0, unclear: 0 }, 'bare_assertion', .45],
+    [{ original_record: .1, attributable_research: .05, substantive_secondary: .15, ordinary_reference: 0, bare_assertion: 0, attributed: 0, promotional: .7, unclear: 0 }, 'promotional', .3],
   ] as const)('measures probability of any substantive basis without accepting bare or promotional mass', async (probabilities, choice, expected) => {
     const client: JevClient = { ask: async request => ({ ...answer(request), e0_content_basis: { choice, probabilities } }) };
     const result = await createJudge(client)(claim, evidence, context);
@@ -132,7 +132,7 @@ describe('typed joint judgment adapter', () => {
     // semantic accuracy; the bounded live campaign evaluates the instructions.
     const client: JevClient = { ask: async request => ({
       ...answer(request), e0_relevant: { noul: relevance },
-      e0_content_basis: { choice: basis, probabilities: Object.fromEntries(['original_record', 'attributable_research', 'substantive_secondary', 'bare_assertion', 'attributed', 'promotional', 'unclear'].map(key => [key, key === basis ? 1 : 0])) },
+      e0_content_basis: { choice: basis, probabilities: Object.fromEntries(['original_record', 'attributable_research', 'substantive_secondary', 'ordinary_reference', 'bare_assertion', 'attributed', 'promotional', 'unclear'].map(key => [key, key === basis ? 1 : 0])) },
     }) };
     const result = await createJudge(client)(claim, retained, context);
     expect(decideVerdict(result).verdict).toBe(expected);

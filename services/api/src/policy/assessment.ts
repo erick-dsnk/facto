@@ -2,7 +2,7 @@ import { PipelineError, type Judgment } from '../../../../packages/contracts/src
 
 /** Server-only assessments of quoted content, never verified publisher provenance.
  * These fields are deliberately absent from the frozen app result contract. */
-export const CONTENT_BASES = ['original_record', 'attributable_research', 'substantive_secondary', 'bare_assertion', 'attributed', 'promotional', 'unclear'] as const;
+export const CONTENT_BASES = ['original_record', 'attributable_research', 'substantive_secondary', 'ordinary_reference', 'bare_assertion', 'attributed', 'promotional', 'unclear'] as const;
 export const CLAIM_RISKS = ['ordinary', 'health_safety', 'disputed', 'unknown'] as const;
 export const ORIGIN_RELATIONSHIPS = ['common_origin', 'distinct_origins', 'unclear'] as const;
 export const ASSESSMENT_THRESHOLD = 0.85;
