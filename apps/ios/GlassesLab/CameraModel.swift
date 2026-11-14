@@ -1,3 +1,4 @@
+import AVFoundation
 import MWDATCamera
 import MWDATCore
 import Observation
@@ -52,6 +53,15 @@ final class CameraModel {
   @ObservationIgnored private var photoAttempt = 0
   @ObservationIgnored private var didRequestCapture = false
 
+  // Live mode hooks (LiveModel). Set once; both run on the main actor.
+  /// Glasses-mic buffers, copied off the SDK thread. Only while "Glasses mic audio" is on.
+  @ObservationIgnored var onAudioBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)?
+  /// The stream stopped. `byUser` is false when the glasses or the session dropped it.
+  @ObservationIgnored var onStreamStopped: (@MainActor (_ byUser: Bool) -> Void)?
+  @ObservationIgnored private var userStoppedStream = false
+  /// Callers of `captureStillDuringStream()` waiting for the current photo.
+  @ObservationIgnored private var photoWaiters: [CheckedContinuation<Data, Error>] = []
+
   var hasSession: Bool { session != nil }
   var isStreaming: Bool { camera != nil }
   /// True once the selector has picked a pair of glasses. Starting a session before
@@ -101,6 +111,7 @@ final class CameraModel {
   }
 
   func endSession() {
+    userStoppedStream = true
     sessionState = .stopping
     session?.stop()
   }
@@ -127,6 +138,7 @@ final class CameraModel {
     }
     guard camera == nil else { return }
     lastError = nil
+    userStoppedStream = false
     do {
       // checkPermissionStatus is silent; requestPermission switches to the Meta AI app.
       if try await Wearables.shared.checkPermissionStatus(.camera) != .granted {
@@ -182,7 +194,9 @@ final class CameraModel {
           let buffer = audioFrame.pcmBuffer
           let format = AudioMeter.describe(buffer.format)
           let level = AudioMeter.levelDb(buffer)
-          Task { @MainActor in self?.handleAudio(format: format, level: level) }
+          // Copied here because the SDK may reuse the buffer once this callback returns.
+          let copy = PCMBufferCopy(buffer)
+          Task { @MainActor in self?.handleAudio(format: format, level: level, copy: copy) }
         }.store(in: streamTokens)
       }
       stream.videoFramePublisher.listen { [weak self] videoFrame in
@@ -198,10 +212,11 @@ final class CameraModel {
     }
   }
 
-  private func handleAudio(format: String, level: Double) {
+  private func handleAudio(format: String, level: Double, copy: PCMBufferCopy) {
     audioBufferCount += 1
     audioFormat = format
     audioLevelDb = level
+    if let buffer = copy.buffer { onAudioBuffer?(buffer) }
   }
 
   // MARK: Step 3: photo during the live stream (never pauses the stream)
@@ -388,6 +403,7 @@ final class CameraModel {
     photoStatus = "Done"
     plog("photo arrived: \(data.count / 1024) KB")
     finishPhoto()
+    resumePhotoWaiters(.success(data))
   }
 
   private func failPhoto(_ message: String) {
@@ -395,6 +411,13 @@ final class CameraModel {
     photoStatus = "Failed"
     plog("failed: \(message)")
     finishPhoto()
+    resumePhotoWaiters(.failure(PhotoCaptureError.failed))
+  }
+
+  private func resumePhotoWaiters(_ result: Result<Data, Error>) {
+    let waiters = photoWaiters
+    photoWaiters.removeAll()
+    for waiter in waiters { waiter.resume(with: result) }
   }
 
   /// Ends the photo attempt. Only the photo child is stopped; the stream keeps running.
@@ -417,6 +440,7 @@ final class CameraModel {
   }
 
   func stopStream() {
+    userStoppedStream = true
     // Stopping the camera cascades to its stream and detaches it from the session.
     camera?.stop()
   }
@@ -427,9 +451,15 @@ final class CameraModel {
   }
 
   private func clearStream() {
+    let hadStream = camera != nil
     streamTokens.clear()
     camera = nil
     streamState = .stopped
+    if hadStream {
+      let byUser = userStoppedStream
+      userStoppedStream = false
+      onStreamStopped?(byUser)
+    }
   }
 
   // MARK: Stats
@@ -480,6 +510,103 @@ final class CameraModel {
       Int(best.0.size.width * best.0.scale), Int(best.0.size.height * best.0.scale),
       scored.count, ms
     )
+  }
+}
+
+// MARK: - Live mode
+
+/// Why `captureStillDuringStream()` failed. The details stay in `lastError` and the photo log.
+enum PhotoCaptureError: Error, Equatable {
+  case noSession
+  case failed
+}
+
+/// Why Live mode couldn't start the listening stream. `message` is shown on the phone.
+enum LiveStreamError: Error, Equatable {
+  case noGlasses(String?)
+  case streamWithoutAudio
+  case streamFailed(String?)
+
+  var message: String {
+    switch self {
+    case .noGlasses(let detail): "The glasses session didn't start. \(detail ?? "Check that the glasses are connected.")"
+    case .streamWithoutAudio: "The stream is running without glasses mic audio. Stop the stream, then start listening."
+    case .streamFailed(let detail): "The stream didn't start. \(detail ?? "Try again.")"
+    }
+  }
+}
+
+extension CameraModel: LiveCamera {
+  /// A still from the running stream for look-and-check. It never pauses or stops the stream:
+  /// it reuses `capturePhoto()` (stream capture, then the photo child of the same camera) and
+  /// starts a stream first when none is running. A second caller shares the photo in flight.
+  func captureStillDuringStream() async throws -> Data {
+    guard await ensureSessionStarted() else { throw PhotoCaptureError.noSession }
+    return try await withCheckedThrowingContinuation { continuation in
+      photoWaiters.append(continuation)
+      guard !isCapturingPhoto else { return }
+      Task { @MainActor in
+        await self.capturePhoto()
+        // capturePhoto() returns without a photo when permission is denied or the session
+        // is gone. While a photo is on its way, isCapturingPhoto stays true.
+        if !self.isCapturingPhoto { self.resumePhotoWaiters(.failure(PhotoCaptureError.failed)) }
+      }
+    }
+  }
+
+  /// The listening stream: glasses mic audio on, at the chosen quality (decision 10). Starts the
+  /// session and the stream when needed. A stream that already carries mic audio is kept as it
+  /// is. One without mic audio is left running, because only the user stops a stream.
+  func startListeningStream(quality: StreamQuality) async throws {
+    if isStreaming {
+      guard captureStreamAudio else { throw LiveStreamError.streamWithoutAudio }
+      return
+    }
+    switch quality {
+    case .demo:
+      resolution = .high
+      frameRate = 30
+    case .listening:
+      resolution = .low
+      frameRate = 15
+    }
+    captureStreamAudio = true
+    guard await ensureSessionStarted() else { throw LiveStreamError.noGlasses(lastError) }
+    await startStream()
+    guard isStreaming else { throw LiveStreamError.streamFailed(lastError) }
+  }
+
+  /// Starts the device session when needed and waits up to 10 s for it.
+  func ensureSessionStarted() async -> Bool {
+    if session == nil { startSession() }
+    for _ in 0..<100 where session != nil && sessionState != .started {
+      try? await Task.sleep(for: .milliseconds(100))
+    }
+    return session != nil && sessionState == .started
+  }
+}
+
+/// A copy of one SDK audio buffer, made on the SDK's callback thread and then handed to the
+/// main actor. Nothing touches it after the copy, so crossing the actor boundary is safe.
+final class PCMBufferCopy: @unchecked Sendable {
+  let buffer: AVAudioPCMBuffer?
+
+  init(_ source: AVAudioPCMBuffer) {
+    let frames = source.frameLength
+    guard frames > 0, let copy = AVAudioPCMBuffer(pcmFormat: source.format, frameCapacity: frames) else {
+      buffer = nil
+      return
+    }
+    copy.frameLength = frames
+    let bytesPerFrame = Int(source.format.streamDescription.pointee.mBytesPerFrame)
+    let from = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: source.audioBufferList))
+    let to = UnsafeMutableAudioBufferListPointer(copy.mutableAudioBufferList)
+    for (src, dst) in zip(from, to) {
+      guard let srcData = src.mData, let dstData = dst.mData else { continue }
+      let count = min(Int(src.mDataByteSize), Int(frames) * bytesPerFrame)
+      memcpy(dstData, srcData, count)
+    }
+    buffer = copy
   }
 }
 
