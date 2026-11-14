@@ -363,10 +363,10 @@ describe('Jev wire validation', () => {
     expect(body).toMatchObject({ model: 'jev-latest', ...request });
   });
 
-  it.each([[401, 'jev_authentication'], [403, 'jev_authentication'], [429, 'jev_rate_limited'], [503, 'jev_unavailable']] as const)('keeps HTTP %i operational and does not retry automatically', async (status, code) => {
+  it.each([[401, 'jev_authentication', 1], [403, 'jev_authentication', 1], [429, 'jev_rate_limited', 2], [503, 'jev_unavailable', 2]] as const)('keeps HTTP %i operational with the bounded retry policy', async (status, code, attempts) => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('provider body with secrets must never escape', { status }));
     await expect(createJevClient({ apiKey: 'test-only-key', fetch: fetcher }).ask(request, context())).rejects.toMatchObject({ code, message: code });
-    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(attempts);
   });
 
   it.each([0, 125])('reports only validated input-token usage (%i) through the optional meter', async inputTokens => {

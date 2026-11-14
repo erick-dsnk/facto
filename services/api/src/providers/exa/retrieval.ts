@@ -20,8 +20,8 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
       throw new PipelineError('claim_not_admitted');
     }
     if (!options.clientFactory && !options.apiKey) throw new PipelineError('missing_exa_key');
-    const client = options.clientFactory?.(context.signal) ?? new AbortableExa(options.apiKey!, context.signal, options.fetch);
-    context.consume('search', claim.id);
+    const client = options.clientFactory?.(context.signal) ?? new AbortableExa(options.apiKey!, context.signal, options.fetch, context, claim.id);
+    if (options.clientFactory) context.consume('search', claim.id);
     const highlights = { query: buildHighlightQuery(claim.checkedText), maxCharacters: 4000 };
     const query = options.queryStrategy ? buildAlternateQuery(claim.checkedText, options.queryStrategy) : claim.checkedText;
     const pages = parseExaResponse(await client.search(query, { type: 'auto', numResults: options.queryStrategy ? 8 : 5, objective: RETRIEVAL_OBJECTIVE, contents: { highlights } }));
@@ -43,8 +43,11 @@ export function createRetriever(options: RetrieverOptions): PipelineAdapters['re
     let pageFailures = 0;
     for (const page of candidates) {
       context.signal.throwIfAborted();
+      // Contents are optional enrichment. Retries share this same allowance,
+      // so stop before beginning another page when no attempt remains; keep
+      // the original search results and any page text already obtained.
       if (budget.canConsume && !budget.canConsume('contents', claim.id)) break;
-      context.consume('contents', claim.id);
+      if (options.clientFactory) context.consume('contents', claim.id);
       const contents = parseExaContentsResponse(await client.getContents([page.url], { text: { maxCharacters: 12000 }, highlights, livecrawl: 'preferred', livecrawlTimeout: 1500 }), [page.url]);
       context.signal.throwIfAborted();
       pageFailures += contents.pageFailures.length;
