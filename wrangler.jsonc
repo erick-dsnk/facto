@@ -44,7 +44,11 @@
   // Non-secret settings. The Durable Object copies these and the secrets below into the container env.
   "vars": {
     "PIPELINE_MODE": "live",
-    "TRUST_PROXY": "1"
+    "TRUST_PROXY": "1",
+    // Capture confidence below this asks for confirmation instead of checking (server default 0.8).
+    "MIN_CAPTURE_CONFIDENCE": "0.6",
+    // "1" logs every final Deepgram result with per-word confidence (what bystanders said). Debug only.
+    "DEBUG_TRANSCRIPTS": "1"
   }
 
   // Secrets, set with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc` from deploy/cloudflare.
