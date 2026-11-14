@@ -10,7 +10,6 @@ struct NativeCardPreviewControls: View {
 
   private var blocked: Bool {
     captureOrLiveActive || display.webDisplayEnabled
-      || (display.sessionState != .idle && display.nativePreviewFixture == nil)
   }
 
   var body: some View {
@@ -21,7 +20,7 @@ struct NativeCardPreviewControls: View {
           Text(value.rawValue).tag(value)
         }
       }
-      .pickerStyle(.segmented)
+      .pickerStyle(.menu)
       Button(display.nativePreviewFixture == nil ? "Show native fixture" : "Replay native fixture") {
         if let device = wearables.mockDisplayDeviceIdentifier {
           display.startNativePreview(fixture, device: device)
@@ -44,7 +43,7 @@ struct NativeCardPreviewControls: View {
         }
         .disabled(wearables.nativePreviewServerBusy)
       }
-      Text("Actual MockDeviceKit output appears above. For Chrome, run this app in iOS Simulator and enable Meta’s extension on the native simulator URL. Searching adds four static source icons, then shows True. DAT uses preset card/type styling and discrete layout updates.")
+      Text("Actual MockDeviceKit output appears above. For Chrome, run this app in iOS Simulator and enable Meta’s extension on the native simulator URL. Searching adds four static source icons, then shows True. Listening and Checking preview the brief action acknowledgements. DAT uses preset card/type styling and discrete layout updates.")
         .font(.caption).foregroundStyle(.secondary)
       if blocked {
         Text("Stop Live/capture, disconnect the regular display, and select Native display before trying this mock-only comparison.")

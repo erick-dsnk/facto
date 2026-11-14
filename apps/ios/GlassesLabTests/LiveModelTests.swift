@@ -16,6 +16,10 @@ private final class FakeLiveBackend: LiveBackend {
   var connectionState: ChannelConnectionState = .idle
   var onUnreadableEvent: (@MainActor (String?) -> Void)?
   var failConnect = false
+  var requiresAuthentication = false
+  private var wantsConnection = false
+  private(set) var suspendCount = 0
+  private(set) var resumeCount = 0
   private(set) var connectCount = 0
   var readyActive = true
   var readyAudio: Bool? = true
@@ -42,8 +46,11 @@ private final class FakeLiveBackend: LiveBackend {
 
   func connect() async throws {
     connectCount += 1
+    wantsConnection = true
+    requiresAuthentication = false
     setState(.connecting)
     if failConnect {
+      requiresAuthentication = true
       setState(.disconnected(reason: "unauthorized"))
       throw ConnectFailure()
     }
@@ -65,10 +72,23 @@ private final class FakeLiveBackend: LiveBackend {
     self.sessionId = nil
     self.sessionEpoch = nil
     setState(.disconnected(reason: reason))
+    if wantsConnection { Task { try? await self.connect() } }
+  }
+
+  func suspend() {
+    suspendCount += 1
+    setState(.disconnected(reason: "suspended"))
+  }
+
+  func resume() async throws {
+    resumeCount += 1
+    guard wantsConnection, !requiresAuthentication, connectionState != .connected else { return }
+    try await connect()
   }
 
   func close() async {
     closeCount += 1
+    wantsConnection = false
     sessionId = nil
     sessionEpoch = nil
     setState(.disconnected(reason: "closed"))
@@ -232,9 +252,16 @@ private final class CountingChime: ChimePlaying {
 @MainActor
 private final class FakeLens: LensDisplaying {
   var isConnected = true
+  var onReady: (@MainActor () -> Void)?
+  private(set) var searches: [(String, [ClaimSourcesPayload.Source])] = []
+  func showSearching(claimText: String, captureLabel: String?, sources: [ClaimSourcesPayload.Source]) async { searches.append((claimText, sources)) }
   private(set) var webDisplayEnabled = false
   func setWebDisplayEnabled(_ enabled: Bool) { webDisplayEnabled = enabled }
   private(set) var cards: [ResultCard?] = []
+  private(set) var feedback: [NativeTriggerFeedback] = []
+  private(set) var feedbackClears = 0
+  func showTriggerFeedback(_ feedback: NativeTriggerFeedback) async { self.feedback.append(feedback) }
+  func clearTriggerFeedback() async { feedbackClears += 1 }
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
     cards.append(card)
   }
@@ -301,7 +328,7 @@ private enum LiveEvents {
     let result = ClaimResult(
       verdict: verdict, reasonCode: "fixture", selectedEvidenceIds: ["ev-1"], summary: "", originalText: text,
       checkedText: text, sourceSpan: SourceSpan(start: 0, end: CodePoints.count(text)), evidence: [evidence],
-      checkedAt: "2026-11-14T10:00:02Z", expiresAt: "2026-11-14T10:01:02Z", durationMs: 900, cached: false,
+      checkedAt: "2026-11-14T10:00:02Z", expiresAt: ISO8601DateFormatter().string(from: Date().addingTimeInterval(60)), durationMs: 900, cached: false,
       policyVersion: "glasses-p0.1", modelVersion: "fixture", presentation: Presentation(action: action, reasonCode: "fixture")
     )
     return event(
@@ -687,33 +714,117 @@ final class LiveModelTests: XCTestCase {
     XCTAssertEqual(defaults.object(forKey: LiveModel.automaticAlertsKey) as? Bool, false)
   }
 
-  func testExpiredSessionIsRenewedAndListeningResumes() async {
+  func testTransportRenewsExpiredSessionWithoutRestartingCapture() async {
     let model = await listeningModel()
-    backend.endSession(reason: "deleted")
-
+    let starts = camera.startedQualities.count
+    backend.endSession(reason: "expired")
     await waitUntil { self.backend.connectCount == 2 }
-    await waitUntil { self.backend.controlTypes.filter { $0 == "audio.start" }.count == 2 }
-    let starts = backend.controls.filter { $0["type"] as? String == "audio.start" }
-    XCTAssertEqual(starts.last?["sessionEpoch"] as? Int, 1, "the new session's epoch, not the old one's")
-    XCTAssertEqual(starts.last?["streamGeneration"] as? Int, 2)
-    await waitUntil { self.chime.count == 1 }
-    XCTAssertEqual(model.notice, "The session expired, so a new one started. Listening resumed.")
-    XCTAssertFalse(speaker.spoken.contains(AudioStreamerStopReason.sessionEnded(reasonCode: "deleted").spokenMessage!))
-    await waitUntil { self.backend.controlTypes.filter { $0 == "session.preferences" }.count == 2 }
+    for _ in 0..<30 { await Task.yield() }
+    XCTAssertEqual(camera.startedQualities.count, starts)
+    XCTAssertEqual(backend.controlTypes.filter { $0 == "audio.start" }.count, 1)
+    XCTAssertFalse(model.isListening)
+    XCTAssertNil(model.lens.card)
+    XCTAssertTrue(model.wantsBackendConnection)
   }
 
-  func testRenewalIsLimitedToOncePerMinute() async {
-    let model = await listeningModel()
-    backend.endSession(reason: "deleted")
-    await waitUntil { self.backend.controlTypes.filter { $0 == "audio.start" }.count == 2 }
-    backend.emit(LiveEvents.audioReady(generation: 2))
-    await waitUntil { model.status == .listening }
+  func testSavedCredentialRestoresTransportButNoSensorsAfterRelaunch() async {
+    BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "saved-secret").save(to: defaults, secrets: secrets)
+    defaults.set(true, forKey: LiveModel.connectionIntentKey)
+    let model = makeModel()
+    await model.setAppActive(true)
+    await waitUntil { model.isConnected }
+    XCTAssertEqual(backend.config.joinCode, "saved-secret")
+    XCTAssertTrue(camera.startedQualities.isEmpty)
+    XCTAssertEqual(wake.starts, 0)
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"))
+  }
 
-    now += 10
-    backend.endSession(reason: "deleted")
-    await waitUntil { model.notice == "The backend ended the session (deleted). Tap Connect for a new one." }
-    XCTAssertEqual(backend.connectCount, 2)
-    XCTAssertEqual(speaker.spoken.last, AudioStreamerStopReason.sessionEnded(reasonCode: "deleted").spokenMessage)
+  func testExplicitDisconnectPersistsAcrossForegroundAndNewModel() async {
+    let model = await connectedModel()
+    await model.disconnect()
+    let count = backends.count
+    await model.setAppActive(false)
+    await model.setAppActive(true)
+    let relaunched = makeModel()
+    await relaunched.setAppActive(true)
+    XCTAssertFalse(relaunched.wantsBackendConnection)
+    XCTAssertEqual(backends.count, count)
+    XCTAssertEqual(defaults.object(forKey: LiveModel.connectionIntentKey) as? Bool, false)
+  }
+
+  func testBackgroundRecoveryStopsCaptureAndDoesNotResumeIt() async {
+    let model = await listeningModel()
+    let starts = camera.startedQualities.count
+    await model.setAppActive(false)
+    XCTAssertEqual(backend.suspendCount, 1)
+    XCTAssertFalse(camera.isStreaming)
+    await model.setAppActive(true)
+    await waitUntil { model.isConnected }
+    XCTAssertEqual(camera.startedQualities.count, starts)
+    XCTAssertFalse(model.isListening)
+    XCTAssertNil(model.lens.card)
+  }
+
+  func testRevocationBlocksWakeCaptureAndQueuedResultsUntilAuthorizationRestored() async {
+    let model = await connectedModel()
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    backend.emit(LiveEvents.result(requestId: "stale", action: .respond))
+    await model.setGlassesAuthorized(false)
+    await model.restoreConnection()
+    backend.emit(LiveEvents.captureRequest())
+    wake.hear(.listen)
+    for _ in 0..<30 { await Task.yield() }
+    XCTAssertFalse(wake.isRunning)
+    XCTAssertEqual(camera.photoCount, 0)
+    XCTAssertTrue(camera.startedQualities.isEmpty)
+    XCTAssertTrue(speaker.spoken.isEmpty)
+    XCTAssertNil(model.lens.card)
+    await model.setGlassesAuthorized(true)
+    backend.emit(LiveEvents.captureRequest())
+    await waitUntil { self.camera.photoCount == 1 }
+  }
+
+  func testNativeReadyRestoresOnlyCurrentEligibleCardAndNewSearchWins() async {
+    let model = await connectedModel()
+    lens.isConnected = false
+    backend.emit(LiveEvents.result(requestId: "card", action: .notify))
+    await waitUntil { model.lens.card != nil }
+    lens.isConnected = true
+    lens.onReady?()
+    await waitUntil { self.lens.cards.last.flatMap { $0 } != nil }
+    let checking = LiveEvents.event(.claimChecking, requestId: "new", payload: .claimChecking(
+      AdmissionPayload(admissionAction: .check, reasonCode: "fixture", claimText: "Newer manual claim", mode: .ocr, userInitiated: true)))
+    backend.emit(checking)
+    await waitUntil { self.lens.searches.last?.0 == "Newer manual claim" }
+    let count = lens.cards.count
+    backend.emit(LiveEvents.result(requestId: "older-other", action: .notify))
+    for _ in 0..<30 { await Task.yield() }
+    XCTAssertEqual(lens.cards.count, count, "an older request cannot overwrite the active manual search")
+    backend.emit(LiveEvents.error("provider_failed", requestId: "older-other"))
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.cards.count, count, "an older failure cannot replace a newer manual search")
+    await model.setAppActive(false)
+    lens.onReady?()
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertNil(lens.cards.last.flatMap { $0 })
+  }
+
+  func testManualSourceUpdatesCannotResurrectCancelledSearch() async {
+    let model = await connectedModel()
+    backend.emit(LiveEvents.event(.claimChecking, requestId: "manual", payload: .claimChecking(
+      AdmissionPayload(admissionAction: .check, reasonCode: "fixture", claimText: "Actual claim", mode: .ocr, userInitiated: true))))
+    await waitUntil { !self.lens.searches.isEmpty }
+    let source = ClaimSourcesPayload.Source(id: "1", hostname: "example.com", title: "Source", stage: "found", provider: "exa")
+    backend.emit(LiveEvents.event(.claimSources, requestId: "manual", payload: .claimSources(ClaimSourcesPayload(sources: [source]))))
+    await waitUntil { self.lens.searches.last?.1.count == 1 }
+    backend.emit(LiveEvents.event(.checkCancelled, requestId: "manual", payload: .checkCancelled(ReasonPayload(reasonCode: "cancelled"))))
+    for _ in 0..<20 { await Task.yield() }
+    let count = lens.searches.count
+    backend.emit(LiveEvents.event(.claimSources, requestId: "manual", payload: .claimSources(ClaimSourcesPayload(sources: [source]))))
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.searches.count, count)
+    XCTAssertTrue(model.isConnected)
   }
 
   func testPausedSessionIsResumedWhenNotListening() async {
@@ -745,6 +856,54 @@ final class LiveModelTests: XCTestCase {
     backend.emit(LiveEvents.audioReady(generation: 1))
     await waitUntil { model.status == .listening }
     XCTAssertEqual(defaults.object(forKey: LiveModel.demoQualityKey) as? Bool, false)
+  }
+
+  func testListeningAcknowledgementWaitsForAudioReadyAndOnlyAppearsOnce() async {
+    let model = await connectedModel()
+    await model.startListening()
+    await waitUntil { self.backend.audioControlTypes.contains("audio.start") }
+    XCTAssertEqual(lens.feedback, [], "Camera startup alone does not prove listening is ready")
+    backend.emit(LiveEvents.audioReady(generation: 1))
+    await waitUntil { self.lens.feedback == [.listening] }
+    backend.emit(LiveEvents.audioReady(generation: 1))
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.feedback, [.listening])
+  }
+
+  func testFailedListeningHasNoSuccessAcknowledgement() async {
+    camera.startError = LiveStreamError.streamWithoutAudio
+    let model = await connectedModel()
+    await model.startListening()
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.feedback, [])
+  }
+
+  func testCheckingAcknowledgementOnlyForAcceptedManualRequestAndDeduplicates() async {
+    let model = await connectedModel()
+    let automatic = LiveEvents.event(.claimChecking, requestId: "automatic", payload: .claimChecking(
+      AdmissionPayload(admissionAction: .check, reasonCode: "fixture", userInitiated: false)))
+    backend.emit(automatic)
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.feedback, [])
+    let manual = LiveEvents.event(.claimChecking, requestId: "manual", payload: .claimChecking(
+      AdmissionPayload(admissionAction: .check, reasonCode: "fixture", userInitiated: true)))
+    backend.emit(manual)
+    await waitUntil { self.lens.feedback == [.checking] }
+    backend.emit(manual)
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.feedback, [.checking])
+    XCTAssertTrue(model.isConnected)
+  }
+
+  func testStoppingListeningCancelsItsPendingAcknowledgement() async {
+    let model = await connectedModel()
+    await model.startListening()
+    await waitUntil { self.backend.audioControlTypes.contains("audio.start") }
+    model.stopListening()
+    backend.emit(LiveEvents.audioReady(generation: 1))
+    for _ in 0..<20 { await Task.yield() }
+    XCTAssertEqual(lens.feedback, [])
+    XCTAssertGreaterThan(lens.feedbackClears, 0)
   }
 
   func testStreamFailureLeavesListeningOffWithANotice() async {
@@ -781,19 +940,32 @@ final class LiveModelTests: XCTestCase {
     XCTAssertEqual(keepAwake, [true, false], "the phone stays awake only while listening")
   }
 
-  func testShortDropResumesWithAChime() async {
+  func testShortTransportDropRequiresExplicitListeningResume() async {
     let model = await listeningModel()
+    let starts = camera.startedQualities.count
     backend.setState(.reconnecting(attempt: 1))
-    await waitUntil { model.status == .reconnecting(attempt: 1) }
-    clock.advance(by: 2)
+    await waitUntil { model.listening == .stopped(.noConnection) }
     backend.sessionEpoch = 2
     backend.setState(.connected)
     backend.emit(LiveEvents.sessionReady(active: false, audio: true, epoch: 2))
-    await waitUntil { self.chime.count == 1 }
-    await waitUntil { self.backend.controlTypes.filter { $0 == "audio.start" }.count == 2 }
-    // AudioStreamer sends the one session.resume; LiveModel must not send a second.
-    XCTAssertEqual(backend.controlTypes.filter { $0 == "session.resume" }.count, 1)
-    XCTAssertEqual(model.notice, "Reconnected. Listening resumed.")
+    await waitUntil { model.sessionActive == true }
+    XCTAssertEqual(backend.controlTypes.filter { $0 == "audio.start" }.count, 1)
+    XCTAssertEqual(camera.startedQualities.count, starts)
+    XCTAssertFalse(model.isListening)
+    XCTAssertEqual(chime.count, 0)
+  }
+
+  func testSuspendedListeningStartupCannotResumeAfterBackgrounding() async {
+    let model = await connectedModel()
+    camera.suspendStartup = true
+    let startup = Task { await model.startListening() }
+    await waitUntil { self.camera.isStartupSuspended }
+    await model.setAppActive(false)
+    camera.releaseStartup()
+    await startup.value
+    XCTAssertFalse(camera.isStreaming)
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"))
+    XCTAssertFalse(model.isListening)
   }
 
   func testLongDropStopsListeningWithNoConnection() async {
