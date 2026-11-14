@@ -198,7 +198,7 @@ final class ScreenOCRTests: XCTestCase {
       line("right", x: 0.55, y: 0.81),
       line("left", x: 0.05, y: 0.80),
     ], minimumConfidence: 0.4)
-    XCTAssertEqual(result.text, "left\nright\nlower")
+    XCTAssertEqual(result.text, "left\nlower\nright")
   }
 
   func testCloseSameRowLinesJoinButWideGapsDoNot() {
@@ -210,6 +210,36 @@ final class ScreenOCRTests: XCTestCase {
       line("Name", x: 0.1, y: 0.5, w: 0.1), line("Qty", x: 0.7, y: 0.5, w: 0.1),
     ], minimumConfidence: 0.4)
     XCTAssertEqual(wide.text, "Name\nQty")
+  }
+
+  func testTwoColumnsOfTwoParagraphsStayInColumns() {
+    // Left paragraphs sit more than 1.5 line heights apart; the right column straddles the gap.
+    let result = OCRService.assemble([
+      line("L1a", x: 0.05, y: 0.90, w: 0.3), line("L1b", x: 0.05, y: 0.86, w: 0.3),
+      line("L2a", x: 0.05, y: 0.60, w: 0.3), line("L2b", x: 0.05, y: 0.56, w: 0.3),
+      line("R1a", x: 0.60, y: 0.88, w: 0.3), line("R1b", x: 0.60, y: 0.84, w: 0.3),
+      line("R2a", x: 0.60, y: 0.58, w: 0.3), line("R2b", x: 0.60, y: 0.54, w: 0.3),
+    ], minimumConfidence: 0.4)
+    XCTAssertEqual(result.text, "L1a\nL1b\nL2a\nL2b\nR1a\nR1b\nR2a\nR2b")
+  }
+
+  func testFullWidthTitleSeparatesBands() {
+    let result = OCRService.assemble([
+      line("Title", x: 0.05, y: 0.95, w: 0.85),
+      line("R1", x: 0.60, y: 0.80, w: 0.3), line("L1", x: 0.05, y: 0.80, w: 0.3),
+      line("L2", x: 0.05, y: 0.50, w: 0.3), line("R2", x: 0.60, y: 0.50, w: 0.3),
+    ], minimumConfidence: 0.4)
+    XCTAssertEqual(result.text, "Title\nL1\nL2\nR1\nR2")
+  }
+
+  func testGutterIsMeasuredInPixelsOnLandscapeImages() {
+    // A 0.05 normalised gutter on a 2:1 image is 0.10 of the height: over 2 line heights of
+    // 0.03 would be 0.06, so the columns stay apart. With aspect 1 they would be joined.
+    let lines = [
+      line("L1", x: 0.40, y: 0.80, w: 0.10), line("R1", x: 0.55, y: 0.80, w: 0.10),
+    ]
+    XCTAssertEqual(OCRService.orderedBlocks(lines, aspect: 1).count, 1)
+    XCTAssertEqual(OCRService.orderedBlocks(lines, aspect: 2).count, 2)
   }
 
   func testDistantParagraphsAreSeparateBlocks() {
