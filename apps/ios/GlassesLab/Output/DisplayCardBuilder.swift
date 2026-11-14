@@ -10,8 +10,8 @@ import MWDATDisplay
 /// Layout, top to bottom, inside 24 pt padding with 12 pt spacing:
 ///   [icon] Verdict word        heading
 ///   Claim excerpt              body, on a card background
-///   Source: name               meta, secondary
-///   Hint                       meta, secondary
+///   Source name                meta, secondary
+///   Detail                     meta, secondary
 ///   [Repeat] [Dismiss]         only when handlers are given
 /// LensMirrorView draws the same layout on the phone; keep the two in step.
 enum DisplayCardBuilder {
@@ -40,7 +40,9 @@ enum DisplayCardBuilder {
       if let sourceLine = card.sourceLine {
         Text(sourceLine, style: .meta, color: .secondary)
       }
-      Text(card.hint, style: .meta, color: .secondary)
+      if let detail = card.detail {
+        Text(detail, style: .meta, color: .secondary)
+      }
       if onRepeat != nil || onDismiss != nil {
         ButtonGroup(alignment: .start) {
           if let onRepeat {
