@@ -4,7 +4,8 @@ import ImageIO
 import Vision
 
 // On-device OCR for "look and check" (decision 5). The photo stays in memory, only the
-// recognised text leaves this module, and nothing here logs that text.
+// recognised text leaves this module, and nothing here logs that text. The coordinator copies
+// the result, observations included, into the on-device DebugLog while it is on.
 
 /// What OCR produced for one photo. `text` holds the kept lines in reading order, one row
 /// per line. Log `lineCount`, `codePointCount` and `meanConfidence`, never `text`.
@@ -16,6 +17,9 @@ struct OCRResult: Equatable, Sendable {
   var lineCount: Int
   /// Lines Vision found but the confidence filter dropped.
   var droppedLineCount: Int
+  /// Every observation Vision returned, in Vision's order, with its confidence, including the
+  /// ones the filter dropped. For the debug log; `assemble` alone leaves it empty.
+  var observations: [OCRService.OCRLine] = []
 
   static let empty = OCRResult(text: "", meanConfidence: 0, lineCount: 0, droppedLineCount: 0)
 
@@ -72,7 +76,9 @@ final class OCRService: TextRecognizing {
             guard let candidate = observation.topCandidates(1).first else { return nil }
             return OCRLine(text: candidate.string, confidence: candidate.confidence, boundingBox: observation.boundingBox)
           }
-          continuation.resume(returning: Self.assemble(lines, minimumConfidence: minimumLineConfidence))
+          var result = Self.assemble(lines, minimumConfidence: minimumLineConfidence)
+          result.observations = lines
+          continuation.resume(returning: result)
         } catch {
           continuation.resume(throwing: error)
         }

@@ -60,7 +60,9 @@ struct ReconnectInfo: Equatable, Sendable {
 /// stream, check submit and cancel, and session close.
 ///
 /// Log hygiene: the bearer token, check text, transcripts and event payloads are never
-/// logged. Logs carry ids, event types, status codes and lengths.
+/// logged. Logs carry ids, event types, status codes and lengths. The on-device `DebugLog`
+/// is the exception: while it is on it keeps raw events and check bodies on the phone, never
+/// the token or join code.
 @MainActor
 final class BackendClient: SessionChannel, CheckSubmitter {
   private(set) var sessionId: String?
@@ -79,6 +81,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     didSet {
       guard connectionState != oldValue else { return }
       Self.log.info("stream state \(Self.describe(self.connectionState), privacy: .public)")
+      debugLog.log("ws.state", ["state": Self.describe(connectionState)])
       for continuation in stateSubscribers.values { continuation.yield(connectionState) }
     }
   }
@@ -93,6 +96,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   private let makeSocket: WebSocketFactory
   private let sleep: @Sendable (TimeInterval) async throws -> Void
   private let uptime: () -> TimeInterval
+  private let debugLog: DebugLog
 
   private var token: String?
   private var filter: ServerEventFilter?
@@ -115,13 +119,15 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   ///   - webSocketFactory: defaults to `URLSessionWebSocketTask` on `urlSession`.
   ///   - sleep: backoff wait in seconds; tests pass a recorder.
   ///   - uptime: monotonic seconds used to measure the reconnect gap.
+  ///   - debugLog: receives raw events, check bodies and connection changes.
   init(
     config: BackendConfig,
     urlSession: URLSession = URLSession(configuration: .ephemeral),
     policy: ReconnectPolicy = ReconnectPolicy(),
     webSocketFactory: WebSocketFactory? = nil,
     sleep: @escaping @Sendable (TimeInterval) async throws -> Void = { try await Task.sleep(nanoseconds: UInt64($0 * 1_000_000_000)) },
-    uptime: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }
+    uptime: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
+    debugLog: DebugLog = .shared
   ) {
     self.config = config
     self.urlSession = urlSession
@@ -129,6 +135,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     self.makeSocket = webSocketFactory ?? URLSessionWebSocketConnection.factory(session: urlSession)
     self.sleep = sleep
     self.uptime = uptime
+    self.debugLog = debugLog
   }
 
   // MARK: - Subscriptions
@@ -198,6 +205,11 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     lastReconnect = nil
     terminalReason = nil
     Self.log.info("session created id=\(response.sessionId, privacy: .public) epoch=\(response.sessionEpoch)")
+    debugLog.log("session.created", [
+      "sessionId": response.sessionId, "epoch": response.sessionEpoch, "expiresAt": response.expiresAt,
+      "mode": response.capabilities?.mode as Any, "text": response.capabilities?.text as Any,
+      "audio": response.capabilities?.audio as Any,
+    ])
     return response
   }
 
@@ -229,6 +241,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
         try await openStream(reconnectAttempt: nil)
       }
     } catch {
+      debugLog.log("backend.connect_failed", ["reason": Self.reasonCode(for: error), "error": String(describing: error), "closing": closing])
       if !closing { connectionState = .disconnected(reason: Self.reasonCode(for: error)) }
       throw error
     }
@@ -274,7 +287,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
     request.httpBody = try JSONEncoder().encode(input)
-    _ = try await perform(request, label: "check.submit")
+    _ = try await perform(request, label: "check.submit", logBody: true)
     Self.log.info(
       "check accepted req=\(input.requestId, privacy: .public) rev=\(input.revision) mode=\(input.mode.rawValue, privacy: .public) codePoints=\(CodePoints.count(input.text))"
     )
@@ -297,6 +310,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     guard connectionState == .connected, let socket else { throw BackendClientError.notConnected }
     let data = try JSONEncoder().encode(message)
     guard let text = String(data: data, encoding: .utf8) else { throw BackendClientError.invalidResponse }
+    debugLog.logJSONText("ws.send", text, ["conn": connectionID])
     try await socket.send(.text(text))
   }
 
@@ -337,6 +351,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
       throw CancellationError()
     }
 
+    debugReceived(first, connection: current)
     let firstEvent = decode(first)
     let decision = firstEvent.map { filter?.accept($0) ?? .drop(.otherSession) }
     sessionEpoch = filter?.epoch ?? sessionEpoch
@@ -356,6 +371,10 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     connectionState = .connected
     if let info {
       Self.log.info("stream reconnected attempt=\(info.attempt) gapMs=\(Int(info.gap * 1000)) resumable=\(info.isWithinAutoResumeWindow)")
+      debugLog.log("ws.reconnected", [
+        "attempt": info.attempt, "gapMs": Int(info.gap * 1000), "previousEpoch": info.previousEpoch as Any,
+        "epoch": info.sessionEpoch as Any, "resumable": info.isWithinAutoResumeWindow,
+      ])
       for continuation in reconnectSubscribers.values { continuation.yield(info) }
     }
     if let firstEvent, let decision { deliver(firstEvent, decision) }
@@ -374,6 +393,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
           return
         }
         guard let self, self.connectionID == id, !self.closing else { return }
+        self.debugReceived(frame, connection: id)
         self.handle(frame)
       }
     }
@@ -397,6 +417,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
         } catch {
           guard !Task.isCancelled, let current = self, current.connectionID == id, !current.closing else { return }
           Self.log.info("stream ping failed, dropping the socket")
+          current.debugLog.log("ws.ping_failed", ["conn": id, "error": String(describing: error)])
           connection.cancel(with: .goingAway)
           return
         }
@@ -422,6 +443,10 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     }
     let nsError = error as NSError
     Self.log.info("stream lost \(nsError.domain, privacy: .public) \(nsError.code)")
+    debugLog.log("ws.lost", [
+      "conn": id, "domain": nsError.domain, "code": nsError.code,
+      "handshakeStatus": connection.handshakeStatusCode as Any,
+    ])
     let lostAt = uptime()
     // Leave `.connected` now, not when the reconnect task first runs: senders must see the
     // loss at once instead of failing against a nil socket while the state still says connected.
@@ -458,6 +483,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
         return
       } catch {
         Self.log.info("reconnect attempt=\(attempt) failed \(Self.reasonCode(for: error), privacy: .public)")
+        debugLog.log("ws.reconnect_failed", ["attempt": attempt, "reason": Self.reasonCode(for: error), "error": String(describing: error)])
       }
     }
     guard !closing else { return }
@@ -481,6 +507,7 @@ final class BackendClient: SessionChannel, CheckSubmitter {
       } catch {
         let type = Self.envelopeType(in: Data(text.utf8))
         Self.log.error("undecodable event envelope type=\(type ?? "-", privacy: .public) bytes=\(text.utf8.count)")
+        debugLog.log("ws.unreadable", ["type": type as Any, "bytes": text.utf8.count, "error": String(describing: error)])
         reportUnreadable(type: type)
         return nil
       }
@@ -504,6 +531,13 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   }
 
   private func deliver(_ event: ServerEvent, _ decision: ServerEventFilter.Decision) {
+    if case .drop(let reason) = decision {
+      debugLog.log("ws.drop", [
+        "reason": reason.rawValue, "type": event.type.rawValue, "eventId": event.eventId,
+        "epoch": event.sessionEpoch, "filterEpoch": filter?.epoch as Any,
+        "requestId": event.requestId as Any, "revision": event.revision as Any,
+      ])
+    }
     switch decision {
     case .drop(.malformedPayload):
       Self.log.error("dropped \(event.logSummary, privacy: .public) reason=malformed_payload")
@@ -573,16 +607,62 @@ final class BackendClient: SessionChannel, CheckSubmitter {
 
   // MARK: - HTTP
 
-  private func perform(_ request: URLRequest, label: String) async throws -> Data {
-    let (data, response) = try await urlSession.data(for: request)
-    guard let http = response as? HTTPURLResponse else { throw BackendClientError.invalidResponse }
+  /// - Parameter logBody: copy the request body into the debug log. Only for check bodies:
+  ///   the session-create body holds the join code.
+  private func perform(_ request: URLRequest, label: String, logBody: Bool = false) async throws -> Data {
+    let started = ProcessInfo.processInfo.systemUptime
+    debugRequest(request, label: label, logBody: logBody)
+    let data: Data
+    let response: URLResponse
+    do {
+      (data, response) = try await urlSession.data(for: request)
+    } catch {
+      debugLog.log("http.error", ["label": label, "error": String(describing: error), "ms": Self.elapsedMs(since: started)])
+      throw error
+    }
+    guard let http = response as? HTTPURLResponse else {
+      debugLog.log("http.error", ["label": label, "error": "not_http", "ms": Self.elapsedMs(since: started)])
+      throw BackendClientError.invalidResponse
+    }
     guard (200..<300).contains(http.statusCode) else {
       let code = Self.serverErrorCode(from: data)
       Self.log.error("\(label, privacy: .public) status=\(http.statusCode) code=\(code ?? "-", privacy: .public)")
+      debugLog.log("http.response", ["label": label, "status": http.statusCode, "code": code as Any, "ms": Self.elapsedMs(since: started)])
       throw BackendClientError.http(status: http.statusCode, code: code)
     }
     Self.log.debug("\(label, privacy: .public) status=\(http.statusCode)")
+    debugLog.log("http.response", ["label": label, "status": http.statusCode, "ms": Self.elapsedMs(since: started)])
     return data
+  }
+
+  // MARK: - Debug log
+
+  /// Method, path and headers (the debug log redacts `Authorization`), plus the body when asked.
+  private func debugRequest(_ request: URLRequest, label: String, logBody: Bool) {
+    guard debugLog.isEnabled else { return }
+    let payload: [String: Any] = [
+      "label": label, "method": request.httpMethod ?? "GET", "path": request.url?.path ?? "",
+      "headers": request.allHTTPHeaderFields ?? [:],
+    ]
+    if logBody, let body = request.httpBody {
+      debugLog.log("http.request", payload, jsonBody: body)
+    } else {
+      debugLog.log("http.request", payload)
+    }
+  }
+
+  /// Every frame as received, before decoding or filtering. Binary frames from the server are
+  /// counted, not stored.
+  private func debugReceived(_ frame: WebSocketFrame, connection: Int) {
+    guard debugLog.isEnabled else { return }
+    switch frame {
+    case .text(let text): debugLog.logJSONText("ws.recv", text, ["conn": connection])
+    case .binary(let data): debugLog.log("ws.recv_binary", ["conn": connection, "bytes": data.count])
+    }
+  }
+
+  private static func elapsedMs(since start: TimeInterval) -> Int {
+    Int((ProcessInfo.processInfo.systemUptime - start) * 1000)
   }
 
   /// Reads `{ "error": "queue_full" }`. Anything that is not a short snake_case code is
