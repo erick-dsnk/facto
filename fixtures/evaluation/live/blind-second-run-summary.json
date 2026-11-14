@@ -1,0 +1,290 @@
+{
+  "schema": "aggregate-only-second-independent-blind-campaign-v1",
+  "metadata": {
+    "commit": "7e278906bd20e4460c431eeef4b6dd93f76a0acb",
+    "dirty": false,
+    "sourceSHA256": "631ec1c3f1a9330cdbd6a714cbc98059cff14d16af088169db196ec895bd823a",
+    "sourceHashScope": "tracked apps/console, services/api, packages/contracts, package manifest and lockfile",
+    "blindSetSHA256": "84bbd95e5227b231c46ab630c361b746c61812d01c2984c797d7ffb2d45f1a96",
+    "blindInputsSHA256": "affc6505b38c41da113d6c40db36723cf487cab71111784ae3779cba3986b198",
+    "runnerSHA256": "a8e73e371fd996669d559cd59b48232637a2b288ef75ea0f7b6fbe8f3e339925",
+    "role": "independent_blind_second_campaign_first_run",
+    "noImplementationTuningDuringRun": true,
+    "priorFirstRunPreserved": true
+  },
+  "counts": {
+    "declared": 10,
+    "observed": 10,
+    "terminalReceipts": 10,
+    "localStops": 0,
+    "transportFailures": 0,
+    "providerErrors": 0
+  },
+  "completed": true,
+  "truth": {
+    "eligible": 8,
+    "observedEligible": 8,
+    "correctDefinitive": 4,
+    "wrongDefinitive": 0,
+    "abstentions": 4,
+    "noVerdict": 0,
+    "notRun": 0,
+    "supportedExpected": 4,
+    "contradictedExpected": 4,
+    "definitivePrecision": 1,
+    "definitiveCoverage": 4,
+    "correctDefinitiveFractionOfEligible": 0.5
+  },
+  "groundTruthBreakdown": {
+    "expectedFalse": {
+      "eligible": 4,
+      "correctDefinitive": 2,
+      "wrongDefinitive": 0,
+      "abstentions": 2,
+      "noVerdict": 0
+    },
+    "expectedTrue": {
+      "eligible": 4,
+      "correctDefinitive": 2,
+      "wrongDefinitive": 0,
+      "abstentions": 2,
+      "noVerdict": 0
+    }
+  },
+  "inputCategoryBreakdown": {
+    "ordinary_public": {
+      "eligible": 7,
+      "correctDefinitive": 4,
+      "wrongDefinitive": 0,
+      "abstentions": 3,
+      "noVerdict": 0
+    },
+    "mixed_synthetic_private_public": {
+      "eligible": 1,
+      "correctDefinitive": 0,
+      "wrongDefinitive": 0,
+      "abstentions": 1,
+      "noVerdict": 0
+    }
+  },
+  "admission": {
+    "declared": 10,
+    "observed": 10,
+    "correct": 9,
+    "incorrect": 1,
+    "notRun": 0,
+    "exactPublicSpanPass": 10,
+    "exactPublicSpanFail": 0
+  },
+  "semanticActionConfusion": {
+    "expectedCheck": {
+      "denominator": 8,
+      "actualCheck": 8
+    },
+    "expectedSkip": {
+      "denominator": 1,
+      "actualNeedsConfirmation": 1
+    },
+    "expectedNeedsConfirmation": {
+      "denominator": 1,
+      "actualNeedsConfirmation": 1
+    },
+    "interpretation": "Semantic classifier action and terminal event type determine correctness. Wire admissionAction is wait/skip/check only; a needs_confirmation event with skip stops verification while requesting clarification, not a separate failure."
+  },
+  "privacy": {
+    "observedSearchCalls": 13,
+    "forbiddenPrivateQueryViolations": 0,
+    "unexpectedControlRetrievals": 0,
+    "harnessPrivacyBoundaryStops": 0,
+    "note": "Harness rejects unapproved queries before dispatch; a boundary stop is counted separately from actual exposure."
+  },
+  "presentation": {
+    "eligibleFactualInputs": 8,
+    "factualResults": 8,
+    "resultPresentationsAvailable": 8,
+    "respondResults": 8,
+    "clarificationTerminals": 2,
+    "nonResultPresentationsAvailable": 2,
+    "nonResultActions": {
+      "respond": 2
+    },
+    "allRequestsWithTerminalFeedback": 10,
+    "allRequests": 10
+  },
+  "abstentionReasons": {
+    "insufficient_independent_evidence": 2,
+    "below_threshold": 1,
+    "no_agreeing_citation": 1
+  },
+  "citations": {
+    "definitiveResults": 4,
+    "selectedReferences": 9,
+    "uniqueSelectedURLCount": 9,
+    "missingSelectedRecords": 0,
+    "definitiveWithoutCitation": 0,
+    "independentReview": {
+      "uniqueSelectedUrls": 9,
+      "independentlyOpened": 9,
+      "relevant": 9,
+      "irrelevant": 0,
+      "inaccessible": 0,
+      "matchingSelectedStance": 9,
+      "wrongSelectedStance": 0,
+      "unresolvedSelectedStance": 0,
+      "firstPartyAuthoredTechnicalInstitutionalSources": 6,
+      "secondarySources": 3,
+      "definitiveOutcomesReviewed": 4,
+      "correctDefinitive": 4,
+      "wrongDefinitive": 0,
+      "eligibleFactualClaims": 8,
+      "abstentions": 4,
+      "noVerdict": 0
+    },
+    "openingMethod": "Independent source opening means a new connected Exa fetch returning substantive page text. Exa may serve indexed/cached content; no direct-origin live freshness guarantee claimed.",
+    "independence": "Nine relevant citations are not nine independent origins; common standards, rules and institutional definitions are described per source.",
+    "deliberateUserSourceOpens": "not measured"
+  },
+  "limits": {
+    "requestBytes": 65536,
+    "totalRequestBytes": 1000000,
+    "inputTokens": 240000,
+    "unknownInputTokensPerAttempt": 24000,
+    "calls": {
+      "jev": 30,
+      "search": 16,
+      "contents": 24
+    },
+    "wallMs": 180000
+  },
+  "totals": {
+    "attempts": 53,
+    "pendingDispatchReservations": 0,
+    "calls": {
+      "jev": 23,
+      "search": 13,
+      "contents": 17
+    },
+    "requestBytes": 697709,
+    "measuredInputTokens": 170682,
+    "unknownInputTokenReservations": 0,
+    "chargedInputTokens": 170682,
+    "knownCostUSD": 0.10800000000000004,
+    "attemptsWithUnknownCost": 23,
+    "elapsedMs": 31840
+  },
+  "usageDetails": {
+    "maxSingleRequestBytes": 58535,
+    "knownCostUSD": 0.108,
+    "costIsPartial": true,
+    "attemptsWithUnknownCost": 23,
+    "remainingUnknownInputTokenReservations": 0
+  },
+  "latencyAndCache": {
+    "allTypedRequests": {
+      "requests": 10,
+      "medianMs": 3637.5,
+      "p95Ms": 6710,
+      "resultEvents": 8,
+      "coldResultEvents": 8,
+      "cachedResultEvents": 0,
+      "requestsWithoutFactualResult": 2
+    },
+    "eligibleFactualRequests": {
+      "requests": 8,
+      "medianMs": 3942.5,
+      "p95Ms": 6710,
+      "resultEvents": 8,
+      "coldResultEvents": 8,
+      "cachedResultEvents": 0,
+      "requestsWithoutFactualResult": 0
+    },
+    "method": "Harness CaseReport.durationMs from typed dispatch through terminal receipt and provider drain, integer milliseconds. Median averages middle pair for even n; P95 nearest rank ceil(.95*n), maximum at n=10 and n=8. Result cache flags only; no hardware/listening inference or deliberate user source-open measurement."
+  },
+  "methodology": {
+    "campaign": "second_fresh_independent_blind_set",
+    "executionCount": 1,
+    "reruns": 0,
+    "firstCampaignPreserved": true,
+    "caseMutationAfterSeal": false,
+    "implementationChangesDuringRun": false,
+    "presealIndependentReview": {
+      "authoritativeSources": 8,
+      "exactExcerpts": 8,
+      "factualLabels": 8,
+      "true": 4,
+      "false": 4,
+      "admissionExpectations": 10,
+      "issues": 0
+    },
+    "authorshipIsolation": "Author knew first-campaign outcomes and public development examples previously exposed while integrating the first runner after its seal. The second set uses distinct specific subjects/propositions, and no new implementation/diff or development diagnostics were inspected. General knowledge that a public-source extraction refinement was planned did not determine source or case difficulty.",
+    "distinctnessScope": "Independently checked against the first sealed set and the supplied known public development exclusion list. Unseen development cases cannot be certified.",
+    "groundTruthQualification": "First-party standards, rules, institutional histories, service publications and an original manufacturer educational reference. Source authority is relevant to each exact proposition; not a claim of original experimental research.",
+    "actionScoring": "Semantic classifier action and terminal event type determine correctness. Wire admissionAction is wait/skip/check only; a needs_confirmation event with skip stops verification while requesting clarification, not a separate failure.",
+    "presentationScoring": "Eight result events retained respond presentations; both clarification events retained respond presentations in this frozen harness. Personal preference should skip rather than clarify; that is the one semantic action failure.",
+    "latencyMethod": "Harness CaseReport.durationMs from typed dispatch through terminal receipt and provider drain, integer milliseconds. Median averages middle pair for even n; P95 nearest rank ceil(.95*n), maximum at n=10 and n=8. Result cache flags only; no hardware/listening inference or deliberate user source-open measurement.",
+    "privacyScope": "Exact public-span/query boundary blocks unapproved search dispatch; actual searches and private exclusions independently counted. Authorized classification receives submitted input. The only private clause is synthetic.",
+    "statisticalScope": "Ten purposively selected nonrepresentative manual inputs. Conditional precision denominator is four definitive outputs; coverage denominator is all eight eligible facts. Four abstentions are not passes. No pooling with the first run or causal claim from differences between distinct sets and freezes.",
+    "preservation": "One initial reservation, 53 pre-dispatch records, 53 attempt completions, 10 case completions and one final marker; original sanitized final report is authoritative for completed status. Generic progress snapshots retain completed:false.",
+    "publication": "Aggregate-only public markdown/JSON. No case bodies, labels, source URLs or detailed records in repository/PR. Separate private retention archive; first archive unchanged.",
+    "independentCitationReview": {
+      "uniqueSelectedUrls": 9,
+      "independentlyOpened": 9,
+      "relevant": 9,
+      "irrelevant": 0,
+      "inaccessible": 0,
+      "matchingSelectedStance": 9,
+      "wrongSelectedStance": 0,
+      "unresolvedSelectedStance": 0,
+      "firstPartyAuthoredTechnicalInstitutionalSources": 6,
+      "secondarySources": 3,
+      "definitiveOutcomesReviewed": 4,
+      "correctDefinitive": 4,
+      "wrongDefinitive": 0,
+      "eligibleFactualClaims": 8,
+      "abstentions": 4,
+      "noVerdict": 0
+    },
+    "citationOpeningLimitation": "Independent source opening means a new connected Exa fetch returning substantive page text. Exa may serve indexed/cached content; no direct-origin live freshness guarantee claimed."
+  },
+  "artifactHashes": {
+    "sealedBundle": "84bbd95e5227b231c46ab630c361b746c61812d01c2984c797d7ffb2d45f1a96",
+    "sealedInputs": "affc6505b38c41da113d6c40db36723cf487cab71111784ae3779cba3986b198",
+    "presealReview": "94f4b79679e176782f4f8096095ec15dc6f65dd91388e230f419e231b59fc5dd",
+    "sanitizedFirstExecution": "f917d6d03816da2101f9f37f0e6984896a710fccac129d3caf6bd4c3136bad73",
+    "journal": "d8419d75e4e2a8a2ad9bffb3a5fdf2f7d766e128bfec338efa7ac602d7a4431a",
+    "citationReview": "3c79ea7cca7bd6f25f337a97a43f653c9ef2296d7451f577eba2fa98692a1271",
+    "citationRetrievalEvidence": "400cf5d5048e68c1dfa285243d4af09e36fbda167fd8bc491c88280308ab14d2",
+    "runner": "a8e73e371fd996669d559cd59b48232637a2b288ef75ea0f7b6fbe8f3e339925",
+    "retentionManifest": "65aa83bd2bd7596b33c7c5711a2a1a07e86ad738cf8ae1296a931426dafca5db"
+  },
+  "retentionArchive": {
+    "path": "/workspace/independent-evaluation-retention-02/sealed-second-first-run.tar.gz",
+    "sha256": "01cc97e1ab28113e427ffa97a38f09d48f1e59dce1491b833fc1adb93e68bff8",
+    "bytes": 3779257,
+    "publication": "Private user retention only; contains sealed cases and must remain outside the PR."
+  },
+  "priorCampaign": {
+    "status": "preserved_unchanged_separate_campaign",
+    "correctDefinitive": 2,
+    "eligible": 8,
+    "abstentions": 5,
+    "noVerdict": 1,
+    "comparisonLimitation": "Different fresh cases and frozen code; do not pool results or infer causal improvement.",
+    "archiveSHA256": "df1a87d8679823e214b705ae84fb594cc8b9461400d3ec5e0ccde8391db1128c"
+  },
+  "limitations": [
+    "Small purposive nonrepresentative manual sample; no production accuracy estimate.",
+    "Only 4/8 eligible facts resolved correctly and definitively (50%); the other four abstained and are not passes.",
+    "Conditional precision 4/4 has a four-output denominator and excludes four unresolved eligible facts.",
+    "The author knew prior outcomes, earlier public development topics and the general planned extraction change. No new implementation/diff inspected or targeting of the fix; unseen development cases cannot be certified.",
+    "Sources are authoritative first-party rules, standards, histories and original institutional references, not primary experimental research.",
+    "Zero observed private-query exposure is conditional on the harness public-span/query dispatch guard; authorized classification receives submitted text. The private clause was synthetic.",
+    "Independent source opening uses connected Exa, possibly indexed/cached; nine relevant sources overlap and are not nine independent confirmations. Deliberate user source opens were not measured.",
+    "Known cost is partial; 23 attempts lack reported cost. All completed Jev token usage was measured.",
+    "The 24000-token unknown allowance is a stopping reservation, not a guaranteed upper bound; actual usage can exceed it before later dispatch stops.",
+    "Latency uses small sequential typed samples; no hardware or listening false-alert claim. Automatic/native/iOS/ASR paths not evaluated.",
+    "Generic progress snapshots retain completed:false at the final phase; the immutable final report records completed:true and ten terminal receipts.",
+    "This second campaign never replaces the first; distinct sets and freezes do not support a pooled or causal comparison."
+  ],
+  "publicDisclosure": "Aggregate-only: no case bodies, labels, source URLs or detailed records. Full reports, journal, ground truth and reviews remain sealed outside the repository."
+}

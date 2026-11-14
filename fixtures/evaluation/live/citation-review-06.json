@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent_selected_citation_review",
+  "reviewedAt": "2026-11-14T03:19:59.537648+00:00",
+  "input": "/workspace/task-evidence/live-development-06.json",
+  "inputSHA256": "ba96ee0faafa034335183731f231464e027e040470ab25837d33474745f8e220",
+  "inputMetadata": {
+    "commit": "7e278906bd20e4460c431eeef4b6dd93f76a0acb",
+    "dirty": false,
+    "sourceSHA256": "631ec1c3f1a9330cdbd6a714cbc98059cff14d16af088169db196ec895bd823a"
+  },
+  "reusedReview": {
+    "path": "/workspace/task-evidence/citation-review-05.json",
+    "sha256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+    "reviewedAt": "2026-11-14T02:56:01.319233+00:00",
+    "antecedentReview04Path": "/workspace/task-evidence/citation-review-04.json",
+    "antecedentReview04SHA256": "8eda0ef5f7d7f5eaf817e88a34ff6a24d12a0e439e888d134149547a21750437",
+    "basis": "Same-day prior source inspection reused for unchanged selected passages and source identity/grouping findings. Two changed excerpt windows reopened and inspected."
+  },
+  "scope": {
+    "selectedDefinitiveCases": [
+      "L6-existential"
+    ],
+    "selectedUniqueUrls": 5,
+    "newUniqueUrlsVs05": 0,
+    "review06UrlRequests": 2,
+    "unchangedUrlInspectionsReused": 3,
+    "cacheRepeat": "L5 is insufficient_evidence with no selected citation; never counted as another independent check or source.",
+    "caseResults": [
+      {
+        "case": "L1-opera",
+        "verdict": "insufficient_evidence",
+        "cached": false,
+        "selectedEvidenceIds": []
+      },
+      {
+        "case": "L2-lightning",
+        "verdict": "insufficient_evidence",
+        "cached": false,
+        "selectedEvidenceIds": []
+      },
+      {
+        "case": "L4-mixed",
+        "verdict": "insufficient_evidence",
+        "cached": false,
+        "selectedEvidenceIds": []
+      },
+      {
+        "case": "L5-cache-repeat",
+        "verdict": "insufficient_evidence",
+        "cached": true,
+        "selectedEvidenceIds": []
+      },
+      {
+        "case": "L6-existential",
+        "verdict": "supported",
+        "cached": false,
+        "selectedEvidenceIds": [
+          "ev-caf1e0a1533ac3783477",
+          "ev-1a695a106a22850b30b3",
+          "ev-de510503319a759fc462",
+          "ev-533b3489b31330136bde",
+          "ev-af7c05813e2333997b30"
+        ]
+      },
+      {
+        "case": "L8-first-person",
+        "verdict": "insufficient_evidence",
+        "cached": false,
+        "selectedEvidenceIds": []
+      }
+    ]
+  },
+  "comparison": {
+    "selectedPlanetIdsAndUrlsUnchanged": true,
+    "removedSelectedUrls": [
+      {
+        "evidenceId": "ev-a38cbdd50b89785e9ddf",
+        "url": "https://www.nma.gov.au/defining-moments/resources/sydney-opera-house",
+        "reason": "Opera and cached Opera cases now abstain; no longer selected"
+      },
+      {
+        "evidenceId": "ev-98bba1d289c45e2bce3a",
+        "url": "https://www.sydneyoperahouse.com/our-story/50-years-extraordinary-moments",
+        "reason": "Opera and cached Opera cases now abstain; no longer selected"
+      },
+      {
+        "evidenceId": "ev-c6ef4b33746b6e519887",
+        "url": "https://www.queenelizabeth.com/moments/opening-of-sydney-opera-house",
+        "reason": "Opera and cached Opera cases now abstain; no longer selected"
+      }
+    ],
+    "excerptChanges": [
+      {
+        "evidenceId": "ev-1a695a106a22850b30b3",
+        "url": "https://astro4edu.org/bigideas/bigidea7/",
+        "changedFields": [
+          "excerpt"
+        ],
+        "oldExcerptSHA256": "b5335081dc0de97f1fea03897370412cf4d9cfafa1f6818b849321aa8a63e7aa",
+        "newExcerptSHA256": "0a07b90c5dd91bb9206e024c2d59dd657aaef64d3555d8e905169622110c5d35"
+      },
+      {
+        "evidenceId": "ev-533b3489b31330136bde",
+        "url": "https://www.timeanddate.com/astronomy/planets/planet",
+        "changedFields": [
+          "excerpt"
+        ],
+        "oldExcerptSHA256": "c5daae4f014c4eab1326350b59b3f11f8cd99db11f09d637cba8559455e53cd8",
+        "newExcerptSHA256": "318fc293a3d152399b9623ca500aa75595870f81afd87d3a10c082fe1469d6f8"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-caf1e0a1533ac3783477",
+      "url": "https://ssd.jpl.nasa.gov/planets/def.html",
+      "suppliedContentBasis": "page_text",
+      "sourceGroupSupplied": "nasa.gov",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://ssd.jpl.nasa.gov/planets/def.html",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review06Requested": false,
+        "reuseQualification": "Access and unchanged-passage inspection reused from recorded same-day reviews; no review06 request."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "Using this new definition, there are eight planets in the solar system",
+      "relevance": "Exact count and eight names occur in the retrieved page; supplied page_text corresponds to the article, credited to Donald K. Yeomans and Paul W. Chodas, October 2006.",
+      "scope": "Solar System planets under the August 2006 IAU definition, excluding dwarf planets. Historical explanatory article still served by JPL; use with the other currently retrieved classification explanations, not as proof of an unrestricted timeless count.",
+      "sourceFamily": "NASA / JPL Solar System Dynamics",
+      "originAssessment": "Same NASA/JPL family as /planets/; those two URLs are not independent corroborators and have closely overlapping wording. Explains the underlying IAU resolution.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReuse": {
+        "reviewPath": "/workspace/task-evidence/citation-review-05.json",
+        "reviewSHA256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+        "basis": "Same selected ID/URL. Prior same-day source attribution, grouping, and scope review retained."
+      },
+      "selectedExcerptSHA256": "58bf8175e13a26a176783e67611d22e99d41c3db7d3e353c5f010a3581c98f40"
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-1a695a106a22850b30b3",
+      "url": "https://astro4edu.org/bigideas/bigidea7/",
+      "suppliedContentBasis": "page_text",
+      "sourceGroupSupplied": "astro4edu.org",
+      "access": {
+        "method": "curl GET with redirects and inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://astro4edu.org/bigideas/bigidea7/",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review06Requested": true,
+        "retrievedAt": "2026-11-14T03:19:13.981561+00:00",
+        "publicResponseSHA256": "9b5f943a64c9004efda75318921df4523d52a3a88ca03d2202cb32378f77597b",
+        "freshnessQualification": "HTTP 200 retrieval through configured proxy; cache/origin freshness not established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "Relevant count/definition and added section 7.5 text found in the HTTP 200 HTML. Added paragraphs broaden surrounding educational context without altering the eight recognized planets proposition.",
+      "briefExactQuote": "There are eight planets in the Solar System",
+      "relevance": "Explicit eight-planet assertion and IAU context correspond to actual page; changed surrounding window inspected.",
+      "scope": "Explicitly according to the 2006 IAU resolution; excludes dwarf planets. Same Solar System and planet population as the ordinary classification claim.",
+      "sourceFamily": "IAU Office of Astronomy for Education",
+      "originAssessment": "Page identifies Big Ideas in Astronomy as an IAU Office of Astronomy for Education project. Distinct publisher from JPL, but the underlying classification originates from the same IAU resolution; not an independent empirical discovery.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReuse": {
+        "reviewPath": "/workspace/task-evidence/citation-review-05.json",
+        "reviewSHA256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+        "basis": "Same selected ID/URL. Prior same-day source attribution, grouping, and scope review retained."
+      },
+      "selectedExcerptSHA256": "0a07b90c5dd91bb9206e024c2d59dd657aaef64d3555d8e905169622110c5d35",
+      "review06Delta": {
+        "change": "Window begins midway through Solar System composition paragraph, retains complete section 7.3 eight-planet statement and IAU criteria, and extends into section 7.5 terrestrial/gas-giant explanation; title and early formation paragraphs are omitted.",
+        "passageCorrespondence": "Relevant count/definition and added section 7.5 text found in the HTTP 200 HTML. Added paragraphs broaden surrounding educational context without altering the eight recognized planets proposition.",
+        "scopeAssessment": "Solar System under 2006 IAU criteria, excluding dwarf planets. Broad gas-giant terminology in neighboring section is not used here as a separate verified claim.",
+        "briefExactQuote": "There are eight planets in the Solar System"
+      }
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-de510503319a759fc462",
+      "url": "https://ssd.jpl.nasa.gov/planets/",
+      "suppliedContentBasis": "page_text",
+      "sourceGroupSupplied": "nasa.gov",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://ssd.jpl.nasa.gov/planets/",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review06Requested": false,
+        "reuseQualification": "Access and unchanged-passage inspection reused from recorded same-day reviews; no review06 request."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "Using this new definition, there are eight planets in the solar system",
+      "relevance": "Exact count and eight names occur in the retrieved page; supplied page_text corresponds, including the note that Pluto remains on the JPL ephemeris for historical reasons.",
+      "scope": "Solar System classification following the 2006 definition. Keeping Pluto in an ephemeris does not reclassify it as one of the eight.",
+      "sourceFamily": "NASA / JPL Solar System Dynamics",
+      "originAssessment": "Same site, institution, and substantially shared lead wording as def.html; count once with that page, not as a second family.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReuse": {
+        "reviewPath": "/workspace/task-evidence/citation-review-05.json",
+        "reviewSHA256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+        "basis": "Same selected ID/URL. Prior same-day source attribution, grouping, and scope review retained."
+      },
+      "selectedExcerptSHA256": "08e6645187a6a474b0302fbcd5371d16dbc53febc8f8afb8daa62bf4dff49a43"
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-533b3489b31330136bde",
+      "url": "https://www.timeanddate.com/astronomy/planets/planet",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "timeanddate.com",
+      "access": {
+        "method": "curl GET with redirects and inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://www.timeanddate.com/astronomy/planets/planet",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review06Requested": true,
+        "retrievedAt": "2026-11-14T03:19:09.769390+00:00",
+        "publicResponseSHA256": "0476397af2636c0434ba2c67803eecb0f56b4f6abe1580e18111f0e86bc08f53",
+        "freshnessQualification": "HTTP 200 retrieval through configured proxy; cache/origin freshness not established."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "All added substantive passages correspond to HTTP 200 HTML. Complete final sentence on actual page says Planet X remains a hypothesis; the excerpt already labels it hypothetical before truncation.",
+      "briefExactQuote": "There are eight planets.",
+      "relevance": "Explicit eight-planet assertion and IAU context correspond to actual page; changed surrounding window inspected.",
+      "scope": "Solar System and current IAU classification; page separately discusses changing definitions, Pluto, and hypothetical Planet Nine, explicitly describing the latter as a hypothesis. Supports the ordinary recognized-planet count, not proof that no undiscovered planet exists.",
+      "sourceFamily": "Time and Date AS",
+      "originAssessment": "Separately authored explanatory article with byline Graham Jones and Time and Date AS copyright; no full-article republication attribution observed. NASA image credits are image attribution, not evidence that the article is syndicated from NASA. Shares the IAU definitional basis.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReuse": {
+        "reviewPath": "/workspace/task-evidence/citation-review-05.json",
+        "reviewSHA256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+        "basis": "Same selected ID/URL. Prior same-day source attribution, grouping, and scope review retained."
+      },
+      "selectedExcerptSHA256": "318fc293a3d152399b9623ca500aa75595870f81afd87d3a10c082fe1469d6f8",
+      "review06Delta": {
+        "change": "Window now starts midway through historical Ceres paragraph and includes full planet/dwarf-planet criteria, the exact eight-planet assertion, exoplanet definition discussion, and hypothetical Planet Nine discussion. Final sentence truncates after nothing more t.",
+        "passageCorrespondence": "All added substantive passages correspond to HTTP 200 HTML. Complete final sentence on actual page says Planet X remains a hypothesis; the excerpt already labels it hypothetical before truncation.",
+        "scopeAssessment": "The count is the ordinary recognized Solar System planet count under the stated classification. Exoplanets are outside that population; a hypothetical additional Solar System planet is not presented as an established ninth planet. Does not prove absence of undiscovered planets. The page uses orbit around a star in a simplified definition, while JPL/IAU give orbit around the Sun; this does not change its explicit Solar System count.",
+        "briefExactQuote": "There are eight planets in the solar system."
+      }
+    },
+    {
+      "case": "L6-existential",
+      "evidenceId": "ev-af7c05813e2333997b30",
+      "url": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+      "suppliedContentBasis": "highlight",
+      "sourceGroupSupplied": "skyandtelescope.org",
+      "access": {
+        "method": "curl GET, redirects followed, inherited proxy environment",
+        "httpStatus": 200,
+        "finalUrl": "https://skyandtelescope.org/astronomy-resources/solar-system-planets-how-many-are-there/",
+        "curlExit": 0,
+        "openedArticle": true,
+        "status": "opened",
+        "review06Requested": false,
+        "reuseQualification": "Access and unchanged-passage inspection reused from recorded same-day reviews; no review06 request."
+      },
+      "assessment": "supports_proposition_in_stated_scope",
+      "passageCorrespondence": "confirmed relevant supplied passages in actual retrieved HTML",
+      "briefExactQuote": "There are eight planets in the solar system",
+      "relevance": "Exact proposition and eight names in article opening; supplied highlights correspond to actual article paragraphs.",
+      "scope": "Solar System planets under the IAU definition; explains why Pluto is a dwarf planet. Article dated July 15, 2021; no conflicting scope or contrary count observed in the relevant article.",
+      "sourceFamily": "Sky & Telescope",
+      "originAssessment": "Byline Maria Temming, July 15, 2021. Separately authored educational article, no full-article republication attribution observed. NASA credit adjacent to an illustration does not make the article a NASA syndication. Same underlying IAU definition as other planet sources.",
+      "incorrectContext": "none identified in relevant accessible passages",
+      "sourceInspectionReuse": {
+        "reviewPath": "/workspace/task-evidence/citation-review-05.json",
+        "reviewSHA256": "b9b5b10cd7f66dc9e5d1001143734805bd858a2634b01830d076f77b4151d637",
+        "basis": "Same selected ID/URL. Prior same-day source attribution, grouping, and scope review retained."
+      },
+      "selectedExcerptSHA256": "e96c176a52c240f5340bb0665d34d95c69f841e67e9ea39ec095e4b451b2344a"
+    }
+  ],
+  "caseFindings": [
+    {
+      "case": "L6-existential",
+      "proposition": "There are eight planets in the Solar System.",
+      "finding": "Five selected URLs correspond to relevant passages stating eight under the IAU classification. Two changed excerpt windows were inspected by HTTP 200 retrieval; three unchanged selected excerpts reuse prior same-day inspection. No incorrect context identified for the recognized Solar System planet count.",
+      "sourceFamilies": [
+        "NASA / JPL Solar System Dynamics",
+        "IAU Office of Astronomy for Education",
+        "Time and Date AS",
+        "Sky & Telescope"
+      ],
+      "independenceQualification": "Two JPL URLs are one family. Separately authored Timeanddate and Sky & Telescope material plus IAU education provide substantive consistency across distinct editorial/institutional families; shared underlying IAU definition is not independent empirical confirmation of a universal census. No article-level syndication observed in inspected material."
+    }
+  ],
+  "historicalCaveats": {
+    "opera": "Prior NMA and official Opera House sources describe the 1973 opening but are not selected by run06. Their prior review is not a review06 definitive citation result. NMA references the ABC/Opera House history project among books, so full primary-origin independence was not established.",
+    "queenElizabeth": "The Opera memorial source returned HTTP 403 during review04 and remained unverified. It was not retried for review06 and is not selected by run06.",
+    "skyAndTelescope": "Unchanged excerpt includes loose surprising solar system planets phrase about Pluto alongside repeated dwarf planet wording and explicit explanation it is no longer a planet; the eight-count context remains classification-specific."
+  },
+  "limits": [
+    "Bounded review of selected public development citations; not a broad factual-accuracy or coverage pass.",
+    "Only two changed-content URLs requested for review06; unchanged findings explicitly reused, without asserting fresh access.",
+    "HTTP 200 through configured proxy does not establish root-origin freshness or bypass caching.",
+    "Recognized Solar System planet count under the IAU definition, excluding dwarf planets; no claim that undiscovered planets cannot exist.",
+    "No blind materials, implementation edits, production report changes, or project-provider-key calls used."
+  ]
+}
