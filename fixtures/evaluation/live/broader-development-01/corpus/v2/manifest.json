@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "kind": "open_development_artifact_manifest",
+  "name": "broader-development-2026-11-14-v2",
+  "reviewStatus": "pending_independent_source_label_review",
+  "blinded": false,
+  "frozenAt": "2026-11-14T04:12:35.661129+00:00",
+  "parentV1ManifestSha256": "8c3712d954c331057f45cb5a4468163c28d45471fd4300e6bbc9b9c3eebe061c",
+  "sourceRecordsPath": "../sources.json",
+  "sourceRecordsSha256": "dc6d5588055ba5fb77bd543862e9159312c3971063fa6bd42afeeed54895101c",
+  "denominators": {
+    "totalInputs": 16,
+    "ordinaryFactualInputs": 12,
+    "trueUniqueFacts": 6,
+    "falseUniqueFacts": 6,
+    "uniqueFactualPropositions": 12,
+    "controlInputs": 4,
+    "controlTypes": {
+      "personal_experience": 1,
+      "opinion": 1,
+      "incomplete_or_unclear": 1,
+      "synthetic_private_public_mixture": 1
+    },
+    "eligiblePublicSpanOccurrences": 13,
+    "eligibleInputOccurrences": 13,
+    "inputsWithoutEligiblePublicSpans": 3,
+    "repeatedPublicFactInMixedControl": "BD07",
+    "uniqueFactMetricRule": "Score BD01-BD12 once each. Exclude BDC04 repeated BD07 from unique-fact accuracy. Report control admission/privacy separately; BDC04 is an eligible-span isolation control, not a negative-admission case."
+  },
+  "latencyStatus": "not_measured",
+  "files": [
+    {
+      "path": "cases.json",
+      "bytes": 27590,
+      "sha256": "52babda66404dffdbe87d06fc9addba3eabdafad466d26c47d6c297c84368c62"
+    },
+    {
+      "path": "live-manifest.json",
+      "bytes": 8736,
+      "sha256": "d10e403f76240b40e5c124644ff38643e7212339e8d6c64fb94ce73e73e81512"
+    },
+    {
+      "path": "amendment.md",
+      "bytes": 1135,
+      "sha256": "39de1f50c707fbcc50eff63792f2aa1ba7f8b29324317ea0631affeae7361de2"
+    },
+    {
+      "path": "batch-index.json",
+      "bytes": 3417,
+      "sha256": "773be4d8d15a384ad1496ab3cbcfbf0b15f0ae05276eb2c998cbd2f58e303184"
+    },
+    {
+      "path": "batches/batch-01.json",
+      "bytes": 2020,
+      "sha256": "755fcccac694f94db05743d6723e4a123e3003f79c01142d8a2d5551c5cf1e99"
+    },
+    {
+      "path": "batches/batch-02.json",
+      "bytes": 2300,
+      "sha256": "65f4edaf91213073c46678babf92e65c7087b8dde51d98489dbb68e379e97fc9"
+    },
+    {
+      "path": "batches/batch-03.json",
+      "bytes": 2164,
+      "sha256": "8c42e6eaace67ce1fa5e01a90f007509ed961096a00ec77ede075c714cae16da"
+    },
+    {
+      "path": "batches/batch-04.json",
+      "bytes": 2641,
+      "sha256": "708232974c3357053c129c93443ddca9c81d0ce9e7580b7cafc90cba19a0e39f"
+    }
+  ]
+}
