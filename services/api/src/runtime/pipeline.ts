@@ -1,10 +1,17 @@
 import { performance } from 'node:perf_hooks';
-import { MODEL_VERSION, POLICY_VERSION, PipelineError, type ClaimResult, type TextInput } from '../../../../packages/contracts/src/index.js';
+import {
+  claimFrame, MODEL_VERSION, POLICY_VERSION, PipelineError, PROVIDER_LIMITS, sourceQuery,
+  type AcceptedClaim, type AdmissionPayload, type CheckUsage, type ClaimFrame, type ClaimResult, type Evidence, type Judgment, type ProviderContext, type ProviderKind,
+  type ResultDecision, type TextInput, type VerdictDecision,
+} from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from './adapters.js';
 import { retainAlternateEvidence } from './alternate-evidence.js';
-import { decideVerdict } from '../policy/verdict.js';
+import { assessVerdict, decideVerdict, type VerdictAssessment } from '../policy/verdict.js';
 import { decidePresentation, matchSelectedTopic } from '../policy/notifications.js';
+import { admissionOutcome, privateLifeDecision, subjectMissingDecision, VERDICT_SUMMARIES, wireName, withSpeculation } from '../policy/outcomes.js';
+import { corroborationNeeded, mergeCorroboration, supportingSites } from '../policy/corroboration.js';
 import { AttemptBudget, abortable, assertWithinDeadline } from './budget.js';
+import { ClaimCache, type CachedDecision } from './claim-cache.js';
 import { fingerprint, type RequestRecord, type Session } from './session.js';
 import { claimResultSchema } from '../../../../packages/contracts/src/wire.js';
 
@@ -13,12 +20,31 @@ export type RuntimeMetric = {
   durationMs: number; stageMs: { admission: number; retrieval: number; judgment: number };
   state: RequestRecord['state']; jevAttempts: number; searchAttempts: number; contentAttempts: number; inputTokens: number;
 };
+type Stage = keyof RuntimeMetric['stageMs'];
+type ClaimContext = ProviderContext & { canConsume(kind: ProviderKind, claimId?: string): boolean };
+/** What a sources check hands back: the decision, the judged evidence and whether the shared cache may keep it. */
+type SourcedOutcome = { decision: ResultDecision; evidence: Evidence[]; cacheable: boolean };
+/** One judgment and what the ported rules made of it; `inputs` is the evidence as it was sent to Jev. */
+type Round = { inputs: Evidence[]; judgment: Judgment; verdict: VerdictAssessment };
+
+/** One cache for every session and runtime in this process unless the adapters bring their own (Q9). */
+const sharedClaimCache = new ClaimCache();
+const SECOND_SEARCH_MIN_REMAINING_MS = 3_000;
+const definitive = (verdict: string) => verdict === 'supported' || verdict === 'contradicted' || verdict === 'misleading';
+/** Never carry earlier model assessments into a new evidence set. */
+const raw = (records: Evidence[]) => records.map(source => ({ ...source, sourceRole: 'unknown' as const, directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' as const, stanceProbability: 0 }));
+const sameIds = (a: Evidence[], b: Evidence[]) => JSON.stringify(a.map(source => source.id).sort()) === JSON.stringify(b.map(source => source.id).sort());
+const noEvidence: VerdictDecision = { verdict: 'insufficient_evidence', reasonCode: 'no_evidence', selectedEvidenceIds: [], summary: VERDICT_SUMMARIES.insufficient_evidence };
+
 export class PipelineRuntime {
   private queue: Job[] = [];
   private running = 0;
   /** Bounded sanitized diagnostics; deliberately excludes input, queries, tokens and IDs. */
   readonly metrics: RuntimeMetric[] = [];
-  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string) {}
+  private readonly cache: ClaimCache;
+  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string) {
+    this.cache = adapters.cache ?? sharedClaimCache;
+  }
 
   submit(session: Session, input: TextInput) {
     if (!session.active || input.sessionEpoch !== session.epoch) throw new PipelineError('old_epoch');
@@ -78,12 +104,17 @@ export class PipelineRuntime {
     if (session.current(record)) session.emit('pipeline.error', { reasonCode, message: 'The check didn’t finish.', presentation: { action: record.input.userInitiated && !session.preferences.muted ? 'respond' : 'silent', reasonCode: 'service_status' } }, record.input, claimId);
   }
 
+  /** Jev calls for the whole request so far and Exa searches for this claim. */
+  private usage(record: RequestRecord, claimId?: string): CheckUsage {
+    return { jevCalls: record.budget.jev, exaSearches: claimId ? record.budget.used('search', claimId) : 0 };
+  }
+
   private async run({ session, record }: Job) {
     const { input } = record;
     const started = record.acceptedMonotonic;
     const ctx = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000);
     const stageMs = { admission: 0, retrieval: 0, judgment: 0 };
-    const timed = async <T>(stage: keyof typeof stageMs, call: () => Promise<T>): Promise<T> => {
+    const timed = async <T>(stage: Stage, call: () => Promise<T>): Promise<T> => {
       const start = this.monotonic();
       try {
         assertWithinDeadline(ctx);
@@ -101,6 +132,8 @@ export class PipelineRuntime {
       session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input, currentClaimId);
       record.state = 'done'; return true;
     };
+    /** True when the request no longer owns its output: superseded, cancelled, expired or stale. */
+    const halted = () => !session.current(record) || stopIfStale();
     try {
       if (!session.current(record)) return;
       assertWithinDeadline(ctx);
@@ -122,73 +155,113 @@ export class PipelineRuntime {
           }, Math.max(0, remaining)); record.timer.unref();
           return;
         }
-        session.emit(admission.action === 'needs_confirmation' || (admission.action === 'wait' && input.userInitiated) ? 'claim.needs_confirmation' : 'claim.skipped',
-          { admissionAction: 'skip', reasonCode: admission.reasonCode, presentation: { action: input.userInitiated && !session.preferences.muted ? 'respond' : 'silent', reasonCode: admission.reasonCode } }, input);
+        const outcome = admissionOutcome(admission, input, session.preferences.muted, this.usage(record));
+        session.emit(outcome.type, outcome.payload, input);
         record.state = 'done'; return;
       }
       if (admission.claims.length < 1 || admission.claims.length > 2) throw new PipelineError('malformed_admission');
       // The automatic cooldown counts admitted claims (1 per 4 s), so filler or skipped sentences never block the next claim.
       if (!input.userInitiated) session.lastAutomaticAt = this.now();
-      // Case and whitespace can change an admitted proposition (MW/mW, quoted identifiers).
-      const cacheKey = (text: string) => JSON.stringify([text, input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
+      const sources = this.adapters.sources;
+      // Legacy session cache: case and whitespace can change an admitted proposition (MW/mW, quoted identifiers).
+      const sessionKey = (text: string) => JSON.stringify([text, input.context, input.language, input.mode, POLICY_VERSION, this.modelVersion]);
+      const sharedKey = (claim: AcceptedClaim) => ClaimCache.key(claim.checkedText, claimFrame(claim).subject, POLICY_VERSION, this.modelVersion);
+      /** A later claim still needs provider work within this request's allowance. */
+      const needsProviders = (later: AcceptedClaim) => {
+        const frame = claimFrame(later);
+        if (frame.privateLife || frame.subjectMissing) return false;
+        if (sources) return !ClaimCache.cacheable(frame) || this.cache.get(sharedKey(later)) === undefined;
+        const cached = session.cache.get(sessionKey(later.checkedText));
+        // A near-expiry cache entry may disappear while this claim runs.
+        return !cached || cached.expiresAt <= record.acceptedAt + 10_000;
+      };
       for (const [index, candidate] of admission.claims.entries()) {
         // A correction must not mint fresh provider allowances through a new ID.
         const claim = { ...candidate, id: `${input.requestId}-claim-${index}` };
+        const frame = claimFrame(claim);
+        const subject = wireName(frame.subject);
         currentClaimId = claim.id;
         if (!session.current(record)) return;
         if (!input.userInitiated && this.now() - Date.parse(input.capturedAt) > 15_000) {
           session.emit('claim.skipped', { admissionAction: 'skip', reasonCode: 'stale_capture' }, input, claim.id);
           record.state = 'done'; return;
         }
-        session.emit('claim.checking', { admissionAction: 'check', reasonCode: 'eligible_public_claim' }, input, claim.id);
-        const key = cacheKey(claim.checkedText);
+        const checking: AdmissionPayload = { admissionAction: 'check', reasonCode: 'eligible_public_claim', ...(sources ? { route: frame.route, subject } : {}) };
+        session.emit('claim.checking', checking, input, claim.id);
         // Notification identity is the complete admitted proposition, independent of
-        // capture mode/context. Keep factual cache identity context-sensitive above.
+        // capture mode/context. Keep factual cache identity separate.
         const notificationKey = claim.checkedText;
-        const stored = session.cache.get(key);
+        const build = (decision: ResultDecision, evidence: Evidence[], cached = false, checkedAt = new Date(this.now()).toISOString()): ClaimResult => claimResultSchema.parse({
+          ...decision, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, evidence, checkedAt,
+          expiresAt: new Date(Math.min(this.now() + 60_000, session.expiresAt)).toISOString(), durationMs: this.monotonic() - started,
+          cached, policyVersion: POLICY_VERSION, modelVersion: this.modelVersion, presentation: { action: 'silent', reasonCode: 'pending' },
+          ...(sources ? { route: frame.route, subject, usage: this.usage(record, claim.id) } : {}),
+        });
         let result: ClaimResult;
-        let freshResult: ClaimResult | undefined;
-        if (stored && stored.expiresAt > this.now()) {
-          result = { ...stored.result, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, cached: true, durationMs: this.monotonic() - started };
-        } else {
-          // Spend remaining capacity on useful current work, while protecting a
-          // later span's first judgment whenever there is capacity for both.
-          if (!ctx.canConsume('jev')) throw new PipelineError('jev_budget_exhausted');
-          const laterUncached = admission.claims.slice(index + 1).filter(later => {
-            const cached = session.cache.get(cacheKey(later.checkedText));
-            // A near-expiry cache entry may disappear while this claim runs.
-            return !cached || cached.expiresAt <= record.acceptedAt + 10_000;
-          }).length;
-          const reserved = Math.min(laterUncached, Math.max(0, 3 - record.budget.jev - 1));
-          const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
-          const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, claimContext));
-          if (!session.current(record) || stopIfStale()) return;
-          let judgment = evidence.length ? await timed('judgment', () => this.adapters.judge(claim, evidence, claimContext)) : {
-            label: 'insufficient_evidence' as const, probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 1 }, evidence: [], selectedEvidenceIds: [], misleadingReason: null
-          };
-          if (!session.current(record) || stopIfStale()) return;
-          let decision = decideVerdict(judgment);
-          if (decision.verdict === 'insufficient_evidence' && this.adapters.retrieveAlternate && !laterUncached
-            && claimContext.canConsume('jev') && claimContext.canConsume('search', claim.id)
-            && record.acceptedAt + 10_000 - this.now() >= 3_000) {
-            const additional = await timed('retrieval', () => this.adapters.retrieveAlternate!(claim, claimContext));
-            if (!session.current(record) || stopIfStale()) return;
-            const combined = retainAlternateEvidence(evidence, additional, claim.checkedText, judgment);
-            const identity = (records: typeof evidence) => JSON.stringify(records.map(source => [source.id, source.url, source.title, source.publisher, source.excerpt, source.publishedAt, source.contentBasis, source.sourceGroup, source.echoGroup]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
-            if (combined.length && identity(combined) !== identity(evidence)) {
-              // Never carry first-pass model assessments into a new evidence set.
-              const raw = combined.map(source => ({ ...source, sourceRole: 'unknown' as const, directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' as const, stanceProbability: 0 }));
-              judgment = await timed('judgment', () => this.adapters.judge(claim, raw, claimContext));
-              if (!session.current(record)) return;
-              decision = decideVerdict(judgment);
+        let commit: (() => void) | undefined;
+        const special = frame.privateLife ? privateLifeDecision() : frame.subjectMissing ? subjectMissingDecision() : null;
+        if (special) {
+          // Never searched and never judged: no provider sees a private-life allegation or a claim missing its subject.
+          result = build(special, []);
+        } else if (sources) {
+          const key = sharedKey(claim);
+          const hit = ClaimCache.cacheable(frame) ? this.cache.get(key) : undefined;
+          if (hit) {
+            const { checkedText: _text, evidence, route: _route, subject: _subject, checkedAt, ...decision } = hit;
+            result = build(decision, evidence, true, checkedAt);
+          } else {
+            if (!ctx.canConsume('jev')) throw new PipelineError('jev_budget_exhausted');
+            const laterUncached = admission.claims.slice(index + 1).filter(needsProviders).length;
+            const reserved = Math.min(laterUncached, Math.max(0, PROVIDER_LIMITS.jev - record.budget.jev - 1));
+            const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+            const outcome = await this.checkWithSources({ claim, frame, claimContext, timed, halted, acceptedAt: record.acceptedAt, laterUncached });
+            if (!outcome) return;
+            result = build(outcome.decision, outcome.evidence);
+            if (outcome.cacheable) {
+              const stored: CachedDecision = { ...outcome.decision, checkedText: claim.checkedText, evidence: result.evidence, route: frame.route, subject: frame.subject, checkedAt: result.checkedAt };
+              commit = () => this.cache.set(key, stored);
             }
           }
-          if (stopIfStale()) return;
-          result = { ...decision, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, evidence: judgment.evidence,
-            checkedAt: new Date(this.now()).toISOString(), expiresAt: new Date(Math.min(this.now() + 60_000, session.expiresAt)).toISOString(), durationMs: this.monotonic() - started,
-            cached: false, policyVersion: POLICY_VERSION, modelVersion: this.modelVersion, presentation: { action: 'silent', reasonCode: 'pending' } };
-          result = claimResultSchema.parse(result);
-          freshResult = result;
+        } else {
+          const key = sessionKey(claim.checkedText);
+          const stored = session.cache.get(key);
+          if (stored && stored.expiresAt > this.now()) {
+            result = { ...stored.result, originalText: input.text, checkedText: claim.checkedText, sourceSpan: claim.sourceSpan, cached: true, durationMs: this.monotonic() - started };
+          } else {
+            // Spend remaining capacity on useful current work, while protecting a
+            // later span's first judgment whenever there is capacity for both.
+            if (!ctx.canConsume('jev')) throw new PipelineError('jev_budget_exhausted');
+            const laterUncached = admission.claims.slice(index + 1).filter(needsProviders).length;
+            const reserved = Math.min(laterUncached, Math.max(0, PROVIDER_LIMITS.jev - record.budget.jev - 1));
+            const claimContext = record.budget.context(record.controller.signal, this.now, record.acceptedAt + 10_000, reserved);
+            const evidence = await timed('retrieval', () => this.adapters.retrieve(claim, claimContext));
+            if (halted()) return;
+            let judgment = evidence.length ? await timed('judgment', () => this.adapters.judge(claim, evidence, claimContext)) : {
+              label: 'insufficient_evidence' as const, probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 1 }, evidence: [], selectedEvidenceIds: [], misleadingReason: null
+            };
+            if (halted()) return;
+            let decision = decideVerdict(judgment);
+            if (decision.verdict === 'insufficient_evidence' && this.adapters.retrieveAlternate && !laterUncached
+              && claimContext.canConsume('jev') && claimContext.canConsume('search', claim.id)
+              && record.acceptedAt + 10_000 - this.now() >= SECOND_SEARCH_MIN_REMAINING_MS) {
+              const additional = await timed('retrieval', () => this.adapters.retrieveAlternate!(claim, claimContext));
+              if (halted()) return;
+              const combined = retainAlternateEvidence(evidence, additional, claim.checkedText, judgment);
+              const identity = (records: typeof evidence) => JSON.stringify(records.map(source => [source.id, source.url, source.title, source.publisher, source.excerpt, source.publishedAt, source.contentBasis, source.sourceGroup, source.echoGroup]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
+              if (combined.length && identity(combined) !== identity(evidence)) {
+                judgment = await timed('judgment', () => this.adapters.judge(claim, raw(combined), claimContext));
+                if (!session.current(record)) return;
+                decision = decideVerdict(judgment);
+              }
+            }
+            if (stopIfStale()) return;
+            result = build(decision, judgment.evidence);
+            const fresh = result;
+            commit = () => {
+              session.cache.set(key, { result: fresh, expiresAt: Date.parse(fresh.expiresAt) });
+              if (session.cache.size > 64) session.cache.delete(session.cache.keys().next().value!);
+            };
+          }
         }
         session.notifications = session.notifications.filter(t => this.now() - t < 60_000);
         for (const [k, expires] of session.recentClaims) if (expires <= this.now()) session.recentClaims.delete(k);
@@ -201,10 +274,7 @@ export class PipelineRuntime {
         }, session.preferences) };
         if (!session.current(record)) return;
         assertWithinDeadline(ctx);
-        if (freshResult) {
-          session.cache.set(key, { result: freshResult, expiresAt: Date.parse(freshResult.expiresAt) });
-          if (session.cache.size > 64) session.cache.delete(session.cache.keys().next().value!);
-        }
+        commit?.();
         if (result.presentation.action === 'notify') { session.notifications.push(this.now()); session.recentClaims.set(notificationKey, this.now() + 60_000); }
         record.results.set(claim.id, result); session.emit('claim.result', result, input, claim.id);
       }
@@ -223,5 +293,92 @@ export class PipelineRuntime {
         searchAttempts: [...record.budget.searches.values()].reduce((a, b) => a + b, 0), contentAttempts: [...record.budget.contents.values()].reduce((a, b) => a + b, 0), inputTokens: record.budget.inputTokens });
       if (this.metrics.length > 128) this.metrics.shift();
     }
+  }
+
+  /**
+   * Q5/Q6: free sources first; a True or False from them ends the check with no Exa search. Otherwise the primary
+   * Exa search, then at most one more (corroboration or alternate), never a third. Returns undefined when the
+   * request stopped owning its output.
+   */
+  private async checkWithSources(job: {
+    claim: AcceptedClaim; frame: ClaimFrame; claimContext: ClaimContext; acceptedAt: number; laterUncached: number;
+    timed: <T>(stage: Stage, call: () => Promise<T>) => Promise<T>; halted: () => boolean;
+  }): Promise<SourcedOutcome | undefined> {
+    const { claim, frame, claimContext, timed, halted } = job;
+    const sources = this.adapters.sources!;
+    // A source sees only the checked text and subject: never context, private spans or originalText.
+    const query = sourceQuery(claim, this.now());
+    const traitsOf = (records: Evidence[]) => records.map(record => sources.traits(record, frame.attribution));
+    const judgeRound = async (inputs: Evidence[]): Promise<Round> => {
+      const judgment = await timed('judgment', () => this.adapters.judge(claim, inputs, claimContext));
+      return { inputs, judgment, verdict: assessVerdict(judgment, { traits: traitsOf(judgment.evidence), frame, checkedText: claim.checkedText }) };
+    };
+    const finish = (round: Round | undefined, cacheable: boolean): SourcedOutcome => {
+      const decision = withSpeculation(round?.verdict.decision ?? noEvidence, round?.verdict.ruleLabel ?? null, frame, round?.verdict.tally.counts ?? null);
+      return { decision, evidence: round?.judgment.evidence ?? [], cacheable: cacheable && ClaimCache.cacheable(frame) };
+    };
+
+    const free = await timed('retrieval', () => sources.gatherFree(query, claimContext));
+    if (halted()) return undefined;
+    // A source that failed or ran out of time may answer next time: an abstention resting on it is not kept.
+    const degraded = Object.values(free.answered ?? {}).some(answered => answered === false);
+    const keep = (round: Round | undefined) => !degraded || definitive(finish(round, true).decision.verdict);
+    let round: Round | undefined;
+    const freeRanked = sources.rank(free.evidence, []);
+    if (freeRanked.length && claimContext.canConsume('jev')) {
+      round = await judgeRound(freeRanked);
+      if (halted()) return undefined;
+      const label = round.verdict.decision.verdict;
+      if (label === 'supported' || label === 'contradicted') return finish(round, true);
+    }
+
+    if (claimContext.canConsume('search', claim.id)) {
+      let paid;
+      try {
+        paid = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'primary' }, claimContext));
+      } catch (error) {
+        assertWithinDeadline(claimContext);
+        // A definitive answer from the free sources stands without the search, but is not kept. A provider error is
+        // never presented as Can't verify or Speculation.
+        if (round && definitive(round.verdict.decision.verdict)) return finish(round, false);
+        throw error;
+      }
+      if (halted()) return undefined;
+      const ranked = sources.rank(free.evidence, paid.evidence);
+      if (ranked.length && !(round && sameIds(ranked, round.inputs))) {
+        if (claimContext.canConsume('jev')) {
+          round = await judgeRound(round ? raw(ranked) : ranked);
+          if (halted()) return undefined;
+        } else if (!round) throw new PipelineError('jev_budget_exhausted');
+      }
+    }
+    if (!round && freeRanked.length) throw new PipelineError('jev_budget_exhausted');
+
+    // At most one more Exa search, only with time and allowance left, and never at a later claim's expense.
+    const decided = round?.verdict.decision.verdict ?? 'insufficient_evidence';
+    if (decided === 'insufficient_evidence' && !job.laterUncached && claimContext.canConsume('search', claim.id) && claimContext.canConsume('jev')
+      && job.acceptedAt + 10_000 - this.now() >= SECOND_SEARCH_MIN_REMAINING_MS) {
+      if (round && corroborationNeeded(round.verdict.ruleLabel, round.judgment.label, round.judgment.probabilities, round.verdict.tally.counts)) {
+        // One site alone backs it: search once more without that site.
+        const excludeSites = supportingSites(round.verdict.tally);
+        const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'corroboration', excludeSites }, claimContext));
+        if (halted()) return undefined;
+        const merged = mergeCorroboration(round.judgment.evidence, extra.evidence, excludeSites, record => sources.traits(record, frame.attribution).site);
+        if (merged.length) {
+          round = await judgeRound(raw(merged));
+          if (halted()) return undefined;
+        }
+      } else {
+        const extra = await timed('retrieval', () => sources.searchPaid(query, { purpose: 'alternate' }, claimContext));
+        if (halted()) return undefined;
+        const incoming = sources.rank([], extra.evidence);
+        const combined = round ? retainAlternateEvidence(round.inputs, incoming, claim.checkedText, round.judgment) : incoming;
+        if (combined.length && !(round && sameIds(combined, round.inputs))) {
+          round = await judgeRound(raw(combined));
+          if (halted()) return undefined;
+        }
+      }
+    }
+    return finish(round, keep(round));
   }
 }

@@ -1,11 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PipelineError, type EventEnvelope, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { codePoints, PipelineError, PROVIDER_LIMITS, type EventEnvelope, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
 import { AttemptBudget } from '../../src/runtime/budget.js';
 import { fixtureAdapters } from '../../src/runtime/fixtures.js';
 import { PipelineRuntime } from '../../src/runtime/pipeline.js';
 import { Session, SessionStore } from '../../src/runtime/session.js';
-import { createClassifier } from '../../src/providers/jev/classification.js';
-import type { JevAnswer } from '../../src/providers/jev/client.js';
 
 const input = (s: Session, id = 'req', overrides: Partial<TextInput> = {}): TextInput => ({ schemaVersion: 1, requestId: id, sessionId: s.id, sessionEpoch: s.epoch, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.', language: 'en', capturedAt: new Date(Date.now()).toISOString(), capture: { source: 'typed_fixture', segmentId: 'seg', confidence: 1 }, context: [], userInitiated: true, ...overrides });
 function setup(adapters: PipelineAdapters = fixtureAdapters()) {
@@ -15,30 +13,16 @@ function setup(adapters: PipelineAdapters = fixtureAdapters()) {
 }
 const flush = () => vi.advanceTimersByTimeAsync(0);
 
-/** Real admission implementation with synthetic named Jev answers; no network calls. */
+/** Injected admission: the whole sentence, or only its public clause after a private one. One Jev attempt, no
+ * model or network calls, so these runtime tests do not depend on the classifier's question set. */
 function topicAdapters(priority: number | null = null): PipelineAdapters {
-  return { ...fixtureAdapters(), classify: createClassifier({
-    ask: async (request, context) => {
-      context.consume('jev');
-      const answers: Record<string, JevAnswer> = {};
-      for (const candidate of (request.state as { candidates: { id: string; text: string }[] }).candidates) {
-        const privateText = candidate.text.includes('salary');
-        for (const [name, question] of Object.entries(request.questions)) {
-          if (!name.startsWith(candidate.id + '_')) continue;
-          if (question.type === 'choice') {
-            const choices = Object.keys(question.criteria);
-            const choice = name.endsWith('_kind') ? privateText ? candidate.text.includes('Lightning') ? 'mixed' : 'personal_experience' : 'public_fact'
-              : name.endsWith('_assertion_status') ? 'asserted'
-                : name.endsWith('_quote_use') ? 'name_or_title'
-                : name.endsWith('_claim_structure') ? candidate.id === 'span_0' && (request.state as { candidates: unknown[] }).candidates.length > 1 ? 'multiple_propositions' : 'one_coherent'
-                    : 'asserted';
-            answers[name] = { choice, probabilities: Object.fromEntries(choices.map(key => [key, key === choice ? .99 : .01 / (choices.length - 1)])) };
-          } else answers[name] = { noul: name.endsWith('_private_data') ? privateText ? .99 : .01 : name.endsWith('_self_contained') || name.endsWith('_preserves_scope') ? .99 : priority };
-        }
-      }
-      return answers;
-    }
-  }) };
+  return { ...fixtureAdapters(), classify: async (body, context) => {
+    context.consume('jev');
+    const checkedText = body.text.includes('salary') ? body.text.slice(body.text.indexOf('Lightning')) : body.text;
+    const start = codePoints(body.text.slice(0, body.text.indexOf(checkedText))).length;
+    return { action: 'check', reasonCode: 'eligible_public_claim', claims: [{ id: 'admitted', originalText: body.text, checkedText, sourceSpan: { start, end: start + codePoints(checkedText).length },
+      admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'eligible_public_claim', hasPracticalConsequence: priority, matchedSelectedTopic: null } }] };
+  } };
 }
 
 describe('bounded pipeline runtime', () => {
@@ -293,8 +277,14 @@ describe('bounded pipeline runtime', () => {
   });
 
   it('enforces common attempt limits and session-token isolation/deletion', () => {
-    const budget = new AttemptBudget(); for (let i = 0; i < 3; i++) budget.consume('jev');
+    const budget = new AttemptBudget(); for (let i = 0; i < PROVIDER_LIMITS.jev; i++) budget.consume('jev');
     expect(() => budget.consume('jev')).toThrow('jev_budget_exhausted');
+    for (const kind of ['search', 'contents', 'factcheck', 'wikipedia', 'wikidata', 'weather'] as const) {
+      for (let i = 0; i < PROVIDER_LIMITS[kind]; i++) budget.consume(kind, 'claim-a');
+      expect(() => budget.consume(kind, 'claim-a')).toThrow(`${kind}_budget_exhausted`);
+      expect(budget.used(kind, 'claim-a')).toBe(PROVIDER_LIMITS[kind]);
+      expect(() => budget.consume(kind, 'claim-b')).not.toThrow(); // every kind but Jev counts per claim
+    }
     const store = new SessionStore(); const a = store.create(); const b = store.create();
     expect(() => store.authenticate(a.id, b.token)).toThrow('unauthorized');
     const token = a.token; store.delete(a.id);

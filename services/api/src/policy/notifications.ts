@@ -40,8 +40,11 @@ export function decidePresentation(
   if (intent === 'manual' || intent === 'repeat') return { action: 'respond', reasonCode: intent === 'repeat' ? 'explicit_repeat' : 'explicit_request' };
   if (!state.healthy) return silent('service_unhealthy');
   if (!preferences.automaticNotifications) return silent('notifications_disabled');
-  if (result.verdict !== 'contradicted') return silent('automatic_noncontradiction');
+  // Overheard, only False, Misleading and Speculation alert (chime and card); True and Can't verify stay in history.
+  if (result.verdict !== 'contradicted' && result.verdict !== 'misleading' && result.verdict !== 'speculation') return silent('automatic_noncontradiction');
   if (result.admission?.admissionAction !== 'check' || result.admission.assertionStatus !== 'asserted') return silent('unresolved_admission');
+  if (result.verdict === 'misleading') return { action: 'notify', reasonCode: 'automatic_misleading' };
+  if (result.verdict === 'speculation') return { action: 'notify', reasonCode: 'automatic_speculation' };
   // Every admitted, asserted contradiction alerts. Priority and selected topic only label the
   // reason; neither gates the alert, and there is no per-session alert budget.
   const priority = result.admission.hasPracticalConsequence;
