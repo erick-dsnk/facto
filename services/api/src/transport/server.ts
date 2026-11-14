@@ -81,16 +81,22 @@ export async function buildServer(options: ServerOptions) {
   });
   app.get('/v1/sessions/:sessionId/stream', {
     websocket: true,
-    preValidation: async request => {
+    // Keep the ownership check and handler attachment in one synchronous hook
+    // turn: an async hook lets concurrent upgrades both observe no listener.
+    preValidation: (request, _reply, done) => {
       const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(s => s.trim());
       const token = bearer(request.headers.authorization) ?? protocols.find(p => p.startsWith('bearer.'))?.slice(7);
       const session = store.authenticate(paramsSchema.parse(request.params).sessionId, token);
       if (session.listeners.size) throw new PipelineError('stream_already_connected');
+      done();
     }
   }, (socket, request) => {
     const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map(s => s.trim());
     const token = bearer(request.headers.authorization) ?? protocols.find(p => p.startsWith('bearer.'))?.slice(7);
     const session = store.authenticate(paramsSchema.parse(request.params).sessionId, token);
+    // A losing/late socket must never install a disconnect handler that can
+    // pause the stream which already owns this session.
+    if (session.listeners.size) { socket.close(1008, 'Stream already connected'); return; }
     const transcripts = new Map<string, { hash: string; revision: number; capturedAt: string }>();
     const fail = (error: unknown) => {
       if (error instanceof PipelineError && error.code === 'audio_cancelled') return;
@@ -113,20 +119,24 @@ export async function buildServer(options: ServerOptions) {
       } catch (error) { fail(error); }
     }) : undefined;
     if (bridge) audioBridges.set(session.id, bridge);
+    let disconnected = false;
+    const disconnect = () => {
+      if (disconnected) return;
+      disconnected = true;
+      const stopping = bridge?.stop(); transcripts.clear(); session.pause('disconnected'); void stopping?.catch(() => undefined);
+    };
     const send: Session['listeners'] extends Set<infer T> ? T : never = event => {
       if (event.type === 'session.ended') { transcripts.clear(); void bridge?.stop().catch(() => undefined); }
-      if (socket.readyState !== 1) return;
-      if (socket.bufferedAmount > 65_536) { socket.close(1008, 'Slow consumer'); return; }
+      if (disconnected || socket.readyState !== 1) return;
+      if (socket.bufferedAmount > 65_536) { socket.close(1008, 'Slow consumer'); disconnect(); return; }
       socket.send(JSON.stringify(event));
       if (event.type === 'session.ended' && ['deleted', 'expired'].includes((event.payload as { reasonCode: string }).reasonCode)) socket.close(1000);
     };
     session.listeners.add(send);
-    const disconnect = () => {
-      const stopping = bridge?.stop(); transcripts.clear(); session.pause('disconnected'); void stopping?.catch(() => undefined);
-    };
     socket.on('error', disconnect);
     socket.on('close', () => { session.listeners.delete(send); disconnect(); if (audioBridges.get(session.id) === bridge) audioBridges.delete(session.id); });
     socket.on('message', async (data, binary) => {
+      if (disconnected || socket.readyState !== 1) return;
       try {
         store.authenticate(session.id, token);
         if (binary) {

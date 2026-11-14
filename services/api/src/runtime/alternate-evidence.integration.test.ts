@@ -129,4 +129,46 @@ describe('alternate evidence retention through the composed runtime', () => {
     expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence', reasonCode: 'insufficient_independent_evidence', selectedEvidenceIds: [] });
     expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 3, searchAttempts: 2, durationMs: 2_000 });
   });
+
+  it('keeps the initial abstention without a redundant judgment when only contained highlights arrive', async () => {
+    const initial = witnesses().map(record => ({ ...record, contentBasis: 'page_text' as const,
+      excerpt: `${record.excerpt} Archive keeper identity and adjacent qualifications remain part of this exact page passage.` }));
+    const incoming = initial.map((record, index) => ({ ...record, contentBasis: 'highlight' as const,
+      excerpt: witnesses()[index].excerpt, retrievedAt: '2026-11-14T12:00:02Z' }));
+    const { session, events, runtime, input, judge } = setup(initial, incoming);
+    runtime.submit(session, input);
+    await vi.advanceTimersByTimeAsync(2_000);
+
+    expect(judge).toHaveBeenCalledTimes(1);
+    expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence', selectedEvidenceIds: [] });
+    expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 2, searchAttempts: 2, contentAttempts: 0 });
+  });
+
+  it('freshly judges preserved page context with changed evidence and cannot inherit its prior positive assessment', async () => {
+    const initial = witnesses().map(record => ({ ...record, contentBasis: 'page_text' as const,
+      excerpt: `${record.excerpt} The adjacent archive note distinguishes private ceremonies from later public access.` }));
+    const incoming = [{ ...initial[0], contentBasis: 'highlight' as const, excerpt: witnesses()[0].excerpt }, noise('new-topical')];
+    const { session, events, runtime, input, judge, deadlines } = setup(initial, incoming);
+    const originalJudge = judge.getMockImplementation()!;
+    judge.mockImplementation(async (claim, records, context) => {
+      const result = await originalJudge(claim, records, context);
+      if (judge.mock.calls.length === 2) {
+        result.sourceAssessments = Object.fromEntries(records.map(record => [record.id, { contentBasis: 'bare_assertion', confidence: .99 }]));
+      }
+      return result;
+    });
+    const acceptedAt = Date.now();
+    runtime.submit(session, input);
+    await vi.advanceTimersByTimeAsync(2_000);
+
+    expect(judge).toHaveBeenCalledTimes(2);
+    const raw = judge.mock.calls[1][1];
+    expect(raw.find(record => record.id === initial[0].id)).toMatchObject({ excerpt: initial[0].excerpt,
+      contentBasis: 'page_text', retrievedAt: initial[0].retrievedAt });
+    expect(raw.every(record => record.sourceRole === 'unknown' && !record.directlyAddressesClaim
+      && !record.matchesTimePlaceAndPopulation && record.stance === 'unrelated' && record.stanceProbability === 0)).toBe(true);
+    expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence', selectedEvidenceIds: [] });
+    expect(runtime.metrics[0]).toMatchObject({ state: 'done', jevAttempts: 3, searchAttempts: 2, contentAttempts: 0 });
+    expect(deadlines).toEqual([acceptedAt + 10_000, acceptedAt + 10_000]);
+  });
 });
