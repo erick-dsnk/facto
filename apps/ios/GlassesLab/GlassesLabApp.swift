@@ -10,6 +10,7 @@ struct GlassesLabApp: App {
   @State private var live: LiveModel
 
   init() {
+    FactoTheme.configureAppearance()
     let debugLog = DebugLog.shared
     debugLog.startAutomaticPruning()
     let info = Bundle.main.infoDictionary
