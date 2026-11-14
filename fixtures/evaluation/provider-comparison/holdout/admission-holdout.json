@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "name": "admission-holdout-43",
+  "createdDate": "2026-11-14",
+  "split": "holdout",
+  "notes": [
+    "Generated holdout admission cases (verified subset of candidates). Same shape as the --admission-cases loader accepts: {cases:[{id,text,expected,context?,mode?,confidence?,lowConfidenceWords?}]}.",
+    "References and rationales live in admission-holdout-sidecar.json and must never be sent to models. Device cases carry their original 'why' field.",
+    "Not blind: authored by the same session that saw the harness. Do not tune prompts on this split.",
+    "Page-style context {title,before} from the candidates was converted to the loader's string[] form [title, before]."
+  ],
+  "cases": [
+    {
+      "id": "myth-10",
+      "text": "The seasons happen because the Earth is closer to the Sun in summer.",
+      "expected": "false"
+    },
+    {
+      "id": "myth-11",
+      "text": "Taking vitamin C regularly prevents the common cold.",
+      "expected": "false"
+    },
+    {
+      "id": "myth-12",
+      "text": "Vikings wore helmets with horns in battle.",
+      "expected": "false"
+    },
+    {
+      "id": "surprise-10",
+      "text": "Octopuses have three hearts.",
+      "expected": "true"
+    },
+    {
+      "id": "surprise-11",
+      "text": "Antarctica is the driest continent on Earth.",
+      "expected": "true"
+    },
+    {
+      "id": "plain-06",
+      "text": "The Pacific Ocean is the largest ocean on Earth.",
+      "expected": "true"
+    },
+    {
+      "id": "context-09",
+      "text": "The crew splashed down in the Pacific Ocean on July 24, 1969.",
+      "context": [
+        "Apollo 11 anniversary retrospective",
+        "Neil Armstrong, Buzz Aldrin and Michael Collins flew the first crewed Moon landing mission."
+      ],
+      "expected": "true"
+    },
+    {
+      "id": "context-10",
+      "text": "It was dedicated in 1950.",
+      "context": [
+        "Visiting Washington, DC",
+        "The Lincoln Memorial sits at the west end of the National Mall."
+      ],
+      "expected": "false"
+    },
+    {
+      "id": "context-12",
+      "text": "It was launched in 1999.",
+      "context": [
+        "Space telescopes explained",
+        "The Hubble Space Telescope orbits the Earth."
+      ],
+      "expected": "false"
+    },
+    {
+      "id": "data-07",
+      "text": "The Burj Khalifa is 828 meters tall.",
+      "expected": "true"
+    },
+    {
+      "id": "data-08",
+      "text": "Mount Kilimanjaro is 6,895 meters above sea level.",
+      "expected": "false"
+    },
+    {
+      "id": "data-09",
+      "text": "The Moon is about 384,000 kilometers from Earth on average.",
+      "expected": "true"
+    },
+    {
+      "id": "calc-07",
+      "text": "Fifteen percent of 120 is 18.",
+      "expected": "true"
+    },
+    {
+      "id": "calc-08",
+      "text": "Three hours and twenty minutes is two hundred and fifty minutes.",
+      "expected": "false"
+    },
+    {
+      "id": "calc-09",
+      "text": "A mile is about 1.6 kilometers, so a ten mile run is about 16 kilometers.",
+      "expected": "true"
+    },
+    {
+      "id": "nonclaim-05",
+      "text": "I'm so tired of this Monday morning traffic.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "nonclaim-06",
+      "text": "Please send me the slides before the meeting starts.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "nonclaim-07",
+      "text": "My sister's birthday is next week.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "sports-01",
+      "text": "Spain won the men's FIFA World Cup in 2010.",
+      "expected": "true"
+    },
+    {
+      "id": "sports-02",
+      "text": "A regulation NBA basketball hoop is eight feet above the floor.",
+      "expected": "false"
+    },
+    {
+      "id": "finance-01",
+      "text": "The Federal Reserve is the central bank of the United States.",
+      "expected": "true"
+    },
+    {
+      "id": "finance-02",
+      "text": "FDIC deposit insurance covers up to one million dollars per depositor per bank.",
+      "expected": "false"
+    },
+    {
+      "id": "finance-03",
+      "text": "Croatia adopted the euro on January 1, 2023.",
+      "expected": "true"
+    },
+    {
+      "id": "history-04",
+      "text": "World War II ended in 1952.",
+      "expected": "false"
+    },
+    {
+      "id": "local-01",
+      "text": "The Oresund Bridge links Copenhagen in Denmark with Malmo in Sweden.",
+      "context": [
+        "Commuter notes from southern Sweden"
+      ],
+      "expected": "true"
+    },
+    {
+      "id": "local-02",
+      "text": "The Golden Gate Bridge is in Los Angeles.",
+      "context": [
+        "Weekend in California"
+      ],
+      "expected": "false"
+    },
+    {
+      "id": "civic-01",
+      "text": "The United States Senate has 100 members.",
+      "expected": "true"
+    },
+    {
+      "id": "civic-02",
+      "text": "A member of the US House of Representatives serves a four-year term.",
+      "expected": "false"
+    },
+    {
+      "id": "civic-03",
+      "text": "The voting age in the United States was lowered to eighteen by the 26th Amendment.",
+      "expected": "true"
+    },
+    {
+      "id": "food-01",
+      "text": "A tablespoon of olive oil contains about 120 calories.",
+      "expected": "true"
+    },
+    {
+      "id": "food-02",
+      "text": "It is safe to feed honey to babies under one year old.",
+      "expected": "false"
+    },
+    {
+      "id": "food-03",
+      "text": "The USDA says poultry should be cooked to an internal temperature of 165 degrees Fahrenheit.",
+      "expected": "true"
+    },
+    {
+      "id": "transport-01",
+      "text": "The Channel Tunnel connects England and France.",
+      "expected": "true"
+    },
+    {
+      "id": "transport-02",
+      "text": "Japan's Shinkansen bullet train began service in 1994.",
+      "expected": "false"
+    },
+    {
+      "id": "filler-01",
+      "text": "Okay, so, um, anyway.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "filler-02",
+      "text": "Right, let's get started then.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "question-01",
+      "text": "How many people live in Tokyo?",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "opinion-01",
+      "text": "That was the best concert I have ever seen.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "opinion-02",
+      "text": "Nobody should ever put ketchup on a steak.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "hedged-01",
+      "text": "I think it might rain later, but I'm not really sure.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "joke-01",
+      "text": "Why did the scarecrow win an award? Because he was outstanding in his field.",
+      "expected": "not_a_claim"
+    },
+    {
+      "id": "dev-cheetah",
+      "text": "Cheetahs are the fastest land animal.",
+      "context": [],
+      "mode": "audio",
+      "confidence": 0.95,
+      "expected": "true",
+      "why": "A stable fact the check should resolve cheaply from a reference source."
+    },
+    {
+      "id": "dev-wembley-context",
+      "text": "It seats about sixty thousand people.",
+      "context": [
+        "Wembley Stadium is in London."
+      ],
+      "mode": "audio",
+      "confidence": 0.94,
+      "expected": "false",
+      "why": "Subject comes from the earlier sentence: Wembley seats 90,000, so the claim is false."
+    }
+  ]
+}

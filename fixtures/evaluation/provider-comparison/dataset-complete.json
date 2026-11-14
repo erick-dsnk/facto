@@ -1,0 +1,1970 @@
+{
+ "schemaVersion": 1,
+ "createdDate": "2026-11-14",
+ "note": "Index of the COMPLETE dataset. Never send reference/rationale to models. admission/dev originals from the reference app (44 everyday claims) have no text in this repo.",
+ "files": {
+  "devAdmission": "external: reference app test/claims.json (44) + fixtures/evaluation/device-phrases.json (15)",
+  "devCohort": "fixtures/evaluation/provider-comparison/cohort.json",
+  "devEvidence": "fixtures/evaluation/provider-comparison/frozen-evidence.json",
+  "holdoutAdmission": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json",
+  "holdoutAdmissionSidecar": "fixtures/evaluation/provider-comparison/holdout/admission-holdout-sidecar.json",
+  "holdoutCohort": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json",
+  "holdoutEvidence": "fixtures/evaluation/provider-comparison/holdout/frozen-evidence-holdout.json"
+ },
+ "counts": {
+  "admission": {
+   "dev": {
+    "total": 59,
+    "byLabel": {
+     "false": 22,
+     "true": 28,
+     "not_a_claim": 7,
+     "speculation": 1,
+     "needs_confirmation": 1
+    }
+   },
+   "holdout": {
+    "total": 43,
+    "byLabel": {
+     "false": 15,
+     "true": 18,
+     "not_a_claim": 10
+    }
+   }
+  },
+  "cohort": {
+   "dev": {
+    "total": 24,
+    "byLabel": {
+     "true": 8,
+     "false": 8,
+     "misleading": 4,
+     "cant_verify": 4
+    }
+   },
+   "holdout": {
+    "total": 9,
+    "byLabel": {
+     "true": 3,
+     "false": 3,
+     "cant_verify": 3
+    }
+   }
+  }
+ },
+ "holdoutEvidenceAcquisition": {
+  "file": "fixtures/evaluation/provider-comparison/holdout/frozen-evidence-holdout.json",
+  "acquiredAt": "2026-11-14T20:36:06.743Z",
+  "knownCostUSD": 0.126,
+  "errors": 0,
+  "acquisitionSeconds": 23.5,
+  "baselineEvidence": "fixtures/evaluation/provider-comparison/frozen-evidence.json"
+ },
+ "cases": [
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-01",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-02",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-03",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-04",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-05",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-06",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-07",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "myth-08",
+   "text": null,
+   "expected": "false",
+   "category": "myth",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-01",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-02",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-03",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-04",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-05",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-06",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-07",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "surprise-08",
+   "text": null,
+   "expected": "true",
+   "category": "surprise",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "plain-01",
+   "text": null,
+   "expected": "true",
+   "category": "plain",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "plain-02",
+   "text": null,
+   "expected": "true",
+   "category": "plain",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "plain-03",
+   "text": null,
+   "expected": "true",
+   "category": "plain",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "plain-04",
+   "text": null,
+   "expected": "true",
+   "category": "plain",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "nonclaim-01",
+   "text": null,
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "nonclaim-02",
+   "text": null,
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "nonclaim-03",
+   "text": null,
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "nonclaim-04",
+   "text": null,
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-01",
+   "text": null,
+   "expected": "true",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-02",
+   "text": null,
+   "expected": "true",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-03",
+   "text": null,
+   "expected": "true",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-04",
+   "text": null,
+   "expected": "true",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-05",
+   "text": null,
+   "expected": "false",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-06",
+   "text": null,
+   "expected": "false",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-07",
+   "text": null,
+   "expected": "false",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "context-08",
+   "text": null,
+   "expected": "false",
+   "category": "context",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "data-01",
+   "text": null,
+   "expected": "true",
+   "category": "data",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "data-02",
+   "text": null,
+   "expected": "false",
+   "category": "data",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "data-03",
+   "text": null,
+   "expected": "true",
+   "category": "data",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "data-04",
+   "text": null,
+   "expected": "false",
+   "category": "data",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "data-05",
+   "text": null,
+   "expected": "true",
+   "category": "data",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "data-06",
+   "text": null,
+   "expected": "false",
+   "category": "data",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "calc-01",
+   "text": null,
+   "expected": "true",
+   "category": "calc",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "calc-02",
+   "text": null,
+   "expected": "true",
+   "category": "calc",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "calc-03",
+   "text": null,
+   "expected": "true",
+   "category": "calc",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "calc-04",
+   "text": null,
+   "expected": "false",
+   "category": "calc",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "calc-05",
+   "text": null,
+   "expected": "false",
+   "category": "calc",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "calc-06",
+   "text": null,
+   "expected": "true",
+   "category": "calc",
+   "source": "original",
+   "reference": null,
+   "rationale": null,
+   "file": "external: reference app test/claims.json (FACTCHECK_REPO); text not recoverable from this repo, id and label from fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-affair",
+   "text": "Jensen Huang's fourth affair.",
+   "expected": "speculation",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "An allegation about an identifiable person's private life. It is never searched and answers Speculation with private_life_not_checked.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-ipo",
+   "text": "Anthropic will IPO at a 2.5 trillion dollar valuation.",
+   "expected": "false",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A future claim whose figure is far outside credible published estimates and reporting on Anthropic's valuation as of November 2026.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-goldfish",
+   "text": "Goldfish only remember three seconds.",
+   "expected": "false",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A popular myth: studies show goldfish keep memories for months. Admission must treat it as a claim even when Jev leans towards opinion.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-great-wall",
+   "text": "The Great Wall of China is visible from space.",
+   "expected": "false",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A common misconception: astronauts report the wall is not visible to the naked eye from orbit, and myth sources count as false.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-helsinki",
+   "text": "Helsinki is the capital of Finland.",
+   "expected": "true",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A stable fact that Wikipedia and Wikidata settle without a paid search.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-eiffel-context",
+   "text": "It opened in 1889.",
+   "expected": "true",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "The subject comes from the earlier sentence: the Eiffel Tower opened in 1889 for the Exposition Universelle.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-nasa-moon",
+   "text": "According to NASA, the Moon is shrinking.",
+   "expected": "true",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "NASA reports that the Moon has shrunk by about 150 feet as its interior cools. Attributed to an outlet, so the check is whether NASA reported it.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-opinion",
+   "text": "Pineapple on pizza tastes amazing.",
+   "expected": "not_a_claim",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A matter of taste. Asked about, it answers \"That's an opinion.\" with no search.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-question",
+   "text": "Is the Eiffel Tower taller than the Statue of Liberty?",
+   "expected": "not_a_claim",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A question states no fact. Asked about, it answers \"That's a question.\"",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-prediction",
+   "text": "My team is going to win the hackathon tomorrow.",
+   "expected": "not_a_claim",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A pure guess about the future that no plan, announcement, estimate or forecast could confirm. Asked about, it answers \"That's a prediction.\"",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-misheard",
+   "text": "You heard that on Tropical IPO for $2,500,000,000,000?",
+   "expected": "needs_confirmation",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A misheard \"Anthropic\": the low-confidence words change the claim, so an explicit request answers \"I'm not sure what was said.\"",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-attributed-recent",
+   "text": "Jensen Huang said a memory chip glut is unlikely before 2029.",
+   "expected": "true",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "Huang said at Nvidia GTC Berlin that memory oversupply by 2029 is unlikely; reported 22-23 October 2026. A named speaker on a recent event, so the check is whether he said it.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-everest",
+   "text": "Mount Everest is the highest mountain above sea level.",
+   "expected": "true",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A stable fact: Everest's summit, 8,849 m, is the highest above sea level.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-sydney-capital",
+   "text": "Sydney is the capital of Australia.",
+   "expected": "false",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "A common mistake: Canberra is the capital of Australia.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "dev",
+   "id": "dev-hearsay-bulls",
+   "text": "I heard that bulls get angry when they see the colour red.",
+   "expected": "false",
+   "category": "device",
+   "source": "original",
+   "reference": null,
+   "rationale": "Hearsay framing is ignored and the content is judged: bulls are red-green colourblind and react to the cape's movement, not its colour.",
+   "file": "fixtures/evaluation/device-phrases.json"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "myth-10",
+   "text": "The seasons happen because the Earth is closer to the Sun in summer.",
+   "expected": "false",
+   "category": "myth",
+   "source": "generated",
+   "reference": "https://spaceplace.nasa.gov/seasons/en/",
+   "rationale": "NASA: seasons are caused by the tilt of Earth's axis, not distance from the Sun.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "myth-11",
+   "text": "Taking vitamin C regularly prevents the common cold.",
+   "expected": "false",
+   "category": "myth",
+   "source": "generated",
+   "reference": "https://www.cochrane.org/CD000980/ARI_vitamin-c-for-preventing-and-treating-the-common-cold",
+   "rationale": "Cochrane review found regular vitamin C supplementation did not reduce cold incidence in the general population (it modestly shortened duration).",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "myth-12",
+   "text": "Vikings wore helmets with horns in battle.",
+   "expected": "false",
+   "category": "myth",
+   "source": "generated",
+   "reference": "https://natmus.dk/",
+   "rationale": "National Museum of Denmark: no archaeological evidence of horned Viking battle helmets; the image dates from 19th-century costume design.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "surprise-10",
+   "text": "Octopuses have three hearts.",
+   "expected": "true",
+   "category": "surprise",
+   "source": "generated",
+   "reference": "https://oceanservice.noaa.gov/facts/octopus-hearts.html",
+   "rationale": "Two branchial hearts pump blood through the gills and one systemic heart circulates it to the body.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "surprise-11",
+   "text": "Antarctica is the driest continent on Earth.",
+   "expected": "true",
+   "category": "surprise",
+   "source": "generated",
+   "reference": "https://www.usgs.gov/faqs/what-largest-desert-world",
+   "rationale": "Antarctica receives very little precipitation and is classed as the largest desert; it is the driest continent.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "plain-06",
+   "text": "The Pacific Ocean is the largest ocean on Earth.",
+   "expected": "true",
+   "category": "plain",
+   "source": "generated",
+   "reference": "https://oceanservice.noaa.gov/facts/largestocean.html",
+   "rationale": "NOAA: the Pacific is the largest and deepest ocean.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "context-09",
+   "text": "The crew splashed down in the Pacific Ocean on July 24, 1969.",
+   "expected": "true",
+   "category": "context",
+   "source": "generated",
+   "reference": "https://www.nasa.gov/mission/apollo-11/",
+   "rationale": "Apollo 11 splashdown was July 24, 1969 in the Pacific.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "context-10",
+   "text": "It was dedicated in 1950.",
+   "expected": "false",
+   "category": "context",
+   "source": "generated",
+   "reference": "https://www.nps.gov/linc/learn/historyculture/index.htm",
+   "rationale": "The Lincoln Memorial was dedicated on May 30, 1922.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "context-12",
+   "text": "It was launched in 1999.",
+   "expected": "false",
+   "category": "context",
+   "source": "generated",
+   "reference": "https://science.nasa.gov/mission/hubble/",
+   "rationale": "Hubble was launched April 24, 1990.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "data-07",
+   "text": "The Burj Khalifa is 828 meters tall.",
+   "expected": "true",
+   "category": "data",
+   "source": "generated",
+   "reference": "https://www.skyscrapercenter.com/building/burj-khalifa/3",
+   "rationale": "CTBUH lists the Burj Khalifa at 828 m architectural height.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "data-08",
+   "text": "Mount Kilimanjaro is 6,895 meters above sea level.",
+   "expected": "false",
+   "category": "data",
+   "source": "generated",
+   "reference": "https://whc.unesco.org/en/list/403",
+   "rationale": "UNESCO World Heritage listing gives Kilimanjaro summit at 5,895 m.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "data-09",
+   "text": "The Moon is about 384,000 kilometers from Earth on average.",
+   "expected": "true",
+   "category": "data",
+   "source": "generated",
+   "reference": "https://science.nasa.gov/moon/facts/",
+   "rationale": "NASA gives an average Earth-Moon distance of about 384,400 km.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "calc-07",
+   "text": "Fifteen percent of 120 is 18.",
+   "expected": "true",
+   "category": "calculation",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Arithmetic: 0.15 x 120 = 18.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "calc-08",
+   "text": "Three hours and twenty minutes is two hundred and fifty minutes.",
+   "expected": "false",
+   "category": "calculation",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Arithmetic: 3 x 60 + 20 = 200 minutes, not 250.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "calc-09",
+   "text": "A mile is about 1.6 kilometers, so a ten mile run is about 16 kilometers.",
+   "expected": "true",
+   "category": "calculation",
+   "source": "generated",
+   "reference": "https://www.nist.gov/pml/special-publication-811",
+   "rationale": "NIST SP 811: 1 mile = 1.609344 km, so 10 miles = 16.09 km.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "nonclaim-05",
+   "text": "I'm so tired of this Monday morning traffic.",
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Personal feeling; no checkable proposition.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "nonclaim-06",
+   "text": "Please send me the slides before the meeting starts.",
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "generated",
+   "reference": null,
+   "rationale": "A request/command, states no fact.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "nonclaim-07",
+   "text": "My sister's birthday is next week.",
+   "expected": "not_a_claim",
+   "category": "nonclaim",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Private personal detail; not a public, checkable claim.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "sports-01",
+   "text": "Spain won the men's FIFA World Cup in 2010.",
+   "expected": "true",
+   "category": "sports",
+   "source": "generated",
+   "reference": "https://www.fifa.com/en/tournaments/mens/worldcup/southafrica2010",
+   "rationale": "Spain beat the Netherlands 1-0 in the 2010 final in Johannesburg.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "sports-02",
+   "text": "A regulation NBA basketball hoop is eight feet above the floor.",
+   "expected": "false",
+   "category": "sports",
+   "source": "generated",
+   "reference": "https://official.nba.com/rule-no-1-court-dimensions-equipment/",
+   "rationale": "NBA rule 1: the rim is 10 feet above the floor.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "finance-01",
+   "text": "The Federal Reserve is the central bank of the United States.",
+   "expected": "true",
+   "category": "finance",
+   "source": "generated",
+   "reference": "https://www.federalreserve.gov/aboutthefed.htm",
+   "rationale": "The Federal Reserve describes itself as the central bank of the United States.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "finance-02",
+   "text": "FDIC deposit insurance covers up to one million dollars per depositor per bank.",
+   "expected": "false",
+   "category": "finance",
+   "source": "generated",
+   "reference": "https://www.fdic.gov/deposit-insurance",
+   "rationale": "FDIC standard maximum is $250,000 per depositor, per insured bank, per ownership category.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "finance-03",
+   "text": "Croatia adopted the euro on January 1, 2023.",
+   "expected": "true",
+   "category": "finance",
+   "source": "generated",
+   "reference": "https://www.consilium.europa.eu/en/policies/enlargement-euro-area/",
+   "rationale": "European Commission: Croatia joined the euro area on 1 January 2023.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "history-04",
+   "text": "World War II ended in 1952.",
+   "expected": "false",
+   "category": "history",
+   "source": "generated",
+   "reference": "https://www.nationalww2museum.org/",
+   "rationale": "WWII ended in 1945 (V-J Day, Sept 2, 1945).",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "local-01",
+   "text": "The Oresund Bridge links Copenhagen in Denmark with Malmo in Sweden.",
+   "expected": "true",
+   "category": "local news",
+   "source": "generated",
+   "reference": "https://www.oresundsbron.com/en/",
+   "rationale": "Operator describes the Oresund fixed link between Denmark and Sweden.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "local-02",
+   "text": "The Golden Gate Bridge is in Los Angeles.",
+   "expected": "false",
+   "category": "local news",
+   "source": "generated",
+   "reference": "https://www.goldengate.org/bridge/history-research/",
+   "rationale": "Golden Gate Bridge spans the Golden Gate strait at San Francisco.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "civic-01",
+   "text": "The United States Senate has 100 members.",
+   "expected": "true",
+   "category": "civic",
+   "source": "generated",
+   "reference": "https://www.senate.gov/about/origins-foundations/powers-and-procedures/two-per-state.htm",
+   "rationale": "Two senators per state across 50 states.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "civic-02",
+   "text": "A member of the US House of Representatives serves a four-year term.",
+   "expected": "false",
+   "category": "civic",
+   "source": "generated",
+   "reference": "https://constitution.congress.gov/browse/article-1/section-2/",
+   "rationale": "Article I, Section 2: House members are chosen every second year.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "civic-03",
+   "text": "The voting age in the United States was lowered to eighteen by the 26th Amendment.",
+   "expected": "true",
+   "category": "civic",
+   "source": "generated",
+   "reference": "https://constitution.congress.gov/constitution/amendment-26/",
+   "rationale": "National Archives: ratified 1971, set voting age to 18.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "food-01",
+   "text": "A tablespoon of olive oil contains about 120 calories.",
+   "expected": "true",
+   "category": "food",
+   "source": "generated",
+   "reference": "https://fdc.nal.usda.gov/",
+   "rationale": "USDA FoodData Central: olive oil is about 119 kcal per tablespoon.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "food-02",
+   "text": "It is safe to feed honey to babies under one year old.",
+   "expected": "false",
+   "category": "food",
+   "source": "generated",
+   "reference": "https://www.cdc.gov/botulism/prevention/index.html",
+   "rationale": "CDC: honey should not be given to infants under 12 months due to infant botulism risk.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "food-03",
+   "text": "The USDA says poultry should be cooked to an internal temperature of 165 degrees Fahrenheit.",
+   "expected": "true",
+   "category": "food",
+   "source": "generated",
+   "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-minimum-internal-temperature-chart",
+   "rationale": "USDA FSIS safe minimum internal temperature for poultry is 165 F.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "transport-01",
+   "text": "The Channel Tunnel connects England and France.",
+   "expected": "true",
+   "category": "transport",
+   "source": "generated",
+   "reference": "https://www.eurotunnel.com/",
+   "rationale": "Eurotunnel operates the undersea rail link between Folkestone and Calais.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "transport-02",
+   "text": "Japan's Shinkansen bullet train began service in 1994.",
+   "expected": "false",
+   "category": "transport",
+   "source": "generated",
+   "reference": "https://global.jr-central.co.jp/en/company/about/history.html",
+   "rationale": "The Tokaido Shinkansen opened on 1 October 1964.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "filler-01",
+   "text": "Okay, so, um, anyway.",
+   "expected": "not_a_claim",
+   "category": "filler",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Conversational filler.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "filler-02",
+   "text": "Right, let's get started then.",
+   "expected": "not_a_claim",
+   "category": "filler",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Conversational filler.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "question-01",
+   "text": "How many people live in Tokyo?",
+   "expected": "not_a_claim",
+   "category": "question",
+   "source": "generated",
+   "reference": null,
+   "rationale": "A question states no fact.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "opinion-01",
+   "text": "That was the best concert I have ever seen.",
+   "expected": "not_a_claim",
+   "category": "opinion",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Subjective evaluation.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "opinion-02",
+   "text": "Nobody should ever put ketchup on a steak.",
+   "expected": "not_a_claim",
+   "category": "opinion",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Taste preference/normative statement.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "hedged-01",
+   "text": "I think it might rain later, but I'm not really sure.",
+   "expected": "not_a_claim",
+   "category": "hedged",
+   "source": "generated",
+   "reference": null,
+   "rationale": "Hedged personal guess about the near future; same family as dev-prediction.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "joke-01",
+   "text": "Why did the scarecrow win an award? Because he was outstanding in his field.",
+   "expected": "not_a_claim",
+   "category": "joke",
+   "source": "generated",
+   "reference": null,
+   "rationale": "A joke; no factual proposition.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "dev-cheetah",
+   "text": "Cheetahs are the fastest land animal.",
+   "expected": "true",
+   "category": "device-context",
+   "source": "generated",
+   "reference": "https://nationalzoo.si.edu/animals/cheetah",
+   "rationale": "Smithsonian National Zoo: cheetahs are the fastest land animals, reaching about 70 mph in short bursts.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "admission",
+   "split": "holdout",
+   "id": "dev-wembley-context",
+   "text": "It seats about sixty thousand people.",
+   "expected": "false",
+   "category": "device-context",
+   "source": "generated",
+   "reference": "https://www.wembleystadium.com/",
+   "rationale": "Wembley capacity is 90,000, not about 60,000.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json (sidecar: admission-holdout-sidecar.json)"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P01",
+   "text": "Venus is the hottest planet in the solar system.",
+   "expected": "true",
+   "category": "venus",
+   "source": "original",
+   "reference": [
+    "https://science.nasa.gov/mercury/facts/"
+   ],
+   "rationale": "NASA identifies Venus, rather than the closer Mercury, as the hottest planet because its dense atmosphere retains heat.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P02",
+   "text": "Mercury is the hottest planet in the solar system.",
+   "expected": "false",
+   "category": "venus",
+   "source": "original",
+   "reference": [
+    "https://science.nasa.gov/mercury/facts/"
+   ],
+   "rationale": "NASA explicitly contrasts Mercury with Venus and assigns the hottest-planet title to Venus.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P03",
+   "text": "The Moon has an extremely thin atmosphere called an exosphere.",
+   "expected": "true",
+   "category": "moon",
+   "source": "original",
+   "reference": [
+    "https://science.nasa.gov/moon/lunar-atmosphere/"
+   ],
+   "rationale": "NASA describes the lunar atmosphere as a very sparse exosphere, with gas particles that seldom collide.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P04",
+   "text": "The Moon has no atmosphere at all.",
+   "expected": "false",
+   "category": "moon",
+   "source": "original",
+   "reference": [
+    "https://science.nasa.gov/moon/lunar-atmosphere/"
+   ],
+   "rationale": "The absolute denial is contradicted by the observed lunar exosphere. A sparse atmosphere is still an atmosphere.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P05",
+   "text": "Lightning can strike the same place more than once.",
+   "expected": "true",
+   "category": "lightning",
+   "source": "original",
+   "reference": [
+    "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/"
+   ],
+   "rationale": "NOAA explains that repeated strikes occur and that tall objects can be more likely to be struck repeatedly.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P06",
+   "text": "Lightning never strikes the same place twice.",
+   "expected": "false",
+   "category": "lightning",
+   "source": "original",
+   "reference": [
+    "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/"
+   ],
+   "rationale": "NOAA directly rejects the familiar never-twice claim and explains repeated strikes.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P07",
+   "text": "About half of the oxygen production on Earth comes from the ocean.",
+   "expected": "true",
+   "category": "oxygen",
+   "source": "original",
+   "reference": [
+    "https://oceanservice.noaa.gov/facts/ocean-oxygen.html/"
+   ],
+   "rationale": "NOAA estimates approximately half of gross oxygen production is oceanic, mainly from photosynthetic plankton; this is not a claim about net atmospheric accumulation.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P08",
+   "text": "The ocean produces none of the oxygen on Earth.",
+   "expected": "false",
+   "category": "oxygen",
+   "source": "original",
+   "reference": [
+    "https://oceanservice.noaa.gov/facts/ocean-oxygen.html/"
+   ],
+   "rationale": "NOAA attributes roughly half of terrestrial oxygen production to the ocean, directly contradicting zero production.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P09",
+   "text": "Earth bulges at the equator.",
+   "expected": "true",
+   "category": "shape",
+   "source": "original",
+   "reference": [
+    "https://oceanservice.noaa.gov/facts/earth-round.html"
+   ],
+   "rationale": "NOAA explains that Earth is an irregular ellipsoid whose equatorial diameter bulges because of rotation.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P10",
+   "text": "Earth is a perfectly smooth sphere.",
+   "expected": "false",
+   "category": "shape",
+   "source": "original",
+   "reference": [
+    "https://oceanservice.noaa.gov/facts/earth-round.html"
+   ],
+   "rationale": "NOAA describes an irregular ellipsoid, an equatorial bulge, topography and changes in shape, all inconsistent with a perfectly smooth sphere.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P11",
+   "text": "Antibiotics do not treat infections caused by viruses.",
+   "expected": "true",
+   "category": "antibiotics",
+   "source": "original",
+   "reference": [
+    "https://www.cdc.gov/antibiotic-use/about/"
+   ],
+   "rationale": "CDC distinguishes bacterial indications from viral illnesses and states that antibiotics do not treat viral infections.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P12",
+   "text": "Antibiotics treat viral infections.",
+   "expected": "false",
+   "category": "antibiotics",
+   "source": "original",
+   "reference": [
+    "https://www.cdc.gov/antibiotic-use/about/"
+   ],
+   "rationale": "CDC says antibiotics do not treat viruses and lists viral illnesses for which they are ineffective.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P13",
+   "text": "At sea level, water boils at approximately 100 degrees Celsius.",
+   "expected": "true",
+   "category": "water",
+   "source": "original",
+   "reference": [
+    "https://www.usgs.gov/water-science-school/science/facts-about-water"
+   ],
+   "rationale": "USGS gives the sea-level boiling point as 100 C and explains that the boiling temperature decreases with altitude and pressure.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P14",
+   "text": "At sea level, water boils at 50 degrees Celsius.",
+   "expected": "false",
+   "category": "water",
+   "source": "original",
+   "reference": [
+    "https://www.usgs.gov/water-science-school/science/facts-about-water"
+   ],
+   "rationale": "USGS gives about 100 C at sea level, directly refuting the asserted 50 C value under the stated conditions.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P15",
+   "text": "Stratospheric ozone protects people from harmful ultraviolet radiation.",
+   "expected": "true",
+   "category": "ozone",
+   "source": "original",
+   "reference": [
+    "https://www.epa.gov/ground-level-ozone-pollution/ground-level-ozone-basics"
+   ],
+   "rationale": "EPA distinguishes the protective upper-atmosphere ozone layer from harmful ground-level ozone.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P16",
+   "text": "Ground-level ozone is harmless to human health.",
+   "expected": "false",
+   "category": "ozone",
+   "source": "original",
+   "reference": [
+    "https://www.epa.gov/ground-level-ozone-pollution/ground-level-ozone-basics"
+   ],
+   "rationale": "EPA identifies ground-level ozone as a harmful pollutant that can injure health, especially respiratory health.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P17",
+   "text": "Water boils at 100 degrees Celsius.",
+   "expected": "misleading",
+   "category": "water",
+   "source": "original",
+   "reference": [
+    "https://www.usgs.gov/water-science-school/science/facts-about-water"
+   ],
+   "rationale": "The usual sea-level value is correct, but the statement omits pressure; USGS gives a lower boiling temperature at altitude. This deliberately tests whether a missing material condition is surfaced. A conventional implicit standard-pressure reading can reasonably yield true.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P18",
+   "text": "Antibiotics treat infections.",
+   "expected": "misleading",
+   "category": "antibiotics",
+   "source": "original",
+   "reference": [
+    "https://www.cdc.gov/antibiotic-use/about/"
+   ],
+   "rationale": "Antibiotics do treat some bacterial infections, but this broad wording leaves out the restriction and can imply treatment of viral infections. CDC makes this distinction explicit. An existential reading can reasonably yield true.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P19",
+   "text": "Ozone is good for human health.",
+   "expected": "misleading",
+   "category": "ozone",
+   "source": "original",
+   "reference": [
+    "https://www.epa.gov/ground-level-ozone-pollution/ground-level-ozone-basics"
+   ],
+   "rationale": "Protective stratospheric ozone provides a true core, while inhaled ground-level ozone is harmful. The statement omits the location/exposure distinction. Broadly interpreted claims can reasonably be judged false.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P20",
+   "text": "The ocean supplies half of the oxygen added to the atmosphere each year.",
+   "expected": "misleading",
+   "category": "oxygen",
+   "source": "original",
+   "reference": [
+    "https://oceanservice.noaa.gov/facts/ocean-oxygen.html/"
+   ],
+   "rationale": "This recasts the approximately half share of gross production as a net atmospheric addition. NOAA says marine life consumes about the same amount; production and net addition are different. A literal net-addition reading can reasonably be judged false.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P21",
+   "text": "Life exists beyond Earth.",
+   "expected": "cant_verify",
+   "category": "alien",
+   "source": "original",
+   "reference": [
+    "https://science.nasa.gov/exoplanets/search-for-life/"
+   ],
+   "rationale": "NASA reports that evidence of life beyond Earth has not yet been established. The underlying existence claim remains unresolved; absence of a detection does not establish falsehood.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P22",
+   "text": "Microbial life exists in the ocean beneath Europa.",
+   "expected": "cant_verify",
+   "category": "europa",
+   "source": "original",
+   "reference": [
+    "https://www.nasa.gov/directorates/smd/is-there-potential-for-life-on-europa-we-asked-a-nasa-expert-episode-52/"
+   ],
+   "rationale": "NASA describes Europa as a promising place to investigate potential habitability; the existence of organisms has not been established. Habitability and actual life are distinct.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P23",
+   "text": "Dark matter is made of supersymmetric particles.",
+   "expected": "cant_verify",
+   "category": "dark",
+   "source": "original",
+   "reference": [
+    "https://home.cern/science/physics/dark-matter"
+   ],
+   "rationale": "CERN presents supersymmetric particles as one theoretical candidate while the physical identity of dark matter remains unknown. The asserted identity is unconfirmed, not established as false.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "dev",
+   "id": "P24",
+   "text": "Planet Nine exists beyond Neptune.",
+   "expected": "cant_verify",
+   "category": "planet",
+   "source": "original",
+   "reference": [
+    "https://science.nasa.gov/solar-system/planet-x/"
+   ],
+   "rationale": "NASA describes Planet Nine as hypothetical and discusses indirect dynamical clues and ongoing searches. These do not establish the asserted existence, nor prove nonexistence.",
+   "file": "fixtures/evaluation/provider-comparison/cohort.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H05",
+   "text": "The 2022 FIFA World Cup was hosted by Qatar.",
+   "expected": "true",
+   "category": "world-cup-2022",
+   "source": "generated",
+   "reference": [
+    "https://www.fifa.com/en/tournaments/mens/worldcup/qatar2022"
+   ],
+   "rationale": "FIFA's tournament page lists Qatar as host of the 2022 men's World Cup.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H06",
+   "text": "The 2022 FIFA World Cup was hosted by Saudi Arabia.",
+   "expected": "false",
+   "category": "world-cup-2022",
+   "source": "generated",
+   "reference": [
+    "https://www.fifa.com/en/tournaments/mens/worldcup/qatar2022"
+   ],
+   "rationale": "FIFA lists Qatar, not Saudi Arabia, as host of the 2022 tournament.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H09",
+   "text": "The EU General Data Protection Regulation has applied since 25 May 2018.",
+   "expected": "true",
+   "category": "gdpr",
+   "source": "generated",
+   "reference": [
+    "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+   ],
+   "rationale": "Regulation (EU) 2016/679 was adopted in 2016 and, by its final provisions, applies from 25 May 2018.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H10",
+   "text": "The EU General Data Protection Regulation has applied since 2012.",
+   "expected": "false",
+   "category": "gdpr",
+   "source": "generated",
+   "reference": [
+    "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+   ],
+   "rationale": "The regulation was proposed in 2012 but adopted in 2016 and applies from 2018.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H13",
+   "text": "The Mona Lisa was painted by Leonardo da Vinci.",
+   "expected": "true",
+   "category": "mona-lisa",
+   "source": "generated",
+   "reference": [
+    "https://collections.louvre.fr/en/ark:/53355/cl010062370"
+   ],
+   "rationale": "The Louvre collection record attributes the portrait to Leonardo da Vinci.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H14",
+   "text": "The Mona Lisa was painted by Michelangelo.",
+   "expected": "false",
+   "category": "mona-lisa",
+   "source": "generated",
+   "reference": [
+    "https://collections.louvre.fr/en/ark:/53355/cl010062370"
+   ],
+   "rationale": "The Louvre attributes the work to Leonardo, not Michelangelo.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H21",
+   "text": "The Riemann hypothesis is true.",
+   "expected": "cant_verify",
+   "category": "riemann",
+   "source": "generated",
+   "reference": [
+    "https://www.claymath.org/millennium/riemann-hypothesis/"
+   ],
+   "rationale": "The Clay Mathematics Institute lists it as an unsolved Millennium Prize problem; it is neither proved nor disproved.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H22",
+   "text": "P does not equal NP.",
+   "expected": "cant_verify",
+   "category": "p-vs-np",
+   "source": "generated",
+   "reference": [
+    "https://www.claymath.org/millennium/p-vs-np/"
+   ],
+   "rationale": "The Clay Mathematics Institute lists P versus NP as an open Millennium Prize problem; no accepted proof either way.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  },
+  {
+   "set": "cohort",
+   "split": "holdout",
+   "id": "H23",
+   "text": "The Voynich manuscript contains a message in a natural language.",
+   "expected": "cant_verify",
+   "category": "voynich",
+   "source": "generated",
+   "reference": [
+    "https://beinecke.library.yale.edu/collections/highlights/voynich-manuscript"
+   ],
+   "rationale": "Yale's Beinecke Library describes the manuscript's script as undeciphered; its nature remains unresolved, not shown to be a hoax or a language.",
+   "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json"
+  }
+ ],
+ "droppedGenerated": [
+  {
+   "set": "admission",
+   "id": "myth-09",
+   "reasons": [
+    "Exact duplicate of existing dev cases E16/E17/E38/E42/E45/E46 and cohort P06 (lightning never strikes same place twice)."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "surprise-09",
+   "reasons": [
+    "Ambiguous: sidereal rotation (243 d) exceeds the 224.7 d year, but NASA's fact sheet gives the solar day as about 117 Earth days, which is shorter than the year. Label depends on which 'day' is meant."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "plain-05",
+   "reasons": [
+    "Near-duplicate of cohort P13 and P17 (water boils at 100 C); pedantic since NIST boiling point is 99.97 C."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "context-11",
+   "reasons": [
+    "Near-duplicate of existing dev case 'The Panama Canal opened to world trade in 1914'."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "sports-03",
+   "reasons": [
+    "Near-duplicate of existing dev case 'first modern Olympic Games held in Paris in 1896' (same fact, city flipped)."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "sports-04",
+   "reasons": [
+    "Near-duplicate of existing dev case 'Wimbledon Championships are played on grass courts' (label flipped)."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "history-01",
+   "reasons": [
+    "Near-duplicate of existing dev case 'The fall of the Berlin Wall occurred in 1991'."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "history-02",
+   "reasons": [
+    "Near-duplicate of existing dev Magna Carta year cases (1216, 1315)."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "history-03",
+   "reasons": [
+    "Near-duplicate of existing dev case 'Declaration of Independence adopted in 1776'; also July 2 vs July 4 nuance."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "tech-01",
+   "reasons": [
+    "Near-duplicate of dev case CB02 (World Wide Web invented by Tim Berners-Lee)."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "tech-02",
+   "reasons": [
+    "Near-duplicate of existing dev iPhone cases (introduced 2001 / announced 9 Jan 2007)."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "quote-01",
+   "reasons": [
+    "Ambiguous label: Armstrong's recorded words omitted 'a'; inserted 'a' is debated, so true vs misleading is not unambiguous."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "quote-02",
+   "reasons": [
+    "Weak label: evidence is a misattribution analysis, not a primary source; 'no source found' could be cant_verify or misleading rather than false."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "question-02",
+   "reasons": [
+    "Leading question implying a factual claim; ambiguous between not_a_claim and an eligible claim."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "hedged-02",
+   "reasons": [
+    "Near-duplicate of dev-affair; hedge makes the label ambiguous between not_a_claim and speculation."
+   ]
+  },
+  {
+   "set": "admission",
+   "id": "dev-misheard-central-bank",
+   "reasons": [
+    "Near-duplicate of dev-misheard; label depends on how the pipeline treats 'Pannonian'."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H01",
+   "reasons": [
+    "Cited URL federalreservehistory.org/essays/federal-reserve-act returns Content Not Found (real page is /federal-reserve-act-signed); fix source before reuse."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H02",
+   "reasons": [
+    "Shares H01's broken Fed History reference; dropped as a pair."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H03",
+   "reasons": [
+    "Near-duplicate of dev Magna Carta cases; 'sealed' ambiguity noted in dev notes."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H04",
+   "reasons": [
+    "Dropped with H03 (same Magna Carta overlap)."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H07",
+   "reasons": [
+    "Near-duplicate of dev case 'World Wide Web invented by Tim Berners-Lee'."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H08",
+   "reasons": [
+    "Same Web-origin near-duplicate as H07."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H11",
+   "reasons": [
+    "Only source is the eurotunnel.com homepage (301 to leshuttle.com); not a primary page supporting the claim."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H12",
+   "reasons": [
+    "Same weak homepage-only reference as H11."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H15",
+   "reasons": [
+    "CDC reference changed (Nov 2025) and now conflicts with the expected label; reference unstable and contested."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H16",
+   "reasons": [
+    "Dropped with H15 (same CDC reference instability)."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H17",
+   "reasons": [
+    "Self-declared ambiguous label; strict 'misleading' gold contestable."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H18",
+   "reasons": [
+    "Olympics.com says Games are held every four years, so 'misleading' is weak; theme overlaps dev Olympic cases."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H19",
+   "reasons": [
+    "Self-declared ambiguous label; literal legal reading gives false."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H20",
+   "reasons": [
+    "Near-duplicate of dev-everest and heldout Everest cases; ambiguous label."
+   ]
+  },
+  {
+   "set": "cohort",
+   "id": "H24",
+   "reasons": [
+    "Cited TIGHAR page does not support the label; running out of fuel is a leading hypothesis so cant_verify is not safely unambiguous."
+   ]
+  }
+ ]
+}

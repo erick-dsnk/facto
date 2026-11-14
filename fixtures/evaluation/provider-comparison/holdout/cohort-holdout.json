@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "name": "public-primary-reference-holdout-9",
+  "createdDate": "2026-11-14",
+  "kind": "open_exploratory",
+  "split": "holdout",
+  "notes": [
+    "Verified subset of generated candidate cohort H01-H24 (ids retained). Same format as cohort.json.",
+    "References ground human expected labels only. References and rationales MUST NOT be passed to models.",
+    "Not blind; do not tune prompts on this split."
+  ],
+  "cases": [
+    {
+      "id": "H05",
+      "text": "The 2022 FIFA World Cup was hosted by Qatar.",
+      "expected": "true",
+      "category": "world-cup-2022",
+      "correlationGroup": "world-cup-2022",
+      "rationale": "FIFA's tournament page lists Qatar as host of the 2022 men's World Cup.",
+      "sources": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/qatar2022"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H06",
+      "text": "The 2022 FIFA World Cup was hosted by Saudi Arabia.",
+      "expected": "false",
+      "category": "world-cup-2022",
+      "correlationGroup": "world-cup-2022",
+      "rationale": "FIFA lists Qatar, not Saudi Arabia, as host of the 2022 tournament.",
+      "sources": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/qatar2022"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H09",
+      "text": "The EU General Data Protection Regulation has applied since 25 May 2018.",
+      "expected": "true",
+      "category": "gdpr",
+      "correlationGroup": "gdpr",
+      "rationale": "Regulation (EU) 2016/679 was adopted in 2016 and, by its final provisions, applies from 25 May 2018.",
+      "sources": [
+        "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H10",
+      "text": "The EU General Data Protection Regulation has applied since 2012.",
+      "expected": "false",
+      "category": "gdpr",
+      "correlationGroup": "gdpr",
+      "rationale": "The regulation was proposed in 2012 but adopted in 2016 and applies from 2018.",
+      "sources": [
+        "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H13",
+      "text": "The Mona Lisa was painted by Leonardo da Vinci.",
+      "expected": "true",
+      "category": "mona-lisa",
+      "correlationGroup": "mona-lisa",
+      "rationale": "The Louvre collection record attributes the portrait to Leonardo da Vinci.",
+      "sources": [
+        "https://collections.louvre.fr/en/ark:/53355/cl010062370"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H14",
+      "text": "The Mona Lisa was painted by Michelangelo.",
+      "expected": "false",
+      "category": "mona-lisa",
+      "correlationGroup": "mona-lisa",
+      "rationale": "The Louvre attributes the work to Leonardo, not Michelangelo.",
+      "sources": [
+        "https://collections.louvre.fr/en/ark:/53355/cl010062370"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H21",
+      "text": "The Riemann hypothesis is true.",
+      "expected": "cant_verify",
+      "category": "riemann",
+      "correlationGroup": "riemann",
+      "rationale": "The Clay Mathematics Institute lists it as an unsolved Millennium Prize problem; it is neither proved nor disproved.",
+      "sources": [
+        "https://www.claymath.org/millennium/riemann-hypothesis/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H22",
+      "text": "P does not equal NP.",
+      "expected": "cant_verify",
+      "category": "p-vs-np",
+      "correlationGroup": "p-vs-np",
+      "rationale": "The Clay Mathematics Institute lists P versus NP as an open Millennium Prize problem; no accepted proof either way.",
+      "sources": [
+        "https://www.claymath.org/millennium/p-vs-np/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "H23",
+      "text": "The Voynich manuscript contains a message in a natural language.",
+      "expected": "cant_verify",
+      "category": "voynich",
+      "correlationGroup": "voynich",
+      "rationale": "Yale's Beinecke Library describes the manuscript's script as undeciphered; its nature remains unresolved, not shown to be a hoax or a language.",
+      "sources": [
+        "https://beinecke.library.yale.edu/collections/highlights/voynich-manuscript"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    }
+  ]
+}
