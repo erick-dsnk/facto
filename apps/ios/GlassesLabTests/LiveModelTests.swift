@@ -134,6 +134,41 @@ private final class FakeLiveCamera: LiveCamera {
     isStreaming = false
     onStreamStopped?(byUser)
   }
+
+  private(set) var liveStreamStops = 0
+
+  func stopLiveStream() async {
+    liveStreamStops += 1
+    dropStream(byUser: true)
+  }
+}
+
+@MainActor
+private final class FakeWakeListener: WakeWordListening {
+  var onWake: (@MainActor (WakeCommand) -> Void)?
+  private(set) var isRunning = false
+  var inputName: String? { isRunning ? "Test glasses" : nil }
+  var startError: WakeWordError?
+  private(set) var starts = 0
+  private(set) var stops = 0
+
+  func start() async throws {
+    if let startError { throw startError }
+    starts += 1
+    isRunning = true
+  }
+
+  func stop() {
+    guard isRunning else { return }
+    stops += 1
+    isRunning = false
+  }
+
+  /// The detector hears the phrase.
+  func hear(_ command: WakeCommand = .listen) {
+    guard isRunning else { return }
+    onWake?(command)
+  }
 }
 
 private final class FakeTextRecognizer: TextRecognizing, @unchecked Sendable {
@@ -330,6 +365,7 @@ final class LiveModelTests: XCTestCase {
   private var backends: [FakeLiveBackend] = []
   private var configureBackend: ((FakeLiveBackend) -> Void)?
   private var keepAwake: [Bool] = []
+  private var wake: FakeWakeListener!
   private var secrets: MemorySecretStore!
   private var now: TimeInterval = 1_000
 
@@ -345,6 +381,7 @@ final class LiveModelTests: XCTestCase {
     backends = []
     configureBackend = nil
     keepAwake = []
+    wake = FakeWakeListener()
     now = 1_000
     secrets = MemorySecretStore()
   }
@@ -361,6 +398,7 @@ final class LiveModelTests: XCTestCase {
       audioClock: clock, checkTimeout: checkTimeout, configureAudioSession: {},
       idleTimer: { [unowned self] in self.keepAwake.append($0) },
       uptime: { [unowned self] in self.now },
+      wakeListener: wake, wakeWindow: 0.4, wakeCheckWindow: 0.4,
       makeBackend: { [unowned self] config in
         let backend = FakeLiveBackend(config: config)
         self.configureBackend?(backend)
@@ -386,6 +424,103 @@ final class LiveModelTests: XCTestCase {
     backend.emit(LiveEvents.audioReady(generation: 1))
     await waitUntil { model.status == .listening }
     return model
+  }
+
+  // MARK: Wake phrase
+
+  func testWakeOptionIsOffByDefaultAndNeverOpensTheMicrophone() async {
+    let model = await connectedModel()
+    XCTAssertFalse(model.wakeWordEnabled)
+    XCTAssertEqual(model.wakeState, .off)
+    XCTAssertEqual(wake.starts, 0)
+  }
+
+  func testWakeOptionWaitsOnlyWhenConnectedAndStartsNoStream() async {
+    let model = makeModel()
+    model.wakeWordEnabled = true
+    XCTAssertEqual(model.wakeState, .blocked("Connect to the backend to arm it."))
+    XCTAssertEqual(wake.starts, 0)
+
+    model.baseURLText = "https://api.example.test"
+    model.joinCode = "demo-code"
+    await model.connect()
+    await waitUntil { model.wakeState.isWaiting }
+    XCTAssertTrue(wake.isRunning)
+    XCTAssertTrue(camera.startedQualities.isEmpty, "no glasses stream while waiting for the phrase")
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"), "no audio is offered to the backend while waiting")
+    XCTAssertEqual(keepAwake.last, true)
+    XCTAssertTrue(defaults.bool(forKey: LiveModel.wakeWordKey), "the option persists")
+  }
+
+  func testWakePhraseStartsListeningThenGoesBackToWaiting() async {
+    let model = await connectedModel()
+    model.wakeWordEnabled = true
+    await waitUntil { model.wakeState.isWaiting }
+    let armed = wake.starts
+
+    wake.hear()
+    XCTAssertEqual(model.wakeState, .awake)
+    XCTAssertFalse(wake.isRunning, "the detector's microphone is released before the stream starts")
+    XCTAssertEqual(chime.count, 1)
+    await waitUntil { self.backend.controlTypes.contains("audio.start") }
+    XCTAssertEqual(camera.startedQualities.count, 1)
+    backend.emit(LiveEvents.audioReady(generation: 1))
+
+    // After the window: listening and the stream it started are stopped, and it waits again.
+    await waitUntil { self.wake.starts == armed + 1 }
+    XCTAssertFalse(model.isListening)
+    XCTAssertTrue(backend.controlTypes.contains("audio.stop"))
+    XCTAssertEqual(camera.liveStreamStops, 1)
+    XCTAssertFalse(camera.isStreaming)
+    XCTAssertTrue(model.wakeState.isWaiting)
+  }
+
+  func testHeyFactoCheckThisTakesAPhotoWithoutListening() async {
+    // A short check timeout: the fake backend never answers, and the wake session waits for
+    // a check in flight before it ends.
+    let model = await connectedModel(checkTimeout: 0.3)
+    model.wakeWordEnabled = true
+    await waitUntil { model.wakeState.isWaiting }
+
+    wake.hear(.checkThis)
+    await waitUntil { self.camera.photoCount == 1 }
+    XCTAssertFalse(wake.isRunning, "the detector's microphone is released before the photo")
+    XCTAssertEqual(chime.count, 1)
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"), "a photo check does not start listening")
+    XCTAssertEqual(model.wakeState, .awake)
+    // Once the check is over it waits for the phrase again.
+    await waitUntil(timeout: 5) { model.wakeState.isWaiting }
+    XCTAssertTrue(model.pendingChecks.isEmpty)
+  }
+
+  func testStartingToListenByHandPausesTheDetector() async {
+    let model = await connectedModel()
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    await model.startListening()
+    XCTAssertFalse(wake.isRunning)
+    XCTAssertEqual(model.wakeState, .blocked("Paused while listening."))
+    XCTAssertEqual(camera.liveStreamStops, 0, "a stream the user started is never stopped by the wake option")
+  }
+
+  func testTurningTheOptionOffStopsTheDetector() async {
+    let model = await connectedModel()
+    model.wakeWordEnabled = true
+    await waitUntil { self.wake.isRunning }
+    model.wakeWordEnabled = false
+    await waitUntil { !self.wake.isRunning }
+    XCTAssertEqual(model.wakeState, .off)
+    XCTAssertFalse(defaults.bool(forKey: LiveModel.wakeWordKey))
+  }
+
+  func testADetectorThatCannotStartIsReportedOnce() async {
+    wake.startError = .microphoneDenied
+    let model = await connectedModel()
+    model.wakeWordEnabled = true
+    await waitUntil { model.wakeState == .unavailable(WakeWordError.microphoneDenied.message) }
+    try? await Task.sleep(nanoseconds: 50_000_000)
+    XCTAssertEqual(wake.starts, 0)
+    XCTAssertEqual(model.wakeState, .unavailable(WakeWordError.microphoneDenied.message))
   }
 
   // MARK: Connection

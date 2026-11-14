@@ -4,6 +4,8 @@ options:
   deploymentTarget:
     iOS: "17.2"
   createIntermediateGroups: true
+  # Downloads the wake phrase libraries on the first run (about 47 MB), then does nothing.
+  preGenCommand: scripts/fetch-wake-word-libs.sh
 
 packages:
   MWDAT:
@@ -50,6 +52,13 @@ targets:
         product: MWDATDisplay
       - package: MWDAT
         product: MWDATMockDevice
+      # On-device keyword spotter for the "Hey Facto" wake phrase (issue #53), static libraries
+      # fetched into Vendor/ by scripts/fetch-wake-word-libs.sh. They make no network calls.
+      - framework: Vendor/sherpa-onnx.xcframework
+        embed: false
+      - framework: Vendor/onnxruntime.xcframework
+        embed: false
+      - sdk: libc++.tbd
     info:
       path: GlassesLab/Info.plist
       properties:
@@ -71,6 +80,8 @@ targets:
         # Bluetooth Classic (low bitrate). Without them it streams over the glasses'
         # Wi-Fi link (720x1280 @ 30 fps). Meta: github.com/meta/meta-wearables-dat-ios/issues/376
         UIBackgroundModes:
+          # Keeps the on-device wake phrase detector running with the phone locked.
+          - audio
           - processing
           - bluetooth-central
           - bluetooth-peripheral
@@ -78,7 +89,7 @@ targets:
         NSLocalNetworkUsageDescription: Facto finds your glasses on Wi-Fi to use their camera and mic.
         NSBonjourServices: [_bonjour._tcp]
         NSCameraUsageDescription: Simulated glasses use the phone camera as their video feed.
-        NSMicrophoneUsageDescription: Used only for the glasses mic test in Developer settings.
+        NSMicrophoneUsageDescription: Facto listens through the glasses mic during an audio check, and on this phone for Hey Facto when you turn that on.
 
   GlassesLabTests:
     type: bundle.unit-test

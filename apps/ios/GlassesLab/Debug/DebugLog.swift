@@ -4,15 +4,16 @@ import os
 
 /// On-device debug log for field tests on real glasses.
 ///
-/// While the toggle is on (the default), the app appends one JSON object per line to
+/// The log is off until the wearer turns it on in the Debug log section; nothing said or seen
+/// is recorded before that. While the toggle is on, the app appends one JSON object per line to
 /// `Library/Application Support/DebugLog/YYYY-MM-DD.jsonl` (local date) and saves each
 /// look-and-check photo next to it as `photo-<UTC timestamp>-<id>.jpg`:
 ///
 ///     {"ts":"2026-11-14T15:30:12.345Z","kind":"ws.recv","payload":{...}}
 ///
 /// It keeps what the rest of the app never logs: raw backend events with transcripts, check
-/// request bodies with OCR text, and the photos OCR ran on. The project owner turned this on
-/// for debugging, with these limits:
+/// request bodies with OCR text, and the photos OCR ran on. It is meant for
+/// debugging, with these limits:
 /// - Files stay in the app container. The app never uploads them, and the folder is excluded
 ///   from device backups. Share them from the Debug log section or pull them with devicectl
 ///   (apps/ios/README.md).
@@ -77,7 +78,7 @@ final class DebugLog: @unchecked Sendable {
     self.defaults = defaults
     self.now = now
     self.suspended = suspended
-    enabled = !suspended && (defaults.object(forKey: Self.enabledKey) as? Bool ?? true)
+    enabled = !suspended && (defaults.object(forKey: Self.enabledKey) as? Bool ?? false)
 
     timestampFormatter = ISO8601DateFormatter()
     timestampFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]

@@ -42,9 +42,9 @@ describe('independent presentation policy', () => {
     expect(decidePresentation({ verdict: 'contradicted' }, 'automatic', state, preferences)).toEqual({ action: 'silent', reasonCode: 'unresolved_admission' });
     expect(state).toEqual(before);
   });
-  it('ignores unbounded or non-finite model priority', () => {
+  it('never labels unbounded or non-finite model priority as practical', () => {
     for (const priority of [NaN, Infinity, 5]) {
-      expect(decidePresentation({ verdict: 'contradicted', admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_claim', hasPracticalConsequence: priority, matchedSelectedTopic: null } }, 'automatic', state, preferences).action).toBe('silent');
+      expect(decidePresentation({ verdict: 'contradicted', admission: { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_claim', hasPracticalConsequence: priority, matchedSelectedTopic: null } }, 'automatic', state, preferences)).toEqual({ action: 'notify', reasonCode: 'automatic_contradiction' });
     }
   });
 });
