@@ -10,10 +10,12 @@ import { deterministicIssue } from '../../../../services/api/src/input/claims/sp
 import { buildServer } from '../../../../services/api/src/transport/server.js';
 import { CampaignBudget, DEVELOPMENT_LIMITS, HarnessStop, type LiveLimits } from './budget.js';
 import { freshObservation, observedProviders, stopObservation, type RequestObservation } from './observe.js';
+import { DEFAULT_PREFERENCES, loadDevelopmentManifest, publicCasePlan, validateLiveCases, type LiveCase } from './cases.js';
+import { summarizeCampaign } from './metrics.js';
 
 const controlFetch = (url: string, init?: RequestInit) => fetch(url, { ...init, signal: AbortSignal.timeout(2_500) });
 
-export type LiveCase = { label: string; text: string; allowedPublic: string[]; automatic?: boolean; final?: boolean; cancelAfterDetected?: boolean };
+export type { LiveCase } from './cases.js';
 
 /** Independent public development examples; never load the evaluation corpus. */
 export const DEVELOPMENT_CASES: LiveCase[] = [
@@ -36,9 +38,9 @@ type WireObservation = {
 };
 type CaseReport = {
   label: string; status: 'observed' | 'local_stop' | 'transport_failure'; httpStatus: number | null;
-  terminalReceived: boolean; terminalType: string | null; durationMs: number; mismatch: string[];
+  terminalReceived: boolean; terminalType: string | null; durationMs: number; schedulingDelayMs: number; mismatch: string[];
   events: WireObservation[]; admission?: RequestObservation['admission']; attempts: RequestObservation['attempts'];
-  stageMs: RequestObservation['stageMs']; evidence: RequestObservation['evidence']; admittedPublic: string[];
+  stageMs: RequestObservation['stageMs']; evidence: RequestObservation['evidence']; admittedPublic: string[]; rejectedAdmissionCount: number;
   deterministicPublicIssues: { text: string; issue: ReturnType<typeof deterministicIssue> }[];
   localStops: string[]; runtime?: { state: string; jevConsumed: number; searchConsumed: number; contentsConsumed: number; inputTokens: number };
   usage: { measuredInputTokens: number; unknownInputTokenReservations: number; requestBytes: number; knownCostUSD: number | null; attemptsWithUnknownCost: number };
@@ -106,12 +108,10 @@ export function terminalEvent(events: EventEnvelope[], requestId: string, expect
 
 export async function runLiveCampaign(options: {
   keys: { jev: string; exa: string }; cases?: LiveCase[]; limits?: LiveLimits; providerFetch?: typeof fetch;
-  receiptTimeoutMs?: number; metadata?: { commit?: string; dirty?: boolean; sourceSHA256?: string; authProbe?: 'jev' | 'exa' }; onCase?: (report: CaseReport) => void | Promise<void>;
+  receiptTimeoutMs?: number; metadata?: { commit?: string; dirty?: boolean; sourceSHA256?: string; authProbe?: 'jev' | 'exa'; casesSHA256?: string; campaignName?: string }; onCase?: (report: CaseReport) => void | Promise<void>;
   onProgress?: (progress: { phase: 'dispatch_reserved' | 'attempt_finished'; label: string; attempts: RequestObservation['attempts']; localStops: string[]; totals: ReturnType<CampaignBudget['summary']> }) => void | Promise<void>;
 }) {
-  const cases = options.cases ?? DEVELOPMENT_CASES;
-  if (!cases.length || cases.length > 16 || new Set(cases.map(sample => sample.label)).size !== cases.length
-    || cases.some(sample => !/^[a-zA-Z0-9_-]{1,80}$/.test(sample.label))) throw new Error('Invalid predeclared campaign');
+  const cases = validateLiveCases(options.cases ?? DEVELOPMENT_CASES);
   const budget = new CampaignBudget(options.limits ?? DEVELOPMENT_LIMITS);
   const requests = new Map<string, { observation: RequestObservation; allowedPublic: string[] }>();
   const providers = observedProviders({ budget, requests, keys: options.keys, fetch: options.providerFetch,
@@ -120,6 +120,7 @@ export async function runLiveCampaign(options: {
   const joinCode = randomUUID();
   const server = await buildServer({ adapters: providers.adapters, mode: 'live', joinCode, joinExpiresAt: Date.now() + 600_000 });
   const reports: CaseReport[] = [];
+  let lastAutomaticDispatch = -Infinity;
   let socket: WebSocket | undefined;
   let inbox: Inbox | undefined;
   let session: { sessionId: string; token: string; sessionEpoch: number } | undefined;
@@ -149,6 +150,11 @@ export async function runLiveCampaign(options: {
     if (Object.values(auth).some(status => status !== 401)) { transportFailure = 'authentication_boundary_failed'; throw new Error('authentication_boundary_failed'); }
     for (const sample of cases) {
       if (budget.elapsedMs >= budget.limits.wallMs || reports.some(report => report.status === 'local_stop' || report.status === 'transport_failure')) break;
+      const scheduledAt = performance.now();
+      const spacing = sample.automatic ? Math.max(0, 4_100 - (scheduledAt - lastAutomaticDispatch)) : 0;
+      if (spacing) await new Promise(resolve => setTimeout(resolve, Math.min(spacing, Math.max(0, budget.limits.wallMs - budget.elapsedMs))));
+      if (budget.elapsedMs >= budget.limits.wallMs) break;
+      const schedulingDelayMs = Math.round(performance.now() - scheduledAt);
       const observation = freshObservation(sample.label);
       const requestId = `${sample.label}-${randomUUID().slice(0, 8)}`;
       requests.set(requestId, { observation, allowedPublic: sample.allowedPublic });
@@ -163,9 +169,17 @@ export async function runLiveCampaign(options: {
         void cancel().catch(() => mismatch.push('cancel_transport_failed'));
       }, Math.max(1, budget.limits.wallMs - budget.elapsedMs));
       try {
+        // Both messages share the authenticated ordered stream. Resume does not
+        // change epoch or clear history; its ready receipt acknowledges the
+        // preceding synchronous preference update without a timing sleep.
+        const beforePreferences = Math.max(0, ...inbox.events.map(event => event.eventSeq));
+        socket.send(JSON.stringify({ type: 'session.preferences', sessionEpoch: session.sessionEpoch, preferences: sample.preferences ?? DEFAULT_PREFERENCES }));
+        socket.send(JSON.stringify({ type: 'session.resume', sessionEpoch: session.sessionEpoch }));
+        await inbox.wait(events => events.find(event => event.type === 'session.ready' && event.eventSeq > beforePreferences), 2_000);
         const input = { schemaVersion: 1, requestId, sessionId: session.sessionId, sessionEpoch: session.sessionEpoch, revision: 1,
           mode: 'typed', text: sample.text, language: 'en', capturedAt: new Date().toISOString(),
           capture: { source: 'typed_fixture', segmentId: requestId, confidence: 1, final: sample.final ?? true }, context: [], userInitiated: !sample.automatic };
+        if (sample.automatic) lastAutomaticDispatch = performance.now();
         httpStatus = (await controlFetch(`${address}/v1/sessions/${session.sessionId}/checks`, { method: 'POST', headers, body: JSON.stringify(input) })).status;
         if (httpStatus !== 202) mismatch.push('check_not_accepted');
         else {
@@ -198,9 +212,10 @@ export async function runLiveCampaign(options: {
       const record = server.store.sessions.get(session.sessionId)?.requests.get(requestId);
       const knownCosts = observation.attempts.filter(attempt => attempt.costUSD !== null);
       const report: CaseReport = { label: sample.label, status: observation.localStops.length ? 'local_stop' : mismatch.length ? 'transport_failure' : 'observed',
-        httpStatus, terminalReceived: !!terminal, terminalType: terminal?.type ?? null, durationMs: Math.round(performance.now() - started), mismatch,
+        httpStatus, terminalReceived: !!terminal, terminalType: terminal?.type ?? null, durationMs: Math.round(performance.now() - started), schedulingDelayMs, mismatch,
         events, admission: observation.admission, attempts: observation.attempts, stageMs: observation.stageMs, evidence: observation.evidence,
-        admittedPublic: observation.admittedPublic, deterministicPublicIssues: sample.allowedPublic.map(text => ({ text, issue: deterministicIssue(text) })), localStops: observation.localStops,
+        admittedPublic: observation.admittedPublic, rejectedAdmissionCount: observation.rejectedAdmissionCount,
+        deterministicPublicIssues: sample.allowedPublic.map(text => ({ text, issue: deterministicIssue(text) })), localStops: observation.localStops,
         runtime: record ? { state: record.state, jevConsumed: record.budget.jev, searchConsumed: [...record.budget.searches.values()].reduce((a, b) => a + b, 0),
           contentsConsumed: [...record.budget.contents.values()].reduce((a, b) => a + b, 0), inputTokens: record.budget.inputTokens } : undefined,
         usage: { measuredInputTokens: observation.attempts.reduce((sum, attempt) => sum + (attempt.inputTokens ?? 0), 0),
@@ -220,11 +235,11 @@ export async function runLiveCampaign(options: {
   return {
     schemaVersion: 1, kind: 'authenticated_http_websocket_live_development', startedAt: new Date(Date.now() - budget.elapsedMs).toISOString(),
     modelVersion: MODEL_VERSION, policyVersion: POLICY_VERSION, metadata: options.metadata ?? {}, limits: budget.limits,
-    predeclaredCases: cases.map(sample => ({ label: sample.label, allowedPublic: sample.allowedPublic, automatic: !!sample.automatic, final: sample.final ?? true, cancellation: !!sample.cancelAfterDetected })),
+    predeclaredCases: cases.map(publicCasePlan),
     counts: { declared: cases.length, observed: reports.length, terminalReceipts: reports.filter(report => report.terminalReceived).length, localStops: reports.filter(report => report.status === 'local_stop').length,
       transportFailures: reports.filter(report => report.status === 'transport_failure').length, providerErrors: reports.filter(report => report.events.some(event => event.type === 'pipeline.error') && report.status !== 'local_stop').length },
     completed: reports.length === cases.length && reports.every(report => report.terminalReceived && report.status === 'observed') && !transportFailure,
-    auth, transportFailure, totals: budget.summary(), cases: reports,
+    auth, transportFailure, totals: budget.summary(), cases: reports, evaluation: summarizeCampaign(cases, reports),
     limitations: ['Observed terminal delivery is not a factual-accuracy pass; review every abstention and definitive citation.',
       '24,000 tokens per pending/unknown Jev attempt is an uncertainty allowance, not a tokenizer-derived upper bound. Any unknown completed Jev usage blocks subsequent provider dispatch. Actual usage can exceed a reservation before the harness can stop.',
       'A dispatch_reserved checkpoint records an allowance before fetch is called; interruption leaves dispatch uncertain. Final actual attempt counts include only dispatched attempts.',
@@ -246,15 +261,19 @@ async function sourceSnapshot(expectedCommit?: string) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2);
-  const allowed = new Set(['--live', '--plan', '--output', '--commit', '--auth-probe']);
+  const allowed = new Set(['--live', '--plan', '--output', '--commit', '--auth-probe', '--cases-file']);
   const values: Record<string, string> = {};
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
-    if (!allowed.has(arg)) throw new Error('Usage: live [--plan | --live --output PATH] [--commit SHA] [--auth-probe jev|exa]');
-    if (['--output', '--commit', '--auth-probe'].includes(arg)) { if (!args[index + 1] || args[index + 1].startsWith('--')) throw new Error('Missing argument'); values[arg] = args[++index]; }
+    if (!allowed.has(arg)) throw new Error('Usage: live [--plan | --live --output PATH] [--commit SHA] [--auth-probe jev|exa] [--cases-file PATH]');
+    if (['--output', '--commit', '--auth-probe', '--cases-file'].includes(arg)) { if (values[arg] || !args[index + 1] || args[index + 1].startsWith('--')) throw new Error('Missing or duplicate argument'); values[arg] = args[++index]; }
   }
+  if (values['--cases-file'] && values['--auth-probe']) throw new Error('Custom development cases cannot be combined with an authentication probe');
+  const loaded = values['--cases-file'] ? await loadDevelopmentManifest(values['--cases-file']) : undefined;
+  const cases = loaded?.manifest.cases ?? DEVELOPMENT_CASES;
+  const campaignMetadata = loaded ? { casesSHA256: loaded.sha256, campaignName: loaded.manifest.name } : {};
   if (args.includes('--plan') || !args.includes('--live')) {
-    process.stdout.write(`${JSON.stringify({ mode: 'plan_only_no_provider_calls', limits: DEVELOPMENT_LIMITS, cases: DEVELOPMENT_CASES.map(sample => ({ label: sample.label, allowedPublic: sample.allowedPublic, automatic: !!sample.automatic, final: sample.final ?? true })) }, null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify({ mode: 'plan_only_no_provider_calls', metadata: campaignMetadata, limits: DEVELOPMENT_LIMITS, cases: cases.map(publicCasePlan) }, null, 2)}\n`);
   } else {
     if (!values['--output']) throw new Error('A durable --output path is required for live execution.');
     const probeValue = values['--auth-probe'];
@@ -262,13 +281,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const authProbe = probeValue === 'jev' ? 'jev' as const : probeValue === 'exa' ? 'exa' as const : undefined;
     if ((authProbe !== 'jev' && !process.env.JEV_API_KEY) || (!authProbe && !process.env.EXA_API_KEY)) throw new Error('Configure server-side JEV_API_KEY and EXA_API_KEY through the environment.');
     const keys = { jev: authProbe === 'jev' ? 'deliberately-invalid-jev-key' : process.env.JEV_API_KEY!, exa: authProbe === 'exa' ? 'deliberately-invalid-exa-key' : process.env.EXA_API_KEY ?? 'unused' };
-    const metadata = { ...await sourceSnapshot(values['--commit']), authProbe };
+    const metadata = { ...await sourceSnapshot(values['--commit']), ...campaignMetadata, authProbe };
     const output = values['--output'];
     await mkdir(dirname(output), { recursive: true });
     // Reserve before any provider call, then atomically replace our own report
     // with each checkpoint. A rerun must choose a fresh path.
     const reserved = await open(output, 'wx', 0o600);
-    await reserved.writeFile(`${JSON.stringify({ schemaVersion: 1, completed: false, phase: 'reserved_before_dispatch', metadata, limits: DEVELOPMENT_LIMITS })}\n`);
+    const campaignPlan = { metadata, limits: DEVELOPMENT_LIMITS, predeclaredCases: (authProbe ? [DEVELOPMENT_CASES[0]] : cases).map(publicCasePlan) };
+    await reserved.writeFile(`${JSON.stringify({ schemaVersion: 1, completed: false, phase: 'reserved_before_dispatch', ...campaignPlan })}\n`);
     await reserved.sync(); await reserved.close();
     const checkpointCases: CaseReport[] = [];
     const persist = async (value: unknown) => {
@@ -277,9 +297,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       const written = await open(temporary, 'r'); await written.sync(); await written.close();
       await rename(temporary, output);
     };
-    const report = await runLiveCampaign({ keys, cases: authProbe ? [DEVELOPMENT_CASES[0]] : undefined, metadata,
-      onProgress: async active => { await persist({ schemaVersion: 1, completed: false, phase: 'attempt_checkpoint', metadata, limits: DEVELOPMENT_LIMITS, cases: checkpointCases, active }); },
-      onCase: async report => { checkpointCases.push(report); await persist({ schemaVersion: 1, completed: false, phase: 'case_checkpoint', metadata, limits: DEVELOPMENT_LIMITS, cases: checkpointCases }); } });
+    const report = await runLiveCampaign({ keys, cases: authProbe ? [DEVELOPMENT_CASES[0]] : cases, metadata,
+      onProgress: async active => { await persist({ schemaVersion: 1, completed: false, phase: 'attempt_checkpoint', ...campaignPlan, cases: checkpointCases, active }); },
+      onCase: async report => { checkpointCases.push(report); await persist({ schemaVersion: 1, completed: false, phase: 'case_checkpoint', ...campaignPlan, cases: checkpointCases }); } });
     await persist(report);
     process.stdout.write(`${JSON.stringify({ output, completed: report.completed, counts: report.counts, totals: report.totals }, null, 2)}\n`);
     if (!report.completed) process.exitCode = 1;

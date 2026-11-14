@@ -122,6 +122,54 @@ describe('bounded authenticated live campaign with injected provider HTTP', () =
     expect(JSON.stringify(report)).not.toContain('SYNTHETIC_PRIVATE_MARKER');
   });
 
+  it('observes automatic permission and selected-topic notification through authenticated controls, resetting preferences between cases', async () => {
+    const ordinary = syntheticProvider();
+    const providerFetch = vi.fn<typeof fetch>(async (url, init) => {
+      const response = await ordinary(url, init);
+      if (String(url).endsWith('/search')) {
+        const decoded = await response.json() as { results: { url: string; title: string; highlights: string[] }[] };
+        decoded.results.push({ url: 'https://ceremony.example.net/record', title: 'Opening ceremony record', highlights: ['At the Sydney Opera House ceremony on 20 October 1973, Queen Elizabeth II formally opened the building. The dated event register describes the programme and attendance in the new performance halls.'] });
+        return Response.json(decoded);
+      }
+      if (!String(url).includes('typesafe.ai')) return response;
+      const decoded = await response.json() as { answers: Record<string, { choice?: string; probabilities?: Record<string, number>; noul?: number }>; usage: unknown };
+      for (const [name, answer] of Object.entries(decoded.answers)) {
+        if (name.endsWith('_has_practical_consequence')) answer.noul = 0;
+        const selected = name === 'verdict' ? 'contradicted' : name.endsWith('_stance') ? 'contradicts' : undefined;
+        if (selected) { answer.choice = selected; answer.probabilities = Object.fromEntries(Object.keys(answer.probabilities!).map(key => [key, Number(key === selected)])); }
+      }
+      return Response.json(decoded);
+    });
+    const make = (label: string, year: number): LiveCase => {
+      const text = `The Sydney Opera House opened in ${year}.`;
+      return { label, text, allowedPublic: [text], automatic: true, expected: { claims: [{ id: label, acceptedTexts: [text], verdict: 'contradicted', domain: 'history' }], admissionAction: 'check', presentationActions: ['silent'] } };
+    };
+    const enabled = make('enabled', 1974);
+    enabled.preferences = { muted: false, automaticNotifications: true, selectedTopics: ['Sydney Opera House'] };
+    enabled.expected!.presentationActions = ['notify'];
+    const report = await runLiveCampaign({ keys, cases: [make('disabled', 1974), enabled, make('reset', 1975)], providerFetch });
+    expect(report.completed, JSON.stringify({ counts: report.counts, failure: report.transportFailure, cases: report.cases.map(sample => ({ label: sample.label, stops: sample.localStops, mismatch: sample.mismatch, events: sample.events.map(event => ({ type: event.type, reason: event.reasonCode })) })) })).toBe(true);
+    expect(report.cases.map(sample => sample.events.at(-1)?.presentation)).toEqual([
+      { action: 'silent', reasonCode: 'notifications_disabled' },
+      { action: 'notify', reasonCode: 'selected_topic_contradiction' },
+      { action: 'silent', reasonCode: 'notifications_disabled' },
+    ]);
+    expect(report.cases[1].events.at(-1)?.cached).toBe(true);
+    expect(report.evaluation.actions).toMatchObject({ presentationChecks: 3, presentationMatches: 3, admissionActionMatches: 3 });
+    expect(report.evaluation.factual).toMatchObject({ expected: 3, correctDefinitive: 3, cachedResults: 1, sourceVerifiedCorrect: 0 });
+    expect(report.cases[1].schedulingDelayMs).toBeGreaterThan(3_500);
+  }, 12_000);
+
+  it('keeps automatic personal controls silent without retrieval even when notifications are enabled', async () => {
+    const report = await runLiveCampaign({ keys, cases: [{ label: 'automatic-private', text: 'I felt tired after lunch.', allowedPublic: [], automatic: true,
+      preferences: { muted: false, automaticNotifications: true, selectedTopics: [] }, expected: { claims: [], admissionAction: 'skip', presentationActions: ['silent'] } }],
+    providerFetch: syntheticProvider({ personal: true }) });
+    expect(report.completed).toBe(true);
+    expect(report.cases[0].events.at(-1)?.presentation).toEqual({ action: 'silent', reasonCode: 'private_or_personal' });
+    expect(report.totals.calls).toEqual({ jev: 1, search: 0, contents: 0 });
+    expect(report.evaluation.actions.presentationMatches).toBe(1);
+  });
+
   it('retains manual clarification feedback delivered through HTTP and WS without fabricating interim presentation', async () => {
     const providerFetch = syntheticProvider();
     const report = await runLiveCampaign({ keys, cases: [{ label: 'clarify', text: 'The population is', allowedPublic: [], final: false }], providerFetch });
