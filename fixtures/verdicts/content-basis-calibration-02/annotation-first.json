@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "annotator": "source_calibration independent AI agent",
+  "labels": [
+    {
+      "id": "CB01",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Bumblebees retrieve only the ordinal ranking of foraging options when comparing memories obtained in distinct settings",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The title asserts a conclusion, but no study design, observed contrast, data, or result account is retained. Heading wording and publisher metadata cannot replace the missing research body.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB02",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "SEC. 2. JUNETEENTH NATIONAL INDEPENDENCE DAY AS A LEGAL PUBLIC HOLIDAY.",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The section heading identifies the holiday topic but no operative text or calendar date is retained. It cannot establish the June 19 statutory relation from its heading alone.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB03",
+      "expectedBasis": "substantive",
+      "supportingSpan": "\"objectDate\":\"1889\",\"objectBeginDate\":1889,\"objectEndDate\":1889",
+      "stanceDiagnostic": "supports",
+      "labelReason": "The catalogue body contains labelled object-title, artist, date and medium fields. The date is an actual retained record field, not an inference from the separate page title.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB04",
+      "expectedBasis": "substantive",
+      "supportingSpan": "Section 6103(a) of title 5, United States Code, is amended by inserting after the item relating to Memorial Day the following: ``Juneteenth National Independence Day, June 19.''.",
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The retained public-law identifier and operative amendment specify the designated holiday and June 19. A changed asserted date changes stance, not the presence of statutory content.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB05",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "Legal commentators agree that the Hunting Act 2004 has reduced illegal hunting. This landmark success shows that the law works.",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "An unattributed consensus and efficacy assertion supplies no measurement, identified study, comparison, or specific record supporting the claimed reduction.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB06",
+      "expectedBasis": "substantive",
+      "supportingSpan": "We tested the effect of the LGMF on the recruitment success of forager bees by placing observation hives inside large Helmholtz coils, and then either reducing the LGMF to 2% or shifting its apparent declination. Neither of these treatments reduced the number of nest mates that waggle dancing forager bees recruited to a feeding station located 200 m north of the hive. These results indicate that the LGMF does not act as the reference for the alignment of waggle-dancing bees.",
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The passage describes Helmholtz-coil experimental manipulations, recruitment outcome, station distance, and a null result. A claim falsely asserting a reduction still faces substantive experimental content.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB07",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "1 Hunting wild mammals with dogs E+W This section has no associated Explanatory Notes",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The retained body identifies a section topic and geographic extent but contains no operative legal rule. A separate statute title cannot supply the missing offence or exemption terms.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB08",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Yet, there is tantalizing evidence that the local (ambient) geomagnetic field (LGMF) could play a role.",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The sentence alludes to unspecified tantalizing evidence and a possible role without retaining an identifiable observation, method, result, or record. It does not become substantive just because it came from a research paper.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB09",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Citation: Lambinet V, Hayden ME, Bieri M, Gries G (2014) Does the Earth's Magnetic Field Serve as a Reference for Alignment of the Honeybee Waggle Dance? PLoS ONE 9(12): e115665. https://doi.org/10.1371/journal.pone.0115665",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "A bibliographic citation with a question-form paper title locates research but retains no method or result. It is not itself the experimental finding.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB10",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "\"title\":\"Wheat Field with Cypresses\"",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The retained body gives only the object title. The separate metadata title asserts 1888 but the catalogue date field is missing. Source quality cannot be recovered from that title assertion.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB11",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Public Law 117-17 117th Congress",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "A law citation identifies a document but does not retain its terms. The asserted holiday date appears only in separate metadata, which cannot substitute for body contents.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB12",
+      "expectedBasis": "substantive",
+      "supportingSpan": "A series of experiments showed that after learning to discriminate pairs of different flowers by sucrose concentration, bumblebees preferred flowers (in novel pairings) with (1) higher ranking over equal absolute reward, (2) higher ranking over higher absolute reward, and (3) identical qualitative ranking but different quantitative ranking equally.",
+      "stanceDiagnostic": "supports",
+      "labelReason": "The abstract specifies flower-pair discrimination by sucrose concentration and novel-pairing preference outcomes. The opposing proposition does not erase that retained method and finding.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB13",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "Controlled research confirms flawless decisions. Our revolutionary bumblebee learning system makes every bee choose the best reward in every setting.",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The phrase controlled research names no identifiable study or procedure and the universal performance claim supplies no result or comparison. It is an unsupported benefit advertisement.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB14",
+      "expectedBasis": "substantive",
+      "supportingSpan": "\"objectDate\":\"1889\",\"objectBeginDate\":1889,\"objectEndDate\":1889",
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The catalogue body contains labelled object-title, artist, date and medium fields. The date is an actual retained record field, not an inference from the separate page title.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB15",
+      "expectedBasis": "substantive",
+      "supportingSpan": "The 2020 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Nickel Boys , by Colson Whitehead (Doubleday)",
+      "stanceDiagnostic": "supports",
+      "labelReason": "The retained award-register heading supplies the year and category, and its content supplies the winning work and author. This is the award record itself, not an unrelated promotional book description.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB16",
+      "expectedBasis": "insufficient",
+      "supportingSpan": "Winning Work",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The body heading does not identify the winning work, category, or award year; external page metadata and URL cannot supply an absent record.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB17",
+      "expectedBasis": "substantive",
+      "supportingSpan": "We tested the effect of the LGMF on the recruitment success of forager bees by placing observation hives inside large Helmholtz coils, and then either reducing the LGMF to 2% or shifting its apparent declination. Neither of these treatments reduced the number of nest mates that waggle dancing forager bees recruited to a feeding station located 200 m north of the hive. These results indicate that the LGMF does not act as the reference for the alignment of waggle-dancing bees.",
+      "stanceDiagnostic": "supports",
+      "labelReason": "The passage describes Helmholtz-coil experimental manipulations, recruitment outcome, station distance, and a null result. A claim falsely asserting a reduction still faces substantive experimental content.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB18",
+      "expectedBasis": "substantive",
+      "supportingSpan": "Section 6103(a) of title 5, United States Code, is amended by inserting after the item relating to Memorial Day the following: ``Juneteenth National Independence Day, June 19.''.",
+      "stanceDiagnostic": "supports",
+      "labelReason": "The retained public-law identifier and operative amendment specify the designated holiday and June 19. A changed asserted date changes stance, not the presence of statutory content.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB19",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "Experts agree that Wheat Field with Cypresses dates to 1889. Our definitive art guide brings you the most accurate scholarship on this masterpiece.",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The passage repeats a date through unnamed experts and praises a guide. It provides no retained catalogue entry, identified scholarly account, analysis, or basis for the dating.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB20",
+      "expectedBasis": "substantive",
+      "supportingSpan": "The 2020 Pulitzer Prize Winner in Fiction For distinguished fiction published during the year by an American author, preferably dealing with American life, Fifteen thousand dollars ($15,000). The Nickel Boys , by Colson Whitehead (Doubleday)",
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The retained award-register heading supplies the year and category, and its content supplies the winning work and author. This is the award record itself, not an unrelated promotional book description.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB21",
+      "expectedBasis": "substantive",
+      "supportingSpan": "A series of experiments showed that after learning to discriminate pairs of different flowers by sucrose concentration, bumblebees preferred flowers (in novel pairings) with (1) higher ranking over equal absolute reward, (2) higher ranking over higher absolute reward, and (3) identical qualitative ranking but different quantitative ranking equally.",
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The abstract specifies flower-pair discrimination by sucrose concentration and novel-pairing preference outcomes. The opposing proposition does not erase that retained method and finding.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB22",
+      "expectedBasis": "substantive",
+      "supportingSpan": "A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.",
+      "stanceDiagnostic": "supports",
+      "labelReason": "The retained provision includes its section heading, jurisdiction marker and the operative offence rule with its exemption. This is legal content, irrespective of whether the proposition agrees with it.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB23",
+      "expectedBasis": "non_substantive",
+      "supportingSpan": "A reading-club host says, “The Nickel Boys won the 2020 Pulitzer Prize in Fiction.” Join our discussion and discover the award-winning novel everyone is talking about.",
+      "stanceDiagnostic": "not_assessed",
+      "labelReason": "The host merely asserts the award outcome inside an advertisement. No actual award register, awarding act, named record, or reported examination is retained; the checked proposition concerns the award, not whether the host said this.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    },
+    {
+      "id": "CB24",
+      "expectedBasis": "substantive",
+      "supportingSpan": "A person commits an offence if he hunts a wild mammal with a dog, unless his hunting is exempt.",
+      "stanceDiagnostic": "contradicts",
+      "labelReason": "The retained provision includes its section heading, jurisdiction marker and the operative offence rule with its exemption. This is legal content, irrespective of whether the proposition agrees with it.",
+      "ambiguity": false,
+      "excludeFromPrimary": false
+    }
+  ],
+  "candidatePromptOrCodeReadForThisStudy": false,
+  "providerOutputsViewed": false
+}
