@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { codePoints } from '../../../../packages/contracts/src/index.js';
 import { evidenceSchema } from '../../../../packages/contracts/src/wire.js';
-import { buildAlternateQuery, mergeRetainedEvidence, needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse, selectExcerpt } from './normalize.js';
+import { buildAlternateQuery, buildHighlightQuery, RETRIEVAL_OBJECTIVE, mergeRetainedEvidence, needsPageText, normalizeEvidence, normalizeUrl, parseExaResponse, selectExcerpt } from './normalize.js';
 
 const now = '2026-11-14T10:00:00.000Z';
 const quote = 'The Eiffel Tower officially opened in 1889. This historical statement is retained exactly as the provider returned it.';
@@ -115,6 +115,85 @@ describe('evidence normalization', () => {
     expect(selected.excerpt).toContain(contrary);
   });
 
+  it('keeps a compact opening relation and record heading ahead of scattered subject words later in the body', () => {
+    const checked = 'Lumen is the capital of Velora.';
+    const heading = 'Jurisdiction register J-42; Keeper: Regional Records Office.\n';
+    const relation = 'Lumen is the capital of Velora. This entry was reviewed against the administrative register.';
+    const scattered = `Lumen offers cultural events and transit. ${'Visitor details. '.repeat(18)}The green capital initiative describes parks. ${'More visitor details. '.repeat(18)}Trade with Velora is growing. `;
+    const text = `${heading}${relation}\n\n${scattered.repeat(12)}`;
+    const selected = selectExcerpt({ url: 'https://records.example.org/j42', text }, checked)!;
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(selected.excerpt).toContain(relation);
+    expect(selected.excerpt).toContain(heading);
+  });
+
+  it('retains nearby table identity and maintenance provenance when the reported value differs from the claim', () => {
+    const checked = 'Roven is the capital of Velora.';
+    const record = '# Country register: Velora\nKeeper: International Reference Bureau; updated November 2026.\n\n| Country | Velora |\n| Capital | Lumen |\n| Record | V-318 |';
+    const text = `${'Unrelated navigation. '.repeat(80)}\n\n${record}\n\n${'Velora cultural programmes and capital investment news. '.repeat(100)}`;
+    const selected = selectExcerpt({ url: 'https://records.example.org/v318', text }, checked)!;
+    expect(selected.excerpt).toContain(record);
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(codePoints(selected.excerpt).length).toBeLessThanOrEqual(2000);
+  });
+
+  it('keeps the methods and measured contrary findings of an original observation record', () => {
+    const checked = 'The Kestrel sensor never records two pulses in one minute.';
+    const record = 'Field log K-31, maintained by the instrument team. The Kestrel sensor recorded three pulses in one minute. A synchronized camera and calibrated recorder independently timestamped each event. However, these measurements concern the outdoor configuration only.';
+    const text = `${'Instrument navigation. '.repeat(100)}\n\n${record}\n\n${'Procurement and instrument catalogue details. '.repeat(100)}`;
+    const selected = selectExcerpt({ url: 'https://observatory.example.org/k31', text }, checked)!;
+    expect(selected.excerpt).toContain(record);
+    expect(text.includes(selected.excerpt)).toBe(true);
+  });
+
+  it('does not replace an informative highlight with a fetched page matching only an incidental subject word', () => {
+    const checked = 'Lumen is the capital of Velora.';
+    const highlight = 'The jurisdiction register lists Lumen as the capital of Velora. Keeper: Regional Records Office.';
+    const text = `Capital investment and opening hours. ${'Gardening information. '.repeat(180)}`;
+    expect(selectExcerpt({ url: 'https://records.example.org/j42', highlights: [highlight], text }, checked))
+      .toEqual({ excerpt: highlight, contentBasis: 'highlight' });
+  });
+
+  it.each(['1889', '1890'])('does not prefer a distant obsolete agreeing date or a misleading title (%s)', year => {
+    const checked = `The Aster bridge opened in ${year}.`;
+    const correction = 'Current archive correction: the Aster bridge opened in 1890; the earlier 1889 entry was a copying error.';
+    const obsolete = 'Obsolete summary: the Aster bridge opened in 1889.';
+    const text = `${correction}\n\n${'Unrelated archival inventory. '.repeat(150)}\n\n${obsolete}`;
+    const selected = selectExcerpt({ url: 'https://archive.example.org/bridge', title: 'The Aster bridge opened in 1889',
+      highlights: [obsolete], text }, checked)!;
+    expect(selected.contentBasis).toBe('page_text');
+    expect(selected.excerpt).toContain(correction);
+    expect(selected.excerpt).not.toContain(obsolete);
+    expect(text.includes(selected.excerpt)).toBe(true);
+  });
+
+  it('bounds maximum-size paragraph processing while preserving an exact late contrary record', () => {
+    const checked = 'The Kestrel sensor never records two pulses in one minute.';
+    const record = 'The Kestrel sensor records three pulses in one minute. Record K-44 describes calibrated observations, with indoor conditions excluded.';
+    const text = `${'🦉 catalogue entry. '.repeat(2500)}${'x'.repeat(49000)}\n${record}`.slice(-100000);
+    const selected = selectExcerpt({ url: 'https://observatory.example.org/k44', text }, checked)!;
+    expect(selected.excerpt).toContain(record);
+    expect(text.includes(selected.excerpt)).toBe(true);
+    expect(codePoints(selected.excerpt).length).toBeLessThanOrEqual(2000);
+  });
+
+  it('does not turn a method-bearing incidental mention into a judged source', () => {
+    const checked = 'Lumen is the capital of Velora.';
+    const geology = 'Research methods: granite samples were taken from Lumen, the capital of Velora. The measured result concerns mineral composition and does not establish administrative status.';
+    const record = normalizeEvidence([{ url: 'https://research.example.org/geology', text: geology }], checked, now)[0];
+    expect(record.excerpt).toBe(geology);
+    expect(record).toMatchObject({ sourceRole: 'unknown', directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' });
+  });
+
+  it('preserves every checked qualifier in highlight guidance without adding private context or an expected verdict', () => {
+    const checked = 'According to the 2024 log, Kestrel did not record more than two pulses before May.';
+    const query = buildHighlightQuery(checked);
+    expect(query).toContain(JSON.stringify(checked));
+    expect(query).toContain('supporting, challenging or qualifying');
+    expect(query).not.toContain('salary');
+    expect(() => buildHighlightQuery(' ')).toThrow('claim_not_admitted');
+  });
+
   it('keeps a relevant highlight when bounded fetched text omits its passage', () => {
     const selected = selectExcerpt({
       url: 'https://museum.org/history', highlights: [quote],
@@ -213,9 +292,9 @@ describe('evidence normalization', () => {
     const checked = 'According to the 2024 report, the bridge did not open before May.';
     const query = buildAlternateQuery(checked, 'balanced_evidence');
     expect(query).toContain(JSON.stringify(checked));
-    expect(query).toContain('Retrieval objective:');
-    expect(query).toContain('supports, challenges, or qualifies');
-    expect(query).toContain('underlying named records');
+    expect(query).not.toContain('Retrieval objective:');
+    expect(RETRIEVAL_OBJECTIVE).toContain('supports, challenges, or qualifies');
+    expect(query).toContain('underlying named record');
     expect(query).toContain('identified keeper and provenance');
     expect(query).not.toContain('private salary');
   });

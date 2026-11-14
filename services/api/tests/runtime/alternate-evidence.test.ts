@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { type Evidence, type Judgment } from '../../../../packages/contracts/src/index.js';
 import { type AssessedJudgment } from '../../src/policy/assessment.js';
 import { independentSourceCount } from '../../src/policy/sources.js';
+import { decideVerdict } from '../../src/policy/verdict.js';
 import { retainAlternateEvidence } from '../../src/runtime/alternate-evidence.js';
 
 const checkedText = 'Aster was founded in Belvar in 1890.';
@@ -44,12 +45,43 @@ describe('bounded assessment-aware alternate evidence retention', () => {
     expect(retained.slice(0, 2).map(record => record.id)).toEqual(['useful-support', 'bare-contrary']);
   });
 
-  it.each(['missing', 'low-confidence', 'inherited', 'scope'] as const)('does not pin ordinary evidence with %s assessment', mode => {
+  it('reserves only two old substantive-category candidates by confidence while leaving four fresh slots', () => {
+    const old = [noise('bare'), source('lower'), source('record'), source('strongest'), source('runner-up')];
+    const assessed = judgment(old);
+    assessed.sourceAssessments = {
+      bare: { contentBasis: 'bare_assertion', confidence: 1 },
+      lower: { contentBasis: 'substantive_secondary', confidence: .64 },
+      record: { contentBasis: 'original_record', confidence: .78 },
+      strongest: { contentBasis: 'substantive_secondary', confidence: .84 },
+      'runner-up': { contentBasis: 'attributable_research', confidence: .83 },
+    };
+    const retained = retainAlternateEvidence(old, Array.from({ length: 6 }, (_, index) => noise(`new-${index}`)), checkedText, assessed);
+    expect(retained.slice(0, 2).map(record => record.id)).toEqual(['strongest', 'runner-up']);
+    expect(retained.filter(record => record.id.startsWith('new-'))).toHaveLength(4);
+    expect(retained.some(record => ['bare', 'lower', 'record'].includes(record.id))).toBe(false);
+    const fresh = judgment(retained);
+    fresh.label = 'supported'; fresh.probabilities = { supported: .99, contradicted: 0, misleading: 0, insufficient_evidence: .01 };
+    for (const record of retained) fresh.sourceAssessments[record.id] = assessed.sourceAssessments[record.id]
+      ?? { contentBasis: 'bare_assertion', confidence: 1 };
+    expect(decideVerdict(fresh)).toMatchObject({ verdict: 'insufficient_evidence', reasonCode: 'insufficient_independent_evidence' });
+  });
+
+  it('retains an identified old record below the verdict threshold rather than six incoming repetitions', () => {
+    const old = [source('identified-record')];
+    const assessed = judgment(old);
+    assessed.sourceAssessments['identified-record'] = { contentBasis: 'original_record', confidence: .78 };
+    const retained = retainAlternateEvidence(old, Array.from({ length: 6 }, (_, index) => noise(`new-${index}`)), checkedText, assessed);
+    expect(retained).toHaveLength(6);
+    expect(retained[0].id).toBe('identified-record');
+    expect(retained[0]).toMatchObject({ directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated', stanceProbability: null });
+  });
+
+  it.each(['missing', 'negative-category', 'inherited', 'scope'] as const)('does not pin ordinary evidence with %s assessment', mode => {
     const old = [source('old')];
     const assessed = judgment(old);
     let supplied: Judgment = assessed;
     if (mode === 'missing') supplied = { label: assessed.label, probabilities: assessed.probabilities, evidence: assessed.evidence, selectedEvidenceIds: [], misleadingReason: null };
-    if (mode === 'low-confidence') assessed.sourceAssessments.old.confidence = .84;
+    if (mode === 'negative-category') assessed.sourceAssessments.old = { contentBasis: 'bare_assertion', confidence: 1 };
     if (mode === 'inherited') assessed.sourceAssessments = Object.create(assessed.sourceAssessments) as AssessedJudgment['sourceAssessments'];
     if (mode === 'scope') assessed.evidence[0].matchesTimePlaceAndPopulation = false;
     const retained = retainAlternateEvidence(old, Array.from({ length: 6 }, (_, index) => noise(`new-${index}`)), checkedText, supplied);
