@@ -4,6 +4,8 @@ How we shoot, cut and ship the ~2:00 submission video by **Sun 15 Nov, 10:00** (
 
 Open `runbook.html` in a browser for the full version, with commands, Omni prompts, camera settings and the schedule. This file is the short version.
 
+**Read `meta-style.md` first.** It moves the look toward Meta's own glasses videos, revises the beat sheet and lists what to film on Saturday afternoon. Where it disagrees with this file, it wins.
+
 ## Locked decisions
 
 | | |
