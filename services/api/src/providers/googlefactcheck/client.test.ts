@@ -95,7 +95,11 @@ describe('S2 fact checks', () => {
     expect(evidence[0].rating).toBe('supported');
     expect(jev.requests).toHaveLength(1);
     expect(context.used('jev')).toBe(1);
-    expect(jev.requests[0].state).toEqual({ 'selected claim': 'Bats are blind.' });
+    expect(jev.requests[0].state).toMatchObject({ 'selected claim': 'Bats are blind.' });
+    expect(jev.requests[0].state).not.toHaveProperty('the claim is about');
+    // Fact-checker text travels in the state; the questions name a fact check by number only.
+    expect((jev.requests[0].state as { 'fact checks': { number: number; rating: string }[] })['fact checks'].map(check => [check.number, check.rating])).toEqual([[1, 'False'], [2, 'True']]);
+    expect(Object.values(jev.requests[0].questions).map(question => question.instructions).join(' ')).not.toContain(reviews[0].claim);
   });
 
   it('"Pants on Fire" is contradicted; misleading takes neither side; unknown ratings go to Jev', async () => {
@@ -115,7 +119,8 @@ describe('S2 fact checks', () => {
     const evidence = await matchFactChecks(candidates.map(c => c.review), { text: 'Bats are blind.', subject: 'Bats' }, jev, createTestContext());
     expect(evidence.map(e => [e.publisher, e.rating, e.stance])).toEqual([
       ['PolitiFact', 'contradicted', 'contradicts'], ['Snopes', 'contradicted', 'contradicts'], ['PolitiFact', 'misleading', 'unrelated']]);
-    expect(jev.requests[0].state).toEqual({ 'selected claim': 'Bats are blind.', 'the claim is about': 'Bats' });
+    expect(jev.requests[0].state).toMatchObject({ 'selected claim': 'Bats are blind.', 'the claim is about': 'Bats' });
+    expect(Object.values(jev.requests[0].questions).map(question => question.instructions).join(' ')).not.toContain('Misattributed');
   });
 
   it('no candidates means no Jev request; a missing answer is malformed', async () => {

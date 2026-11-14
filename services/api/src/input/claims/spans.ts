@@ -80,15 +80,29 @@ export function generateCandidates(text: string): ClaimCandidate[] {
 }
 
 const email = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+/** A spoken or obfuscated address: "jane at example dot com", "jane (at) example [dot] org". */
+const spokenEmail = /\b[\p{L}\p{N}._%+-]+\s*(?:\bat\b|\(at\)|\[at\])\s*([\p{L}\p{N}-]+)\s*(?:\bdot\b|\(dot\)|\[dot\])\s*(?:com|org|net|edu|gov|io|co|uk|de|fi|fr|eu|me|info|ai)\b/giu;
+/** Words that make "at X dot com" ordinary speech ("the dot com bubble"), not an address. */
+const NOT_A_MAIL_DOMAIN = new Set(['the', 'a', 'an', 'that', 'this', 'its', 'his', 'her', 'their', 'our', 'your', 'my', 'least', 'most', 'first', 'last']);
 /** A run of digits with phone-style separators. Commas never appear in one, so "$2,500,000" is not a candidate. */
 const digitRun = /(?<![\p{L}\p{N}])\+?\(?\d[\d \t().-]{5,}\d(?![\p{L}\p{N}])/gu;
+/** An amount or a count, not a number to call: a currency before it or a unit or counted noun after it. */
+const currencyBefore = /(?:[$€£¥₹]|\b(?:usd|eur|gbp|jpy|chf|sek|nok|dkk))\s*$/iu;
+const quantityAfter = /^\s*(?:[%‰]|(?:dollars?|euros?|pounds?|yen|yuan|rupees?|people|persons|users|views|visitors|subscribers|followers|downloads|copies|units|items|cases|deaths|votes|years?|days?|hours?|seconds?|kilometres?|kilometers?|km|miles?|metres?|meters?|tons?|tonnes?|kg|bytes?|digits?|times|cells|stars|galaxies|atoms|molecules|bacteria)\b)/iu;
+const isbnBefore = /\bISBN(?:-1[03])?:?\s*$/iu;
 
-function looksLikePhone(run: string): boolean {
+function looksLikePhone(run: string, before: string, after: string): boolean {
   const digits = run.replace(/\D/gu, '');
   if (digits.length < 7 || digits.length > 15) return false;
   if (run.startsWith('+')) return digits.length >= 8;
   const groups = run.split(/[\s().-]+/u).filter(Boolean);
-  if (groups.length < 2 || (groups.length < 3 && !run.includes('('))) return false;
+  // ISBNs: "ISBN 978-3-16-148410-0", or 13 digits starting 978/979 in four or five hyphenated groups.
+  if (isbnBefore.test(before) || (digits.length === 13 && /^97[89]/u.test(digits) && /^\d+(?:-\d+){3,4}$/u.test(run))) return false;
+  // An unseparated 10 to 15 digit run is a phone number unless it reads as an amount or a count.
+  if (groups.length === 1) return digits.length >= 10 && !currencyBefore.test(before) && !quantityAfter.test(after);
+  // A local number: 555-1234, 555 1234.
+  if (groups.length === 2 && /^\d{3}[\s-]\d{4}$/u.test(run)) return true;
+  if (groups.length < 3 && !run.includes('(')) return false;
   // Dates: 2026-11-14, 14.11.2026, 11/14/2026.
   if (/^\d{4}-\d{1,2}-\d{1,2}$/u.test(run) || /^\d{1,2}[.-]\d{1,2}[.-]\d{2,4}$/u.test(run)) return false;
   // Thousands written with spaces or dots: 10 000 000, 1.500.000.
@@ -101,7 +115,12 @@ function looksLikePhone(run: string): boolean {
 /** An email address or a phone number. These never reach any search, whatever Jev says. */
 export function containsContactData(text: string): boolean {
   if (email.test(text)) return true;
-  return [...text.matchAll(digitRun)].some(match => looksLikePhone(match[0].trim()));
+  if ([...text.matchAll(spokenEmail)].some(match => !NOT_A_MAIL_DOMAIN.has(match[1].toLocaleLowerCase('en')))) return true;
+  return [...text.matchAll(digitRun)].some(match => {
+    const run = match[0].trim();
+    const start = match.index + match[0].indexOf(run);
+    return looksLikePhone(run, text.slice(0, start), text.slice(start + run.length));
+  });
 }
 
 const firstPersonPrivate = /\b(my (?:salary|income|address|phone number|diagnosis|password|social security)|i (?:feel|felt|visited|was diagnosed)|my (?:wife|husband|child|doctor))\b/i;

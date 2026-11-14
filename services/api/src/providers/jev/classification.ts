@@ -8,15 +8,15 @@ import { type JevAnswer, type JevClient, type JevQuestion, validateAnswers } fro
 
 /** Every admission threshold in one place; tune them with the live eval, never inline. */
 export const ADMISSION_THRESHOLDS = {
-  claim: 0.2, route: 0.4, privateData: 0.1, privateLife: 0.4, rumour: 0.5, future: 0.5, misheard: 0.5, selfContained: 0.5, preservesScope: 0.85
+  claim: 0.2, route: 0.4, privateData: 0.1, privateLife: 0.4, rumour: 0.5, future: 0.5, misheard: 0.5, selfContained: 0.5, preservesScope: 0.85, subjectPrivate: 0.5
 } as const;
 
 // What a candidate is, ported from the reference app's SelectionKind with the future-claim riders. Tuned wording:
 // "whether or not it is actually true" stops Jev from turning away myths and false claims.
 const kindCriteria: Record<SelectionKind, string> = {
-  claim: 'It states at least one checkable fact about the world or about what someone said, did or decided, either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too. A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it',
+  claim: 'It states at least one checkable fact about the world or about what someone said, did or decided, either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too. A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it; a guess about how the speaker\'s own team, plans or life will turn out does not',
   opinion: 'Only a personal view, taste, feeling or judgment, with no fact in it that a source could prove or disprove. Value judgements phrased as predictions are opinions',
-  prediction: 'Only a guess about the future that no plan, announcement, estimate or forecast could confirm or contradict',
+  prediction: 'Only a guess about the future that no plan, announcement, estimate or forecast could confirm or contradict, such as a guess about how the speaker\'s own team, plans or life will turn out',
   question: 'A question',
   instruction: 'Only an instruction, request, piece of advice or call to action, with no fact in it',
   other: 'A fragment, greeting, heading, code or anything else that states no fact',
@@ -42,12 +42,13 @@ const claimStructure = {
   unclear: 'It is unclear whether the exact candidate is one proposition or multiple propositions.'
 };
 const privateDataQuestion = "Does this exact candidate disclose private or sensitive information about an identifiable person that should not go to web search? A person's name together with a public role, published work, official act, or publicly conferred award is not private merely because it identifies them. Still mark health/medical history, personal finances/account details, home/private contact/location, credentials/identity-document details, and private lived events/anecdotes as private, including for public figures and when phrased as reported or publicly known. Assess the actual information and context; a name/title/public-figure label alone neither establishes privacy nor waives it. When privacy status is uncertain, do not infer safety from fame or apparent searchability.";
-const privateLifeQuestion = "Does this candidate allege something about the private life of an identifiable person, such as an affair or relationship, their health, or their personal finances? Public figures are included, and so is a phrase that only presupposes it, such as \"his fourth affair\". Arrests, lawsuits, official statements and what courts or major outlets reported are public conduct, not private life.";
+const privateLifeQuestion = "Does this candidate allege something about the private life of an identifiable person, such as an affair or relationship, their health, or their personal finances? Public figures are included, and so is a phrase that only presupposes it, such as \"his fourth affair\". Public conduct and public events are not private life: arrests, crimes and criminal allegations, lawsuits, deaths, official statements and announcements (such as a leader announcing their own diagnosis or hospital stay), and what courts or major outlets reported.";
 const rumourQuestion = 'Is this candidate a rumour, allegation or speculation going around, about the past or the future, rather than a plain statement of fact? Hearsay framing such as "I heard", "people say" or "reportedly" counts. A myth or a wrong number stated plainly as fact does not.';
 const futureQuestion = 'Is this candidate about something that has not happened yet, such as a plan, launch, forecast, valuation or result in the future? Statements about the present or the past are not.';
 const completenessQuestion = 'Is this exact proposition complete enough to check without guessing a missing subject, condition, or scope detail that could change what is checked? A high yes means the captured proposition has the needed information. Judge only information needed for this fact type: timeless named facts and complete historical propositions do not need extra time, place, or population; a statistic often does (for example, “Unemployment is 7%” lacks a location and reference date). A generic or explicitly universal proposition can be complete as stated even when false or overbroad. Quantifiers such as all, always, no, and never state scope; possible counterexamples or omitted real-world qualifications belong to evidence judgment, not completeness. Do not demand a named event, date, place, or list of exceptions for a general proposition unless its wording leaves an actual referent or comparison unresolved. Evaluate the literal proposition without narrowing it or supplying conditions. Completeness is separate from truth and classification confidence; “I think” alone does not make a proposition incomplete.';
 const practicalQuestion = 'Would relying on this proposition plausibly change a concrete health, financial, safety or other practical decision? This is priority, never factual truth.';
 const scopeQuestion = 'Does this exact subspan preserve any negation, condition, quantifier, attribution, quotation, and other qualifier that actually governs it in originalText? A complete independent sentence or conjunction clause is not made incomplete by an unrelated neighboring private clause or by a discourse connector such as “and” or “but”. Answer yes when the exact span is independently checkable; answer no only when dropping surrounding text would change or detach a qualifier that governs this proposition.';
+const subjectPrivateQuestion = 'If this candidate is about one of the people offered in the subject question, is that person a private individual rather than a public figure (a politician, official, executive, celebrity, athlete, author or anyone else in the public eye)? Answer low when it is about a public figure, an organisation, a place or a thing, or when it names its own subject.';
 const structureQuestion = 'Is this exact candidate one coherent proposition, multiple independently meaningful propositions, or unclear? A sentence or clause can still contain several propositions.';
 const misheardQuestion: Record<'audio' | 'ocr', string> = {
   audio: 'Is this transcript likely misheard in a way that changes the claim? capture_confidence is the speech recogniser\'s average word confidence and low_confidence_words lists the words it was least sure of, with their confidence. Answer high only when a likely mishearing would change what is claimed, such as a name, a number or a key word, or when the sentence makes no sense as heard. Low confidence on a word that does not change the claim is not enough.',
@@ -79,6 +80,8 @@ function questionsFor(plan: Plan, index: number): Record<string, JevQuestion> {
   if (subjects.length) {
     questions[`${id}_subject`] = { type: 'choice', instructions: p + 'The candidate may refer to someone or something it doesn\'t name, with words like "he", "it" or "the company". Using the context (earlier sentences) and the rest of the captured text, which of these does it refer to? Decide only who or what it is about, not whether it is true: a wrong statement about someone is still about them. Choose none when it already names what it is about.',
       criteria: numbered('None of these: it names its own subject or refers to someone or something else', subjects) };
+    // A private person's name would reach the searches as the subject: Jev says whether the subject is one.
+    questions[`${id}_subject_private`] = { type: 'noul', instructions: p + subjectPrivateQuestion };
   }
   const resolution = subjects.length
     ? `A word such as "he", "it" or "the company" counts as resolved when it refers to one of the names offered in ${id}_subject; judge completeness with that subject in place. `
@@ -148,31 +151,53 @@ export function createClassifier(client: JevClient): PipelineAdapters['classify'
     const answers = validateAnswers({ answers: await client.ask({ state, questions }, context) }, questions);
     context.signal.throwIfAborted();
 
-    if (captured && (noul(answers.misheard) ?? 0) >= ADMISSION_THRESHOLDS.misheard) {
-      return { action: input.userInitiated ? 'needs_confirmation' : 'skip', reasonCode: REASON_CODES.possiblyMisheard, claims: [] };
+    if (captured) {
+      // Like privacy and completeness, the mishearing answer never defaults: an unanswered one fails closed.
+      const misheard = noul(answers.misheard);
+      if (typeof misheard !== 'number') throw new PipelineError('malformed_provider');
+      if (misheard >= ADMISSION_THRESHOLDS.misheard) return { action: input.userInitiated ? 'needs_confirmation' : 'skip', reasonCode: REASON_CODES.possiblyMisheard, claims: [] };
     }
-    const assessed = plans.map(plan => assess(plan, answers, input, context.now()));
+    // A name from a sensitive candidate of this input never becomes another candidate's subject: it would carry that text's person to a search.
+    const sensitiveTexts = plans.filter(plan => sensitiveSpan(plan.candidate, answers)).map(plan => plan.candidate.text.toLocaleLowerCase('en'));
+    const blockedSubject = (name: string) => containsContactData(name) || sensitiveTexts.some(text => text.includes(name.toLocaleLowerCase('en')));
+    const assessed = plans.map(plan => assess(plan, answers, input, context.now(), blockedSubject));
     return admit(assessed);
   };
 }
 
-function assess(plan: Plan, answers: Record<string, JevAnswer>, input: TextInput, now: number): Assessed {
+/** Privacy never defaults: an unanswered privacy question fails closed. */
+function privacyScores(candidate: ClaimCandidate, answers: Record<string, JevAnswer>) {
+  const privateData = noul(answers[`${candidate.id}_private_data`]);
+  const privateLife = noul(answers[`${candidate.id}_private_life`]);
+  if (typeof privateData !== 'number' || typeof privateLife !== 'number') throw new PipelineError('malformed_provider');
+  return { privateData, privateLife };
+}
+
+/** Its text must never reach a search: contact data, private data or a private-life allegation. */
+function sensitiveSpan(candidate: ClaimCandidate, answers: Record<string, JevAnswer>): boolean {
+  const { privateData, privateLife } = privacyScores(candidate, answers);
+  return containsContactData(candidate.text) || privateLife >= ADMISSION_THRESHOLDS.privateLife || privateData >= ADMISSION_THRESHOLDS.privateData || deterministicIssue(candidate.text) !== null;
+}
+
+function assess(plan: Plan, answers: Record<string, JevAnswer>, input: TextInput, now: number, blockedSubject: (name: string) => boolean): Assessed {
   const { candidate, proper } = plan;
   const id = candidate.id;
-  const privateData = noul(answers[`${id}_private_data`]);
-  const privateLifeScore = noul(answers[`${id}_private_life`]);
+  const { privateLife: privateLifeScore } = privacyScores(candidate, answers);
   const selfContained = noul(answers[`${id}_self_contained`]);
-  // Privacy and completeness never default: an unanswered one fails closed.
-  if (typeof privateData !== 'number' || typeof privateLifeScore !== 'number' || typeof selfContained !== 'number') throw new PipelineError('malformed_provider');
+  // Completeness never defaults either.
+  if (typeof selfContained !== 'number') throw new PipelineError('malformed_provider');
   const kind = decideKind(answers[`${id}_kind`]);
   const isClaim = kind === 'claim';
   const contact = containsContactData(candidate.text);
   const privateLife = isClaim && !contact && privateLifeScore >= ADMISSION_THRESHOLDS.privateLife;
-  const privateSpan = contact || privateLifeScore >= ADMISSION_THRESHOLDS.privateLife || privateData >= ADMISSION_THRESHOLDS.privateData || deterministicIssue(candidate.text) !== null;
+  const privateSpan = sensitiveSpan(candidate, answers);
   const scope = noul(answers[`${id}_preserves_scope`]);
   const scopeHolds = !proper || candidate.contentOf !== undefined || (typeof scope === 'number' && scope >= ADMISSION_THRESHOLDS.preservesScope);
   // Jev answers each question on its own, so a subject it picked fills the missing referent even when completeness came back low.
-  const subject = chosenName(answers[`${id}_subject`], plan.subjects);
+  // A private person (or an unanswered privacy question about them) and a name from sensitive text never become the subject.
+  const picked = chosenName(answers[`${id}_subject`], plan.subjects);
+  const subjectPrivate = noul(answers[`${id}_subject_private`]);
+  const subject = picked !== null && !blockedSubject(picked) && typeof subjectPrivate === 'number' && subjectPrivate < ADMISSION_THRESHOLDS.subjectPrivate ? picked : null;
   const complete = selfContained >= ADMISSION_THRESHOLDS.selfContained || subject !== null;
   const route = decideRoute(answers[`${id}_route`], candidate.text, now);
   const attributionChoice = answers[`${id}_attribution`].choice as AttributionChoice;

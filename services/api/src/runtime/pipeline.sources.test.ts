@@ -168,6 +168,8 @@ describe('evidence-sources pipeline', () => {
     slow.runtime.submit(slow.session, input(slow.session)); await vi.advanceTimersByTimeAsync(7_001);
     expect(slow.calls.paid.map(call => call.request.purpose)).toEqual(['primary']);
     expect(slow.results()[0].verdict).toBe('insufficient_evidence');
+    // More time might have settled it, so the abstention is not shared.
+    expect(slow.cache.size).toBe(0);
 
     const two = setup({ script: { paid: { primary: [ev('a', 'a.example')] } }, classify: async (body, context) => {
       context.consume('jev');
@@ -329,7 +331,7 @@ describe('evidence-sources pipeline', () => {
     expect(t.cache.size).toBe(0);
   });
 
-  it('reports an Exa failure as an error, unless the free sources already gave a definitive answer', async () => {
+  it('reports a primary Exa failure as an error, unless the free sources already gave a definitive answer', async () => {
     const failing = setup({ script: { paidError: { primary: new PipelineError('exa_unavailable') } } });
     failing.runtime.submit(failing.session, input(failing.session)); await flush();
     expect(failing.results()).toHaveLength(0);
@@ -340,10 +342,69 @@ describe('evidence-sources pipeline', () => {
     kept.runtime.submit(kept.session, input(kept.session)); await flush();
     expect(kept.results()[0]).toMatchObject({ verdict: 'misleading', selectedEvidenceIds: ['wiki'] });
     expect(kept.cache.size).toBe(0);
-    const optional = setup({ script: { paid: { primary: [ev('a', 'a.example')] }, paidError: { alternate: new PipelineError('exa_unavailable') } } });
+  });
+
+  it('keeps the first answer when the optional second search breaks: not kept and never Speculation', async () => {
+    const optional = setup({ frame: { rumour: true }, script: { paid: { primary: [ev('a', 'a.example')] }, paidError: { alternate: new PipelineError('exa_unavailable') } } });
     optional.runtime.submit(optional.session, input(optional.session)); await flush();
-    expect(optional.results()).toHaveLength(0);
-    expect(optional.events.at(-1)).toMatchObject({ type: 'pipeline.error', payload: { reasonCode: 'exa_unavailable' } });
+    expect(optional.calls.paid.map(call => call.request.purpose)).toEqual(['primary', 'alternate']);
+    expect(optional.results()[0]).toMatchObject({ verdict: 'insufficient_evidence', evidence: [{ id: 'a' }], presentation: { action: 'respond' } });
+    expect(optional.cache.size).toBe(0);
+    const judge = scriptedJudge(evidence => ({ label: 'supported', p: 0.9, stances: Object.fromEntries(evidence.map(source => [source.id, ['supports', 0.9]])) }));
+    const corroboration = setup({ judge, script: { paid: { primary: [ev('one', 'localnews.example')] }, paidError: { corroboration: new PipelineError('malformed_exa_response') } } });
+    corroboration.runtime.submit(corroboration.session, input(corroboration.session)); await flush();
+    expect(corroboration.calls.paid.map(call => call.request.purpose)).toEqual(['primary', 'corroboration']);
+    expect(corroboration.results()[0]).toMatchObject({ verdict: 'insufficient_evidence' });
+    expect(corroboration.cache.size).toBe(0);
+    everyEventValid([...optional.events, ...corroboration.events]);
+  });
+
+  it('an outage is never Speculation: failed free sources and an empty search answer Can\'t verify, silent when overheard', async () => {
+    const failed = { fact_check: false, wikipedia: false, wikidata: false, calculation: true } as const;
+    const asked = setup({ frame: { rumour: true }, script: { answered: failed } });
+    asked.runtime.submit(asked.session, input(asked.session, { text: 'Examplecorp is about to be sold to Megacorp.' })); await flush();
+    expect(asked.results()[0]).toMatchObject({ verdict: 'insufficient_evidence', reasonCode: 'no_evidence', presentation: { action: 'respond' } });
+    expect(asked.cache.size).toBe(0);
+    const overheard = setup({ frame: { rumour: true }, script: { answered: failed } });
+    overheard.session.preferences = { muted: false, automaticNotifications: true, selectedTopics: [] };
+    overheard.runtime.submit(overheard.session, input(overheard.session, { text: 'Examplecorp is about to be sold to Megacorp.', userInitiated: false })); await flush();
+    expect(overheard.results()[0]).toMatchObject({ verdict: 'insufficient_evidence', presentation: { action: 'silent' } });
+    everyEventValid([...asked.events, ...overheard.events]);
+  });
+
+  it('with no search left and a failed free source there is nothing to answer from: an error, not Can\'t verify', async () => {
+    const t = setup({ frame: { rumour: true }, script: { answered: { wikipedia: false }, paid: { primary: [ev('a', 'a.example')] } } });
+    t.runtime.submit(t.session, input(t.session, { userInitiated: false })); await flush();
+    expect(t.calls.paid).toHaveLength(2);
+    t.runtime.submit(t.session, input(t.session, { userInitiated: false, revision: 2, text: 'Turku is the capital of Finland.' })); await flush();
+    expect(t.calls.paid).toHaveLength(2);
+    expect(t.events.at(-1)).toMatchObject({ type: 'pipeline.error', payload: { reasonCode: 'sources_unavailable', presentation: { action: 'silent' } } });
+    // With every free source answering, the spent allowance falls through to Can't verify, never Speculation.
+    const u = setup({ frame: { rumour: true }, script: { paid: { primary: [ev('a', 'a.example')] } } });
+    u.runtime.submit(u.session, input(u.session, { userInitiated: false })); await flush();
+    u.runtime.submit(u.session, input(u.session, { userInitiated: false, revision: 2, text: 'Turku is the capital of Finland.' })); await flush();
+    expect(u.results()[0]).toMatchObject({ verdict: 'speculation' });
+    expect(u.results().at(-1)).toMatchObject({ verdict: 'insufficient_evidence' });
+    expect(u.cache.size).toBe(1); // only the first, complete check
+  });
+
+  it('a check that runs out of time is a timeout, never Can\'t verify or Speculation, and nothing is cached', async () => {
+    const t = setup({ frame: { rumour: true } });
+    const original = t.adapters.sources!.gatherFree;
+    t.adapters.sources!.gatherFree = async (query, context) => { const free = await original(query, context); vi.setSystemTime(NOW + 10_001); return free; };
+    t.runtime.submit(t.session, input(t.session)); await flush();
+    expect(t.results()).toHaveLength(0);
+    expect(t.searchPaid).not.toHaveBeenCalled();
+    expect(t.events.at(-1)).toMatchObject({ type: 'pipeline.error', payload: { reasonCode: 'timeout' } });
+    expect(t.cache.size).toBe(0);
+  });
+
+  it('never sends contact data to a source, whatever admission decided', async () => {
+    const t = setup({ frame: { subject: 'Jane 415 555 0100' } });
+    t.runtime.submit(t.session, input(t.session)); await flush();
+    expect(t.gatherFree).not.toHaveBeenCalled();
+    expect(t.searchPaid).not.toHaveBeenCalled();
+    expect(t.events.at(-1)).toMatchObject({ type: 'pipeline.error', payload: { reasonCode: 'private_or_personal' } });
   });
 
   it.each([

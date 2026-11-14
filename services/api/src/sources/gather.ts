@@ -16,7 +16,7 @@ const ORDER: FreeSourceName[] = ['fact_check', 'calculation', 'wikidata', 'weath
 
 /**
  * The free sources that apply to a claim: the calculation always runs (on the server, no network); a claim
- * it settles asks nothing else. A weather claim with a readable place and date asks Open-Meteo; any other
+ * routed as a calculation that it settles asks nothing else. A weather claim with a readable place and date asks Open-Meteo; any other
  * claim asks the fact checks (with a key), Wikipedia, and Wikidata for a fact about a named thing.
  */
 function freeTasks(deps: SourceDeps, query: SourceQuery, now: () => number): FreeTask[] {
@@ -57,7 +57,8 @@ export async function gatherFree(deps: SourceDeps, query: SourceQuery, context: 
     answered.calculation = true;
   } catch { answered.calculation = false; }
   if (calculated) found.set('calculation', [calculated]);
-  const tasks = calculated ? [] : freeTasks(deps, query, now);
+  // Only a calculation claim stops at the calculation; any other claim that happens to parse as one still asks the rest.
+  const tasks = calculated && query.route === 'calculation' ? [] : freeTasks(deps, query, now);
 
   if (tasks.length) {
     const controller = new AbortController();

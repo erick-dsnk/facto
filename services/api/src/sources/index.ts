@@ -32,7 +32,7 @@ export function createEvidenceSources(deps: SourceDeps): EvidenceSources {
   return {
     gatherFree: (query, context) => gatherFree(deps, query, context),
     searchPaid: (query, request, context) => deps.paid.search(query, request, context),
-    rank: (free, paid) => rankEvidence(free, paid, deps.lists),
+    rank: (free, paid, future) => rankEvidence(free, paid, deps.lists, future),
     traits: (evidence, attribution) => sourceTraits(evidence, attribution, deps.lists),
   };
 }
