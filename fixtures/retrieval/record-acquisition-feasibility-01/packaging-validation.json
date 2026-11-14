@@ -1,0 +1,21 @@
+{
+  "kind": "offline_portable_archive_prepublication_checks",
+  "createdAt": "2026-11-14T06:57:05.083120+00:00",
+  "originalCopies": 681,
+  "originalDecodedPayloadBytes": 3517748,
+  "storedCopiedPayloadBytes": 2948575,
+  "losslesslyGzippedCopies": 50,
+  "embeddedManifestEntriesVerified": 615,
+  "networkCalls": 0,
+  "providerCalls": 0,
+  "archivedRunnersExecuted": 0,
+  "activeArchiveUtility": [
+    "verify.py"
+  ],
+  "archivedSourceAndTestsInert": true,
+  "noIndexOrRepositoryWrites": true,
+  "diffCheck": "git diff --no-index --check against empty directory: exit0/no output after deterministic gzip of whitespace-sensitive original bytes",
+  "originalLocationQualification": "Initial strict671-original check passed. Later root integration advanced client.ts; portable historical snapshot stays exact, optional strict --originals reports that path. See original-location-recheck.json.",
+  "independentAnalysisManifestSHA256": "394c119bacc780aca8d3da74812c6740e7b5a5d07d0f59bebf53b1a425b08731",
+  "pending": "Independent package review, then root archive-only copy/commit authorization."
+}
