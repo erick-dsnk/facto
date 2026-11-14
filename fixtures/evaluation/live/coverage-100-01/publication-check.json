@@ -1,0 +1,27 @@
+{
+  "kind": "researched100_publication_integrity",
+  "createdAt": "2026-11-14T11:26:27.231480+00:00",
+  "originalReportSHA256": "e6cefc9877f271a231b4fd1834df0a9d6609a6dc7b03bed7846667b555a1111d",
+  "originalCitationAuditSHA256": "7edcee32de6c28961bbad128b5093d05305b593ea295cbba1eb889d4ebb919b5",
+  "citationProjectionSHA256": "7320ba67e305a3ab7ca85873fc45b887d94a8096a247db07a4c5eaefc6eb16cb",
+  "exactReusableDatasetJSONAndCSV": true,
+  "authoredSyntheticInputs": 100,
+  "groundedFactReferences": 80,
+  "maxPublishedResearchQuoteWords": 75,
+  "citationOccurrenceBindingsAndDecisionsPreserved": 246,
+  "maxPublishedCitationProofWords": 75,
+  "knownEnvironmentValuesScanned": 7,
+  "secretValueMatches": 0,
+  "forbiddenRawBodyOrRunnableFiles": 0,
+  "productionSourceDiffPaths": [],
+  "gate": {
+    "lint": "pass",
+    "typecheck": "pass",
+    "tests": 689,
+    "files": 34,
+    "development": 36,
+    "presentation": 21
+  },
+  "newProviderCalls": 0,
+  "omissions": "Original long source/audit proof bodies and author extraction dumps, active paid executor/authorization and raw fetched pages are omitted; hashes retained and corpus reusable. Capture compression is lossless."
+}

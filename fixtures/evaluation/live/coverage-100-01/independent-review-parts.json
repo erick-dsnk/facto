@@ -1,0 +1,99 @@
+{
+  "pass": true,
+  "providerCalls": 0,
+  "facts": 80,
+  "true": 40,
+  "false": 40,
+  "controls": 20,
+  "conversationStyleFacts": 24,
+  "conversationStyleInputsIncludingControls": 44,
+  "styleCounts": {
+    "mixed_private_public": 12,
+    "standalone": 56,
+    "first_person_public": 12
+  },
+  "domains": {
+    "history": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "civics": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "geography": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "earth_science": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "natural_science": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "computing_technology": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "culture_arts": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    },
+    "sport": {
+      "facts": 10,
+      "true": 5,
+      "false": 5
+    }
+  },
+  "partCounts": {
+    "a": {
+      "facts": 20,
+      "true": 10,
+      "false": 10,
+      "conversationStyleFacts": 6,
+      "trueConversation": 3,
+      "falseConversation": 3
+    },
+    "b": {
+      "facts": 20,
+      "true": 10,
+      "false": 10,
+      "conversationStyleFacts": 6,
+      "trueConversation": 3,
+      "falseConversation": 3
+    },
+    "c": {
+      "facts": 20,
+      "true": 10,
+      "false": 10,
+      "conversationStyleFacts": 6,
+      "trueConversation": 3,
+      "falseConversation": 3
+    },
+    "d": {
+      "facts": 20,
+      "true": 10,
+      "false": 10,
+      "conversationStyleFacts": 6,
+      "trueConversation": 3,
+      "falseConversation": 3
+    }
+  },
+  "sourceHashRecords": 80,
+  "hashes": {
+    "part-a.json": "a0b8d12cbbf203b2ca366cd7abd829c31b9d26e96f5be8362ec95145566cc19b",
+    "part-b.json": "d1cff6c4f1b87c96bf431be37d56195740af7fb8850e9849d598caf56e67e074",
+    "part-c.json": "b97ed6c444cfdb387498e885d753d9ae7ef2c90458e03a25235e94f3ac6c980e",
+    "part-d.json": "edd273bb51eb270416693373576cf40066681514c05860439665b6e3d462f7d1"
+  },
+  "scopeReview": "All80prospectivegoldlabels/qualifiers and authorinspectedgroundingconsistent. Exactsourcegate/modelperformanceunmeasured untilfirstliveexecution. No blindclaim; each input isolated typedturn."
+}
