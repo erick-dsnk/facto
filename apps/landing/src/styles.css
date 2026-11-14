@@ -400,26 +400,23 @@ a {
 
 .pop__icons {
   position: absolute;
-  top: 0.45em;
+  top: 0.375em; /* (PILL_H - ICON) / 2 */
   display: flex;
 }
 
-/* Source tiles: first letter of each outlet, overlapping. */
+/* Source tiles: each publisher's site icon, overlapping. */
 .pop__icons i {
-  display: grid;
-  place-items: center;
-  width: 1.6em;
-  height: 1.6em;
-  border-radius: 0.45em;
-  font: 600 0.62em/1 var(--font);
-  font-style: normal;
-  color: #fff;
-  box-shadow: 0 0 0 0.12em rgb(44 44 46);
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 0.3em;
+  background: center / cover no-repeat;
+  box-shadow: 0 0 0 0.075em rgb(44 44 46);
   opacity: 0;
 }
 
 .pop__icons i + i {
-  margin-left: -0.45em;
+  margin-left: -0.22em; /* ICON_STEP - ICON in popup.ts */
 }
 
 .pop__card {

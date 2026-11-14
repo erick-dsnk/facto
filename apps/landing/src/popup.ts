@@ -15,7 +15,8 @@ interface Example {
   /** What was said. For "You asked", the request; `read` then replaces it. */
   claim: string;
   read?: string;
-  sources: { letter: string; color: string }[];
+  /** Publishers the search turns up; `logo` is a file in public/img/sources. */
+  sources: { name: string; logo: string }[];
   verdict: 'true' | 'false';
   label: string;
   after: string;
@@ -29,9 +30,9 @@ const EXAMPLES: Example[] = [
     mode: 'Heard nearby',
     claim: 'Goldfish only remember things for three seconds.',
     sources: [
-      { letter: 'L', color: '#1f5fa8' },
-      { letter: 'B', color: '#3a3a3c' },
-      { letter: 'P', color: '#00798c' },
+      { name: 'Live Science', logo: 'livescience' },
+      { name: 'BBC', logo: 'bbc' },
+      { name: 'National Geographic', logo: 'natgeo' },
     ],
     verdict: 'false',
     label: 'False',
@@ -44,8 +45,8 @@ const EXAMPLES: Example[] = [
     claim: 'Facto, can you check this?',
     read: 'The Eiffel Tower grows up to 15 cm taller in summer.',
     sources: [
-      { letter: 'T', color: '#8a5a2b' },
-      { letter: 'B', color: '#0b3d91' },
+      { name: 'Tour Eiffel', logo: 'toureiffel' },
+      { name: 'Britannica', logo: 'britannica' },
     ],
     verdict: 'true',
     label: 'True',
@@ -55,10 +56,20 @@ const EXAMPLES: Example[] = [
   },
 ];
 
+const logoUrl = (logo: string) => `${import.meta.env.BASE_URL}img/sources/${logo}.webp`;
+
+// Fetch the logos up front so each tile shows its mark the moment it arrives.
+const preloaded = EXAMPLES.flatMap((ex) => ex.sources.map((src) => logoUrl(src.logo))).map((url) => {
+  const img = new Image();
+  img.src = url;
+  return img; // kept referenced so the fetch is not dropped
+});
+void preloaded;
+
 const PILL_H = 1.9; // em
 const STAGE_X = 1.75; // em, where stage labels start
-const ICON = 1.0; // em, tile size inside the pill font
-const ICON_STEP = 0.55; // em, overlap step
+const ICON = 1.15; // em, tile size inside the pill font
+const ICON_STEP = 0.93; // em, overlap step (about a fifth of a tile, as in apps/glasses)
 
 const q = <T extends Element>(root: ParentNode, sel: string): T => {
   const el = root.querySelector<T>(sel);
@@ -116,8 +127,7 @@ export function createPopup(root: HTMLElement): Popup {
     pub.textContent = ex.pub;
     icons.forEach((i, k) => {
       const src = ex.sources[k];
-      i.textContent = src?.letter ?? '';
-      i.style.background = src?.color ?? 'transparent';
+      i.style.backgroundImage = src ? `url("${logoUrl(src.logo)}")` : 'none';
       i.style.display = src ? '' : 'none';
     });
   }
@@ -269,15 +279,46 @@ export function createPopup(root: HTMLElement): Popup {
   }
 
   let master: gsap.core.Timeline | null = null;
+  let builtW = 0; // card width in em when the timeline was built
+  const widthEm = () => pop.offsetWidth / (parseFloat(getComputedStyle(pop).fontSize) || 16);
+
   function build(): gsap.core.Timeline {
     const m = measure();
+    builtW = m.fullW;
     const tl = gsap.timeline({ paused: true, repeat: -1 });
     EXAMPLES.forEach((ex) => tl.add(exampleTimeline(ex, m)));
     return tl;
   }
 
-  return {
+  // The lens can still be growing when the popup first plays, and the font has a pixel
+  // floor, so the card's width in em is not fixed. Rebuild when it changes, or the card
+  // opens too narrow and clips its text.
+  // Wait until the lens stops resizing, so a scroll that is still moving it does not
+  // restart the popup on every frame.
+  let staticMode = false;
+  let settle = 0;
+  new ResizeObserver(() => {
+    window.clearTimeout(settle);
+    settle = window.setTimeout(() => {
+      if (Math.abs(widthEm() - builtW) < 0.05) return;
+      if (staticMode) {
+        controls.showStatic();
+        return;
+      }
+      if (!master) return;
+      const playing = master.isActive();
+      master.kill();
+      master = null;
+      if (playing) {
+        master = build();
+        master.play();
+      }
+    }, 150);
+  }).observe(pop);
+
+  const controls: Popup = {
     play() {
+      staticMode = false;
       master ??= build();
       if (!master.isActive()) master.play();
     },
@@ -286,8 +327,10 @@ export function createPopup(root: HTMLElement): Popup {
       gsap.set(ui, { opacity: 0 });
     },
     showStatic() {
+      staticMode = true;
       master?.pause(0);
       const m = measure();
+      builtW = m.fullW;
       const ex = EXAMPLES[0];
       setup(ex, m.cardH[ex.verdict]);
       setWords(text, ex.claim, true);
@@ -296,4 +339,5 @@ export function createPopup(root: HTMLElement): Popup {
       gsap.set(pillDot, { opacity: 0 });
     },
   };
+  return controls;
 }
