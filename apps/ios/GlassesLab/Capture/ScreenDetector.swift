@@ -38,6 +38,30 @@ struct ScreenQuad: Equatable, Sendable {
 
   var corners: [CGPoint] { [topLeft, topRight, bottomRight, bottomLeft] }
 
+  /// Exact homography from a corrected unit square back to the original quadrilateral.
+  /// Both spaces have bottom-left origins. This also preserves skewed line polygons.
+  var unitToOriginal: [Double] {
+    let p = [bottomLeft, bottomRight, topRight, topLeft]
+    let x = p.map { Double($0.x) }, y = p.map { Double($0.y) }
+    let dx1 = x[1] - x[2], dx2 = x[3] - x[2], dx3 = x[0] - x[1] + x[2] - x[3]
+    let dy1 = y[1] - y[2], dy2 = y[3] - y[2], dy3 = y[0] - y[1] + y[2] - y[3]
+    let determinant = dx1 * dy2 - dx2 * dy1
+    let g: Double, h: Double
+    if abs(dx3) + abs(dy3) < 1e-12 || abs(determinant) < 1e-12 { g = 0; h = 0 }
+    else { g = (dx3 * dy2 - dx2 * dy3) / determinant; h = (dx1 * dy3 - dx3 * dy1) / determinant }
+    return [x[1] - x[0] + g * x[1], x[3] - x[0] + h * x[3], x[0],
+            y[1] - y[0] + g * y[1], y[3] - y[0] + h * y[3], y[0], g, h, 1]
+  }
+
+  func mapFromUnit(_ points: [OCRTargetPoint]) -> [OCRTargetPoint] {
+    let m = unitToOriginal
+    return points.map { p in
+      let divisor = m[6] * p.x + m[7] * p.y + m[8]
+      return .init(x: (m[0] * p.x + m[1] * p.y + m[2]) / divisor,
+                   y: (m[3] * p.x + m[4] * p.y + m[5]) / divisor)
+    }
+  }
+
   /// Shoelace area (normalised units squared).
   var area: CGFloat {
     let points = corners

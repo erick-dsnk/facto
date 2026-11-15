@@ -31,7 +31,7 @@ enum StreamQuality: String, CaseIterable, Sendable {
 
 /// The backend connection Live mode drives. `BackendClient` is the real one.
 @MainActor
-protocol LiveBackend: SessionChannel, CheckSubmitter {
+protocol LiveBackend: SessionChannel, CheckSubmitter, OCRTargetSelecting {
   var config: BackendConfig { get }
   /// Called for each event the app couldn't read (contract drift). Argument: the event type.
   var onUnreadableEvent: (@MainActor (_ type: String?) -> Void)? { get set }
@@ -46,6 +46,9 @@ protocol LiveBackend: SessionChannel, CheckSubmitter {
 }
 
 extension LiveBackend {
+  func selectTarget(in input: OCRTargetInput, imageData: Data, intent: String?) async throws -> OCRTargetSelection {
+    .init(status: .unavailable, reason: "backend_has_no_selector")
+  }
   var requiresAuthentication: Bool { false }
   func suspend() {}
   func resume() async throws { try await connect() }
@@ -271,6 +274,10 @@ final class LiveModel {
 
   var baseURLText: String
   var joinCode: String
+  var remoteOCRSelectionEnabled: Bool {
+    didSet { defaults.set(remoteOCRSelectionEnabled, forKey: BackendConfig.remoteOCRSelectionEnabledKey) }
+  }
+  var photoTargetHint = ""
   var demoQuality: Bool {
     didSet {
       defaults.set(demoQuality, forKey: Self.demoQualityKey)
@@ -373,6 +380,12 @@ final class LiveModel {
   }
   var checkPhase: LookAndCheckCoordinator.Phase { coordinator?.phase ?? .idle }
   var isChecking: Bool { checkPhase != .idle }
+  var photoTargetChoices: [LookAndCheckCoordinator.TargetChoice] { coordinator?.targetChoices ?? [] }
+
+  func choosePhotoTarget(_ id: String) async {
+    guard isAppActive, isConnected, glassesAuthorized else { return }
+    _ = await coordinator?.chooseTarget(id)
+  }
 
   let webDisplay: WebDisplayConnection
   private(set) var isSwitchingDisplay = false
@@ -531,6 +544,7 @@ final class LiveModel {
     self.webDisplay = WebDisplayConnection(defaults: defaults)
     self.baseURLText = config.baseURL.absoluteString
     self.joinCode = config.joinCode
+    self.remoteOCRSelectionEnabled = config.remoteOCRSelectionEnabled
     self.wantsBackendConnection = defaults.object(forKey: Self.connectionIntentKey) as? Bool ?? !config.joinCode.isEmpty
     self.demoQuality = defaults.object(forKey: Self.demoQualityKey) as? Bool ?? true
     self.isMuted = defaults.bool(forKey: Self.mutedKey)
@@ -613,7 +627,7 @@ final class LiveModel {
       notice = "Use an https:// URL. Plain http works only for localhost and private network addresses."
       return
     }
-    let config = BackendConfig(baseURL: url, joinCode: joinCode.trimmingCharacters(in: .whitespacesAndNewlines))
+    let config = BackendConfig(baseURL: url, joinCode: joinCode.trimmingCharacters(in: .whitespacesAndNewlines), remoteOCRSelectionEnabled: remoteOCRSelectionEnabled)
     guard !config.joinCode.isEmpty else { connection = .disconnected(reason: "missing_join_code"); return }
     if !restoring {
       wantsBackendConnection = true
@@ -979,7 +993,7 @@ final class LiveModel {
       return
     }
     guard !Task.isCancelled, wakeID == nil || wakeSessionID == wakeID else { return }
-    await coordinator.performCheck(source: .button)
+    await coordinator.performCheck(source: .button, intent: photoTargetHint.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : photoTargetHint)
   }
 
   // MARK: Output controls
@@ -1026,7 +1040,7 @@ final class LiveModel {
     streamer.onStopped = { [weak self] reason in self?.listeningStopped(reason) }
     streamer.onAutoResumed = { [weak self] in self?.autoResumed() }
     relay.target = streamer
-    let coordinator = LookAndCheckCoordinator(channel: backend, photo: camera, recognizer: recognizer, submitter: backend, debugLog: debugLog)
+    let coordinator = LookAndCheckCoordinator(channel: backend, photo: camera, recognizer: recognizer, submitter: backend, targetSelector: config.remoteOCRSelectionEnabled ? backend : nil, debugLog: debugLog)
     coordinator.canCapture = { [weak self] in
       guard let self else { return false }
       return self.isAppActive && self.glassesAuthorized && self.wantsBackendConnection && self.isConnected && backend.connectionState == .connected
@@ -1393,7 +1407,7 @@ final class LiveModel {
       for requestId in requestIds where !resolvedChecks.contains(requestId) {
         startTimer(for: requestId)
       }
-    case .unreadable(let message):
+    case .unreadable(let message), .needsTarget(let message), .incomplete(let message):
       checkMessage = message
       presenter.presentOutcome(.needsConfirmation(heard: false), userInitiated: true)
     case .failed(let reason):
@@ -1423,6 +1437,11 @@ final class LiveModel {
     case "session_paused": pausedMessage
     case "photo_failed": "The photo didn't arrive. Check the glasses and try again."
     case "ocr_failed": "The photo couldn't be read. Try again."
+    case "target_selection_failed", "target_selection_unavailable": "Text selection is unavailable. Try again shortly."
+    case "target_selection_input_too_large": "There's too much text in this photo. Move closer or open an individual post and try again."
+    case "target_selection_hint_too_long": "Shorten the headline or topic hint to 500 characters and try again."
+    case "target_selection_image_too_large": "The photo couldn't be prepared for text selection. Move closer to the text and take another photo."
+    case "invalid_target_selection": "The text region couldn't be confirmed. Try another photo."
     case "submit_failed": "The backend didn't accept the text. Check the connection."
     default: "The check didn't finish (\(reason))."
     }

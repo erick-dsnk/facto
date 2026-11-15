@@ -764,6 +764,16 @@ final class LiveModelTests: XCTestCase {
 
   // MARK: Connection
 
+  func testPhotoLayoutConsentPersistsWithoutConnecting() {
+    let model = makeModel()
+    XCTAssertFalse(model.remoteOCRSelectionEnabled)
+    model.remoteOCRSelectionEnabled = true
+    XCTAssertTrue(BackendConfig.load(from: defaults, secrets: secrets).remoteOCRSelectionEnabled)
+    model.remoteOCRSelectionEnabled = false
+    XCTAssertFalse(BackendConfig.load(from: defaults, secrets: secrets).remoteOCRSelectionEnabled)
+    XCTAssertTrue(backends.isEmpty, "saving consent must not start a backend session")
+  }
+
   func testConnectSavesSettingsAndConnects() async {
     let model = await connectedModel()
     XCTAssertEqual(backend.config, BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "demo-code"))

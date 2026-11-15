@@ -431,8 +431,8 @@ final class DebugLogWiringTests: XCTestCase {
     let photo = StubPhoto(jpeg: jpeg)
     var ocr = OCRResult(text: "The Eiffel Tower opened in 1889.", meanConfidence: 0.9, lineCount: 1, droppedLineCount: 1)
     ocr.observations = [
-      OCRService.OCRLine(text: "The Eiffel Tower opened in 1889.", confidence: 0.9, boundingBox: CGRect(x: 0.1, y: 0.5, width: 0.8, height: 0.1)),
-      OCRService.OCRLine(text: "~~", confidence: 0.2, boundingBox: CGRect(x: 0.1, y: 0.2, width: 0.1, height: 0.05)),
+      OCRService.OCRLine(text: "The Eiffel Tower opened in 1889.", confidence: 0.9, boundingBox: CGRect(x: 0.1, y: 0.5, width: 0.8, height: 0.1), id: "original-0"),
+      OCRService.OCRLine(text: "~~", confidence: 0.2, boundingBox: CGRect(x: 0.1, y: 0.2, width: 0.1, height: 0.05), id: "original-1"),
     ]
     let recognizer = StubRecognizer(result: ocr)
     let submitter = StubSubmitter()
@@ -451,7 +451,7 @@ final class DebugLogWiringTests: XCTestCase {
     let entries = try sandbox.entries()
     XCTAssertEqual(
       entries.compactMap { $0["kind"] as? String },
-      ["lookcheck.start", "lookcheck.photo", "lookcheck.ocr", "lookcheck.chunks", "lookcheck.submitted", "lookcheck.outcome"]
+      ["lookcheck.start", "lookcheck.photo", "lookcheck.ocr", "lookcheck.target", "lookcheck.chunks", "lookcheck.submitted", "lookcheck.outcome"]
     )
     let traces = Set(entries.compactMap { payload($0)["trace"] as? String })
     XCTAssertEqual(traces.count, 1, "one trace id ties the check together")
@@ -468,10 +468,13 @@ final class DebugLogWiringTests: XCTestCase {
     XCTAssertEqual(ocrEntry["text"] as? String, "The Eiffel Tower opened in 1889.")
     let observations = try XCTUnwrap(ocrEntry["observations"] as? [[String: Any]])
     XCTAssertEqual(observations.compactMap { $0["text"] as? String }, ["The Eiffel Tower opened in 1889.", "~~"])
+    XCTAssertEqual(observations.compactMap { $0["id"] as? String }, ["original-0", "original-1"])
     XCTAssertEqual(try XCTUnwrap(observations[1]["confidence"] as? Double), 0.2, accuracy: 0.0001)
-    XCTAssertEqual(payload(entries[3])["chunks"] as? [String], ["The Eiffel Tower opened in 1889."])
-    XCTAssertEqual(payload(entries[4])["requestId"] as? String, requestId)
-    XCTAssertEqual(payload(entries[5])["outcome"] as? String, "submitted")
+    XCTAssertEqual(payload(entries[3])["status"] as? String, "selected")
+    XCTAssertEqual(payload(entries[3])["selectedLineIds"] as? [String], ["original-0"])
+    XCTAssertEqual(payload(entries[4])["chunks"] as? [String], ["The Eiffel Tower opened in 1889."])
+    XCTAssertEqual(payload(entries[5])["requestId"] as? String, requestId)
+    XCTAssertEqual(payload(entries[6])["outcome"] as? String, "submitted")
   }
 
   func testUnreadablePhotoLogsWhy() async throws {
@@ -489,8 +492,41 @@ final class DebugLogWiringTests: XCTestCase {
     let entries = try sandbox.entries()
     let unreadable = try XCTUnwrap(entries.first { $0["kind"] as? String == "lookcheck.unreadable" }.map(payload))
     XCTAssertEqual(unreadable["reason"] as? String, "low_confidence")
+    XCTAssertEqual(unreadable["meanConfidence"] as? Double, 0.3)
+    XCTAssertEqual(unreadable["minimumMeanConfidence"] as? Double, 0.5)
+    XCTAssertEqual(unreadable["visibleCharacters"] as? Int, 5)
     XCTAssertEqual(payload(entries[0])["trigger"] as? String, "button")
     XCTAssertEqual(entries.last.map(payload)?["message"] as? String, LookAndCheckCoordinator.unreadableMessage)
+  }
+
+  func testUnreadableSourceObservationsLogSelectionReason() async throws {
+    var ocr = OCRResult(text: "", meanConfidence: 0, lineCount: 0, droppedLineCount: 1)
+    ocr.observations = [
+      OCRService.OCRLine(text: "Th3 E1", confidence: 0.2,
+        boundingBox: CGRect(x: 0.1, y: 0.5, width: 0.6, height: 0.1), id: "original-0"),
+    ]
+    let log = sandbox.makeLog()
+    let submitter = StubSubmitter()
+    let coordinator = LookAndCheckCoordinator(
+      channel: StubChannel(), photo: StubPhoto(jpeg: try makeJPEG(width: 8, height: 6)),
+      recognizer: StubRecognizer(result: ocr), submitter: submitter, debugLog: log
+    )
+
+    let outcome = await coordinator.performCheck(source: .button)
+    log.waitUntilWritten()
+
+    XCTAssertEqual(outcome, .unreadable(message: LookAndCheckCoordinator.unreadableMessage))
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+    let entries = try sandbox.entries()
+    XCTAssertEqual(entries.compactMap { $0["kind"] as? String }, [
+      "lookcheck.start", "lookcheck.photo", "lookcheck.ocr", "lookcheck.target", "lookcheck.unreadable", "lookcheck.outcome",
+    ])
+    XCTAssertEqual(payload(entries[3])["status"] as? String, "unreadable")
+    let unreadable = payload(entries[4])
+    XCTAssertEqual(unreadable["reason"] as? String, "no_readable_lines")
+    XCTAssertEqual(unreadable["meanConfidence"] as? Double, 0)
+    XCTAssertEqual(unreadable["visibleCharacters"] as? Int, 0)
+    XCTAssertEqual(Set(entries.compactMap { payload($0)["trace"] as? String }).count, 1)
   }
 }
 

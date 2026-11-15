@@ -1,0 +1,101 @@
+name: iOS
+
+on:
+  pull_request:
+    paths:
+      - apps/ios/**
+      - .github/workflows/ios.yml
+  push:
+    branches: [main]
+    paths:
+      - apps/ios/**
+      - .github/workflows/ios.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  simulator-tests:
+    runs-on: macos-26
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/ios
+        shell: bash
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify Xcode and install XcodeGen
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          python3 - <<'PY'
+          import subprocess
+          version = subprocess.check_output(["xcodebuild", "-version"], text=True).splitlines()[0].split()[1]
+          if tuple(map(int, version.split(".")[:2])) < (26, 4):
+              raise SystemExit("GlassesLab requires Xcode 26.4 or later")
+          PY
+          brew install xcodegen
+      - name: Generate project and fetch pinned native libraries
+        run: xcodegen generate
+      - name: Select an available iPhone simulator
+        id: simulator
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+
+          available = json.loads(subprocess.check_output(
+              ["xcrun", "simctl", "list", "devices", "available", "--json"], text=True
+          ))["devices"]
+          candidates = []
+          for runtime, devices in available.items():
+              match = re.search(r"\.iOS-(\d+)-(\d+)(?:-(\d+))?$", runtime)
+              if not match:
+                  continue
+              version = tuple(int(part or 0) for part in match.groups())
+              for device in devices:
+                  if device.get("isAvailable") and device["name"].startswith("iPhone"):
+                      candidates.append((version, device["name"], device["udid"]))
+          if not candidates:
+              raise SystemExit("No available iPhone simulator is installed")
+          version, name, udid = max(candidates)
+          print(f"Testing on {name}, iOS {'.'.join(map(str, version))}, {udid}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"udid={udid}\n")
+          PY
+      - name: Build and run XCTest
+        env:
+          SIMULATOR_UDID: ${{ steps.simulator.outputs.udid }}
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project GlassesLab.xcodeproj \
+            -scheme GlassesLab \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -destination-timeout 120 \
+            -parallel-testing-enabled NO \
+            -derivedDataPath DerivedData \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            DEVELOPMENT_TEAM= \
+            2>&1 | tee xcodebuild.log
+      - name: Upload native test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-results
+          path: |
+            apps/ios/TestResults.xcresult
+            apps/ios/xcodebuild.log
+          if-no-files-found: ignore
+          retention-days: 7
