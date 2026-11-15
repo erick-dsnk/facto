@@ -12,8 +12,8 @@ import { DebugFeed } from './runtime/debug-feed.js';
 const mode = process.env.PIPELINE_MODE ?? 'fixture';
 if (mode !== 'fixture' && mode !== 'live') throw new Error('PIPELINE_MODE must be fixture or live.');
 if (mode === 'live' && !process.env.EXA_API_KEY) throw new Error('Live mode requires EXA_API_KEY.');
-const decision = selectDecisionProvider({ mode, provider: process.env.DECISION_PROVIDER, jevApiKey: process.env.JEV_API_KEY,
-  layaUrl: process.env.LAYA_URL, diagnostic: (event, fields) => console.info(`[laya] ${event}`, fields) });
+const decision = selectDecisionProvider({ mode, provider: process.env.DECISION_PROVIDER, admissionProvider: process.env.ADMISSION_PROVIDER, jevApiKey: process.env.JEV_API_KEY,
+  layaUrl: process.env.LAYA_URL, layaApiKey: process.env.LAYA_API_KEY, diagnostic: (event, fields) => console.info(`[laya] ${event}`, fields) });
 const client = decision.client;
 // Debug only: logs every final Deepgram result, including what bystanders said. Off unless set to 1.
 const debugTranscripts = process.env.DEBUG_TRANSCRIPTS === '1';
@@ -21,7 +21,7 @@ const debugTranscripts = process.env.DEBUG_TRANSCRIPTS === '1';
 const debugFeedKey = process.env.DEBUG_FEED_KEY ?? '';
 if (debugTranscripts && debugFeedKey.length < 16) console.warn('DEBUG_FEED_KEY is unset or shorter than 16 characters: the debug feed is off.');
 const debugFeed = debugTranscripts && debugFeedKey.length >= 16 ? new DebugFeed() : undefined;
-const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(client), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client),
+const adapters = mode === 'fixture' ? fixtureAdapters() : { classify: createClassifier(decision.admissionClient), retrieve: createRetriever({ apiKey: process.env.EXA_API_KEY! }), retrieveAlternate: createRetriever({ apiKey: process.env.EXA_API_KEY!, queryStrategy: 'balanced_evidence' }), judge: createJudge(client),
   ...(decision.cache ? { cache: decision.cache } : {}),
   sources: createLiveSources({ jev: client, exaApiKey: process.env.EXA_API_KEY!, googleFactCheckApiKey: process.env.GOOGLE_FACTCHECK_API_KEY || undefined }) };
 const cert = process.env.TLS_CERT_PATH; const key = process.env.TLS_KEY_PATH;

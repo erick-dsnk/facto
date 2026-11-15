@@ -29,6 +29,18 @@ describe('local Laya decision adapter', () => {
     expect(diagnostic).toHaveBeenCalledWith('truncated', expect.objectContaining({ inferenceMs: 42.5, inputTokens: 73, stateTokensDropped: 12, truncatedQuestions: 1 }));
   });
 
+  it('sends an optional Laya bearer token and fails authentication without retry or secret diagnostics', async () => {
+    for (const status of [401, 403]) {
+      const fetcher = vi.fn<typeof fetch>(async () => new Response('private auth response', { status }));
+      const diagnostic = vi.fn();
+      await expect(createLayaClient({ url: 'http://localhost:8765', apiKey: 'local-secret', fetch: fetcher, diagnostic }).ask(request, context()))
+        .rejects.toMatchObject({ code: 'jev_authentication' });
+      expect(fetcher).toHaveBeenCalledOnce();
+      expect(fetcher.mock.calls[0][1]?.headers).toEqual({ 'Content-Type': 'application/json', Authorization: 'Bearer local-secret' });
+      expect(diagnostic).not.toHaveBeenCalled();
+    }
+  });
+
   it('rejects invalid decision options through shared Jev answer validation', async () => {
     const invalid = [
       { answers: {} },
