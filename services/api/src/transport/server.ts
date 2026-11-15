@@ -3,12 +3,12 @@ import websocket from '@fastify/websocket';
 import { readFile } from 'node:fs/promises';
 import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
-import { PROVIDER_LIMITS, PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
+import { PROVIDER_LIMITS, PipelineError, textInputSchema, type LowConfidenceWord } from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from '../runtime/adapters.js';
 import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
 import type { DebugFeed } from '../runtime/debug-feed.js';
-import { audioStartSchema, type AsrAdapter } from './audio.js';
+import { audioStartSchema, type AsrAdapter, type AudioStart } from './audio.js';
 import { AudioBridge } from './audio-bridge.js';
 import { displayEventVisible } from '../runtime/display.js';
 import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
@@ -243,11 +243,47 @@ export async function buildServer(options: ServerOptions) {
     const recent = new TranscriptContext();
     // Joins hesitation-split claims and keeps fragments from being checked (part of the voice options; absent, every sentence is checked).
     const stitcher = options.voice ? new SentenceStitcher(options.voice.stitchMs) : undefined;
-    const forget = () => { transcripts.clear(); triggered.clear(); stitcher?.clear(); };
+    // A held sentence that trails off is checked on its own once nothing continues it within the stitch window.
+    const releaseTimers = new Set<ReturnType<typeof setTimeout>>();
+    let lastConfig: AudioStart | undefined;
+    const forget = () => { transcripts.clear(); triggered.clear(); stitcher?.clear(); for (const timer of releaseTimers) clearTimeout(timer); releaseTimers.clear(); };
     const fail = (error: unknown) => {
       if (error instanceof PipelineError && error.code === 'audio_cancelled') return;
       if (!session.active || !store.sessions.has(session.id)) return;
       session.emit('pipeline.error', { reasonCode: error instanceof PipelineError ? error.code : 'invalid_request', message: 'The request could not be completed.' });
+    };
+    type CheckStep = { requestId: string; segmentId: string; text: string; speaker: number | null; atMs: number };
+    /** Submits one sentence (or stitched claim) for checking. Every revision is re-evaluated: a correction that is no longer a trigger is checked like any sentence. */
+    const submitCheck = (step: CheckStep, config: AudioStart, confidence: number | null, lowConfidenceWords?: LowConfidenceWord[]) => {
+      const target = step.requestId;
+      // A correction that only changes which words were uncertain is a new revision too.
+      const hash = createHash('sha256').update(JSON.stringify(lowConfidenceWords ? [step.text, confidence, lowConfidenceWords] : [step.text, confidence])).digest('hex');
+      const previous = transcripts.get(target);
+      const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(step.atMs).toISOString(),
+        context: previous?.context ?? recent.contextFor(target, step.atMs) };
+      const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(step.segmentId) ? step.segmentId : `segment-${createHash('sha256').update(step.segmentId).digest('hex').slice(0, 24)}`;
+      const input = textInputSchema.parse({ schemaVersion: 1, requestId: target, sessionId: session.id, sessionEpoch: config.sessionEpoch, revision: record.revision,
+        mode: 'audio', text: step.text, language: 'en', capturedAt: record.capturedAt,
+        capture: { source: config.source, segmentId, confidence, final: true, ...(lowConfidenceWords ? { lowConfidenceWords } : {}) },
+        context: record.context, userInitiated: false });
+      // Context reflects the conversation, including sentences the runtime later declines to check.
+      recent.record(target, step.text, step.speaker, Date.parse(record.capturedAt));
+      runtime.submit(session, input); remember(transcripts, target, record);
+    };
+    const scheduleRelease = () => {
+      if (!stitcher || !options.voice) return;
+      const timer = setTimeout(() => {
+        releaseTimers.delete(timer);
+        if (!lastConfig || !session.active) return;
+        for (const step of stitcher.release(now())) {
+          try {
+            debugFeed?.push('asr.stitch', { action: 'release', requestId: step.requestId, text: step.text }, session.id);
+            submitCheck(step, lastConfig, null);
+          } catch (error) { fail(error); }
+        }
+      }, options.voice.stitchMs + 250);
+      timer.unref?.();
+      releaseTimers.add(timer);
     };
     const bridge: AudioBridge | undefined = options.asr ? new AudioBridge(session, options.asr, (event, config, capturedAt) => {
       try {
@@ -256,6 +292,7 @@ export async function buildServer(options: ServerOptions) {
         const lowConfidenceWords = event.lowConfidenceWords?.length ? event.lowConfidenceWords : undefined;
         // A correction that only changes which words were uncertain is a new revision too.
         const hashOf = (text: string) => createHash('sha256').update(JSON.stringify(lowConfidenceWords ? [text, event.confidence, lowConfidenceWords] : [text, event.confidence])).digest('hex');
+        lastConfig = config;
         if (isVoiceTrigger(event.text)) {
           // A spoken "check this" asks the app for a photo. The command itself is never fact-checked.
           // Keep the segment's revision so a later correction back to a claim is checked as a newer revision.
@@ -280,22 +317,10 @@ export async function buildServer(options: ServerOptions) {
         if (step.action === 'hold') {
           if (step.cancel) session.cancel(step.cancel);
           recent.record(step.requestId, step.text, step.speaker, step.atMs);
+          scheduleRelease();
           return;
         }
-        // Every revision is re-evaluated: a correction that is no longer a trigger is checked like any sentence.
-        const target = step.requestId;
-        const hash = hashOf(step.text);
-        const previous = transcripts.get(target);
-        const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(step.atMs).toISOString(),
-          context: previous?.context ?? recent.contextFor(target, step.atMs) };
-        const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(step.segmentId) ? step.segmentId : `segment-${createHash('sha256').update(step.segmentId).digest('hex').slice(0, 24)}`;
-        const input = textInputSchema.parse({ schemaVersion: 1, requestId: target, sessionId: session.id, sessionEpoch: config.sessionEpoch, revision: record.revision,
-          mode: 'audio', text: step.text, language: 'en', capturedAt: record.capturedAt,
-          capture: { source: config.source, segmentId, confidence: event.confidence, final: true, ...(lowConfidenceWords ? { lowConfidenceWords } : {}) },
-          context: record.context, userInitiated: false });
-        // Context reflects the conversation, including sentences the runtime later declines to check.
-        recent.record(target, step.text, step.speaker, Date.parse(record.capturedAt));
-        runtime.submit(session, input); remember(transcripts, target, record);
+        submitCheck(step, config, event.confidence, lowConfidenceWords);
       } catch (error) {
         // The session's request budget is spent. Stop listening with a distinct reason instead of dropping every later sentence.
         if (error instanceof PipelineError && error.code === 'request_capacity') void bridge?.stop('request_capacity').catch(() => undefined);

@@ -54,6 +54,10 @@ describe('independent presentation policy', () => {
   });
   it.each(['misleading', 'speculation'] as const)('keeps the opt-in, mute, duplicate and admission gates for overheard %s', verdict => {
     expect(decidePresentation({ verdict, admission: admitted }, 'automatic', state, { ...preferences, automaticNotifications: false })).toEqual({ action: 'silent', reasonCode: 'notifications_disabled' });
+    // Overheard gossip about someone's private life never alerts; asked about, it still answers that it isn't checked.
+    expect(decidePresentation({ verdict: 'speculation', reasonCode: 'private_life_not_checked', admission: admitted }, 'automatic', state, preferences)).toEqual({ action: 'silent', reasonCode: 'private_life_not_checked' });
+    expect(decidePresentation({ verdict: 'speculation', reasonCode: 'private_life_not_checked', admission: admitted }, 'manual', state, preferences)).toEqual({ action: 'respond', reasonCode: 'explicit_request' });
+    expect(decidePresentation({ verdict: 'speculation', reasonCode: 'unconfirmed_rumour', admission: admitted }, 'automatic', state, preferences)).toEqual({ action: 'notify', reasonCode: 'automatic_speculation' });
     expect(decidePresentation({ verdict, admission: admitted }, 'automatic', state, { ...preferences, muted: true })).toEqual({ action: 'silent', reasonCode: 'muted' });
     expect(decidePresentation({ verdict, admission: admitted }, 'automatic', { ...state, duplicate: true }, preferences)).toEqual({ action: 'silent', reasonCode: 'duplicate' });
     expect(decidePresentation({ verdict }, 'automatic', state, preferences)).toEqual({ action: 'silent', reasonCode: 'unresolved_admission' });

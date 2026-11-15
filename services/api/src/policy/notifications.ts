@@ -1,6 +1,6 @@
 import type { AdmissionMetadata, Preferences, Presentation, PresentationState, ResultDecision } from '../../../../packages/contracts/src/index.js';
 
-export type PresentationResult = Pick<ResultDecision, 'verdict'> & { admission?: AdmissionMetadata };
+export type PresentationResult = Pick<ResultDecision, 'verdict'> & Partial<Pick<ResultDecision, 'reasonCode'>> & { admission?: AdmissionMetadata };
 const silent = (reasonCode: string): Presentation => ({ action: 'silent', reasonCode });
 
 const normalizedPhrase = (value: string) => value.normalize('NFKC').toLowerCase().replace(/\s+/gu, ' ').trim();
@@ -40,6 +40,8 @@ export function decidePresentation(
   if (intent === 'manual' || intent === 'repeat') return { action: 'respond', reasonCode: intent === 'repeat' ? 'explicit_repeat' : 'explicit_request' };
   if (!state.healthy) return silent('service_unhealthy');
   if (!preferences.automaticNotifications) return silent('notifications_disabled');
+  // Claims about someone's private life are never checked. Overheard, an alert would only repeat the gossip to the wearer.
+  if (result.verdict === 'speculation' && result.reasonCode === 'private_life_not_checked') return silent('private_life_not_checked');
   // Overheard, only False, Misleading and Speculation alert (chime and card); True and Can't verify stay in history.
   if (result.verdict !== 'contradicted' && result.verdict !== 'misleading' && result.verdict !== 'speculation') return silent('automatic_noncontradiction');
   if (result.admission?.admissionAction !== 'check' || result.admission.assertionStatus !== 'asserted') return silent('unresolved_admission');

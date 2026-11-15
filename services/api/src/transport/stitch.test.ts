@@ -23,6 +23,27 @@ describe('sentence stitcher', () => {
     expect(stitcher.add(said('3', 'From the family of horses.', 43_000))).toMatchObject({ action: 'check', requestId: 'r-1', text: 'Crocodiles are from the family of horses.' });
   });
 
+  // PR #75 review: a claim that opens with a camel-case name was held forever as a "lowercase continuation".
+  it.each(['iPhone sales doubled last year.', 'eBay was founded in 1995.', 'iOS 26 shipped in September.'])('checks a sentence that opens with a camel-case name: %s', text => {
+    expect(new SentenceStitcher(4000).add(said('1', text, 10_000))).toMatchObject({ action: 'check', requestId: 'r-1', text });
+  });
+
+  it('checks a trailing-off sentence on its own once nothing continues it within the window, and only once', () => {
+    const stitcher = new SentenceStitcher(4000);
+    expect(stitcher.add(said('1', 'The Eiffel Tower is in Berlin,', 10_000)).action).toBe('hold');
+    expect(stitcher.release(13_999)).toEqual([]);
+    expect(stitcher.release(14_000)).toEqual([{ action: 'check', requestId: 'r-1', segmentId: 'g1-1', text: 'The Eiffel Tower is in Berlin', speaker: 0, atMs: 10_000 }]);
+    expect(stitcher.release(20_000)).toEqual([]);
+  });
+
+  it('never releases a headless continuation or a stitched claim that was already checked', () => {
+    const stitcher = new SentenceStitcher(4000);
+    expect(stitcher.add(said('1', 'from the family of zebras.', 10_000)).action).toBe('hold');
+    expect(stitcher.add(said('2', 'Crocodiles are, uh,', 20_000)).action).toBe('hold');
+    expect(stitcher.add(said('3', 'From the family of zebras.', 21_000)).action).toBe('check');
+    expect(stitcher.release(40_000)).toEqual([]);
+  });
+
   it('does not join after the window, so the late continuation stands alone and the fragment is never checked', () => {
     const stitcher = new SentenceStitcher(4000);
     expect(stitcher.add(said('1', 'Crocodiles are, uh,', 39_000)).action).toBe('hold');
