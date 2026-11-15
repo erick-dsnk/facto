@@ -54,6 +54,15 @@ describe('ported verdict rules', () => {
     expect(label('contradicted', pFalse, tally([['politifact.com', 'contradicts', sure]], { trusted: ['politifact.com'] }))).toBe('contradicted');
   });
 
+  it('says False on one contradicting site when Jev is at least 90% sure and no site backs the claim', () => {
+    const one = tally([['a.org', 'contradicts', sure]]);
+    expect(label('contradicted', RULES.minProbabilityConfidentFalse, one)).toBe('contradicted');
+    expect(label('contradicted', RULES.minProbabilityConfidentFalse - 0.01, one)).toBe('insufficient_evidence');
+    const backed = tally([['a.org', 'contradicts', sure], ['b.com', 'supports', sure]]);
+    expect(label('contradicted', sure, backed)).not.toBe('contradicted');
+    expect(label('contradicted', sure, tally([['a.org', 'unrelated', sure]]))).toBe('insufficient_evidence');
+  });
+
   it('gives each label its own minimum probability', () => {
     const support = tally([['a.org', 'supports', sure], ['b.com', 'supports', sure]]);
     expect(label('supported', RULES.minProbabilityTrue, support)).toBe('supported');

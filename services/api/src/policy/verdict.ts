@@ -8,6 +8,9 @@ import { abstentionReason, decideLabel, rankedSources } from './verdict-rules.js
 import { VERDICT_SUMMARIES, wireName } from './outcomes.js';
 
 const thresholds = { supported: 0.85, contradicted: 0.90, misleading: 0.85 };
+/** On the strict route, False without a reviewed anchor needs this many contradicting sites, none supporting, at this probability. */
+const STRICT_CLEAR_FALSE_SITES = 3;
+const STRICT_CLEAR_FALSE_PROBABILITY = 0.9;
 const abstain = (reasonCode: string): VerdictDecision => ({ verdict: 'insufficient_evidence', reasonCode, selectedEvidenceIds: [], summary: VERDICT_SUMMARIES.insufficient_evidence });
 const LABELS: Verdict[] = ['supported', 'contradicted', 'misleading', 'insufficient_evidence'];
 
@@ -57,7 +60,11 @@ export function assessVerdict(judgment: Judgment, context: VerdictContext, regis
   // reviewed expert anchor plus an independently corroborating passage with a disclosed distinct origin.
   if ((ruleLabel === 'supported' || ruleLabel === 'contradicted') && needsStrongEvidence(context.checkedText, assessment)) {
     const agreeing = judgment.evidence.filter(source => source.stance === (ruleLabel === 'supported' ? 'supports' : 'contradicts'));
-    if (!qualifyingSourceSet(agreeing, context.checkedText, assessment, registry, judgment.evidence).length) return done(abstain('insufficient_independent_evidence'));
+    // A clear-cut False needs no reviewed anchor: three or more sites against, none for, Jev at least 90% sure.
+    // "Vitamin C cures the common cold" had five contradicting sites at 0.95 and stayed Can't verify (15 Nov).
+    const clearFalse = ruleLabel === 'contradicted' && tally.counts.contradicting >= STRICT_CLEAR_FALSE_SITES
+      && tally.counts.supporting === 0 && judgment.probabilities.contradicted >= STRICT_CLEAR_FALSE_PROBABILITY;
+    if (!clearFalse && !qualifyingSourceSet(agreeing, context.checkedText, assessment, registry, judgment.evidence).length) return done(abstain('insufficient_independent_evidence'));
   }
   const cited = rankedSources(ruleLabel, tally).slice(0, 6);
   if (!cited.length) return done(abstain('no_agreeing_citation'));
