@@ -93,6 +93,10 @@ export function generateCandidates(text: string): ClaimCandidate[] {
     if (words.length < 2) return;
     // "Have you seen my keys?", "Did you read the news?": a short object, not a claim.
     if (words.length < 3 && /^(?:my|your|his|her|our|their|this|that|these|those|the|a|an|it|me|him|them|us)$/iu.test(words[0])) return;
+    // "I've heard this sentence so many times", "I heard it on the news", "My dad told me so": what follows is an object, not a claim.
+    // Passed on as hearsay it came back as Speculation and alerted (15 Nov).
+    // With an explicit "that" ("I heard that it opened in 1889"), a pronoun starts a real clause.
+    if (!/\bthat\s*$/iu.test(match[0]) && /^(?:this|these|those|it|him|her|them|you|me|us|so|such)$/iu.test(words[0].replace(/[^\p{L}]/gu, ''))) return;
     const index = add(start, end);
     if (index < 0) return;
     contentOf.set(index, parent);
