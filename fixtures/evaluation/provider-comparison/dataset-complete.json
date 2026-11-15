@@ -9,7 +9,9 @@
     "holdoutAdmission": "fixtures/evaluation/provider-comparison/holdout/admission-holdout.json",
     "holdoutAdmissionSidecar": "fixtures/evaluation/provider-comparison/holdout/admission-holdout-sidecar.json",
     "holdoutCohort": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json",
-    "holdoutEvidence": "fixtures/evaluation/provider-comparison/holdout/frozen-evidence-holdout.json"
+    "holdoutEvidence": "fixtures/evaluation/provider-comparison/holdout/frozen-evidence-holdout.json",
+    "claimbusterAdmission": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-{dev,holdout}.json (CFS+NFS, 90 each), admission-cb-{dev,holdout}-ufs.json (UFS, 30 each, reported separately)",
+    "claimbusterSidecar": "fixtures/evaluation/provider-comparison/claimbuster/sidecar.json"
   },
   "counts": {
     "admission": {
@@ -60,6 +62,24 @@
       "generated": {
         "admission/holdout": 59,
         "cohort/holdout": 24
+      }
+    },
+    "admissionClaimbuster": {
+      "dev": {
+        "total": 120,
+        "byLabel": {
+          "NFS": 40,
+          "CFS": 50,
+          "UFS": 30
+        }
+      },
+      "holdout": {
+        "total": 120,
+        "byLabel": {
+          "NFS": 40,
+          "CFS": 50,
+          "UFS": 30
+        }
       }
     }
   },
@@ -2198,6 +2218,3366 @@
       "rationale": "IMF COFER data put the dollar share near 57 percent in late 2025, a century low but still well above half; headlines about decline can mislead.",
       "file": "fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json",
       "round": "topup-r1"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15084",
+      "text": "That's been a consistent policy, one I intend to carry out.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-14892",
+      "text": "In addition, we've brought down inflation.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5784",
+      "text": "I think that, if you look at the record and the impressions of the American people -- Bob, your network just did a poll, showing that two-thirds of the American people think that Senator McCain is running a negative campaign versus one-third of mine.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-25957",
+      "text": "Marijuana use is up 141percent.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-17392",
+      "text": "All of the things that I said we would do, from inflation being down, interest rates being down, unemployment falling, all of those things we have done.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9874",
+      "text": "There are 4 million people who are waiting in line to get here legally.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5665",
+      "text": "Senator Obama has asked for nearly $1 billion in pork-barrel earmark projects...",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-1342",
+      "text": "Uh - Mr. Maynard, uh - the record of gun control, whether it's one city or another or in some states, does not show that the registration of a gun, handgun, or the registration of the gun owner, has in any way whatsoever decreased the crime rate or the use of that gun in the committing of a crime.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5783",
+      "text": "Well, look, you know, I think that we expect presidential campaigns to be tough.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9348",
+      "text": "Production on government land of oil is down 14 percent.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5552",
+      "text": "Exxon Mobil, and other oil companies, for example, would get an additional $4 billion in tax breaks.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9656",
+      "text": "Governor Romney not only opposed it, he suggested that in fact employers should be able to make the decision as to whether or not a woman gets contraception through her insurance coverage.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-16046",
+      "text": "But I will go out there and find men and women to interpret.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-6022",
+      "text": "So Senator Obama, who has never traveled south of our border, opposes the Colombia Free Trade Agreement.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-14930",
+      "text": "Mr. Carter had also promised that he would not use unemployment as a tool to fight against inflation.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15638",
+      "text": "So that pledge isn't realistic, and I think the vice president knows it; I think the people of this country know it.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-6064",
+      "text": "We've got to put more money into preventive care.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9635",
+      "text": "I mentioned 31/2 million women, more now in poverty than four years ago.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-17219",
+      "text": "We are today subsidizing housing for more than 10 million people, and we're going to continue along that line.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-1037",
+      "text": "We now have one extreme for instance, of some welfare recipients, who by taking advantage of the welfare laws, the housing laws, the uh - Medicaid uh - laws, and the uh - food stamp laws, make over $10 thousand a year and uh - they don't have to pay any taxes on it.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-7586",
+      "text": "There were eleven dictators in South America and in Central America when we came in, in 1953.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5990",
+      "text": "But understand, we only have three to four percent of the world's oil reserves and we use 25 percent of the world's oil, which means that we can't drill our way out of the problem.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-7702",
+      "text": "We are a goldfish bowl before the world.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5589",
+      "text": "Our tax rate for business in America is 35 percent.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-12574",
+      "text": "I voted for the Formosa resolution in 1955.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-28918",
+      "text": "But I'm not proud of any record, sir, I'm not.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-12609",
+      "text": "There isn't one country in the Middle East that now endorses the Eisenhower Doctrine.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5827",
+      "text": "We do and I hope...",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5648",
+      "text": "OK, what -- what would I cut?",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-24544",
+      "text": "That crime bill is going to be one of my highest priorities next January if I become president.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5676",
+      "text": "And I want to make sure that we are focused on those programs that work.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9733",
+      "text": "Well, in fact we saved 1,000 jobs.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-24648",
+      "text": "Well over a million and a quarter Americans are HIV-positive.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-24794",
+      "text": "It's time to do it because we have run up so much debt that time is no longer our friend.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-1116",
+      "text": "I don't believe it will happen.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-26344",
+      "text": "Well, 88 percent of the people -- the President claims 11 million are already covered and only 5 percent -- keep in mind only 5 percent of the employers are affected by the Family Leave Act.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-16227",
+      "text": "I will not agree to another debate.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-28958",
+      "text": "He has promised a trillion dollars out of the Social Security Trust Fund for young working adults to invest and save on their own.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-6179",
+      "text": "Senator Obama voted against Justice Breyer and Justice Roberts on the grounds that they didn't meet his ideological standards.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-6276",
+      "text": "Parents are going to have to show more responsibility.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-6019",
+      "text": "But let me give you another example of a free trade agreement that Senator Obama opposes.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-7994",
+      "text": "You can't tell me that a surplus food distribution of five cents po- per person - and that n- nearly six million Americans receiving that - is adequate.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-28851",
+      "text": "I think that speaks for itself.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5608",
+      "text": "Well, first of all, I think it's important for the American public to understand that the $750 billion rescue package, if it's structured properly, and, as president, I will make sure it's structured properly, means that ultimately taxpayers get their money back, and that's important to understand.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-7789",
+      "text": "We tried to provide an appropriation of a billion and a half for five years, on a long-term loan basis, which this Administration opposed.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15686",
+      "text": "I think this is a great country, because we've always wanted to do better, to make our country better, to make our lives better.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5894",
+      "text": "And the facts are facts and records are records.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5778",
+      "text": "And when you looked into the camera in a debate with Senator Clinton and said, \"I will sit down and negotiate with John McCain about public financing before I make a decision,\" you didn't tell the American people the truth because you didn't.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-15222",
+      "text": "We've now reduced the importing of foreign oil in the last year alone by one-third.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-24821",
+      "text": "I'd like to thank the computer executives and the electronics executives in Silicon Valley, two-thirds of whom are Republicans who said they wanted to sign on to a change in America.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5863",
+      "text": "The same front outfit organization that your campaign gave $832,000 for \"lighting and site selection.\"",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15418",
+      "text": "I've seen the strength of my nation, and I've seen the crises it approached in a tentative way.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-28664",
+      "text": "I know this, 100% will get it if I'm the president.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-15027",
+      "text": "I have brought into the top level, top levels of government, into the White House, into administrative offices of the Executive branch, into the judicial system, highly qualified black and Spanish citizens and women who in the past had been excluded.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-5975",
+      "text": "Look, we've sailed Navy ships around the world for 60 years with nuclear power plants on them.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-12540",
+      "text": "That is why Senator wh- President Eisenhower was also correct in his policy in the Formosa Straits, where he declined, and refused to follow the recommendations - recommendations which Senator Kennedy voted for in 1955; again made in 1959; again repeated in his debates that you have heard - recommendations with regard to - again - slicing off a piece of free territory, and abandoning it, if - in effect, to the Communists.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15525",
+      "text": "You know, the American people are fair.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15987",
+      "text": "The Congress is doing a better job of it.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-16154",
+      "text": "We ought to move forward swiftly on my ideas of ethanol which would use more corn, and therefore, create a bigger market for our agricultural products.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-1128",
+      "text": "But no president of the United States, in my opinion, should signal in advance to a prospective enemy, what his uhh - decision might be or what option he might exercise.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-19924",
+      "text": "Here's the record: We cut deficit four years in a row for the first time before the Civil War -- I mean, before World War II, and maybe before the Civil War, too.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9632",
+      "text": "In the -- in the last women have lost 580,000 jobs.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-17159",
+      "text": "Everybody remembers that; people know what happened.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-15645",
+      "text": "I think it's whether you share the broad dreams of the American people, whether you have confidence in the people's ability to get things done or whether you think it all should be turned over, as many of the liberals do, to Washington, D.C. You see, I think it's a question of values, not likability or loveability, it's a question in foreign affairs in experience, knowing world leaders, knowing how to build on a superb record of this administration in arms control, because you'd know exactly how to begin.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-16101",
+      "text": "You ought to go out and see around this country what's happening in the volunteer section: Americans helping America.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-15149",
+      "text": "Now, I have not blocked the SALT II treaty, as Mr. Carter and Mr. Mondale suggest I have.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9818",
+      "text": "The unemployment, the number of people who are still looking for work, is still 23 million Americans.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-17810",
+      "text": "I did support the '76 measure that he told about, because we were in a deep recession and we needed some stimulation.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-16275",
+      "text": "And I think that's one reason why we need fresh leadership in the White House that can make progress now in bringing peace to the Middle East.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-8533",
+      "text": "That's why we have to continue to be alert.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-7871",
+      "text": "I think in many ways this election is more important than any since 1932, or certainly almost any in this century.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-10386",
+      "text": "And I want to fight for them.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-12780",
+      "text": "What I said was that ten years ago, we were producing twice as many scientists and engineers as the Soviet Union and today they're producing twice as many as we are, and that this affects our security around the world.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-6214",
+      "text": "Those of us who are proudly pro-life understand that.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-6002",
+      "text": "We can only get 4,000 to 5,000 into South Korea.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-23824",
+      "text": "Over time we have developed a government that comes at the people, that comes from the top down, where the people are more or less treated as objects to be programmed during the campaign with commercials and media events and fear messages and personal attacks and things of that nature.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-28297",
+      "text": "More than 90% of America's children go to public schools.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-1459",
+      "text": "In the last month, we've had a net loss of one hundred and sixty-three thousand jobs.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-1604",
+      "text": "I believe in the greatness of our country, and I believe the American people are ready for a change in Washington.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-9475",
+      "text": "Actually it was a town hall, and I said I would cut taxes for middle- class families, and that's what I've done, by $3,600.00.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5864",
+      "text": "So all of these things need to be examined, of course.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-7836",
+      "text": "Well Mr. Nixon has stated the record inaccurately in regard to the depressed area bill.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-7923",
+      "text": "On the question of the summit, I agree with the position of Mr. Nixon.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-8124",
+      "text": "I'm not satisfied to have fifty percent of our steel-mill capacity unused.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-28710",
+      "text": "I don't want to embarrass our oldest daughter.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-6216",
+      "text": "Senator Obama, as a member of the Illinois State Senate, voted in the Judiciary Committee against a law that would provide immediate medical attention to a child born of a failed abortion.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-5540",
+      "text": "Joe, I want to tell you, I'll not only help you buy that business that you worked your whole life for and be able -- and I'll keep your taxes low and I'll provide available and affordable health care for you and your employees.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-29062",
+      "text": "For those of you for me, thanks for your help.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-nfs-12619",
+      "text": "Are we doing enough in that area?",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-cfs-15933",
+      "text": "The defense budget today takes far less percentage of the gross national product than it did in President Kennedy's time, for example moved tremendously.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-15416",
+      "text": "I've been President now for almost four years.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-28777",
+      "text": "He is the chairman of the health committee.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-8255",
+      "text": "Well, the Vice President and I came to the Congress together 1946; we both served in the Labor Committee.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-9592",
+      "text": "And, you know, I was raised by a single mom who had to put herself through school while looking after two kids.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-13149",
+      "text": "There have been many wars in the history of mankind.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-10098",
+      "text": "The ambassador of the United Nations went on the Sunday television shows and spoke about how --",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-15445",
+      "text": "Next Tuesday is Election Day.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-10043",
+      "text": "And today there's a memorial service for one of those that was lost in this tragedy.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-12591",
+      "text": "In 1957 I was in Havana.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-15602",
+      "text": "The Governor has to balance the budget in his state he is required to by law.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-5635",
+      "text": "During the Depression era, we had a thing called the home ownership loan corporation.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-7583",
+      "text": "Now Senator Kennedy has made some very strong criticisms of my part - or alleged part - in what has happened in Cuba.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-13303",
+      "text": "On our last television debate, I pointed out that it was my position that Americans must choose the best man that either party could produce.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-9627",
+      "text": "She said, I can't be here until 7 or 8 o'clock at night.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-5625",
+      "text": "I mentioned health care earlier.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-24450",
+      "text": "I was born to a widowed mother who gave me family values, and grandparents.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-9283",
+      "text": "I was in coal country.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-1576",
+      "text": "I was Governor of Georgia for four years.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-5577",
+      "text": "Now, it is true that my friend and supporter, Warren Buffett, for example, could afford to pay a little more in taxes in order...",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-12145",
+      "text": "And therefore Congress passes the bill after our session in 1997 ended, we passed an enabling legislation in 1999.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-9929",
+      "text": "He was asked this on Univision the other day.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-9130",
+      "text": "I was in Pennsylvania with someone who had just graduated -- this was in Philadelphia -- and she said, \"I've got my degree.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-7839",
+      "text": "I was the floor manager.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-6050",
+      "text": "Just yesterday, I was in Toledo shaking some hands in a line.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-9862",
+      "text": "But first of all, this is a nation of immigrants.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-15938",
+      "text": "I served at the UN.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-17274",
+      "text": "I am a son of a Methodist minister.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-5871",
+      "text": "Bill Ayers is a professor of education in Chicago.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-5993",
+      "text": "We invented the auto industry and the fact that we have fallen so far behind is something that we have to work on.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "dev",
+      "id": "cb-dev-ufs-1571",
+      "text": "I was a school board member, and a library board member.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-dev-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-25561",
+      "text": "I would like to see their elimination.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10629",
+      "text": "Senator Obama has never taken on his leaders of his party on a single issue.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11277",
+      "text": "Well, thank you, Terry (ph).",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-1943",
+      "text": "What things would I cut from spending?",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10753",
+      "text": "Now, when Senator McCain is proposing tax cuts that would give the average Fortune 500 CEO an additional $700,000 in tax cuts, that's not sharing a burden.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-2148",
+      "text": "And using that money, we were actually able to lower prescription drug costs for seniors by an average of $600, and we were also able to make a -- make a significant dent in providing them the kind of preventive care that will ultimately save money through the -- throughout the system.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-7351",
+      "text": "I believe the best way to help our small businesses is not only through small-business loans, which we have increased since I've been the president of the United States, but to unbundle government contracts so people have a chance to be able to bid and receive a contract to help get their business going.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-16626",
+      "text": "We uh - have got to do that at the federal government level.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-6449",
+      "text": "Well, first of all, Bob, thank you for moderating tonight.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-3545",
+      "text": "It's gone -- we have now presided over the largest increase in the size of government since the Great Society.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-2055",
+      "text": "The oil industry gets $4 billion a year in corporate welfare.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11327",
+      "text": "But here's what I do know.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-7215",
+      "text": "Five hundred thousand kids lost after-school programs because of your budget.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-21704",
+      "text": "Thirty years ago there were three police officers on the street for every crime; today there are three crimes for every police officer.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-18627",
+      "text": "But a president must always be willing to use troops.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10461",
+      "text": "And, Alan (ph), thank you for your question.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-3024",
+      "text": "We have made available to the Israelis over 45 percent of the total economic and military aid since the establishment of Israel twenty-seven years ago.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-8710",
+      "text": "Why not leave it with them?",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6721",
+      "text": "He voted to violate the budget cap 277 times.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-8886",
+      "text": "And the problem is, with Governments - Federal, State and Local - taking $.44 out of every dollar earned, that the Federal Government has pre-empted too many of the tax sources, and that the cities.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6882",
+      "text": "But more importantly, with respect to the question of no record, I helped write -- I did write, I was one of the original authors of the early childhood health care and the expansion of health care that we did in the middle of the 1990s.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-21237",
+      "text": "I want to rebuild our military to keep the peace.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-11049",
+      "text": "We've spent, so far, close to $700 billion and if we continue on the path that we're on, as Senator McCain is suggesting, it's going to go well over $1 trillion.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-411",
+      "text": "Go out and take a look at St. Louis at some of that effort.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-7021",
+      "text": "And this is the first president in 72 years to preside over an economy in America that has lost jobs, 1.6 million jobs.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-3013",
+      "text": "As a matter of fact, Iran is gonna get eighty F-14s before we even meet our own Air Force orders for F-l4s.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10927",
+      "text": "If you've got health insurance, most of you have seen your premiums double over the last eight years.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10720",
+      "text": "Look, we can attack health care and energy at the same time.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-7510",
+      "text": "I think the greatest possibilities of our country, our dreams and our hopes, are out there just waiting for us to grab onto them.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-3555",
+      "text": "I've got a pen, and I'm going to veto every single spending bill that comes across my desk.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-17971",
+      "text": "This president has left them in shatters across the globe, and we're now 90 percent of the casualties in Iraq and 90 percent of the costs.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-21636",
+      "text": "They ought to be engaged in making high speed rail.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-3752",
+      "text": "Look, we are sending $700 billion a year overseas to countries that don't like us very much.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-27107",
+      "text": "You know, Moammar Gadhafi had more American blood on his hands than any individual other than Osama bin Laden.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10874",
+      "text": "And we can do it, but we're going to have to make an investment.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-7049",
+      "text": "But the way to make sure our economy grows is not to raise taxes on small-business owners.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-2591",
+      "text": "The proof of that is 1 out of 6 people in poverty.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11234",
+      "text": "And for the most part I agree with Senator McCain on many of the steps that have to be taken.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-23421",
+      "text": "China and India are graduating more graduates in technology and science than we are.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11204",
+      "text": "We have to do a lot of things.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10437",
+      "text": "Well, Alan (ph), thank you very much for the question.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10803",
+      "text": "Now, in contrast, Senator McCain wants to give a $300 billion tax cut, $200 billion of it to the largest corporations and a hundred thousand of it -- a hundred billion of it going to people like CEOs on Wall Street.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-16782",
+      "text": "Congress has sustained forty-two vetoes.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-27722",
+      "text": "We have to remain vigilant, as I just said.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-7525",
+      "text": "I love the optimism in that painting, because that's how I feel about America.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10494",
+      "text": "But I think the first criteria, Tom, would have to be somebody who immediately Americans identify with, immediately say, we can trust that individual.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10998",
+      "text": "So let me -- let me just talk about this fundamental difference.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-9009",
+      "text": "Now, Governor Reagan is running on a platform that calls for a Constitutional amendment banning abortion.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-27391",
+      "text": "Our Air Force is older and smaller than at any time since it was founded in 1947.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-16674",
+      "text": "We'll keep the lid on some of these programs that we can hold down as we have a little extra money to spend for those quality-of-life programs which I think are needed and necessary.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10587",
+      "text": "They've got -- we've got to give them a chance to do their best again.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-3694",
+      "text": "We've got to make sure that our children are keeping pace in math and in science.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-14752",
+      "text": "Then the question is, can we govern?",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6917",
+      "text": "Now, what happens is when you begin to get people covered like that -- for instance in diabetes, if you diagnose diabetes early, you could save $50 billion in the health care system of America by avoiding surgery and dialysis.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6881",
+      "text": "I've actually passed 56 individual bills that I've personally written and, in addition to that, and not always under my name, there is amendments on certain bills.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10863",
+      "text": "Nuclear power is safe, and it's clean, and it creates hundreds of thousands of jobs.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11065",
+      "text": "And so I do believe that we have to consider it as part of our interests, our national interests, in intervening where possible.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-80",
+      "text": "We're consuming 50 percent of the world's cocaine.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-11313",
+      "text": "Iran went from zero centrifuges to develop nuclear weapons to 4,000.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6596",
+      "text": "When they tried to reduce taxes, he voted against that 127 times.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-3384",
+      "text": "Not a single young American today is fighting or dying on any foreign battlefield.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-228",
+      "text": "I think we have to demonstrate some flexibility and I think the FDA is attempting to do so now in trying to make it possible for new and experimental drugs to be available to people who are at risk at AIDS and I would hope that we could bring that kind of a policy to bear beginning in January.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-543",
+      "text": "The federal government spends seven percent of the total on education, and the rest of the state governments and local governments and the thousand points of lightened I'm talking about private schools and private church schools and things of this nature--are putting up 93 percent.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-11266",
+      "text": "And Georgia and Ukraine are both major gateways of energy into Europe.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10834",
+      "text": "When he ran for the United States Senate from Illinois, he said he would have a middle-income tax cut.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-7033",
+      "text": "Twenty percent of the upper-income people pay about 80 percent of the taxes in America today because of how we structured the tax cuts.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10465",
+      "text": "Now, I have a plan to fix this problem and it has got to do with energy independence.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-18918",
+      "text": "Actually, we've increased funding for dealing with nuclear proliferation about 35 percent since I've been the president.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-7346",
+      "text": "I agree, we shouldn't have quotas.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-27385",
+      "text": "Our Navy is old -- excuse me, our Navy is smaller now than at any time since 1917.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-11070",
+      "text": "Right now there's a peacekeeping force that has been set up and we have African Union troops in Darfur to stop a genocide that has killed hundreds of thousands of people.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-7180",
+      "text": "Is that a new question or a 30-second question?",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-4275",
+      "text": "So I want to say that, with the Nunn-Lugar thing...",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-2453",
+      "text": "And over the last two years, health care premiums have gone up -- it's true -- but they've gone up slower than any time in the last 50 years.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11340",
+      "text": "That's what's at stake in this election.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-9017",
+      "text": "On the Amendment that you mentioned, I abandoned it 15 years ago.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-18380",
+      "text": "I understand how hard it is.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-10574",
+      "text": "I think it depends on what we do.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6986",
+      "text": "The fact is that the president is driving the largest deficits in American history.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-2971",
+      "text": "The Soviet Union is still jamming Radio Free Europe - Radio - uh- uh - Radio Free Europe is being jammed.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-16692",
+      "text": "The take-home pay of a worker in this country is actually less now than it was in 1968 - measured in real dollars.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10608",
+      "text": "And so while it's true that nobody's completely innocent here, we have had over the last eight years the biggest increases in deficit spending and national debt in our history.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-4250",
+      "text": "The second point I want to make is -- is the issue of energy.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-11278",
+      "text": "And thank you for your service to the country.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-3130",
+      "text": "In the meantime, there has developed the problem of the Soviet Backfire - their high-performance aircraft which they say is not a long-range aircraft and which some of our people say is a intercontinental aircraft.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-4336",
+      "text": "The other thing that we have to focus on, though, is Al Qaida.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-7349",
+      "text": "Do you realize today in America, we spend $73 billion to help 10 million low- and middle-income families better afford college?",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-10448",
+      "text": "And, in fact, we just found out that AIG, a company that got a bailout, just a week after they got help went on a $400,000 junket.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-cfs-6720",
+      "text": "When they voted -- when they proposed reducing taxes, you voted against it 126 times.",
+      "expected": "cant_verify",
+      "category": "CFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-nfs-7454",
+      "text": "I love the strong women around me.",
+      "expected": "not_a_claim",
+      "category": "NFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-16699",
+      "text": "Well among my other experiences in the past, I've - I've been a nuclear engineer, and did graduate work in this field.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-7291",
+      "text": "I've been a hunter since I was a kid, 12, 13 years old.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-20870",
+      "text": "Two days ago we ate lunch at a restaurant.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-18381",
+      "text": "I get the casualty reports every day.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-20717",
+      "text": "When I was in the United States Senate I worked with former President Bush, your father.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-3110",
+      "text": "In Puerto Rico this year, I met with six of the leading industrial nations' heads of state to meet the problem of inflation so we would be able to solve it before it got out of hand.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-20456",
+      "text": "I was in coal country in West Virginia yesterday.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-2976",
+      "text": "One press conference he had without sound.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-11354",
+      "text": "I grew up in a family where my father was gone most of the time because he was at sea and doing our country's business.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-27174",
+      "text": "When the -- when the president of Iraq -- excuse me, of Iran, Ahmadinejad, says that our debt makes us not a great country, that's a frightening thing.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-21947",
+      "text": "I was in the Lomax AME Church.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-2136",
+      "text": "My grandmother died three days before I was elected president.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-18117",
+      "text": "He believes in the freedom of the Iraqi people.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-8961",
+      "text": "This is 1980 and not 1966.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-27814",
+      "text": "I was born in Detroit.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-2363",
+      "text": "You know, I was in New Hampshire.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-3029",
+      "text": "Iran has Iraq as one of its neighbors.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-16828",
+      "text": "Another thing is a system called DISC which was originally designed, proposed by Mr. Nixon, to encourage exports.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-27815",
+      "text": "My dad was head of a car company.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-3111",
+      "text": "I have met with the heads of government bilaterally as well as multilaterally.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-6784",
+      "text": "I was an altar boy.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-9083",
+      "text": "A great historian, Henry Steele Commager, said that in their lust for victory, neither traditional party is looking beyond November.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-7319",
+      "text": "Now I'm the senior Democrat on it.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-2888",
+      "text": "I am a graduate of the U.S.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-6658",
+      "text": "I've had shop stewards stand up and say, \"Will you promise me you're going to stop all this outsourcing?",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-11040",
+      "text": "Well, you know, Senator McCain, in the last debate and today, again, suggested that I don't understand.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-1686",
+      "text": "I was in Dayton, Ohio, and a woman grabbed my arm and she said, \"I've been out of work since May.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-11199",
+      "text": "And I've had conversations with him.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-202",
+      "text": "I was in Houston on Tuesday meeting with a group of good citizens, working citizens.",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
+    },
+    {
+      "set": "admission-claimbuster",
+      "split": "holdout",
+      "id": "cb-holdout-ufs-26",
+      "text": "You know, I saw a movie - \"Crocodile Dundee.\"",
+      "expected": "cant_verify",
+      "category": "UFS",
+      "source": "claimbuster",
+      "reference": [
+        "https://zenodo.org/records/3609356"
+      ],
+      "rationale": null,
+      "file": "fixtures/evaluation/provider-comparison/claimbuster/admission-cb-holdout-ufs.json"
     }
   ],
   "droppedGenerated": [
@@ -2602,5 +5982,24 @@
         "Microsoft confirms support ended 14 Oct 2025 (ESU to 12 Oct 2027 is a narrow exception); 'no longer supported' reads as true, so misleading is not clearly best. Overlaps T120 (same fact and source)."
       ]
     }
-  ]
+  ],
+  "claimbuster": {
+    "source": "https://zenodo.org/records/3609356 (groundtruth.csv)",
+    "license": "CC-BY-4.0",
+    "citation": "Arslan et al., ICWSM 2020",
+    "seed": 20261114,
+    "mapping": {
+      "CFS": "cant_verify (eligible, must be admitted for checking)",
+      "NFS": "not_a_claim",
+      "UFS": "cant_verify (separate, reported as ufsAdmitted, not scored)"
+    },
+    "auditorFlaggedNfsIds": [
+      "cb-dev-nfs-7923",
+      "cb-dev-nfs-7871",
+      "cb-dev-nfs-23824",
+      "cb-holdout-nfs-10465",
+      "cb-dev-nfs-24794",
+      "cb-dev-nfs-15084"
+    ]
+  }
 }

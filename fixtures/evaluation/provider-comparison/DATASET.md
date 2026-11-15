@@ -10,6 +10,7 @@ Index of every admission and cohort case used by the Jev vs Laya harness. Machin
 - holdoutAdmission: `fixtures/evaluation/provider-comparison/holdout/admission-holdout.json`
 - holdoutAdmissionSidecar: `fixtures/evaluation/provider-comparison/holdout/admission-holdout-sidecar.json`
 - holdoutCohort: `fixtures/evaluation/provider-comparison/holdout/cohort-holdout.json`
+- claimbusterAdmission: `fixtures/evaluation/provider-comparison/claimbuster/` (see its README)
 - holdoutEvidence: `fixtures/evaluation/provider-comparison/holdout/frozen-evidence-holdout.json`
 
 ## Counts per split and label
@@ -126,6 +127,17 @@ Top-up: live Exa for the 15 new cohort cases only, known cost $0.21, 0 errors, 2
 ## Dev cohort (24) and dev admission (59)
 
 Listed in `dataset-complete.json` (`split: dev`). Cohort texts are in `cohort.json`; device phrases in `fixtures/evaluation/device-phrases.json`. The 44 everyday admission rows have text null in the committed index; the full text is outside the repo (scratchpad `data/dataset-complete-full.json` and `data/DATASET-full.md`, built from the harness `loadSets` over the reference app claims).
+
+## ClaimBuster admission sets (240)
+
+Real, human-labelled debate sentences from ClaimBuster (Zenodo 3609356, CC-BY-4.0, Arslan et al., ICWSM 2020), added for the per-provider prompt tuning (#69). Debates are split dev/holdout at the debate level (seed 20261114), so no debate appears in both. Rows are `set: admission-claimbuster` in `dataset-complete.json`; `category` is the ClaimBuster label.
+
+| Split | CFS (check-worthy) | NFS (not a claim) | UFS (unimportant factual) | Files |
+|---|---:|---:|---:|---|
+| dev | 50 | 40 | 30 | `claimbuster/admission-cb-dev.json` (CFS+NFS, 90), `claimbuster/admission-cb-dev-ufs.json` (30) |
+| holdout | 50 | 40 | 30 | `claimbuster/admission-cb-holdout.json` (CFS+NFS, 90), `claimbuster/admission-cb-holdout-ufs.json` (30) |
+
+Mapping: CFS to `cant_verify` (eligible: must be admitted for checking), NFS to `not_a_claim`, UFS to `cant_verify` but kept apart and only reported as `ufsAdmitted` (the label is a judgement of importance, not of claim-hood). Six NFS ids were flagged by an auditor as probably mislabelled claims (`cb-dev-nfs-7923`, `-7871`, `-23824`, `-24794`, `-15084`, `cb-holdout-nfs-10465`) and are reported as `cbCorrectExFlagged`. See `claimbuster/README.md`.
 
 ## Dropped generated candidates
 
