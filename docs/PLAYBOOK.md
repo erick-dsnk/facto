@@ -1,6 +1,6 @@
 # Junction 2026: agent playbook (team of 2-3)
 
-The full research behind these choices, with sources, is in [research.md](research.md).
+The full research behind these choices, with sources, is in [research.md](product/research.md).
 
 ## Roles
 - **Type cycle**: everyone builds and everyone reviews exactly one teammate. The reviewer approves and merges once CI is green.
