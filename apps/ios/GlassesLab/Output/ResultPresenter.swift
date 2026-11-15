@@ -2,8 +2,8 @@ import Foundation
 import Observation
 import os
 
-/// The one active card. The lens (via DisplayCardBuilder) and the phone mirror
-/// (LensMirrorView) both render from this model, so they always match.
+/// The one active card. The lens (via DisplayCardBuilder) and the phone preview both render
+/// from this model, so they always match.
 @Observable
 @MainActor
 final class LensCardViewModel {
@@ -26,11 +26,14 @@ final class LensCardViewModel {
 
 /// Turns check outcomes into speech, chimes, cards and history (decisions 7 and 11).
 ///
-/// - `respond`: speaks the plan's line plus the best source (never a URL) and shows a card.
+/// - `respond`: speaks the card's line ("False. 3 of 3 sources disagree, including Live
+///   Science.", never a URL) and shows the card.
 ///   `playbackStarted` / `playbackEnded` wrap the speech so the backend ignores our voice.
 /// - `notify`: a quiet chime plus a card. No playback reporting, so listening continues.
 /// - `silent` (and any action this build does not know): history only. Never promoted.
 /// - Muted: no speech and no chime; cards and history stay.
+/// - VoiceOver hears every card the wearer doesn't: a muted answer or a chimed alert is
+///   announced. A spoken card isn't, so VoiceOver never talks over the line.
 @MainActor
 final class ResultPresenter: ResultPresenting {
   private static let log = Logger(subsystem: "com.davidvasilescu.junction.glasseslab", category: "output")
@@ -39,6 +42,9 @@ final class ResultPresenter: ResultPresenting {
   let lens: LensCardViewModel
   /// Suppresses speech and chimes. Never turns a muted card into speech later.
   var isMuted = false
+  /// True when no lens shows the card (Ray-Ban Meta, or Display glasses not attached): an
+  /// overheard alert is then spoken after its chime, or the wearer learns nothing.
+  var alertsAreSpoken: () -> Bool = { false }
   /// Speech rate for spoken answers; lower it for slower speech.
   var speechRate: Float = SystemSpeechSpeaker.defaultRate
 
@@ -47,6 +53,8 @@ final class ResultPresenter: ResultPresenting {
   private weak var playback: PlaybackReporting?
   private let now: () -> Date
   private let debugLog: DebugLog
+  /// Posts a VoiceOver announcement.
+  private let announce: @MainActor (String) -> Void
   /// Set while a line is speaking. Only the newest line's finish ends playback, so
   /// interrupting one answer with another reports a single started/ended pair.
   private var activeUtterance: UUID?
@@ -58,7 +66,8 @@ final class ResultPresenter: ResultPresenting {
     history: ResultHistory,
     lens: LensCardViewModel,
     now: @escaping () -> Date = Date.init,
-    debugLog: DebugLog = .shared
+    debugLog: DebugLog = .shared,
+    announce: @escaping @MainActor (String) -> Void = { VoiceOverAnnouncer.post($0) }
   ) {
     self.speaker = speaker
     self.chime = chime
@@ -67,6 +76,7 @@ final class ResultPresenter: ResultPresenting {
     self.lens = lens
     self.now = now
     self.debugLog = debugLog
+    self.announce = announce
   }
 
   /// Production wiring with the system speaker and chime.
@@ -92,9 +102,8 @@ final class ResultPresenter: ResultPresenting {
     }
     let outcome = OutputOutcome.verdict(result.verdict)
     let card = ResultCard(result: result)
-    let line = ResultWording.spokenLine(for: outcome, sourceName: card.sourceName)
     deliver(
-      outcome: outcome, result: result, card: card, line: line, presentation: presentation,
+      outcome: outcome, result: result, card: card, line: card.spokenLine, presentation: presentation,
       userInitiated: userInitiated, identity: identity
     )
   }
@@ -119,7 +128,7 @@ final class ResultPresenter: ResultPresenting {
     )
     let card = ResultCard(outcome: outcome, claimText: claimText)
     deliver(
-      outcome: outcome, result: nil, card: card, line: ResultWording.line(for: outcome), presentation: presentation,
+      outcome: outcome, result: nil, card: card, line: card.spokenLine, presentation: presentation,
       userInitiated: userInitiated, identity: identity
     )
   }
@@ -136,7 +145,7 @@ final class ResultPresenter: ResultPresenting {
     }
     debugLog.log("present.repeat", ["repeated": true, "kind": entry.card.kind.rawValue])
     lens.show(entry.card)
-    speak(ResultWording.spokenLine(for: entry.outcome, sourceName: entry.card.sourceName))
+    speak(entry.card.spokenLine)
     return true
   }
 
@@ -185,12 +194,19 @@ final class ResultPresenter: ResultPresenting {
       lens.show(card)
       if isMuted {
         delivery = .cardOnly
+      } else if alertsAreSpoken() {
+        chime.playChime()
+        speak(line)
+        delivery = .spoken
       } else {
         chime.playChime()
         delivery = .chimed
       }
     case .silent, .unknown:
       delivery = .silent
+    }
+    if delivery == .cardOnly || delivery == .chimed {
+      announce(card.accessibilityLabel)
     }
 
     history.record(ResultHistory.Entry(

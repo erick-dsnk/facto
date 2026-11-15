@@ -16,6 +16,8 @@ private final class FakeLiveBackend: LiveBackend {
   var connectionState: ChannelConnectionState = .idle
   var onUnreadableEvent: (@MainActor (String?) -> Void)?
   var failConnect = false
+  /// The client's reason code for a failed connect.
+  var failReason = "unauthorized"
   var requiresAuthentication = false
   private var wantsConnection = false
   private(set) var suspendCount = 0
@@ -50,8 +52,8 @@ private final class FakeLiveBackend: LiveBackend {
     requiresAuthentication = false
     setState(.connecting)
     if failConnect {
-      requiresAuthentication = true
-      setState(.disconnected(reason: "unauthorized"))
+      requiresAuthentication = failReason == "unauthorized"
+      setState(.disconnected(reason: failReason))
       throw ConnectFailure()
     }
     // Each session has its own id, like services/api.
@@ -180,9 +182,24 @@ private final class FakeLiveCamera: LiveCamera {
     isStreaming = true
   }
 
+  /// Called when a photo is requested, so a test can record what was true at that moment.
+  var onPhoto: (@MainActor () -> Void)?
+
+  /// Like CameraModel: with no stream running, the photo is taken without one, and the camera
+  /// leaves the glasses session again afterwards.
   func captureStillDuringStream() async throws -> Data {
     photoCount += 1
-    if !isStreaming { try await startListeningStream(quality: liveQuality) }
+    onPhoto?()
+    guard !isStreaming else { return Data([0xFF, 0xD8, 0xFF]) }
+    if let startError { throw startError }
+    onCaptureStarting?()
+    hasSession = true
+    if suspendStartup {
+      // Deliberately ignores task cancellation, like a pending SDK/permission operation.
+      await withCheckedContinuation { startupContinuation = $0 }
+    }
+    hasSession = false
+    onCaptureSessionEnded?()
     return Data([0xFF, 0xD8, 0xFF])
   }
 
@@ -198,6 +215,51 @@ private final class FakeLiveCamera: LiveCamera {
     dropStream(byUser: true)
     hasSession = false
     onCaptureSessionEnded?()
+  }
+}
+
+/// What was true when the camera was asked for a photo.
+@MainActor
+private final class PhotoMoment {
+  var detectorRunning: Bool?
+  var state: WakeWordState?
+}
+
+/// Listening input double: the glasses' Bluetooth mic without audio hardware or the iOS prompt.
+@MainActor
+private final class FakeMicrophone: ListeningMicrophone {
+  var onBuffer: (@MainActor (AVAudioPCMBuffer) -> Void)?
+  private(set) var isRunning = false
+  var inputName: String? { isRunning ? "Bluetooth HFP: Fake glasses" : nil }
+  var permission = true
+  var startError: Error?
+  private(set) var startCount = 0
+  private(set) var stopCount = 0
+  /// Holds the permission prompt open, like iOS waiting for the user.
+  var suspendPermission = false
+  private var permissionContinuation: CheckedContinuation<Void, Never>?
+  var isPermissionPending: Bool { permissionContinuation != nil }
+
+  func releasePermission() {
+    permissionContinuation?.resume()
+    permissionContinuation = nil
+  }
+
+  func requestPermission() async -> Bool {
+    if suspendPermission { await withCheckedContinuation { permissionContinuation = $0 } }
+    return permission
+  }
+
+  func start() throws {
+    if let startError { throw startError }
+    startCount += 1
+    isRunning = true
+  }
+
+  func stop() {
+    guard isRunning else { return }
+    stopCount += 1
+    isRunning = false
   }
 }
 
@@ -370,9 +432,50 @@ final class LiveStatusTests: XCTestCase {
     XCTAssertEqual(Set(states.map(\.title)).count, states.count)
     XCTAssertEqual(LiveStatus.listening.tone, .good)
     XCTAssertNotEqual(LiveStatus.connected.title, LiveStatus.listening.title)
-    for failure in states where failure.title.hasPrefix("Stopped") || failure.title.contains("Connection lost") {
+    for failure in states where failure.title.hasPrefix("Listening stopped") || failure.title.contains("Connection lost") {
       XCTAssertEqual(failure.tone, .bad, failure.title)
     }
+  }
+
+  func testTitlesAndDetailsUseTheHomeScreenCopy() {
+    XCTAssertEqual(LiveStatus.offline.title, "Offline")
+    XCTAssertEqual(LiveStatus.offline.detail, "Tap Reconnect to go online.")
+    XCTAssertEqual(LiveStatus.connecting.title, "Connecting…")
+    XCTAssertEqual(LiveStatus.connecting.detail, "Opening a session.")
+    XCTAssertEqual(LiveStatus.connected.title, "Online")
+    XCTAssertEqual(LiveStatus.connected.detail, "Tap Start listening, or Check this to read what’s in front of you.")
+    XCTAssertEqual(LiveStatus.startingToListen.title, "Starting to listen…")
+    XCTAssertEqual(LiveStatus.startingToListen.detail, "Waiting for the glasses stream and the backend.")
+    XCTAssertEqual(LiveStatus.listening.title, "Listening")
+    XCTAssertEqual(LiveStatus.listening.detail, "No alert doesn’t mean a claim is true.")
+    XCTAssertEqual(LiveStatus.reconnecting(attempt: 2).title, "Reconnecting…")
+    XCTAssertEqual(LiveStatus.reconnecting(attempt: 2).detail, "Connection dropped. Attempt 2 of 3.")
+    XCTAssertEqual(LiveStatus.reconnecting(attempt: 0).detail, "Connection dropped.")
+
+    let stopped: [(AudioStreamerStopReason, String)] = [
+      (.glassesDisconnected, "Listening stopped: glasses disconnected"),
+      (.noConnection, "Listening stopped: no connection"),
+      (.sessionEnded(reasonCode: "deleted"), "Listening stopped: session ended"),
+      (.audioUnavailable(reasonCode: "asr_failed"), "Listening stopped: mic unavailable"),
+    ]
+    for (reason, title) in stopped {
+      XCTAssertEqual(LiveStatus.listeningStopped(reason).title, title)
+      XCTAssertEqual(LiveStatus.listeningStopped(reason).detail, "Tap Start listening to try again.")
+    }
+
+    let errors: [(String, String)] = [
+      ("network_lost", "Connection lost"), ("connect_failed", "Connection lost"),
+      ("unauthorized", "Join code rejected"), ("http_401", "Join code rejected"), ("http_403", "Join code rejected"),
+      ("deleted", "Session ended"), ("expired", "Session ended"),
+      ("connect_timeout", "Backend not responding"), ("timed_out", "Backend not responding"),
+      ("invalid_url", "Backend URL not valid"), ("insecure_url", "Backend URL needs https"),
+      ("missing_join_code", "Join code needed"), ("something_new", "Backend error"),
+    ]
+    for (code, title) in errors {
+      XCTAssertEqual(LiveStatus.backendError(code: code).title, title, code)
+    }
+    XCTAssertEqual(LiveStatus.backendError(code: "network_lost").detail, "Reason: network_lost.")
+    XCTAssertEqual(LiveStatus.backendError(code: "missing_join_code").detail, "Add your join code in Settings.")
   }
 }
 
@@ -392,6 +495,7 @@ final class LiveModelTests: XCTestCase {
   private var configureBackend: ((FakeLiveBackend) -> Void)?
   private var keepAwake: [Bool] = []
   private var wake: FakeWakeListener!
+  private var mic: FakeMicrophone!
   private var secrets: MemorySecretStore!
   private var now: TimeInterval = 1_000
 
@@ -408,6 +512,7 @@ final class LiveModelTests: XCTestCase {
     configureBackend = nil
     keepAwake = []
     wake = FakeWakeListener()
+    mic = FakeMicrophone()
     now = 1_000
     secrets = MemorySecretStore()
   }
@@ -425,6 +530,7 @@ final class LiveModelTests: XCTestCase {
       idleTimer: { [unowned self] in self.keepAwake.append($0) },
       uptime: { [unowned self] in self.now },
       wakeListener: wake, wakeWindow: 0.4, wakeCheckWindow: 0.4,
+      microphone: mic,
       makeBackend: { [unowned self] config in
         let backend = FakeLiveBackend(config: config)
         self.configureBackend?(backend)
@@ -440,7 +546,16 @@ final class LiveModelTests: XCTestCase {
     model.joinCode = "demo-code"
     await model.connect()
     await waitUntil { model.status == .connected }
+    await settle(model)
     return model
+  }
+
+  /// The connection-state stream replays its buffered states (idle, connecting, connected)
+  /// after connect() returns. In the app that finishes long before anyone can act; here a
+  /// check could start first and see the stale "idle". Let the replay drain, then confirm.
+  private func settle(_ model: LiveModel) async {
+    for _ in 0..<50 { await Task.yield() }
+    await waitUntil { model.isConnected && self.backend.connectionState == .connected }
   }
 
   private func listeningModel() async -> LiveModel {
@@ -454,11 +569,14 @@ final class LiveModelTests: XCTestCase {
 
   // MARK: Wake phrase
 
-  func testWakeOptionIsOffByDefaultAndNeverOpensTheMicrophone() async {
+  /// David's decision: "Hey Facto" is how a check starts hands-free, so it is on by default.
+  func testWakeOptionIsOnByDefaultAndArmsTheDetector() async {
     let model = await connectedModel()
-    XCTAssertFalse(model.wakeWordEnabled)
-    XCTAssertEqual(model.wakeState, .off)
-    XCTAssertEqual(wake.starts, 0)
+    XCTAssertTrue(model.wakeWordEnabled)
+    await waitUntil { model.wakeState.isWaiting }
+    XCTAssertTrue(wake.isRunning)
+    XCTAssertTrue(camera.startedQualities.isEmpty, "waiting for the phrase never starts the camera")
+    XCTAssertEqual(mic.startCount, 0, "waiting for the phrase never starts listening")
   }
 
   func testWakeOptionWaitsOnlyWhenConnectedAndStartsNoStream() async {
@@ -478,45 +596,47 @@ final class LiveModelTests: XCTestCase {
     XCTAssertTrue(defaults.bool(forKey: LiveModel.wakeWordKey), "the option persists")
   }
 
-  func testWakePhraseStartsListeningThenGoesBackToWaiting() async {
-    let model = await connectedModel()
-    model.wakeWordEnabled = true
+  /// "Hey Facto" on its own takes a photo and checks it, like "Hey Facto, check this": no
+  /// listening and no camera stream. Then the detector waits for the phrase again.
+  func testWakePhraseTakesAPhotoThenGoesBackToWaiting() async {
+    let model = await connectedModel(checkTimeout: 0.3)
     await waitUntil { model.wakeState.isWaiting }
     let armed = wake.starts
+    let atPhoto = PhotoMoment()
+    camera.onPhoto = { atPhoto.detectorRunning = self.wake.isRunning; atPhoto.state = model.wakeState }
 
     wake.hear()
-    XCTAssertEqual(model.wakeState, .awake)
-    XCTAssertFalse(wake.isRunning, "the detector's microphone is released before the stream starts")
     XCTAssertEqual(chime.count, 1)
-    await waitUntil { self.backend.controlTypes.contains("audio.start") }
-    XCTAssertEqual(camera.startedQualities.count, 1)
-    backend.emit(LiveEvents.audioReady(generation: 1))
+    await waitUntil { self.backend.submitted.count == 1 }
+    XCTAssertEqual(camera.photoCount, 1)
+    XCTAssertEqual(atPhoto.detectorRunning, false, "the detector's microphone is released before the photo")
+    XCTAssertEqual(atPhoto.state, .awake)
+    XCTAssertTrue(camera.startedQualities.isEmpty, "a photo check never starts a camera stream")
+    XCTAssertFalse(backend.controlTypes.contains("audio.start"), "a photo check never starts listening")
+    XCTAssertEqual(mic.startCount, 0)
 
-    // After the window: listening and the stream it started are stopped, and it waits again.
-    await waitUntil { self.wake.starts == armed + 1 }
+    await waitUntil(timeout: 5) { self.wake.starts == armed + 1 && model.wakeState.isWaiting }
     XCTAssertFalse(model.isListening)
-    XCTAssertTrue(backend.controlTypes.contains("audio.stop"))
-    XCTAssertEqual(camera.liveStreamStops, 1)
-    XCTAssertFalse(camera.isStreaming)
-    XCTAssertTrue(model.wakeState.isWaiting)
+    XCTAssertFalse(camera.hasSession, "the camera leaves the glasses session after the photo")
   }
 
   func testHeyFactoCheckThisTakesAPhotoWithoutListening() async {
-    // A short check timeout: the fake backend never answers, and the wake session waits for
-    // a check in flight before it ends.
+    // A short check timeout: the fake backend never answers, so the check resolves by timing out.
     let model = await connectedModel(checkTimeout: 0.3)
     model.wakeWordEnabled = true
     await waitUntil { model.wakeState.isWaiting }
 
+    let atPhoto = PhotoMoment()
+    camera.onPhoto = { atPhoto.detectorRunning = self.wake.isRunning; atPhoto.state = model.wakeState }
     wake.hear(.checkThis)
     await waitUntil { self.camera.photoCount == 1 }
-    XCTAssertFalse(wake.isRunning, "the detector's microphone is released before the photo")
+    XCTAssertEqual(atPhoto.detectorRunning, false, "the detector's microphone is released before the photo")
     XCTAssertEqual(chime.count, 1)
     XCTAssertFalse(backend.controlTypes.contains("audio.start"), "a photo check does not start listening")
-    XCTAssertEqual(model.wakeState, .awake)
-    // Once the check is over it waits for the phrase again.
+    XCTAssertEqual(atPhoto.state, .awake)
+    // The detector re-arms as soon as the photo is read; the unanswered check still times out.
     await waitUntil(timeout: 5) { model.wakeState.isWaiting }
-    XCTAssertTrue(model.pendingChecks.isEmpty)
+    await waitUntil(timeout: 5) { model.pendingChecks.isEmpty }
   }
 
   func testStartingToListenByHandPausesTheDetector() async {
@@ -577,27 +697,28 @@ final class LiveModelTests: XCTestCase {
     XCTAssertFalse(wake.isRunning)
   }
 
+  /// "Hey Facto" takes a photo now, so a Developer stream can't overlap a wake capture (it is
+  /// refused while the photo is pending). Once the cancelled wake photo's cleanup has run, a
+  /// stream started by hand is not stopped by it.
   func testManualStreamStartsAfterCancelledWakeCleanupAndIsNotStoppedByIt() async {
-    let model = await connectedModel()
+    let model = await connectedModel(checkTimeout: 0.3)
     camera.suspendStartup = true
-    model.wakeWordEnabled = true
     await waitUntil { self.wake.isRunning }
     wake.hear()
     await waitUntil { self.camera.isStartupSuspended }
     model.wakeWordEnabled = false
-    let manual = Task {
-      await model.performManualCapture {
-        self.camera.suspendStartup = false
-        try? await self.camera.startListeningStream(quality: .demo)
-      }
-    }
-    await Task.yield()
     camera.releaseStartup()
-    await manual.value
+    await waitUntil { self.camera.liveStreamStops == 1 && !model.isChecking }
+    await model.performManualCapture {
+      self.camera.suspendStartup = false
+      try? await self.camera.startListeningStream(quality: .demo)
+    }
+    for _ in 0..<20 { await Task.yield() }
     XCTAssertEqual(camera.liveStreamStops, 1)
-    XCTAssertEqual(camera.startedQualities.count, 2)
+    XCTAssertEqual(camera.startedQualities.count, 1)
     XCTAssertTrue(camera.isStreaming, "the new manual stream survives old wake cleanup")
   }
+
 
   func testDelayedWakePhotoStartupIsAlsoOwnedUntilCleanupFinishes() async {
     let model = await connectedModel()
@@ -643,6 +764,16 @@ final class LiveModelTests: XCTestCase {
 
   // MARK: Connection
 
+  func testPhotoLayoutConsentPersistsWithoutConnecting() {
+    let model = makeModel()
+    XCTAssertFalse(model.remoteOCRSelectionEnabled)
+    model.remoteOCRSelectionEnabled = true
+    XCTAssertTrue(BackendConfig.load(from: defaults, secrets: secrets).remoteOCRSelectionEnabled)
+    model.remoteOCRSelectionEnabled = false
+    XCTAssertFalse(BackendConfig.load(from: defaults, secrets: secrets).remoteOCRSelectionEnabled)
+    XCTAssertTrue(backends.isEmpty, "saving consent must not start a backend session")
+  }
+
   func testConnectSavesSettingsAndConnects() async {
     let model = await connectedModel()
     XCTAssertEqual(backend.config, BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "demo-code"))
@@ -687,6 +818,87 @@ final class LiveModelTests: XCTestCase {
     for host in ["api.example.test", "8.8.8.8", "172.32.0.1", "192.169.0.1", "10.0.0.5.example.com"] {
       XCTAssertFalse(LiveModel.allowsCleartext(host: host), host)
     }
+  }
+
+  // MARK: Automatic connect
+
+  func testConnectIfConfiguredConnectsWithASavedJoinCode() async {
+    BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: "demo-code").save(to: defaults, secrets: secrets)
+    let model = makeModel()
+    await model.connectIfConfigured()
+    await waitUntil { model.status == .connected }
+    XCTAssertEqual(backends.count, 1)
+    XCTAssertEqual(backend.config.joinCode, "demo-code")
+
+    // The app coming back to the foreground while connected changes nothing.
+    await model.connectIfConfigured()
+    XCTAssertEqual(backends.count, 1)
+    XCTAssertEqual(backend.connectCount, 1)
+  }
+
+  func testConnectIfConfiguredStaysOfflineWithoutAJoinCode() async {
+    let model = makeModel()
+    await model.connectIfConfigured()
+    XCTAssertTrue(backends.isEmpty)
+    XCTAssertEqual(model.status, .offline)
+
+    model.joinCode = "   "
+    await model.connectIfConfigured()
+    XCTAssertTrue(backends.isEmpty)
+  }
+
+  func testConnectIfConfiguredDoesNotRetryARejectedJoinCode() async {
+    configureBackend = { $0.failConnect = true }
+    let model = makeModel()
+    model.baseURLText = "https://api.example.test"
+    model.joinCode = "wrong"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "unauthorized"))
+
+    await model.connectIfConfigured()
+    XCTAssertEqual(backend.connectCount, 1, "only a new join code in Settings can fix this")
+  }
+
+  func testConnectIfConfiguredDoesNotRetryABadURL() async {
+    let model = makeModel()
+    model.baseURLText = "http://api.example.test"
+    model.joinCode = "demo-code"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "insecure_url"))
+
+    await model.connectIfConfigured()
+    XCTAssertTrue(backends.isEmpty)
+  }
+
+  func testConnectIfConfiguredRetriesAfterANetworkError() async {
+    configureBackend = { $0.failConnect = true; $0.failReason = "network_lost" }
+    let model = makeModel()
+    model.baseURLText = "https://api.example.test"
+    model.joinCode = "demo-code"
+    await model.connect()
+    XCTAssertEqual(model.status, .backendError(code: "network_lost"))
+
+    backend.failConnect = false
+    await model.connectIfConfigured()
+    await waitUntil { model.status == .connected }
+    XCTAssertEqual(backend.connectCount, 2)
+  }
+
+  func testReconnectClosesAndOpensASession() async {
+    let model = await connectedModel()
+    await model.reconnect()
+    await waitUntil { model.status == .connected }
+    XCTAssertEqual(backend.closeCount, 1)
+    XCTAssertEqual(backend.connectCount, 2)
+  }
+
+  func testForgetJoinCodeDisconnectsAndClearsTheKeychain() async {
+    let model = await connectedModel()
+    await model.forgetJoinCode()
+    XCTAssertEqual(model.status, .offline)
+    XCTAssertEqual(model.joinCode, "")
+    XCTAssertNil(secrets.read(BackendConfig.joinCodeKey))
+    XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).joinCode, "")
   }
 
   func testUnreadableEventShowsANotice() async {
@@ -844,13 +1056,14 @@ final class LiveModelTests: XCTestCase {
 
   // MARK: Listening
 
-  func testStartListeningStartsTheStreamThenAudio() async {
+  func testStartListeningStartsTheGlassesMicThenAudio() async {
     let model = await connectedModel()
     XCTAssertEqual(camera.liveQuality, .demo)
     model.demoQuality = false
     XCTAssertEqual(camera.liveQuality, .listening, "a stream Check this starts uses the same quality")
     await model.startListening()
-    XCTAssertEqual(camera.startedQualities, [.listening])
+    XCTAssertEqual(mic.startCount, 1, "listening uses the glasses' Bluetooth mic")
+    XCTAssertTrue(camera.startedQualities.isEmpty, "listening never starts the camera stream")
     await waitUntil { self.backend.audioControlTypes == ["audio.start"] }
     XCTAssertEqual(model.status, .startingToListen)
     backend.emit(LiveEvents.audioReady(generation: 1))
@@ -906,11 +1119,21 @@ final class LiveModelTests: XCTestCase {
     XCTAssertGreaterThan(lens.feedbackClears, 0)
   }
 
-  func testStreamFailureLeavesListeningOffWithANotice() async {
-    camera.startError = LiveStreamError.streamWithoutAudio
+  func testMicFailureLeavesListeningOffWithANotice() async {
+    mic.startError = MicrophoneError.noGlassesMic
     let model = await connectedModel()
     await model.startListening()
-    XCTAssertEqual(model.notice, LiveStreamError.streamWithoutAudio.message)
+    XCTAssertEqual(model.notice, MicrophoneError.noGlassesMic.message)
+    XCTAssertFalse(model.isListening)
+    XCTAssertEqual(backend.audioControlTypes, [])
+  }
+
+  func testMicPermissionDeniedLeavesListeningOffWithANotice() async {
+    mic.permission = false
+    let model = await connectedModel()
+    await model.startListening()
+    XCTAssertEqual(model.notice, MicrophoneError.denied.message)
+    XCTAssertEqual(mic.startCount, 0)
     XCTAssertFalse(model.isListening)
     XCTAssertEqual(backend.audioControlTypes, [])
   }
@@ -924,15 +1147,21 @@ final class LiveModelTests: XCTestCase {
     XCTAssertNotNil(model.notice)
   }
 
-  func testGlassesDisconnectStopsListeningWithASpokenReason() async {
+  /// Listening runs on the Bluetooth mic, so a camera stream ending (a fallback photo or the
+  /// Developer stream) leaves it running.
+  func testCameraStreamEndingDoesNotStopMicListening() async {
     let model = await listeningModel()
     camera.dropStream(byUser: false)
-    XCTAssertEqual(model.status, .listeningStopped(.glassesDisconnected))
-    XCTAssertEqual(speaker.spoken.last, AudioStreamerStopReason.glassesDisconnected.spokenMessage)
-    await waitUntil { self.backend.controlTypes.contains("audio.stop") }
+    for _ in 0..<10 { await Task.yield() }
+    XCTAssertEqual(model.status, .listening)
+    XCTAssertTrue(mic.isRunning)
+    XCTAssertFalse(backend.controlTypes.contains("audio.stop"))
+    XCTAssertTrue(speaker.spoken.isEmpty)
   }
 
   func testUserStopIsNotAFailure() async {
+    // The wake detector also keeps the phone awake while it waits; this test is about listening.
+    defaults.set(false, forKey: LiveModel.wakeWordKey)
     let model = await listeningModel()
     model.stopListening()
     XCTAssertEqual(model.status, .connected)
@@ -957,12 +1186,13 @@ final class LiveModelTests: XCTestCase {
 
   func testSuspendedListeningStartupCannotResumeAfterBackgrounding() async {
     let model = await connectedModel()
-    camera.suspendStartup = true
+    mic.suspendPermission = true
     let startup = Task { await model.startListening() }
-    await waitUntil { self.camera.isStartupSuspended }
+    await waitUntil { self.mic.isPermissionPending }
     await model.setAppActive(false)
-    camera.releaseStartup()
+    mic.releasePermission()
     await startup.value
+    XCTAssertEqual(mic.startCount, 0, "the mic never opens after the app went to the background")
     XCTAssertFalse(camera.isStreaming)
     XCTAssertFalse(backend.controlTypes.contains("audio.start"))
     XCTAssertFalse(model.isListening)
@@ -1002,7 +1232,7 @@ final class LiveModelTests: XCTestCase {
     model.displayOutputMode = .native
     await waitUntil { model.displayOutputMode == .web && !model.isSwitchingDisplay }
     XCTAssertTrue(lens.webDisplayEnabled)
-    XCTAssertTrue(camera.isStreaming)
+    XCTAssertTrue(mic.isRunning, "listening (the Bluetooth mic) keeps running")
     XCTAssertTrue(model.isListening)
     XCTAssertEqual(backend.closeCount, 0)
     XCTAssertNotNil(model.notice)
@@ -1063,6 +1293,17 @@ final class LiveModelTests: XCTestCase {
     XCTAssertEqual(chime.count, 1)
     await waitUntil { self.lens.cards.count == 1 }
     XCTAssertEqual(lens.cards.first??.kind, .contradicted)
+  }
+
+  /// Ray-Ban Meta glasses have no lens: an overheard contradiction must be spoken, not only chimed.
+  func testAutomaticContradictionIsSpokenWhenNoLensIsConnected() async {
+    lens.isConnected = false
+    let model = await connectedModel()
+    backend.emit(LiveEvents.result(requestId: "asr-1-1-nolens", action: .notify, verdict: .contradicted))
+    await waitUntil { model.history.entries.count == 1 }
+    XCTAssertEqual(model.history.entries[0].delivery, .spoken)
+    XCTAssertEqual(chime.count, 1)
+    XCTAssertEqual(speaker.spoken.count, 1)
   }
 
   func testSilentResultStaysInHistoryOnly() async {
@@ -1212,8 +1453,15 @@ final class LiveModelTests: XCTestCase {
   func testCheckThisNeedsAConnection() async {
     let model = makeModel()
     await model.checkThis()
-    XCTAssertEqual(model.checkMessage, "Connect to the backend first.")
+    XCTAssertEqual(model.checkMessage, "Facto is offline. Tap Reconnect.")
     XCTAssertEqual(camera.photoCount, 0)
+  }
+
+  func testStartListeningOfflineSaysHowToFixIt() async {
+    let model = makeModel()
+    await model.startListening()
+    XCTAssertEqual(model.notice, "Facto is offline. Tap Reconnect.")
+    XCTAssertTrue(camera.startedQualities.isEmpty)
   }
 }
 

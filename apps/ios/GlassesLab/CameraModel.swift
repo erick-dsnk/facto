@@ -70,6 +70,15 @@ final class CameraModel {
   @ObservationIgnored private var userStoppedStream = false
   /// Callers of `captureStillDuringStream()` waiting for the current photo.
   @ObservationIgnored private var photoWaiters: [CheckedContinuation<Data, Error>] = []
+  /// The camera was added only for one photo; it has no stream and is stopped after it.
+  @ObservationIgnored private var photoOnlyCamera = false
+  /// The stream runs only to make photos fast on glasses without a display (no audio).
+  @ObservationIgnored private var warmStandby = false
+  var isWarmStandby: Bool { warmStandby && isStreaming && !captureStreamAudio && !isCapturingPhoto }
+  /// Glasses without a display listen through the camera stream's mic, which hears nearby
+  /// voices best, and take photos from the same stream. Display glasses use the Bluetooth mic,
+  /// because a running camera holds back their lens cards.
+  var listensThroughStream: Bool { glasses.kind == .rayBanMeta }
   /// Quality for a stream that Live mode starts (LiveModel keeps it in sync with Demo quality).
   @ObservationIgnored var liveQuality: StreamQuality = .demo
 
@@ -79,20 +88,19 @@ final class CameraModel {
   /// this fails with "No eligible device available".
   var hasActiveDevice = false
 
-  /// Created once and kept, as in Meta's CameraAccess sample. A selector made at tap
-  /// time has not seen any device yet.
-  @ObservationIgnored private let deviceSelector = AutoDeviceSelector(wearables: Wearables.shared)
+  /// The one session shared with the display (see GlassesSession).
+  @ObservationIgnored private let glasses: GlassesSession
   @ObservationIgnored private var session: DeviceSession?
   @ObservationIgnored private var camera: MWDATCamera.Camera?
-  @ObservationIgnored private let sessionTokens = ListenerTokenBag()
   @ObservationIgnored private let streamTokens = ListenerTokenBag()
   @ObservationIgnored private var arrivals: [CFTimeInterval] = []
 
   /// Must be created after `Wearables.configure()`.
-  init() {
+  init(glasses: GlassesSession = .shared) {
+    self.glasses = glasses
     Task { [weak self] in
       guard let self else { return }
-      for await deviceId in self.deviceSelector.activeDeviceStream() {
+      for await deviceId in self.glasses.deviceSelector.activeDeviceStream() {
         self.hasActiveDevice = deviceId != nil
       }
     }
@@ -105,17 +113,13 @@ final class CameraModel {
     onCaptureStarting?()
     lastError = nil
     do {
-      let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
-      session = newSession
-      // Subscribe before start() so no transition is missed.
-      newSession.statePublisher.listen { [weak self] state in
-        Task { @MainActor in self?.handleSession(state) }
-      }.store(in: sessionTokens)
-      newSession.errorPublisher.listen { [weak self] error in
-        Task { @MainActor in self?.lastError = "Session: \(error.localizedDescription)" }
-      }.store(in: sessionTokens)
-      sessionState = .starting
-      try newSession.start()
+      // Joins the display's session when it already has one: the glasses take one session.
+      session = try glasses.acquire(
+        .camera,
+        onState: { [weak self] state in self?.handleSession(state) },
+        onError: { [weak self] message in self?.lastError = "Session: \(message)" }
+      )
+      handleSession(glasses.state)
     } catch {
       lastError = "Session: \(error.localizedDescription)"
       clearSession()
@@ -123,9 +127,16 @@ final class CameraModel {
   }
 
   func endSession() {
+    guard session != nil else { return }
     userStoppedStream = true
-    sessionState = .stopping
-    session?.stop()
+    if glasses.release(.camera) {
+      // Last holder: the session stops and `.stopped` clears the rest.
+      sessionState = .stopping
+    } else {
+      // The display keeps the session; stop only the camera (its LED goes off).
+      camera?.stop()
+      clearSession()
+    }
   }
 
   private func handleSession(_ state: DeviceSessionState) {
@@ -137,7 +148,6 @@ final class CameraModel {
   private func clearSession() {
     if isCapturingPhoto { failPhoto("The session ended during the photo.") }
     clearStream()
-    sessionTokens.clear()
     session = nil
     sessionState = .idle
     onCaptureSessionEnded?()
@@ -283,7 +293,8 @@ final class CameraModel {
       // Starting a stream is fine; stopping one for a photo is not.
       await startStream()
     }
-    for _ in 0..<60 where streamState != .streaming {
+    // The first stream start also brings up the glasses' Wi-Fi link, which can take >6 s.
+    for _ in 0..<150 where streamState != .streaming {
       try? await Task.sleep(for: .milliseconds(100))
     }
     guard isCapturingPhoto else { return }
@@ -498,6 +509,7 @@ final class CameraModel {
     audioDeliveries = nil
     camera = nil
     streamState = .stopped
+    warmStandby = false
     if hadStream {
       let byUser = userStoppedStream
       userStoppedStream = false
@@ -586,14 +598,21 @@ extension CameraModel: LiveCamera {
   func captureStillDuringStream() async throws -> Data {
     guard await ensureSessionStarted() else { throw PhotoCaptureError.noSession }
     if !isStreaming, !isCapturingPhoto {
-      // Only the first start decides whether the stream carries mic audio, and only the user
-      // stops a stream. So a stream that "Check this" starts is the listening stream; if mic
-      // audio is refused, a plain stream still gives the photo.
-      do {
-        try await startListeningStream(quality: liveQuality)
-      } catch {
-        captureStreamAudio = false
+      // A stream-less photo (Meta's photo API) took ~14 s: 7.8 s to capture and 5.8 s over
+      // Bluetooth. Grabbing a still from a running stream takes ~1 s, so photos come from a
+      // stream, chosen per glasses:
+      if glasses.sessionHasDisplay {
+        // Display glasses: a running stream holds back lens cards and shows a viewfinder, so
+        // the stream runs only for the photo.
+        return try await captureStillWithShortStream()
       }
+      // Glasses without a display: start a quiet stream (no audio, nothing sent anywhere) and
+      // keep it, so the next photo is instant too.
+      warmStandby = true
+      captureStreamAudio = false
+      resolution = .low
+      frameRate = 15
+      plog("starting the quiet photo stream (glasses without a display)")
     }
     return try await withCheckedThrowingContinuation { continuation in
       photoWaiters.append(continuation)
@@ -605,6 +624,70 @@ extension CameraModel: LiveCamera {
         if !self.isCapturingPhoto { self.resumePhotoWaiters(.failure(PhotoCaptureError.failed)) }
       }
     }
+  }
+
+  /// One still from the camera's photo capability, with no video stream. The camera is added
+  /// for the photo and stopped right after, and the camera leaves the shared session, so
+  /// "Hey Facto" (which waits for the camera to be idle) works again. On Display glasses the
+  /// display keeps the session open, so the next photo joins it straight away.
+  private func captureStillWithoutStream() async throws -> Data {
+    guard let session, session.state == .started else { throw PhotoCaptureError.noSession }
+    if try await Wearables.shared.checkPermissionStatus(.camera) != .granted {
+      guard try await Wearables.shared.requestPermission(.camera) == .granted else {
+        lastError = "Camera permission denied in Meta AI."
+        throw PhotoCaptureError.failed
+      }
+    }
+    let config = StreamConfiguration(videoCodec: .raw, audioCodec: nil, resolution: .low, frameRate: 15)
+    guard let photoCamera = try session.addCamera(config: config) else { throw PhotoCaptureError.failed }
+    camera = photoCamera
+    photoOnlyCamera = true
+    lastError = nil
+    isCapturingPhoto = true
+    photoRequestedAt = CACurrentMediaTime()
+    photoAttempt = 0
+    photoLog.removeAll()
+    plog("Take photo without a stream (\(photoResolution.rawValue)/\(photoQuality.rawValue))")
+    do {
+      let data = try await withCheckedThrowingContinuation { continuation in
+        photoWaiters.append(continuation)
+        startPhotoChild(reason: "photo only, no stream")
+      }
+      endPhotoOnlyCamera()
+      endSession()
+      return data
+    } catch {
+      // Keep the session: the caller falls back to a short stream on it.
+      endPhotoOnlyCamera()
+      throw error
+    }
+  }
+
+  /// Fallback when the glasses refuse a photo without a stream: a plain stream (no mic audio)
+  /// just for the photo, stopped once the photo is in.
+  private func captureStillWithShortStream() async throws -> Data {
+    captureStreamAudio = false
+    defer {
+      // Success or failure: end the stream and leave the session so "Hey Facto" re-arms.
+      stopStream()
+      endSession()
+    }
+    return try await withCheckedThrowingContinuation { continuation in
+      photoWaiters.append(continuation)
+      Task { @MainActor in
+        await self.capturePhoto()
+        if !self.isCapturingPhoto { self.resumePhotoWaiters(.failure(PhotoCaptureError.failed)) }
+      }
+    }
+  }
+
+  /// Stops the camera added for a stream-less photo, without reporting a stream stop.
+  private func endPhotoOnlyCamera() {
+    guard photoOnlyCamera else { return }
+    photoOnlyCamera = false
+    photoTokens.clear()
+    camera?.stop()
+    camera = nil
   }
 
   /// The listening stream: glasses mic audio on, at the chosen quality (decision 10). Starts the
@@ -629,9 +712,9 @@ extension CameraModel: LiveCamera {
     guard isStreaming else { throw LiveStreamError.streamFailed(lastError) }
   }
 
-  /// Ends the stream and the device session after a wake-phrase session, so the glasses are
-  /// idle (camera and LED off) while the app waits for the phrase again. This is never used
-  /// for a photo: a photo is always taken from a running stream.
+  /// Releases the camera's hold on the glasses session (and any stream) after a wake-phrase
+  /// session or a photo check, so the glasses are idle (camera and LED off) and the "Hey Facto"
+  /// detector can re-arm. The display keeps the shared session if it is connected.
   func stopLiveStream() async {
     guard session != nil else { return }
     endSession()

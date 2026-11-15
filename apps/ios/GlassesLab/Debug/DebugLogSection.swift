@@ -1,7 +1,6 @@
 import SwiftUI
 
-/// Debug log controls for the lab list: the toggle, what is saved, share and delete. Plain on
-/// purpose; the redesign moves it to a Developer screen.
+/// Debug log controls on the Developer screen: the toggle, what is saved, share and delete.
 struct DebugLogSection: View {
   let log: DebugLog
   @State private var isEnabled: Bool
@@ -18,10 +17,11 @@ struct DebugLogSection: View {
     Section {
       VStack(alignment: .leading, spacing: 4) {
         Toggle("Debug log", isOn: $isEnabled)
+          .factoToggleTint()
           .onChange(of: isEnabled) { _, enabled in log.isEnabled = enabled }
         Text("Off until you turn it on. When on, saves photos, OCR text and transcripts on this phone for 24 hours.")
-          .font(.footnote)
-          .foregroundStyle(.secondary)
+          .font(.onest(.footnote))
+          .foregroundStyle(.factoTextSecondary)
       }
       LabeledContent("Entries", value: "\(stats.entries)")
       LabeledContent("Photos", value: "\(stats.photos)")
@@ -38,9 +38,9 @@ struct DebugLogSection: View {
           Text("Removes every saved entry and photo from this phone.")
         }
     } header: {
-      Text("Debug log")
+      SettingsHeader("Debug log")
     } footer: {
-      Text("The app never uploads these files. Share them from here or copy them to a Mac with devicectl.")
+      SettingsFooter("Facto never uploads these files. Share them from here or copy them to a Mac with devicectl.")
     }
     .task { await refreshWhileVisible() }
   }

@@ -64,6 +64,11 @@ extension BackendClient: LiveBackend {}
 protocol LiveCamera: PhotoCapturing {
   var isStreaming: Bool { get }
   var hasSession: Bool { get }
+  /// A quiet video stream (no audio) kept running on glasses without a display, only so a
+  /// photo takes ~1 s instead of ~14 s. "Hey Facto" stays armed during it.
+  var isWarmStandby: Bool { get }
+  /// Listening should use the camera stream's audio (glasses without a display).
+  var listensThroughStream: Bool { get }
   var onCaptureStarting: (@MainActor () -> Void)? { get set }
   var onCaptureSessionEnded: (@MainActor () -> Void)? { get set }
   /// Quality for a stream that Live mode starts, including one started by "Check this".
@@ -74,6 +79,11 @@ protocol LiveCamera: PhotoCapturing {
   /// Ends a stream Live mode started for the wake phrase, and its device session, so the
   /// glasses go back to idle. Returns once they have stopped (or after a few seconds).
   func stopLiveStream() async
+}
+
+extension LiveCamera {
+  var isWarmStandby: Bool { false }
+  var listensThroughStream: Bool { false }
 }
 
 /// The glasses lens. `DisplayModel` is the real one.
@@ -108,7 +118,8 @@ final class PlaybackRelay: PlaybackReporting {
 
 // MARK: - Status
 
-/// What the Live screen shows at the top. Each failure has its own state, so a broken
+/// The backend half of the home screen's status line (HomeStatus adds the glasses). Each
+/// failure has its own state, so a broken
 /// connection never looks like "no alerts" (decision 9).
 enum LiveStatus: Equatable, Sendable {
   case offline
@@ -153,19 +164,20 @@ enum LiveStatus: Equatable, Sendable {
 
   var title: String {
     switch self {
-    case .offline: "Not connected"
+    case .offline: "Offline"
     case .connecting: "Connecting…"
-    case .connected: "Connected, not listening"
+    case .connected: "Online"
     case .startingToListen: "Starting to listen…"
     case .listening: "Listening"
     case .reconnecting: "Reconnecting…"
     case .listeningStopped(let reason):
       switch reason {
-      case .glassesDisconnected: "Stopped: glasses disconnected"
-      case .noConnection: "Stopped: no connection"
-      case .sessionEnded: "Stopped: session ended"
-      case .audioUnavailable: "Stopped: listening unavailable"
-      case .requested: "Not listening"
+      case .glassesDisconnected: "Listening stopped: glasses disconnected"
+      case .noConnection: "Listening stopped: no connection"
+      case .sessionEnded: "Listening stopped: session ended"
+      case .audioUnavailable: "Listening stopped: mic unavailable"
+      // `make` turns the user's own Stop into `.connected`.
+      case .requested: "Online"
       }
     case .backendError(let code): Self.errorTitle(code)
     }
@@ -173,21 +185,16 @@ enum LiveStatus: Equatable, Sendable {
 
   var detail: String {
     switch self {
-    case .offline: "Enter the backend URL and join code, then tap Connect."
-    case .connecting: "Opening a session on the backend."
-    case .connected: "Tap Start listening, or Check this to read text in front of you."
+    case .offline: "Tap Reconnect to go online."
+    case .connecting: "Opening a session."
+    case .connected: "Tap Start listening, or Check this to read what’s in front of you."
     case .startingToListen: "Waiting for the glasses stream and the backend."
-    case .listening: "No alert does not mean a claim was verified."
+    case .listening: "No alert doesn’t mean a claim is true."
     case .reconnecting(let attempt):
-      attempt > 0
-        ? "Connection dropped. Attempt \(attempt) of 3. Audio from the gap is discarded."
-        : "Connection dropped. Audio from the gap is discarded."
-    case .listeningStopped(let reason):
-      switch reason {
-      case .audioUnavailable(let code), .sessionEnded(let code): "Reason: \(code). Tap Start listening to try again."
-      default: "Tap Start listening to try again."
-      }
-    case .backendError(let code): "Reason: \(code). Tap Connect to try again."
+      attempt > 0 ? "Connection dropped. Attempt \(attempt) of 3." : "Connection dropped."
+    case .listeningStopped: "Tap Start listening to try again."
+    case .backendError(let code):
+      code == "missing_join_code" ? "Add your join code in Settings." : "Reason: \(code)."
     }
   }
 
@@ -215,10 +222,10 @@ enum LiveStatus: Equatable, Sendable {
   private static func errorTitle(_ code: String) -> String {
     switch code {
     case "network_lost", "connect_failed": "Connection lost"
-    case "unauthorized": "Join code or session rejected"
-    case "deleted", "expired": "Session ended by the backend"
+    case "unauthorized", "http_401", "http_403": "Join code rejected"
+    case "deleted", "expired": "Session ended"
     case "connect_timeout", "timed_out": "Backend not responding"
-    case "missing_join_code": "Join code missing"
+    case "missing_join_code": "Join code needed"
     case "invalid_url": "Backend URL not valid"
     case "insecure_url": "Backend URL needs https"
     default: "Backend error"
@@ -251,12 +258,18 @@ final class LiveModel {
   /// A manual check with no outcome after this long is reported as "The check didn't finish."
   /// The backend's own deadline is 10 s.
   nonisolated static let defaultCheckTimeout: TimeInterval = 15
+  /// Shown when Start listening or Check this runs without a backend session.
+  static let offlineMessage = "Facto is offline. Tap Reconnect."
+  /// Shown when a paused backend session didn't resume in time.
+  static let pausedMessage = "The backend session is paused. Tap Reconnect."
 
   // MARK: Settings (UserDefaults)
 
   var baseURLText: String
   var joinCode: String
-  var remoteOCRSelectionEnabled: Bool
+  var remoteOCRSelectionEnabled: Bool {
+    didSet { defaults.set(remoteOCRSelectionEnabled, forKey: BackendConfig.remoteOCRSelectionEnabledKey) }
+  }
   var photoTargetHint = ""
   var demoQuality: Bool {
     didSet {
@@ -441,6 +454,10 @@ final class LiveModel {
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private let secrets: SecretStoring
   @ObservationIgnored private let configureAudioSession: () -> Void
+  /// Listening input: the glasses' Bluetooth mic. The camera only takes Check this photos.
+  @ObservationIgnored private let mic: ListeningMicrophone
+  /// Current listening runs on the camera stream's audio (Ray-Ban Meta), not the mic.
+  @ObservationIgnored private var listeningViaStream = false
   @ObservationIgnored private let idleTimer: (_ keepAwake: Bool) -> Void
   @ObservationIgnored private let uptime: () -> TimeInterval
   @ObservationIgnored private let debugLog: DebugLog
@@ -513,6 +530,7 @@ final class LiveModel {
     wakeListener: WakeWordListening? = nil,
     wakeWindow: TimeInterval = LiveModel.defaultWakeWindow,
     wakeCheckWindow: TimeInterval = LiveModel.defaultWakeCheckWindow,
+    microphone: ListeningMicrophone? = nil,
     makeBackend: (@MainActor (BackendConfig) -> LiveBackend)? = nil
   ) {
     let config = BackendConfig.load(from: defaults, secrets: secrets)
@@ -524,12 +542,14 @@ final class LiveModel {
     self.demoQuality = defaults.object(forKey: Self.demoQualityKey) as? Bool ?? true
     self.isMuted = defaults.bool(forKey: Self.mutedKey)
     self.automaticAlerts = defaults.object(forKey: Self.automaticAlertsKey) as? Bool ?? true
-    self.wakeWordEnabled = defaults.bool(forKey: Self.wakeWordKey)
+    // On by default: "Hey Facto" is how a check starts without touching the phone.
+    self.wakeWordEnabled = defaults.object(forKey: Self.wakeWordKey) as? Bool ?? true
     let wakeListener = wakeListener ?? MicrophoneWakeWordListener()
     self.wake = wakeListener
     self.wakeWindow = wakeWindow
     self.wakeCheckWindow = wakeCheckWindow
     self.camera = camera
+    self.mic = microphone ?? GlassesMicrophone()
     self.display = display
     self.defaults = defaults
     self.secrets = secrets
@@ -553,12 +573,16 @@ final class LiveModel {
     self.relay = relay
     self.presenter = ResultPresenter(speaker: speaker, chime: chime, playback: relay, history: history, lens: lens, debugLog: debugLog)
     presenter.isMuted = isMuted
+    // Without a lens showing the card (Ray-Ban Meta, or Display glasses not connected),
+    // overheard alerts are spoken as well as chimed.
+    presenter.alertsAreSpoken = { [weak display] in !(display?.isConnected ?? false) }
 
     lens.onChange = { [weak self] card in self?.lensChanged(card) }
     display?.onReady = { [weak self] in self?.restoreNativePresentation() }
     camera.liveQuality = quality
     camera.onStreamStopped = { [weak self] byUser in self?.streamStopped(byUser: byUser) }
     camera.onAudioBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
+    mic.onBuffer = { [weak self] buffer in self?.streamer?.append(buffer) }
     camera.onCaptureStarting = { [weak self] in
       guard let self else { return }
       self.pauseWakeDetector()
@@ -710,16 +734,47 @@ final class LiveModel {
     notice = Self.connectFailureNotice("unauthorized")
   }
 
+  /// Connects on launch and whenever the app comes back to the foreground, so the wearer never
+  /// has to connect by hand. Does nothing without a saved join code, while a connection is open or
+  /// opening, or after the backend refused the join code or the URL: those need the user to
+  /// change Settings first, and retrying them on every foreground would only fail again.
+  func connectIfConfigured() async {
+    guard canEditBackend, !joinCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+    if case .disconnected(let reason) = connection, Self.settingsErrorCodes.contains(reason) { return }
+    // A suspended client belongs to the foreground restore path (setAppActive).
+    if case .disconnected("suspended") = connection { return }
+    await connect()
+  }
+
+  /// Disconnects, then connects again with the current URL and join code.
+  func reconnect() async {
+    await disconnect()
+    await connect()
+  }
+
+  /// Disconnects and deletes the saved join code, so the next launch stays offline.
+  func forgetJoinCode() async {
+    await disconnect()
+    joinCode = ""
+    secrets.write(nil, for: BackendConfig.joinCodeKey)
+  }
+
+  /// Disconnect reasons only a change in Settings can fix: the join code or the URL.
+  nonisolated static let settingsErrorCodes: Set<String> = [
+    "missing_join_code", "unauthorized", "http_401", "http_403", "invalid_url", "insecure_url",
+  ]
+
   /// What to do about a failed connect, by the client's reason code.
   static func connectFailureNotice(_ reason: String) -> String? {
     switch reason {
-    case "closed", "cancelled": nil
-    case "missing_join_code": "Enter the join code, then tap Connect."
-    case "unauthorized", "http_401", "http_403": "The backend rejected the join code. Check it, then tap Connect."
-    case "connect_timeout", "timed_out": "The backend didn't answer in time. Check the URL and mobile data, then tap Connect."
-    case "network_lost": "No network. Check mobile data, then tap Connect."
+    // "suspended" is the app being in the background; restoreConnection resumes it on return.
+    case "closed", "cancelled", "suspended": nil
+    case "missing_join_code": "Add your join code in Settings."
+    case "unauthorized", "http_401", "http_403": "The backend rejected the join code. Check it in Settings."
+    case "connect_timeout", "timed_out": "The backend didn't answer in time. Check the URL and mobile data, then tap Reconnect."
+    case "network_lost": "No network. Check mobile data, then tap Reconnect."
     case "session_capacity", "rate_limited", "http_429": "The backend has no free sessions right now. Try again in a minute."
-    default: "Couldn't connect (\(reason)). Check the URL and join code, then tap Connect."
+    default: "Couldn't connect (\(reason)). Check the URL and join code, then tap Reconnect."
     }
   }
 
@@ -794,7 +849,7 @@ final class LiveModel {
     }
     guard current() else { return }
     guard isConnected, let streamer else {
-      notice = "Connect to the backend first."
+      notice = Self.offlineMessage
       return
     }
     guard !streamer.phase.isActive, !isStartingStream, !isChecking else { return }
@@ -810,35 +865,83 @@ final class LiveModel {
       isStartingStream = false
       refreshWake()
     }
-    do {
-      try await camera.startListeningStream(quality: quality)
-    } catch {
-      notice = (error as? LiveStreamError)?.message ?? "The glasses stream didn't start."
+    if camera.listensThroughStream {
+      // Ray-Ban Meta: the camera stream carries the glasses' mic, which hears nearby voices
+      // best, and "check this" photos come from the same stream in ~1 s.
+      do {
+        try await camera.startListeningStream(quality: quality)
+      } catch {
+        notice = (error as? LiveStreamError)?.message ?? "The glasses stream didn't start."
+        return
+      }
+      guard current(), await ensureSessionActive(), isConnected, self.streamer === streamer, current() else {
+        if isConnected { notice = notice ?? Self.pausedMessage }
+        return
+      }
+      listeningViaStream = true
+      streamer.source = .glassesStreamAudio
+      streamer.start()
+      acknowledgeListeningOnReady = true
+      syncListening()
+      startTicker()
       return
     }
+    // Display glasses: the Bluetooth mic, because a running camera holds back lens cards.
+    listeningViaStream = false
+    streamer.source = .glassesHfp
+    guard await mic.requestPermission() else {
+      notice = MicrophoneError.denied.message
+      return
+    }
+    // The permission prompt can take a while: never open the mic after the app went to the
+    // background or the capture was cancelled meanwhile.
+    guard current() else { return }
+    do {
+      try mic.start()
+    } catch {
+      notice = (error as? MicrophoneError)?.message ?? "The microphone didn't start (\((error as NSError).code))."
+      configureAudioSession()
+      return
+    }
+    debugLog.log("live.mic_input", ["input": mic.inputName ?? "unknown"])
     guard current() else {
-      // A cancelled wake startup has a serialized owner cleanup; avoid stopping it twice.
-      if wakeID == nil { await camera.stopLiveStream() }
+      stopMic()
       return
     }
     guard await ensureSessionActive() else {
-      notice = "The backend session is paused. Disconnect and connect again."
+      stopMic()
+      notice = Self.pausedMessage
       return
     }
-    guard current(), isConnected, self.streamer === streamer else { return }
+    guard isConnected, self.streamer === streamer else {
+      stopMic()
+      return
+    }
+    guard current() else {
+      stopMic()
+      return
+    }
     streamer.start()
     acknowledgeListeningOnReady = true
     syncListening()
     startTicker()
   }
 
-  /// The user's Stop listening. The camera stream keeps running so a photo stays instant;
-  /// "Stop stream" ends it.
+  /// The user's Stop listening: the mic stops and the audio session goes back to spoken output.
   func stopListening() {
     captureGeneration = UUID()
     clearTriggerAcknowledgement()
     guard let streamer, streamer.phase.isActive else { return }
     streamer.stop()
+    stopMic()
+    if listeningViaStream {
+      // The listening stream goes off with listening, so the camera is idle and Hey Facto re-arms.
+      listeningViaStream = false
+      Task {
+        await self.camera.stopLiveStream()
+        self.refreshWake()
+      }
+    }
     presenter.stopOutput()
     syncListening()
     // Stopping by hand during a wake session also ends that session and its stream.
@@ -854,7 +957,7 @@ final class LiveModel {
     guard isAppActive, glassesAuthorized else { return }
     if let cleanup = wakeCleanupTask { await cleanup.value }
     guard isConnected, let coordinator else {
-      checkMessage = "Connect to the backend first."
+      checkMessage = Self.offlineMessage
       return
     }
     guard !coordinator.isRunning else { return }
@@ -879,7 +982,7 @@ final class LiveModel {
       isAppActive, isConnected, let coordinator, !coordinator.isRunning else { return }
     checkMessage = nil
     guard await ensureSessionActive() else {
-      checkMessage = "The backend session is paused. Disconnect and connect again."
+      checkMessage = Self.pausedMessage
       return
     }
     guard !Task.isCancelled, wakeID == nil || wakeSessionID == wakeID else { return }
@@ -920,7 +1023,9 @@ final class LiveModel {
   private func build(_ config: BackendConfig) {
     let backend = makeBackend(config)
     backend.onUnreadableEvent = { [weak self] type in self?.unreadableEvent(type) }
-    let streamer = AudioStreamer(channel: backend, clock: audioClock, resumesAfterReconnect: false, debugLog: debugLog)
+    let streamer = AudioStreamer(
+      channel: backend, source: .glassesHfp, clock: audioClock, resumesAfterReconnect: false, debugLog: debugLog
+    )
     streamer.onStopped = { [weak self] reason in self?.listeningStopped(reason) }
     streamer.onAutoResumed = { [weak self] in self?.autoResumed() }
     relay.target = streamer
@@ -1179,7 +1284,7 @@ final class LiveModel {
       } catch {
         self.log.error("session.resume failed \(BackendClient.reasonCode(for: error), privacy: .public)")
         self.debugLog.log("live.resume_failed", ["epoch": epoch, "error": String(describing: error)])
-        self.notice = "Couldn't resume the backend session. Disconnect and connect again."
+        self.notice = "Couldn't resume the backend session. Tap Reconnect."
       }
     }
   }
@@ -1231,7 +1336,15 @@ final class LiveModel {
     return sessionActive == true
   }
 
+  /// Stops the Bluetooth mic and gives the audio session back to spoken output.
+  private func stopMic() {
+    guard mic.isRunning else { return }
+    mic.stop()
+    configureAudioSession()
+  }
+
   private func listeningStopped(_ reason: AudioStreamerStopReason) {
+    stopMic()
     clearTriggerAcknowledgement()
     listening = .stopped(reason)
     log.info("listening stopped \(reason.code, privacy: .public)")
@@ -1255,15 +1368,15 @@ final class LiveModel {
     syncListening()
   }
 
+  /// A camera stream ended. Listening runs on the Bluetooth mic, so it carries on; a stream only
+  /// runs for a fallback photo or from the Developer screen.
+  /// A camera stream ended. Listening through that stream ends with it; Bluetooth-mic
+  /// listening carries on (a stream there only runs for a photo).
   private func streamStopped(byUser: Bool) {
     defer { refreshWake() }
     debugLog.log("live.stream_stopped", ["byUser": byUser, "listening": String(describing: streamer?.phase ?? .idle)])
-    guard let streamer, streamer.phase.isActive else { return }
-    if byUser {
-      streamer.stop()
-    } else {
-      streamer.glassesDisconnected()
-    }
+    guard listeningViaStream, let streamer, streamer.phase.isActive else { return }
+    if byUser { streamer.stop() } else { streamer.glassesDisconnected() }
     syncListening()
   }
 
@@ -1289,12 +1402,27 @@ final class LiveModel {
       checkMessage = Self.checkFailureMessage(reason)
       presenter.presentOutcome(.checkFailed, userInitiated: true)
     }
+    releaseCameraAfterPhoto()
+  }
+
+  /// A photo check is over once its photo is read: release the camera so "Hey Facto" re-arms
+  /// at once (the detector stays paused while the camera holds the glasses session), instead
+  /// of waiting out the wake window. A stream someone started on purpose keeps running.
+  private func releaseCameraAfterPhoto() {
+    if wakeSession {
+      Task { await self.endWakeSession() }
+    } else if camera.hasSession, !camera.isStreaming, !manualCaptureStarting {
+      Task {
+        await self.camera.stopLiveStream()
+        self.refreshWake()
+      }
+    }
   }
 
   static func checkFailureMessage(_ reason: String) -> String {
     switch reason {
-    case "no_session": "No backend session. Connect first."
-    case "session_paused": "The backend session is paused. Disconnect and connect again."
+    case "no_session": offlineMessage
+    case "session_paused": pausedMessage
     case "photo_failed": "The photo didn't arrive. Check the glasses and try again."
     case "ocr_failed": "The photo couldn't be read. Try again."
     case "target_selection_failed", "target_selection_unavailable": "Text selection is unavailable. Try again shortly."
@@ -1412,8 +1540,8 @@ final class LiveModel {
       else if !wantsBackendConnection || !isConnected { "Connect to the backend to arm it." }
       else if listening.isActive || isStartingStream { "Paused while listening." }
       else if wakeStartTask != nil || wakeCleanupTask != nil || manualCaptureStarting { "Waiting for the glasses session to finish." }
-      else if camera.isStreaming { "Paused while the glasses stream is on. Stop the stream to arm it." }
-      else if camera.hasSession { "Paused while the glasses session is on." }
+      else if camera.isStreaming, !camera.isWarmStandby { "Paused while the glasses stream is on. Stop the stream to arm it." }
+      else if camera.hasSession, !camera.isWarmStandby { "Paused while the glasses session is on." }
       else { nil }
     if let blocked {
       pauseWakeDetector()
@@ -1465,38 +1593,23 @@ final class LiveModel {
   /// "Hey Facto, check this" takes a photo and checks it, like the Check this button.
   private func wakeHeard(_ command: WakeCommand) {
     guard wakeWordEnabled, !wakeSession, wakeStartTask == nil, wakeCleanupTask == nil,
-      isAppActive, glassesAuthorized, wantsBackendConnection, !manualCaptureStarting, !camera.hasSession, !camera.isStreaming, isConnected else { return }
+      isAppActive, glassesAuthorized, wantsBackendConnection, !manualCaptureStarting, camera.isWarmStandby || (!camera.hasSession && !camera.isStreaming), isConnected else { return }
     // A chime is not playback, so it is not reported to the backend.
     if !isMuted { chime.playChime() }
-    if command == .checkThis {
-      log.info("wake phrase: check this")
-      // checkThis() releases the detector's microphone, starts the short wake session and
-      // stops the stream again once the check is done.
-      beginWakeSession()
-      let wakeID = wakeSessionID
-      wakeStartTask = Task {
-        await self.checkThis(wakeID: wakeID)
-        self.wakeStartTask = nil
-        guard !Task.isCancelled, self.wakeSessionID == wakeID else { return }
-        self.startWakeTimer(after: self.wakeCheckWindow)
-      }
-      return
-    }
-    log.info("wake phrase: starting to listen")
+    // Every "Hey Facto…" takes a photo and checks what is in view; nothing is streamed.
+    // checkThis() releases the detector's microphone, and the short wake session re-arms the
+    // detector once the check is done.
+    log.info("wake phrase: \(command == .checkThis ? "check this" : "hey facto", privacy: .public), taking a photo")
     beginWakeSession()
     let wakeID = wakeSessionID
     wakeStartTask = Task {
-      await self.startListening(wakeID: wakeID)
+      await self.checkThis(wakeID: wakeID)
       self.wakeStartTask = nil
       guard !Task.isCancelled, self.wakeSessionID == wakeID else { return }
-      if self.streamer?.phase.isActive ?? false {
-        self.startWakeTimer(after: self.wakeWindow)
-      } else {
-        // Listening didn't start; `notice` says why.
-        await self.endWakeSession()
-      }
+      self.startWakeTimer(after: self.wakeCheckWindow)
     }
   }
+
 
   private func startWakeTimer(after seconds: TimeInterval) {
     wakeTimer?.cancel()
@@ -1543,7 +1656,8 @@ final class LiveModel {
     // is pending. Keep ownership until it returns, then end even a partially started session.
     let cleanup = Task {
       await startup?.value
-      if ownsStream {
+      // The quiet photo stream on glasses without a display stays on for the next photo.
+      if ownsStream, !self.camera.isWarmStandby {
         self.log.info("wake session over: stopping the stream")
         await self.camera.stopLiveStream()
       }

@@ -44,31 +44,66 @@ private final class EventLog: PlaybackReporting {
 
 // MARK: - Helpers
 
-private func evidence(id: String = "ev-1", title: String = "Eiffel Tower history", publisher: String? = "Eiffel Tower") -> Evidence {
+private func evidence(
+  id: String = "ev-1",
+  title: String = "Eiffel Tower history",
+  publisher: String? = "Eiffel Tower",
+  url: String = "https://www.toureiffel.paris/en/the-monument/history",
+  stance: EvidenceStance = .supports,
+  excerpt: String = "The Eiffel Tower opened in 1889."
+) -> Evidence {
   Evidence(
-    id: id, url: "https://www.toureiffel.paris/en/the-monument/history", title: title, publisher: publisher,
+    id: id, url: url, title: title, publisher: publisher,
     publishedAt: nil, retrievedAt: "2026-11-14T10:00:01Z", contentBasis: "highlight",
-    excerpt: "The Eiffel Tower opened in 1889.", sourceGroup: "toureiffel.paris", echoGroup: nil,
+    excerpt: excerpt, sourceGroup: "toureiffel.paris", echoGroup: nil,
     sourceRole: "primary", directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true,
-    stance: .supports, stanceProbability: 0.96
+    stance: stance, stanceProbability: 0.96
   )
 }
 
 private func result(
   _ verdict: Verdict = .supported,
   action: PresentationAction = .respond,
+  reasonCode: String = "fixture",
   checkedText: String = "The Eiffel Tower opened in 1889.",
   evidence items: [Evidence] = [evidence()],
   selected: [String]? = nil
 ) -> ClaimResult {
   ClaimResult(
-    verdict: verdict, reasonCode: "fixture", selectedEvidenceIds: selected ?? items.map(\.id),
+    verdict: verdict, reasonCode: reasonCode, selectedEvidenceIds: selected ?? items.map(\.id),
     summary: "", originalText: checkedText, checkedText: checkedText,
     sourceSpan: SourceSpan(start: 0, end: CodePoints.count(checkedText)), evidence: items,
     checkedAt: "2026-11-14T10:00:02Z", expiresAt: "2026-11-14T10:01:02Z", durationMs: 1_200, cached: false,
     policyVersion: "glasses-p0.1", modelVersion: "fixture",
     presentation: Presentation(action: action, reasonCode: "fixture")
   )
+}
+
+/// The website's False example: three selected sources contradict the claim.
+private func falseEiffel() -> ClaimResult {
+  result(.contradicted, checkedText: "The Eiffel Tower opened in 1890.", evidence: [
+    evidence(id: "ls", publisher: "Live Science", url: "https://www.livescience.com/eiffel", stance: .contradicts,
+             excerpt: "The tower opened to the public on 31 March 1889."),
+    evidence(id: "te", publisher: nil, url: "https://www.toureiffel.paris/en", stance: .contradicts),
+    evidence(id: "bb", publisher: "BBC", url: "https://www.bbc.co.uk/news/eiffel", stance: .contradicts),
+  ])
+}
+
+/// The website's True example: two of three selected sources support the claim.
+private func trueNASA() -> ClaimResult {
+  result(.supported, checkedText: "The Moon has no atmosphere to speak of.", evidence: [
+    evidence(id: "nasa", publisher: "NASA", url: "https://science.nasa.gov/moon", stance: .supports),
+    evidence(id: "esa", publisher: "ESA", url: "https://www.esa.int/moon", stance: .supports),
+    evidence(id: "wiki", publisher: "Wikipedia", url: "https://en.wikipedia.org/wiki/Moon", stance: .unrelated),
+  ])
+}
+
+private extension ClaimResult {
+  func withAction(_ action: PresentationAction) -> ClaimResult {
+    var copy = self
+    copy.presentation = Presentation(action: action, reasonCode: "fixture")
+    return copy
+  }
 }
 
 private func identity(_ claim: String = "claim-1", request: String = "req-1", revision: Int = 1) -> ClaimIdentity {
@@ -78,56 +113,182 @@ private func identity(_ claim: String = "claim-1", request: String = "req-1", re
 // MARK: - Wording
 
 final class ResultWordingTests: XCTestCase {
-  func testWordingForEveryOutcomeMatchesThePlan() {
-    XCTAssertEqual(ResultWording.line(for: .verdict(.supported)), "Supported by the sources I found.")
-    XCTAssertEqual(ResultWording.line(for: .verdict(.contradicted)), "The evidence I found contradicts that claim.")
-    XCTAssertEqual(ResultWording.line(for: .verdict(.misleading)), "That needs context.")
-    XCTAssertEqual(ResultWording.line(for: .verdict(.insufficientEvidence)), "I couldn't verify that.")
-    XCTAssertEqual(ResultWording.line(for: .verdict(.unknown("new_verdict"))), "I couldn't verify that.")
-    XCTAssertEqual(ResultWording.line(for: .needsConfirmation(heard: false)), "I'm not sure what was read.")
-    XCTAssertEqual(ResultWording.line(for: .needsConfirmation(heard: true)), "I'm not sure what was said.")
-    XCTAssertEqual(ResultWording.line(for: .checkFailed), "The check didn't finish.")
-  }
+  // MARK: Words and lines
 
-  func testVerdictWordsAreDistinctLabels() {
+  func testVerdictWordsMatchTheWebsite() {
     let kinds: [CardKind] = [.supported, .contradicted, .misleading, .unverified, .needsConfirmation, .checkFailed]
-    let words = kinds.map(ResultWording.verdictWord(for:))
-    XCTAssertEqual(Set(words).count, kinds.count, "Each kind needs its own word; colour is never the only signal")
+    XCTAssertEqual(
+      kinds.map(ResultWording.verdictWord(for:)),
+      ["True", "False", "Misleading", "Can\u{2019}t verify", "Not sure", "Check failed"]
+    )
     XCTAssertEqual(ResultWording.kind(for: .verdict(.unknown("x"))), .unverified)
   }
 
-  func testSpokenLineNamesTheBestSourceWithinTwentyWords() {
-    let verdicts: [Verdict] = [.supported, .contradicted, .misleading, .insufficientEvidence]
-    for verdict in verdicts {
-      let card = ResultCard(result: result(verdict))
-      let line = ResultWording.spokenLine(for: .verdict(verdict), sourceName: card.sourceName)
-      XCTAssertTrue(line.hasPrefix(ResultWording.line(for: .verdict(verdict))))
-      XCTAssertTrue(line.contains("Eiffel Tower"), line)
-      XCTAssertLessThanOrEqual(ResultWording.wordCount(line), ResultWording.maxSpokenWords)
-      XCTAssertFalse(line.contains("http"), line)
-      XCTAssertFalse(ResultWording.looksLikeURL(line), line)
+  func testLinesForOutcomesWithoutAResult() {
+    XCTAssertEqual(ResultWording.line(for: .verdict(.supported)), "True.")
+    XCTAssertEqual(ResultWording.line(for: .verdict(.contradicted)), "False.")
+    XCTAssertEqual(ResultWording.line(for: .verdict(.misleading)), "Misleading.")
+    XCTAssertEqual(ResultWording.line(for: .verdict(.insufficientEvidence)), "Can’t verify. No reliable source addresses it.")
+    XCTAssertEqual(ResultWording.line(for: .verdict(.unknown("new_verdict"))), "Can’t verify. No reliable source addresses it.")
+    XCTAssertEqual(ResultWording.line(for: .needsConfirmation(heard: true)), "I’m not sure what was said.")
+    XCTAssertEqual(ResultWording.line(for: .needsConfirmation(heard: false)), "I’m not sure what was read.")
+    XCTAssertEqual(ResultWording.line(for: .checkFailed), "The check didn’t finish.")
+  }
+
+  func testMisleadingReasons() {
+    XCTAssertEqual(ResultWording.misleadingReason(code: "omitted_condition"), "Missing context")
+    XCTAssertEqual(ResultWording.misleadingReason(code: "outdated_fact"), "Out of date")
+    XCTAssertEqual(ResultWording.misleadingReason(code: "exaggeration"), "Exaggerated")
+    for code in [nil, "", "partly_true", "partially_true", "true_in_part"] {
+      XCTAssertEqual(ResultWording.misleadingReason(code: code), "True only in part", String(describing: code))
+    }
+    XCTAssertEqual(ResultWording.misleadingReason(code: "something_new"), "Missing context")
+  }
+
+  // MARK: Spoken lines
+
+  func testSpokenLineExamplesFromTheSpec() {
+    XCTAssertEqual(ResultWording.spokenLine(for: falseEiffel()), "False. 3 of 3 sources disagree, including Live Science.")
+    XCTAssertEqual(ResultWording.spokenLine(for: trueNASA()), "True. 2 of 3 sources agree, including NASA.")
+
+    let oneFalse = result(.contradicted, evidence: [evidence(publisher: "Live Science", stance: .contradicts)])
+    XCTAssertEqual(ResultWording.spokenLine(for: oneFalse), "False. 1 source disagrees: Live Science.")
+    let oneTrue = result(.supported, evidence: [evidence(publisher: "NASA", stance: .supports)])
+    XCTAssertEqual(ResultWording.spokenLine(for: oneTrue), "True. 1 source agrees: NASA.")
+
+    XCTAssertEqual(ResultWording.spokenLine(for: result(.misleading, reasonCode: "outdated_fact")), "Misleading. Out of date.")
+    XCTAssertEqual(ResultWording.spokenLine(for: result(.misleading, reasonCode: "omitted_condition")), "Misleading. Missing context.")
+    XCTAssertEqual(ResultWording.spokenLine(for: result(.misleading, reasonCode: "exaggeration")), "Misleading. Exaggerated.")
+    XCTAssertEqual(ResultWording.spokenLine(for: result(.insufficientEvidence)), "Can’t verify. No reliable source addresses it.")
+    XCTAssertEqual(ResultWording.spokenLine(for: result(.unknown("new"))), "Can’t verify. No reliable source addresses it.")
+  }
+
+  func testSpokenLineWithoutAMatchingSourceIsTheVerdictAlone() {
+    let unrelated = result(.contradicted, evidence: [evidence(stance: .unrelated)])
+    XCTAssertEqual(ResultWording.spokenLine(for: unrelated), "False.")
+    XCTAssertEqual(ResultWording.spokenLine(for: result(.supported, selected: [])), "True.")
+  }
+
+  func testSpokenLineDropsAMissingOrOverlongSource() {
+    let nameless = result(.contradicted, evidence: [
+      evidence(id: "a", publisher: nil, url: "", stance: .contradicts),
+      evidence(id: "b", publisher: nil, url: "", stance: .contradicts),
+    ])
+    XCTAssertEqual(ResultWording.spokenLine(for: nameless), "False. 2 of 2 sources disagree.")
+
+    // 20 one-letter words fit the 40 code point name cap but push the line past 20 words.
+    let wordy = (0..<20).map { _ in "a" }.joined(separator: " ")
+    let long = result(.supported, evidence: [evidence(id: "a", publisher: wordy), evidence(id: "b", publisher: wordy)])
+    XCTAssertEqual(ResultWording.spokenLine(for: long), "True. 2 of 2 sources agree.")
+    let longSingle = result(.supported, evidence: [evidence(publisher: wordy)])
+    XCTAssertEqual(ResultWording.spokenLine(for: longSingle), "True. 1 source agrees.")
+  }
+
+  func testNoSpokenLineContainsAURLOrRunsOver() {
+    let sources: [Evidence] = [
+      evidence(id: "a", publisher: nil, url: "https://www.toureiffel.paris/en"),
+      evidence(id: "b", publisher: "www.example.com", url: "https://www.example.com/x"),
+      evidence(id: "c", publisher: "https://news.example.org/story", url: "https://news.example.org/story"),
+      evidence(id: "d", publisher: "info@example.net", url: "http://example.net"),
+      evidence(id: "e", publisher: String(repeating: "Long Publisher Name ", count: 5), url: "https://x.example"),
+    ]
+    let verdicts: [Verdict] = [.supported, .contradicted, .misleading, .insufficientEvidence, .unknown("x")]
+    for source in sources {
+      for stance in [EvidenceStance.supports, .contradicts] {
+        var item = source
+        item.stance = stance
+        for verdict in verdicts {
+          let line = ResultWording.spokenLine(for: result(verdict, evidence: [item, evidence(id: "z", stance: stance)]))
+          XCTAssertFalse(line.lowercased().contains("http"), line)
+          XCTAssertFalse(line.contains("://"), line)
+          XCTAssertFalse(line.lowercased().contains("www."), line)
+          XCTAssertLessThanOrEqual(ResultWording.wordCount(line), ResultWording.maxSpokenWords, line)
+        }
+      }
     }
   }
 
-  func testSourceNameNeverUsesAURL() {
-    let urlPublisher = result(evidence: [evidence(title: "Eiffel Tower history", publisher: "www.toureiffel.paris")])
-    XCTAssertEqual(ResultWording.bestSourceName(for: urlPublisher), "Eiffel Tower history")
+  // MARK: Counts and detail
 
-    let domainEverywhere = result(evidence: [evidence(title: "https://example.com/page", publisher: "example.com")])
-    XCTAssertNil(ResultWording.bestSourceName(for: domainEverywhere))
-    XCTAssertEqual(
-      ResultWording.spokenLine(for: .verdict(.supported), sourceName: nil),
-      "Supported by the sources I found."
-    )
+  func testStanceCountCoversAllSelectedEvidence() {
+    XCTAssertEqual(ResultWording.stanceCount(for: falseEiffel()), ResultWording.StanceCount(matching: 3, total: 3))
+    XCTAssertEqual(ResultWording.stanceCount(for: trueNASA()), ResultWording.StanceCount(matching: 2, total: 3))
 
-    let unselected = result(evidence: [evidence()], selected: [])
-    XCTAssertNil(ResultWording.bestSourceName(for: unselected), "Only selected evidence is named")
+    let partlyUnselected = result(.contradicted, evidence: [
+      evidence(id: "a", stance: .contradicts), evidence(id: "b", stance: .supports), evidence(id: "c", stance: .contradicts),
+    ], selected: ["a", "b"])
+    XCTAssertEqual(ResultWording.stanceCount(for: partlyUnselected), ResultWording.StanceCount(matching: 1, total: 2), "unselected evidence never counts")
+
+    XCTAssertNil(ResultWording.stanceCount(for: result(.misleading)))
+    XCTAssertNil(ResultWording.stanceCount(for: result(.insufficientEvidence)))
+    XCTAssertNil(ResultWording.stanceCount(for: result(.unknown("x"))))
   }
 
-  func testLongSourceNameIsDroppedRatherThanExceedingTheWordCap() {
-    let name = Array(repeating: "word", count: 12).joined(separator: " ")
-    let line = ResultWording.spokenLine(for: .verdict(.contradicted), sourceName: name)
-    XCTAssertEqual(line, "The evidence I found contradicts that claim.")
+  func testDetailForResults() {
+    XCTAssertEqual(ResultWording.detail(for: trueNASA()), "2 of 3 sources agree")
+    XCTAssertEqual(ResultWording.detail(for: result(.supported)), "1 source agrees")
+    XCTAssertEqual(ResultWording.detail(for: falseEiffel()), "3 of 3 sources disagree")
+    XCTAssertEqual(ResultWording.detail(for: result(.contradicted, evidence: [evidence(stance: .contradicts)])), "1 source disagrees")
+    XCTAssertNil(ResultWording.detail(for: result(.contradicted, evidence: [evidence(stance: .supports)])))
+    XCTAssertNil(ResultWording.detail(for: result(.supported, selected: [])))
+    XCTAssertEqual(ResultWording.detail(for: result(.misleading, reasonCode: "exaggeration")), "Exaggerated")
+    XCTAssertEqual(ResultWording.detail(for: result(.misleading, reasonCode: "partly_true")), "True only in part")
+    XCTAssertEqual(ResultWording.detail(for: result(.insufficientEvidence)), "No reliable source addresses it")
+    XCTAssertEqual(ResultWording.detail(for: result(.unknown("x"))), "No reliable source addresses it")
+  }
+
+  func testDetailForOutcomes() {
+    XCTAssertEqual(ResultWording.detail(for: OutputOutcome.needsConfirmation(heard: true)), "Say it again")
+    XCTAssertEqual(ResultWording.detail(for: OutputOutcome.needsConfirmation(heard: false)), "Move closer and try again")
+    XCTAssertEqual(ResultWording.detail(for: OutputOutcome.checkFailed), "Try again")
+  }
+
+  // MARK: Sources
+
+  func testBestEvidencePrefersTheMatchingStanceAndNeverUnselected() {
+    let mixed = result(.contradicted, evidence: [
+      evidence(id: "wiki", publisher: "Wikipedia", stance: .unrelated),
+      evidence(id: "ls", publisher: "Live Science", stance: .contradicts),
+    ])
+    XCTAssertEqual(ResultWording.bestEvidence(for: mixed)?.id, "ls")
+    XCTAssertEqual(ResultWording.bestSourceName(for: mixed), "Live Science")
+
+    let unselectedMatch = result(.contradicted, evidence: [
+      evidence(id: "sel", publisher: "Selected", stance: .supports),
+      evidence(id: "hidden", publisher: "Hidden", stance: .contradicts),
+    ], selected: ["sel"])
+    XCTAssertEqual(ResultWording.bestEvidence(for: unselectedMatch)?.id, "sel", "falls back to the first selected item")
+    XCTAssertEqual(ResultWording.bestEvidence(for: result(.misleading))?.id, "ev-1")
+    XCTAssertNil(ResultWording.bestEvidence(for: result(.supported, selected: [])))
+    XCTAssertNil(ResultWording.bestSourceName(for: result(.supported, selected: [])), "only selected evidence is named")
+  }
+
+  func testSourceNameIsThePublisherOrTheDomainNeverTheTitle() {
+    XCTAssertEqual(ResultWording.sourceName(for: evidence(publisher: "  Live Science ")), "Live Science")
+    XCTAssertEqual(ResultWording.sourceName(for: evidence(publisher: nil, url: "https://www.toureiffel.paris/en")), "toureiffel.paris")
+    XCTAssertEqual(ResultWording.sourceName(for: evidence(publisher: "   ", url: "https://www.toureiffel.paris/en")), "toureiffel.paris")
+    XCTAssertEqual(ResultWording.sourceName(for: evidence(publisher: "www.toureiffel.paris")), "toureiffel.paris")
+    XCTAssertEqual(ResultWording.sourceName(for: evidence(publisher: "https://www.bbc.co.uk/news")), "bbc.co.uk")
+    XCTAssertEqual(ResultWording.sourceName(for: evidence(publisher: "Reuters.com")), "reuters.com")
+    XCTAssertNil(ResultWording.sourceName(for: evidence(title: "Eiffel Tower history", publisher: nil, url: "")), "never the title")
+    XCTAssertNil(ResultWording.sourceName(for: evidence(publisher: nil, url: "http://192.168.1.20:3000/page")))
+
+    let long = ResultWording.sourceName(for: evidence(publisher: String(repeating: "Publisher ", count: 8)))
+    XCTAssertLessThanOrEqual(CodePoints.count(long ?? ""), ResultWording.maxSourceNameCodePoints)
+  }
+
+  func testRegistrableDomain() {
+    XCTAssertEqual(ResultWording.registrableDomain(of: "https://www.toureiffel.paris/en"), "toureiffel.paris")
+    XCTAssertEqual(ResultWording.registrableDomain(of: "https://www.bbc.co.uk/news/world"), "bbc.co.uk")
+    XCTAssertEqual(ResultWording.registrableDomain(of: "https://news.bbc.co.uk"), "bbc.co.uk")
+    XCTAssertEqual(ResultWording.registrableDomain(of: "https://edition.cnn.com/2026/11/14"), "cnn.com")
+    XCTAssertEqual(ResultWording.registrableDomain(of: "https://www.smh.com.au/national"), "smh.com.au")
+    XCTAssertEqual(ResultWording.registrableDomain(of: "HTTPS://WWW.NASA.GOV/"), "nasa.gov")
+    XCTAssertEqual(ResultWording.registrableDomain(of: "www.livescience.com"), "livescience.com")
+    XCTAssertNil(ResultWording.registrableDomain(of: "http://192.168.1.20:3000/v1"))
+    XCTAssertNil(ResultWording.registrableDomain(of: "http://[::1]:3000/"))
+    XCTAssertNil(ResultWording.registrableDomain(of: "https://"))
+    XCTAssertNil(ResultWording.registrableDomain(of: ""))
   }
 
   func testLooksLikeURL() {
@@ -137,6 +298,51 @@ final class ResultWordingTests: XCTestCase {
     XCTAssertFalse(ResultWording.looksLikeURL("Eiffel Tower"))
     XCTAssertFalse(ResultWording.looksLikeURL("U.S. Census Bureau"))
     XCTAssertFalse(ResultWording.looksLikeURL("Version 2.0 notes"))
+  }
+
+  // MARK: Card
+
+  func testFalseCardCarriesEveryField() {
+    let card = ResultCard(result: falseEiffel())
+    XCTAssertEqual(card.kind, .contradicted)
+    XCTAssertEqual(card.verdictWord, "False")
+    XCTAssertEqual(card.detail, "3 of 3 sources disagree")
+    XCTAssertEqual(card.excerpt, "The Eiffel Tower opened in 1890.")
+    XCTAssertEqual(card.quote, "“The tower opened to the public on 31 March 1889.”")
+    XCTAssertEqual(card.sourceName, "Live Science")
+    XCTAssertEqual(card.sourceLine, "Live Science", "no Source: prefix")
+    XCTAssertEqual(card.spokenLine, "False. 3 of 3 sources disagree, including Live Science.")
+    XCTAssertEqual(
+      card.accessibilityLabel,
+      "False. 3 of 3 sources disagree. Claim: The Eiffel Tower opened in 1890. Source: Live Science."
+    )
+  }
+
+  func testCardQuoteIsCappedAndNilWhenBlank() {
+    let long = String(repeating: "The tower was the tallest structure in the world for 41 years. ", count: 5)
+    let quote = ResultCard(result: result(evidence: [evidence(excerpt: long)])).quote ?? ""
+    XCTAssertLessThanOrEqual(CodePoints.count(quote), ResultWording.maxQuoteCodePoints)
+    XCTAssertTrue(quote.hasPrefix("“"))
+    XCTAssertTrue(quote.hasSuffix("…”"))
+
+    XCTAssertNil(ResultCard(result: result(evidence: [evidence(excerpt: "  ")])).quote)
+    XCTAssertEqual(ResultCard(result: result(evidence: [evidence(excerpt: "\"Opened in 1889.\"")])).quote, "“Opened in 1889.”")
+    XCTAssertNil(ResultCard(result: result(.supported, selected: [])).quote)
+  }
+
+  func testOutcomeCard() {
+    let failed = ResultCard(outcome: .checkFailed, claimText: nil)
+    XCTAssertEqual(failed.verdictWord, "Check failed")
+    XCTAssertEqual(failed.detail, "Try again")
+    XCTAssertNil(failed.quote)
+    XCTAssertNil(failed.sourceName)
+    XCTAssertEqual(failed.spokenLine, "The check didn’t finish.")
+    XCTAssertEqual(failed.accessibilityLabel, "Check failed. Try again.")
+
+    let unsure = ResultCard(outcome: .needsConfirmation(heard: false), claimText: "Opened in 1889")
+    XCTAssertEqual(unsure.verdictWord, "Not sure")
+    XCTAssertEqual(unsure.detail, "Move closer and try again")
+    XCTAssertEqual(unsure.accessibilityLabel, "Not sure. Move closer and try again. Claim: Opened in 1889.")
   }
 
   // MARK: Excerpt
@@ -170,15 +376,6 @@ final class ResultWordingTests: XCTestCase {
     let word = String(repeating: "a", count: 100)
     XCTAssertEqual(CardText.excerpt(word, maxCodePoints: 70), String(repeating: "a", count: 69) + "…")
   }
-
-  func testCardUsesClaimExcerptAndSource() {
-    let card = ResultCard(result: result(.contradicted))
-    XCTAssertEqual(card.kind, .contradicted)
-    XCTAssertEqual(card.verdictWord, "Contradicted")
-    XCTAssertEqual(card.excerpt, "The Eiffel Tower opened in 1889.")
-    XCTAssertEqual(card.sourceLine, "Source: Eiffel Tower")
-    XCTAssertFalse(card.accessibilityLabel.contains("http"))
-  }
 }
 
 // MARK: - Presenter
@@ -191,6 +388,7 @@ final class ResultPresenterTests: XCTestCase {
   private var history: ResultHistory!
   private var lens: LensCardViewModel!
   private var presenter: ResultPresenter!
+  private var announced: [String] = []
 
   override func setUp() async throws {
     speaker = FakeSpeaker()
@@ -199,7 +397,11 @@ final class ResultPresenterTests: XCTestCase {
     speaker.log = playback
     history = ResultHistory()
     lens = LensCardViewModel()
-    presenter = ResultPresenter(speaker: speaker, chime: chime, playback: playback, history: history, lens: lens)
+    announced = []
+    presenter = ResultPresenter(
+      speaker: speaker, chime: chime, playback: playback, history: history, lens: lens,
+      announce: { [unowned self] in self.announced.append($0) }
+    )
   }
 
   private func present(_ result: ClaimResult, _ id: ClaimIdentity = identity(), userInitiated: Bool = false) {
@@ -209,10 +411,10 @@ final class ResultPresenterTests: XCTestCase {
   func testRespondSpeaksTheLineAndSourceInsidePlaybackReports() {
     present(result(.supported, action: .respond), userInitiated: true)
 
-    XCTAssertEqual(speaker.spoken, ["Supported by the sources I found. The best source is Eiffel Tower."])
+    XCTAssertEqual(speaker.spoken, ["True. 1 source agrees: Eiffel Tower."])
     XCTAssertEqual(playback.events, ["started", "speak"])
     XCTAssertEqual(chime.count, 0)
-    XCTAssertEqual(lens.card?.verdictWord, "Supported")
+    XCTAssertEqual(lens.card?.verdictWord, "True")
 
     speaker.finishAll()
     XCTAssertEqual(playback.events, ["started", "speak", "ended"])
@@ -268,6 +470,27 @@ final class ResultPresenterTests: XCTestCase {
     XCTAssertTrue(speaker.spoken.isEmpty, "unmuting does not replay muted results")
   }
 
+  func testVoiceOverHearsEveryCardTheWearerDoesNot() {
+    present(result(.supported, action: .respond), identity("a"), userInitiated: true)
+    XCTAssertTrue(announced.isEmpty, "a spoken card isn't announced over the speech")
+
+    present(result(.contradicted, action: .notify), identity("b"))
+    XCTAssertEqual(announced, [lens.card?.accessibilityLabel ?? ""], "a chime alone doesn't say the verdict")
+
+    presenter.isMuted = true
+    present(result(.misleading, action: .respond), identity("c"), userInitiated: true)
+    XCTAssertEqual(announced.count, 2)
+    XCTAssertEqual(announced.last, lens.card?.accessibilityLabel)
+    XCTAssertEqual(announced.last?.hasPrefix("Misleading."), true)
+
+    present(result(.supported, action: .silent), identity("d"))
+    XCTAssertEqual(announced.count, 2, "silent results stay in history only")
+
+    presenter.isMuted = false
+    XCTAssertTrue(presenter.repeatLatest())
+    XCTAssertEqual(announced.count, 2, "Repeat speaks, so VoiceOver stays quiet")
+  }
+
   func testInterruptingSpeechReportsOnePlaybackPair() {
     present(result(.supported), identity("a"), userInitiated: true)
     present(result(.contradicted), identity("b"), userInitiated: true)
@@ -296,15 +519,15 @@ final class ResultPresenterTests: XCTestCase {
   }
 
   func testRepeatSpeaksTheLatestDeliveredEntry() {
-    present(result(.contradicted, action: .notify))
+    present(falseEiffel().withAction(.notify))
     XCTAssertTrue(presenter.repeatLatest())
-    XCTAssertEqual(speaker.spoken, ["The evidence I found contradicts that claim. The best source is Eiffel Tower."])
+    XCTAssertEqual(speaker.spoken, ["False. 3 of 3 sources disagree, including Live Science."])
     XCTAssertEqual(playback.events, ["started", "speak"])
   }
 
   func testExplicitFailureAlwaysAnswersAndAutomaticFailureStaysQuiet() {
     presenter.presentOutcome(.checkFailed, userInitiated: true, claimText: "The Eiffel Tower opened in 1889.")
-    XCTAssertEqual(speaker.spoken, ["The check didn't finish."])
+    XCTAssertEqual(speaker.spoken, ["The check didn’t finish."])
     XCTAssertEqual(lens.card?.verdictWord, "Check failed")
 
     presenter.presentOutcome(.needsConfirmation(heard: true), userInitiated: false)
@@ -411,12 +634,26 @@ final class ChimeToneTests: XCTestCase {
 
 @MainActor
 final class DisplayCardBuilderTests: XCTestCase {
-  func testCardUsesRealClaimSummaryAndPublisher() {
+  private struct SendFailed: Error {}
+
+  /// The lens uses Eric's native layout with Facto's wording: claim, verdict word, the stance
+  /// count next to it, the explanation, then the source. Every card carries a verdict dot.
+  func testFalseCardShowsClaimVerdictCountExplanationAndSource() {
+    let card = ResultCard(result: falseEiffel())
+    let box = DisplayCardBuilder.build(card)
+    XCTAssertEqual(
+      DisplayCardBuilder.textContents(of: box),
+      ["The Eiffel Tower opened in 1890.", "False", "3 of 3 sources disagree", ResultWording.lensSentence(for: .contradicted), "Live Science"]
+    )
+    XCTAssertTrue(DisplayCardBuilder.containsImage(box), "the verdict dot")
+  }
+
+  func testCardUsesRealClaimSummaryAndPublisher() throws {
     var checked = result(.misleading)
     checked.summary = "The tower opened in 1889, after construction began in 1887."
     let card = ResultCard(result: checked)
     let texts = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
-    XCTAssertEqual(texts, ["The Eiffel Tower opened in 1889.", "Needs context", checked.summary, "Eiffel Tower"])
+    XCTAssertEqual(texts, ["The Eiffel Tower opened in 1889.", "Misleading", try XCTUnwrap(card.detail), checked.summary, "Eiffel Tower"])
     XCTAssertNil(card.captureLabel, "The result contract alone does not identify the input mode")
   }
 
@@ -424,7 +661,7 @@ final class DisplayCardBuilderTests: XCTestCase {
     let card = ResultCard(outcome: .checkFailed, claimText: nil)
     let plain = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card))
     let withHandlers = DisplayCardBuilder.textContents(of: DisplayCardBuilder.build(card, onRepeat: {}, onDismiss: {}))
-    XCTAssertEqual(plain, ["Check failed", "The check didn't finish."])
+    XCTAssertEqual(plain, ["Check failed", "Try again", "The check didn’t finish."])
     XCTAssertEqual(withHandlers, plain)
   }
 
@@ -445,9 +682,81 @@ final class DisplayCardBuilderTests: XCTestCase {
     XCTAssertEqual(texts, ["Read from screen", "A real incoming claim", "Searching..."])
   }
 
-  func testLensAndMirrorHaveAnIconForEveryKind() {
+  func testReadyCard() {
+    XCTAssertEqual(DisplayCardBuilder.textContents(of: DisplayCardBuilder.buildReady()), ["facto", "Ready"])
+  }
+
+  func testSwatchesExistForTheFourVerdictsOnly() throws {
+    for kind in [CardKind.supported, .contradicted, .misleading, .unverified] {
+      let image = try XCTUnwrap(DisplayCardBuilder.swatchImage(for: kind), "\(kind)")
+      XCTAssertEqual(image.size, CGSize(width: 64, height: 64), "\(kind)")
+      XCTAssertEqual(image.scale, 1, "\(kind)")
+    }
+    XCTAssertNil(DisplayCardBuilder.swatchImage(for: .needsConfirmation))
+    XCTAssertNil(DisplayCardBuilder.swatchImage(for: .checkFailed))
+    XCTAssertTrue(
+      DisplayCardBuilder.swatchImage(for: .supported) === DisplayCardBuilder.swatchImage(for: .supported),
+      "swatches are drawn once"
+    )
+  }
+
+  func testLensHasAnIconForEveryKind() {
     let kinds: [CardKind] = [.supported, .contradicted, .misleading, .unverified, .needsConfirmation, .checkFailed]
     XCTAssertEqual(Set(kinds.map { DisplayCardBuilder.icon(for: $0).rawValue }).count, kinds.count)
-    XCTAssertEqual(Set(kinds.map(LensMirrorCanvas.symbol(for:))).count, kinds.count)
+  }
+
+  // MARK: Swatch fallback
+
+  func testFailedSwatchSendIsResentWithTheIcon() async throws {
+    var sent: [Bool] = []
+    let keepSwatches = try await DisplayCardBuilder.send(
+      ResultCard(result: falseEiffel()), includeSwatch: true, onRepeat: nil, onDismiss: nil
+    ) { box in
+      let hasSwatch = DisplayCardBuilder.containsImage(box)
+      sent.append(hasSwatch)
+      if hasSwatch { throw SendFailed() }
+    }
+    XCTAssertEqual(sent, [true, false])
+    XCTAssertFalse(keepSwatches)
+  }
+
+  func testSuccessfulSwatchSendKeepsSwatches() async throws {
+    var sent: [Bool] = []
+    let keepSwatches = try await DisplayCardBuilder.send(
+      ResultCard(result: falseEiffel()), includeSwatch: true, onRepeat: nil, onDismiss: nil
+    ) { sent.append(DisplayCardBuilder.containsImage($0)) }
+    XCTAssertEqual(sent, [true])
+    XCTAssertTrue(keepSwatches)
+  }
+
+  func testSendWithoutSwatchesNeverRetries() async {
+    var attempts = 0
+    do {
+      _ = try await DisplayCardBuilder.send(
+        ResultCard(result: falseEiffel()), includeSwatch: false, onRepeat: nil, onDismiss: nil
+      ) { box in
+        attempts += 1
+        XCTAssertFalse(DisplayCardBuilder.containsImage(box))
+        throw SendFailed()
+      }
+      XCTFail("the send error reaches the caller")
+    } catch {
+      XCTAssertEqual(attempts, 1)
+    }
+  }
+
+  func testIconCardFailureKeepsSwatchesForLaterCards() async {
+    var attempts = 0
+    do {
+      _ = try await DisplayCardBuilder.send(
+        ResultCard(outcome: .checkFailed, claimText: nil), includeSwatch: true, onRepeat: nil, onDismiss: nil
+      ) { _ in
+        attempts += 1
+        throw SendFailed()
+      }
+      XCTFail("the send error reaches the caller")
+    } catch {
+      XCTAssertEqual(attempts, 1, "a card without a swatch has nothing to drop")
+    }
   }
 }

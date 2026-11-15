@@ -116,16 +116,18 @@ protocol PlaybackReporting: AnyObject {
 
 // MARK: - Backend configuration
 
-/// Where the app finds the backend. The base URL comes from UserDefaults so a build can point
-/// at a laptop or at Railway without code changes. The join code creates sessions, so it is
-/// kept in the Keychain. No secrets in source: the join code defaults to empty and is
-/// entered on the device.
+/// Where the app finds the backend. The base URL defaults to the hosted backend; a URL saved
+/// in UserDefaults overrides it, so a build can point at a laptop without code changes. The
+/// join code creates sessions, so it is kept in the Keychain. No secrets in source: the join
+/// code defaults to empty and is entered on the device.
 struct BackendConfig: Equatable, Sendable {
   static let baseURLKey = "backend.baseURL"
   static let joinCodeKey = "backend.joinCode"
   static let remoteOCRSelectionEnabledKey = "backend.remoteOCRSelectionEnabled"
-  /// The backend's default local port (services/api listens on PORT, default 3000).
-  static let defaultBaseURL = URL(string: "http://localhost:3000")!
+  /// Set once the one-time removal of old localhost and Railway URLs has run.
+  static let baseURLMigratedKey = "backend.baseURLMigrated"
+  /// The hosted backend (Cloudflare Workers).
+  static let defaultBaseURL = URL(string: "https://actually-api.lively-voice-2bf8.workers.dev")!
 
   var baseURL: URL
   var joinCode: String
@@ -139,6 +141,7 @@ struct BackendConfig: Equatable, Sendable {
   }
 
   static func load(from defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) -> BackendConfig {
+    migrateStoredBaseURL(in: defaults)
     let url = defaults.string(forKey: baseURLKey)
       .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
       .flatMap(URL.init(string:))
@@ -153,6 +156,20 @@ struct BackendConfig: Equatable, Sendable {
       defaults.removeObject(forKey: joinCodeKey)
     }
     return BackendConfig(baseURL: url ?? defaultBaseURL, joinCode: joinCode ?? "", remoteOCRSelectionEnabled: defaults.bool(forKey: remoteOCRSelectionEnabledKey))
+  }
+
+  /// `connect()` saves the URL it used, so builds before the hosted default kept localhost or
+  /// a Railway URL. Runs once: drops such a URL so those installs move to the default. Any
+  /// other saved URL (a laptop on the LAN, say) stays.
+  static func migrateStoredBaseURL(in defaults: UserDefaults) {
+    guard !defaults.bool(forKey: baseURLMigratedKey) else { return }
+    defaults.set(true, forKey: baseURLMigratedKey)
+    guard let stored = defaults.string(forKey: baseURLKey),
+          let host = URL(string: stored.trimmingCharacters(in: .whitespacesAndNewlines))?.host?.lowercased()
+    else { return }
+    if host == "localhost" || host == "railway.app" || host.hasSuffix(".railway.app") {
+      defaults.removeObject(forKey: baseURLKey)
+    }
   }
 
   func save(to defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) {
