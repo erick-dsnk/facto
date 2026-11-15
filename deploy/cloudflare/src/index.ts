@@ -11,11 +11,18 @@ interface Env {
   // vars (wrangler.jsonc)
   PIPELINE_MODE?: string;
   TRUST_PROXY?: string;
+  ASR_PROVIDER?: string;
+  ELEVENLABS_KEYTERMS?: string;
   DEEPGRAM_KEYTERMS?: string;
+  ASR_DIM_DB?: string;
+  ASR_DIM_FLOOR_DBFS?: string;
+  ASR_ECHO_MS?: string;
+  ASR_STITCH_MS?: string;
   DEBUG_TRANSCRIPTS?: string;
   // secrets (wrangler secret put)
   JEV_API_KEY?: string;
   EXA_API_KEY?: string;
+  ELEVENLABS_API_KEY?: string;
   DEEPGRAM_API_KEY?: string;
   GOOGLE_FACTCHECK_API_KEY?: string;
   DEMO_JOIN_CODE?: string;
@@ -34,10 +41,17 @@ const READY_TIMEOUT_MS = 90_000;
 const PASSTHROUGH = [
   "PIPELINE_MODE",
   "TRUST_PROXY",
+  "ASR_PROVIDER",
+  "ELEVENLABS_KEYTERMS",
   "DEEPGRAM_KEYTERMS",
+  "ASR_DIM_DB",
+  "ASR_DIM_FLOOR_DBFS",
+  "ASR_ECHO_MS",
+  "ASR_STITCH_MS",
   "DEBUG_TRANSCRIPTS",
   "JEV_API_KEY",
   "EXA_API_KEY",
+  "ELEVENLABS_API_KEY",
   "DEEPGRAM_API_KEY",
   "GOOGLE_FACTCHECK_API_KEY",
   "DEMO_JOIN_CODE",

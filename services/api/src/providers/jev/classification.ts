@@ -3,6 +3,7 @@ import {
   type ClaimRoute, type NonClaimKind, type PipelineAdapters, type SelectionKind, type SourceSpan, type TextInput
 } from '../../../../../packages/contracts/src/index.js';
 import { containsContactData, deterministicIssue, generateCandidates, type ClaimCandidate } from '../../input/claims/spans.js';
+import { looksEnglish } from '../../input/claims/language.js';
 import { sourceNameCandidates, subjectCandidates } from '../../input/claims/subjects.js';
 import { type JevAnswer, type JevClient, type JevQuestion, validateAnswers } from './client.js';
 
@@ -14,10 +15,10 @@ export const ADMISSION_THRESHOLDS = {
 // What a candidate is, ported from the reference app's SelectionKind with the future-claim riders. Tuned wording:
 // "whether or not it is actually true" stops Jev from turning away myths and false claims.
 const kindCriteria: Record<SelectionKind, string> = {
-  claim: 'It states at least one checkable fact about the world or about what someone said, did or decided, either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too. A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it; a guess about how the speaker\'s own team, plans or life will turn out does not',
+  claim: 'It states at least one checkable fact about the world or about what someone said, did or decided, either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too. A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it; a guess about how the speaker\'s own team, plans or life will turn out does not. A question that passes a fact on, such as "Have you heard that…", "Did you know…" or "Is it true that…", states that fact',
   opinion: 'Only a personal view, taste, feeling or judgment, with no fact in it that a source could prove or disprove. Value judgements phrased as predictions are opinions',
   prediction: 'Only a guess about the future that no plan, announcement, estimate or forecast could confirm or contradict, such as a guess about how the speaker\'s own team, plans or life will turn out',
-  question: 'A question',
+  question: 'A question that asks for something and passes no fact on, such as "Why?", "You know?" or "Is Sydney the capital of Australia?"',
   instruction: 'Only an instruction, request, piece of advice or call to action, with no fact in it',
   other: 'A fragment, greeting, heading, code or anything else that states no fact',
 };
@@ -34,7 +35,7 @@ const attributionCriteria: Record<AttributionChoice, string> = {
   none: 'No attribution: the speaker states it in their own voice',
   named_speaker: 'It reports what a named person, government or organization said, claimed, announced or decided, such as "Kushner said the talks failed"',
   named_outlet: 'It cites a named news outlet, publication or organization as its source, such as "According to Politico, …" or "According to NASA, …"',
-  hearsay: 'Hearsay or an unnamed source, such as "I heard", "you heard", "people say", "they say", "apparently" or "according to experts"',
+  hearsay: 'Hearsay or an unnamed source, such as "I heard", "you heard", "have you heard", "people say", "they say", "apparently" or "according to experts"',
 };
 const claimStructure = {
   one_coherent: 'The exact candidate expresses one coherent proposition; any boundary crosses only details required to state that proposition.',
@@ -43,9 +44,9 @@ const claimStructure = {
 };
 const privateDataQuestion = "Does this exact candidate disclose private or sensitive information about an identifiable person that should not go to web search? A person's name together with a public role, published work, official act, or publicly conferred award is not private merely because it identifies them. Still mark health/medical history, personal finances/account details, home/private contact/location, credentials/identity-document details, and private lived events/anecdotes as private, including for public figures and when phrased as reported or publicly known. Assess the actual information and context; a name/title/public-figure label alone neither establishes privacy nor waives it. When privacy status is uncertain, do not infer safety from fame or apparent searchability.";
 const privateLifeQuestion = "Does this candidate allege something about the private life of an identifiable person, such as an affair or relationship, their health, or their personal finances? Public figures are included, and so is a phrase that only presupposes it, such as \"his fourth affair\". Public conduct and public events are not private life: arrests, crimes and criminal allegations, lawsuits, deaths, official statements and announcements (such as a leader announcing their own diagnosis or hospital stay), and what courts or major outlets reported.";
-const rumourQuestion = 'Is this candidate a rumour, allegation or speculation going around, about the past or the future, rather than a plain statement of fact? Hearsay framing such as "I heard", "people say" or "reportedly" counts. A myth or a wrong number stated plainly as fact does not.';
+const rumourQuestion = 'Is this candidate a rumour, allegation or speculation going around, about the past or the future, rather than a plain statement of fact? Hearsay framing such as "I heard", "have you heard", "people say" or "reportedly" counts. A myth or a wrong number stated plainly as fact does not.';
 const futureQuestion = 'Is this candidate about something that has not happened yet, such as a plan, launch, forecast, valuation or result in the future? Statements about the present or the past are not.';
-const completenessQuestion = 'Is this exact proposition complete enough to check without guessing a missing subject, condition, or scope detail that could change what is checked? A high yes means the captured proposition has the needed information. Judge only information needed for this fact type: timeless named facts and complete historical propositions do not need extra time, place, or population; a statistic often does (for example, “Unemployment is 7%” lacks a location). A present-tense statement refers to now: do not mark it incomplete for lacking a date when its subject is named (“Anthropic is worth $300 billion” is complete). A generic or explicitly universal proposition can be complete as stated even when false or overbroad. Quantifiers such as all, always, no, and never state scope; possible counterexamples or omitted real-world qualifications belong to evidence judgment, not completeness. Do not demand a named event, date, place, or list of exceptions for a general proposition unless its wording leaves an actual referent or comparison unresolved. Evaluate the literal proposition without narrowing it or supplying conditions. Completeness is separate from truth and classification confidence; “I think” alone does not make a proposition incomplete.';
+const completenessQuestion = 'Is this exact proposition complete enough to check without guessing a missing subject, condition, or scope detail that could change what is checked? A high yes means the captured proposition has the needed information. Judge only information needed for this fact type: timeless named facts and complete historical propositions do not need extra time, place, or population; a statistic often does (for example, “Unemployment is 7%” lacks a location). A statistic or share about a named group of people, such as “Immigrants commit 60% of crimes” or “Women earn 80% of what men earn”, names what it measures and is complete without a place or period: read it as the place and time the claim is usually made about, and leave which data it matches or misstates to the evidence. A sensitive or offensive claim about a group is still complete when it names the group and the figure. A present-tense statement refers to now: do not mark it incomplete for lacking a date when its subject is named (“Anthropic is worth $300 billion” is complete). A generic or explicitly universal proposition can be complete as stated even when false or overbroad. Quantifiers such as all, always, no, and never state scope; possible counterexamples or omitted real-world qualifications belong to evidence judgment, not completeness. Do not demand a named event, date, place, or list of exceptions for a general proposition unless its wording leaves an actual referent or comparison unresolved. Evaluate the literal proposition without narrowing it or supplying conditions. Completeness is separate from truth and classification confidence; “I think” alone does not make a proposition incomplete.';
 const practicalQuestion = 'Would relying on this proposition plausibly change a concrete health, financial, safety or other practical decision? This is priority, never factual truth.';
 const scopeQuestion = 'Does this exact subspan preserve any negation, condition, quantifier, attribution, quotation, and other qualifier that actually governs it in originalText? A complete independent sentence or conjunction clause is not made incomplete by an unrelated neighboring private clause or by a discourse connector such as “and” or “but”. Answer yes when the exact span is independently checkable; answer no only when dropping surrounding text would change or detach a qualifier that governs this proposition.';
 const subjectPrivateQuestion = 'If this candidate is about one of the people offered in the subject question, is that person a private individual rather than a public figure (a politician, official, executive, celebrity, athlete, author or anyone else in the public eye)? Answer low when it is about a public figure, an organisation, a place or a thing, or when it names its own subject.';
@@ -134,6 +135,9 @@ type Assessed = {
 export function createClassifier(client: JevClient): PipelineAdapters['classify'] {
   return async (input, context) => {
     if (input.capture.final === false) return { action: input.userInitiated ? 'needs_confirmation' : 'wait', reasonCode: 'interim_capture', claims: [] };
+    // Overheard speech in another language is background chatter: skipped before Jev, so it never uses the automatic cooldown.
+    // A photo or a spoken "check this" is checked whatever its language.
+    if (input.mode === 'audio' && !input.userInitiated && !looksEnglish(input.text)) return { action: 'skip', reasonCode: REASON_CODES.notEnglish, claims: [] };
     const candidates = generateCandidates(input.text);
     const whole = candidates[0].span;
     const plans: Plan[] = candidates.map(candidate => ({
@@ -227,12 +231,15 @@ function assess(plan: Plan, answers: Record<string, JevAnswer>, input: TextInput
 
 function admit(assessed: Assessed[]): AdmissionResult {
   const byId = new Map(assessed.map(entry => [entry.candidate.id, entry]));
-  // Hearsay ("I heard that ...") and a named source that is not the question: check the content without its frame.
+  // Hearsay ("I heard that ..."), a claim passed on as a question ("Have you heard that ...?", "Is it true that ...?") and a named
+  // source that is not the question: check the content without its frame. A question frame needs no attribution answer from Jev,
+  // which reads "Did you know ...?" as attributed to nobody; a named source Jev matched keeps its frame.
   const replaced = new Set<string>();
   for (const entry of assessed) {
     const parent = entry.candidate.contentOf === undefined ? undefined : byId.get(entry.candidate.contentOf);
     if (!parent) continue;
-    const ignoreFrame = parent.attributionChoice === 'hearsay' || (parent.attributionChoice !== 'none' && parent.claim.attribution === null);
+    const ignoreFrame = parent.claim.attribution === null
+      && (parent.attributionChoice !== 'none' || entry.candidate.asked === true || entry.candidate.hedged === true);
     if (ignoreFrame && entry.eligible) {
       replaced.add(parent.candidate.id);
       entry.claim.rumour ||= parent.claim.rumour;

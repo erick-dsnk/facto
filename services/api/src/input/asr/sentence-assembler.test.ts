@@ -38,7 +38,7 @@ describe('sentence assembler', () => {
     assembler.interim(words('The Eiffel Tower opened in 1889. It'));
     expect(finals()).toEqual([]);
     assembler.interim(words('The Eiffel Tower opened in 1889. It is'));
-    expect(finals()).toEqual([{ text: 'The Eiffel Tower opened in 1889.', final: true, segmentId: 'g1-1', confidence: 0.9, captureOffsetMs: 0, speaker: null }]);
+    expect(finals()).toEqual([{ text: 'The Eiffel Tower opened in 1889.', final: true, segmentId: 'g1-1', confidence: 0.9, captureOffsetMs: 0, endOffsetMs: 1750, speaker: null }]);
     const locked = words('The Eiffel Tower opened in 1889. It is tall.');
     assembler.final(locked, endOf(locked) + 0.1);
     expect(finals().map(event => [event.segmentId, event.text])).toEqual([['g1-1', 'The Eiffel Tower opened in 1889.'], ['g1-2', 'It is tall.']]);
@@ -191,5 +191,79 @@ describe('sentence assembler', () => {
     expect(picked.map(word => word.text)).toEqual([...Array.from({ length: 11 }, (_, index) => `w${index}`), 'w19']);
     const odd = words(`— ${'x'.repeat(65)} fine`).map(word => ({ ...word, confidence: 0.2 }));
     expect(lowConfidenceWords(odd)).toEqual([{ text: 'fine', confidence: 0.2 }]);
+  });
+});
+
+describe('sentence assembler: speakers, echo and timing', () => {
+  it('ends a sentence where the diarized speaker changes, so two people never share one claim', () => {
+    const { assembler, finals } = setup();
+    const locked = words('Lightning never strikes twice you have Moodle right', 0, [0, 0, 0, 0, 1, 1, 1, 1]);
+    assembler.final(locked, endOf(locked));
+    expect(finals().map(event => [event.text, event.speaker])).toEqual([['Lightning never strikes twice', 0]]);
+    assembler.utteranceEnd();
+    expect(finals().map(event => [event.text, event.speaker])).toEqual([['Lightning never strikes twice', 0], ['you have Moodle right', 1]]);
+  });
+
+  it('keeps one word labelled with another speaker inside its sentence, and words without a speaker do not break a run', () => {
+    const { assembler, finals } = setup();
+    const flip = words('Helsinki is the capital of Finland.', 0, [0, 0, 1, 0, 0, 0]);
+    assembler.final(flip, endOf(flip));
+    const gaps = words('So Paris is big and old.', 5, [0, null, 0, null, 1, 1]);
+    assembler.final(gaps, endOf(gaps));
+    expect(finals().map(event => event.text)).toEqual(['Helsinki is the capital of Finland.', 'So Paris is big', 'and old.']);
+  });
+
+  it('emits the first speaker early from interims once the second has said two words', () => {
+    const { assembler, finals } = setup();
+    assembler.interim(words('It was 70 sorry', 0, [0, 0, 0, 1]));
+    assembler.interim(words('It was 70 sorry it', 0, [0, 0, 0, 1, 1]));
+    expect(finals()).toEqual([]);
+    assembler.interim(words('It was 70 sorry it was', 0, [0, 0, 0, 1, 1, 1]));
+    expect(finals().map(event => [event.text, event.speaker])).toEqual([['It was 70', 0]]);
+  });
+
+  it('drops words that start before ignoreBefore, such as the tail of a spoken answer', () => {
+    const events: AsrTranscript[] = [];
+    const assembler = new SentenceAssembler(event => events.push(event), { idPrefix: 'g2', ignoreBefore: 0.8 });
+    assembler.interim([...words('Australia.', 0.1), ...words('The', 0.9)]);
+    expect(events.map(event => event.text)).toEqual(['The']);
+    const locked = [...words('Australia.', 0.1), ...words('The Great Wall is long.', 0.9)];
+    assembler.final(locked, endOf(locked));
+    expect(events.filter(event => event.final).map(event => [event.text, event.captureOffsetMs])).toEqual([['The Great Wall is long.', 900]]);
+  });
+
+  it('reports where the last word ends, for the loudness gate', () => {
+    const { assembler, finals, events } = setup();
+    assembler.interim(words('Helsinki is', 1));
+    expect(events[0]).toMatchObject({ captureOffsetMs: 1000, endOffsetMs: 1550 });
+    const locked = words('Helsinki is cold.', 1);
+    assembler.final(locked, endOf(locked));
+    expect(finals()[0]).toMatchObject({ captureOffsetMs: 1000, endOffsetMs: 1850 });
+  });
+});
+
+describe('sentence assembler: corrections at a commit boundary', () => {
+  const timed = (list: [string, number, number, number][]): AsrWord[] => list.map(([text, start, end, speaker]) => ({ text, start, end, confidence: null, speaker }));
+  const first = "Not Energy Drink, 'cause I can Google it and I can find the one with the Red Bull.";
+
+  // Live 15 Nov 02:05:20-22. Interims emitted "…with the Red Bull." and "with electrolytes." early; the commit's timings put "Red"
+  // inside the second sentence's span, which then read "with electrolytes. Red", and "Bull doesn't have electrolytes." stood alone.
+  it('carries a word after a sentence end into the next sentence instead of leaving it on the corrected one', () => {
+    const { assembler, finals } = setup();
+    const spoken = words(first, 0, Array(18).fill(0));
+    const next = (list: [string, number][]) => timed(list.map(([text, start]) => [text, start, start + 0.25, 1]));
+    assembler.interim([...spoken, ...next([['with', 5.4]])]);
+    assembler.interim([...spoken, ...next([['with', 5.4], ['electrolytes.', 5.7]])]);
+    assembler.interim([...spoken, ...next([['with', 5.4], ['electrolytes.', 5.7], ['Red', 6.0]])]);
+    assembler.interim([...spoken, ...next([['with', 5.4], ['electrolytes.', 5.7], ['Red', 6.0], ['Bull', 6.3]])]);
+    expect(finals().map(event => [event.segmentId, event.text, event.speaker])).toEqual([['g1-1', first, 0], ['g1-2', 'with electrolytes.', 1]]);
+
+    const committed = words("Not Energy Drink, 'cause I can Google it and I can find the one", 0, Array(14).fill(0)).map(word => ({ ...word, start: word.start * 0.95, end: word.end * 0.95 }));
+    assembler.final([...committed, ...timed([['with', 5.3, 5.5, 1], ['electrolytes.', 5.5, 5.8, 1], ['Red', 5.8, 5.9, 1]])], 5.9);
+    assembler.final(timed([['Bull', 6.0, 6.3, 1], ["doesn't", 6.4, 6.7, 1], ['have', 6.8, 7.0, 1], ['electrolytes.', 7.1, 7.5, 1]]), 7.5);
+    expect(finals().map(event => [event.segmentId, event.text, event.speaker])).toEqual([
+      ['g1-1', first, 0], ['g1-2', 'with electrolytes.', 1],
+      ['g1-1', "Not Energy Drink, 'cause I can Google it and I can find the one", 0],
+      ['g1-3', "Red Bull doesn't have electrolytes.", 1]]);
   });
 });
