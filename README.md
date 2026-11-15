@@ -1,102 +1,169 @@
-# Junction 2026 starter: agent-ready repo
+<div align="center">
 
-The stack isn't chosen yet. This repo holds the agent setup: shared context, guardrails, skills, issue-to-agent dispatch and CI review.
+# facto
 
-Start with **[docs/PLAYBOOK.md](docs/PLAYBOOK.md)**.
+### Fact-checking without the effort.
 
-| Path | What it is |
-|---|---|
-| `AGENTS.md` (and the `CLAUDE.md` symlink) | Shared context for Claude, Codex and Copilot |
-| `REVIEW.md` | Rules that keep AI review to blocking issues only |
-| `.claude/settings.json`, `.claude/hooks/` | Permissions and hooks for deps, format and typecheck |
-| `.claude/skills/` | `/ticketize`, `/dispatch`, `/work-issue`, `/verify` |
-| `.claude/agents/reviewer.md` | Read-only reviewer subagent |
-| `.github/workflows/` | CI gate, @claude/label → PR, Claude Review, Copilot setup |
-| `scripts/` | `bootstrap-labels.sh`, `dispatch.sh` |
-| `docs/research.md` | Research report with sources |
+One request. An answer through your Meta glasses.
 
-## Deploy (Cloudflare)
+<img src="apps/landing/public/img/glasses-product.webp" alt="Black Meta glasses" width="720" />
 
-The API runs as one Cloudflare Container behind a Worker (issue #43). The Worker sends every request, HTTP and WebSocket alike, to one Durable Object named `api`, which owns the only container, because sessions live in memory. Files: `Dockerfile`, `.dockerignore`, `wrangler.jsonc`, `deploy/cloudflare/` (Worker code and a pinned `wrangler`).
+**Look. Ask. Check.**
 
-- **URL:** `https://actually-api.<account-subdomain>.workers.dev` (`wss://` on the same host). It comes from `name` in `wrangler.jsonc` and stays the same across deploys and restarts. Don't rename the Worker.
-- **Lifetime:** an open WebSocket keeps the instance up. After the last request the container runs for 6 more hours (the maximum inactivity timeout), then stops. The next request cold-starts it in a few seconds.
-- **What drops sessions:** a deploy closes open WebSockets right away (`code_update_strategy: immediate`), so clients reconnect. If the image, a var or a secret changed, the first request after the deploy replaces the container, which drops every session. A Worker-only change keeps the container and its sessions.
+[Getting started](#getting-started) · [Architecture](#architecture) · [Laya and privacy](#laya-and-privacy) · [Development](#development)
 
-### Prerequisites
+</div>
 
-- **Workers Paid plan** ($5/month). Containers aren't available on Free. The instance is `standard-1` (1/2 vCPU, 4 GiB): left running all day it uses the included memory in about a day, then costs roughly $0.85 per day.
-- **Docker running** locally (`docker info`). `wrangler deploy` builds the image for linux/amd64 and pushes it to Cloudflare's registry.
-- **Logged in:** `cd deploy/cloudflare && npm ci && npx wrangler login`. Every command below runs from `deploy/cloudflare`, so it uses the pinned wrangler.
+## Why facto
 
-### Configuration
+People pass on what they believe. Others take it at face value.
 
-Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `MIN_CAPTURE_CONFIDENCE=0.6` (capture confidence below this asks for confirmation; the server default is 0.8) and `DEBUG_TRANSCRIPTS` (empty, so off; `1` logs every final Deepgram result with per-word confidence as `[asr:final]` lines, which includes what bystanders said, so an operator sets it only for a debugging session). The in-memory feed at `GET /v1/debug/feed` additionally needs the secret `DEBUG_FEED_KEY` (16+ characters, sent as `x-debug-key`). The join code never opens it, without the key the route does not exist and nothing is recorded, and a session's entries are purged when it is deleted or expires. The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
+Fact-checking takes effort. So it’s easy to skip.
 
-Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc`. Wrangler prompts for the value. Never commit or paste values anywhere:
+Facto brings live fact-checking to Meta glasses. Look at a claim, request a check, and let the pipeline find the evidence. No typing. No searching. No digging through results.
 
-| Name | Value |
-|---|---|
-| `JEV_API_KEY` | Jev key (live mode refuses to start without it) |
-| `EXA_API_KEY` | Exa key (same) |
-| `DEEPGRAM_API_KEY` | Deepgram key (without it `/health` shows `"asr":"not_configured"`) |
-| `DEMO_JOIN_CODE` | 8+ characters |
-| `DEMO_JOIN_EXPIRES_AT` | ISO timestamp after the demo, e.g. `2026-12-31T23:59:00Z` |
-| `ALLOWED_ORIGINS` | `https://actually-api.<account-subdomain>.workers.dev` (for the `/` console page; the iOS app sends no `Origin`) |
+## One request. Facto takes it from there.
 
-To test without the Exa key, deploy in fixture mode with `npx wrangler deploy --config ../../wrangler.jsonc --var PIPELINE_MODE:fixture`. The next deploy without `--var` goes back to live. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset: Cloudflare terminates TLS.
+| Step | What happens |
+| --- | --- |
+| **Capture** | Take a photo of the claim in front of you, or use speech from an active listening session. |
+| **Read** | Apple Vision extracts text on the phone; the audio route produces a transcript. |
+| **Check** | Identify a checkable public statement, retrieve evidence, and assess what the sources say. |
+| **Answer** | Return a short result with supporting sources, through speech or a display card. |
 
-### Deploy
+**Hear the answer. See the source.** Speaker-only glasses use spoken output. Display glasses have a visual card for the claim, result and source; the repository also includes a browser-based HUD preview.
 
-Deploy from an up-to-date `main` checkout (the Deepgram adapter and `TRUST_PROXY` are on `main` since #38 and #39 merged):
+The app supports an on-screen check action and a “check this” command during active listening. The intended native “Hey Meta” experience is not the same as the app’s own voice-trigger integration. Device-specific behavior and setup are documented in the [iOS guide](apps/ios/README.md) and [capability record](docs/device-capabilities.md).
 
-```sh
-cd deploy/cloudflare && npm ci && npm run deploy
+The team reports **~0.92s median pipeline latency**. This is a pipeline measurement, not a guarantee for the full camera-to-answer experience.
+
+## Architecture
+
+Facto separates capture, evidence gathering, model decisions and presentation. A model’s answer is an input to the system; the evidence and verdict rules determine what reaches the wearer.
+
+```mermaid
+flowchart TD
+    G[Meta glasses: camera and microphone] --> I[iOS companion / Meta DAT]
+    I --> O[Apple Vision OCR on phone]
+    I --> A[Audio stream / Deepgram transcription]
+    O --> T[Authenticated HTTP and WebSocket API]
+    A --> T
+    T --> C[Classify the statement]
+    C -->|Checkable public claim| E[Exa evidence retrieval]
+    C -->|Incomplete or ineligible| W[Wait or skip]
+    E --> J[Judge the claim against evidence]
+    J --> V[Deterministic verdict and citation rules]
+    V --> P[Presentation policy]
+    P --> R[Speech / display card / result history]
+    C -. Decision provider .-> M[Jev on main / self-hosted Laya integration pending]
+    J -. Decision provider .-> M
 ```
 
-First time: deploy, then set the secrets above. Until they exist, requests get `503 {"error":"backend_unavailable"}`. Setting a secret creates a new version, and the next request starts the container with it. The first deploy can take a few minutes before container requests succeed.
+### Capture and transport
 
-`npm run check` in `deploy/cloudflare` typechecks the Worker and runs `wrangler deploy --dry-run`, which builds the image locally and uploads nothing.
+The Swift iOS app connects to Meta’s Device Access Toolkit, manages camera and audio sessions, and coordinates the look-and-check flow. Photos pass through Apple Vision OCR on the phone. Audio is streamed to the backend for transcription. Shared schemas keep the iOS app and TypeScript API aligned.
 
-### Verify
+The backend uses Fastify with authenticated HTTP and WebSocket sessions. Request identities, revisions, cancellation and deadlines keep stale or superseded results from appearing as current answers.
+
+### Classification: should this statement be checked?
+
+The classifier identifies public factual claims and separates them from personal experiences, speculation and statements that need more context. It can admit a claim for checking, wait for more speech, or skip it. This step decides whether to investigate; it does not decide whether the claim is true.
+
+### Retrieval and judgment: what does the evidence say?
+
+Exa retrieves relevant sources. The pipeline normalizes evidence and passes the claim and source passages to the judgment stage. That stage assesses support, contradiction, missing context and uncertainty.
+
+Deterministic policy then checks evidence quality, citations and conflicting sources before assigning an outcome:
+
+- **Supported:** qualifying evidence supports the claim.
+- **Contradicted:** qualifying evidence contradicts it.
+- **Misleading:** the claim needs context.
+- **Cannot verify:** the available evidence is insufficient.
+
+Timeouts and provider failures remain operational errors, not factual verdicts. Presentation policy separately decides whether to respond, notify or remain silent. **Silence does not mean a claim was verified.**
+
+## Laya and privacy
+
+**The team has fine-tuned and self-hosted Laya, an open-source model used for the same classification and evidence-judgment roles as Jev.** We chose this direction to keep those decision inputs under our control instead of sending them to a hosted decision service. Captured statements and conversational context can contain sensitive information; controlling where that processing happens is part of the product design.
+
+**Integration status:** the fine-tuning and hosting work above is the team’s update; it has not yet been merged into this repository’s default implementation. `main` currently uses Jev. [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68) contains the self-hosted Laya provider comparison, and [issue #69](https://github.com/erick-dsnk/junction-2026/issues/69) records provider-specific prompt work. That earlier comparison is not an evaluation of the newly reported fine-tuned model. Its drop-in results should not be presented as the final model’s performance.
+
+Self-hosting changes the privacy boundary for classification and judgment. It does **not** make the whole system local: evidence queries still reach retrieval services, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
+
+## Repository map
+
+| Path | Responsibility |
+| --- | --- |
+| [`apps/ios`](apps/ios) | Swift companion, Meta DAT integration, OCR, audio, speech and display output |
+| [`services/api`](services/api) | Sessions, transcription, claim classification, retrieval, judgment and presentation policy |
+| [`packages/contracts`](packages/contracts) | Shared schemas and versioned event contracts |
+| [`apps/console`](apps/console) | Browser console and evaluation harnesses |
+| [`apps/glasses`](apps/glasses) | Fixture-based display HUD and visual inspection tools |
+| [`apps/landing`](apps/landing) | Product landing page, glasses imagery and animations |
+| [`fixtures`](fixtures) | Test cases, evaluation datasets and recorded evidence |
+| [`docs`](docs) | Device records, implementation notes and evaluation methodology |
+
+## Getting started
+
+Use Node.js **22.12+ within v22, v24, or v26+**, matching the root package’s engine constraint. Native iOS development additionally requires macOS, Xcode, signing and compatible hardware or the SDK’s mock devices.
+
+### Run the backend locally
 
 ```sh
-BASE=https://actually-api.<account-subdomain>.workers.dev
-read -rs JOIN && export JOIN   # paste the join code; it stays out of shell history
+npm ci
+cp .env.example .env
 ```
 
-1. Health, live with ASR. Expect `"mode":"live"` and `"asr":"configured_unverified"`:
-   `curl -s $BASE/health`
-2. Join. Expect `201` with the code and `401` with a wrong one:
-   `curl -s -o /dev/null -w '%{http_code}\n' -X POST $BASE/v1/sessions -H 'content-type: application/json' -d "{\"joinCode\":\"$JOIN\"}"`
-   `curl -s -o /dev/null -w '%{http_code}\n' -X POST $BASE/v1/sessions -H 'content-type: application/json' -d '{"joinCode":"wrong-code"}'`
-3. Typed check, live verdict. Join and keep the session:
-   `S=$(curl -s -X POST $BASE/v1/sessions -H 'content-type: application/json' -d "{\"joinCode\":\"$JOIN\"}"); SID=$(echo "$S" | node -pe 'JSON.parse(require("fs").readFileSync(0)).sessionId'); TOKEN=$(echo "$S" | node -pe 'JSON.parse(require("fs").readFileSync(0)).token')`
-   Open the stream in a second terminal (verdicts arrive there as `claim.result`) and leave it open for step 4:
-   `npx wscat@6.1.0 -c "wss://${BASE#https://}/v1/sessions/$SID/stream" -s actually-v1 -H "Authorization: Bearer $TOKEN"`
-   Then send the check. Expect `202`:
-   `curl -s -w ' %{http_code}\n' -X POST $BASE/v1/sessions/$SID/checks -H 'content-type: application/json' -H "authorization: Bearer $TOKEN" -d "{\"schemaVersion\":1,\"requestId\":\"req-cf-1\",\"sessionId\":\"$SID\",\"sessionEpoch\":1,\"revision\":1,\"mode\":\"typed\",\"text\":\"The Eiffel Tower opened in 1889.\",\"language\":\"en\",\"capturedAt\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"capture\":{\"source\":\"typed_fixture\",\"segmentId\":\"typed-1\",\"confidence\":1,\"final\":true},\"context\":[],\"userInitiated\":true}"`
-4. WebSocket: the `wscat` session from step 3 should stay connected for 3 minutes (the server closes it when the 5-minute session ends). wscat doesn't ping, so type something every minute or so to stay under Cloudflare's idle timeout; the app pings every 2 s.
-5. Join limit counts real clients. From network A (e.g. Wi-Fi), 10 bad joins, then an 11th. Expect `401` ten times, then `429`:
-   `for i in $(seq 1 11); do curl -s -o /dev/null -w '%{http_code} ' -X POST $BASE/v1/sessions -H 'content-type: application/json' -d '{"joinCode":"wrong-code"}'; done; echo`
-   Within 60 s, from network B (e.g. a phone hotspot), the step 2 good join still returns `201`. If network B also gets `429`, the proxy chain adds an address, so set `TRUST_PROXY` to `2`, redeploy and retest.
-6. One instance and a stable URL: `npx wrangler containers list` shows one application, `npx wrangler containers instances <ID>` shows one instance, and `$BASE` is unchanged after a redeploy. Only a redeploy (or a changed secret) drops sessions.
+Edit `.env` before starting:
 
-If a request gets Cloudflare error 1010 (Browser Integrity Check on `workers.dev`), send a normal User-Agent, e.g. `curl -A 'actually-smoke/1.0'`.
+- Set `DEMO_JOIN_CODE` to a secret code of at least eight characters.
+- Set `DEMO_JOIN_EXPIRES_AT` to a future absolute ISO timestamp.
+- Keep `PIPELINE_MODE=fixture` for local development without provider credentials.
 
-### Redeploy and logs
+```sh
+npm run dev
+```
 
-- Redeploy: run the same deploy command. Clients reconnect and rejoin if the container was replaced.
-- Live logs from the Worker and container: `npx wrangler tail --config ../../wrangler.jsonc`, or the Worker's Logs tab in the dashboard (observability is on).
-- Container state: `npx wrangler containers list`, then `npx wrangler containers instances <ID>`.
+Open [localhost:3000](http://localhost:3000) for the console. Fixture mode uses predefined examples; it does not verify arbitrary real-world claims.
 
-## Deploy (Railway)
+For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `DEEPGRAM_API_KEY` for the audio route. Keep credentials on the server and out of commits. Laya-specific configuration belongs to the pending integration, not the current `.env.example`.
 
-The API runs as one Railway service in EU West. `railway.json` sets the start command (`npm start`, which runs `tsx`, now a runtime dependency), the `/health` healthcheck and a single replica, because sessions live in memory.
+### Run the visual previews
 
-1. Create the service from this repo and enable auto-deploy from `main`.
-2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
-3. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset. Railway terminates TLS, so clients use `https://` and `wss://` on the Railway domain.
-4. Check `GET /health` on the public domain. It reports mode and provider readiness without credentials.
+```sh
+# Display HUD, from the repository root
+npm run dev:glasses
 
-`.env.example` lists every variable.
+# Landing page, in a separate terminal
+cd apps/landing
+npm install
+npm run dev
+```
+
+The HUD uses fixtures, not live evidence. Its [guide](apps/glasses/README.md) lists the preview routes. The landing page has its own package and lock file.
+
+### Connect the glasses
+
+Follow the [iOS setup guide](apps/ios/README.md) for Meta AI pairing, Developer Mode, XcodeGen, signing and permissions. Connect the companion to your backend, start a session, and explicitly start listening or request a photo check.
+
+The app uses foreground capture. Connection recovery does not automatically restart an ordinary capture session; the wearer stays in control of starting it again.
+
+## Development
+
+```sh
+npm run check          # Lint, TypeScript and backend/shared tests
+npm run check:glasses  # Display UI checks
+npm run build:glasses  # Display UI production build
+```
+
+Native iOS tests require Xcode; instructions live in the [iOS guide](apps/ios/README.md). For deployment, see the [deployment guide](docs/deployment.md). Evaluation results and their limits are documented in [`docs/evaluation.md`](docs/evaluation.md). Fixture tests and provider comparisons do not establish accuracy across everyday use.
+
+Contribution and review conventions live in [`AGENTS.md`](AGENTS.md) and the [team playbook](docs/PLAYBOOK.md).
+
+## Built at Junction 2026
+
+Eric Tabacaru · David Vasilescu · Ciprian Nitipir
+
+Concept app. Not affiliated with Meta or Ray-Ban.
+
+**A source. In the moment.**
