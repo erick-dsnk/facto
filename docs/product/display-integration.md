@@ -7,7 +7,7 @@ The web display is built into the API image and served from the API's own origin
 Build the container from the repository root so Docker receives the glasses workspace files:
 
 ```sh
-docker build -t facto-glasses-api .
+docker build -t actually-glasses-api .
 ```
 
 The image runs `npm run build:glasses` during its build. The generated Vite files go to `dist/glasses`, which the API exposes at `/display/` and `/display/assets/<generated-file>`. Route HTTP requests and WebSocket upgrades for the same public host to this API container. Keep TLS enabled at the public edge.

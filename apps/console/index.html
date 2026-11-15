@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Facto · Pipeline console</title>
+  <title>Actually · Pipeline console</title>
   <style>
     :root{color-scheme:light dark;font-family:system-ui,sans-serif}body{max-width:900px;margin:2rem auto;padding:0 1rem;line-height:1.5}h1{margin-bottom:.2rem}p{max-width:75ch}fieldset{margin:1.5rem 0;padding:1rem;border:1px solid #888;border-radius:.5rem}label{display:block;margin:.4rem 0}input,textarea,button{font:inherit;padding:.6rem}textarea{box-sizing:border-box;width:100%;min-height:7rem}button{cursor:pointer;margin:.4rem .4rem .4rem 0}button:disabled{cursor:default;opacity:.6}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #888;padding:1rem;border-radius:.5rem}#status{font-weight:600}input[type=checkbox]{width:1.2rem;height:1.2rem;vertical-align:middle}.note{font-size:.9rem;opacity:.85}
   </style>
 </head>
 <body>
-  <h1>Facto pipeline console</h1>
+  <h1>Actually pipeline console</h1>
   <p>Submit typed text to the shared glasses API. This console does not capture glasses audio or images. No alert does not mean a claim was verified.</p>
   <p id="readiness">Checking server status…</p>
   <p id="status" role="status" aria-live="polite">Disconnected</p>
@@ -51,7 +51,7 @@
         session = await jsonRequest('/v1/sessions', { method: 'POST', body: JSON.stringify({ joinCode: $('join-code').value }) });
         $('join-code').value = ''; clearResults(); controls(false);
         const base = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}`;
-        const ws = new WebSocket(`${base}/v1/sessions/${encodeURIComponent(session.sessionId)}/stream`, ['facto-v1', `bearer.${session.token}`]);
+        const ws = new WebSocket(`${base}/v1/sessions/${encodeURIComponent(session.sessionId)}/stream`, ['actually-v1', `bearer.${session.token}`]);
         socket = ws;
         ws.addEventListener('open', () => { if (socket === ws) { controls(true); status(`Connected · expires ${session.expiresAt}`); } });
         ws.addEventListener('message', event => {

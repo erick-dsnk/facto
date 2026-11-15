@@ -1,5 +1,5 @@
 ---
-name: Facto screenshot HUD
+name: Actually screenshot HUD
 description: Captured claim with a filled result card or compact searching pill
 colors:
   canvas: "#000000"
@@ -54,7 +54,7 @@ components:
     height: "40px"
 ---
 
-# Design System: Facto screenshot HUD
+# Design System: Actually screenshot HUD
 
 ## Overview
 

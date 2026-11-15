@@ -136,13 +136,13 @@ export async function runLiveCampaign(options: {
     if (!session) throw new Error('session_creation_failed');
     const wsURL = `${address.replace('http:', 'ws:')}/v1/sessions/${session.sessionId}/stream`;
     auth.unauthorizedWebsocketStatus = await new Promise<number>((resolve, reject) => {
-      const unauthenticated = new WebSocket(wsURL, ['facto-v1', 'bearer.deliberately-invalid-token']);
+      const unauthenticated = new WebSocket(wsURL, ['actually-v1', 'bearer.deliberately-invalid-token']);
       const timer = setTimeout(() => { unauthenticated.terminate(); reject(new Error('auth_probe_timeout')); }, 2_000);
       unauthenticated.on('error', () => undefined);
       unauthenticated.once('unexpected-response', (_request, response) => { clearTimeout(timer); response.resume(); unauthenticated.terminate(); resolve(response.statusCode ?? 0); });
       unauthenticated.once('open', () => { clearTimeout(timer); unauthenticated.close(); resolve(101); });
     });
-    socket = new WebSocket(wsURL, ['facto-v1', `bearer.${session.token}`]);
+    socket = new WebSocket(wsURL, ['actually-v1', `bearer.${session.token}`]);
     inbox = new Inbox(socket);
     await inbox.wait(events => events.find(event => event.type === 'session.ready'), 2_000);
     const headers = { authorization: `Bearer ${session.token}`, 'content-type': 'application/json' };

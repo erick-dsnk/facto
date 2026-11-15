@@ -22,7 +22,7 @@ async function setup(adapters: RuntimeAdapters = fixtureAdapters()) {
   const grant = async () => displayGrantSchema.parse((await server.app.inject({ method: 'POST', url: `/v1/sessions/${credentials.sessionId}/display-grant`, headers: ownerHeaders })).json());
   const observe = async (access: DisplayGrant) => {
     const events: (DisplaySnapshot | EventEnvelope)[] = [];
-    const socket = await server.app.injectWS(access.streamPath, { headers: { origin: 'http://localhost:3030', 'sec-websocket-protocol': `facto-display-v1, display.${access.displayToken}` } }, { onInit: socket => socket.on('message', bytes => events.push(JSON.parse(bytes.toString()))) });
+    const socket = await server.app.injectWS(access.streamPath, { headers: { origin: 'http://localhost:3030', 'sec-websocket-protocol': `actually-display-v1, display.${access.displayToken}` } }, { onInit: socket => socket.on('message', bytes => events.push(JSON.parse(bytes.toString()))) });
     sockets.push(socket); await vi.waitFor(() => expect(events.length).toBeGreaterThan(0)); return { socket, events };
   };
   const body: TextInput = { schemaVersion: 1, requestId: 'display-check', sessionId: credentials.sessionId, sessionEpoch: 1, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.', language: 'en', capturedAt: new Date(initial).toISOString(), capture: { source: 'typed_fixture', segmentId: 'display-check', confidence: 1 }, context: [], userInitiated: true };
@@ -52,7 +52,7 @@ describe('read-only display observer', () => {
     const test = await setup(); const grant = await test.grant(); const observer = await test.observe(grant);
     const denied = await test.server.app.inject({ method: 'POST', url: `/v1/sessions/${grant.sessionId}/checks`, headers: { authorization: `Bearer ${grant.displayToken}` }, payload: test.body }); expect(denied.statusCode).toBe(401);
     await expect(test.server.app.injectWS(grant.streamPath, { headers: test.ownerHeaders })).rejects.toThrow();
-    await expect(test.server.app.injectWS(grant.streamPath, { headers: { origin: 'https://evil.example', 'sec-websocket-protocol': `facto-display-v1, display.${grant.displayToken}` } })).rejects.toThrow();
+    await expect(test.server.app.injectWS(grant.streamPath, { headers: { origin: 'https://evil.example', 'sec-websocket-protocol': `actually-display-v1, display.${grant.displayToken}` } })).rejects.toThrow();
     const closed = once(observer.socket, 'close'); const next = await test.grant(); await closed;
     expect(next.displayToken).not.toBe(grant.displayToken);
     await expect(test.observe(grant)).rejects.toThrow();
@@ -77,7 +77,7 @@ describe('read-only display observer', () => {
     const test = await setup();
     const redirect = await test.server.app.inject('/display'); expect(redirect.statusCode).toBe(302); expect(redirect.headers.location).toBe('/display/');
     for (const path of ['/display/assets/missing.js', '/display/assets/%2e%2e%2fpackage.json', '/display/assets/%2e%2e%5cpackage.json', '/display/assets/server.ts', '/display/assets/package.json', '/display/anything']) {
-      const response = await test.server.app.inject(path); expect([400, 404]).toContain(response.statusCode); expect(response.body).not.toContain('facto-glasses');
+      const response = await test.server.app.inject(path); expect([400, 404]).toContain(response.statusCode); expect(response.body).not.toContain('actually-glasses');
     }
   });
   it('clears a visible manual check when its result becomes silent without disclosing that result', async () => {
@@ -139,8 +139,8 @@ describe('read-only display observer', () => {
   });
   it('does not expose automatic silent checks or results and selects only the display subprotocol', async () => {
     const test = await setup(); const grant = await test.grant(); const address = await test.server.app.listen({ host: '127.0.0.1', port: 0 });
-    const events: unknown[] = []; const socket = new WebSocket(`${address.replace('http:', 'ws:')}${grant.streamPath}`, ['facto-display-v1', `display.${grant.displayToken}`], { origin: 'http://localhost:3030' }); sockets.push(socket); socket.on('message', bytes => events.push(JSON.parse(bytes.toString()))); await once(socket, 'open');
-    expect(socket.protocol).toBe('facto-display-v1'); await test.submit({ ...test.body, userInitiated: false });
+    const events: unknown[] = []; const socket = new WebSocket(`${address.replace('http:', 'ws:')}${grant.streamPath}`, ['actually-display-v1', `display.${grant.displayToken}`], { origin: 'http://localhost:3030' }); sockets.push(socket); socket.on('message', bytes => events.push(JSON.parse(bytes.toString()))); await once(socket, 'open');
+    expect(socket.protocol).toBe('actually-display-v1'); await test.submit({ ...test.body, userInitiated: false });
     await vi.waitFor(() => expect(test.server.store.sessions.get(grant.sessionId)!.requests.get(test.body.requestId)?.state).toBe('done'));
     expect(events).toHaveLength(1); expect(JSON.stringify(events)).not.toContain(grant.displayToken); expect(JSON.stringify(events)).not.toContain(test.credentials.token);
   });

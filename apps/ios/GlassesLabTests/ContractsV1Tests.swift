@@ -251,7 +251,7 @@ final class ContractsV1Tests: XCTestCase {
     XCTAssertEqual(loaded.checksURL(sessionId: "abc").absoluteString, "https://api.example.com/v1/sessions/abc/checks")
     XCTAssertEqual(
       BackendConfig().streamURL(sessionId: "abc")?.absoluteString,
-      "wss://facto-api.lively-voice-2bf8.workers.dev/v1/sessions/abc/stream"
+      "wss://actually-api.lively-voice-2bf8.workers.dev/v1/sessions/abc/stream"
     )
 
     defaults.set("ftp://nope", forKey: BackendConfig.baseURLKey)

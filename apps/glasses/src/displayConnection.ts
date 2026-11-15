@@ -35,7 +35,7 @@ export function connectDisplay(credentials: DisplayCredentials, receive: (messag
     if (stopped) return;
     snapshotReceived = false;
     try {
-      socket = dependencies.socket(displaySocketUrl(credentials), ['facto-display-v1', `display.${credentials.displayToken}`]);
+      socket = dependencies.socket(displaySocketUrl(credentials), ['actually-display-v1', `display.${credentials.displayToken}`]);
     } catch {
       disconnected();
       timer = dependencies.schedule(connect, Math.min(500 * 2 ** attempt++, 8000));

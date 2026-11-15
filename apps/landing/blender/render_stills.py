@@ -1,6 +1,6 @@
 """Transparent stills for the landing page sections.
 
-  Blender -b facto_glasses.blend -P render_stills.py -- --out ./raw/stills
+  Blender -b actually_glasses.blend -P render_stills.py -- --out ./raw/stills
 """
 
 import os
