@@ -5,7 +5,7 @@ import { createJudge } from './jev/judgment.js';
 import type { JevRequest } from './jev/client.js';
 import { createLiveSources } from '../sources/index.js';
 import { ClaimCache } from '../runtime/claim-cache.js';
-import { selectDecisionProvider } from './decision-provider.js';
+import { createGatedAdmissionClient, selectDecisionProvider } from './decision-provider.js';
 
 describe('decision provider selection', () => {
   it('defaults to Jev and preserves the existing missing-key failure at live startup', () => {
@@ -32,6 +32,25 @@ describe('decision provider selection', () => {
     expect(selectDecisionProvider({ mode: 'fixture', provider: '  ' }).provider).toBe('jev');
   });
 
+  it('laya_gate sends only the fine-tuned questions to Laya, the rest to Jev, Laya first, and requires both at live startup', async () => {
+    expect(() => selectDecisionProvider({ mode: 'live', admissionProvider: 'laya_gate', jevApiKey: 'jev-key' })).toThrow('Live Laya mode requires LAYA_URL.');
+    expect(() => selectDecisionProvider({ mode: 'live', admissionProvider: 'laya_gate', layaUrl: 'http://localhost:8765' })).toThrow('Live Jev mode requires JEV_API_KEY.');
+    const order: string[] = [];
+    const answer = (name: string) => async (request: JevRequest) => { order.push(name); return Object.fromEntries(Object.keys(request.questions).map(key => [key, { noul: name === 'laya' ? 0.9 : 0.1 }])); };
+    const laya = { ask: vi.fn(answer('laya')) }; const jev = { ask: vi.fn(answer('jev')) };
+    const ctx: ProviderContext = { signal: new AbortController().signal, consume: vi.fn(), now: () => 0 };
+    const q = { type: 'noul' as const, instructions: 'x' };
+    const answers = await createGatedAdmissionClient(laya, jev).ask({ state: {}, questions: { c0_kind: q, c0_private_data: q, c0_private_life: q, c0_self_contained: q, c0_subject_private: q, misheard: q } }, ctx);
+    expect(order).toEqual(['laya', 'jev']);
+    expect(Object.keys(laya.ask.mock.calls[0][0].questions).sort()).toEqual(['c0_kind', 'c0_private_data', 'c0_private_life']);
+    expect(Object.keys(jev.ask.mock.calls[0][0].questions).sort()).toEqual(['c0_self_contained', 'c0_subject_private', 'misheard']);
+    expect(answers.c0_private_data).toEqual({ noul: 0.9 });
+    expect(answers.c0_self_contained).toEqual({ noul: 0.1 });
+    const selected = selectDecisionProvider({ mode: 'fixture', admissionProvider: 'laya_gate' });
+    expect(selected.admissionProvider).toBe('laya_gate');
+    expect(selected.cache).toBeInstanceOf(ClaimCache);
+  });
+
   it('rejects unsupported provider names rather than silently choosing a backend', () => {
     expect(() => selectDecisionProvider({ mode: 'fixture', provider: 'unknown' })).toThrow('DECISION_PROVIDER must be jev or laya.');
   });
@@ -40,7 +59,7 @@ describe('decision provider selection', () => {
     expect(() => selectDecisionProvider({ mode: 'live', provider: 'jev', admissionProvider: 'laya', jevApiKey: 'jev-key' })).toThrow('Live Laya mode requires LAYA_URL.');
     expect(() => selectDecisionProvider({ mode: 'live', provider: 'jev', admissionProvider: 'laya', layaUrl: 'http://localhost:8765' })).toThrow('Live Jev mode requires JEV_API_KEY.');
     expect(() => selectDecisionProvider({ mode: 'live', provider: 'laya', admissionProvider: 'jev', layaUrl: 'http://localhost:8765' })).toThrow('Live Jev mode requires JEV_API_KEY.');
-    expect(() => selectDecisionProvider({ mode: 'fixture', admissionProvider: 'unknown' })).toThrow('ADMISSION_PROVIDER must be jev or laya.');
+    expect(() => selectDecisionProvider({ mode: 'fixture', admissionProvider: 'unknown' })).toThrow('ADMISSION_PROVIDER must be jev, laya or laya_gate.');
     const inherited = selectDecisionProvider({ mode: 'fixture', provider: 'laya', admissionProvider: '  ' });
     expect(inherited.admissionClient).toBe(inherited.client);
     expect(inherited.admissionProvider).toBe('laya');
