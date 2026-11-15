@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "name": "public-primary-reference-exploratory-24",
+  "createdDate": "2026-11-14",
+  "kind": "open_exploratory",
+  "notes": [
+    "Authored and primary-reference-reviewed before provider outputs; not blind, population-representative, or an independent benchmark.",
+    "Eight correlated supported/refuted pairs, four deliberately context-sensitive misleading cases, and four unresolved scientific hypotheses.",
+    "References ground human expected labels only. Their text and rationales MUST NOT be passed to the models. Use separately acquired identical frozen retrieval evidence for both providers.",
+    "Reference rationales are reviewer paraphrases, not quoted source excerpts and not manufactured evidence.",
+    "Context-sensitive P17-P20 require strict score plus alternative-label sensitivity and a separate 20-case less-ambiguous score.",
+    "Predominantly science/health/geography; correlated pairs and science-heavy unknowns limit generalization.",
+    "References were browsed on 2026-11-14. Natural uncertainty labels describe available public evidence, not a claim that an underlying proposition is false."
+  ],
+  "cases": [
+    {
+      "id": "P01",
+      "text": "Venus is the hottest planet in the solar system.",
+      "expected": "true",
+      "category": "venus",
+      "correlationGroup": "venus",
+      "rationale": "NASA identifies Venus, rather than the closer Mercury, as the hottest planet because its dense atmosphere retains heat.",
+      "sources": [
+        "https://science.nasa.gov/mercury/facts/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P02",
+      "text": "Mercury is the hottest planet in the solar system.",
+      "expected": "false",
+      "category": "venus",
+      "correlationGroup": "venus",
+      "rationale": "NASA explicitly contrasts Mercury with Venus and assigns the hottest-planet title to Venus.",
+      "sources": [
+        "https://science.nasa.gov/mercury/facts/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P03",
+      "text": "The Moon has an extremely thin atmosphere called an exosphere.",
+      "expected": "true",
+      "category": "moon",
+      "correlationGroup": "moon",
+      "rationale": "NASA describes the lunar atmosphere as a very sparse exosphere, with gas particles that seldom collide.",
+      "sources": [
+        "https://science.nasa.gov/moon/lunar-atmosphere/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P04",
+      "text": "The Moon has no atmosphere at all.",
+      "expected": "false",
+      "category": "moon",
+      "correlationGroup": "moon",
+      "rationale": "The absolute denial is contradicted by the observed lunar exosphere. A sparse atmosphere is still an atmosphere.",
+      "sources": [
+        "https://science.nasa.gov/moon/lunar-atmosphere/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P05",
+      "text": "Lightning can strike the same place more than once.",
+      "expected": "true",
+      "category": "lightning",
+      "correlationGroup": "lightning",
+      "rationale": "NOAA explains that repeated strikes occur and that tall objects can be more likely to be struck repeatedly.",
+      "sources": [
+        "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P06",
+      "text": "Lightning never strikes the same place twice.",
+      "expected": "false",
+      "category": "lightning",
+      "correlationGroup": "lightning",
+      "rationale": "NOAA directly rejects the familiar never-twice claim and explains repeated strikes.",
+      "sources": [
+        "https://www.nssl.noaa.gov/education/svrwx101/lightning/faq/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P07",
+      "text": "About half of the oxygen production on Earth comes from the ocean.",
+      "expected": "true",
+      "category": "oxygen",
+      "correlationGroup": "oxygen",
+      "rationale": "NOAA estimates approximately half of gross oxygen production is oceanic, mainly from photosynthetic plankton; this is not a claim about net atmospheric accumulation.",
+      "sources": [
+        "https://oceanservice.noaa.gov/facts/ocean-oxygen.html/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P08",
+      "text": "The ocean produces none of the oxygen on Earth.",
+      "expected": "false",
+      "category": "oxygen",
+      "correlationGroup": "oxygen",
+      "rationale": "NOAA attributes roughly half of terrestrial oxygen production to the ocean, directly contradicting zero production.",
+      "sources": [
+        "https://oceanservice.noaa.gov/facts/ocean-oxygen.html/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P09",
+      "text": "Earth bulges at the equator.",
+      "expected": "true",
+      "category": "shape",
+      "correlationGroup": "shape",
+      "rationale": "NOAA explains that Earth is an irregular ellipsoid whose equatorial diameter bulges because of rotation.",
+      "sources": [
+        "https://oceanservice.noaa.gov/facts/earth-round.html"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P10",
+      "text": "Earth is a perfectly smooth sphere.",
+      "expected": "false",
+      "category": "shape",
+      "correlationGroup": "shape",
+      "rationale": "NOAA describes an irregular ellipsoid, an equatorial bulge, topography and changes in shape, all inconsistent with a perfectly smooth sphere.",
+      "sources": [
+        "https://oceanservice.noaa.gov/facts/earth-round.html"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P11",
+      "text": "Antibiotics do not treat infections caused by viruses.",
+      "expected": "true",
+      "category": "antibiotics",
+      "correlationGroup": "antibiotics",
+      "rationale": "CDC distinguishes bacterial indications from viral illnesses and states that antibiotics do not treat viral infections.",
+      "sources": [
+        "https://www.cdc.gov/antibiotic-use/about/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P12",
+      "text": "Antibiotics treat viral infections.",
+      "expected": "false",
+      "category": "antibiotics",
+      "correlationGroup": "antibiotics",
+      "rationale": "CDC says antibiotics do not treat viruses and lists viral illnesses for which they are ineffective.",
+      "sources": [
+        "https://www.cdc.gov/antibiotic-use/about/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P13",
+      "text": "At sea level, water boils at approximately 100 degrees Celsius.",
+      "expected": "true",
+      "category": "water",
+      "correlationGroup": "water",
+      "rationale": "USGS gives the sea-level boiling point as 100 C and explains that the boiling temperature decreases with altitude and pressure.",
+      "sources": [
+        "https://www.usgs.gov/water-science-school/science/facts-about-water"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P14",
+      "text": "At sea level, water boils at 50 degrees Celsius.",
+      "expected": "false",
+      "category": "water",
+      "correlationGroup": "water",
+      "rationale": "USGS gives about 100 C at sea level, directly refuting the asserted 50 C value under the stated conditions.",
+      "sources": [
+        "https://www.usgs.gov/water-science-school/science/facts-about-water"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P15",
+      "text": "Stratospheric ozone protects people from harmful ultraviolet radiation.",
+      "expected": "true",
+      "category": "ozone",
+      "correlationGroup": "ozone",
+      "rationale": "EPA distinguishes the protective upper-atmosphere ozone layer from harmful ground-level ozone.",
+      "sources": [
+        "https://www.epa.gov/ground-level-ozone-pollution/ground-level-ozone-basics"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P16",
+      "text": "Ground-level ozone is harmless to human health.",
+      "expected": "false",
+      "category": "ozone",
+      "correlationGroup": "ozone",
+      "rationale": "EPA identifies ground-level ozone as a harmful pollutant that can injure health, especially respiratory health.",
+      "sources": [
+        "https://www.epa.gov/ground-level-ozone-pollution/ground-level-ozone-basics"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P17",
+      "text": "Water boils at 100 degrees Celsius.",
+      "expected": "misleading",
+      "category": "water",
+      "correlationGroup": "water",
+      "rationale": "The usual sea-level value is correct, but the statement omits pressure; USGS gives a lower boiling temperature at altitude. This deliberately tests whether a missing material condition is surfaced. A conventional implicit standard-pressure reading can reasonably yield true.",
+      "sources": [
+        "https://www.usgs.gov/water-science-school/science/facts-about-water"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation",
+      "ambiguousLabel": true,
+      "alternativeExpected": [
+        "true"
+      ],
+      "scoringNote": "Context-sensitive gold. Report strict four-label score and a sensitivity score accepting alternativeExpected; also report the other 20 cases separately. Do not tune on these examples."
+    },
+    {
+      "id": "P18",
+      "text": "Antibiotics treat infections.",
+      "expected": "misleading",
+      "category": "antibiotics",
+      "correlationGroup": "antibiotics",
+      "rationale": "Antibiotics do treat some bacterial infections, but this broad wording leaves out the restriction and can imply treatment of viral infections. CDC makes this distinction explicit. An existential reading can reasonably yield true.",
+      "sources": [
+        "https://www.cdc.gov/antibiotic-use/about/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation",
+      "ambiguousLabel": true,
+      "alternativeExpected": [
+        "true"
+      ],
+      "scoringNote": "Context-sensitive gold. Report strict four-label score and a sensitivity score accepting alternativeExpected; also report the other 20 cases separately. Do not tune on these examples."
+    },
+    {
+      "id": "P19",
+      "text": "Ozone is good for human health.",
+      "expected": "misleading",
+      "category": "ozone",
+      "correlationGroup": "ozone",
+      "rationale": "Protective stratospheric ozone provides a true core, while inhaled ground-level ozone is harmful. The statement omits the location/exposure distinction. Broadly interpreted claims can reasonably be judged false.",
+      "sources": [
+        "https://www.epa.gov/ground-level-ozone-pollution/ground-level-ozone-basics"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation",
+      "ambiguousLabel": true,
+      "alternativeExpected": [
+        "false"
+      ],
+      "scoringNote": "Context-sensitive gold. Report strict four-label score and a sensitivity score accepting alternativeExpected; also report the other 20 cases separately. Do not tune on these examples."
+    },
+    {
+      "id": "P20",
+      "text": "The ocean supplies half of the oxygen added to the atmosphere each year.",
+      "expected": "misleading",
+      "category": "oxygen",
+      "correlationGroup": "oxygen",
+      "rationale": "This recasts the approximately half share of gross production as a net atmospheric addition. NOAA says marine life consumes about the same amount; production and net addition are different. A literal net-addition reading can reasonably be judged false.",
+      "sources": [
+        "https://oceanservice.noaa.gov/facts/ocean-oxygen.html/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation",
+      "ambiguousLabel": true,
+      "alternativeExpected": [
+        "false"
+      ],
+      "scoringNote": "Context-sensitive gold. Report strict four-label score and a sensitivity score accepting alternativeExpected; also report the other 20 cases separately. Do not tune on these examples."
+    },
+    {
+      "id": "P21",
+      "text": "Life exists beyond Earth.",
+      "expected": "cant_verify",
+      "category": "alien",
+      "correlationGroup": "alien",
+      "rationale": "NASA reports that evidence of life beyond Earth has not yet been established. The underlying existence claim remains unresolved; absence of a detection does not establish falsehood.",
+      "sources": [
+        "https://science.nasa.gov/exoplanets/search-for-life/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P22",
+      "text": "Microbial life exists in the ocean beneath Europa.",
+      "expected": "cant_verify",
+      "category": "europa",
+      "correlationGroup": "europa",
+      "rationale": "NASA describes Europa as a promising place to investigate potential habitability; the existence of organisms has not been established. Habitability and actual life are distinct.",
+      "sources": [
+        "https://www.nasa.gov/directorates/smd/is-there-potential-for-life-on-europa-we-asked-a-nasa-expert-episode-52/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P23",
+      "text": "Dark matter is made of supersymmetric particles.",
+      "expected": "cant_verify",
+      "category": "dark",
+      "correlationGroup": "dark",
+      "rationale": "CERN presents supersymmetric particles as one theoretical candidate while the physical identity of dark matter remains unknown. The asserted identity is unconfirmed, not established as false.",
+      "sources": [
+        "https://home.cern/science/physics/dark-matter"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    },
+    {
+      "id": "P24",
+      "text": "Planet Nine exists beyond Neptune.",
+      "expected": "cant_verify",
+      "category": "planet",
+      "correlationGroup": "planet",
+      "rationale": "NASA describes Planet Nine as hypothetical and discusses indirect dynamical clues and ongoing searches. These do not establish the asserted existence, nor prove nonexistence.",
+      "sources": [
+        "https://science.nasa.gov/solar-system/planet-x/"
+      ],
+      "referenceReviewDate": "2026-11-14",
+      "referenceTextType": "reviewer_paraphrase_not_quotation"
+    }
+  ]
+}

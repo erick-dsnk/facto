@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-14T19:41:08.715Z",
+  "updatedAt": "2026-11-14T19:41:13.908Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.2",
+  "cohortSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "evidenceSHA256": "31a31a93009b8bce1f3ec5b4c00cc1b0deb3c53b8ced61741006cba483b5b298",
+  "options": {
+    "providers": [
+      "jev"
+    ],
+    "modes": [
+      "admission"
+    ],
+    "limit": 3,
+    "repetitions": 1,
+    "deadlineMs": 10000,
+    "output": "fixtures/evaluation/provider-comparison/results/admission-smoke-jev.json"
+  },
+  "summary": [
+    {
+      "group": "jev/admission",
+      "n": 3,
+      "correct": 0,
+      "errors": 0,
+      "abstentions": 0,
+      "skipped": 0,
+      "definitive": 0,
+      "definitiveCorrect": 0,
+      "admission": {
+        "truePositive": 3,
+        "falsePositive": 0,
+        "expectedPositive": 3,
+        "precision": 1,
+        "recall": 1
+      },
+      "durationMs": {
+        "p50": 351.23296799999935,
+        "p95": 4647.544993
+      },
+      "askMs": {
+        "n": 3,
+        "p50": 349.50451500000054,
+        "p95": 4586.206386
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 8190,
+      "errorCodes": {}
+    }
+  ],
+  "observations": [
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-01",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 4647.544993,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 4586.206386,
+          "questions": 11,
+          "stateBytes": 281,
+          "inputTokens": 2848,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 192.5408350000007,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 188.08528300000035,
+          "questions": 10,
+          "stateBytes": 231,
+          "inputTokens": 2673,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-03",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 351.23296799999935,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 349.50451500000054,
+          "questions": 10,
+          "stateBytes": 235,
+          "inputTokens": 2669,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    }
+  ]
+}
