@@ -13,13 +13,15 @@
     "test": "vitest run",
     "check": "npm run lint && npm run typecheck && npm test",
     "evaluate": "tsx apps/console/evaluate.ts",
-    "evaluate:live": "tsx --env-file-if-exists=.env apps/console/src/live/run.ts",
+    "evaluate:live": "tsx --env-file-if-exists=.env apps/console/evaluate-live.ts",
+    "evaluate:live:inprocess": "tsx --env-file-if-exists=.env apps/console/src/live/run.ts",
     "dev:glasses": "npm run dev --workspace=@actually/glasses",
     "build:glasses": "npm run build --workspace=@actually/glasses",
     "check:glasses": "npm run check --workspace=@actually/glasses"
   },
   "dependencies": {
     "@fastify/websocket": "11.2.0",
+    "compromise": "14.19.0",
     "exa-js": "2.28.0",
     "fastify": "5.12.8",
     "tldts": "7.0.19",

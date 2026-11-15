@@ -98,6 +98,17 @@ export function independentSourceCount(evidence: Evidence[], origins: OriginAsse
 // into a medical assertion through broad prefix matching. The typed assessment
 // still escalates safety implications that these bounded lexical rules miss.
 const highRiskLanguage = /\b(cure[sd]?|curing|treat(?:s|ed|ing|ments?)?|prevent(?:s|ed|ing|ion)?|disease\w*|health\w*|cancer\w*|asthma|virus(?:es)?|medicin\w*|medical|pregnan\w*|vaccin\w*|toxic\w*|poison\w*|bleach|vinegar|ammonia|dos(?:e|es|age)|suicid\w*|overdos\w*|flammab\w*|explosiv\w*)\b|\b(athletic|physical|cognitive|cardiac|immune|lung|brain|bodily|clinical)\s+(performance|effectiveness|benefits?|risks?|safety)\b/i;
+/** Health/safety, disputed or uncertain-stakes claims (typed risk or the lexical triggers) need the stronger
+ * expert-anchor and independent-corroborator route. A missing assessment is treated as uncertain. */
+export function needsStrongEvidence(checkedText: string, assessment: JudgmentAssessment | undefined): boolean {
+  if (!assessment || highRiskLanguage.test(checkedText)) return true;
+  // Only a claim Jev actually rates as health/safety or disputed takes the strict route. Being merely unsure that a
+  // claim is ordinary used to send everyday myths there too: "Humans swallow eight spiders a year in their sleep" had six
+  // contradicting sources at p=1.00 and still stayed Can't verify (risk ordinary/0.71, 15 Nov).
+  return assessment.claimRisk.level !== 'ordinary' && assessment.claimRisk.confidence >= STRICT_RISK_CONFIDENCE;
+}
+/** How sure Jev must be that a claim is health/safety or disputed before it needs the strict route. */
+const STRICT_RISK_CONFIDENCE = 0.5;
 const substantive = (assessment: JudgmentAssessment, id: string): boolean => {
   if (!Object.hasOwn(assessment.sourceAssessments, id)) return false;
   const source = assessment.sourceAssessments[id];
@@ -113,8 +124,7 @@ export function qualifyingSourceSet(evidence: Evidence[], checkedText: string | 
   if (!assessment || !checkedText) return [];
   const direct = evidence.filter(isDirectEvidence);
   const families = sourceFamilies(retainedEvidence, assessment.originAssessments);
-  const strong = assessment.claimRisk.level !== 'ordinary' || assessment.claimRisk.confidence < ASSESSMENT_THRESHOLD || highRiskLanguage.test(checkedText);
-  if (!strong) {
+  if (!needsStrongEvidence(checkedText, assessment)) {
     // A developed descriptive reference account need not name an underlying
     // primary record for ordinary facts. It still needs corroboration; the new
     // category never inherits a registry's single-source authority exception.

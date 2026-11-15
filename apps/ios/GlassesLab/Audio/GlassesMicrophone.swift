@@ -41,9 +41,12 @@ final class GlassesMicrophone: ListeningMicrophone {
     let session = AVAudioSession.sharedInstance()
     try session.setCategory(.playAndRecord, mode: .default, options: [.allowBluetoothHFP])
     try session.setActive(true)
-    guard let glasses = session.availableInputs?.first(where: { $0.portType == .bluetoothHFP }) else {
+    let hfp = session.availableInputs?.filter { $0.portType == .bluetoothHFP } ?? []
+    DebugLog.shared.log("mic.hfp_inputs", ["inputs": hfp.map(\.portName)])
+    guard let index = GlassesHFPInput.preferredIndex(hfp.map(\.portName)) else {
       throw MicrophoneError.noGlassesMic
     }
+    let glasses = hfp[index]
     try session.setPreferredInput(glasses)
     guard session.currentRoute.inputs.first?.portType == .bluetoothHFP else { throw MicrophoneError.noGlassesMic }
     inputName = "Bluetooth HFP: \(glasses.portName)"
@@ -105,5 +108,21 @@ enum MicrophoneError: Error, Equatable {
     case .noGlassesMic: "The glasses’ mic isn’t connected. Turn on the glasses and check they’re connected over Bluetooth in iOS Settings."
     case .denied: "Microphone access is off for Facto in iOS Settings."
     }
+  }
+}
+
+/// Picks the glasses among Bluetooth hands-free inputs. Taking the first one picked AirPods Max
+/// over the glasses (phone log, 14 Nov).
+enum GlassesHFPInput {
+  private static let glassesWords = ["ray-ban", "rayban", "ray ban", "meta", "rb "]
+  private static let otherWords = ["airpods", "beats", "buds", "headphone", "headset", "car"]
+
+  /// A name that looks like Meta glasses first, then any name that isn't a known headset, then
+  /// the first input. Nil when there is no hands-free input at all.
+  static func preferredIndex(_ names: [String]) -> Int? {
+    let lowered = names.map { $0.lowercased() }
+    if let index = lowered.firstIndex(where: { name in glassesWords.contains { name.contains($0) } }) { return index }
+    if let index = lowered.firstIndex(where: { name in !otherWords.contains { name.contains($0) } }) { return index }
+    return names.isEmpty ? nil : 0
   }
 }

@@ -12,9 +12,12 @@ function answersFor(init?: RequestInit, personal = false) {
   const request = JSON.parse(String(init?.body)) as { questions: Record<string, JevQuestion> };
   const choices: Record<string, string> = { verdict: 'supported', selected_evidence: 'e0', misleading_reason: 'none', claim_risk: 'ordinary' };
   return Object.fromEntries(Object.entries(request.questions).map(([name, question]) => {
-    if (question.type === 'noul') return [name, { noul: name.endsWith('_private_data') ? Number(personal) : name.endsWith('_context_established') ? 0 : 1 }];
-    const choice = choices[name] ?? (name.endsWith('_kind') ? personal ? 'personal_experience' : 'public_fact'
-      : name.endsWith('_assertion_status') ? 'asserted' : name.endsWith('_claim_structure') ? 'one_coherent'
+    // Admission: a complete claim in the speaker's own voice, about no private person, no private life, no rumour and nothing in the future.
+    // A personal case is the same claim disclosing private data.
+    if (question.type === 'noul') return [name, { noul: name.endsWith('_private_data') ? Number(personal)
+      : /_(private_life|rumour|future|subject_private|context_established)$/.test(name) ? 0 : 1 }];
+    const choice = choices[name] ?? (name.endsWith('_kind') ? 'claim' : name.endsWith('_route') ? 'general'
+      : /_(attribution|source|subject)$/.test(name) ? 'none' : name.endsWith('_claim_structure') ? 'one_coherent'
         : name.endsWith('_stance') ? 'supports' : name.endsWith('_context_reason') ? 'none'
           : name.endsWith('_content_basis') ? 'original_record' : name.endsWith('_origin') ? 'distinct_origins' : Object.keys(question.criteria)[0]);
     return [name, { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(key => [key, Number(key === choice)])) }];
@@ -135,7 +138,7 @@ describe('bounded authenticated live campaign with injected provider HTTP', () =
       if (!String(url).includes('typesafe.ai')) return response;
       const decoded = await response.json() as { answers: Record<string, { choice?: string; probabilities?: Record<string, number>; noul?: number }>; usage: unknown };
       for (const [name, answer] of Object.entries(decoded.answers)) {
-        if (name.endsWith('_has_practical_consequence')) answer.noul = 0;
+        if (name.endsWith('_practical')) answer.noul = 0;
         const selected = name === 'verdict' ? 'contradicted' : name.endsWith('_stance') ? 'contradicts' : undefined;
         if (selected) { answer.choice = selected; answer.probabilities = Object.fromEntries(Object.keys(answer.probabilities!).map(key => [key, Number(key === selected)])); }
       }

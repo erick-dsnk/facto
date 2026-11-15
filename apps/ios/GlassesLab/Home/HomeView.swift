@@ -169,7 +169,7 @@ struct HomeView: View {
           .disabled(live.lens.card == nil)
       }
       LensPreview(card: live.lens.card)
-      footnote(display.isConnected ? "Also on your Meta Ray-Ban Display." : "Shown on this phone only.")
+      footnote(display.isAvailable ? "Also on your Meta Ray-Ban Display." : "Shown on this phone only.")
     }
   }
 

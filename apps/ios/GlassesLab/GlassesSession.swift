@@ -47,13 +47,61 @@ final class GlassesSession {
   private(set) var needsGlassesAppUpdate = false
   /// The glasses in use, kept current from each pair's wear, hinge and link state.
   private(set) var kind: Kind = .none
+  /// The pair in use reports being on the wearer's face. A Display pair that isn't worn
+  /// refuses every session with "Device unavailable", and nobody would see the lens anyway.
+  private(set) var pairWorn = false
   @ObservationIgnored private var kindObservers: [@MainActor (Kind) -> Void] = []
+  /// How long a new reading of the pair in use must hold before it counts. A failing session
+  /// briefly drops the link, and acting on each flicker restarted the lens retries every second.
+  static let settleDelay: Duration = .milliseconds(1500)
+  private struct InUse: Equatable {
+    var kind: Kind
+    var worn: Bool
+  }
+  @ObservationIgnored private var settling: InUse?
+  @ObservationIgnored private var settleTask: Task<Void, Never>?
   /// One state listener per registered pair, kept here rather than in a ListenerTokenBag: the
   /// bag's clear and insert are separate actor hops, so a late clear could drop new listeners.
   @ObservationIgnored private var deviceListeners: [DeviceIdentifier: any AnyListenerToken] = [:]
   @ObservationIgnored private var devicesTask: Task<Void, Never>?
 
   @ObservationIgnored private var holders: [Holder: Handlers] = [:]
+  @ObservationIgnored private var holderObservers: [@MainActor () -> Void] = []
+  /// Set when the session starts winding down; cleared once it has stopped.
+  @ObservationIgnored private var stoppingSince: Date?
+
+  /// The session is stopping. `acquire` refuses until it has stopped; observers hear
+  /// `observeHolders` then, and `waitUntilStopped()` returns.
+  /// After 3 s it no longer counts, and the next `acquire` drops the stuck session.
+  var isWindingDown: Bool {
+    guard session != nil, let stoppingSince else { return false }
+    return Date().timeIntervalSince(stoppingSince) <= 3
+  }
+
+  /// Waits (up to `limit`) for a stopping session to finish, so the next `acquire` opens a
+  /// fresh one. Stops take 150 to 450 ms on the glasses.
+  func waitUntilStopped(limit: Duration = .seconds(2)) async {
+    let clock = ContinuousClock()
+    let deadline = clock.now + limit
+    while isWindingDown, clock.now < deadline {
+      try? await Task.sleep(for: .milliseconds(50))
+    }
+  }
+
+  /// The camera is on the session (on Display glasses, a photo). Its stream holds back the lens,
+  /// so the lens steps aside until the camera leaves.
+  var cameraHolds: Bool { holders[.camera] != nil }
+
+  /// Calls `handler` after the camera or the display joins or leaves the session.
+  func observeHolders(_ handler: @escaping @MainActor () -> Void) {
+    holderObservers.append(handler)
+  }
+
+  /// Asynchronous, so an observer can acquire or release without re-entering the caller.
+  private func holdersChanged() {
+    let observers = holderObservers
+    Task { @MainActor in observers.forEach { $0() } }
+  }
   @ObservationIgnored private let tokens = ListenerTokenBag()
 
   private struct Handlers {
@@ -71,9 +119,16 @@ final class GlassesSession {
     }
   }
 
-  /// Calls `handler` whenever `kind` changes (the wearer swaps, folds or takes off glasses).
+  /// Calls `handler` whenever `kind` or `pairWorn` changes (the wearer swaps, folds, puts on or
+  /// takes off glasses), once the change has held for `settleDelay`.
   func observeKind(_ handler: @escaping @MainActor (Kind) -> Void) {
     kindObservers.append(handler)
+  }
+
+  /// "Session ended by device": the glasses closed the session, usually because the wearer
+  /// pressed back. The SDK reports it only as `unexpectedError(description:)`.
+  nonisolated static func isEndedByDevice(_ message: String) -> Bool {
+    message.localizedCaseInsensitiveContains("ended by device")
   }
 
   /// Follows every registered pair: putting glasses on, taking them off or folding them changes
@@ -93,14 +148,38 @@ final class GlassesSession {
     refreshKind()
   }
 
+  /// Publishes a new pair in use only after it has held for `settleDelay`.
   private func refreshKind() {
-    let pick = Self.pairInUse(Self.pairs())
-    let newKind: Kind = pick.map { $0.supportsDisplay() ? .display : .rayBanMeta } ?? .none
-    guard newKind != kind else { return }
-    kind = newKind
-    NSLog("[glasses] in use: %@ (%@)", newKind.rawValue, pick?.nameOrId() ?? "none")
-    DebugLog.shared.log("glasses.kind", ["kind": newKind.rawValue, "device": pick?.nameOrId() ?? "none"])
-    kindObservers.forEach { $0(newKind) }
+    let observed = Self.inUse(Self.pairInUse(Self.pairs()))
+    guard observed != InUse(kind: kind, worn: pairWorn) else {
+      settling = nil
+      settleTask?.cancel()
+      settleTask = nil
+      return
+    }
+    guard observed != settling else { return }
+    settling = observed
+    settleTask?.cancel()
+    settleTask = Task { [weak self] in
+      try? await Task.sleep(for: Self.settleDelay)
+      guard !Task.isCancelled, let self else { return }
+      self.settleTask = nil
+      self.settling = nil
+      let pick = Self.pairInUse(Self.pairs())
+      let current = Self.inUse(pick)
+      // Changed again while settling: start over from the newest reading.
+      guard current == observed else { return self.refreshKind() }
+      self.kind = current.kind
+      self.pairWorn = current.worn
+      NSLog("[glasses] in use: %@ worn=%d (%@)", current.kind.rawValue, current.worn, pick?.nameOrId() ?? "none")
+      DebugLog.shared.log("glasses.kind", ["kind": current.kind.rawValue, "worn": current.worn, "device": pick?.nameOrId() ?? "none"])
+      self.kindObservers.forEach { $0(current.kind) }
+    }
+  }
+
+  private static func inUse(_ pick: Device?) -> InUse {
+    // Only a pair that says it's off the face counts as not worn (mock glasses report unknown).
+    InUse(kind: pick.map { $0.supportsDisplay() ? .display : .rayBanMeta } ?? .none, worn: pick.map { $0.donState != .doffed } ?? false)
   }
 
   private static func pairs() -> [Device] {
@@ -126,10 +205,20 @@ final class GlassesSession {
     onState: @escaping (DeviceSessionState) -> Void,
     onError: @escaping (String) -> Void
   ) throws -> DeviceSession {
+    if let stoppingSince, session != nil {
+      // A stop that never reported `.stopped`: give up on it so the glasses aren't stuck.
+      guard Date().timeIntervalSince(stoppingSince) > 3 else { throw DeviceSessionError.sessionAlreadyExists }
+      NSLog("[glasses] stopping session never stopped; dropping it")
+      DebugLog.shared.log("glasses.session_stuck", ["holders": holders.keys.map { "\($0)" }])
+      let current = Array(holders.values)
+      reset()
+      current.forEach { $0.onState(.stopped) }
+    }
     if let session, state != .stopping, state != .stopped {
       // The lens only makes sense on a Display pair: don't attach it to Ray-Ban Meta.
       if holder == .display, session.device?.supportsDisplay() == false { throw DeviceSessionError.noEligibleDevice }
       holders[holder] = Handlers(onState: onState, onError: onError)
+      holdersChanged()
       return session
     }
     let pick = preferredPair(for: holder)
@@ -144,6 +233,7 @@ final class GlassesSession {
     session = newSession
     state = .starting
     holders = [holder: Handlers(onState: onState, onError: onError)]
+    holdersChanged()
     // Subscribe before start() so no transition is missed.
     newSession.statePublisher.listen { [weak self, weak newSession] state in
       Task { @MainActor in
@@ -210,10 +300,14 @@ final class GlassesSession {
   func release(_ holder: Holder) -> Bool {
     guard holders[holder] != nil else { return false }
     if holders.count == 1 {
+      // Winding down from now, not from when the SDK reports `.stopping`: a camera or lens
+      // acquiring in between would join a dying session, or open a second one the glasses refuse.
+      stoppingSince = Date()
       session?.stop()
       return true
     }
     holders[holder] = nil
+    holdersChanged()
     return false
   }
 
@@ -222,6 +316,7 @@ final class GlassesSession {
     NSLog("[glasses] session state %@", "\(newState)")
     DebugLog.shared.log("glasses.session_state", ["state": "\(newState)", "holders": holders.keys.map { "\($0)" }])
     state = newState
+    if newState == .stopping, stoppingSince == nil { stoppingSince = Date() }
     if newState == .started { needsGlassesAppUpdate = false }
     let current = Array(holders.values)
     if newState == .stopped { reset() }
@@ -230,8 +325,10 @@ final class GlassesSession {
 
   private func reset() {
     tokens.clear()
+    stoppingSince = nil
     session = nil
     state = .idle
     holders = [:]
+    holdersChanged()
   }
 }

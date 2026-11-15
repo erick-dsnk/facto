@@ -1,4 +1,4 @@
-import { PipelineError, type Judgment } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, type Judgment, type ResultBasis } from '../../../../packages/contracts/src/index.js';
 
 /** Server-only assessments of quoted content, never verified publisher provenance.
  * These fields are deliberately absent from the frozen app result contract. */
@@ -13,7 +13,8 @@ export type JudgmentAssessment = {
   claimRisk: { level: typeof CLAIM_RISKS[number]; confidence: number };
   originAssessments: OriginAssessment[];
 };
-export type AssessedJudgment = Judgment & JudgmentAssessment;
+/** `basis` is asked only for claims about the future: what a definitive verdict rests on, or null for neither. */
+export type AssessedJudgment = Judgment & JudgmentAssessment & { basis?: ResultBasis | null };
 
 const finiteProbability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
 

@@ -50,6 +50,9 @@ targets:
         product: MWDATCamera
       - package: MWDAT
         product: MWDATDisplay
+      # Swipes and back from Meta Ray-Ban Display glasses dismiss the lens (experimental in 1.0).
+      - package: MWDAT
+        product: MWDATInputs
       - package: MWDAT
         product: MWDATMockDevice
       # On-device keyword spotter for the "Hey Facto" wake phrase (issue #53), static libraries

@@ -3,15 +3,17 @@ import websocket from '@fastify/websocket';
 import { readFile } from 'node:fs/promises';
 import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
-import { PipelineError, textInputSchema } from '../../../../packages/contracts/src/index.js';
+import { PROVIDER_LIMITS, PipelineError, textInputSchema, type LowConfidenceWord } from '../../../../packages/contracts/src/index.js';
 import type { RuntimeAdapters } from '../runtime/adapters.js';
 import { PipelineRuntime } from '../runtime/pipeline.js';
 import { SessionStore, equalSecret, type Session } from '../runtime/session.js';
 import type { DebugFeed } from '../runtime/debug-feed.js';
-import { audioStartSchema, type AsrAdapter } from './audio.js';
+import { audioStartSchema, type AsrAdapter, type AudioStart } from './audio.js';
 import { AudioBridge } from './audio-bridge.js';
 import { displayEventVisible } from '../runtime/display.js';
 import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
+import { type VoiceConfig } from './voice-level.js';
+import { SentenceStitcher } from './stitch.js';
 import { OCR_SELECTION_BODY_LIMIT, parseTargetSelectionRequest, unavailableSelection, type TargetSelector } from '../input/ocr/target-selection.js';
 
 export type ServerOptions = {
@@ -26,6 +28,11 @@ export type ServerOptions = {
   debugFeed?: DebugFeed;
   /** Operator credential for the debug feed, at least 16 characters. Without it the feed is off and nothing is recorded. The join code never opens the feed. */
   debugFeedKey?: string;
+  /**
+   * Voice dimming and spoken-answer echo (ASR_DIM_DB, ASR_DIM_FLOOR_DBFS, ASR_ECHO_MS). Absent: neither. With the debug feed on,
+   * every final sentence's level decision is recorded as an `asr.level` entry.
+   */
+  voice?: VoiceConfig;
   /** Optional explicit image upload path; image/OCR never enter the debug feed. */
   targetSelector?: TargetSelector;
 };
@@ -118,7 +125,7 @@ export async function buildServer(options: ServerOptions) {
       feed.push('session.created', { expiresAt: new Date(session.expiresAt).toISOString() }, session.id);
       session.listeners.add(event => feed.push(event.type, { requestId: event.requestId, revision: event.revision, claimId: event.claimId, payload: event.payload }, session.id));
     }
-    return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, token: session.token, sessionEpoch: session.epoch, expiresAt: new Date(session.expiresAt).toISOString(), capabilities: { mode: options.mode, text: true, audio: !!options.asr }, budgets: { deadlineMs: 10_000, running: 2, queued: 3, jev: 3, searchesPerClaim: 2 } });
+    return reply.code(201).send({ schemaVersion: 1, sessionId: session.id, token: session.token, sessionEpoch: session.epoch, expiresAt: new Date(session.expiresAt).toISOString(), capabilities: { mode: options.mode, text: true, audio: !!options.asr }, budgets: { deadlineMs: 10_000, running: 2, queued: 3, jev: PROVIDER_LIMITS.jev, searchesPerClaim: PROVIDER_LIMITS.search } });
   });
   app.post('/v1/sessions/:sessionId/display-grant', async (request, reply) => {
     const session = authenticated(request.params, request.headers.authorization);
@@ -234,22 +241,71 @@ export async function buildServer(options: ServerOptions) {
     const triggered = new Map<string, true>();
     let lastCaptureRequestAt = -Infinity;
     const recent = new TranscriptContext();
-    const forget = () => { transcripts.clear(); triggered.clear(); };
+    // Joins hesitation-split claims and keeps fragments from being checked (part of the voice options; absent, every sentence is checked).
+    const stitcher = options.voice ? new SentenceStitcher(options.voice.stitchMs) : undefined;
+    // A held sentence that trails off is checked on its own once nothing continues it within the stitch window.
+    const releaseTimers = new Set<ReturnType<typeof setTimeout>>();
+    let lastConfig: AudioStart | undefined;
+    // What the recogniser reported for each held sentence, so a released claim keeps its confidence and uncertain words.
+    const heldCapture = new Map<string, { confidence: number | null; lowConfidenceWords?: LowConfidenceWord[] }>();
+    const forget = () => { transcripts.clear(); triggered.clear(); stitcher?.clear(); for (const timer of releaseTimers) clearTimeout(timer); releaseTimers.clear(); heldCapture.clear(); };
     const fail = (error: unknown) => {
       if (error instanceof PipelineError && error.code === 'audio_cancelled') return;
       if (!session.active || !store.sessions.has(session.id)) return;
       session.emit('pipeline.error', { reasonCode: error instanceof PipelineError ? error.code : 'invalid_request', message: 'The request could not be completed.' });
     };
+    type CheckStep = { requestId: string; segmentId: string; text: string; speaker: number | null; atMs: number };
+    /** Submits one sentence (or stitched claim) for checking. Every revision is re-evaluated: a correction that is no longer a trigger is checked like any sentence. */
+    const submitCheck = (step: CheckStep, config: AudioStart, confidence: number | null, lowConfidenceWords?: LowConfidenceWord[]) => {
+      const target = step.requestId;
+      // A correction that only changes which words were uncertain is a new revision too.
+      const hash = createHash('sha256').update(JSON.stringify(lowConfidenceWords ? [step.text, confidence, lowConfidenceWords] : [step.text, confidence])).digest('hex');
+      const previous = transcripts.get(target);
+      const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(step.atMs).toISOString(),
+        context: previous?.context ?? recent.contextFor(target, step.atMs) };
+      const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(step.segmentId) ? step.segmentId : `segment-${createHash('sha256').update(step.segmentId).digest('hex').slice(0, 24)}`;
+      const input = textInputSchema.parse({ schemaVersion: 1, requestId: target, sessionId: session.id, sessionEpoch: config.sessionEpoch, revision: record.revision,
+        mode: 'audio', text: step.text, language: 'en', capturedAt: record.capturedAt,
+        capture: { source: config.source, segmentId, confidence, final: true, ...(lowConfidenceWords ? { lowConfidenceWords } : {}) },
+        context: record.context, userInitiated: false });
+      // Context reflects the conversation, including sentences the runtime later declines to check.
+      recent.record(target, step.text, step.speaker, Date.parse(record.capturedAt));
+      runtime.submit(session, input); remember(transcripts, target, record);
+    };
+    const scheduleRelease = () => {
+      if (!stitcher || !options.voice) return;
+      const timer = setTimeout(() => {
+        releaseTimers.delete(timer);
+        // The connection closed or the session moved to a new epoch since: nothing of the old stream is checked.
+        if (!lastConfig || closed || !session.active || lastConfig.sessionEpoch !== session.epoch) return;
+        for (const step of stitcher.release(now())) {
+          try {
+            debugFeed?.push('asr.stitch', { action: 'release', requestId: step.requestId, text: step.text }, session.id);
+            const capture = heldCapture.get(step.requestId);
+            submitCheck(step, lastConfig, capture?.confidence ?? null, capture?.lowConfidenceWords);
+          } catch (error) {
+            if (error instanceof PipelineError && error.code === 'request_capacity') void bridge?.stop('request_capacity').catch(() => undefined);
+            fail(error);
+          }
+        }
+      }, options.voice.stitchMs + 1000);
+      timer.unref?.();
+      releaseTimers.add(timer);
+    };
     const bridge: AudioBridge | undefined = options.asr ? new AudioBridge(session, options.asr, (event, config, capturedAt) => {
       try {
         const segmentHash = createHash('sha256').update(event.segmentId).digest('hex').slice(0, 24);
         const requestId = `asr-${config.sessionEpoch}-${config.streamGeneration}-${segmentHash}`;
-        const hash = createHash('sha256').update(JSON.stringify([event.text, event.confidence])).digest('hex');
-        const previous = transcripts.get(requestId);
+        const lowConfidenceWords = event.lowConfidenceWords?.length ? event.lowConfidenceWords : undefined;
+        // A correction that only changes which words were uncertain is a new revision too.
+        const hashOf = (text: string) => createHash('sha256').update(JSON.stringify(lowConfidenceWords ? [text, event.confidence, lowConfidenceWords] : [text, event.confidence])).digest('hex');
+        lastConfig = config;
         if (isVoiceTrigger(event.text)) {
           // A spoken "check this" asks the app for a photo. The command itself is never fact-checked.
           // Keep the segment's revision so a later correction back to a claim is checked as a newer revision.
-          if (previous) { remember(transcripts, requestId, { ...previous, hash }); session.cancel(requestId); }
+          stitcher?.interrupt();
+          const previous = transcripts.get(requestId);
+          if (previous) { remember(transcripts, requestId, { ...previous, hash: hashOf(event.text) }); session.cancel(requestId); }
           if (triggered.has(requestId)) return;
           remember(triggered, requestId, true);
           if (now() - lastCaptureRequestAt < CAPTURE_REQUEST_INTERVAL_MS) return;
@@ -257,22 +313,30 @@ export async function buildServer(options: ServerOptions) {
           session.emit('capture.request', { reasonCode: 'voice_trigger' });
           return;
         }
-        // Every revision is re-evaluated: a correction that is no longer a trigger is checked like any sentence.
-        const record = { hash, revision: previous ? previous.revision + Number(previous.hash !== hash) : 1, capturedAt: previous?.capturedAt ?? new Date(capturedAt).toISOString(),
-          context: previous?.context ?? recent.contextFor(requestId, capturedAt) };
-        const segmentId = /^[a-zA-Z0-9_-]{1,100}$/.test(event.segmentId) ? event.segmentId : `segment-${segmentHash}`;
-        const input = textInputSchema.parse({ schemaVersion: 1, requestId, sessionId: session.id, sessionEpoch: config.sessionEpoch, revision: record.revision,
-          mode: 'audio', text: event.text, language: 'en', capturedAt: record.capturedAt,
-          capture: { source: config.source, segmentId, confidence: event.confidence, final: true }, context: record.context, userInitiated: false });
-        // Context reflects the conversation, including sentences the runtime later declines to check.
-        recent.record(requestId, event.text, event.speaker ?? null, Date.parse(record.capturedAt));
-        runtime.submit(session, input); remember(transcripts, requestId, record);
+        // A fragment waits for its continuation and is never checked alone; a stitched claim is a revision of its first fragment's
+        // request, so it supersedes whatever that fragment started.
+        const step = stitcher?.add({ requestId, segmentId: event.segmentId, text: event.text, speaker: event.speaker ?? null, atMs: capturedAt })
+          ?? { action: 'check' as const, requestId, segmentId: event.segmentId, text: event.text, speaker: event.speaker ?? null, atMs: capturedAt };
+        if (step.action === 'skip') return;
+        if (step.action === 'hold' || step.requestId !== requestId || step.text !== event.text) {
+          debugFeed?.push('asr.stitch', { action: step.action, requestId: step.requestId, text: step.text, ...(step.action === 'hold' && step.cancel ? { cancelled: step.cancel } : {}) }, session.id);
+        }
+        if (step.action === 'hold') {
+          if (step.cancel) session.cancel(step.cancel);
+          recent.record(step.requestId, step.text, step.speaker, step.atMs);
+          heldCapture.set(requestId, { confidence: event.confidence, ...(lowConfidenceWords ? { lowConfidenceWords } : {}) });
+          if (heldCapture.size > 64) heldCapture.delete(heldCapture.keys().next().value!);
+          scheduleRelease();
+          return;
+        }
+        submitCheck(step, config, event.confidence, lowConfidenceWords);
       } catch (error) {
         // The session's request budget is spent. Stop listening with a distinct reason instead of dropping every later sentence.
         if (error instanceof PipelineError && error.code === 'request_capacity') void bridge?.stop('request_capacity').catch(() => undefined);
         fail(error);
       }
-    }) : undefined;
+    }, { dim: options.voice ? { dimDb: options.voice.dimDb, floorDbfs: options.voice.floorDbfs } : undefined, echoMs: options.voice?.echoMs,
+      onLevel: debugFeed ? record => debugFeed.push('asr.level', record, session.id) : undefined }) : undefined;
     if (bridge) audioBridges.set(session.id, bridge);
     let closed = false;
     const disconnect = (reason = 'disconnected') => {

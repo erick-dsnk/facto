@@ -90,6 +90,9 @@ extension LiveCamera {
 @MainActor
 protocol LensDisplaying: AnyObject {
   var isConnected: Bool { get }
+  /// The wearer can see the lens (a worn Display pair). Cards go to the lens only then; the
+  /// lens opens its session by itself while it has something to show.
+  var isAvailable: Bool { get }
   var onReady: (@MainActor () -> Void)? { get set }
   func showSearching(claimText: String, captureLabel: String?, sources: [ClaimSourcesPayload.Source]) async
   func setWebDisplayEnabled(_ enabled: Bool)
@@ -99,6 +102,7 @@ protocol LensDisplaying: AnyObject {
 }
 
 extension LensDisplaying {
+  var isAvailable: Bool { isConnected }
   var onReady: (@MainActor () -> Void)? { get { nil } set {} }
   func showSearching(claimText: String, captureLabel: String?, sources: [ClaimSourcesPayload.Source]) async {}
   func setWebDisplayEnabled(_ enabled: Bool) {}
@@ -238,6 +242,9 @@ enum LiveStatus: Equatable, Sendable {
 @Observable
 @MainActor
 final class LiveModel {
+  /// How long listening waits for a dropped backend connection before it stops. Reconnects took 0.8 to 3.6 s on 14 Nov.
+  static let listeningReconnectGrace: TimeInterval = 10
+
   static let demoQualityKey = "live.demoQuality"
   static let mutedKey = "live.muted"
   static let automaticAlertsKey = "live.automaticAlerts"
@@ -573,9 +580,9 @@ final class LiveModel {
     self.relay = relay
     self.presenter = ResultPresenter(speaker: speaker, chime: chime, playback: relay, history: history, lens: lens, debugLog: debugLog)
     presenter.isMuted = isMuted
-    // Without a lens showing the card (Ray-Ban Meta, or Display glasses not connected),
+    // Without a lens the wearer can see (Ray-Ban Meta, or Display glasses not worn),
     // overheard alerts are spoken as well as chimed.
-    presenter.alertsAreSpoken = { [weak display] in !(display?.isConnected ?? false) }
+    presenter.alertsAreSpoken = { [weak display] in !(display?.isAvailable ?? false) }
 
     lens.onChange = { [weak self] card in self?.lensChanged(card) }
     display?.onReady = { [weak self] in self?.restoreNativePresentation() }
@@ -1024,7 +1031,11 @@ final class LiveModel {
     let backend = makeBackend(config)
     backend.onUnreadableEvent = { [weak self] type in self?.unreadableEvent(type) }
     let streamer = AudioStreamer(
-      channel: backend, source: .glassesHfp, clock: audioClock, resumesAfterReconnect: false, debugLog: debugLog
+      // A dropped connection resumes listening by itself when it comes back within the grace window. On Ray-Ban Meta the
+      // camera stream moves the phone onto the glasses' Wi-Fi and the socket drops for about 1.5 s; stopping listening on
+      // every drop made the wearer tap Start listening again (14–15 Nov).
+      channel: backend, source: .glassesHfp, clock: audioClock, reconnectGrace: Self.listeningReconnectGrace,
+      resumesAfterReconnect: true, debugLog: debugLog
     )
     streamer.onStopped = { [weak self] reason in self?.listeningStopped(reason) }
     streamer.onAutoResumed = { [weak self] in self?.autoResumed() }
@@ -1151,7 +1162,8 @@ final class LiveModel {
       sessionActive = false
       debugDecision(event, "session_ended", ["reason": payload.reasonCode])
       clearRecoveryPresentation()
-      notice = "The session ended. Connection recovery does not resume listening; tap Start listening when ready."
+      // "disconnected" is a dropped connection: listening resumes by itself if it comes back in time.
+      if payload.reasonCode != "disconnected" { notice = "The session ended. Tap Start listening when ready." }
     case .claimChecking(let payload):
       if payload.userInitiated == true, let requestId = event.requestId {
         webDisplayRequestId = requestId
@@ -1746,7 +1758,7 @@ final class LiveModel {
           await display.clearTriggerFeedback()
           continue
         }
-        guard self?.displayOutputMode == .native, display.isConnected else { continue }
+        guard self?.displayOutputMode == .native, display.isAvailable else { continue }
         switch update {
         case .card(let card):
           await display.showCard(card, onRepeat: card == nil ? nil : onRepeat, onDismiss: card == nil ? nil : onDismiss)

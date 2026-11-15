@@ -52,28 +52,36 @@ export async function loadCases(split: 'development' | 'heldout' = 'development'
   return cases;
 }
 
+/** The fixtures' kinds, mapped onto the classifier's SelectionKind. Completeness and privacy come from their own scripted answers. */
+const SELECTION_KINDS: Record<string, string> = { public_fact: 'claim', personal_experience: 'claim', mixed: 'claim', incomplete_or_unclear: 'claim', opinion: 'opinion', prediction: 'prediction' };
+
+/**
+ * Scripted answers to the classifier's questions. Each candidate is stated in the speaker's own voice, names its own subject and
+ * is no rumour, future claim or private-life allegation. The classifier no longer asks for assertion status, so it is not scripted.
+ */
 function fixtureAnswers(request: JevRequest, sample: EvaluationCase): Record<string, JevAnswer> {
   const state = request.state as { candidates: Array<{ id: string; text: string }> };
   const answers: Record<string, JevAnswer> = {};
-  for (const candidate of state.candidates) {
+  for (const [name, question] of Object.entries(request.questions)) {
+    // The scripted model reads a low OCR confidence as a likely misreading.
+    if (name === 'misheard') { answers[name] = { noul: sample.capture.confidence < 0.5 ? 0.9 : 0.05 }; continue; }
+    const candidate = state.candidates.find(entry => name.startsWith(`${entry.id}_`));
+    if (!candidate) throw new Error('Unexpected classifier question');
     const semantic = sample.candidateModelFixtures?.[candidate.text] ?? sample.modelFixture;
-    for (const suffix of ['kind', 'assertion_status', 'quote_use', 'claim_structure'] as const) {
-      const key = `${candidate.id}_${suffix}`;
-      const question = request.questions[key];
-      if (!question) continue;
-      if (question.type !== 'choice') throw new Error('Unexpected classifier question');
-      const choice = suffix === 'kind' ? semantic.kind
-        : suffix === 'assertion_status' ? semantic.assertionStatus
-        : suffix === 'quote_use' ? 'name_or_title'
-        : semantic.claimStructure ?? (candidate.id === 'span_0' && state.candidates.length > 1 ? 'multiple_propositions' : 'one_coherent');
-      answers[key] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(option => [option, Number(option === choice)])) };
+    const field = name.slice(candidate.id.length + 1);
+    if (question.type === 'choice') {
+      const choice = field === 'kind' ? semantic.kind === 'question_or_instruction' ? candidate.text.trim().endsWith('?') ? 'question' : 'instruction' : SELECTION_KINDS[semantic.kind]
+        : field === 'route' ? 'general'
+        : field === 'claim_structure' ? semantic.claimStructure ?? (candidate.id === 'span_0' && state.candidates.length > 1 ? 'multiple_propositions' : 'one_coherent')
+        : field === 'attribution' || field === 'source' || field === 'subject' ? 'none' : undefined;
+      if (choice === undefined) throw new Error('Unexpected classifier question');
+      answers[name] = { choice, probabilities: Object.fromEntries(Object.keys(question.criteria).map(option => [option, Number(option === choice)])) };
+      continue;
     }
-    answers[`${candidate.id}_self_contained`] = { noul: semantic.selfContained };
-    answers[`${candidate.id}_private_data`] = { noul: semantic.privateData };
-    answers[`${candidate.id}_has_practical_consequence`] = { noul: semantic.hasPracticalConsequence };
-    if (request.questions[`${candidate.id}_preserves_scope`]) {
-      answers[`${candidate.id}_preserves_scope`] = { noul: 1 };
-    }
+    const scripted: Record<string, number | null> = { self_contained: semantic.selfContained, private_data: semantic.privateData, practical: semantic.hasPracticalConsequence,
+      preserves_scope: 1, private_life: 0, rumour: 0, future: 0, subject_private: 0 };
+    if (!Object.hasOwn(scripted, field)) throw new Error('Unexpected classifier question');
+    answers[name] = { noul: scripted[field] };
   }
   return answers;
 }
