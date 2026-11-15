@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Session } from '../runtime/session.js';
-import { AudioBridge } from './audio-bridge.js';
+import { AudioBridge, type LevelRecord } from './audio-bridge.js';
 import { type AsrAdapter, type AsrStream, type AsrTranscript, type AudioStart } from './audio.js';
 import { type EventEnvelope } from '../../../../packages/contracts/src/index.js';
 
@@ -175,5 +175,97 @@ describe('injectable audio bridge', () => {
     publish({ ...transcript, captureOffsetMs: 20_000 });
     await vi.waitFor(() => expect(events.some(event => event.type === 'pipeline.error')).toBe(true));
     expect(final).toHaveBeenCalledTimes(1); await bridge.stop();
+  });
+});
+
+describe('voice dimming and spoken-answer echo', () => {
+  /** A 100 ms frame of square wave at `amplitude`: 3277 is about -20 dBFS (the wearer), 104 about -50 dBFS (another table). */
+  function audio(sequence: number, amplitude: number, generation = 1) {
+    const bytes = frame(sequence, generation); const view = new DataView(bytes.buffer);
+    for (let sample = 0; sample < 1600; sample++) view.setInt16(13 + sample * 2, sample % 2 ? amplitude : -amplitude, true);
+    return bytes;
+  }
+  function dimming(options: ConstructorParameters<typeof AudioBridge>[3] = {}) {
+    const session = new Session(() => Date.parse('2026-11-15T01:00:00Z'));
+    const events: EventEnvelope[] = []; session.listeners.add(event => events.push(event));
+    const publishers: ((event: AsrTranscript) => void)[] = [];
+    const adapter: AsrAdapter = { start: vi.fn(async (...args: Parameters<AsrAdapter['start']>) => { publishers.push(args[1]); return { write: async () => {}, stop: async () => {} }; }) };
+    const final = vi.fn(async () => {});
+    const records: LevelRecord[] = [];
+    const bridge = new AudioBridge(session, adapter, final, { onLevel: record => { records.push(record); }, ...options });
+    const publish = (event: AsrTranscript) => publishers[publishers.length - 1](event);
+    const sentence = (segmentId: string, text: string, captureOffsetMs: number, endOffsetMs?: number): AsrTranscript =>
+      ({ text, final: true, segmentId, confidence: null, captureOffsetMs, ...(endOffsetMs === undefined ? {} : { endOffsetMs }) });
+    return { session, events, adapter, final, records, bridge, publish, sentence };
+  }
+  const dim = { dimDb: 14, floorDbfs: -60 };
+
+  it('measures each final sentence over its words, learns the wearer, then dims far quieter sentences but still shows them', async () => {
+    const state = dimming({ dim });
+    await state.bridge.start(config);
+    for (let sequence = 0; sequence < 20; sequence++) await state.bridge.accept(audio(sequence, sequence < 10 ? 3277 : 104));
+    for (const [id, start] of [['s1', 0], ['s2', 300], ['s3', 600]] as const) state.publish(state.sentence(id, `Wearer sentence ${id}.`, start, start + 300));
+    await vi.waitFor(() => expect(state.final).toHaveBeenCalledTimes(3));
+    expect(state.records.map(record => [record.segmentId, record.action, record.level])).toEqual([['s1', 'learning', -20], ['s2', 'learning', -20], ['s3', 'learning', -20]]);
+
+    state.publish(state.sentence('s4', 'Chatter from another table.', 1000, 1900));
+    await vi.waitFor(() => expect(state.records).toHaveLength(4));
+    expect(state.records[3]).toEqual({ streamGeneration: 1, segmentId: 's4', text: 'Chatter from another table.', action: 'dimmed', level: -50, reference: -20, reason: 'below_reference' });
+    // A correction keeps its segment's decision and is not measured again.
+    state.publish(state.sentence('s4', 'Chatter from the other table.', 1000, 1900));
+    // A spoken "check this" is never dimmed, however quiet.
+    state.publish(state.sentence('s5', 'Hey Facto, check this.', 1000, 1900));
+    state.publish(state.sentence('s6', 'The partner speaks up.', 100, 800));
+    state.publish(state.sentence('s7', 'No timing for this one.', 1200));
+    await vi.waitFor(() => expect(state.final).toHaveBeenCalledTimes(6));
+    expect(state.final.mock.calls.map(call => (call as unknown as [AsrTranscript])[0].segmentId)).toEqual(['s1', 's2', 's3', 's5', 's6', 's7']);
+    expect(state.records.map(record => [record.segmentId, record.action])).toEqual([['s1', 'learning'], ['s2', 'learning'], ['s3', 'learning'], ['s4', 'dimmed'], ['s5', 'trigger'], ['s6', 'kept'], ['s7', 'unmeasured']]);
+    const finals = state.events.filter(event => event.type === 'transcript.final');
+    expect(finals.map(event => (event.payload as { segmentId: string }).segmentId)).toEqual(['s1', 's2', 's3', 's4', 's4', 's5', 's6', 's7']);
+    expect(finals.some(event => 'endOffsetMs' in (event.payload as object))).toBe(false);
+    await state.bridge.stop();
+  });
+
+  it('starts learning again when the audio source changes, and only reports levels when dimDb is 0', async () => {
+    const state = dimming({ dim });
+    await state.bridge.start(config);
+    for (let sequence = 0; sequence < 10; sequence++) await state.bridge.accept(audio(sequence, 3277));
+    for (const id of ['a', 'b', 'c']) state.publish(state.sentence(id, 'Loud.', 0, 900));
+    await vi.waitFor(() => expect(state.records).toHaveLength(3));
+    await state.bridge.stop();
+    await state.bridge.start({ ...config, streamGeneration: 2, source: 'phone_mic' });
+    for (let sequence = 0; sequence < 10; sequence++) await state.bridge.accept(audio(sequence, 104, 2));
+    state.publish(state.sentence('d', 'Quiet phone mic.', 0, 900));
+    await vi.waitFor(() => expect(state.records).toHaveLength(4));
+    expect(state.records[3]).toMatchObject({ streamGeneration: 2, action: 'learning', level: -50, reference: null });
+    await state.bridge.stop();
+
+    const off = dimming({ dim: { dimDb: 0, floorDbfs: -60 } });
+    await off.bridge.start(config);
+    for (let sequence = 0; sequence < 10; sequence++) await off.bridge.accept(audio(sequence, 104));
+    off.publish(off.sentence('e', 'Quiet but checked.', 0, 900));
+    await vi.waitFor(() => expect(off.final).toHaveBeenCalledTimes(1));
+    expect(off.records).toEqual([expect.objectContaining({ action: 'off', level: -50 })]);
+    await off.bridge.stop();
+  });
+
+  it('gives the first stream after a spoken answer an echo window, also when that start fails once', async () => {
+    const state = dimming({ echoMs: 800 });
+    const calls = () => vi.mocked(state.adapter.start).mock.calls as unknown[][];
+    await state.bridge.start(config);
+    expect(calls()[0]).toHaveLength(4);
+    await state.bridge.playback(true);
+    expect(state.events.find(event => event.type === 'audio.stopped')?.payload).toMatchObject({ reasonCode: 'playback' });
+    await state.bridge.playback(false);
+    vi.mocked(state.adapter.start).mockRejectedValueOnce(new Error('provider down'));
+    await expect(state.bridge.start({ ...config, streamGeneration: 2 })).rejects.toThrow('asr_unavailable');
+    expect(calls()[1][4]).toEqual({ ignoreWordsBeforeMs: 800 });
+    await state.bridge.start({ ...config, streamGeneration: 3 });
+    expect(calls()[2][4]).toEqual({ ignoreWordsBeforeMs: 800 });
+    await state.bridge.stop();
+    await state.bridge.start({ ...config, streamGeneration: 4 });
+    expect(calls()[3]).toHaveLength(4);
+    expect(state.records).toEqual([]);
+    await state.bridge.stop();
   });
 });

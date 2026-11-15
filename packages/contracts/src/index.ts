@@ -54,6 +54,8 @@ export type AttributionFrame = { source: string; mode: 'said' | 'reported' };
 export const REASON_CODES = {
   notAClaim: 'not_a_claim', privateOrPersonal: 'private_or_personal', possiblyMisheard: 'possibly_misheard',
   subjectMissing: 'subject_missing', unconfirmedRumour: 'unconfirmed_rumour', privateLifeNotChecked: 'private_life_not_checked',
+  /** Overheard speech that is not English: background chatter, skipped before Jev so it never uses the automatic cooldown. */
+  notEnglish: 'not_english',
 } as const;
 
 export type AdmissionMetadata = {

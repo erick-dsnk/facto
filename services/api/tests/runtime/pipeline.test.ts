@@ -3,6 +3,7 @@ import { codePoints, PipelineError, PROVIDER_LIMITS, type EventEnvelope, type Pi
 import { AttemptBudget } from '../../src/runtime/budget.js';
 import { fixtureAdapters } from '../../src/runtime/fixtures.js';
 import { PipelineRuntime } from '../../src/runtime/pipeline.js';
+import { createClassifier } from '../../src/providers/jev/classification.js';
 import { Session, SessionStore } from '../../src/runtime/session.js';
 
 const input = (s: Session, id = 'req', overrides: Partial<TextInput> = {}): TextInput => ({ schemaVersion: 1, requestId: id, sessionId: s.id, sessionEpoch: s.epoch, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.', language: 'en', capturedAt: new Date(Date.now()).toISOString(), capture: { source: 'typed_fixture', segmentId: 'seg', confidence: 1 }, context: [], userInitiated: true, ...overrides });
@@ -241,6 +242,24 @@ describe('bounded pipeline runtime', () => {
     expect(() => runtime.submit(session, input(session, 'b', { userInitiated: false }))).toThrow('automatic_cooldown');
     await vi.advanceTimersByTimeAsync(4_000);
     expect(runtime.submit(session, input(session, 'c', { userInitiated: false }))).toMatchObject({ duplicate: false });
+    session.pause();
+  });
+
+  it('skips overheard speech in another language before Jev, so the next English claim is not held by the cooldown', async () => {
+    const adapters = topicAdapters(); const normal = adapters.classify;
+    const ask = vi.fn(async () => { throw new Error('Jev must not be called for chatter'); });
+    const real = createClassifier({ ask });
+    adapters.classify = (body, context) => body.requestId === 'chatter' ? real(body, context) : normal(body, context);
+    const { session, runtime, events } = setup(adapters);
+    const heard = { userInitiated: false, mode: 'audio' as const, capture: { source: 'glasses_stream_audio' as const, segmentId: 'seg', confidence: null, final: true } };
+    runtime.submit(session, input(session, 'chatter', { ...heard, text: 'Hey, no estoy acá de nuevo.' })); await flush();
+    expect(events.find(e => e.requestId === 'chatter' && e.type === 'claim.skipped')?.payload).toMatchObject({ admissionAction: 'skip', reasonCode: 'not_english', presentation: { action: 'silent' } });
+    expect(ask).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(3_000);
+    // The English claim 3 s later is admitted; only an admitted claim starts the cooldown.
+    expect(runtime.submit(session, input(session, 'claim', { ...heard, capturedAt: new Date(Date.now()).toISOString() }))).toMatchObject({ duplicate: false }); await flush();
+    expect(events.some(e => e.requestId === 'claim' && e.type === 'pipeline.error' && (e.payload as { reasonCode: string }).reasonCode === 'automatic_cooldown')).toBe(false);
+    expect(() => runtime.submit(session, input(session, 'next', { ...heard, capturedAt: new Date(Date.now()).toISOString() }))).toThrow('automatic_cooldown');
     session.pause();
   });
 
