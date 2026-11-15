@@ -355,6 +355,8 @@ final class LookAndCheckCoordinator {
       case .incomplete:
         return .incomplete(message: "That text is cut off. Open the full post and try again.")
       case .unreadable:
+        debugUnreadable(trace: trace, reason: selection.reason ?? "no_readable_lines",
+                        text: ocr.text, meanConfidence: ocr.meanConfidence)
         return .unreadable(message: Self.unreadableMessage)
       case .unavailable:
         if let reason = selection.reason, ["target_selection_input_too_large", "target_selection_hint_too_long", "target_selection_image_too_large"].contains(reason) {
@@ -364,6 +366,8 @@ final class LookAndCheckCoordinator {
       case .selected:
         guard let resolved = selection.resolvedLines(in: input) else {
           if input.lines.allSatisfy({ $0.confidence < settings.minimumMeanConfidence }) {
+            debugUnreadable(trace: trace, reason: "low_confidence",
+                            text: ocr.text, meanConfidence: ocr.meanConfidence)
             return .unreadable(message: Self.unreadableMessage)
           }
           return .failed(reason: "invalid_target_selection")
@@ -380,11 +384,8 @@ final class LookAndCheckCoordinator {
     let targetConfidence = selectedLines.reduce(0.0) { $0 + $1.confidence } / Double(max(selectedLines.count, 1))
     let visible = targetText.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.count
     guard visible >= settings.minimumCharacters, targetConfidence >= settings.minimumMeanConfidence else {
-      debugLog.log("lookcheck.unreadable", [
-        "trace": trace, "reason": visible < settings.minimumCharacters ? "too_few_characters" : "low_confidence",
-        "visibleCharacters": visible, "minimumCharacters": settings.minimumCharacters,
-        "meanConfidence": targetConfidence, "minimumMeanConfidence": settings.minimumMeanConfidence,
-      ])
+      debugUnreadable(trace: trace, reason: visible < settings.minimumCharacters ? "too_few_characters" : "low_confidence",
+                      text: targetText, meanConfidence: targetConfidence)
       return .unreadable(message: Self.unreadableMessage)
     }
     let split = OCRChunker.chunk(targetText, maxChunks: settings.maxChunks)
@@ -479,6 +480,17 @@ final class LookAndCheckCoordinator {
   }
 
   // MARK: Debug log
+
+  /// Target selection can reject unreadable evidence before chunking. Keep the same
+  /// reason and measurements for those exits as for the selected-text quality gate.
+  private func debugUnreadable(trace: String, reason: String, text: String, meanConfidence: Double) {
+    debugLog.log("lookcheck.unreadable", [
+      "trace": trace, "reason": reason,
+      "visibleCharacters": text.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.count,
+      "minimumCharacters": settings.minimumCharacters,
+      "meanConfidence": meanConfidence, "minimumMeanConfidence": settings.minimumMeanConfidence,
+    ])
+  }
 
   /// Everything Vision returned: the kept text plus each observation with its confidence and
   /// normalised box (origin bottom-left), including the lines the confidence filter dropped.
