@@ -1,0 +1,2204 @@
+{
+ "seed": 20261114,
+ "source": "https://zenodo.org/records/3609356 groundtruth.csv",
+ "debates": {
+  "dev": [
+   "1960-09-26.txt",
+   "1960-10-07.txt",
+   "1960-10-13.txt",
+   "1960-10-21.txt",
+   "1976-10-22.txt",
+   "1980-10-28.txt",
+   "1984-10-07.txt",
+   "1988-10-13.txt",
+   "1992-10-11.txt",
+   "1996-10-06.txt",
+   "1996-10-16.txt",
+   "2000-10-11.txt",
+   "2000-10-17.txt",
+   "2008-10-15.txt",
+   "2012-10-16.txt"
+  ],
+  "holdout": [
+   "1976-09-23.txt",
+   "1976-10-06.txt",
+   "1980-09-21.txt",
+   "1984-10-21.txt",
+   "1988-09-25.txt",
+   "1992-10-15.txt",
+   "1992-10-19.txt",
+   "2000-10-03.txt",
+   "2004-09-30.txt",
+   "2004-10-08.txt",
+   "2004-10-13.txt",
+   "2008-09-26.txt",
+   "2008-10-07.txt",
+   "2012-10-03.txt",
+   "2012-10-22.txt"
+  ]
+ },
+ "dev": {
+  "cb-dev-cfs-12574": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "12574",
+   "debate": "1960-10-21.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-14930": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "14930",
+   "debate": "1980-10-28.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-9874": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9874",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-5975": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5975",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-7836": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7836",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-9733": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9733",
+   "debate": "2012-10-16.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-8124": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "8124",
+   "debate": "1960-09-26.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-14892": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "14892",
+   "debate": "1980-10-28.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-17219": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "17219",
+   "debate": "1984-10-07.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-24821": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "24821",
+   "debate": "1992-10-11.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-16154": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "16154",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-25957": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "25957",
+   "debate": "1996-10-16.txt",
+   "speaker": "Bob Dole",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-28958": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "28958",
+   "debate": "2000-10-17.txt",
+   "speaker": "Al Gore",
+   "speaker_title": "Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-6216": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6216",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-26344": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "26344",
+   "debate": "1996-10-16.txt",
+   "speaker": "Bob Dole",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-19924": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "19924",
+   "debate": "1996-10-06.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-5665": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5665",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-9632": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9632",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-6179": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6179",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-15222": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "15222",
+   "debate": "1980-10-28.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-17810": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "17810",
+   "debate": "1984-10-07.txt",
+   "speaker": "Walter Mondale",
+   "speaker_title": "Former Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-9348": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9348",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-9635": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9635",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-12609": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "12609",
+   "debate": "1960-10-21.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-12540": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "12540",
+   "debate": "1960-10-21.txt",
+   "speaker": "Richard M. Nixon",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-5784": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5784",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-7586": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7586",
+   "debate": "1960-10-07.txt",
+   "speaker": "Richard M. Nixon",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-5608": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5608",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-15027": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "15027",
+   "debate": "1980-10-28.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-28297": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "28297",
+   "debate": "2000-10-17.txt",
+   "speaker": "Al Gore",
+   "speaker_title": "Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-1342": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "1342",
+   "debate": "1976-10-22.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-1037": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "1037",
+   "debate": "1976-10-22.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-9818": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9818",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-17392": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "17392",
+   "debate": "1984-10-07.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-5990": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5990",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-5778": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5778",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-15933": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "15933",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-5552": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5552",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-6002": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6002",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-5863": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5863",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-5589": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "5589",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-9475": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9475",
+   "debate": "2012-10-16.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-24648": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "24648",
+   "debate": "1992-10-11.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-6022": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6022",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-7789": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7789",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-15149": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "15149",
+   "debate": "1980-10-28.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-cfs-1459": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "1459",
+   "debate": "1976-10-22.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-9656": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9656",
+   "debate": "2012-10-16.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-12780": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "12780",
+   "debate": "1960-10-21.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-cfs-7994": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7994",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-15416": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "15416",
+   "debate": "1980-10-28.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-28777": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "28777",
+   "debate": "2000-10-17.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-8255": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "8255",
+   "debate": "1960-09-26.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-9592": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9592",
+   "debate": "2012-10-16.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-13149": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "13149",
+   "debate": "1960-10-13.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-10098": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "10098",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-15445": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "15445",
+   "debate": "1980-10-28.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-10043": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "10043",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-12591": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "12591",
+   "debate": "1960-10-21.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-15602": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "15602",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-5635": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "5635",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-7583": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "7583",
+   "debate": "1960-10-07.txt",
+   "speaker": "Richard M. Nixon",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-13303": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "13303",
+   "debate": "1960-10-13.txt",
+   "speaker": "Richard M. Nixon",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-9627": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9627",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-5625": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "5625",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-24450": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "24450",
+   "debate": "1992-10-11.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-9283": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9283",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-1576": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "1576",
+   "debate": "1976-10-22.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-5577": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "5577",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-12145": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "12145",
+   "debate": "2000-10-11.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-9929": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9929",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-9130": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9130",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-7839": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "7839",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-6050": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "6050",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-9862": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9862",
+   "debate": "2012-10-16.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-15938": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "15938",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-ufs-17274": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "17274",
+   "debate": "1984-10-07.txt",
+   "speaker": "Walter Mondale",
+   "speaker_title": "Former Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-5871": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "5871",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-5993": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "5993",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-ufs-1571": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "1571",
+   "debate": "1976-10-22.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-7871": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7871",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-29062": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "29062",
+   "debate": "2000-10-17.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-5648": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5648",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-12619": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "12619",
+   "debate": "1960-10-21.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-6276": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "6276",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-5676": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5676",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-15686": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15686",
+   "debate": "1988-10-13.txt",
+   "speaker": "Michael Dukakis",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-15638": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15638",
+   "debate": "1988-10-13.txt",
+   "speaker": "Michael Dukakis",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-5894": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5894",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-7702": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7702",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-6064": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "6064",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-17159": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "17159",
+   "debate": "1984-10-07.txt",
+   "speaker": "Walter Mondale",
+   "speaker_title": "Former Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-5540": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5540",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-6019": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "6019",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-1604": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "1604",
+   "debate": "1976-10-22.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-5783": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5783",
+   "debate": "2008-10-15.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-16275": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "16275",
+   "debate": "1988-10-13.txt",
+   "speaker": "Michael Dukakis",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-1128": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "1128",
+   "debate": "1976-10-22.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-28918": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "28918",
+   "debate": "2000-10-17.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-1116": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "1116",
+   "debate": "1976-10-22.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-24544": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "24544",
+   "debate": "1992-10-11.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-28851": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "28851",
+   "debate": "2000-10-17.txt",
+   "speaker": "Al Gore",
+   "speaker_title": "Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-6214": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "6214",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-15084": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15084",
+   "debate": "1980-10-28.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-16227": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "16227",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-15418": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15418",
+   "debate": "1980-10-28.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-15525": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15525",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-5827": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5827",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-28710": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "28710",
+   "debate": "2000-10-17.txt",
+   "speaker": "Al Gore",
+   "speaker_title": "Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-15987": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15987",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-28664": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "28664",
+   "debate": "2000-10-17.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-10386": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10386",
+   "debate": "2012-10-16.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-15645": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "15645",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-7923": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7923",
+   "debate": "1960-10-07.txt",
+   "speaker": "John F. Kennedy",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-dev-nfs-23824": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "23824",
+   "debate": "1992-10-11.txt",
+   "speaker": "Ross Perot",
+   "speaker_title": "Independent Candidate",
+   "speaker_party": "INDEPENDENT"
+  },
+  "cb-dev-nfs-5864": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "5864",
+   "debate": "2008-10-15.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-16046": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "16046",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-8533": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "8533",
+   "debate": "1960-09-26.txt",
+   "speaker": "Richard M. Nixon",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-16101": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "16101",
+   "debate": "1988-10-13.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-dev-nfs-24794": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "24794",
+   "debate": "1992-10-11.txt",
+   "speaker": "Ross Perot",
+   "speaker_title": "Independent Candidate",
+   "speaker_party": "INDEPENDENT"
+  }
+ },
+ "holdout": {
+  "cb-holdout-cfs-2591": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "2591",
+   "debate": "2012-10-03.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-3545": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "3545",
+   "debate": "2008-09-26.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-7033": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7033",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-10753": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10753",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-23421": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "23421",
+   "debate": "2004-10-08.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-9009": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9009",
+   "debate": "1980-09-21.txt",
+   "speaker": "John Anderson",
+   "speaker_title": "Congressman",
+   "speaker_party": "INDEPENDENT"
+  },
+  "cb-holdout-cfs-3752": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "3752",
+   "debate": "2008-09-26.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-7351": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7351",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-17971": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "17971",
+   "debate": "2004-09-30.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-3024": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "3024",
+   "debate": "1976-10-06.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-6881": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6881",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-7349": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7349",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-11313": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "11313",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-2971": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "2971",
+   "debate": "1976-10-06.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-6882": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6882",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-6986": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6986",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-21704": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "21704",
+   "debate": "1992-10-15.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-6917": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6917",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-10834": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10834",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-3130": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "3130",
+   "debate": "1976-10-06.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-16692": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "16692",
+   "debate": "1976-09-23.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-6720": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6720",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-10629": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10629",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-10927": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10927",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-543": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "543",
+   "debate": "1988-09-25.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-11266": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "11266",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-2148": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "2148",
+   "debate": "2012-10-03.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-11070": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "11070",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-27391": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "27391",
+   "debate": "2012-10-22.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-16782": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "16782",
+   "debate": "1976-09-23.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-11049": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "11049",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-18918": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "18918",
+   "debate": "2004-09-30.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-27107": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "27107",
+   "debate": "2012-10-22.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-2453": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "2453",
+   "debate": "2012-10-03.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-10448": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10448",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-3013": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "3013",
+   "debate": "1976-10-06.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-80": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "80",
+   "debate": "1988-09-25.txt",
+   "speaker": "Michael Dukakis",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-10608": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10608",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-6596": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6596",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-8886": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "8886",
+   "debate": "1980-09-21.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-9017": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "9017",
+   "debate": "1980-09-21.txt",
+   "speaker": "John Anderson",
+   "speaker_title": "Congressman",
+   "speaker_party": "INDEPENDENT"
+  },
+  "cb-holdout-cfs-3384": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "3384",
+   "debate": "1976-10-06.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-228": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "228",
+   "debate": "1988-09-25.txt",
+   "speaker": "Michael Dukakis",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-27385": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "27385",
+   "debate": "2012-10-22.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-10863": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10863",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-cfs-10803": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "10803",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-7215": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7215",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-2055": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "2055",
+   "debate": "2012-10-03.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-7021": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "7021",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-cfs-6721": {
+   "claimbuster_label": "CFS",
+   "verdict": 1,
+   "sentence_id": "6721",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-16699": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "16699",
+   "debate": "1976-09-23.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-7291": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "7291",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-20870": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "20870",
+   "debate": "2000-10-03.txt",
+   "speaker": "Al Gore",
+   "speaker_title": "Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-18381": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "18381",
+   "debate": "2004-09-30.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-20717": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "20717",
+   "debate": "2000-10-03.txt",
+   "speaker": "Al Gore",
+   "speaker_title": "Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-3110": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "3110",
+   "debate": "1976-10-06.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-20456": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "20456",
+   "debate": "2000-10-03.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-2976": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "2976",
+   "debate": "1976-10-06.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-11354": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "11354",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-27174": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "27174",
+   "debate": "2012-10-22.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-21947": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "21947",
+   "debate": "1992-10-15.txt",
+   "speaker": "George Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-2136": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "2136",
+   "debate": "2012-10-03.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-18117": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "18117",
+   "debate": "2004-09-30.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-8961": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "8961",
+   "debate": "1980-09-21.txt",
+   "speaker": "John Anderson",
+   "speaker_title": "Congressman",
+   "speaker_party": "INDEPENDENT"
+  },
+  "cb-holdout-ufs-27814": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "27814",
+   "debate": "2012-10-22.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-2363": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "2363",
+   "debate": "2012-10-03.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-3029": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "3029",
+   "debate": "1976-10-06.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-16828": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "16828",
+   "debate": "1976-09-23.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-27815": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "27815",
+   "debate": "2012-10-22.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-3111": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "3111",
+   "debate": "1976-10-06.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-6784": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "6784",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-9083": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "9083",
+   "debate": "1980-09-21.txt",
+   "speaker": "John Anderson",
+   "speaker_title": "Congressman",
+   "speaker_party": "INDEPENDENT"
+  },
+  "cb-holdout-ufs-7319": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "7319",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-2888": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "2888",
+   "debate": "1976-10-06.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-6658": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "6658",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-11040": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "11040",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-1686": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "1686",
+   "debate": "2012-10-03.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-11199": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "11199",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-ufs-202": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "202",
+   "debate": "1988-09-25.txt",
+   "speaker": "Michael Dukakis",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-ufs-26": {
+   "claimbuster_label": "UFS",
+   "verdict": 0,
+   "sentence_id": "26",
+   "debate": "1988-09-25.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-8710": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "8710",
+   "debate": "1980-09-21.txt",
+   "speaker": "Ronald Reagan",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-18380": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "18380",
+   "debate": "2004-09-30.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-11278": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11278",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-7180": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7180",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-11065": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11065",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-21237": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "21237",
+   "debate": "2000-10-03.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-10587": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10587",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-11327": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11327",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-3694": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "3694",
+   "debate": "2008-09-26.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-3555": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "3555",
+   "debate": "2008-09-26.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-6449": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "6449",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-21636": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "21636",
+   "debate": "1992-10-15.txt",
+   "speaker": "Bill Clinton",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-1943": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "1943",
+   "debate": "2012-10-03.txt",
+   "speaker": "Mitt Romney",
+   "speaker_title": "Governor",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-10874": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10874",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-7454": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7454",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-4336": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "4336",
+   "debate": "2008-09-26.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-10461": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10461",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-10465": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10465",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-10998": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10998",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-11234": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11234",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-10437": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10437",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-18627": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "18627",
+   "debate": "2004-09-30.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-11204": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11204",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-14752": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "14752",
+   "debate": "1992-10-19.txt",
+   "speaker": "Ross Perot",
+   "speaker_title": "Independent Candidate",
+   "speaker_party": "INDEPENDENT"
+  },
+  "cb-holdout-nfs-10720": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10720",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-10494": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10494",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-411": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "411",
+   "debate": "1988-09-25.txt",
+   "speaker": "George Bush",
+   "speaker_title": "Vice President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-7346": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7346",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-16674": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "16674",
+   "debate": "1976-09-23.txt",
+   "speaker": "Gerald R. Ford",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-7525": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7525",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-11277": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11277",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-16626": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "16626",
+   "debate": "1976-09-23.txt",
+   "speaker": "Jimmy Carter",
+   "speaker_title": "Governor",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-27722": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "27722",
+   "debate": "2012-10-22.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-4275": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "4275",
+   "debate": "2008-09-26.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-11340": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "11340",
+   "debate": "2008-10-07.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-7049": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7049",
+   "debate": "2004-10-13.txt",
+   "speaker": "George W. Bush",
+   "speaker_title": "President",
+   "speaker_party": "REPUBLICAN"
+  },
+  "cb-holdout-nfs-4250": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "4250",
+   "debate": "2008-09-26.txt",
+   "speaker": "Barack Obama",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-7510": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "7510",
+   "debate": "2004-10-13.txt",
+   "speaker": "John Kerry",
+   "speaker_title": "Senator",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-25561": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "25561",
+   "debate": "1984-10-21.txt",
+   "speaker": "Walter Mondale",
+   "speaker_title": "Former Vice President",
+   "speaker_party": "DEMOCRAT"
+  },
+  "cb-holdout-nfs-10574": {
+   "claimbuster_label": "NFS",
+   "verdict": -1,
+   "sentence_id": "10574",
+   "debate": "2008-10-07.txt",
+   "speaker": "John McCain",
+   "speaker_title": "Senator",
+   "speaker_party": "REPUBLICAN"
+  }
+ }
+}

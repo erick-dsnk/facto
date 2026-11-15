@@ -46,6 +46,14 @@ describe('prompt pack files', () => {
     expect(resolvePromptPack({})).toEqual(DEFAULT_PROMPT_PACK);
     expect(PROMPT_PACKS.jev).toBe(DEFAULT_PROMPT_PACK); expect(packForProvider('laya')).toBe(DEFAULT_PROMPT_PACK);
   });
+  it('loads the committed per-provider packs, which are opt-in and equal to the built-in behaviour (nothing shipped, see docs/per-provider-prompts.md)', async () => {
+    for (const provider of ['jev', 'laya'] as const) {
+      const pack = await loadPromptPack(new URL(`./packs/${provider}.json`, import.meta.url).pathname);
+      expect(pack.name).toBe(`${provider}-tuned-r2`);
+      expect({ ...pack, name: 'built-in' }).toEqual(DEFAULT_PROMPT_PACK);
+      expect(PROMPT_PACKS[provider]).toBe(DEFAULT_PROMPT_PACK);
+    }
+  });
   it('rejects unknown keys, options with no canonical answer and bad option maps', () => {
     expect(() => resolvePromptPack({ admission: { thresholdz: {} } })).toThrow(/prompt_pack_invalid/);
     expect(() => resolvePromptPack({ judge: { verdict: { criteria: { yes: 'a', no: 'b' } } } })).toThrow(/needs an optionMap/);
