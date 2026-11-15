@@ -52,7 +52,7 @@ describe('prompt pack files', () => {
     expect(jev).not.toEqual(DEFAULT_PROMPT_PACK);
     expect(PROMPT_PACKS.jev).toBe(DEFAULT_PROMPT_PACK);
     const laya = await loadPromptPack(new URL('./packs/laya.json', import.meta.url).pathname);
-    expect(laya.name).toBe('laya-structure-r2a2');
+    expect(laya.name).toBe('laya-wording-r2a2');
     expect(laya).not.toEqual(DEFAULT_PROMPT_PACK);
     expect(PROMPT_PACKS.laya).toEqual(laya);
     expect(packForProvider('laya')).toBe(PROMPT_PACKS.laya);
