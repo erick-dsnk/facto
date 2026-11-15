@@ -1,11 +1,11 @@
 ---
 name: ticketize
-description: Turn docs/plan.md (or the plan in the conversation) into small GitHub issues that agents can work in parallel, each with acceptance criteria, owned files, a wave and a routing label. Use at kickoff after the plan is agreed.
+description: Turn the plan in the conversation into small GitHub issues that agents can work in parallel, each with acceptance criteria, owned files, a wave and a routing label. Use at kickoff after the plan is agreed.
 disable-model-invocation: true
 ---
 # Ticketize the plan
 
-Input: `docs/plan.md`, or the plan just agreed in this conversation. If neither exists, say so and stop.
+Input: the plan just agreed in this conversation. Keep the plan outside the public repository. If no plan was supplied, say so and stop.
 
 1. **Split** the plan into issues that each do one thing and take an agent 15-60 minutes. Aim for 15-40 issues. Each should be checkable on its own.
 2. **Assign file ownership.** No two issues in the same wave may own the same file. Put shared foundations (DB schema, shared types, API contracts, layout shell) in **wave 1**, owned by one issue each, so later waves build on them instead of racing for them.

@@ -31,7 +31,7 @@ Connect the stream **before submitting text**. There is no event replay across a
 
 ## WebSocket events
 
-Connect `WS /v1/sessions/{id}/stream`. Native `URLSessionWebSocketTask` can send the bearer header. Browser WebSocket APIs cannot set that header, so the console sends subprotocols `actually-v1` and `bearer.<session token>`; the server selects `actually-v1`. Never place tokens in URL query strings. Browser Origin must be allowed by the server.
+Connect `WS /v1/sessions/{id}/stream`. Native `URLSessionWebSocketTask` can send the bearer header. Browser WebSocket APIs cannot set that header, so the console sends subprotocols `facto-v1` and `bearer.<session token>`; the server selects `facto-v1`. Never place tokens in URL query strings. Browser Origin must be allowed by the server.
 
 Envelope fields are `schemaVersion`, `eventId`, increasing `eventSeq`, `sessionId`, `sessionEpoch`, `type`, `serverAt`, `payload`; claim events also identify `requestId`, `claimId`, `revision`. A request may produce up to two separate claim IDs. Do not overwrite one clause's result with another clause's result.
 
@@ -142,7 +142,7 @@ The contracts and fixture tests validate shape, Unicode behavior, citations and 
 
 The companion owns the session and its `/stream` controller socket. It may mint an owner-authenticated `POST /v1/sessions/:sessionId/display-grant` capability. The response (`displayGrantSchema`) contains `displayToken`, `sessionId`, `sessionEpoch`, ISO `expiresAt`, and `streamPath` (`/v1/sessions/:sessionId/display-stream`). The random display token expires within 300 seconds and never after its parent session. Minting another grant rotates only display observers. Owner-authenticated `DELETE` on the grant route revokes it idempotently. Session credentials must never be placed in a glasses link.
 
-The observer connects with WebSocket protocols `actually-display-v1` and `display.<displayToken>`; only `actually-display-v1` is selected. It accepts no text controls or binary input. A connection/disconnection never resumes, pauses, replaces, or stops owner audio. Browser origins must be in `ALLOWED_ORIGINS`; production uses the API's built `/display/` UI. No session token, audio, transcript, capture command, or arbitrary provider payload is forwarded.
+The observer connects with WebSocket protocols `facto-display-v1` and `display.<displayToken>`; only `facto-display-v1` is selected. It accepts no text controls or binary input. A connection/disconnection never resumes, pauses, replaces, or stops owner audio. Browser origins must be in `ALLOWED_ORIGINS`; production uses the API's built `/display/` UI. No session token, audio, transcript, capture command, or arbitrary provider payload is forwarded.
 
 Its first frame is a directly sent `display.snapshot`, validated by `displaySnapshotSchema`, with the current epoch/sequence, grant expiry, active flag, and one bounded `DisplayState` (or null). Reconnecting replaces the view with this state; it does not replay notification history. The visible projection includes manual checking and results whose presentation is `notify` or `respond`. The event stream permits only correlated visible checking/source/result/lifecycle changes. Cancellation, supersession, failure, pause, and session end clear matching content; result expiry also bounds the view. A silent completion clears a previously visible checking card using a sanitized `check.cancelled` (`not_presented`) rather than exposing that result. Gaps in sequence numbers are expected because private events are omitted.
 

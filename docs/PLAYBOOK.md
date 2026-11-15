@@ -22,7 +22,7 @@ The full research behind these choices, with sources, is in [research.md](produc
 | 10 | Optional: add a browser-verify skill (e.g. agent-browser) so agents can screenshot the UI as evidence | 20 min |
 
 ## Day of
-1. **Plan (45-90 min, everyone):** write the PRD together in plan mode and save it as `docs/plan.md`. Decide the architecture yourselves, not the agents.
+1. **Plan (45-90 min, everyone):** write the PRD together in plan mode and keep it outside the public repository. Decide the architecture yourselves, not the agents.
 2. **Ticketize (15 min):** run `/ticketize`. Check the table: wave 1 holds the foundations, and no two issues in a wave own the same file. Approve it.
 3. **Wave 1 (humans):** builders do the foundations locally (`claude -w <name>` per issue, then `/work-issue <n>`). Your reviewer merges.
 4. **Dispatch waves 2+:** `/dispatch 2`. Cloud sessions, Copilot and Codex open PRs, and Claude Review comments on each.

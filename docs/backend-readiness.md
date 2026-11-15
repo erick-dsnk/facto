@@ -4,7 +4,7 @@ Scope: the typed-text fact-checking backend, authenticated HTTP/WebSocket transp
 
 ## Required by the existing plan and issues
 
-Sources: repository `docs/plan.md` §§8–11 and §15; GitHub issues 15, 16, 17, 18, 20 and 24. Requirements retain their original scope; wearable-only acceptance remains deferred.
+Sources: GitHub issues 15, 16, 17, 18, 20 and 24. Requirements retain their original scope; wearable-only acceptance remains deferred.
 
 - Admit exact complete public spans; preserve negation, quantities, conditions and Unicode offsets. Private/opinion/nonasserted content must not receive factual verdicts or unsafe public searches. Unresolved input clarifies or waits and expires within bounds.
 - Zero private details in inspected queries, zero stale output after stop and zero duplicate backend delivery capable of causing repeated speech. Record any harness-blocked unsafe query as a failure, separately from actual exposure.

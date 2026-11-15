@@ -57,7 +57,7 @@ export async function buildServer(options: ServerOptions) {
   const displayGrants = new Map<string, { token: string; expiresAt: number; observers: Set<(code?: number) => void> }>();
   const connections = new Map<string, () => void>();
   const app = Fastify({ logger: false, bodyLimit: 16_384, ...(options.trustProxy ? { trustProxy: (_address: string, hop: number) => hop < options.trustProxy! } : {}), ...(options.tls ? { https: options.tls } : {}) });
-  await app.register(websocket, { options: { maxPayload: 16_384, handleProtocols: protocols => protocols.has('actually-display-v1') ? 'actually-display-v1' : protocols.has('actually-v1') ? 'actually-v1' : false } });
+  await app.register(websocket, { options: { maxPayload: 16_384, handleProtocols: protocols => protocols.has('facto-display-v1') ? 'facto-display-v1' : protocols.has('facto-v1') ? 'facto-v1' : false } });
   const allowedOrigins = new Set(options.allowedOrigins ?? ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:3030', 'http://127.0.0.1:3030']);
   const joinAttempts = new Map<string, { count: number; until: number }>();
   const sweep = setInterval(() => { store.sweep(); for (const [id, grant] of displayGrants) if (grant.expiresAt <= now() || !store.sessions.has(id)) { for (const close of grant.observers) close(); displayGrants.delete(id); } for (const [ip, rate] of joinAttempts) if (rate.until <= now()) joinAttempts.delete(ip); }, 1000);
@@ -145,7 +145,7 @@ export async function buildServer(options: ServerOptions) {
     const session = store.sessions.get(sessionId);
     const grant = displayGrants.get(sessionId);
     const token = protocols.find(value => value.startsWith('display.'))?.slice(8);
-    if (!protocols.includes('actually-display-v1') || !session || session.expiresAt <= now() || !grant || grant.expiresAt <= now() || !token || !equalSecret(token, grant.token)) throw new PipelineError('unauthorized');
+    if (!protocols.includes('facto-display-v1') || !session || session.expiresAt <= now() || !grant || grant.expiresAt <= now() || !token || !equalSecret(token, grant.token)) throw new PipelineError('unauthorized');
     return { session, grant };
   };
   app.get('/v1/sessions/:sessionId/display-stream', {

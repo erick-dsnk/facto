@@ -2,7 +2,6 @@
 
 ## Start here
 - [PLAYBOOK.md](PLAYBOOK.md): team playbook and working agreements.
-- [plan.md](plan.md): implementation plan and per-issue owned files.
 - [deployment.md](deployment.md): deployment guide.
 - [cloud-handoff.md](cloud-handoff.md): fact-checking backend cloud handoff.
 - [fresh-cloud-continuation.md](fresh-cloud-continuation.md): continuing work in a new cloud environment.

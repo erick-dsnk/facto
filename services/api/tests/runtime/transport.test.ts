@@ -58,7 +58,7 @@ describe('session HTTP and WebSocket boundary', () => {
     expect(health.body).not.toContain(joinCode); expect(health.body).not.toContain('API_KEY');
     const page = await server.app.inject('/');
     expect(page.statusCode).toBe(200); expect(page.headers['content-type']).toContain('text/html');
-    expect(page.body).toContain('Actually pipeline console');
+    expect(page.body).toContain('Facto pipeline console');
   });
 
   it('rejects wrong/expired join codes and bounds attempts per address', async () => {
@@ -201,9 +201,9 @@ describe('session HTTP and WebSocket boundary', () => {
     const server = await setup(); const session = await join(server);
     const address = await server.app.listen({ host: '127.0.0.1', port: 0 });
     const events: EventEnvelope[] = [];
-    const socket = new WebSocket(`${address.replace('http:', 'ws:')}/v1/sessions/${session.sessionId}/stream`, ['actually-v1', `bearer.${session.token}`], { origin: 'http://localhost:3000' });
+    const socket = new WebSocket(`${address.replace('http:', 'ws:')}/v1/sessions/${session.sessionId}/stream`, ['facto-v1', `bearer.${session.token}`], { origin: 'http://localhost:3000' });
     sockets.push(socket); socket.on('message', bytes => events.push(JSON.parse(bytes.toString()) as EventEnvelope));
-    await once(socket, 'open'); expect(socket.protocol).toBe('actually-v1');
+    await once(socket, 'open'); expect(socket.protocol).toBe('facto-v1');
     await eventOf(events, 'session.ready'); await submit(server, session); await eventOf(events, 'claim.result');
     expect(JSON.stringify(events)).not.toContain(session.token);
   });

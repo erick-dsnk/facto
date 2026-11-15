@@ -249,7 +249,7 @@ async function evaluateRuntimeCase(sample: EvaluationCase): Promise<Observation>
     if (created.status !== 201) throw new Error(`Evaluation session creation failed: ${created.status}`);
     const session = await created.json() as { sessionId: string; token: string; sessionEpoch: number };
     const events: EventEnvelope[] = [];
-    socket = new WebSocket(`${wsOrigin}/v1/sessions/${session.sessionId}/stream`, ['actually-v1', `bearer.${session.token}`]);
+    socket = new WebSocket(`${wsOrigin}/v1/sessions/${session.sessionId}/stream`, ['facto-v1', `bearer.${session.token}`]);
     socket.on('message', data => { try { events.push(JSON.parse(data.toString()) as EventEnvelope); } catch { /* malformed wire events are detected by missing expected events */ } });
     await new Promise<void>((resolve, reject) => { socket!.once('open', resolve); socket!.once('error', reject); });
     await waitForEvent(events, event => event.type === 'session.ready', 2_000);

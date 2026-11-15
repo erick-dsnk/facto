@@ -6,7 +6,7 @@ Operational instructions retained from the original repository README. Run comma
 
 The API runs as one Cloudflare Container behind a Worker (issue #43). The Worker sends every request, HTTP and WebSocket alike, to one Durable Object named `api`, which owns the only container, because sessions live in memory. Files: `Dockerfile`, `.dockerignore`, `wrangler.jsonc`, `deploy/cloudflare/` (Worker code and a pinned `wrangler`).
 
-- **URL:** `https://actually-api.<account-subdomain>.workers.dev` (`wss://` on the same host). It comes from `name` in `wrangler.jsonc` and stays the same across deploys and restarts. Don't rename the Worker.
+- **URL:** `https://facto-api.<account-subdomain>.workers.dev` (`wss://` on the same host). It comes from `name` in `wrangler.jsonc` and stays the same across deploys and restarts. The Facto Worker must be deployed and its secrets configured before clients use this hostname.
 - **Lifetime:** an open WebSocket keeps the instance up. After the last request the container runs for 6 more hours (the maximum inactivity timeout), then stops. The next request cold-starts it in a few seconds.
 - **What drops sessions:** a deploy closes open WebSockets right away (`code_update_strategy: immediate`), so clients reconnect. If the image, a var or a secret changed, the first request after the deploy replaces the container, which drops every session. A Worker-only change keeps the container and its sessions.
 
@@ -31,7 +31,7 @@ Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrang
 | `DEEPGRAM_API_KEY` | Deepgram key, the fallback recogniser (`ASR_PROVIDER=deepgram`, or used when `ELEVENLABS_API_KEY` is missing) |
 | `DEMO_JOIN_CODE` | 8+ characters |
 | `DEMO_JOIN_EXPIRES_AT` | ISO timestamp after the demo, e.g. `2026-12-31T23:59:00Z` |
-| `ALLOWED_ORIGINS` | `https://actually-api.<account-subdomain>.workers.dev` (for the `/` console page; the iOS app sends no `Origin`) |
+| `ALLOWED_ORIGINS` | `https://facto-api.<account-subdomain>.workers.dev` (for the `/` console page; the iOS app sends no `Origin`) |
 
 To test without the Exa key, deploy in fixture mode with `npx wrangler deploy --config ../../wrangler.jsonc --var PIPELINE_MODE:fixture`. The next deploy without `--var` goes back to live. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset: Cloudflare terminates TLS.
 
@@ -63,7 +63,7 @@ First time: deploy, then set the secrets above. Until they exist, requests get `
 ### Verify
 
 ```sh
-BASE=https://actually-api.<account-subdomain>.workers.dev
+BASE=https://facto-api.<account-subdomain>.workers.dev
 read -rs JOIN && export JOIN   # paste the join code; it stays out of shell history
 ```
 
@@ -75,7 +75,7 @@ read -rs JOIN && export JOIN   # paste the join code; it stays out of shell hist
 3. Typed check, live verdict. Join and keep the session:
    `S=$(curl -s -X POST $BASE/v1/sessions -H 'content-type: application/json' -d "{\"joinCode\":\"$JOIN\"}"); SID=$(echo "$S" | node -pe 'JSON.parse(require("fs").readFileSync(0)).sessionId'); TOKEN=$(echo "$S" | node -pe 'JSON.parse(require("fs").readFileSync(0)).token')`
    Open the stream in a second terminal (verdicts arrive there as `claim.result`) and leave it open for step 4:
-   `npx wscat@6.1.0 -c "wss://${BASE#https://}/v1/sessions/$SID/stream" -s actually-v1 -H "Authorization: Bearer $TOKEN"`
+   `npx wscat@6.1.0 -c "wss://${BASE#https://}/v1/sessions/$SID/stream" -s facto-v1 -H "Authorization: Bearer $TOKEN"`
    Then send the check. Expect `202`:
    `curl -s -w ' %{http_code}\n' -X POST $BASE/v1/sessions/$SID/checks -H 'content-type: application/json' -H "authorization: Bearer $TOKEN" -d "{\"schemaVersion\":1,\"requestId\":\"req-cf-1\",\"sessionId\":\"$SID\",\"sessionEpoch\":1,\"revision\":1,\"mode\":\"typed\",\"text\":\"The Eiffel Tower opened in 1889.\",\"language\":\"en\",\"capturedAt\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"capture\":{\"source\":\"typed_fixture\",\"segmentId\":\"typed-1\",\"confidence\":1,\"final\":true},\"context\":[],\"userInitiated\":true}"`
 4. WebSocket: the `wscat` session from step 3 should stay connected for 3 minutes. Sessions expire after `SESSION_LIFETIME_MS` (default 2 hours). wscat doesn't ping, so type something every minute or so to stay under Cloudflare's idle timeout; the app pings every 2 s.
@@ -84,7 +84,7 @@ read -rs JOIN && export JOIN   # paste the join code; it stays out of shell hist
    Within 60 s, from network B (e.g. a phone hotspot), the step 2 good join still returns `201`. If network B also gets `429`, the proxy chain adds an address, so set `TRUST_PROXY` to `2`, redeploy and retest.
 6. One instance and a stable URL: `npx wrangler containers list` shows one application, `npx wrangler containers instances <ID>` shows one instance, and `$BASE` is unchanged after a redeploy. Only a redeploy (or a changed secret) drops sessions.
 
-If a request gets Cloudflare error 1010 (Browser Integrity Check on `workers.dev`), send a normal User-Agent, e.g. `curl -A 'actually-smoke/1.0'`.
+If a request gets Cloudflare error 1010 (Browser Integrity Check on `workers.dev`), send a normal User-Agent, e.g. `curl -A 'facto-smoke/1.0'`.
 
 ### Redeploy and logs
 

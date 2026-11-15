@@ -127,7 +127,7 @@ struct BackendConfig: Equatable, Sendable {
   /// Set once the one-time removal of old localhost and Railway URLs has run.
   static let baseURLMigratedKey = "backend.baseURLMigrated"
   /// The hosted backend (Cloudflare Workers).
-  static let defaultBaseURL = URL(string: "https://actually-api.lively-voice-2bf8.workers.dev")!
+  static let defaultBaseURL = URL(string: "https://facto-api.lively-voice-2bf8.workers.dev")!
 
   var baseURL: URL
   var joinCode: String

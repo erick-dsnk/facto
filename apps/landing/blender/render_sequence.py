@@ -1,7 +1,7 @@
-"""Render the Facto landing scroll sequence from actually_glasses.blend.
+"""Render the Facto landing scroll sequence from facto_glasses.blend.
 
 Usage (headless):
-  Blender -b actually_glasses.blend -P render_sequence.py -- \
+  Blender -b facto_glasses.blend -P render_sequence.py -- \
       --variant desktop --out ./frames --start 0 --end 149 --samples 64
 
   --coords-only   write lens coordinates JSON without rendering

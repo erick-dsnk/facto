@@ -24,7 +24,7 @@ export type EvalTransport = {
 };
 export const nodeTransport = (): EvalTransport => ({
   fetch: (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(10_000) }),
-  openSocket: (url, token) => new WebSocket(url, ['actually-v1'], { headers: { Authorization: `Bearer ${token}` }, handshakeTimeout: 10_000 }),
+  openSocket: (url, token) => new WebSocket(url, ['facto-v1'], { headers: { Authorization: `Bearer ${token}` }, handshakeTimeout: 10_000 }),
   now: Date.now,
   sleep: ms => delay(ms),
 });

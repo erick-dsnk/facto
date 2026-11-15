@@ -19,7 +19,7 @@ describe('display observer credentials and connection', () => {
     const create = vi.fn(() => { const socket = { close: vi.fn(), onmessage: null, onclose: null, onerror: null } as ObserverSocket; sockets.push(socket); return socket; });
     const receive = vi.fn(); const disconnected = vi.fn();
     const stop = connectDisplay(credentials, receive, disconnected, { socket: create, schedule: setTimeout, cancel: clearTimeout });
-    expect(create).toHaveBeenCalledWith(displaySocketUrl(credentials), ['actually-display-v1', `display.${credentials.displayToken}`]);
+    expect(create).toHaveBeenCalledWith(displaySocketUrl(credentials), ['facto-display-v1', `display.${credentials.displayToken}`]);
     const message = (socket: ObserverSocket, data: string) => socket.onmessage?.call({} as WebSocket, { data } as MessageEvent);
     message(sockets[0], '{invalid'); message(sockets[0], JSON.stringify({ type: 'claim.result' }));
     expect(receive).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe('display observer credentials and connection', () => {
     const next = { ...credentials, sessionId: 'new-session', displayToken: 'b'.repeat(40) };
     observer.replace(next);
     expect(sockets[0].close).toHaveBeenCalledWith(1000);
-    expect(create).toHaveBeenLastCalledWith(displaySocketUrl(next), ['actually-display-v1', `display.${next.displayToken}`]);
+    expect(create).toHaveBeenLastCalledWith(displaySocketUrl(next), ['facto-display-v1', `display.${next.displayToken}`]);
     oldMessage?.call({} as WebSocket, { data: JSON.stringify({ type: 'display.snapshot' }) } as MessageEvent);
     oldClose?.call({} as WebSocket, { code: 1006 } as CloseEvent);
     expect(receive).not.toHaveBeenCalled();

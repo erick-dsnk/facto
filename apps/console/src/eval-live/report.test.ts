@@ -61,6 +61,6 @@ describe('live eval report', () => {
     expect(safeLabel('')).toBe('run');
     expect(reportBaseName('x', '2026-11-14T01:02:03.004Z')).toBe('2026-11-14T010203Z-x');
     expect(['http://127.0.0.1:3311', 'http://localhost:3000', 'http://[::1]:3000'].map(serverKind)).toEqual(['loopback', 'loopback', 'loopback']);
-    expect(serverKind('https://actually-api.example.workers.dev')).toBe('remote');
+    expect(serverKind('https://facto-api.example.workers.dev')).toBe('remote');
   });
 });

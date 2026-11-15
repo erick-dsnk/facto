@@ -5,8 +5,8 @@
   "$schema": "./deploy/cloudflare/node_modules/wrangler/config-schema.json",
 
   // With the account's workers.dev subdomain this fixes the public URL:
-  // https://actually-api.<subdomain>.workers.dev. Renaming it changes the URL.
-  "name": "actually-api",
+  // https://facto-api.<subdomain>.workers.dev. Renaming it changes the URL.
+  "name": "facto-api",
   "main": "./deploy/cloudflare/src/index.ts",
   // Must not be newer than the workerd bundled with the pinned wrangler (4.156.0 ships 2026-10-23).
   "compatibility_date": "2026-10-23",
