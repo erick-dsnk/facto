@@ -123,15 +123,19 @@ protocol PlaybackReporting: AnyObject {
 struct BackendConfig: Equatable, Sendable {
   static let baseURLKey = "backend.baseURL"
   static let joinCodeKey = "backend.joinCode"
+  static let remoteOCRSelectionEnabledKey = "backend.remoteOCRSelectionEnabled"
   /// The backend's default local port (services/api listens on PORT, default 3000).
   static let defaultBaseURL = URL(string: "http://localhost:3000")!
 
   var baseURL: URL
   var joinCode: String
+  /// Explicit opt-in: uploads a photo and OCR observations to the configured backend.
+  var remoteOCRSelectionEnabled: Bool
 
-  init(baseURL: URL = BackendConfig.defaultBaseURL, joinCode: String = "") {
+  init(baseURL: URL = BackendConfig.defaultBaseURL, joinCode: String = "", remoteOCRSelectionEnabled: Bool = false) {
     self.baseURL = baseURL
     self.joinCode = joinCode
+    self.remoteOCRSelectionEnabled = remoteOCRSelectionEnabled
   }
 
   static func load(from defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) -> BackendConfig {
@@ -148,11 +152,12 @@ struct BackendConfig: Equatable, Sendable {
       }
       defaults.removeObject(forKey: joinCodeKey)
     }
-    return BackendConfig(baseURL: url ?? defaultBaseURL, joinCode: joinCode ?? "")
+    return BackendConfig(baseURL: url ?? defaultBaseURL, joinCode: joinCode ?? "", remoteOCRSelectionEnabled: defaults.bool(forKey: remoteOCRSelectionEnabledKey))
   }
 
   func save(to defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) {
     defaults.set(baseURL.absoluteString, forKey: Self.baseURLKey)
+    defaults.set(remoteOCRSelectionEnabled, forKey: Self.remoteOCRSelectionEnabledKey)
     defaults.removeObject(forKey: Self.joinCodeKey)
     secrets.write(joinCode, for: Self.joinCodeKey)
   }

@@ -36,6 +36,16 @@ xcodebuild test -project GlassesLab.xcodeproj -scheme GlassesLab \
 
 Live-pipeline code lives in `GlassesLab/Contracts` (wire types), `GlassesLab/Pipeline` (protocols between modules), `Networking`, `Audio`, `Capture` and `Output`.
 
+The **iOS / simulator-tests** GitHub Actions job builds the app and runs the full
+XCTest bundle for changes under `apps/ios`. It uses the public `macos-26` runner,
+checks for Xcode 26.4 or later, generates the project with XcodeGen, and fetches
+the existing checksum-pinned wake phrase libraries. It selects an installed
+iPhone simulator and disables signing, so no Apple account, Meta credentials,
+glasses or backend secrets are required. Live-backend tests keep their existing
+environment-variable skip conditions. The job uploads `xcodebuild.log` and the
+`.xcresult` bundle, including on failure; simulator tests do not validate physical
+glasses capture, display output or network behavior.
+
 ## Deploy without Xcode
 
 ```sh
