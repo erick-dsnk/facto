@@ -157,6 +157,12 @@ describe('exact candidate spans', () => {
     expect(found!.hedged === true).toBe(hedged);
   });
 
+  // Live 15 Nov 08:47: "I've heard this sentence…" was passed on as hearsay and alerted as Speculation.
+  it.each(['But I\u2019ve heard this sentence so many times already.', 'I heard it on the news.', 'My dad told me so.', 'Have you seen this video of a cat?',
+    'I read them all last year.'])('adds no frame content when an object follows the frame: %s', text => {
+    expect(generateCandidates(text)).toHaveLength(1);
+  });
+
   it.each(['Have you seen my keys?', 'Did you read about the merger?', 'Is it crazy?', 'Right?', 'Yeah, right?', 'I think so.', 'I’m pretty sure.',
     'My dad told me.', 'Turns out.', 'Did you see what happened?'])('adds no frame content to a frame with no claim: %s', text => {
     expect(generateCandidates(text)).toHaveLength(1);
