@@ -34,6 +34,12 @@ struct LiveSections: View {
         .textInputAutocapitalization(.never)
         .autocorrectionDisabled()
         .disabled(!live.canEditBackend)
+      Toggle("Understand photo layout on server", isOn: $live.remoteOCRSelectionEnabled)
+        .disabled(!live.canEditBackend)
+      if live.remoteOCRSelectionEnabled {
+        Text("Sends the captured still and its recognized text to your backend to select the headline, post, or paragraph. Applies when you connect.")
+          .font(.footnote).foregroundStyle(.secondary)
+      }
       if live.canEditBackend {
         SwiftUI.Button("Connect") { Task { await live.connect() } }
           .disabled(live.joinCode.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -104,10 +110,20 @@ struct LiveSections: View {
         }
         .disabled(!live.isConnected || live.isStartingStream)
       }
+      TextField("Headline or topic to check (optional)", text: $live.photoTargetHint)
+        .disabled(live.isChecking)
       SwiftUI.Button(checkButtonTitle) { Task { await live.checkThis() } }
         .disabled(!live.isConnected || live.isChecking)
       if let message = live.checkMessage {
         Text(message).font(.footnote).foregroundStyle(.secondary)
+      }
+      ForEach(live.photoTargetChoices) { choice in
+        SwiftUI.Button {
+          Task { await live.choosePhotoTarget(choice.id) }
+        } label: {
+          Text(choice.text).multilineTextAlignment(.leading).lineLimit(4)
+        }
+        .disabled(!live.isConnected || live.isChecking)
       }
       if !live.pendingChecks.isEmpty {
         LabeledContent("Waiting for results", value: "\(live.pendingChecks.count)")

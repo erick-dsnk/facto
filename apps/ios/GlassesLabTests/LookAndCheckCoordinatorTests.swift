@@ -1,3 +1,6 @@
+import CoreGraphics
+import ImageIO
+import UniformTypeIdentifiers
 import XCTest
 @testable import GlassesLab
 
@@ -37,6 +40,7 @@ private final class FakePhoto: PhotoCapturing {
   var calls = 0
   var fails = false
   var holdNext = false
+  var imageData = Data([0xFF, 0xD8, 0xFF])
   private(set) var gate: CheckedContinuation<Void, Never>?
 
   func captureStillDuringStream() async throws -> Data {
@@ -46,7 +50,7 @@ private final class FakePhoto: PhotoCapturing {
       await withCheckedContinuation { gate = $0 }
     }
     if fails { throw FakeError() }
-    return Data([0xFF, 0xD8, 0xFF])
+    return imageData
   }
 
   func release() {
@@ -58,11 +62,43 @@ private final class FakePhoto: PhotoCapturing {
 private final class FakeRecognizer: TextRecognizing, @unchecked Sendable {
   var result: OCRResult
   var fails = false
+  private(set) var receivedImageData: Data?
   init(_ result: OCRResult) { self.result = result }
 
   func recognizeText(in imageData: Data) async throws -> OCRResult {
+    receivedImageData = imageData
     if fails { throw FakeError() }
     return result
+  }
+}
+
+@MainActor
+private final class FakeTargetSelector: OCRTargetSelecting {
+  var result = OCRTargetSelection(status: .selected, selectedLineIds: ["first"])
+  var onStarted: (() -> Void)?
+  var fails = false
+  var holdNext = false
+  private(set) var gate: CheckedContinuation<Void, Never>?
+  private(set) var inputs: [OCRTargetInput] = []
+  private(set) var images: [Data] = []
+  private(set) var intents: [String?] = []
+
+  func selectTarget(in input: OCRTargetInput, imageData: Data, intent: String?) async throws -> OCRTargetSelection {
+    inputs.append(input)
+    images.append(imageData)
+    intents.append(intent)
+    onStarted?()
+    if holdNext {
+      holdNext = false
+      await withCheckedContinuation { gate = $0 }
+    }
+    if fails { throw FakeError() }
+    return result
+  }
+
+  func release() {
+    gate?.resume()
+    gate = nil
   }
 }
 
@@ -118,11 +154,142 @@ final class LookAndCheckCoordinatorTests: XCTestCase {
     submitter = FakeSubmitter()
   }
 
-  private func makeCoordinator() -> LookAndCheckCoordinator {
+  private func makeCoordinator(targetSelector: OCRTargetSelecting? = nil) -> LookAndCheckCoordinator {
     LookAndCheckCoordinator(
       channel: channel, photo: photo, recognizer: recognizer, submitter: submitter,
-      now: { [fixedDate] in fixedDate }
+      targetSelector: targetSelector, now: { [fixedDate] in fixedDate }
     )
+  }
+
+  /// A decodable capture is essential here: these tests exercise the real upload-image
+  /// preparation branch rather than returning early on the legacy fake JPEG marker.
+  private func prepareRemoteCapture() throws {
+    let context = try XCTUnwrap(CGContext(data: nil, width: 80, height: 40, bitsPerComponent: 8,
+      bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+    context.setFillColor(CGColor(gray: 1, alpha: 1))
+    context.fill(CGRect(x: 0, y: 0, width: 80, height: 40))
+    let data = NSMutableData()
+    let destination = try XCTUnwrap(CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil))
+    CGImageDestinationAddImage(destination, try XCTUnwrap(context.makeImage()), nil)
+    XCTAssertTrue(CGImageDestinationFinalize(destination))
+    photo.imageData = data as Data
+    var result = readable
+    result.observations = [
+      .init(text: "The Eiffel Tower opened in 1889.", confidence: 0.95,
+        boundingBox: CGRect(x: 0.1, y: 0.7, width: 0.6, height: 0.04), id: "first"),
+      .init(text: "City bus drivers receive additional training", confidence: 0.95,
+        boundingBox: CGRect(x: 0.1, y: 0.3, width: 0.6, height: 0.04), id: "second"),
+    ]
+    recognizer.result = result
+  }
+
+  func testRemoteSelectorReceivesOriginalEvidenceAndPreparedImageThenSubmitsOnlyResolvedText() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    let outcome = await makeCoordinator(targetSelector: selector).performCheck(source: .button, intent: "the Eiffel Tower")
+    XCTAssertEqual(outcome?.submittedCount, 1)
+    XCTAssertEqual(selector.inputs, [recognizer.result.targetInput])
+    XCTAssertEqual(selector.intents, ["the Eiffel Tower"])
+    XCTAssertEqual(recognizer.receivedImageData, photo.imageData, "recognition retains the original capture")
+    let uploaded = try XCTUnwrap(selector.images.first)
+    XCTAssertNotNil(CGImageSourceCreateWithData(uploaded as CFData, nil))
+    XCTAssertLessThanOrEqual(uploaded.count, OCRTargetRequestLimits.maximumImageBytes)
+    XCTAssertEqual(submitter.envelopes.first?.text, "The Eiffel Tower opened in 1889.")
+  }
+
+  func testRemoteUnknownSourceIDNeverSubmits() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    selector.result = .init(status: .selected, selectedLineIds: ["invented"])
+    let outcome = await makeCoordinator(targetSelector: selector).performCheck(source: .button)
+    XCTAssertEqual(outcome, .failed(reason: "invalid_target_selection"))
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testRemoteUnavailableNeverFallsBackToWholePage() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    selector.result = .init(status: .unavailable, reason: "provider_unavailable")
+    let outcome = await makeCoordinator(targetSelector: selector).performCheck(source: .button)
+    XCTAssertEqual(outcome, .failed(reason: "target_selection_unavailable"))
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testRemoteProviderErrorNeverSubmits() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    selector.fails = true
+    let outcome = await makeCoordinator(targetSelector: selector).performCheck(source: .button)
+    XCTAssertEqual(outcome, .failed(reason: "target_selection_failed"))
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testStopWhileRemoteSelectorIsPendingSuppressesOldResponse() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    selector.holdNext = true
+    let started = expectation(description: "remote selector started")
+    selector.onStarted = { started.fulfill() }
+    let coordinator = makeCoordinator(targetSelector: selector)
+    var outcomeCount = 0
+    coordinator.onOutcome = { _ in outcomeCount += 1 }
+    let check = Task { await coordinator.performCheck(source: .button) }
+    await fulfillment(of: [started], timeout: 2)
+    XCTAssertNotNil(selector.gate)
+    coordinator.stop()
+    channel.sessionId = "new-session"
+    selector.release()
+    let outcome = await check.value
+    XCTAssertEqual(outcome, .failed(reason: "cancelled"))
+    XCTAssertEqual(outcomeCount, 0)
+    XCTAssertNil(coordinator.lastOutcome)
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+    XCTAssertTrue(coordinator.targetChoices.isEmpty)
+  }
+
+  func testRemoteCandidateChoiceReusesCaptureAndDoesNotUploadAgain() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    selector.result = .init(status: .needsTarget, candidates: [
+      .init(id: "tower", role: "headline", lineIds: ["first"]),
+      .init(id: "bus", role: "headline", lineIds: ["second"]),
+      .init(id: "invalid", role: "headline", lineIds: ["unknown"]),
+    ])
+    let coordinator = makeCoordinator(targetSelector: selector)
+    let initial = await coordinator.performCheck(source: .button)
+    guard case .needsTarget? = initial else { return XCTFail("Expected clarification") }
+    XCTAssertEqual(coordinator.targetChoices.map(\.id), ["tower", "bus"])
+    let choice = await coordinator.chooseTarget("bus")
+    XCTAssertEqual(choice?.submittedCount, 1)
+    XCTAssertEqual(submitter.envelopes.first?.text, "City bus drivers receive additional training")
+    XCTAssertEqual(photo.calls, 1)
+    XCTAssertEqual(selector.images.count, 1)
+    XCTAssertTrue(coordinator.targetChoices.isEmpty)
+  }
+
+  func testRemoteOverLimitEvidenceFailsBeforeUploadWithoutDroppingLines() async throws {
+    try prepareRemoteCapture()
+    let original = try XCTUnwrap(recognizer.result.observations.first)
+    recognizer.result.observations = (0..<301).map { index in
+      var line = original
+      line.id = "line-\(index)"
+      return line
+    }
+    let selector = FakeTargetSelector()
+    let outcome = await makeCoordinator(targetSelector: selector).performCheck(source: .button)
+    XCTAssertEqual(outcome, .failed(reason: "target_selection_input_too_large"))
+    XCTAssertTrue(selector.inputs.isEmpty)
+    XCTAssertEqual(recognizer.result.observations.count, 301)
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testRemoteOverLimitHintFailsBeforeUpload() async throws {
+    try prepareRemoteCapture()
+    let selector = FakeTargetSelector()
+    let outcome = await makeCoordinator(targetSelector: selector).performCheck(source: .button, intent: String(repeating: "x", count: 501))
+    XCTAssertEqual(outcome, .failed(reason: "target_selection_hint_too_long"))
+    XCTAssertTrue(selector.inputs.isEmpty)
+    XCTAssertTrue(submitter.envelopes.isEmpty)
   }
 
   func testStopBeforeQueuedTriggerCannotStartCapture() async {
@@ -333,6 +500,84 @@ final class LookAndCheckCoordinatorTests: XCTestCase {
     recognizer.result = OCRResult(text: " a \n", meanConfidence: 1, lineCount: 1, droppedLineCount: 0)
     let outcome = await makeCoordinator().performCheck(source: .button)
     XCTAssertEqual(outcome, .unreadable(message: LookAndCheckCoordinator.unreadableMessage))
+  }
+
+  func testCompetingContentNeverReachesFactChecker() async {
+    var result = readable
+    result.observations = [
+      .init(text: "US aviation shutdown blamed on router", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.7, width: 0.6, height: 0.04), id: "first"),
+      .init(text: "City bus drivers receive additional training", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.4, width: 0.6, height: 0.04), id: "second"),
+    ]
+    recognizer.result = result
+    let outcome = await makeCoordinator().performCheck(source: .button)
+    guard case .needsTarget? = outcome else { return XCTFail("Expected a target clarification") }
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testExplicitCandidateChoiceUsesSameCaptureAndNoUnrelatedText() async throws {
+    var result = readable
+    result.observations = [
+      .init(text: "US aviation shutdown blamed on router", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.7, width: 0.6, height: 0.04), id: "first"),
+      .init(text: "City bus drivers receive additional training", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.4, width: 0.6, height: 0.04), id: "second"),
+    ]
+    recognizer.result = result
+    let coordinator = makeCoordinator()
+    _ = await coordinator.performCheck(source: .button)
+    let choice = try XCTUnwrap(coordinator.targetChoices.first { $0.text.contains("aviation") })
+    let outcome = await coordinator.chooseTarget(choice.id)
+    XCTAssertEqual(outcome?.submittedCount, 1)
+    XCTAssertEqual(photo.calls, 1)
+    XCTAssertEqual(submitter.envelopes.first?.text, "US aviation shutdown blamed on router")
+    XCTAssertTrue(coordinator.targetChoices.isEmpty)
+    let repeated = await coordinator.chooseTarget(choice.id)
+    XCTAssertNil(repeated)
+  }
+
+  func testStopDiscardsPendingTargetChoices() async {
+    var result = readable
+    result.observations = [
+      .init(text: "US aviation shutdown blamed on router", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.7, width: 0.6, height: 0.04), id: "first"),
+      .init(text: "City bus drivers receive additional training", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.4, width: 0.6, height: 0.04), id: "second"),
+    ]
+    recognizer.result = result
+    let coordinator = makeCoordinator()
+    _ = await coordinator.performCheck(source: .button)
+    XCTAssertEqual(coordinator.targetChoices.count, 2)
+    coordinator.stop()
+    XCTAssertTrue(coordinator.targetChoices.isEmpty)
+    let afterStop = await coordinator.chooseTarget("block-0")
+    XCTAssertNil(afterStop)
+    XCTAssertTrue(submitter.envelopes.isEmpty)
+  }
+
+  func testOnlyResolvedTargetIsSubmitted() async {
+    var result = readable
+    result.observations = [
+      .init(text: "US aviation shutdown blamed on router", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.7, width: 0.6, height: 0.04), id: "first"),
+      .init(text: "City bus drivers receive additional training", confidence: 0.95,
+            boundingBox: CGRect(x: 0, y: 0.4, width: 0.6, height: 0.04), id: "second"),
+    ]
+    recognizer.result = result
+    let outcome = await makeCoordinator().performCheck(source: .button, intent: "Check the aviation shutdown story")
+    XCTAssertEqual(outcome?.submittedCount, 1)
+    XCTAssertEqual(submitter.envelopes.first?.text, "US aviation shutdown blamed on router")
+  }
+
+  func testIncompleteTargetNeverReachesFactChecker() async {
+    var result = readable
+    result.observations = [.init(text: "President is officially Dea... View more", confidence: 0.95,
+      boundingBox: CGRect(x: 0.1, y: 0.7, width: 0.6, height: 0.04), id: "post")]
+    recognizer.result = result
+    let outcome = await makeCoordinator().performCheck(source: .button)
+    guard case .incomplete? = outcome else { return XCTFail("Expected incomplete target") }
+    XCTAssertTrue(submitter.envelopes.isEmpty)
   }
 
   func testPhotoFailure() async {

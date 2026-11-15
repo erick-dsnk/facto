@@ -41,6 +41,10 @@ final class LookAndCheckCoordinator {
     case submitted(requestIds: [String], droppedCodePoints: Int)
     /// No usable text. Show or speak `message` ("Move closer and try again").
     case unreadable(message: String)
+    /// Several independent content blocks compete for the user's attention.
+    case needsTarget(message: String)
+    /// The visible source is collapsed or cut off; never complete it by inference.
+    case incomplete(message: String)
     /// `reason` is a short code, safe to log: no_session, photo_failed, ocr_failed,
     /// session_paused, invalid_input, submit_failed.
     case failed(reason: String)
@@ -63,6 +67,23 @@ final class LookAndCheckCoordinator {
 
   private(set) var phase: Phase = .idle
   private(set) var lastOutcome: Outcome?
+  struct TargetChoice: Identifiable, Equatable, Sendable {
+    let id: String
+    let text: String
+  }
+  private(set) var targetChoices: [TargetChoice] = []
+  private struct PendingTarget {
+    let ocr: OCRResult
+    let input: OCRTargetInput
+    let candidates: [OCRTargetCandidate]
+    let capturedAt: Date
+  }
+  private struct ChosenTarget {
+    let ocr: OCRResult
+    let lines: [OCRTargetLine]
+    let capturedAt: Date
+  }
+  @ObservationIgnored private var pendingTarget: PendingTarget?
   /// Called on the main actor after every finished check, for the UI or speech.
   @ObservationIgnored var onOutcome: ((Outcome) -> Void)?
   @ObservationIgnored var onAccepted: (@MainActor () -> Void)?
@@ -77,6 +98,7 @@ final class LookAndCheckCoordinator {
   @ObservationIgnored private let photo: PhotoCapturing
   @ObservationIgnored private let recognizer: TextRecognizing
   @ObservationIgnored private let submitter: CheckSubmitter
+  @ObservationIgnored private let targetSelector: OCRTargetSelecting?
   @ObservationIgnored private let settings: Settings
   @ObservationIgnored private let now: () -> Date
   @ObservationIgnored private let debugLog: DebugLog
@@ -90,6 +112,7 @@ final class LookAndCheckCoordinator {
     recognizer: TextRecognizing,
     submitter: CheckSubmitter,
     settings: Settings = Settings(),
+    targetSelector: OCRTargetSelecting? = nil,
     now: @escaping () -> Date = Date.init,
     debugLog: DebugLog = .shared
   ) {
@@ -98,6 +121,7 @@ final class LookAndCheckCoordinator {
     self.recognizer = recognizer
     self.submitter = submitter
     self.settings = settings
+    self.targetSelector = targetSelector
     self.now = now
     self.debugLog = debugLog
   }
@@ -120,6 +144,8 @@ final class LookAndCheckCoordinator {
 
   func stop() {
     operationGeneration = UUID()
+    pendingTarget = nil
+    targetChoices = []
     listener?.cancel()
     listener = nil
   }
@@ -132,43 +158,63 @@ final class LookAndCheckCoordinator {
 
   /// Starts a check in the background. Returns false when one is already running.
   @discardableResult
-  func trigger(_ source: TriggerSource) -> Bool {
+  func trigger(_ source: TriggerSource, intent: String? = nil) -> Bool {
     guard canCapture?() ?? true else { return false }
     guard !isRunning else {
       log.info("trigger ignored, check running, source=\(source.rawValue, privacy: .public)")
       debugLog.log("lookcheck.ignored", ["source": source.rawValue, "trigger": source.debugName, "phase": "\(phase)"])
       return false
     }
+    pendingTarget = nil
+    targetChoices = []
     phase = .capturing
     onAccepted?()
     let generation = operationGeneration
-    Task { await self.run(source: source, generation: generation) }
+    Task { await self.run(source: source, generation: generation, intent: intent) }
     return true
   }
 
   /// Runs one check and returns its outcome, or nil when a check is already running.
   @discardableResult
-  func performCheck(source: TriggerSource) async -> Outcome? {
+  func performCheck(source: TriggerSource, intent: String? = nil) async -> Outcome? {
     guard canCapture?() ?? true else { return nil }
     guard !isRunning else {
       log.info("trigger ignored, check running, source=\(source.rawValue, privacy: .public)")
       debugLog.log("lookcheck.ignored", ["source": source.rawValue, "trigger": source.debugName, "phase": "\(phase)"])
       return nil
     }
+    pendingTarget = nil
+    targetChoices = []
     phase = .capturing
     onAccepted?()
-    return await run(source: source, generation: operationGeneration)
+    return await run(source: source, generation: operationGeneration, intent: intent)
+  }
+
+  /// Explicit choice reuses this capture's immutable OCR evidence, without taking or
+  /// uploading another photo. Session readiness and cancellation checks still apply.
+  @discardableResult
+  func chooseTarget(_ id: String) async -> Outcome? {
+    guard !isRunning, canCapture?() ?? true, let pending = pendingTarget,
+          let candidate = pending.candidates.first(where: { $0.id == id }),
+          let lines = OCRTargetSelection(status: .selected, selectedLineIds: candidate.lineIds).resolvedLines(in: pending.input)
+    else { return nil }
+    pendingTarget = nil
+    targetChoices = []
+    phase = .recognizing
+    onAccepted?()
+    let chosen = ChosenTarget(ocr: pending.ocr, lines: lines, capturedAt: pending.capturedAt)
+    return await run(source: .button, generation: operationGeneration, intent: nil, chosen: chosen)
   }
 
   // MARK: Pipeline
 
   /// Expects `phase` already set to `.capturing` so a second trigger is refused at once.
   @discardableResult
-  private func run(source: TriggerSource, generation: UUID) async -> Outcome {
+  private func run(source: TriggerSource, generation: UUID, intent: String?, chosen: ChosenTarget? = nil) async -> Outcome {
     // Keep the diagnostic trace across cancellation-safe capture and submission.
     let trace = String(UUID().uuidString.prefix(8)).lowercased()
     let started = ProcessInfo.processInfo.systemUptime
-    let outcome = await pipeline(source: source, generation: generation, trace: trace)
+    let outcome = await pipeline(source: source, generation: generation, trace: trace, intent: intent, chosen: chosen)
     guard generation == operationGeneration else {
       await onCancelledCapture?()
       phase = .idle
@@ -182,6 +228,10 @@ final class LookAndCheckCoordinator {
       log.info("look-and-check submitted=\(ids.count, privacy: .public) droppedCodePoints=\(dropped, privacy: .public)")
     case .unreadable:
       log.info("look-and-check unreadable")
+    case .needsTarget:
+      log.info("look-and-check needs target")
+    case .incomplete:
+      log.info("look-and-check incomplete target")
     case .failed(let reason):
       log.error("look-and-check failed reason=\(reason, privacy: .public)")
     }
@@ -201,7 +251,7 @@ final class LookAndCheckCoordinator {
     return String(requestId[..<dash])
   }
 
-  private func pipeline(source: TriggerSource, generation: UUID, trace: String) async -> Outcome {
+  private func pipeline(source: TriggerSource, generation: UUID, trace: String, intent: String?, chosen: ChosenTarget?) async -> Outcome {
     func current() -> Bool { !Task.isCancelled && operationGeneration == generation }
     guard current() else { return .failed(reason: "cancelled") }
     log.info("look-and-check start source=\(source.rawValue, privacy: .public)")
@@ -213,10 +263,14 @@ final class LookAndCheckCoordinator {
       return .failed(reason: "no_session")
     }
 
-    phase = .capturing
-    let capturedAt = now()
+    phase = chosen == nil ? .capturing : .recognizing
+    let capturedAt = chosen?.capturedAt ?? now()
     let ocr: OCRResult
-    do {
+    let selectedLines: [OCRTargetLine]
+    if let chosen {
+      ocr = chosen.ocr
+      selectedLines = chosen.lines
+    } else {
       // The JPEG lives only in this scope and is released once OCR returns. The debug log's
       // copy on disk is the only one kept.
       let jpeg: Data
@@ -248,19 +302,92 @@ final class LookAndCheckCoordinator {
         return .failed(reason: "ocr_failed")
       }
       debugOCR(ocr, trace: trace, milliseconds: Self.elapsedMs(since: ocrStarted))
+      var input = ocr.targetInput
+      // Other TextRecognizing implementations may expose only one already-selected string.
+      // Apple Vision always supplies individual observations and never takes this adapter.
+      if input.lines.isEmpty && !ocr.isEmpty {
+        input = OCRTargetInput(lines: [.init(id: "original-0", text: ocr.text, confidence: ocr.meanConfidence,
+          polygon: [.init(x: 0, y: 1), .init(x: 1, y: 1), .init(x: 1, y: 0), .init(x: 0, y: 0)])], aspect: ocr.aspect)
+      }
+      let selection: OCRTargetSelection
+      if let targetSelector {
+        // Supplying this dependency is an explicit configuration choice to upload a still.
+        if let failure = OCRTargetRequestLimits.failure(in: input, intent: intent) { return .failed(reason: failure) }
+        let upright: Data
+        do {
+          upright = try await Task.detached(priority: .userInitiated) {
+            try OCRService.selectionJPEG(jpeg)
+          }.value
+        } catch OCRError.selectionImageTooLarge {
+          return .failed(reason: "target_selection_image_too_large")
+        } catch {
+          return .failed(reason: "ocr_failed")
+        }
+        guard current() else { return .failed(reason: "cancelled") }
+        do {
+          selection = try await targetSelector.selectTarget(in: input, imageData: upright, intent: intent)
+        } catch {
+          guard current() else { return .failed(reason: "cancelled") }
+          return .failed(reason: "target_selection_failed")
+        }
+      } else if ocr.observations.isEmpty && !input.lines.isEmpty {
+        selection = .init(status: .selected, selectedLineIds: input.lines.map(\.id))
+      } else {
+        selection = OCRTargetSelector.select(input, intent: intent)
+      }
+      guard current() else { return .failed(reason: "cancelled") }
+      debugLog.log("lookcheck.target", ["trace": trace, "status": selection.status.rawValue,
+        "selectedLineIds": selection.selectedLineIds, "candidateCount": selection.candidates.count,
+        "reason": selection.reason as Any])
+      switch selection.status {
+      case .needsTarget:
+        let validCandidates = selection.candidates.filter {
+          OCRTargetSelection(status: .selected, selectedLineIds: $0.lineIds).resolvedLines(in: input) != nil
+        }
+        pendingTarget = PendingTarget(ocr: ocr, input: input, candidates: validCandidates, capturedAt: capturedAt)
+        targetChoices = validCandidates.compactMap { candidate in
+          guard let lines = OCRTargetSelection(status: .selected, selectedLineIds: candidate.lineIds).resolvedLines(in: input) else { return nil }
+          return TargetChoice(id: candidate.id, text: lines.map(\.text).joined(separator: " "))
+        }
+        return .needsTarget(message: targetChoices.isEmpty
+          ? "Specify a headline or topic below and try again."
+          : "I found several text blocks. Choose one below.")
+      case .incomplete:
+        return .incomplete(message: "That text is cut off. Open the full post and try again.")
+      case .unreadable:
+        return .unreadable(message: Self.unreadableMessage)
+      case .unavailable:
+        if let reason = selection.reason, ["target_selection_input_too_large", "target_selection_hint_too_long", "target_selection_image_too_large"].contains(reason) {
+          return .failed(reason: reason)
+        }
+        return .failed(reason: "target_selection_unavailable")
+      case .selected:
+        guard let resolved = selection.resolvedLines(in: input) else {
+          if input.lines.allSatisfy({ $0.confidence < settings.minimumMeanConfidence }) {
+            return .unreadable(message: Self.unreadableMessage)
+          }
+          return .failed(reason: "invalid_target_selection")
+        }
+        selectedLines = resolved
+      }
     }
     log.info("ocr lines=\(ocr.lineCount, privacy: .public) dropped=\(ocr.droppedLineCount, privacy: .public) codePoints=\(ocr.codePointCount, privacy: .public) meanConfidence=\(ocr.meanConfidence, privacy: .public)")
 
-    let visible = ocr.text.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.count
-    guard visible >= settings.minimumCharacters, ocr.meanConfidence >= settings.minimumMeanConfidence else {
+    let targetText = selectedLines.map(\.text).joined(separator: "\n")
+    if OCRTargetSelector.isVisiblyTruncated(targetText) {
+      return .incomplete(message: "That text is cut off. Open the full post and try again.")
+    }
+    let targetConfidence = selectedLines.reduce(0.0) { $0 + $1.confidence } / Double(max(selectedLines.count, 1))
+    let visible = targetText.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.count
+    guard visible >= settings.minimumCharacters, targetConfidence >= settings.minimumMeanConfidence else {
       debugLog.log("lookcheck.unreadable", [
         "trace": trace, "reason": visible < settings.minimumCharacters ? "too_few_characters" : "low_confidence",
         "visibleCharacters": visible, "minimumCharacters": settings.minimumCharacters,
-        "meanConfidence": ocr.meanConfidence, "minimumMeanConfidence": settings.minimumMeanConfidence,
+        "meanConfidence": targetConfidence, "minimumMeanConfidence": settings.minimumMeanConfidence,
       ])
       return .unreadable(message: Self.unreadableMessage)
     }
-    let split = OCRChunker.chunk(ocr.text, maxChunks: settings.maxChunks)
+    let split = OCRChunker.chunk(targetText, maxChunks: settings.maxChunks)
     debugLog.log("lookcheck.chunks", [
       "trace": trace, "chunks": split.chunks, "codePoints": split.chunks.map { CodePoints.count($0) },
       "droppedChunkCount": split.droppedChunkCount, "droppedCodePoints": split.droppedCodePoints,
@@ -285,7 +412,7 @@ final class LookAndCheckCoordinator {
       guard current() else { return .failed(reason: "cancelled") }
       let requestId = "\(requestBase)-\(index + 1)"
       let segmentId = "\(photoSegment)-\(index + 1)"
-      let confidence = min(max(ocr.meanConfidence, 0), 1)
+      let confidence = min(max(targetConfidence, 0), 1)
       // The session and epoch are read now, not before the photo: a reconnect during the
       // capture raises the epoch, and a renewed session has a new id.
       func envelope() -> TextInputEnvelope? {
@@ -362,7 +489,9 @@ final class LookAndCheckCoordinator {
       "lineCount": ocr.lineCount, "droppedLineCount": ocr.droppedLineCount, "codePoints": ocr.codePointCount,
       "observations": ocr.observations.map { line -> [String: Any] in
         [
+          "id": line.id, "viewId": line.viewId,
           "text": line.text, "confidence": Double(line.confidence),
+          "originalPolygon": line.originalPolygon.map { [$0.x, $0.y] },
           "box": [line.boundingBox.minX, line.boundingBox.minY, line.boundingBox.width, line.boundingBox.height].map { Double($0) },
         ]
       },
@@ -378,6 +507,12 @@ final class LookAndCheckCoordinator {
       payload["droppedCodePoints"] = droppedCodePoints
     case .unreadable(let message):
       payload["outcome"] = "unreadable"
+      payload["message"] = message
+    case .needsTarget(let message):
+      payload["outcome"] = "needs_target"
+      payload["message"] = message
+    case .incomplete(let message):
+      payload["outcome"] = "incomplete"
       payload["message"] = message
     case .failed(let reason):
       payload["outcome"] = "failed"
