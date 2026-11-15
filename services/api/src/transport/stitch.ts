@@ -14,6 +14,9 @@ const DANGLING = new Set(('a an the of to in on at by for with from into about o
 const CONTINUES = new Set(['is', 'are', 'was', 'were', 'which', 'whose', 'whom', 'from', 'of', 'than', 'and']);
 const ENDS_SENTENCE = /[.!?]["'”’)\]]*$/u;
 const TRAILS_OFF = /(?:\.\.\.|…|[,;:\-–—])["'”’)\]]*$/u;
+/** A cut-off false start the recogniser kept before the sentence ("in- Cyberpunk 2077 was…", "and- Stai…"): lowercase words ending in a dash. */
+const FALSE_START = /^(?:\p{Ll}[\p{Ll}']*[-–—]\s+)+/u;
+const dropFalseStart = (text: string) => text.trimStart().replace(FALSE_START, '');
 const bare = (token: string) => token.toLowerCase().replace(/^[^\p{L}\p{N}']+|[^\p{L}\p{N}']+$/gu, '');
 const words = (text: string) => text.trim().split(/\s+/).filter(Boolean);
 
@@ -85,7 +88,9 @@ export class SentenceStitcher {
 
   constructor(private readonly windowMs = DEFAULT_STITCH_MS) {}
 
-  add(sentence: Sentence): StitchStep {
+  add(heard: Sentence): StitchStep {
+    // Live 15 Nov 09:09:39: "in- Cyberpunk 2077 was released in 2000." read as a lowercase continuation and was never checked.
+    const sentence = { ...heard, text: dropFalseStart(heard.text) };
     const before = this.texts.get(sentence.requestId);
     this.texts.delete(sentence.requestId); this.texts.set(sentence.requestId, sentence.text);
     if (this.texts.size > MEMORY) this.texts.delete(this.texts.keys().next().value!);
