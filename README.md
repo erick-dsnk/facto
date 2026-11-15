@@ -6,7 +6,9 @@
 
 One request. An answer through your Meta glasses.
 
-<img src="apps/landing/public/img/glasses-product.webp" alt="Black Meta glasses" width="720" />
+<img src="docs/images/lens-searching.webp" alt="Facto in the right lens, searching sources for the claim that the Eiffel Tower grows up to 15 cm taller in summer" width="420" /> <img src="docs/images/lens-verdict.webp" alt="Facto in the right lens showing True, with a quote from toureiffel.paris" width="420" />
+<br />
+<img src="docs/images/glasses-listening.webp" alt="The glasses with the caption: Your glasses already hear what you hear" width="420" /> <img src="docs/images/glasses-front.webp" alt="The glasses from the front" width="420" />
 
 **Look. Ask. Check.**
 
