@@ -7,6 +7,7 @@ import { createJudge } from './providers/jev/judgment.js';
 import { createRetriever } from './providers/exa/retrieval.js';
 import { createDeepgramAdapter } from './input/asr/deepgram-adapter.js';
 import { DebugFeed } from './runtime/debug-feed.js';
+import { createVisionTargetSelector } from './input/ocr/target-selection.js';
 
 const mode = process.env.PIPELINE_MODE ?? 'fixture';
 if (mode !== 'fixture' && mode !== 'live') throw new Error('PIPELINE_MODE must be fixture or live.');
@@ -28,11 +29,17 @@ const onRailway = !!(process.env.RAILWAY_ENVIRONMENT_ID || process.env.RAILWAY_E
 const trustProxy = Number(process.env.TRUST_PROXY || (onRailway ? '1' : '0'));
 if (!Number.isInteger(trustProxy) || trustProxy < 0 || trustProxy > 5) throw new Error('TRUST_PROXY must be the number of proxy hops in front of the server (0 when clients connect directly).');
 const deepgramKey = process.env.DEEPGRAM_API_KEY;
+const visionBaseURL = process.env.OCR_VISION_BASE_URL;
+const visionModel = process.env.OCR_VISION_MODEL;
+if (!!visionBaseURL !== !!visionModel) throw new Error('Set both OCR_VISION_BASE_URL and OCR_VISION_MODEL to enable remote OCR selection.');
+const targetSelector = visionBaseURL && visionModel ? createVisionTargetSelector({ baseURL: visionBaseURL, model: visionModel, apiKey: process.env.OCR_VISION_API_KEY,
+  timeoutMs: Number(process.env.OCR_VISION_TIMEOUT_MS || '12000'), maxTokens: Number(process.env.OCR_VISION_MAX_TOKENS || '1200') }) : undefined;
 // Text and OCR checks still work without ASR, so a missing key is loud at startup rather than fatal.
 if (mode === 'live' && !deepgramKey) console.warn('DEEPGRAM_API_KEY is not set: live mode has no speech recognition and audio.start fails with asr_unavailable.');
 const { app } = await buildServer({ adapters, mode, joinCode: process.env.DEMO_JOIN_CODE ?? '', joinExpiresAt: Date.parse(process.env.DEMO_JOIN_EXPIRES_AT ?? ''),
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',').map(s => s.trim()), tls: cert && key ? { cert: await readFile(cert), key: await readFile(key) } : undefined, trustProxy,
   debugFeed, debugFeedKey,
+  targetSelector,
   asr: deepgramKey ? createDeepgramAdapter({ apiKey: deepgramKey, transcriptLog: debugTranscripts ? entry => console.info(`[asr:final] ${JSON.stringify(entry)}`) : undefined }) : undefined });
 await app.listen({ host: process.env.HOST || (onRailway ? '0.0.0.0' : '127.0.0.1'), port: Number(process.env.PORT ?? '3000') });
 console.info(`Actually API listening (${mode} mode, audio ${deepgramKey ? 'on' : 'off'}, min capture confidence ${minCaptureConfidence}${debugTranscripts ? ', transcript debug log ON' : ''}). No alert does not mean verified.`);

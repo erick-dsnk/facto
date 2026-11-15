@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "image_size_px": {
+    "width": 1536,
+    "height": 2048
+  },
+  "bbox_format": "normalized [x_min, y_min, x_max, y_max], origin at top-left of original image",
+  "provenance": "Manual visual transcription from the supplied original images. No OCR output, external news pages, or inferred unseen text used.",
+  "samples": [
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.07.jpeg",
+      "page_type": "CNN article",
+      "evaluation_assumption": "Article headline is intended target.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "headline",
+          "text": "Key questions still unanswered as air travel slowly gets on track",
+          "bbox_norm": [
+            0.329,
+            0.395,
+            0.772,
+            0.432
+          ],
+          "ambiguous": false,
+          "truncated": false
+        }
+      ],
+      "clutter_notes": "Browser chrome, tab rail, video card/caption, summary text and room/keyboard are outside the primary target. Screen text is small because the laptop occupies a modest portion of the photo."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.07 (1).jpeg",
+      "page_type": "CNN article",
+      "evaluation_assumption": "Article headline is intended target; one visible body excerpt is a secondary OCR target.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "headline",
+          "text": "Additional delays and cancellations expected in New York this weekend, governor says",
+          "bbox_norm": [
+            0.423,
+            0.441,
+            0.733,
+            0.478
+          ],
+          "ambiguous": false,
+          "truncated": false
+        },
+        {
+          "role": "secondary",
+          "kind": "body_paragraph_visible_excerpt",
+          "text": "Travelers should expect additional delays and cancellations at New York airports this weekend as airlines rebound from yesterday's nationwide ground stop, according to New York Gov. Kathy Hochul and",
+          "bbox_norm": [
+            0.421,
+            0.637,
+            0.66,
+            0.664
+          ],
+          "ambiguous": false,
+          "truncated": true,
+          "truncation_note": "The visible excerpt ends at 'and'; remaining text is cut off/too small at the bottom of the screen. Do not complete it."
+        }
+      ],
+      "clutter_notes": "Photo caption and author line are visible but not target. Body excerpt is lower contrast and smaller than headline."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.08.jpeg",
+      "page_type": "CNN article",
+      "evaluation_assumption": "Article headline is intended target; first visible body paragraph is a secondary OCR target.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "headline",
+          "text": "US floated idea of Ukraine swapping land for NATO membership, Zelensky says",
+          "bbox_norm": [
+            0.301,
+            0.487,
+            0.822,
+            0.526
+          ],
+          "ambiguous": false,
+          "truncated": false
+        },
+        {
+          "role": "secondary",
+          "kind": "body_paragraph",
+          "text": "The United States floated the idea of Ukraine ceding the eastern Donbas region to Russia in exchange for NATO membership during recent talks, Ukraine's President Volodymyr Zelensky has said.",
+          "bbox_norm": [
+            0.435,
+            0.692,
+            0.715,
+            0.731
+          ],
+          "ambiguous": false,
+          "truncated": false
+        }
+      ],
+      "clutter_notes": "Video/player caption and browser chrome are not the target. Another body paragraph begins below the excerpt but is partly cut off; excluded."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.08 (1).jpeg",
+      "page_type": "Al Jazeera live article",
+      "evaluation_assumption": "Article headline is the default primary target; the first visible live-update bullet is a secondary target.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "headline",
+          "text": "Iran war live: Israel vows Gaza ‘offensive policy’ despite caretaker status",
+          "bbox_norm": [
+            0.347,
+            0.464,
+            0.573,
+            0.511
+          ],
+          "ambiguous": false,
+          "truncated": false
+        },
+        {
+          "role": "secondary",
+          "kind": "live_update_bullet",
+          "text": "At least one Palestinian has been killed and two others wounded after Israeli forces carried out a drone strike on the al-Mawasi area of Khan Younis in southern Gaza, just days after Israel fatally struck a hospital in Gaza.",
+          "bbox_norm": [
+            0.36,
+            0.562,
+            0.6,
+            0.602
+          ],
+          "ambiguous": false,
+          "truncated": false
+        }
+      ],
+      "clutter_notes": "A second update bullet and video caption are also present. The second bullet is readable but not transcribed here to keep the requested secondary target to one paragraph."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.08 (2).jpeg",
+      "page_type": "Al Jazeera live article with selected text",
+      "evaluation_assumption": "The blue-highlighted sentence is the explicit intended target, even though the headline is also visible.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "selected_body_paragraph",
+          "text": "At least one Palestinian has been killed and two others wounded after Israeli forces carried out a drone strike on the al-Mawasi area of Khan Younis in southern Gaza, just days after Israel fatally struck a hospital in Gaza.",
+          "bbox_norm": [
+            0.342,
+            0.508,
+            0.594,
+            0.55
+          ],
+          "ambiguous": false,
+          "truncated": false
+        },
+        {
+          "role": "context_only",
+          "kind": "headline",
+          "text": "Iran war live: Israel vows Gaza ‘offensive policy’ despite caretaker status",
+          "bbox_norm": [
+            0.318,
+            0.396,
+            0.61,
+            0.45
+          ],
+          "ambiguous": false,
+          "truncated": false
+        }
+      ],
+      "clutter_notes": "The selected paragraph is visually marked in blue. For target-selection scoring, count the headline as non-target context; for raw OCR scoring, it remains legible text."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.08 (3).jpeg",
+      "page_type": "Al Jazeera homepage",
+      "evaluation_assumption": "The prominent red breaking-news card headline is used as the dominant headline target. The user's intended story on this homepage is inherently ambiguous; this is an evaluation assumption, not established intent.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "dominant_breaking_headline",
+          "text": "One killed as Israel vows Gaza ‘offensive policy’ despite caretaker status",
+          "bbox_norm": [
+            0.385,
+            0.57,
+            0.66,
+            0.625
+          ],
+          "ambiguous": true,
+          "truncated": false,
+          "ambiguity_note": "Homepage shows several competing headlines and stories; this large red breaking card was selected as the dominant item for evaluation."
+        }
+      ],
+      "clutter_notes": "Dense homepage columns contain many other unrelated story headlines and summaries. Score target selection separately from character recognition."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.09.jpeg",
+      "page_type": "Al Jazeera homepage",
+      "evaluation_assumption": "The prominent red breaking-news card headline is used as the dominant headline target. The user's intended story on this homepage is inherently ambiguous; this is an evaluation assumption, not established intent.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "dominant_breaking_headline",
+          "text": "One killed as Israel vows Gaza ‘offensive policy’ despite caretaker status",
+          "bbox_norm": [
+            0.4,
+            0.562,
+            0.62,
+            0.611
+          ],
+          "ambiguous": true,
+          "truncated": false,
+          "ambiguity_note": "Homepage shows several competing headlines and stories; this large red breaking card was selected as the dominant item for evaluation."
+        }
+      ],
+      "clutter_notes": "Dense homepage columns contain many other unrelated story headlines and summaries. This is a near-duplicate view of the preceding homepage sample, not independent evidence."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.09 (1).jpeg",
+      "page_type": "X post",
+      "evaluation_assumption": "The primary post body is the intended target; embedded media contains no readable overlaid text beyond a timestamp.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "post_body",
+          "text": "🚨 BREAKING: Iran attack with ballistic missile on USA .Heavy Damage Reported in the USA! 🇺🇸😳 ⚠️How will US react now💥 @grok is it a confirmed news?",
+          "bbox_norm": [
+            0.359,
+            0.475,
+            0.704,
+            0.52
+          ],
+          "ambiguous": false,
+          "truncated": false,
+          "transcription_note": "Emoji glyphs and the spacing/punctuation around '.Heavy Damage' and '⚠️How' are visually small and somewhat uncertain; words are transcribed from visible post."
+        }
+      ],
+      "embedded_image_text": [
+        {
+          "kind": "video_timestamp",
+          "text": "0:22",
+          "bbox_norm": [
+            0.36,
+            0.649,
+            0.425,
+            0.664
+          ],
+          "ambiguous": false,
+          "truncated": false
+        }
+      ],
+      "clutter_notes": "The X navigation/sidebar, right rail, metrics, and Grok reply below are outside the primary post body. The attached video itself has no confidently legible text."
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-15 at 01.14.09 (2).jpeg",
+      "page_type": "X post",
+      "evaluation_assumption": "The primary post body is the intended target. Preserve the visible ellipsis and do not infer the hidden completion.",
+      "targets": [
+        {
+          "role": "primary",
+          "kind": "post_body_visible_text",
+          "text": "Big News 🚨\n\nConfirmed By Government\n\nPresident Putin is official Dea... View more",
+          "bbox_norm": [
+            0.365,
+            0.426,
+            0.584,
+            0.485
+          ],
+          "ambiguous": false,
+          "truncated": true,
+          "truncation_note": "The X post is collapsed. The visible 'Dea...' and 'View more' are transcribed as shown; no completion inferred."
+        }
+      ],
+      "embedded_image_text": [
+        {
+          "kind": "image_overlay",
+          "text": "Rest in Peace",
+          "bbox_norm": [
+            0.691,
+            0.585,
+            0.818,
+            0.744
+          ],
+          "ambiguous": false,
+          "truncated": false
+        }
+      ],
+      "clutter_notes": "The verified account name and right-side X panels are context. The embedded image contains the separate readable overlay 'Rest in Peace'; evaluate it independently from post-body OCR."
+    }
+  ],
+  "evaluation_recommendations": [
+    "Report character/word accuracy on the manually specified target regions separately from target-selection performance. A transcript may read text accurately while selecting the wrong story or page furniture.",
+    "For full-frame OCR, report target recall and non-target text volume separately. Do not treat every readable sidebar, browser label, related story, timestamp, caption, or reply as desired fact-check text.",
+    "Compare OCR on original and preprocessed images using identical target text and boxes; allow for small box drift after perspective correction by mapping boxes back to original-image coordinates.",
+    "Treat the two Al Jazeera homepage views as correlated near-duplicates. The nine images are development samples, not independent validation; preprocessing choices made against them may overfit these scenes.",
+    "The homepage samples have ambiguous user intent. Keep their assumed dominant-card target out of any headline accuracy claim, or report results both with and without these two samples.",
+    "For the selected blue paragraph, count only that paragraph as the requested target. OCR of the page headline is useful context but is a target-selection miss if presented as the fact-check claim.",
+    "For the final X sample, preserve the visible truncation and measure it against the visible string only; hallucinated completion should be penalized separately from OCR character error."
+  ]
+}
