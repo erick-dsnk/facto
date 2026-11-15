@@ -101,8 +101,14 @@ const highRiskLanguage = /\b(cure[sd]?|curing|treat(?:s|ed|ing|ments?)?|prevent(
 /** Health/safety, disputed or uncertain-stakes claims (typed risk or the lexical triggers) need the stronger
  * expert-anchor and independent-corroborator route. A missing assessment is treated as uncertain. */
 export function needsStrongEvidence(checkedText: string, assessment: JudgmentAssessment | undefined): boolean {
-  return !assessment || assessment.claimRisk.level !== 'ordinary' || assessment.claimRisk.confidence < ASSESSMENT_THRESHOLD || highRiskLanguage.test(checkedText);
+  if (!assessment || highRiskLanguage.test(checkedText)) return true;
+  // Only a claim Jev actually rates as health/safety or disputed takes the strict route. Being merely unsure that a
+  // claim is ordinary used to send everyday myths there too: "Humans swallow eight spiders a year in their sleep" had six
+  // contradicting sources at p=1.00 and still stayed Can't verify (risk ordinary/0.71, 15 Nov).
+  return assessment.claimRisk.level !== 'ordinary' && assessment.claimRisk.confidence >= STRICT_RISK_CONFIDENCE;
 }
+/** How sure Jev must be that a claim is health/safety or disputed before it needs the strict route. */
+const STRICT_RISK_CONFIDENCE = 0.5;
 const substantive = (assessment: JudgmentAssessment, id: string): boolean => {
   if (!Object.hasOwn(assessment.sourceAssessments, id)) return false;
   const source = assessment.sourceAssessments[id];
