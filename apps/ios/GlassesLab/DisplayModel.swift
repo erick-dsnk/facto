@@ -1,6 +1,7 @@
 import Foundation
 import MWDATCore
 import MWDATDisplay
+import MWDATInputs
 import Observation
 
 // No SwiftUI import here: MWDATDisplay has its own Text, Button and Image.
@@ -8,43 +9,61 @@ import Observation
 /// Display capability on Meta Ray-Ban Display glasses (real or simulated). Its DeviceSession
 /// comes from `GlassesSession.shared`, the one session the camera also uses: on real Display
 /// glasses a second session from the app failed with "Session start failed: device unavailable".
+///
+/// The lens opens only while it has something to show (`LensSessionPolicy`): an acknowledgement,
+/// a search or a card. A swipe left or right, or back, dismisses it, and it stays closed until
+/// something different arrives. A card leaves the lens by itself after `cardHold`.
 @Observable
 @MainActor
 final class DisplayModel {
   var sessionState: DeviceSessionState = .idle
   var displayState: DisplayState = .stopped
   var taps = 0
+  /// Called when the lens becomes available (a Display pair is put on), so LiveModel can send
+  /// the current card or search again.
   var onReady: (@MainActor () -> Void)?
+  /// A worn Display pair is in use, native output is on and the app is active. The lens takes
+  /// content only then, and opens a session only while it has some.
+  private(set) var isAvailable = false
   private(set) var wantsConnection: Bool
   @ObservationIgnored private let defaults: UserDefaults
   @ObservationIgnored private var appActive = false
   @ObservationIgnored private var authorized = false
   @ObservationIgnored private var hasEligibleDevice = false
   @ObservationIgnored private var sessionGeneration = UUID()
-  @ObservationIgnored private var recoveryTask: Task<Void, Never>?
-  @ObservationIgnored private var recoveryTaskID = UUID()
   @ObservationIgnored private var selectorTask: Task<Void, Never>?
   /// The session shared with the camera (see GlassesSession).
   @ObservationIgnored private let glasses: GlassesSession
   /// `session` is the DEBUG native preview's own mock session, not the shared one.
   @ObservationIgnored private var ownsPreviewSession = false
+  @ObservationIgnored private var policy = LensSessionPolicy()
+  @ObservationIgnored private var content = LensContent()
+  @ObservationIgnored private var retryTask: Task<Void, Never>?
+  @ObservationIgnored private var idleCloseTask: Task<Void, Never>?
+  @ObservationIgnored private var holdTask: Task<Void, Never>?
+  @ObservationIgnored private var holdCard: ResultCard?
+  /// Developer "Connect display": keeps the lens open with nothing on it.
+  @ObservationIgnored private var developerHold = false
+
+  /// How long a card stays on the lens before it leaves by itself.
+  static let cardHold: TimeInterval = 15
+  /// How long an empty lens stays open in case more follows (a search after "Checking…").
+  static let idleClose: TimeInterval = 1
 
   init(defaults: UserDefaults = .standard, glasses: GlassesSession = .shared) {
     self.defaults = defaults
     self.glasses = glasses
     self.wantsConnection = defaults.object(forKey: "nativeDisplay.restoreConnection") as? Bool ?? true
-    // The lens follows the glasses in use: it connects when a Display pair is put on and lets
-    // go when the wearer switches to Ray-Ban Meta or folds the glasses.
-    glasses.observeKind { [weak self] _ in
-      guard let self, !self.ownsPreviewSession else { return }
-      self.recoverIfEligible()
-    }
+    // The lens follows the glasses in use: it is available while a Display pair is worn and
+    // lets go when the wearer takes them off or switches to Ray-Ban Meta.
+    glasses.observeKind { [weak self] _ in self?.reconcile() }
+    glasses.observeHolders { [weak self] in self?.reconcile() }
     selectorTask = Task { [weak self] in
       guard let selector = self?.deviceSelector else { return }
       for await identifier in selector.activeDeviceStream() {
         guard let self else { return }
         self.hasEligibleDevice = identifier != nil
-        self.recoverIfEligible()
+        self.reconcile()
       }
     }
   }
@@ -52,45 +71,73 @@ final class DisplayModel {
   func setRecoveryAvailability(active: Bool, authorized: Bool) {
     appActive = active
     self.authorized = authorized
-    recoverIfEligible()
+    reconcile()
   }
 
-  private var recoveryEligible: Bool {
-    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled && glasses.kind == .display
+  private var lensVisible: Bool {
+    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled
+      && glasses.kind == .display && glasses.pairWorn
   }
 
-  private func recoverIfEligible() {
-    guard recoveryEligible else {
-      recoveryTask?.cancel()
-      recoveryTask = nil
-      stopConnection()
-      return
+  /// Opens, keeps or closes the lens session to match what there is to show. Every path that
+  /// opens a session goes through here, so a retry always waits out the backoff.
+  private func reconcile() {
+    guard !ownsPreviewSession else { return }
+    let visible = lensVisible
+    let becameAvailable = visible && !isAvailable
+    if visible != isAvailable {
+      isAvailable = visible
+      log("lens.available", ["available": visible, "kind": glasses.kind.rawValue, "worn": glasses.pairWorn])
+      if !visible { resetLiveOutput() }
     }
-    guard session == nil else { return }
-    attemptConnection()
-    scheduleRecovery()
+    policy.lensVisible = visible
+    policy.hasContent = content.opensLens || (session != nil && !content.isEmpty) || developerHold
+    policy.cameraBusy = glasses.cameraHolds
+    let action = policy.action(sessionOpen: session != nil, now: Date())
+    if action != .closeWhenIdle {
+      idleCloseTask?.cancel()
+      idleCloseTask = nil
+    }
+    if case .retry = action {} else {
+      retryTask?.cancel()
+      retryTask = nil
+    }
+    switch action {
+    case .none: break
+    case .open:
+      // The last session is still stopping; its `.stopped` notifies holders and lands here again.
+      if glasses.isWindingDown { scheduleRetry(after: 0.5) } else { attemptConnection() }
+    case .close: closeLens(visible ? "camera_busy" : "not_visible")
+    case .closeWhenIdle: scheduleIdleClose()
+    case .retry(let delay): scheduleRetry(after: delay)
+    }
+    if becameAvailable { onReady?() }
   }
 
-  private func scheduleRecovery() {
-    guard recoveryEligible, displayState != .started, recoveryTask == nil else { return }
-    let id = UUID()
-    recoveryTaskID = id
-    recoveryTask = Task { [weak self] in
-      defer { if self?.recoveryTaskID == id { self?.recoveryTask = nil } }
-      while !Task.isCancelled {
-        for delay in [1.0, 2.0, 4.0, 8.0] {
-          try? await Task.sleep(for: .seconds(delay))
-          guard !Task.isCancelled, let self, self.recoveryEligible else { return }
-          if self.displayState == .started { return }
-          if self.session == nil { self.attemptConnection() }
-        }
-        // Bounded attempt bursts with cooldown while this foreground association remains
-        // eligible. Unavailable device, explicit disconnect or suspension cancels the task.
-        if let self, self.recoveryEligible, self.displayState != .started, self.session != nil { self.stopConnection() }
-        try? await Task.sleep(for: .seconds(15))
-        guard !Task.isCancelled, self?.recoveryEligible == true else { return }
-      }
+  private func scheduleRetry(after delay: TimeInterval) {
+    guard retryTask == nil else { return }
+    retryTask = Task { [weak self] in
+      try? await Task.sleep(for: .seconds(delay))
+      guard !Task.isCancelled, let self else { return }
+      self.retryTask = nil
+      self.reconcile()
     }
+  }
+
+  private func scheduleIdleClose() {
+    guard idleCloseTask == nil else { return }
+    idleCloseTask = Task { [weak self] in
+      try? await Task.sleep(for: .seconds(Self.idleClose))
+      guard !Task.isCancelled, let self else { return }
+      self.idleCloseTask = nil
+      if self.content.isEmpty, !self.developerHold { self.closeLens("nothing_to_show") }
+    }
+  }
+
+  private func closeLens(_ reason: String) {
+    guard session != nil else { return }
+    log("lens.close", ["reason": reason])
+    stopConnection()
   }
 
   var lastError: String?
@@ -102,20 +149,24 @@ final class DisplayModel {
   func setWebDisplayEnabled(_ enabled: Bool) {
     webDisplayEnabled = enabled
     if enabled {
-      recoveryTask?.cancel()
-      recoveryTask = nil
-      recoveryTaskID = UUID()
+      resetLiveOutput()
+      developerHold = false
       stopConnection()
-    } else { recoverIfEligible() }
+    }
+    reconcile()
   }
 
   /// Created once so it has already found a display-capable device when you tap Connect. It
-  /// only tells recovery whether a Display pair is around; GlassesSession picks the device.
+  /// only tells the lens whether a Display pair is around; GlassesSession picks the device.
   @ObservationIgnored private let deviceSelector = AutoDeviceSelector(
     wearables: Wearables.shared, filter: { $0.supportsDisplay() }
   )
   @ObservationIgnored private var session: DeviceSession?
   @ObservationIgnored private var display: Display?
+  /// Swipes and back from the glasses. With `consumeBack` (the default) back comes here
+  /// instead of ending the session.
+  @ObservationIgnored private var inputs: Inputs?
+  @ObservationIgnored private var inputsTask: Task<Void, Never>?
   @ObservationIgnored private let tokens = ListenerTokenBag()
   /// DAT replaces a whole layout. All home, fixture, card and acknowledgement sends share
   /// this queue so a slower old send cannot overwrite a newer card.
@@ -123,14 +174,6 @@ final class DisplayModel {
   @ObservationIgnored private var outputGeneration = UUID()
   @ObservationIgnored private var feedbackTask: Task<Void, Never>?
   @ObservationIgnored private var feedbackID: UUID?
-  @ObservationIgnored private var triggerFeedback: NativeTriggerFeedback?
-  @ObservationIgnored private var latestCard: ResultCard?
-  private struct Searching {
-    let claimText: String
-    let captureLabel: String?
-    let sources: [ClaimSourcesPayload.Source]
-  }
-  @ObservationIgnored private var latestSearch: Searching?
   @ObservationIgnored private var latestRepeat: (@Sendable () -> Void)?
   @ObservationIgnored private var latestDismiss: (@Sendable () -> Void)?
 
@@ -138,9 +181,10 @@ final class DisplayModel {
     feedbackTask?.cancel()
     feedbackTask = nil
     feedbackID = nil
-    triggerFeedback = nil
-    latestCard = nil
-    latestSearch = nil
+    holdTask?.cancel()
+    holdTask = nil
+    holdCard = nil
+    content.reset()
     latestRepeat = nil
     latestDismiss = nil
     outputGeneration = UUID()
@@ -166,11 +210,12 @@ final class DisplayModel {
   }
 
   private func renderLiveOutput() async {
-    let feedback = triggerFeedback
-    let card = latestCard
-    let search = latestSearch
+    let feedback = content.feedback
+    let card = content.card
+    let search = content.search
     let onRepeat = latestRepeat
     let onDismiss = latestDismiss
+    let clearEmpty = developerHold
     await sendSerialized { display in
       if let feedback {
         try await display.send(NativeTriggerFeedbackBuilder.build(feedback))
@@ -178,10 +223,55 @@ final class DisplayModel {
         try await display.send(DisplayCardBuilder.build(card, onRepeat: onRepeat, onDismiss: onDismiss))
       } else if let search {
         try await display.send(NativeLensCardLayout.searching(claimText: search.claimText, captureLabel: search.captureLabel, sources: search.sources))
-      } else {
+      } else if clearEmpty {
         try await display.clearDisplay()
       }
+      // Otherwise the lens is about to close (`idleClose`): an empty frame would be the grey box.
     }
+  }
+
+  /// A card leaves the lens `cardHold` after it first appears there (not when it arrives: the
+  /// lens may still be opening or waiting for a photo). The phone keeps it until it expires.
+  private func armHoldIfShown() {
+    guard displayState == .started, let card = content.card, holdCard != card else { return }
+    holdCard = card
+    holdTask?.cancel()
+    holdTask = Task { [weak self] in
+      try? await Task.sleep(for: .seconds(Self.cardHold))
+      guard !Task.isCancelled, let self, self.content.card == card else { return }
+      self.holdTask = nil
+      self.holdCard = nil
+      self.lensEnded("timeout")
+    }
+  }
+
+  private func cancelHold() {
+    holdTask?.cancel()
+    holdTask = nil
+    holdCard = nil
+  }
+
+  /// The wearer swiped the lens away or pressed back: as `lensEnded`, and a card is dismissed
+  /// on the phone too, as the phone's Dismiss button does.
+  private func wearerDismissed(_ how: String) {
+    let dismissCard = content.card == nil ? nil : latestDismiss
+    lensEnded(how)
+    dismissCard?()
+  }
+
+  /// The lens closes and stays closed until something different arrives: the card timed out,
+  /// or the glasses ended the session (back without Inputs, but also a dropped link or the
+  /// glasses coming off), so the phone keeps its card.
+  private func lensEnded(_ how: String) {
+    log("lens.dismissed", ["how": how, "card": content.card != nil, "search": content.search != nil])
+    feedbackTask?.cancel()
+    feedbackTask = nil
+    feedbackID = nil
+    cancelHold()
+    content.dismiss()
+    developerHold = false
+    closeLens(how)
+    reconcile()
   }
 
   #if DEBUG
@@ -261,11 +351,12 @@ final class DisplayModel {
   }
   #endif
 
+  /// Developer "Connect display": opens the lens with nothing on it (on a worn Display pair).
   func connect() {
     wantsConnection = true
     defaults.set(true, forKey: "nativeDisplay.restoreConnection")
-    attemptConnection()
-    scheduleRecovery()
+    developerHold = true
+    reconcile()
   }
 
   /// Joins the camera's session when it has one, or opens the shared session.
@@ -274,6 +365,7 @@ final class DisplayModel {
     lastError = nil
     sessionGeneration = UUID()
     let generation = sessionGeneration
+    log("lens.open", ["attempt": policy.failures + 1])
     do {
       session = try glasses.acquire(
         .display,
@@ -283,24 +375,45 @@ final class DisplayModel {
         },
         onError: { [weak self] message in
           guard let self, self.sessionGeneration == generation else { return }
-          self.lastError = "Session: \(message)"
-          self.stopConnection()
-          self.scheduleRecovery()
+          self.sessionFailed(message)
         }
       )
       handleSession(glasses.state)
     } catch {
       lastError = "Session: \(error.localizedDescription)"
       clear()
+      openFailed(error.localizedDescription)
     }
+  }
+
+  /// "Session ended by device" is the wearer leaving the lens (back, when Inputs isn't
+  /// consuming it): treat it as a dismissal, never reopen for the same content. Anything else
+  /// is a failed open and backs off.
+  private func sessionFailed(_ message: String) {
+    lastError = "Session: \(message)"
+    stopConnection()
+    if GlassesSession.isEndedByDevice(message) {
+      lensEnded("ended_by_device")
+    } else {
+      openFailed(message)
+    }
+  }
+
+  private func openFailed(_ message: String) {
+    policy.openFailed(at: Date())
+    log("lens.open_failed", [
+      "message": message, "failures": policy.failures,
+      "retryIn": policy.retryAt.map { max(0, $0.timeIntervalSinceNow) } as Any,
+    ])
+    reconcile()
   }
 
   func disconnect() {
     wantsConnection = false
     defaults.set(false, forKey: "nativeDisplay.restoreConnection")
-    recoveryTask?.cancel()
-    recoveryTask = nil
+    developerHold = false
     stopConnection()
+    reconcile()
   }
 
   /// Starts the DEBUG native preview's own session on a mock device (never the shared one).
@@ -320,7 +433,6 @@ final class DisplayModel {
         guard let self, self.sessionGeneration == generation else { return }
         self.lastError = "Session: \(error.localizedDescription)"
         self.stopConnection()
-        self.scheduleRecovery()
       }
     }.store(in: tokens)
     try newSession.start()
@@ -331,9 +443,12 @@ final class DisplayModel {
   private func stopConnection() {
     let oldDisplay = display
     let oldSession = session
+    let hadInputs = inputs != nil
     let wasPreview = ownsPreviewSession
     clear()
     if let oldDisplay { oldDisplay.stop() }
+    // A camera still on the session must not keep swallowing the glasses' back gesture.
+    if hadInputs { try? oldSession?.removeInputs() }
     if wasPreview {
       oldSession?.stop()
     } else if oldSession != nil {
@@ -347,8 +462,11 @@ final class DisplayModel {
     case .started:
       attachDisplay()
     case .stopped:
+      // Stopped by the glasses without an error. With the lens up that's the wearer leaving
+      // it; before that, a failed open.
+      let hadLens = displayState == .started
       clear()
-      scheduleRecovery()
+      if hadLens { lensEnded("stopped_by_device") } else { openFailed("stopped before the lens started") }
     default:
       break
     }
@@ -370,14 +488,65 @@ final class DisplayModel {
         }
       }.store(in: tokens)
       newDisplay.start()
+      attachInputs(to: session)
     } catch {
       lastError = "Display: \(error.localizedDescription)"
       stopConnection()
-      scheduleRecovery()
+      openFailed("Display: \(error.localizedDescription)")
+    }
+  }
+
+  /// Inputs is experimental in DAT 1.0: if it can't attach, the lens still works and back
+  /// still dismisses it (as "Session ended by device"); only swipes are lost.
+  private func attachInputs(to session: DeviceSession) {
+    guard !ownsPreviewSession else { return }
+    let generation = sessionGeneration
+    do {
+      guard let newInputs = try session.addInputs() else {
+        log("lens.inputs", ["state": "unavailable"])
+        return
+      }
+      inputs = newInputs
+      newInputs.statePublisher.listen { [weak self] state in
+        Task { @MainActor in
+          guard let self, self.sessionGeneration == generation else { return }
+          self.log("lens.inputs", ["state": "\(state)"])
+        }
+      }.store(in: tokens)
+      newInputs.errorPublisher.listen { [weak self] error in
+        Task { @MainActor in
+          guard let self, self.sessionGeneration == generation else { return }
+          self.log("lens.inputs_error", ["error": String(describing: error)])
+        }
+      }.store(in: tokens)
+      inputsTask = Task { [weak self] in
+        for await event in newInputs.events {
+          guard let self, self.sessionGeneration == generation else { return }
+          self.handleInput(event)
+        }
+      }
+    } catch {
+      log("lens.inputs_error", ["error": String(describing: error)])
+    }
+  }
+
+  private func handleInput(_ event: InputEvent) {
+    log("lens.input", ["event": String(describing: event)])
+    switch event {
+    case .nav(let direction, _, _):
+      if direction == .left { wearerDismissed("swipe_left") }
+      if direction == .right { wearerDismissed("swipe_right") }
+    case .back:
+      wearerDismissed("back")
+    case .select:
+      taps += 1
+    default:
+      break
     }
   }
 
   private func handleDisplay(_ state: DisplayState) {
+    let wasStarted = displayState == .started
     displayState = state
     switch state {
     case .started:
@@ -387,21 +556,30 @@ final class DisplayModel {
         return
       }
       #endif
-      recoveryTask?.cancel()
-      recoveryTask = nil
-      Task { await sendHome() }
-      onReady?()
+      policy.opened()
+      log("lens.opened", ["card": content.card != nil, "search": content.search != nil, "feedback": content.feedback != nil])
+      Task { [weak self] in
+        await self?.renderLiveOutput()
+        self?.armHoldIfShown()
+      }
+      reconcile()
     case .stopped:
+      // Stopped after it was up: the glasses took the lens back (counting it as a failure
+      // reopened it a second later). Before that: a failed open.
       stopConnection()
-      scheduleRecovery()
+      if wasStarted { lensEnded("display_stopped") } else { openFailed("display stopped") }
     default:
       break
     }
   }
 
+  /// Session-level state only: the lens content survives a reconnect.
   private func clear() {
     sessionGeneration = UUID()
-    resetLiveOutput()
+    outputGeneration = UUID()
+    inputsTask?.cancel()
+    inputsTask = nil
+    inputs = nil
     #if DEBUG
     cancelNativePreview()
     #endif
@@ -413,59 +591,66 @@ final class DisplayModel {
     displayState = .stopped
   }
 
-  /// A connected native display is quiet until there is a current eligible card or action.
+  /// Developer "Send test screen": clears the lens when nothing else is on it.
   func sendHome() async {
-    guard !webDisplayEnabled, display != nil, triggerFeedback == nil, latestCard == nil, latestSearch == nil else { return }
+    guard !webDisplayEnabled, display != nil, content.isEmpty else { return }
     #if DEBUG
     guard nativePreviewFixture == nil else { return }
     #endif
     await sendSerialized { try await $0.clearDisplay() }
   }
 
+  private func log(_ kind: String, _ payload: [String: Any]) {
+    DebugLog.shared.log(kind, payload)
+  }
 }
 
 extension DisplayModel: LensDisplaying {
   /// A new result always replaces an acknowledgement. Expired acknowledgement timers never
   /// restore a captured old card: only the current card remains eligible for restoration.
   func showCard(_ card: ResultCard?, onRepeat: (@Sendable () -> Void)?, onDismiss: (@Sendable () -> Void)?) async {
-    guard !webDisplayEnabled, display != nil else { return }
+    guard !webDisplayEnabled, isAvailable else { return }
     #if DEBUG
     guard nativePreviewFixture == nil else { return }
     #endif
+    guard content.show(card: card) else { return }
     feedbackTask?.cancel()
     feedbackTask = nil
     feedbackID = nil
-    triggerFeedback = nil
-    latestCard = card
-    latestSearch = nil
     latestRepeat = onRepeat
     latestDismiss = onDismiss
+    if card != holdCard { cancelHold() }
+    reconcile()
     await renderLiveOutput()
+    armHoldIfShown()
   }
 
   func showSearching(claimText: String, captureLabel: String?, sources: [ClaimSourcesPayload.Source]) async {
-    guard isConnected else { return }
+    guard !webDisplayEnabled, isAvailable else { return }
     #if DEBUG
     guard nativePreviewFixture == nil else { return }
     #endif
+    guard content.show(search: LensContent.Search(claimText: claimText, captureLabel: captureLabel, sources: sources)) else { return }
     feedbackTask?.cancel()
     feedbackTask = nil
     feedbackID = nil
-    triggerFeedback = nil
-    latestCard = nil
-    latestSearch = Searching(claimText: claimText, captureLabel: captureLabel, sources: sources)
+    cancelHold()
+    reconcile()
     await renderLiveOutput()
   }
 
   func showTriggerFeedback(_ feedback: NativeTriggerFeedback) async {
-    guard isConnected else { return }
+    // An acknowledgement never opens the lens (see `LensContent.opensLens`); without an open
+    // lens it is dropped so it can't show up stale later.
+    guard !webDisplayEnabled, isAvailable, session != nil else { return }
     #if DEBUG
     guard nativePreviewFixture == nil else { return }
     #endif
     feedbackTask?.cancel()
     let id = UUID()
     feedbackID = id
-    triggerFeedback = feedback
+    content.show(feedback: feedback)
+    reconcile()
     await renderLiveOutput()
     guard feedbackID == id else { return }
     feedbackTask = Task { [weak self] in
@@ -473,7 +658,8 @@ extension DisplayModel: LensDisplaying {
       guard !Task.isCancelled, let self, self.feedbackID == id else { return }
       self.feedbackTask = nil
       self.feedbackID = nil
-      self.triggerFeedback = nil
+      self.content.show(feedback: nil)
+      self.reconcile()
       await self.renderLiveOutput()
     }
   }
@@ -483,7 +669,8 @@ extension DisplayModel: LensDisplaying {
     feedbackTask?.cancel()
     feedbackTask = nil
     feedbackID = nil
-    triggerFeedback = nil
+    content.show(feedback: nil)
+    reconcile()
     await renderLiveOutput()
   }
 }
