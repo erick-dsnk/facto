@@ -4,8 +4,9 @@ Question: can a provider-specific prompt pack (`docs/prompt-pack.md`) close the 
 
 **Outcome (supersedes the earlier versions of this report).**
 - **Laya: shipped.** `services/api/src/providers/packs/laya.json` (`laya-wording-r2a2`) is Laya's default in `PROMPT_PACKS`. Holdout primary 94 against 69 for the built-in pack, ClaimBuster false positives 10 against 13, adm59 false positives 4 against 5, no errors. This replaces the previous ship (`laya-structure-r2a2`, holdout 79 against 69), which was measured while a plumbing bug capped Laya at the default deadline.
-- **Jev: not shipped, opt-in.** `packs/jev.json` (`jev-stack-1`) lifts dev from 140 to 174, but both paired Jev holdout runs failed again (227 `jev_unavailable` errors each), so there is still no holdout for the ship rule. Jev keeps the built-in pack. The file stays for `--prompt-pack` use and for a re-run now that Jev is reachable again.
-- Production default provider stays Jev, on the built-in pack. The Laya numbers are not production-realistic (see Latency).
+- **Jev: shipped.** `packs/jev.json` (`jev-stack-1`) is Jev's default in `PROMPT_PACKS`. Paired holdout (v4): primary 178 against 165 for the built-in pack, adm59 false positives 1 against 4, ClaimBuster false positives 2 against 15, no wrong definitive verdicts, no errors, pipeline p95 0.87 s. Dev: 174 against 140. The two earlier paired holdouts (v2, v3) failed on a Jev outage (`jev_unavailable` in all 227 cases); v4 re-ran the pair once Jev was reachable again.
+- **This changes production Jev requests** (admission kind criteria, admission thresholds, judge claim_risk criteria). Production default provider stays Jev. The Laya numbers are not production-realistic (see Latency).
+- **Jev's packs on Laya (transfer test):** only Jev's threshold change carries over (Laya holdout 81 against 69); Jev's wording makes Laya worse. Laya's own wording pack (94) remains Laya's best. See "Jev packs applied to Laya".
 
 ## Laya pipeline timeout: root cause and fix (commit 3faf727)
 
@@ -29,7 +30,7 @@ Limit that remains: a concurrency-1 Laya server returns 503 whenever overlapping
 - **Rounds and confirmation.** Two rounds of up to 3 attempts per family per provider on dev; the best attempt of each family was re-run as a confirmation.
 - **Greedy stacking.** The best confirmed single variant starts the stack; each further confirmed candidate is merged in (conflicts reconciled by hand), evaluated on dev and kept only if it gains at least 3 over the running stack.
 - **Refine round.** One refine pass per provider and family starts from the stack and tries up to 3 more single-change attempts against the stack's dev score, with the same gate.
-- **Paired holdout.** Baseline and final pack are each run once on the holdout, per provider, back to back so both see the same server state. Ship rule: holdout primary of the final pack at least the baseline, and holdout cbFP not higher; a failed run never ships.
+- **Paired holdout.** Baseline and final pack are each run once on the holdout, per provider, back to back so both see the same server state. Ship rule: holdout primary gain of at least 3 (eps = 2), total false positives (adm59 + ClaimBuster) at most the baseline's + 2, wrong definitive verdicts and errors not above the baseline; a failed run never ships. Dev gate for candidates: gain of at least 3, adm59 FP at most max(baseline, 1), cbFP and wrongDef and errors not above the baseline, Jev pipeline p95 under 10 s.
 - **First run and recovery.** The first tuning run (`tune/r1`, `tune/r2`) produced candidate packs, but its confirmation step was invoked with an undefined pack path (a workflow script bug: the node agents had no output schema), so no gate ran and the first version of this report described a failed run. This recovery run re-measured every candidate with confirmation runs, redid stacking, refine and the holdout. The Laya pipeline timeout and the Jev outage found afterwards are described above and below.
 
 ## Results
@@ -77,18 +78,16 @@ The final Laya pack is the single wording pack.
 
 Ship rule: primary 94 >= 69, cbFP 10 <= 13, wrongDef 0, errors 0, so **laya ship = true**. The gain comes mostly from admission: adm59 correct 26 to 40 and ClaimBuster correct 40 to 49, with false positives not higher.
 
-### Jev holdout (paired, v3)
+### Jev holdout (paired, v4)
 
-| Pack | primary | errors | error kinds | metrics.json |
-|---|---:|---:|---|---|
-| built-in | 0 | 227 | `jev_unavailable` x 227 | `complete = true`, `primary = 0` |
-| jev-stack-1 | 0 | 227 | `jev_unavailable` x 227 | `complete = true`, `primary = 0` |
+| Pack | primary | adm59 (FP) | cbCorrect / cbFP | pipeline | judge | wrongDef | errors | pipeline p95 ms |
+|---|---:|---|---|---:|---:|---:|---:|---:|
+| built-in | 165 | 55 (4) | 74 / 15 | 18 | 18 | 0 | 0 | 892 |
+| jev-stack-1 | 178 | 56 (1) | 86 / 2 | 19 | 17 | 0 | 0 | 865 |
 
-Both runs finished (`complete = true`) with every case an error, so `primary` is 0, not -1 as an earlier version of this report said, and it is not a measurement of the pack. The failure kind is `jev_unavailable` in all 227 cases. The v2 holdout failure was also `jev_unavailable` in every case: an outage of the Jev service, not a pack or harness fault. Jev worked when probed afterwards, but the paired holdout was not re-run again in this step.
+Ship rule: gain 13 >= 3; false positives 3 <= 19 + 2; wrongDef 0 and errors 0, equal to the baseline; p95 under 10 s. So **jev ship = true**. As on dev, the gain is admission precision (ClaimBuster false positives 15 to 2); pipeline and judge move by one case each, within noise.
 
-Why the paired run is the one used: an earlier, unpaired holdout of the built-in pack exists (`tune/baseline/jev-holdout`) and succeeded: primary 168 (adm59 55 with 4 FP, cbCorrect 76 / cbFP 14, pipeline 19, judge 18, 0 errors, pipeline p95 799 ms, judge p95 280 ms). It has no counterpart for `jev-stack-1`, because the final-pack holdout failed. Comparing a final pack with a baseline run at a different time confounds the pack with provider state, so the ship rule uses back-to-back pairs only. The 168 is context for what Jev's built-in pack scores on holdout, not a gate input.
-
-Ship decision: **jev ship = false** (reason: the holdout run failed again, `jev_unavailable` in every case; no holdout evidence for `jev-stack-1`). It is not a negative result for the pack.
+Earlier attempts: the v2 and v3 paired holdouts both finished with `jev_unavailable` in all 227 cases (`complete = true`, `primary = 0`, not -1 as an earlier version of this report said). That was a Jev outage: a probe right after returned normal answers on dev and holdout cases. An earlier, unpaired built-in holdout (`tune/baseline/jev-holdout`, primary 168) agrees with the v4 baseline (165) within noise; the gate uses only the back-to-back pair.
 
 ### Jev dev (v2, unchanged)
 
@@ -142,7 +141,7 @@ Rewrites the admission and judge text as shorter, plainer instructions and crite
 
 The previously shipped `laya-structure-r2a2` (adds `rhetoric` and `personal` options through `optionMap`) is no longer the default; it scored 69 on dev, 93 when stacked on the wording pack (fail), and was not re-run on holdout in v3.
 
-### Jev: `jev-stack-1` (opt-in, not shipped)
+### Jev: `jev-stack-1` (shipped)
 
 Wording stack of two confirmed candidates:
 
@@ -150,7 +149,28 @@ Wording stack of two confirmed candidates:
 - `admission.thresholds`: `claim` 0.6 (built-in default is lower) and `privateData` 0.25. Together these cut ClaimBuster false positives from 26 to 3 on dev.
 - `judge.claim_risk.criteria`: sharper `ordinary`, `health_safety`, `disputed`, `unknown` definitions. Pipeline went 12 to 16 and judge 12 to 14.
 
-Why not shipped: no paired holdout (outage, twice).
+Holdout: 178 against 165 (paired, v4).
+
+## Jev packs applied to Laya (transfer test)
+
+Each Jev pack that passed the Jev dev gate was run on Laya, after the deadline fix, against a fresh Laya dev baseline (63). Same dev gate as above.
+
+| Jev pack on Laya | dev primary | adm59 (FP) | cbCorrect / cbFP | result |
+|---|---:|---|---|---|
+| r1/jev-thresholds-a1 (claim 0.6, privateData 0.25) | 81 | 31 (0) | 46 / 3 | PASS, +18 |
+| jev-stack-1 merged onto laya-structure-r2a2 | 77 | 26 (0) | 47 / 1 | PASS, +14 |
+| r2/jev-wording-a1 | 63 | 18 (0) | 41 / 5 | FAIL, gain 0 |
+| r1/jev-evidence-a3 | 63 | 21 (0) | 38 / 11 | FAIL, gain 0 (no change at all) |
+| jev-stack-1 | 62 | 15 (0) | 43 / 0 | FAIL, gain -1 |
+| r1/jev-wording-a2 | 59 | 21 (0) | 34 / 15 | FAIL, gain -4, cbFP 15 > 11 |
+| r2/jev-thresholds-a1 (claim 0.8) | 55 | 11 (0) | 40 / 0 | FAIL, gain -8 |
+| r2/jev-evidence-a2 | n/a | | | not measured (the run did not finish) |
+
+Paired Laya holdout for the best transfer, `r1/jev-thresholds-a1`: 81 against 69 (adm59 FP 1 against 5, cbFP 3 against 13, pipeline 2 against 0, no errors). That is below Laya's own wording pack (94 on holdout), so it is not shipped.
+
+Stacking the transfer onto the wording pack (`laya-wording-r2a2` plus claim 0.6 and privateData 0.25) scored 69 on dev against 100 for the wording pack alone (repeat run, same window; baseline 63): it became too strict (adm59 correct 20 against 44). Laya stays on `laya-wording-r2a2`.
+
+Reading: Laya's main weakness is admission recall and precision. A higher claim threshold fixes precision on the built-in prompts, but Jev's wording is tuned to how Jev reads questions and does not help Laya, and evidence layout has no effect because Laya's judge is limited by truncation.
 
 ## Laya at 1024 state tokens and 512 head tokens (separate track)
 
@@ -174,14 +194,14 @@ Even 1024/512 truncates every ask (24 of 24), and judge accuracy did not move fr
 
 ## Caveats
 
-- **Dev overfitting.** Tuning on dev with up to 3 attempts per family, two rounds and stacking selects on noise as well as signal. The Jev dev gain (140 to 174) is unverified on holdout. The Laya dev gain (63 to 100) held on holdout (69 to 94).
+- **Dev overfitting.** Tuning on dev with up to 3 attempts per family, two rounds and stacking selects on noise as well as signal. The Jev dev gain (140 to 174) held on holdout (165 to 178). The Laya dev gain (63 to 100) held on holdout (69 to 94).
 - **Holdout is generated, not blind.** Its admission and cohort cases were written and verified by the same team that designed the packs; only the ClaimBuster sets are external.
 - **ClaimBuster label noise and no debate context.** Labels are crowd-sourced and sentences are scored without the previous turn. Six NFS cases were flagged as probably checkable. UFS is not scored.
 - **Run-to-run noise.** Jev repeats differ by about 2 points (eps = 2); a +3 gate is only just above that. Laya is more variable under load, and the stacked packs that lost to the single wording pack (71 and 93 against 100) show that merging Laya packs is not additive. 24 pipeline and 24 judge cases move in steps of 1/24.
 - **Laya is serial-only.** A concurrency-1 server returns 503 on overlap; run one eval at a time with `--lock`.
-- **Jev holdout failed twice** (`jev_unavailable`, 227 errors in both rounds). Jev's ship decision is "no holdout", not a negative result.
+- **Jev holdout needed three attempts.** The first two failed on a Jev outage; the decision uses the third, paired run.
 - **Laya is better at admission, not at judging.** Judge scores are unchanged.
 
 ## Shared-code changes
 
-`PROMPT_PACKS.laya` loads `packs/laya.json` (a synchronous read at module load in `prompt-pack.ts`); `PROMPT_PACKS.jev` is the built-in pack. The pack test asserts that the Jev default stays the built-in pack, that the Jev pack loads and differs from it, and that the Laya default equals the loaded Laya pack named `laya-wording-r2a2`. Earlier in this PR: data (`fixtures/evaluation/provider-comparison/claimbuster/`), the injectable `PipelineRuntime` deadline and `waitCapMs` (default unchanged), harness flags `--prompt-pack`, `--laya-deadline-ms`, `--lock`, and tuning scripts in `apps/console/scripts/`.
+`PROMPT_PACKS.jev` and `PROMPT_PACKS.laya` load `packs/jev.json` and `packs/laya.json` (a synchronous read at module load in `prompt-pack.ts`). **This changes production requests for both providers**; the built-in pack (byte-identical to the pre-pack code, golden test) stays available as `DEFAULT_PROMPT_PACK`. The pack test asserts that each default equals its loaded file (`jev-stack-1`, `laya-wording-r2a2`) and differs from the built-in pack. Earlier in this PR: data (`fixtures/evaluation/provider-comparison/claimbuster/`), the injectable `PipelineRuntime` deadline and `waitCapMs` (default unchanged), harness flags `--prompt-pack`, `--laya-deadline-ms`, `--lock`, and tuning scripts in `apps/console/scripts/`.

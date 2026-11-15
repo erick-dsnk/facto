@@ -42,15 +42,15 @@ function scripted(noul = 0, pick: Record<string, string> = {}): JevClient & { re
 }
 
 describe('prompt pack files', () => {
-  it('resolves an empty file to the built-in pack and registers it for both providers', () => {
+  it('resolves an empty file to the built-in pack', () => {
     expect(resolvePromptPack({})).toEqual(DEFAULT_PROMPT_PACK);
-    expect(PROMPT_PACKS.jev).toBe(DEFAULT_PROMPT_PACK); expect(packForProvider('jev')).toBe(DEFAULT_PROMPT_PACK);
   });
-  it('loads the committed per-provider packs: Laya ships its tuned pack, the Jev pack is opt-in and the Jev default stays built-in (docs/per-provider-prompts.md)', async () => {
+  it('ships the committed tuned pack for each provider (docs/per-provider-prompts.md)', async () => {
     const jev = await loadPromptPack(new URL('./packs/jev.json', import.meta.url).pathname);
     expect(jev.name).toBe('jev-stack-1');
     expect(jev).not.toEqual(DEFAULT_PROMPT_PACK);
-    expect(PROMPT_PACKS.jev).toBe(DEFAULT_PROMPT_PACK);
+    expect(PROMPT_PACKS.jev).toEqual(jev);
+    expect(packForProvider('jev')).toBe(PROMPT_PACKS.jev);
     const laya = await loadPromptPack(new URL('./packs/laya.json', import.meta.url).pathname);
     expect(laya.name).toBe('laya-wording-r2a2');
     expect(laya).not.toEqual(DEFAULT_PROMPT_PACK);

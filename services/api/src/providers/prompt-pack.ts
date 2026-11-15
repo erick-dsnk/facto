@@ -93,5 +93,5 @@ export async function loadPromptPack(path: string, base: PromptPack = DEFAULT_PR
 }
 
 const shippedPack = (provider: DecisionProviderName): PromptPack => resolvePromptPack(JSON.parse(readFileSync(new URL(`./packs/${provider}.json`, import.meta.url), 'utf8')));
-/** The pack each provider uses in production. Jev keeps the built-in pack (its tuned pack in packs/jev.json is opt-in); Laya ships packs/laya.json. See docs/per-provider-prompts.md. */
-export const PROMPT_PACKS: Record<DecisionProviderName, PromptPack> = { jev: DEFAULT_PROMPT_PACK, laya: shippedPack('laya') };
+/** The pack each provider uses in production: packs/jev.json and packs/laya.json, each shipped after a paired holdout. See docs/per-provider-prompts.md. */
+export const PROMPT_PACKS: Record<DecisionProviderName, PromptPack> = { jev: shippedPack('jev'), laya: shippedPack('laya') };
