@@ -5,6 +5,8 @@ import { rankedByStance, TALLY_DEFAULTS, type SourceTally } from './source-tally
  * missing answer, so anything short of these conditions is Can't verify. */
 export const RULES = {
   minProbabilityTrue: 0.6, minProbabilityFalse: 0.7, minProbabilityMisleading: 0.7, minProbabilityMixed: 0.55,
+  /** False on a single contradicting site needs Jev this sure, with no site backing the claim. */
+  minProbabilityConfidentFalse: 0.9,
   stanceMinProbability: TALLY_DEFAULTS.stanceMinProbability, echoOverlap: TALLY_DEFAULTS.echoOverlap, echoMinTrigrams: TALLY_DEFAULTS.echoMinTrigrams,
 } as const;
 
@@ -20,6 +22,11 @@ export function decideLabel(joint: Verdict, probabilities: Record<Verdict, numbe
   // describes a myth often reads as backing it, so it doesn't block False.
   if (joint === 'contradicted' && p('contradicted') >= RULES.minProbabilityFalse
     && (c.contradicting >= 2 || c.trustedContradicting >= 1)) return 'contradicted';
+  // Confident False on one site: obvious myths ("Pizza is only made with gluten dough", 15 Nov) found one contradicting
+  // site and stayed Can't verify. Jev at least 90% sure, one site against and none for is enough. Health, safety and
+  // disputed claims still pass the strict two-source gate in verdict.ts afterwards.
+  if (joint === 'contradicted' && p('contradicted') >= RULES.minProbabilityConfidentFalse
+    && c.contradicting >= 1 && c.supporting === 0) return 'contradicted';
   // Misleading: a fact-checker who checked this very claim rated it so, and Jev doesn't read it as true.
   if (tally.ratedMisleading.length > 0 && joint !== 'supported') return 'misleading';
   // Misleading: independent sites back it and contradict it, or Jev is sure it misleads and a source

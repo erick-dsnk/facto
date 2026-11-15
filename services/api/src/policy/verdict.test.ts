@@ -259,10 +259,11 @@ describe('conservative deterministic verdict', () => {
     judgment.sourceAssessments.c = { contentBasis: 'original_record', confidence: .99 };
     expect(decideVerdict(judgment).verdict).toBe('insufficient_evidence');
   });
-  it('takes the stronger route for uncertain ordinary risk and dangerous-mixture or pregnancy wording', () => {
+  it('takes the stronger route for dangerous-mixture or pregnancy wording, but not for merely uncertain ordinary risk', () => {
     const judgment = reading();
+    // 15 Nov: unsure-but-ordinary used to go strict and silenced everyday myths with six contradicting sources.
     judgment.claimRisk.confidence = .84;
-    expect(decideVerdict(judgment).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment).verdict).not.toBe('insufficient_evidence');
     judgment.claimRisk.confidence = .99;
     for (const text of ['Mixing bleach with vinegar is harmless.', 'This supplement improves pregnancy outcomes.', 'The product improves athletic performance.']) {
       judgment.checkedText = text;

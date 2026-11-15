@@ -7,6 +7,7 @@ import { PROVIDER_LIMITS, type EventEnvelope, type PipelineAdapters, type TextIn
 import { claimResultSchema, eventEnvelopeSchema } from '../../../../packages/contracts/src/wire.js';
 import { type AsrAdapter, type AsrTranscript } from '../../src/transport/audio.js';
 import { DebugFeed } from '../../src/runtime/debug-feed.js';
+import { SESSION_LIFETIME_MS } from '../../src/runtime/session.js';
 
 type Server = Awaited<ReturnType<typeof buildServer>>;
 type Credentials = { sessionId: string; token: string; sessionEpoch: number; expiresAt: string };
@@ -156,7 +157,7 @@ describe('session HTTP and WebSocket boundary', () => {
     expect((await server.app.inject({ method: 'DELETE', url: `/v1/sessions/${session.sessionId}`, headers: auth(session) })).statusCode).toBe(204);
     expect(server.store.sessions.has(session.sessionId)).toBe(false);
     expect((await submit(server, session)).statusCode).toBe(401);
-    const expiring = await join(server); server.advance(300_001);
+    const expiring = await join(server); server.advance(SESSION_LIFETIME_MS + 1);
     expect((await submit(server, expiring)).statusCode).toBe(401);
     expect(server.store.sessions.has(expiring.sessionId)).toBe(false);
   });
@@ -452,8 +453,48 @@ describe('debug feed', () => {
     const entries = (await feedGet(server, operatorKey)).json<Entries>().entries;
     expect(entries.some(entry => entry.sessionId === a.sessionId)).toBe(false);
     expect(entries.some(entry => entry.sessionId === b.sessionId)).toBe(true);
-    server.advance(300_001); server.store.sweep();
+    server.advance(SESSION_LIFETIME_MS + 1); server.store.sweep();
     expect((await feedGet(server, operatorKey)).json<Entries>().entries.some(entry => entry.sessionId === b.sessionId)).toBe(false);
+  });
+
+  it('records each final sentence level, never checks a dimmed sentence, and gives the stream after a spoken answer an echo window', async () => {
+    let publish!: (event: AsrTranscript) => void; let writes = 0;
+    const starts: unknown[][] = [];
+    const asr: AsrAdapter = { start: async (...args: Parameters<AsrAdapter['start']>) => { starts.push(args); publish = args[1]; return { write: async () => { writes++; }, stop: async () => {} }; } };
+    const feed = new DebugFeed();
+    const server = await setup({ asr, debugFeed: feed, debugFeedKey: operatorKey, voice: { dimDb: 14, floorDbfs: -60, echoMs: 800, stitchMs: 4000 } });
+    const session = await join(server); const { socket, events } = await stream(server, session);
+    const start = (streamGeneration: number) => socket.send(JSON.stringify({ type: 'audio.start', sessionEpoch: 1, streamGeneration, encoding: 'pcm_s16le', sampleRateHz: 16000, channels: 1, source: 'glasses_stream_audio' }));
+    start(1); await eventOf(events, 'audio.ready');
+    // One second of the wearer (about -20 dBFS), then one second of another table (about -50 dBFS).
+    for (let sequence = 0; sequence < 20; sequence++) {
+      const bytes = Buffer.alloc(3213); bytes.writeUInt8(1, 0); bytes.writeUInt32BE(1, 1); bytes.writeUInt32BE(sequence, 5); bytes.writeUInt32BE(sequence * 100, 9);
+      const amplitude = sequence < 10 ? 3277 : 104;
+      for (let sample = 0; sample < 1600; sample++) bytes.writeInt16LE(sample % 2 ? amplitude : -amplitude, 13 + sample * 2);
+      socket.send(bytes);
+    }
+    await vi.waitFor(() => expect(writes).toBe(20));
+    const final = (segmentId: string, text: string, captureOffsetMs: number, endOffsetMs: number) => publish({ text, final: true, segmentId, confidence: null, captureOffsetMs, endOffsetMs });
+    const state = server.store.sessions.get(session.sessionId)!;
+    const inputFor = (segmentId: string) => [...state.requests.values()].find(record => record.input.capture.segmentId === segmentId)?.input;
+    final('s1', 'We met in Helsinki.', 0, 300); final('s2', 'It is a big city.', 300, 600); final('s3', 'Helsinki is the capital of Finland.', 600, 900);
+    await vi.waitFor(() => expect(inputFor('s3')).toBeDefined());
+    final('s4', 'Bucharest is the capital of Romania.', 1000, 1900);
+    type Level = { segmentId: string; text: string; action: string; level: number; reference: number | null };
+    const levels = () => feed.after(0).filter(entry => entry.kind === 'asr.level' && entry.sessionId === session.sessionId).map(entry => entry.data as Level);
+    await vi.waitFor(() => expect(levels()).toHaveLength(4));
+    expect(levels().map(level => [level.segmentId, level.action, level.level, level.reference])).toEqual([
+      ['s1', 'learning', -20, null], ['s2', 'learning', -20, null], ['s3', 'learning', -20, null], ['s4', 'dimmed', -50, -20]]);
+    expect(levels()[3].text).toBe('Bucharest is the capital of Romania.');
+    expect(inputFor('s4')).toBeUndefined();
+
+    socket.send(JSON.stringify({ type: 'playback.started', sessionEpoch: 1 }));
+    await vi.waitFor(() => expect(events.some(event => event.type === 'audio.stopped')).toBe(true));
+    socket.send(JSON.stringify({ type: 'playback.ended', sessionEpoch: 1 }));
+    start(2);
+    await vi.waitFor(() => expect(starts).toHaveLength(2));
+    expect(starts[0]).toHaveLength(4);
+    expect(starts[1][4]).toEqual({ ignoreWordsBeforeMs: 800 });
   });
 
   it('keeps only the newest entries', () => {

@@ -15,14 +15,14 @@ const MAX_KEYTERM_LENGTH = 50;
 const KEYTERM_PATTERN = /^[\p{L}\p{N} .\-'&]+$/u;
 
 /**
- * The defaults plus a comma-separated list. Terms are trimmed and inner whitespace collapsed; a term that is empty,
- * longer than 50 characters or holds anything but letters, digits, spaces and . - ' & is dropped. Duplicates are
- * removed ignoring case (the first spelling wins), and at most 50 terms are kept.
+ * The defaults (DEFAULT_KEYTERMS unless given) plus a comma-separated list. Terms are trimmed and inner whitespace collapsed;
+ * a term that is empty, longer than 50 characters or holds anything but letters, digits, spaces and . - ' & is dropped.
+ * Duplicates are removed ignoring case (the first spelling wins), and at most 50 terms are kept.
  */
-export function parseKeyterms(value: string | undefined): string[] {
+export function parseKeyterms(value: string | undefined, defaults: readonly string[] = DEFAULT_KEYTERMS): string[] {
   const terms: string[] = [];
   const seen = new Set<string>();
-  for (const raw of [...DEFAULT_KEYTERMS, ...(value ?? '').split(',')]) {
+  for (const raw of [...defaults, ...(value ?? '').split(',')]) {
     const term = raw.trim().replace(/\s+/g, ' ');
     const length = Array.from(term).length;
     if (length < 1 || length > MAX_KEYTERM_LENGTH || !KEYTERM_PATTERN.test(term)) continue;
@@ -127,10 +127,10 @@ export function createDeepgramAdapter(options: DeepgramOptions): AsrAdapter {
   const listenUrl = options.url ?? deepgramListenUrl(options.keyterms ?? DEFAULT_KEYTERMS);
 
   return {
-    async start(config, onTranscript, signal, onFailure) {
+    async start(config, onTranscript, signal, onFailure, startOptions) {
       signal.throwIfAborted();
       const socket = factory(listenUrl, { Authorization: `Token ${options.apiKey}` });
-      const assembler = new SentenceAssembler(onTranscript, { idPrefix: `g${config.streamGeneration}` });
+      const assembler = new SentenceAssembler(onTranscript, { idPrefix: `g${config.streamGeneration}`, ignoreBefore: (startOptions?.ignoreWordsBeforeMs ?? 0) / 1000 });
       const generation = config.streamGeneration;
       // One line per kind of failure and stream, so a broken provider is visible in the server log without flooding it.
       const reported = new Set<string>();
