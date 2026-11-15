@@ -991,7 +991,7 @@ Recorded by A for [#10](https://github.com/erick-dsnk/junction-2026/issues/10). 
 | B: checking service | erick-dsnk | `packages/contracts/**` (shared-file owner), `services/api/src/**` except `input/asr`, `apps/console/**`, root JS config, `docs/evaluation.md`, `docs/deck-outline.md` |
 | Third teammate | Cipriamn | Video, demo filming and review duty |
 
-Review follows the repository type cycle in `AGENTS.md`: Cipriamn reviews A's PRs, A reviews B's PRs, B reviews Cipriamn's. A schema change goes through B and updates the TypeScript validator, Swift DTO and golden fixture in one PR.
+A schema change goes through B and updates the TypeScript validator, Swift DTO and golden fixture in one PR.
 
 **iOS project.** `apps/ios/` holds the working DAT app (XcodeGen `project.yml`, app "Glasses Lab"), added in [PR #29](https://github.com/erick-dsnk/junction-2026/pull/29). Bundle ID `com.davidvasilescu.junction.glasseslab`, team `97JCVP9322`, automatic signing. DAT SDK: `https://github.com/facebook/meta-wearables-dat-ios` pinned to exact `1.0.1`. The legacy `facebook` URL resolves, so it stays. Devices: iPhone 17 Pro on iOS 26.6 and Ray-Ban Meta Gen 2 on firmware 129; Meta Ray-Ban Display only as a shared loaner.
 

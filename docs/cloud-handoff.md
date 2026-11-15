@@ -30,7 +30,7 @@ Repository: https://github.com/erick-dsnk/junction-2026
 5. #35 / #20 / `codex/20-runtime-stack`
 6. #36 / #24 / `codex/24-live-evaluation-stack`
 
-The sixth draft follows #35 because the live evaluator depends on its retry and alternate-retrieval interfaces. Later merges preserve issue-specific dependencies without force-pushing. The earlier combined retention, #17 citation-selection and #15 opinion changes were frozen and completed the historical public and third sealed evaluations below. Review owner is water / erick-dsnk; intended reviewer is grass / Davidtzuke. No review notification was requested. PR #28 was already merged.
+The sixth draft follows #35 because the live evaluator depends on its retry and alternate-retrieval interfaces. Later merges preserve issue-specific dependencies without force-pushing. The earlier combined retention, #17 citation-selection and #15 opinion changes were frozen and completed the historical public and third sealed evaluations below. No review notification was requested. PR #28 was already merged.
 
 Read `AGENTS.md`, `docs/plan.md`, `apps/console/README.md`, `packages/contracts/README.md`, `docs/evaluation.md`, `docs/backend-readiness.md`, `docs/broader-development-candidate09.md`, `docs/broader-development-candidate08.md`, `docs/broader-development-2026-11-14.md`, `docs/automatic-development-2026-11-14.md`, `docs/live-campaign-2026-11-14.md`, `docs/blind-evaluation-2026-11-14.md`, current issues and PRs before acting. The existing shared app/API schemas, `packages/contracts/`, `apps/ios/` and `services/api/src/input/asr/` are frozen. Glasses, native decoding, actual ASR, deployment and device measurements remain deferred.
 
