@@ -57,6 +57,14 @@ describe('voice trigger', () => {
   it.each(['I need to check this report before Friday.', 'The Eiffel Tower opened in 1889, is this true?', 'Check this out.', 'Is this true for Finland?', 'Check this one about taxes.', 'This is true.', ''])('ignores %s', text => {
     expect(isVoiceTrigger(text)).toBe(false);
   });
+  it.each(['Facto, can you check this?', 'hey facto check this', 'Facto is this true?', 'Hey Facto, check this.', 'HEY FACTO, FACT CHECK THIS!', 'Facto. Check this.',
+    'Fact o, can you check this?', 'Fact-o, check this', 'Fakto, check this please', 'Okay Facto, is this true?', 'Facto, please check this photo.', 'factor check this', 'facto can you check this'])('matches wake word %s', text => {
+    expect(isVoiceTrigger(text)).toBe(true);
+  });
+  it.each(['Facto is a great app.', 'Hey Facto.', 'Facto', 'Facto, I need to check this report.', 'Facto, check this out.', 'Hey Facto, is this true for Finland?',
+    'Factory, check this.', 'Facts, check this.', 'Factor in the cost, check this.', 'The factor is this true?'])('ignores wake word %s', text => {
+    expect(isVoiceTrigger(text)).toBe(false);
+  });
   it('normalizes punctuation, case, hyphens and spacing', () => {
     expect(normalizeUtterance('  FACT‑CHECK   this?! ')).toBe('fact check this');
   });
