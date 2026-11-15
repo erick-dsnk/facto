@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { z } from 'zod';
 import { DEFAULT_ADMISSION_PACK, ADMISSION_CANONICAL } from './jev/classification.js';
@@ -9,8 +10,6 @@ export type DecisionProviderName = 'jev' | 'laya';
 
 /** What the classifier and judge sent before prompt packs existed. */
 export const DEFAULT_PROMPT_PACK: PromptPack = { name: 'built-in', admission: DEFAULT_ADMISSION_PACK, judge: DEFAULT_JUDGE_PACK };
-/** The pack each provider uses in production. Both default to the built-in pack; point a provider at another PromptPack here. */
-export const PROMPT_PACKS: Record<DecisionProviderName, PromptPack> = { jev: DEFAULT_PROMPT_PACK, laya: DEFAULT_PROMPT_PACK };
 export const packForProvider = (provider: DecisionProviderName, packs: Partial<Record<DecisionProviderName, PromptPack>> = PROMPT_PACKS): PromptPack => packs[provider] ?? PROMPT_PACKS[provider];
 
 const text = z.string().min(1);
@@ -92,3 +91,7 @@ export async function loadPromptPack(path: string, base: PromptPack = DEFAULT_PR
   try { raw = JSON.parse(await readFile(path, 'utf8')); } catch (error) { throw new Error(`prompt_pack_unreadable: ${path}: ${error instanceof Error ? error.message : 'unknown'}`); }
   return resolvePromptPack(raw, { ...base, name: base.name });
 }
+
+const shippedPack = (provider: DecisionProviderName): PromptPack => resolvePromptPack(JSON.parse(readFileSync(new URL(`./packs/${provider}.json`, import.meta.url), 'utf8')));
+/** The pack each provider uses in production. Jev keeps the built-in pack (its tuned pack in packs/jev.json is opt-in); Laya ships packs/laya.json. See docs/per-provider-prompts.md. */
+export const PROMPT_PACKS: Record<DecisionProviderName, PromptPack> = { jev: DEFAULT_PROMPT_PACK, laya: shippedPack('laya') };

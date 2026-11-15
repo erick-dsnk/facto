@@ -1,3 +1,31 @@
 {
-  "name": "jev-tuned-r2"
+ "name": "jev-stack-1",
+ "admission": {
+  "choice": {
+   "kind": {
+    "criteria": {
+     "claim": "It states at least one specific, checkable fact about the world or about what someone said, did or decided (a number, record, vote, event, quotation or comparison that a source could confirm or refute), either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too. A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it. Not a claim: hedged first-person views (\"I think\", \"I believe\", \"I hope\"), vague praise or characterisations of people, the country or the speaker's side, rhetorical or debate filler, a promise or intention about what the speaker will do, and a guess about how the speaker's own team, plans or life will turn out",
+     "opinion": "A personal view, belief, hope, taste, feeling, judgment or evaluation, including hedged views (\"I think\", \"I believe\"), vague generalities about people or groups, rhetorical flourishes, debate filler and appeals to what \"everyone knows\", with no specific fact in it that a source could prove or disprove. Value judgements phrased as predictions are opinions",
+     "prediction": "Only a guess, promise, pledge or intention about the future that no plan, announcement, estimate or forecast could confirm or contradict, such as what the speaker will do if elected or how the speaker's own team, plans or life will turn out",
+     "question": "A question",
+     "instruction": "Only an instruction, request, piece of advice or call to action, with no fact in it",
+     "other": "A fragment, greeting, heading, code or anything else that states no fact"
+    }
+   }
+  },
+  "thresholds": {
+   "claim": 0.6,
+   "privateData": 0.25
+  }
+ },
+ "judge": {
+  "claim_risk": {
+   "criteria": {
+    "ordinary": "An ordinary checkable proposition, including settled facts of science, geography, astronomy, weather, history and everyday reference, without a material medical or bodily-safety implication and without a substantial unresolved factual dispute among experts.",
+    "health_safety": "The proposition itself is mainly about medicine, treatment, drugs, disease, pregnancy, toxic exposure, dangerous mixtures, or the health or bodily safety of people, or about consequential product effectiveness. A plain natural-science or environmental fact is not health_safety merely because people are mentioned or because the topic could affect people somehow.",
+    "disputed": "The proposition has a substantial unresolved factual dispute among credible experts that needs expert evidence; an attributed disagreement alone is insufficient. A claim with a settled textbook answer, a debunked myth, or a quantity that is merely approximate or hard to measure is not disputed.",
+    "unknown": "The scope or stakes are too uncertain to safely select ordinary."
+   }
+  }
+ }
 }

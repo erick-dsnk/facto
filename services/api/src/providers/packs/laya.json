@@ -1,3 +1,23 @@
 {
-  "name": "laya-tuned-r2"
+ "name": "laya-structure-r2a2",
+ "admission": {
+  "choice": {
+   "kind": {
+    "criteria": {
+     "claim": "It states at least one checkable fact about the world or about what someone said, did or decided, either true or false, whether or not it is actually true, even if it also gives a view or urges something. Myths, rumours and wrong numbers are statements of fact too. A statement about the future counts when official plans, announcements, published estimates or forecasts could confirm or contradict it; a guess about how the speaker's own team, plans or life will turn out does not",
+     "opinion": "Only a personal view, taste, feeling or judgment, with no fact in it that a source could prove or disprove. Value judgements phrased as predictions are opinions",
+     "prediction": "Only a guess about the future that no plan, announcement, estimate or forecast could confirm or contradict, such as a guess about how the speaker's own team, plans or life will turn out",
+     "question": "A question",
+     "instruction": "Only an instruction, request, piece of advice or call to action, with no fact in it",
+     "other": "A fragment, greeting, heading, code or anything else that states no fact",
+     "rhetoric": "Rhetoric, a slogan, exaggeration, vague generality or loaded wording that names no specific checkable fact",
+     "personal": "Something about the speaker's own feelings, experiences, plans or situation, not a public fact"
+    },
+    "optionMap": {
+     "rhetoric": "opinion",
+     "personal": "opinion"
+    }
+   }
+  }
+ }
 }

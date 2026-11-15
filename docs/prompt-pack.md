@@ -10,7 +10,7 @@ A prompt pack holds every decision-model prompt the classifier (admission) and t
 | Built-in admission pack | `DEFAULT_ADMISSION_PACK` in `services/api/src/providers/jev/classification.ts` |
 | Built-in judge pack | `DEFAULT_JUDGE_PACK` in `services/api/src/providers/jev/judgment.ts` |
 | JSON schema (zod), `resolvePromptPack`, `loadPromptPack`, provider registry | `services/api/src/providers/prompt-pack.ts` |
-| Production selection | `PROMPT_PACKS` in `prompt-pack.ts`: `{ jev, laya }`, both the built-in pack. `selectDecisionProvider` returns `pack`; `services/api/src/index.ts` passes it to `createClassifier`, `createJudge` and the runtime's `verdictRules`. |
+| Production selection | `PROMPT_PACKS` in `prompt-pack.ts`: `{ jev, laya }`: Jev uses the built-in pack, Laya uses `packs/laya.json` (see `docs/per-provider-prompts.md`). `selectDecisionProvider` returns `pack`; `services/api/src/index.ts` passes it to `createClassifier`, `createJudge` and the runtime's `verdictRules`. |
 
 Out of scope: the source-query prompts in `services/api/src/sources` (they use the same client but are not classifier or judge prompts).
 
