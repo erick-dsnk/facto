@@ -1,6 +1,6 @@
 /**
  * The Facto display inside the right lens, on its own clock (not scroll).
- * Motion follows docs/design/card-mockups.html, scaled into the lens:
+ * Motion, scaled into the lens:
  *   1. the claim is heard, word by word
  *   2. a band of light sweeps it
  *   3. a pill grows from where the sweep ends and names its stages

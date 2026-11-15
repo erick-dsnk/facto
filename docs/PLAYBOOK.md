@@ -3,14 +3,7 @@
 The full research behind these choices, with sources, is in [research.md](product/research.md).
 
 ## Roles
-- **Type cycle**: everyone builds and everyone reviews exactly one teammate. The reviewer approves and merges once CI is green.
-  | Owner | Reviewed and merged by |
-  |---|---|
-  | 🔥 fire: Cipriamn | 💧 water: erick-dsnk |
-  | 💧 water: erick-dsnk | 🌱 grass: Davidtzuke |
-  | 🌱 grass: Davidtzuke | 🔥 fire: Cipriamn |
-
-  The **Type Review Cycle** workflow labels each PR with its owner's type and requests the review. The type comes from the issue the PR closes, so agent PRs reach the right reviewer too, or failing that from the PR author.
+- **Review**: everyone builds and everyone reviews. A teammate approves and merges once CI is green.
 - **Shared foundations** (schema, shared types, API contracts) are owned by one person in wave 1. Later PRs that need changes there flag it under **Needs owner** and don't make the change themselves.
 - **Agents**: cloud sessions, Copilot and Codex take the `agent:*` issues. Keep **no more than ~5 agent PRs open** at once.
 
