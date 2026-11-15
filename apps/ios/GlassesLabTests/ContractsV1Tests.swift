@@ -241,9 +241,10 @@ final class ContractsV1Tests: XCTestCase {
     XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets), BackendConfig())
     XCTAssertEqual(BackendConfig.load(from: defaults, secrets: secrets).joinCode, "")
 
-    BackendConfig(baseURL: URL(string: "https://api.example.com")!, joinCode: "demo-code").save(to: defaults, secrets: secrets)
+    BackendConfig(baseURL: URL(string: "https://api.example.com")!, joinCode: "demo-code", remoteOCRSelectionEnabled: true).save(to: defaults, secrets: secrets)
     let loaded = BackendConfig.load(from: defaults, secrets: secrets)
     XCTAssertEqual(loaded.joinCode, "demo-code")
+    XCTAssertTrue(loaded.remoteOCRSelectionEnabled)
     XCTAssertNil(defaults.string(forKey: BackendConfig.joinCodeKey), "the join code stays out of UserDefaults")
     XCTAssertEqual(secrets.read(BackendConfig.joinCodeKey), "demo-code")
     XCTAssertEqual(loaded.streamURL(sessionId: "abc")?.absoluteString, "wss://api.example.com/v1/sessions/abc/stream")

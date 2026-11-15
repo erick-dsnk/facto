@@ -56,6 +56,16 @@ struct SettingsView: View {
         .factoRowBackground()
 
         Section {
+          Toggle("Understand photo layout", isOn: $live.remoteOCRSelectionEnabled)
+            .factoToggleTint()
+        } header: {
+          SettingsHeader("Photo checks")
+        } footer: {
+          SettingsFooter("Uploads the photo and its recognized text to your configured backend to identify the passage to check. Off: text recognition and target selection stay on this phone. Changes apply when Settings closes.")
+        }
+        .factoRowBackground()
+
+        Section {
           SecureField("Join code", text: $live.joinCode)
             .textContentType(.password)
             .textInputAutocapitalization(.never)

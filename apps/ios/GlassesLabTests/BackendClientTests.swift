@@ -19,10 +19,10 @@ final class BackendClientTests: XCTestCase {
 
   // MARK: Helpers
 
-  private func makeClient(joinCode: String = "demo-join", policy: ReconnectPolicy = ReconnectPolicy(retryCycleDelay: nil, openTimeout: 1), sleep: (@Sendable (TimeInterval) async throws -> Void)? = nil) -> BackendClient {
+  private func makeClient(joinCode: String = "demo-join", remoteOCRSelectionEnabled: Bool = false, policy: ReconnectPolicy = ReconnectPolicy(retryCycleDelay: nil, openTimeout: 1), sleep: (@Sendable (TimeInterval) async throws -> Void)? = nil) -> BackendClient {
     let timeline = timeline!
     return BackendClient(
-      config: BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: joinCode),
+      config: BackendConfig(baseURL: URL(string: "https://api.example.test")!, joinCode: joinCode, remoteOCRSelectionEnabled: remoteOCRSelectionEnabled),
       urlSession: MockURLProtocol.session(),
       policy: policy,
       webSocketFactory: sockets.factory,
@@ -74,6 +74,73 @@ final class BackendClientTests: XCTestCase {
   }
 
   // MARK: Session create
+
+  private var targetInput: OCRTargetInput {
+    .init(lines: [.init(id: "L1", text: "One router took down flights", confidence: 0.95,
+                       polygon: [.init(x: 0.1, y: 0.8), .init(x: 0.8, y: 0.8), .init(x: 0.8, y: 0.7), .init(x: 0.1, y: 0.7)])], aspect: 0.75)
+  }
+
+  func testRemoteOCRDisabledMakesNoRequest() async throws {
+    let client = makeClient()
+    let result = try await client.selectTarget(in: targetInput, imageData: Data([255, 216, 255, 217]), intent: nil)
+    XCTAssertEqual(result.status, .unavailable)
+    XCTAssertTrue(MockURLProtocol.recorded.isEmpty)
+  }
+
+  func testRemoteOCRRejectsOversizeEvidenceAndHintBeforeAnyNetworkRequest() async throws {
+    let client = makeClient(remoteOCRSelectionEnabled: true)
+    let source = targetInput.lines[0]
+    func repeatedInput(count: Int, text: String) -> OCRTargetInput {
+      .init(lines: (0..<count).map { index in
+        .init(id: "L\(index)", text: text, confidence: source.confidence, polygon: source.polygon)
+      }, aspect: targetInput.aspect)
+    }
+    let image = Data([255, 216, 255, 217])
+    for input in [repeatedInput(count: 301, text: "a"), repeatedInput(count: 1, text: String(repeating: "a", count: 1_001)),
+                  repeatedInput(count: 61, text: String(repeating: "a", count: 1_000))] {
+      let result = try await client.selectTarget(in: input, imageData: image, intent: nil)
+      XCTAssertEqual(result.reason, "target_selection_input_too_large")
+      XCTAssertEqual(result.status, .unavailable)
+    }
+    // Emoji are two UTF-16 units each; matching the server avoids a misleading HTTP 400.
+    let hintResult = try await client.selectTarget(in: targetInput, imageData: image, intent: String(repeating: "😀", count: 251))
+    XCTAssertEqual(hintResult.reason, "target_selection_hint_too_long")
+    let imageResult = try await client.selectTarget(in: targetInput, imageData: Data(repeating: 0, count: 4_000_001), intent: nil)
+    XCTAssertEqual(imageResult.reason, "target_selection_image_too_large")
+    XCTAssertTrue(MockURLProtocol.recorded.isEmpty)
+  }
+
+  func testRemoteOCRUsesSessionAuthAndOriginalTopLeftPolygons() async throws {
+    serve { request, body in
+      XCTAssertEqual(request.url?.path, "/v1/sessions/session-1/ocr/select-target")
+      XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer tok_secret_value_123")
+      let payload = try! JSONSerialization.jsonObject(with: body) as! [String: Any]
+      let lines = payload["lines"] as! [[String: Any]]
+      let polygon = lines[0]["polygon"] as! [[Double]]
+      XCTAssertEqual(polygon[0][0], 0.1, accuracy: 0.0001)
+      XCTAssertEqual(polygon[0][1], 0.2, accuracy: 0.0001)
+      XCTAssertEqual(lines[0]["text"] as? String, "One router took down flights")
+      return (200, Data(#"{"status":"selected","selectedLineIds":["L1"],"contextLineIds":[],"candidates":[{"id":"post","role":"post_title","lineIds":["L1"]}],"selectedCandidateId":"post","text":"THIS GENERATED STRING MUST BE IGNORED"}"#.utf8))
+    }
+    let client = makeClient(remoteOCRSelectionEnabled: true)
+    try await client.createSession()
+    let result = try await client.selectTarget(in: targetInput, imageData: Data([255, 216, 255, 217]), intent: nil)
+    XCTAssertEqual(result.resolvedLines(in: targetInput)?.map(\.text), ["One router took down flights"])
+  }
+
+  func testRemoteOCRRejectsUnknownIDsAndCrossCandidateMixing() async throws {
+    for selected in [#"["unknown"]"#, #"["L1","L1"]"#] {
+      serve { _, _ in
+        (200, Data("{\"status\":\"selected\",\"selectedLineIds\":\(selected),\"contextLineIds\":[],\"candidates\":[{\"id\":\"post\",\"role\":\"post\",\"lineIds\":[\"L1\"]}],\"selectedCandidateId\":\"post\"}".utf8))
+      }
+      let client = makeClient(remoteOCRSelectionEnabled: true)
+      try await client.createSession()
+      do {
+        _ = try await client.selectTarget(in: targetInput, imageData: Data([255, 216, 255, 217]), intent: nil)
+        XCTFail("Expected invalid response")
+      } catch { XCTAssertEqual(error as? BackendClientError, .invalidResponse) }
+    }
+  }
 
   func testCreateSessionPostsJoinCodeAndStoresTheSession() async throws {
     serve()

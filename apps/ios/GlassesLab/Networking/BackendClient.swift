@@ -65,7 +65,7 @@ struct ReconnectInfo: Equatable, Sendable {
 /// is the exception: while it is on it keeps raw events and check bodies on the phone, never
 /// the token or join code.
 @MainActor
-final class BackendClient: SessionChannel, CheckSubmitter {
+final class BackendClient: SessionChannel, CheckSubmitter, OCRTargetSelecting {
   private(set) var sessionId: String?
   private(set) var sessionEpoch: Int?
   private(set) var expiresAt: String?
@@ -417,6 +417,51 @@ final class BackendClient: SessionChannel, CheckSubmitter {
   }
 
   // MARK: - CheckSubmitter
+
+  /// Explicitly opted-in remote layout interpretation. The upright original JPEG and its
+  /// OCR observations are transient; neither request nor response body enters DebugLog.
+  func selectTarget(in input: OCRTargetInput, imageData: Data, intent: String?) async throws -> OCRTargetSelection {
+    guard config.remoteOCRSelectionEnabled else { return .init(status: .unavailable, reason: "remote_selection_disabled") }
+    if let reason = OCRTargetRequestLimits.failure(in: input, intent: intent) {
+      return .init(status: .unavailable, reason: reason)
+    }
+    guard imageData.count <= OCRTargetRequestLimits.maximumImageBytes else {
+      return .init(status: .unavailable, reason: "target_selection_image_too_large")
+    }
+    let (id, bearer) = try sessionCredentials()
+    let generation = lifecycleID
+    var request = URLRequest(url: config.sessionsURL.appending(path: id).appending(path: "ocr/select-target"), timeoutInterval: 20)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+    request.httpBody = try JSONEncoder().encode(OCRSelectionRequest(
+      imageBase64: imageData.base64EncodedString(), intent: intent,
+      lines: input.lines.map { .init(id: $0.id, text: $0.text, confidence: $0.confidence, polygon: $0.polygon.map { [$0.x, 1 - $0.y] }) }
+    ))
+    let data = try await perform(request, label: "ocr.select")
+    try Task.checkCancellation()
+    guard lifecycleID == generation, sessionId == id, token == bearer else { throw BackendClientError.wrongSession }
+    guard data.count <= 65_536,
+          let wire = try? JSONDecoder().decode(OCRSelectionResponse.self, from: data) else { throw BackendClientError.invalidResponse }
+    let known = Set(input.lines.map(\.id))
+    let collections = [wire.selectedLineIds, wire.contextLineIds] + wire.candidates.map(\.lineIds)
+    guard known.count == input.lines.count,
+          collections.allSatisfy({ Set($0).count == $0.count && Set($0).isSubset(of: known) }),
+          Set(wire.selectedLineIds).isDisjoint(with: wire.contextLineIds),
+          Set(wire.candidates.map(\.id)).count == wire.candidates.count,
+          Set(wire.candidates.flatMap(\.lineIds)).count == wire.candidates.flatMap(\.lineIds).count else { throw BackendClientError.invalidResponse }
+    let status: OCRTargetSelection.Status
+    if wire.status == "no_text" { status = .unreadable }
+    else if let parsed = OCRTargetSelection.Status(rawValue: wire.status) { status = parsed }
+    else { throw BackendClientError.invalidResponse }
+    if status == .selected || status == .incomplete {
+      guard !wire.selectedLineIds.isEmpty,
+            let candidate = wire.candidates.first(where: { $0.id == wire.selectedCandidateId }),
+            Set(candidate.lineIds) == Set(wire.selectedLineIds) else { throw BackendClientError.invalidResponse }
+    } else if !wire.selectedLineIds.isEmpty { throw BackendClientError.invalidResponse }
+    return .init(status: status, selectedLineIds: wire.selectedLineIds,
+                 candidates: wire.candidates.map { .init(id: $0.id, role: $0.role, lineIds: $0.lineIds) }, reason: wire.reason)
+  }
 
   /// `POST /v1/sessions/{id}/checks`. Returns once the server accepts (202).
   func submit(_ input: TextInputEnvelope) async throws {
@@ -876,4 +921,20 @@ final class BackendClient: SessionChannel, CheckSubmitter {
     case .disconnected(let reason): return "disconnected(\(reason))"
     }
   }
+}
+
+private struct OCRSelectionRequest: Encodable {
+  struct Line: Encodable { let id: String; let text: String; let confidence: Double; let polygon: [[Double]] }
+  let imageBase64: String
+  let intent: String?
+  let lines: [Line]
+}
+private struct OCRSelectionResponse: Decodable {
+  struct Candidate: Decodable { let id: String; let role: String; let lineIds: [String] }
+  let status: String
+  let selectedLineIds: [String]
+  let contextLineIds: [String]
+  let candidates: [Candidate]
+  let selectedCandidateId: String?
+  let reason: String?
 }

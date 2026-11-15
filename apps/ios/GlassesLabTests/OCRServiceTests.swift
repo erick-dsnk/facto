@@ -32,10 +32,11 @@ final class OCRServiceTests: XCTestCase {
     return try XCTUnwrap(context.makeImage())
   }
 
-  private func jpeg(_ image: CGImage) throws -> Data {
+  private func jpeg(_ image: CGImage, orientation: CGImagePropertyOrientation = .up) throws -> Data {
     let data = NSMutableData()
     let destination = try XCTUnwrap(CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil))
-    CGImageDestinationAddImage(destination, image, [kCGImageDestinationLossyCompressionQuality: 0.9] as CFDictionary)
+    CGImageDestinationAddImage(destination, image, [kCGImageDestinationLossyCompressionQuality: 0.9,
+      kCGImagePropertyOrientation: orientation.rawValue] as CFDictionary)
     XCTAssertTrue(CGImageDestinationFinalize(destination))
     return data as Data
   }
@@ -78,6 +79,53 @@ final class OCRServiceTests: XCTestCase {
       XCTFail("expected an error")
     } catch {
       XCTAssertEqual(error as? OCRError, .undecodableImage)
+    }
+  }
+
+  func testSelectionUploadNormalizesEXIFAndKeepsWholeFrameAspect() throws {
+    let original = try jpeg(renderLines(["A full frame"], width: 1_400), orientation: .right)
+    let prepared = try OCRService.selectionJPEG(original, maximumDimension: 700)
+    let source = try XCTUnwrap(CGImageSourceCreateWithData(prepared as CFData, nil))
+    let image = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+    // The 1400x220 encoded frame becomes 110x700 upright pixels, without cropping.
+    XCTAssertEqual(image.width, 110)
+    XCTAssertEqual(image.height, 700)
+    let properties = try XCTUnwrap(CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any])
+    XCTAssertEqual((properties[kCGImagePropertyOrientation] as? NSNumber)?.intValue ?? 1, 1)
+    XCTAssertLessThanOrEqual(prepared.count, OCRTargetRequestLimits.maximumImageBytes)
+  }
+
+  func testSelectionUploadBoundsNoisyImageByBytesWithoutChangingOriginal() throws {
+    let width = 1_200, height = 800
+    var seed: UInt32 = 17
+    var pixels = [UInt8](repeating: 0, count: width * height * 4)
+    for index in pixels.indices {
+      seed = seed &* 1_664_525 &+ 1_013_904_223
+      pixels[index] = index % 4 == 3 ? 255 : UInt8(truncatingIfNeeded: seed >> 24)
+    }
+    let provider = try XCTUnwrap(CGDataProvider(data: Data(pixels) as CFData))
+    let image = try XCTUnwrap(CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32,
+      bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(),
+      bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue), provider: provider,
+      decode: nil, shouldInterpolate: false, intent: .defaultIntent))
+    let original = try jpeg(image)
+    let snapshot = original
+    XCTAssertGreaterThan(original.count, 180_000)
+    let prepared = try OCRService.selectionJPEG(original, maximumBytes: 180_000, maximumDimension: 1_200)
+    XCTAssertLessThanOrEqual(prepared.count, 180_000)
+    XCTAssertEqual(original, snapshot)
+    let source = try XCTUnwrap(CGImageSourceCreateWithData(prepared as CFData, nil))
+    let decoded = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+    XCTAssertEqual(Double(decoded.width) / Double(decoded.height), 1.5, accuracy: 0.01)
+  }
+
+  func testSelectionUploadReportsImpossibleByteLimit() throws {
+    let original = try jpeg(renderLines(["Keep this source text"]))
+    XCTAssertThrowsError(try OCRService.selectionJPEG(original, maximumBytes: 1)) {
+      XCTAssertEqual($0 as? OCRError, .selectionImageTooLarge)
+    }
+    XCTAssertThrowsError(try OCRService.selectionJPEG(Data("invalid".utf8))) {
+      XCTAssertEqual($0 as? OCRError, .undecodableImage)
     }
   }
 

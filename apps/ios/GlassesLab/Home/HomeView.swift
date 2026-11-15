@@ -4,7 +4,7 @@ import SwiftUI
 /// and recent checks. Diagnostics live in Settings → Developer.
 struct HomeView: View {
   let wearables: WearablesModel
-  let live: LiveModel
+  @Bindable var live: LiveModel
   let display: DisplayModel
   let onOpenSettings: () -> Void
 
@@ -99,9 +99,32 @@ struct HomeView: View {
       .buttonStyle(FactoPillButtonStyle(size: .large))
       .disabled(!live.isListening && (!live.isConnected || live.isStartingStream))
 
+      TextField("Headline or topic to check (optional)", text: $live.photoTargetHint)
+        .font(.onest(.subheadline))
+        .textFieldStyle(.roundedBorder)
+        .disabled(live.isChecking)
+
       Button(checkTitle) { Task { await live.checkThis() } }
         .buttonStyle(.factoPillSecondary)
         .disabled(!live.isConnected || live.isChecking)
+
+      if !live.photoTargetChoices.isEmpty {
+        Text("Choose what to check from this photo")
+          .font(.onest(.subheadline, weight: .semibold))
+          .accessibilityAddTraits(.isHeader)
+        ForEach(live.photoTargetChoices) { choice in
+          Button {
+            Task { await live.choosePhotoTarget(choice.id) }
+          } label: {
+            Text(choice.text)
+              .multilineTextAlignment(.leading)
+              .frame(maxWidth: .infinity, alignment: .leading)
+          }
+          .buttonStyle(.factoPillSecondary)
+          .disabled(!live.isConnected || live.isChecking)
+          .accessibilityHint("Checks this passage from the existing photo without taking another photo.")
+        }
+      }
 
       // Which glasses the app detected, since Ray-Ban Meta and Display glasses work differently.
       footnote(GlassesSession.shared.kind.label)

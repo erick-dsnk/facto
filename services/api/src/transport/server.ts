@@ -14,6 +14,7 @@ import { displayEventVisible } from '../runtime/display.js';
 import { TranscriptContext, isVoiceTrigger } from './transcript-context.js';
 import { type VoiceConfig } from './voice-level.js';
 import { SentenceStitcher } from './stitch.js';
+import { OCR_SELECTION_BODY_LIMIT, parseTargetSelectionRequest, unavailableSelection, type TargetSelector } from '../input/ocr/target-selection.js';
 
 export type ServerOptions = {
   adapters: RuntimeAdapters; mode: 'fixture' | 'live'; joinCode: string; joinExpiresAt: number;
@@ -32,6 +33,8 @@ export type ServerOptions = {
    * every final sentence's level decision is recorded as an `asr.level` entry.
    */
   voice?: VoiceConfig;
+  /** Optional explicit image upload path; image/OCR never enter the debug feed. */
+  targetSelector?: TargetSelector;
 };
 /** Spoken segments remembered per stream for corrections. The oldest is forgotten first, so listening never stops on a count. */
 const SEGMENT_MEMORY = 64;
@@ -48,6 +51,8 @@ export async function buildServer(options: ServerOptions) {
   const store = new SessionStore(now, id => debugFeed?.purgeSession(id));
   const runtime = new PipelineRuntime(options.adapters, now, undefined, options.mode === 'fixture' ? 'fixture' : 'jev-latest');
   const audioBridges = new Map<string, AudioBridge>();
+  const selecting = new Set<string>();
+  const selectionRates = new Map<string, { count: number; until: number }>();
   // One stream per session. A newer authenticated connection replaces a stale one (half-open after a network blip).
   const displayGrants = new Map<string, { token: string; expiresAt: number; observers: Set<(code?: number) => void> }>();
   const connections = new Map<string, () => void>();
@@ -177,6 +182,25 @@ export async function buildServer(options: ServerOptions) {
     const input = textInputSchema.parse(request.body);
     debugFeed?.push('check.request', { requestId: input.requestId, revision: input.revision, mode: input.mode, text: input.text, capture: input.capture, context: input.context, userInitiated: input.userInitiated }, session.id);
     return reply.code(202).send(runtime.submit(session, input));
+  });
+  app.post('/v1/sessions/:sessionId/ocr/select-target', {
+    bodyLimit: OCR_SELECTION_BODY_LIMIT,
+    onRequest: async request => { authenticated(request.params, request.headers.authorization); },
+  }, async (request, reply) => {
+    const session = authenticated(request.params, request.headers.authorization);
+    const input = parseTargetSelectionRequest(request.body);
+    if (!options.targetSelector) return unavailableSelection('selection_not_configured');
+    for (const [id, rate] of selectionRates) if (rate.until <= now() || !store.sessions.has(id)) selectionRates.delete(id);
+    const previous = selectionRates.get(session.id);
+    if (selecting.has(session.id) || selecting.size >= 4 || (previous && previous.count >= 10)) return reply.code(429).send({ error: 'selection_rate_limit' });
+    selectionRates.set(session.id, { count: (previous?.count ?? 0) + 1, until: previous?.until ?? now() + 60_000 });
+    selecting.add(session.id);
+    try {
+      const result = await options.targetSelector(input);
+      // A deleted/expired session must not receive a late result.
+      authenticated(request.params, request.headers.authorization);
+      return result;
+    } finally { selecting.delete(session.id); }
   });
   if (debugFeed) {
     const feed = debugFeed;

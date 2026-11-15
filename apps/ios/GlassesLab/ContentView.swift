@@ -13,7 +13,7 @@ struct ContentView: View {
 
   @Environment(\.scenePhase) private var scenePhase
   @State private var isShowingSettings = false
-  /// The join code and URL when Settings opened, to tell whether they changed.
+  /// Connection and photo-selection settings when Settings opened.
   @State private var settingsBaseline = BackendFields()
 
   var body: some View {
@@ -34,7 +34,7 @@ struct ContentView: View {
     isShowingSettings = true
   }
 
-  /// A new join code or URL takes effect when Settings closes. An empty join code disconnects
+  /// Connection or photo-selection changes take effect when Settings closes. An empty join code disconnects
   /// and is forgotten, so the next launch doesn't connect with the old one.
   private func settingsClosed() {
     let fields = BackendFields(live)
@@ -53,6 +53,7 @@ struct ContentView: View {
 private struct BackendFields: Equatable {
   var joinCode = ""
   var baseURL = ""
+  var remoteOCRSelectionEnabled = false
 
   init() {}
 
@@ -60,5 +61,6 @@ private struct BackendFields: Equatable {
   init(_ live: LiveModel) {
     joinCode = live.joinCode.trimmingCharacters(in: .whitespacesAndNewlines)
     baseURL = live.baseURLText.trimmingCharacters(in: .whitespacesAndNewlines)
+    remoteOCRSelectionEnabled = live.remoteOCRSelectionEnabled
   }
 }

@@ -92,6 +92,11 @@ final class ScreenOCRTests: XCTestCase {
     for word in ["Yoga", "Tuesday", "cat", "reward"] {
       XCTAssertFalse(result.text.contains(word), "wall text leaked: \(word)")
     }
+    XCTAssertTrue(result.observations.contains { $0.viewId == "original" && $0.text.contains("Yoga") },
+                  "a screen hypothesis must not delete original scene evidence")
+    XCTAssertEqual(Set(result.observations.map(\.id)).count, result.observations.count)
+    XCTAssertEqual(result.views.map(\.id), ["original", "screen"])
+    XCTAssertTrue(result.observations.filter { $0.viewId == "screen" }.allSatisfy { $0.originalPolygon.count == 4 })
     let revenue = try XCTUnwrap(result.text.range(of: "revenue"))
     let water = try XCTUnwrap(result.text.range(of: "Water"))
     XCTAssertLessThan(revenue.lowerBound, water.lowerBound)
