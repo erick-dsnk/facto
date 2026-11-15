@@ -1,6 +1,6 @@
-# Glasses Lab
+# Facto for iOS
 
-A test bench for the Meta Wearables Device Access Toolkit (DAT) 1.0.1 on iOS. It connects to Meta AI, streams the glasses camera with a frame-rate meter, drives the Meta Ray-Ban Display screen, and can simulate glasses with MockDeviceKit.
+The Facto app (Xcode target and scheme `GlassesLab`) checks claims your Meta glasses hear or see and answers in the lens of Meta Ray-Ban Display and through the glasses speakers. It is built on the Meta Wearables Device Access Toolkit (DAT) 1.0.1. The lab tools it grew out of (camera stream with a frame-rate meter, display test, MockDeviceKit glasses, audio routes, debug log) live under **Settings → Developer**.
 
 ## Before the first build
 
@@ -59,30 +59,40 @@ Keep the iPhone **unlocked and plugged in by cable**. During a glasses stream th
 
 ## Using it
 
-1. **Connect to Meta AI.** The Meta AI app opens and asks you to approve Glasses Lab, then sends you back. The app appears under Meta AI > App connections > Developer mode apps.
-2. **Start session**, then **Start stream.** The first stream asks for camera permission in Meta AI.
-3. **Measure.** The camera section shows the measured frame rate, the longest gap between frames, and the frame size. For delay, look at the millisecond clock through the glasses while streaming and take a screenshot: the clock in the preview minus the live clock is the camera-to-app delay.
-4. **Display.** With Meta Ray-Ban Display glasses, or the simulated Display, tap **Connect display**. A screen with a button appears on the glasses; taps come back to the app.
+The app opens on one home screen: the status line, **Start listening** and **Check this**, what's on the lens, and recent checks. The gear opens Settings.
+
+1. **Connect your glasses.** Until they connect, the home screen shows this step in place of the listening controls. **Connect with Meta AI** opens the Meta AI app, which asks you to approve Facto and sends you back. The app appears under Meta AI > App connections > Developer mode apps.
+2. **Add the join code** in Settings, once. Facto keeps it in the Keychain.
+3. Facto then connects to the backend by itself on launch and each time it comes back to the foreground, and connects Meta Ray-Ban Display as soon as those glasses connect.
 
 ### Live mode
 
-The **Live** sections at the top run the product flow against services/api. The code is in `GlassesLab/Live`: `LiveModel` wires `BackendClient`, `AudioStreamer`, `LookAndCheckCoordinator` and `ResultPresenter` to the camera and display models.
+The home screen runs the product flow against services/api. The code is in `GlassesLab/Live` and `GlassesLab/Home`: `LiveModel` wires `BackendClient`, `AudioStreamer`, `LookAndCheckCoordinator` and `ResultPresenter` to the camera and display models, and `HomeStatus` turns the glasses and backend state into the status line.
 
-1. Connect to Meta AI (section 1) once.
-2. Enter the **backend URL** and **join code**, then tap **Connect**. The URL is saved in UserDefaults and the join code in the Keychain. On the iPhone use the Railway `https://` URL: while the glasses stream, the phone is on the glasses' Wi-Fi and reaches the backend over mobile data. Plain `http://` is accepted only for localhost and private network addresses, so `http://localhost:3000` works from the simulator.
-3. **Start listening** starts the device session and the stream with glasses mic audio, then streams 16 kHz PCM16 to the backend. **Demo quality** picks High 720×1280 at 30 fps; off, it picks Low 360×640 at 15 fps for long listening. It applies when the stream starts. Stop the stream to change it, because the app never stops a stream on its own.
-4. **Check this**, or saying "check this" (the backend's `capture.request`), takes a photo from the running stream with `stream.capturePhoto(format: .jpeg)`. The phone reads it with Vision and sends the text. The stream never pauses.
-5. Results speak (`respond`), chime (`notify`) or go to history only (`silent`). The **lens mirror** shows the same card the Display glasses get when the display is connected (section 4). **Mute** silences speech and chimes but keeps cards and history.
+1. **Backend.** The default URL is the hosted backend, `https://actually-api.lively-voice-2bf8.workers.dev`, so a phone on mobile data reaches it while the glasses stream (during a stream the phone is on the glasses' Wi-Fi). With a join code saved, the app connects without a tap. It doesn't retry a rejected join code or a bad URL until you change them in Settings; closing Settings with a new join code or URL reconnects. Settings → Advanced → **Backend URL** points it elsewhere: plain `http://` works only for localhost and private network addresses, so `http://localhost:3000` works from the simulator. On first launch after the update, the app drops a saved localhost or Railway URL once, so older installs move to the default.
+2. **Start listening** starts the device session and the stream with glasses mic audio, then streams 16 kHz PCM16 to the backend. Settings → **Demo quality** picks High 720×1280 at 30 fps; off, it picks Low 360×640 at 15 fps for long listening. It applies when the stream starts. Stop the stream (Settings → Developer → Live session) to change it, because the app never stops a stream on its own.
+3. **Check this**, or saying "Facto, can you check this?" (the backend's `capture.request`; the leading "Facto" is optional), takes a photo from the running stream with `stream.capturePhoto(format: .jpeg)`. The phone reads it with Vision and sends the text. The stream never pauses.
+4. Results speak (`respond`), chime (`notify`) or go to history only (`silent`). **On the lens** shows the same card the Display glasses get. **Recent** lists every result; tap one to show it on the lens again. **Mute** silences speech and chimes but keeps cards and history.
 
-The status line has its own state for listening, reconnecting, stopped with a reason (glasses disconnected, no connection, session ended) and backend errors, so a broken connection never looks like "no alerts". A ping every 2 s catches a connection that died without an error. If transport drops, the app stops the active sensor stream; restoring the connection alone does not restart capture or listening. Longer drops also speak a reason. A check the user asked for always gets an answer: a verdict, "I'm not sure what was read", or after 15 s with no result, "The check didn't finish". A photo split into several requests gets one answer.
+Facto checks what is in front of the wearer: **"Hey Facto…"** (on by default, detected on the phone) or **Check this** takes one photo with the glasses camera, reads the text on the phone and checks it. The camera video stream stays off: on Meta Ray-Ban Display glasses a running stream holds back lens cards and shows a viewfinder. Nothing is streamed to the backend until a check starts. Listening to nearby speech is a Developer-screen tool; it uses the glasses' Bluetooth hands-free mic (`glasses_hfp`) and never the iPhone's microphone.
 
-The backend session is short lived. Live mode retains the join code in Keychain and recreates the backend session when an eligible foreground/network recovery occurs; the short-lived session bearer remains in memory only. Connection recovery does not resume camera capture or ordinary ambient listening. After transport loss, app relaunch, or session expiry, tap **Start listening** again. A separately opted-in **Hey Facto** detector may re-arm after an eligible foreground/session restoration, according to its saved setting and device/backend authorization gates. **Automatic alerts** (on by default) sends `session.preferences` so the backend may chime for a contradicted claim it hears. The phone stays awake while listening: keep Glasses Lab in the foreground, because iOS suspends the socket and audio pipeline of a locked or backgrounded app.
+The status line reads "Glasses connected · Online" when everything works. Every other state reads differently: glasses not set up or not connected, join code needed or rejected, reconnecting, listening stopped with a reason (glasses disconnected, no connection, session ended, mic unavailable) and backend errors, so a broken connection never looks like "no alerts". When one button fixes the problem, the line shows it: **Reconnect** or **Open Settings**. A ping every 2 s catches a connection that died without an error. If transport drops, the app stops any active sensor capture; restoring the connection alone does not restart capture or listening. A check the user asked for always gets an answer: a verdict, "I'm not sure what was read", or after 15 s with no result, "The check didn't finish". A photo split into several requests gets one answer.
 
-`LiveModelTests` covers the wiring with fakes. `LiveModelLiveTests` runs the same flow against a real backend and is skipped unless `TEST_RUNNER_BACKEND_LIVE_URL` and `TEST_RUNNER_BACKEND_LIVE_JOIN_CODE` are set (see `BackendClientLiveTests`). In fixture mode the backend checks only fixture sources, so a photo check comes back as "The check didn't finish".
+The backend session is short lived. Live mode keeps the join code in the Keychain and recreates the backend session when an eligible foreground or network recovery occurs; the short-lived session bearer stays in memory only. Connection recovery never resumes camera capture or listening: after transport loss, relaunch or session expiry, Developer listening needs **Start listening** again. The **Hey Facto** detector may re-arm after an eligible foreground or session restoration, gated by its setting and device and backend authorization. **Automatic alerts** (on by default) sends `session.preferences` so the backend may chime for a contradicted claim it hears. Keep Facto in the foreground: iOS suspends the socket and audio pipeline of a locked or backgrounded app.
+
+`LiveModelTests` covers the wiring with fakes, including the automatic connect, and `HomeStatusTests` covers every status line. `LiveModelLiveTests` runs the same flow against a real backend and is skipped unless `TEST_RUNNER_BACKEND_LIVE_URL` and `TEST_RUNNER_BACKEND_LIVE_JOIN_CODE` are set (see `BackendClientLiveTests`). In fixture mode the backend checks only fixture sources, so a photo check comes back as "The check didn't finish".
+
+### Developer screen
+
+Settings → **Developer** keeps every lab panel for the device checklist: the live session (Stop stream, Reconnect, Disconnect), Meta AI registration and raw device state, simulated glasses, the camera stream, audio routes, the display test, the event log and the debug log.
+
+- **Measure.** Under Camera stream, **Start session**, then **Start stream** (the first stream asks for camera permission in Meta AI). It shows the measured frame rate, the longest gap between frames, and the frame size. For delay, look at the millisecond clock through the glasses while streaming and take a screenshot: the clock in the preview minus the live clock is the camera-to-app delay.
+- **Display.** Facto connects Meta Ray-Ban Display (or the simulated Display) by itself. **Send test screen** shows a screen with a button on the glasses; taps come back to the app. If the automatic connect failed, **Connect display** retries.
+- **Device checklist:** run the camera and display sessions together (listening or Check this while a card is on the lens), because the app now opens both at once.
 
 ### Debug log
 
-The **Debug log** section (under the Live sections) saves what the app normally never logs, so a failed field test can be read afterwards: every raw backend event (transcripts with confidence, `claim.*` with `reasonCode`, `pipeline.error`, `capture.request`), every check request body (OCR text, chunks, capture fields), the look-and-check photos OCR ran on with the OCR result and timings, audio streamer state changes, and what the presenter did with each result. It is **off until you turn it on** (nothing is recorded on a fresh install) and the toggle is remembered.
+Settings → Developer → **Debug log** saves what the app normally never logs, so a failed field test can be read afterwards: every raw backend event (transcripts with confidence, `claim.*` with `reasonCode`, `pipeline.error`, `capture.request`), every check request body (OCR text, chunks, capture fields), the look-and-check photos OCR ran on with the OCR result and timings, audio streamer state changes, and what the presenter did with each result. It is **off until you turn it on** (nothing is recorded on a fresh install) and the toggle is remembered.
 
 - Files stay on the phone in the app container under `Library/Application Support/DebugLog/`: one `YYYY-MM-DD.jsonl` per day (one `{"ts","kind","payload"}` object per line, `ts` in UTC with milliseconds) and `photo-<UTC time>-<id>.jpg` files referenced from `lookcheck.photo` entries. The app never uploads them, and the folder is excluded from backups.
 - Entries and photos older than 24 hours are deleted on launch and every hour. **Delete debug log** removes everything at once.
@@ -100,12 +110,12 @@ Or tap **Share log** and AirDrop the files.
 
 ### Wake phrase: “Hey Facto”
 
-**Wake on “Hey Facto”** (off by default) keeps the app idle until it is asked. With it on and the backend connected:
+Settings → **Wake on “Hey Facto”** (off by default) keeps the app idle until it is asked. With it on and the backend connected:
 
 - The glasses stream is off and no audio or text is sent to the backend. The phone listens on the glasses' Bluetooth hands-free microphone (the phone's own microphone if the glasses aren't the active headset) and runs a keyword detector on the phone. Audio is processed in memory and dropped.
 - **“Hey Facto”** plays a chime, starts the stream and listens for 60 s, then stops the stream, ends the device session and waits again. The decision takes about 1.5 s, because the detector waits to hear whether “check this” follows.
 - **“Hey Facto, check this”** takes a photo and checks what is in view, like the Check this button, then stops the stream. “Check this” on its own does nothing while waiting.
-- Starting to listen by hand, or a running stream, pauses the detector; the status row under the switch says why.
+- Starting to listen by hand, or a running stream, pauses the detector; the line under the buttons on the home screen says why.
 
 The detector is [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) keyword spotting (Apache-2.0) with the open-vocabulary English model `sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01` (int8, about 5 MB, in `GlassesLab/WakeWord/Model`). The phrases are the two `*-keywords.txt` files there: the model's BPE tokens, a boost after `:` and a trigger threshold after `#`. To change a phrase, tokenise it with the model's `bpe.model` (`sherpa-onnx-cli text2token`) and retune the two numbers against recordings.
 
@@ -115,7 +125,7 @@ The two prebuilt libraries it links (sherpa-onnx 2.0.1 and onnxruntime 1.28.2, a
 
 ### Without glasses
 
-Section 2 pairs simulated glasses through MockDeviceKit. The phone's back camera becomes the glasses camera. Choose **Meta Ray-Ban Display** to see the rendered display screen inside the app.
+Settings → Developer → **Simulated glasses** pairs glasses through MockDeviceKit. The phone's back camera becomes the glasses camera. Choose **Meta Ray-Ban Display** to see the rendered display screen inside the app.
 
 ### Native DAT glasses display
 
@@ -202,7 +212,7 @@ References: [Meta's native display simulation guide](https://wearables.developer
 The SDK picks the video link from Info.plist. With the External Accessory keys (`UISupportedExternalAccessoryProtocols`, `external-accessory` background mode) it streams over Bluetooth Classic, which is heavily compressed and mostly stuck at 504×896. Without them it streams over a Wi-Fi network the glasses create, and holds 720×1280 at 30 fps. `project.yml` leaves the External Accessory keys out on purpose; don't add them back. Sources: Meta's replies in [issue #376](https://github.com/meta/meta-wearables-dat-ios/issues/376) and [discussion #297](https://github.com/meta/meta-wearables-dat-ios/discussions/297).
 
 - When a stream starts, the iPhone joins the glasses' Wi-Fi network, so it has no Wi-Fi internet during the stream. Cloud AI calls go over mobile data.
-- Allow **Local Network** for Glasses Lab (Settings > Privacy & Security > Local Network). If it's denied, the SDK silently streams nothing.
+- Allow **Local Network** for Facto (Settings > Privacy & Security > Local Network). If it's denied, the SDK silently streams nothing.
 - If frames don't arrive: forget old "RB Meta…" networks in iPhone Wi-Fi settings, turn off Auto-Join for the venue network, and dismiss any "Unable to join" alert quickly.
 
 ## Known issues to plan around
