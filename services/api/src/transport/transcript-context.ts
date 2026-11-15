@@ -54,7 +54,10 @@ const TRAILING_FILLER = '(?:please|now|for me|one|photo|picture|image|sign)';
 // "Factor" and "Fakto" are accepted too, as likely mishearings (issue #44). The rest of the sentence must still be a
 // trigger phrase, so they only count in front of a real command and add no new false triggers.
 export const VOICE_WAKE_WORDS = ['facto', 'fact o', 'factor', 'fakto'];
-const triggerPattern = new RegExp(`^(?:${LEADING_FILLER} )*(?:(?:${VOICE_WAKE_WORDS.join('|')}) (?:${LEADING_FILLER} )*)?`
+// How Deepgram heard "Hey" right before the name on 14 Nov ("Pay Facto, can you check this?", "A Facto."). Accepted only
+// directly in front of a wake word, so "Pay, check this" or "A factor" alone still isn't a command.
+const WAKE_LEAD = '(?:pay|hay|hi|hei|a|eh|yo)';
+const triggerPattern = new RegExp(`^(?:${LEADING_FILLER} )*(?:(?:${WAKE_LEAD} )?(?:${VOICE_WAKE_WORDS.join('|')}) (?:${LEADING_FILLER} )*)?`
   + `(?:${VOICE_TRIGGER_PHRASES.join('|')})(?: ${TRAILING_FILLER})*$`);
 
 /** Lowercase, hyphens to spaces, punctuation removed, whitespace collapsed. */

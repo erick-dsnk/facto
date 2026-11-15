@@ -8,7 +8,8 @@
         "supported",
         "contradicted",
         "misleading",
-        "insufficient_evidence"
+        "insufficient_evidence",
+        "speculation"
       ]
     },
     "reasonCode": {
@@ -153,6 +154,26 @@
                 "type": "null"
               }
             ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "web",
+              "news",
+              "fact_check",
+              "wikipedia",
+              "wikidata",
+              "weather",
+              "calculation"
+            ]
+          },
+          "rating": {
+            "type": "string",
+            "enum": [
+              "supported",
+              "contradicted",
+              "misleading"
+            ]
           }
         },
         "required": [
@@ -221,6 +242,85 @@
         "reasonCode"
       ],
       "additionalProperties": false
+    },
+    "basis": {
+      "type": "string",
+      "enum": [
+        "estimates",
+        "announcement"
+      ]
+    },
+    "attribution": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_said"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "said",
+            "reported"
+          ]
+        }
+      },
+      "required": [
+        "label",
+        "source",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "route": {
+      "type": "string",
+      "enum": [
+        "recent_event",
+        "named_fact",
+        "weather",
+        "calculation",
+        "general"
+      ]
+    },
+    "subject": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "jevCalls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "exaSearches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "jevCalls",
+        "exaSearches"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
@@ -241,5 +341,5 @@
     "presentation"
   ],
   "additionalProperties": false,
-  "description": "Version 1 result. Additional semantic invariants: checkedText equals the code-point sourceSpan of originalText; selectedEvidenceIds exist in unique retained evidence; definitive verdicts have a citation; expiry >= checkedAt. Validated by wire.ts."
+  "description": "Version 1 result. Additional semantic invariants: checkedText equals the code-point sourceSpan of originalText; selectedEvidenceIds exist in unique retained evidence; supported, contradicted and misleading have a citation; speculation and only speculation carries reasonCode unconfirmed_rumour or private_life_not_checked; private_life_not_checked retains no evidence; basis needs supported, contradicted or misleading; attribution label reported goes with supported and not_said with contradicted; evidence rating only with origin fact_check; expiry >= checkedAt. Validated by wire.ts."
 }

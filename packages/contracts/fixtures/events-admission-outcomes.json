@@ -1,0 +1,85 @@
+[
+  {
+    "schemaVersion": 1,
+    "eventId": "event-1",
+    "eventSeq": 1,
+    "sessionId": "session-fixture",
+    "sessionEpoch": 1,
+    "requestId": "req-1",
+    "claimId": "req-1-claim-0",
+    "revision": 1,
+    "type": "claim.checking",
+    "serverAt": "2026-11-14T10:00:01Z",
+    "payload": {
+      "admissionAction": "check",
+      "reasonCode": "eligible_public_claim",
+      "route": "named_fact",
+      "subject": "Eiffel Tower"
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "eventId": "event-2",
+    "eventSeq": 2,
+    "sessionId": "session-fixture",
+    "sessionEpoch": 1,
+    "requestId": "req-2",
+    "revision": 1,
+    "type": "claim.skipped",
+    "serverAt": "2026-11-14T10:00:02Z",
+    "payload": {
+      "admissionAction": "skip",
+      "reasonCode": "not_a_claim",
+      "kind": "prediction",
+      "summary": "That's a prediction.",
+      "presentation": {
+        "action": "respond",
+        "reasonCode": "not_a_claim"
+      },
+      "usage": {
+        "jevCalls": 1,
+        "exaSearches": 0
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "eventId": "event-3",
+    "eventSeq": 3,
+    "sessionId": "session-fixture",
+    "sessionEpoch": 1,
+    "requestId": "req-3",
+    "revision": 1,
+    "type": "claim.skipped",
+    "serverAt": "2026-11-14T10:00:03Z",
+    "payload": {
+      "admissionAction": "skip",
+      "reasonCode": "not_a_claim",
+      "kind": "opinion",
+      "presentation": {
+        "action": "silent",
+        "reasonCode": "not_a_claim"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "eventId": "event-4",
+    "eventSeq": 4,
+    "sessionId": "session-fixture",
+    "sessionEpoch": 1,
+    "requestId": "req-4",
+    "revision": 1,
+    "type": "claim.needs_confirmation",
+    "serverAt": "2026-11-14T10:00:04Z",
+    "payload": {
+      "admissionAction": "skip",
+      "reasonCode": "possibly_misheard",
+      "summary": "I'm not sure what was said.",
+      "presentation": {
+        "action": "respond",
+        "reasonCode": "possibly_misheard"
+      }
+    }
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "requestId": "asr-1-1-fixture",
+  "sessionId": "session-fixture",
+  "sessionEpoch": 1,
+  "revision": 1,
+  "mode": "audio",
+  "text": "You heard that on Tropical IPO for $2,500,000,000,000?",
+  "language": "en",
+  "capturedAt": "2026-11-14T10:00:00Z",
+  "capture": {
+    "source": "glasses_stream_audio",
+    "segmentId": "g1-4",
+    "confidence": 0.71,
+    "final": true,
+    "lowConfidenceWords": [
+      {
+        "text": "on",
+        "confidence": 0.42
+      },
+      {
+        "text": "Tropical",
+        "confidence": 0.38
+      }
+    ]
+  },
+  "context": [
+    "Speaker 1: Did you see the news about Anthropic?"
+  ],
+  "userInitiated": false
+}

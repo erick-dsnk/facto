@@ -1,0 +1,50 @@
+{
+  "verdict": "contradicted",
+  "reasonCode": "qualifying_evidence",
+  "selectedEvidenceIds": [
+    "fixture-calculation"
+  ],
+  "summary": "The evidence I found contradicts that claim.",
+  "originalText": "7 times 8 is 54.",
+  "checkedText": "7 times 8 is 54.",
+  "sourceSpan": {
+    "start": 0,
+    "end": 16
+  },
+  "evidence": [
+    {
+      "id": "fixture-calculation",
+      "url": "https://facto.invalid/calculation",
+      "title": "Calculation",
+      "publisher": "Calculated by Facto",
+      "publishedAt": null,
+      "retrievedAt": "2026-11-14T10:00:01Z",
+      "contentBasis": "highlight",
+      "excerpt": "7 × 8 = 56 (calculated)",
+      "sourceGroup": "calculation",
+      "echoGroup": null,
+      "sourceRole": "unknown",
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "stance": "contradicts",
+      "stanceProbability": 0.98,
+      "origin": "calculation"
+    }
+  ],
+  "checkedAt": "2026-11-14T10:00:02Z",
+  "expiresAt": "2026-11-14T10:01:02Z",
+  "durationMs": 1300,
+  "cached": false,
+  "policyVersion": "glasses-p0.2",
+  "modelVersion": "fixture",
+  "presentation": {
+    "action": "respond",
+    "reasonCode": "explicit_request"
+  },
+  "route": "calculation",
+  "subject": null,
+  "usage": {
+    "jevCalls": 2,
+    "exaSearches": 0
+  }
+}

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PipelineError } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, type LowConfidenceWord } from '../../../../packages/contracts/src/index.js';
 
 export const AUDIO_HEADER_BYTES = 13;
 export const audioStartSchema = z.object({
@@ -13,15 +13,26 @@ export type AudioFrame = {
   streamGeneration: number; sequence: number; captureOffsetMs: number;
   pcm: Uint8Array; durationMs: number;
 };
-/** `speaker` is the provider's 0-based diarization index for the sentence, or null/absent when unknown. */
-export type AsrTranscript = { text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number; speaker?: number | null };
+/**
+ * `speaker` is the provider's 0-based diarization index for the sentence, or null/absent when unknown. `lowConfidenceWords` lists the
+ * words the recogniser was unsure of, in sentence order (at most 12); absent when there are none or the adapter does not report them.
+ * `endOffsetMs` is where the last word ends, on the same clock as `captureOffsetMs`; the bridge measures the sentence's loudness over
+ * that span. Neither field reaches clients.
+ */
+export type AsrTranscript = {
+  text: string; final: boolean; segmentId: string; confidence: number | null; captureOffsetMs: number; speaker?: number | null;
+  lowConfidenceWords?: LowConfidenceWord[]; endOffsetMs?: number;
+};
+/** Per-stream options from the bridge. `ignoreWordsBeforeMs` drops words that start earlier in the stream (spoken-answer echo). */
+export type AsrStartOptions = { ignoreWordsBeforeMs?: number };
 /** The input owner supplies this adapter. Transport never stores audio or chooses a microphone. */
 export interface AsrAdapter {
   /**
    * `onFailure` reports a provider failure after the stream opened (socket closed or errored), so listening stops at once
    * instead of on the next frame write, which never comes while the phone sends no audio. Call it at most once, with a code only.
    */
-  start(config: AudioStart, onTranscript: (event: AsrTranscript) => void, signal: AbortSignal, onFailure?: (reasonCode: string) => void): Promise<AsrStream>;
+  start(config: AudioStart, onTranscript: (event: AsrTranscript) => void, signal: AbortSignal, onFailure?: (reasonCode: string) => void,
+    options?: AsrStartOptions): Promise<AsrStream>;
 }
 export interface AsrStream { write(frame: AudioFrame): Promise<void>; stop(): Promise<void>; }
 

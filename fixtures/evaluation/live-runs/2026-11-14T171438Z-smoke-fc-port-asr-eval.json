@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "label": "smoke-fc-port-asr-eval",
+  "startedAt": "2026-11-14T17:14:38.172Z",
+  "finishedAt": "2026-11-14T17:14:46.611Z",
+  "completed": true,
+  "stoppedReason": null,
+  "server": {
+    "kind": "loopback",
+    "mode": "live"
+  },
+  "sets": [
+    "everyday"
+  ],
+  "limit": 3,
+  "joins": 1,
+  "licence": "HARD is the AVeriTeC held-out sample (CC BY-NC 4.0), read in place from the reference app checkout. Reports keep only ids, labels and metrics; no claim text, context, checked text or summary is stored.",
+  "metrics": {
+    "everyday": {
+      "set": "everyday",
+      "cases": 3,
+      "fourLabel": {
+        "count": 0,
+        "total": 3,
+        "share": 0
+      },
+      "outcome": {
+        "count": 0,
+        "total": 3,
+        "share": 0
+      },
+      "wrongTrueFalse": 0,
+      "trueCalledFalse": 0,
+      "falseCalledTrue": 0,
+      "cantVerify": {
+        "count": 2,
+        "total": 3,
+        "share": 0.6666666666666666
+      },
+      "skips": {
+        "count": 1,
+        "total": 3,
+        "share": 0.3333333333333333
+      },
+      "errors": 0,
+      "latencyMs": {
+        "median": 3799,
+        "p95": 3839,
+        "measured": 3
+      },
+      "exaSearchesPerCheck": null,
+      "jevCallsPerCheck": null,
+      "usageRows": 0,
+      "fieldUnsupported": 0,
+      "confusion": {
+        "false": {
+          "cant_verify": 2,
+          "needs_confirmation": 1
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "set": "everyday",
+      "id": "myth-01",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 3839,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-02",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 271,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-03",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 3799,
+      "jevCalls": null,
+      "exaSearches": null
+    }
+  ]
+}

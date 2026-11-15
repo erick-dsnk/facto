@@ -125,12 +125,15 @@ export function stopObservation(observation: RequestObservation, error: HarnessS
   if (!observation.controller.signal.aborted) observation.controller.abort(error);
 }
 
-/** Retain only fixed question names and validated numeric/enum answers. */
+/**
+ * Retain only fixed question names and validated numeric/enum answers. Numbered options (the classifier's source and subject
+ * choices) keep only their index: the names they stand for stay in the request criteria, which are never retained.
+ */
 function answerDiagnostics(decoded: unknown, request: JevRequest): Record<string, JevAnswer> | undefined {
   try {
     const answers = validateAnswers(decoded, request.questions);
-    if (Object.entries(request.questions).some(([name, question]) => !/^(span_\d+_[a-z_]+|verdict|selected_evidence|misleading_reason|claim_risk|e\d+_[a-z_]+|e\d+_e\d+_origin)$/.test(name)
-      || (question.type === 'choice' && Object.keys(question.criteria).some(option => !/^[a-z][a-z0-9_]*$/.test(option))))) return undefined;
+    if (Object.entries(request.questions).some(([name, question]) => !/^(span_\d+_[a-z_]+|misheard|verdict|selected_evidence|misleading_reason|claim_risk|basis|e\d+_[a-z_]+|e\d+_e\d+_origin)$/.test(name)
+      || (question.type === 'choice' && Object.keys(question.criteria).some(option => !/^(?:[a-z][a-z0-9_]*|[1-9]\d{0,2})$/.test(option))))) return undefined;
     return answers;
   } catch { return undefined; }
 }

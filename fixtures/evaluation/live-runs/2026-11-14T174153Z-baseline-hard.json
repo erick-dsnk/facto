@@ -1,0 +1,1086 @@
+{
+  "schemaVersion": 1,
+  "label": "baseline-hard",
+  "startedAt": "2026-11-14T17:41:53.763Z",
+  "finishedAt": "2026-11-14T17:45:10.286Z",
+  "completed": true,
+  "stoppedReason": null,
+  "server": {
+    "kind": "loopback",
+    "mode": "live"
+  },
+  "sets": [
+    "hard"
+  ],
+  "limit": null,
+  "joins": 3,
+  "licence": "HARD is the AVeriTeC held-out sample (CC BY-NC 4.0), read in place from the reference app checkout. Reports keep only ids, labels and metrics; no claim text, context, checked text or summary is stored.",
+  "metrics": {
+    "hard": {
+      "set": "hard",
+      "cases": 100,
+      "fourLabel": {
+        "count": 8,
+        "total": 100,
+        "share": 0.08
+      },
+      "outcome": {
+        "count": 8,
+        "total": 100,
+        "share": 0.08
+      },
+      "wrongTrueFalse": 0,
+      "trueCalledFalse": 0,
+      "falseCalledTrue": 0,
+      "cantVerify": {
+        "count": 24,
+        "total": 100,
+        "share": 0.24
+      },
+      "skips": {
+        "count": 72,
+        "total": 100,
+        "share": 0.72
+      },
+      "errors": 0,
+      "latencyMs": {
+        "median": 269.5,
+        "p95": 6772,
+        "measured": 100
+      },
+      "exaSearchesPerCheck": null,
+      "jevCallsPerCheck": null,
+      "usageRows": 0,
+      "fieldUnsupported": 0,
+      "confusion": {
+        "misleading": {
+          "needs_confirmation": 6,
+          "skip": 4,
+          "cant_verify": 3,
+          "not_a_claim": 2
+        },
+        "true": {
+          "not_a_claim": 8,
+          "needs_confirmation": 18,
+          "cant_verify": 5,
+          "true": 3,
+          "skip": 1
+        },
+        "cant_verify": {
+          "needs_confirmation": 8,
+          "not_a_claim": 3,
+          "cant_verify": 4
+        },
+        "false": {
+          "cant_verify": 12,
+          "needs_confirmation": 12,
+          "not_a_claim": 4,
+          "skip": 6,
+          "false": 1
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "set": "hard",
+      "id": "misl-360",
+      "expected": "misleading",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 323,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-182",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 378,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-184",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 189,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-201",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 230,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-354",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 261,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-435",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 212,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-206",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 197,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-424",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 5066,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-434",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 6617,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-147",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 405,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-213",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 248,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-298",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 218,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-310",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 5801,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-078",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 294,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-404",
+      "expected": "misleading",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 254,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-482",
+      "expected": "misleading",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 260,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-018",
+      "expected": "misleading",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 283,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-347",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 267,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-073",
+      "expected": "misleading",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 8365,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-044",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 268,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-235",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 268,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-216",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 334,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-458",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 207,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-186",
+      "expected": "cant_verify",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 238,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-376",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 295,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-323",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 329,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-060",
+      "expected": "misleading",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 222,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-010",
+      "expected": "misleading",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 256,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-107",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 258,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-427",
+      "expected": "misleading",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 178,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-214",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 207,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-337",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 307,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-444",
+      "expected": "false",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 455,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-425",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 224,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-093",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3522,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-031",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3130,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-172",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 6511,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-227",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 5519,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-211",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 251,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-129",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 5099,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-233",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 182,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-181",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 247,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-415",
+      "expected": "false",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 175,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-076",
+      "expected": "cant_verify",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 233,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-286",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 5664,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-220",
+      "expected": "cant_verify",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 4587,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-039",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 3538,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-479",
+      "expected": "misleading",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 204,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-050",
+      "expected": "misleading",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 280,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-123",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 283,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-271",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 276,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-025",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1924,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-237",
+      "expected": "cant_verify",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 179,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-053",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 319,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-015",
+      "expected": "cant_verify",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 7743,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-170",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 182,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-066",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 190,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-128",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 277,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-013",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 284,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-205",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 5021,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-016",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 212,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-038",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 322,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-441",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 4361,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-341",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 194,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-468",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 222,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-387",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 233,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-210",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 263,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-051",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 272,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-017",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 169,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-058",
+      "expected": "misleading",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 6117,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-448",
+      "expected": "misleading",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 193,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-356",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 5738,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-365",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2566,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-486",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 7612,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-081",
+      "expected": "misleading",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 196,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-054",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 4246,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-209",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 271,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-100",
+      "expected": "misleading",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 265,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-003",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 5423,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-092",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 187,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-218",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 197,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-059",
+      "expected": "cant_verify",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 8635,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "misl-366",
+      "expected": "misleading",
+      "predicted": "cant_verify",
+      "reasonCode": "context_not_established",
+      "latencyMs": 5874,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-301",
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 197,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-451",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 259,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-192",
+      "expected": "cant_verify",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 171,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-221",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 179,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-197",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 6772,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-308",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 3566,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-176",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 170,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "unve-026",
+      "expected": "cant_verify",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 4944,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-274",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 9764,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-217",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 225,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-364",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 301,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-343",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 235,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-074",
+      "expected": "false",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 299,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-127",
+      "expected": "false",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 298,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "true-152",
+      "expected": "true",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 223,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-318",
+      "expected": "false",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 175,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "hard",
+      "id": "fals-338",
+      "expected": "false",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 189,
+      "jevCalls": null,
+      "exaSearches": null
+    }
+  ]
+}

@@ -63,7 +63,8 @@ describe('typed joint judgment adapter', () => {
     const result = await createJudge({ ask })(claim, retained, context);
     expect(ask).toHaveBeenCalledOnce();
     const request = ask.mock.calls[0][0];
-    expect(Object.keys(request.questions)).toHaveLength(55);
+    // 4 joint questions, 4 per passage (stance, relevance, scope, content basis) and 15 origin pairs.
+    expect(Object.keys(request.questions)).toHaveLength(43);
     expect(result.originAssessments).toHaveLength(15);
     expect(result.originAssessments[0]).toEqual({ evidenceIds: ['retained-0', 'retained-1'], relationship: 'distinct_origins', confidence: 1 });
     expect(request.questions.e0_content_basis.instructions).toContain('NOT verified publisher reliability');
