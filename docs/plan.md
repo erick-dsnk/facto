@@ -154,7 +154,7 @@ docs/demo.md                        # A, reviewed together
 docs/deck-outline.md                # B, reviewed together
 ```
 
-The repository is currently a starter. Keep the existing iOS project in its current location if already working; `apps/ios/` is the ownership boundary, not a requirement to move it. B owns shared schemas and root JavaScript configuration; A owns Xcode/signing/entitlements and the ASR input module. Follow one issue → branch → PR, with **Files owned** and acceptance evidence; resolve how the existing three-person review cycle applies to these two builders at kickoff.
+The repository is currently a starter. Keep the existing iOS project in its current location if already working; `apps/ios/` is the ownership boundary, not a requirement to move it. B owns shared schemas and root JavaScript configuration; A owns Xcode/signing/entitlements and the ASR input module. Follow one issue → branch → PR, with **Files owned** and acceptance evidence; a teammate reviews and merges once CI is green.
 
 ## 4. Prove the device path in the first 90 minutes
 

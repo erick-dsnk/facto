@@ -55,7 +55,7 @@ Facto separates capture, evidence gathering, model decisions and presentation. A
 flowchart TD
     G[Meta glasses: camera and microphone] --> I[iOS companion / Meta DAT]
     I --> O[Apple Vision OCR on phone]
-    I --> A[Audio stream / Deepgram transcription]
+    I --> A[Audio stream / ElevenLabs or Deepgram transcription]
     O --> T[Authenticated HTTP and WebSocket API]
     A --> T
     T --> C[Classify the statement]
@@ -96,9 +96,9 @@ Timeouts and provider failures remain operational errors, not factual verdicts. 
 
 **Facto's admission gate runs on Laya, an open-source model we fine-tuned and host ourselves.** It decides whether a statement is a checkable public claim, and whether it touches private data or someone's private life, before anything is searched. Jev judges admitted claims against the evidence. Captured speech can contain sensitive information, so the step that sees every statement runs on infrastructure we control instead of a hosted decision service.
 
-The fine-tuned model is deployed on our backend, so testers using the app go through it. On development validation (595 rows) it scored 89.7% on factual-claim classification, 98.7% on private-data detection and 99.8% on private-life detection. These are development numbers, not a blind test. The training data, the comparison with the original checkpoint and its limits are in [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68), and the weights are published as the [admission-v1 release](https://github.com/erick-dsnk/junction-2026/releases/tag/laya-admission-v1-20261114).
+The fine-tuned model is deployed on our backend, so testers using the app go through it. On development validation it scored 534/595 (89.7%) on factual-claim classification, 585/593 (98.7%) on private-data detection and 592/593 (99.8%) on private-life detection. All privacy-positive examples in that validation were fictional. These are development numbers, not a blind test or a measure of real-world privacy safety. Only those three admission heads were supervised; the other admission heads retain inherited behavior. The [model and serving guide](docs/jev-laya-evaluation.md) records the training data, limits and historical original-checkpoint comparison from [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68). The weights are published as the [admission-v1 release](https://github.com/erick-dsnk/junction-2026/releases/tag/laya-admission-v1-20261114).
 
-Self-hosting changes the privacy boundary for admission. It does **not** make the whole system local: evidence queries still reach retrieval services, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
+Self-hosting changes the privacy boundary for admission. It does **not** make the whole system local: evidence queries still reach retrieval services, Jev receives admitted claims and evidence, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone; enabling remote OCR selection also sends the photo and OCR boxes to the configured vision provider. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
 
 ## Repository map
 
@@ -136,7 +136,7 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000) for the console. Fixture mode uses predefined examples; it does not verify arbitrary real-world claims.
 
-For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). To run admission on the fine-tuned Laya model, as the hosted backend does, set `ADMISSION_PROVIDER=laya`, `LAYA_URL` and `LAYA_API_KEY`. See the [deployment guide](docs/deployment.md) for every variable. Keep credentials on the server and out of commits.
+For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). To run admission on the fine-tuned Laya model, as the hosted backend does, keep `DECISION_PROVIDER=jev` and set `ADMISSION_PROVIDER=laya`, `LAYA_URL` and `LAYA_API_KEY`. Start the separate model server using the [model and serving guide](docs/jev-laya-evaluation.md); `npm run dev` starts only the API. See the [deployment guide](docs/deployment.md) for hosted configuration and [`.env.example`](.env.example) for the variable reference. Keep credentials on the server and out of commits.
 
 ### Run the visual previews
 
