@@ -6,13 +6,23 @@
 
 One request. An answer through your Meta glasses.
 
-<img src="apps/landing/public/img/glasses-product.webp" alt="Black Meta glasses" width="720" />
+<img src="docs/images/lens-searching.webp" alt="Facto in the right lens, searching sources for the claim that the Eiffel Tower grows up to 15 cm taller in summer" width="420" /> <img src="docs/images/lens-verdict.webp" alt="Facto in the right lens showing True, with a quote from toureiffel.paris" width="420" />
+<br />
+<img src="docs/images/glasses-listening.webp" alt="The glasses with the caption: Your glasses already hear what you hear" width="420" /> <img src="docs/images/glasses-front.webp" alt="The glasses from the front" width="420" />
 
 **Look. Ask. Check.**
 
-[Getting started](#getting-started) · [Architecture](#architecture) · [Laya and privacy](#laya-and-privacy) · [Development](#development)
+[Demo video](https://youtu.be/VF11rvTQ7kU) · [Website](https://fact0.eu) · [Getting started](#getting-started) · [Architecture](#architecture) · [Laya and privacy](#laya-and-privacy) · [Development](#development)
 
 </div>
+
+## About
+
+Facto is a live fact-checker for Meta glasses, built at Junction 2026 for the Meta challenge. When someone near you states a fact, or you ask "Facto, can you check this?" while looking at a screen or poster, Facto captures the claim, searches real sources and gives you a one-word verdict with its source: **true**, **false**, **needs context** or **unverified**. You hear it through the speakers, or see it in the right lens on Meta Ray-Ban Display.
+
+It is made of a Swift iOS companion that talks to the glasses through Meta's Device Access Toolkit and reads text on the phone with Apple Vision, and a TypeScript backend. The backend decides whether a statement is worth checking, retrieves evidence with Exa, has a model judge the claim against that evidence, then applies fixed rules for citations and conflicting sources before anything reaches the wearer. When the evidence is thin, Facto says it can't verify the claim instead of guessing.
+
+**[Watch the demo](https://youtu.be/VF11rvTQ7kU)**
 
 ## Why facto
 
@@ -45,7 +55,7 @@ Facto separates capture, evidence gathering, model decisions and presentation. A
 flowchart TD
     G[Meta glasses: camera and microphone] --> I[iOS companion / Meta DAT]
     I --> O[Apple Vision OCR on phone]
-    I --> A[Audio stream / Deepgram transcription]
+    I --> A[Audio stream / ElevenLabs or Deepgram transcription]
     O --> T[Authenticated HTTP and WebSocket API]
     A --> T
     T --> C[Classify the statement]
@@ -55,8 +65,8 @@ flowchart TD
     J --> V[Deterministic verdict and citation rules]
     V --> P[Presentation policy]
     P --> R[Speech / display card / result history]
-    C -. Decision provider .-> M[Jev on main / self-hosted Laya integration pending]
-    J -. Decision provider .-> M
+    C -. Admission model .-> L[Fine-tuned Laya, self-hosted]
+    J -. Judgment model .-> M[Jev]
 ```
 
 ### Capture and transport
@@ -84,11 +94,11 @@ Timeouts and provider failures remain operational errors, not factual verdicts. 
 
 ## Laya and privacy
 
-**The team has fine-tuned and self-hosted Laya, an open-source model used for the same classification and evidence-judgment roles as Jev.** We chose this direction to keep those decision inputs under our control instead of sending them to a hosted decision service. Captured statements and conversational context can contain sensitive information; controlling where that processing happens is part of the product design.
+**Facto's admission gate runs on Laya, an open-source model we fine-tuned and host ourselves.** It decides whether a statement is a checkable public claim, and whether it touches private data or someone's private life, before anything is searched. Jev judges admitted claims against the evidence. Captured speech can contain sensitive information, so the step that sees every statement runs on infrastructure we control instead of a hosted decision service.
 
-**Integration status:** the fine-tuning and hosting work above is the team’s update; it has not yet been merged into this repository’s default implementation. `main` currently uses Jev. [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68) contains the self-hosted Laya provider comparison, and [issue #69](https://github.com/erick-dsnk/junction-2026/issues/69) records provider-specific prompt work. That earlier comparison is not an evaluation of the newly reported fine-tuned model. Its drop-in results should not be presented as the final model’s performance.
+The fine-tuned model is deployed on our backend, so testers using the app go through it. On development validation it scored 534/595 (89.7%) on factual-claim classification, 585/593 (98.7%) on private-data detection and 592/593 (99.8%) on private-life detection. All privacy-positive examples in that validation were fictional. These are development numbers, not a blind test or a measure of real-world privacy safety. Only those three admission heads were supervised; the other admission heads retain inherited behavior. The [model and serving guide](docs/jev-laya-evaluation.md) records the training data, limits and historical original-checkpoint comparison from [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68). The weights are published as the [admission-v1 release](https://github.com/erick-dsnk/junction-2026/releases/tag/laya-admission-v1-20261114).
 
-Self-hosting changes the privacy boundary for classification and judgment. It does **not** make the whole system local: evidence queries still reach retrieval services, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
+Self-hosting changes the privacy boundary for admission. It does **not** make the whole system local: evidence queries still reach retrieval services, Jev receives admitted claims and evidence, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone; enabling remote OCR selection also sends the photo and OCR boxes to the configured vision provider. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
 
 ## Repository map
 
@@ -126,7 +136,7 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000) for the console. Fixture mode uses predefined examples; it does not verify arbitrary real-world claims.
 
-For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). See the [deployment guide](docs/deployment.md) for every variable. Keep credentials on the server and out of commits. Laya-specific configuration belongs to the pending integration, not the current `.env.example`.
+For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). To run admission on the fine-tuned Laya model, as the hosted backend does, keep `DECISION_PROVIDER=jev` and set `ADMISSION_PROVIDER=laya`, `LAYA_URL` and `LAYA_API_KEY`. Start the separate model server using the [model and serving guide](docs/jev-laya-evaluation.md); `npm run dev` starts only the API. See the [deployment guide](docs/deployment.md) for hosted configuration and [`.env.example`](.env.example) for the variable reference. Keep credentials on the server and out of commits.
 
 ### Run the visual previews
 

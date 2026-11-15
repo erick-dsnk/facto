@@ -1,12 +1,13 @@
-# Junction 2026: <project name>
+# Junction 2026: Facto
 
 Shared context for Claude Code, Codex and Copilot. `CLAUDE.md` is a symlink to this file. Keep it under ~150 lines and put style rules in linters and hooks, not here.
 
 ## Stack
-<!-- Fill in at kickoff. -->
-- Framework:
-- DB:
-- Hosting / preview URL pattern:
+- Backend: TypeScript on Node 22+, Fastify with HTTP and WebSocket (`services/api`), shared zod contracts (`packages/contracts`)
+- iOS: Swift companion app built with XcodeGen and Meta's Device Access Toolkit (`apps/ios`)
+- Web: React + Vite display HUD (`apps/glasses`), Vite landing page (`apps/landing`)
+- DB: none. Sessions live in memory and expire.
+- Hosting: API in one Cloudflare Container behind a Worker (`wrangler.jsonc`, `deploy/cloudflare`); landing page on a Cloudflare Worker at https://fact0.eu
 
 ## Commands
 - Install: `npm ci`
@@ -20,7 +21,7 @@ Shared context for Claude Code, Codex and Copilot. `CLAUDE.md` is a symlink to t
 - One GitHub issue → one branch → one PR. Branch `<agent>/<issue#>-<slug>`, PR title `#<issue> <summary>`, body has `Closes #<issue>`.
 - Each issue has a **Files owned** list. Stay inside it. If you need to change shared code (types, DB schema, migrations, API contracts), stop and say so in the PR rather than doing it.
 - Don't add dependencies unless the issue needs them. Justify each one in the PR body.
-- Do not merge. Review follows the type cycle: 🔥 fire (Cipriamn) is reviewed by 💧 water (erick-dsnk), water by 🌱 grass (Davidtzuke), and grass by fire. The reviewer merges once CI is green. A PR inherits the `type:*` label of the issue it closes, which is applied automatically.
+- Do not merge your own PR. A teammate reviews it and merges once CI is green.
 
 ## Conventions
 - Demo first: stub auth and payments, and put external APIs behind one module with a mock.

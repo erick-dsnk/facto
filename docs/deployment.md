@@ -24,8 +24,9 @@ Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrang
 
 | Name | Value |
 |---|---|
-| `JEV_API_KEY` | Jev key (live mode refuses to start without it) |
-| `EXA_API_KEY` | Exa key (same) |
+| `JEV_API_KEY` | Jev key (required for the supported Jev judgment / Laya admission configuration) |
+| `LAYA_API_KEY` | Separate bearer token matching the self-hosted Laya server, when Laya admission is enabled |
+| `EXA_API_KEY` | Exa key (required in live mode) |
 | `ELEVENLABS_API_KEY` | ElevenLabs key for speech recognition (`ASR_PROVIDER=elevenlabs`). With neither ASR key, `/health` shows `"asr":"not_configured"` |
 | `DEEPGRAM_API_KEY` | Deepgram key, the fallback recogniser (`ASR_PROVIDER=deepgram`, or used when `ELEVENLABS_API_KEY` is missing) |
 | `DEMO_JOIN_CODE` | 8+ characters |
@@ -33,6 +34,19 @@ Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrang
 | `ALLOWED_ORIGINS` | `https://actually-api.<account-subdomain>.workers.dev` (for the `/` console page; the iOS app sends no `Origin`) |
 
 To test without the Exa key, deploy in fixture mode with `npx wrangler deploy --config ../../wrangler.jsonc --var PIPELINE_MODE:fixture`. The next deploy without `--var` goes back to live. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset: Cloudflare terminates TLS.
+
+### Fine-tuned Laya admission
+
+The hosted app uses Laya for admission and Jev for evidence judgment and fact-check matching. A fresh checkout defaults to Jev for both roles: the committed `wrangler.jsonc` does not select Laya. Deploying the API does not start a model server or download weights. First provision and verify the separate server using the [checkpoint and serving guide](jev-laya-evaluation.md), including the `english` alias override that selects the fine-tuned checkpoint.
+
+To reproduce the hybrid setup:
+
+1. Add `DECISION_PROVIDER=jev` and `ADMISSION_PROVIDER=laya` to `vars` in the root `wrangler.jsonc`. Keep these settings for later deploys; CLI `--var` overrides apply only to that deployment. The admission-only checkpoint must not be selected as `DECISION_PROVIDER=laya`.
+2. Set `LAYA_URL` to the model server's base URL, without `/v1/systemone`. The adapter appends that path and uses the Jev-wire API, not an OpenAI-compatible endpoint. For Cloudflare, the address must be reachable from the API container; `127.0.0.1:8765` would point inside that container. Use HTTPS for a remote server. Set the URL without committing an operator-specific endpoint using `npx wrangler secret put LAYA_URL --config ../../wrangler.jsonc`.
+3. Set `LAYA_API_KEY` with the same `wrangler secret put` command and the token configured on the model server. Keep `JEV_API_KEY` and `EXA_API_KEY` configured. The Worker already forwards all four Laya/provider settings into the container.
+4. Deploy the API, verify authenticated model health as described in the serving guide, and run the typed check below. API `/health` reports `configured_unverified`; it does not call Laya or prove which checkpoint is loaded. Laya transport failures do not silently fall back to hosted Jev admission.
+
+For local development, put the same provider settings, URL and token in the ignored `.env`; loopback is suitable when both processes run on the same host. On Railway, set them as service variables instead of editing `wrangler.jsonc`. See [`.env.example`](../.env.example) for the full variable reference, including optional vision and diagnostic settings.
 
 ### Deploy
 
@@ -64,7 +78,7 @@ read -rs JOIN && export JOIN   # paste the join code; it stays out of shell hist
    `npx wscat@6.1.0 -c "wss://${BASE#https://}/v1/sessions/$SID/stream" -s actually-v1 -H "Authorization: Bearer $TOKEN"`
    Then send the check. Expect `202`:
    `curl -s -w ' %{http_code}\n' -X POST $BASE/v1/sessions/$SID/checks -H 'content-type: application/json' -H "authorization: Bearer $TOKEN" -d "{\"schemaVersion\":1,\"requestId\":\"req-cf-1\",\"sessionId\":\"$SID\",\"sessionEpoch\":1,\"revision\":1,\"mode\":\"typed\",\"text\":\"The Eiffel Tower opened in 1889.\",\"language\":\"en\",\"capturedAt\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"capture\":{\"source\":\"typed_fixture\",\"segmentId\":\"typed-1\",\"confidence\":1,\"final\":true},\"context\":[],\"userInitiated\":true}"`
-4. WebSocket: the `wscat` session from step 3 should stay connected for 3 minutes (the server closes it when the 5-minute session ends). wscat doesn't ping, so type something every minute or so to stay under Cloudflare's idle timeout; the app pings every 2 s.
+4. WebSocket: the `wscat` session from step 3 should stay connected for 3 minutes. Sessions expire after `SESSION_LIFETIME_MS` (default 2 hours). wscat doesn't ping, so type something every minute or so to stay under Cloudflare's idle timeout; the app pings every 2 s.
 5. Join limit counts real clients. From network A (e.g. Wi-Fi), 10 bad joins, then an 11th. Expect `401` ten times, then `429`:
    `for i in $(seq 1 11); do curl -s -o /dev/null -w '%{http_code} ' -X POST $BASE/v1/sessions -H 'content-type: application/json' -d '{"joinCode":"wrong-code"}'; done; echo`
    Within 60 s, from network B (e.g. a phone hotspot), the step 2 good join still returns `201`. If network B also gets `429`, the proxy chain adds an address, so set `TRUST_PROXY` to `2`, redeploy and retest.

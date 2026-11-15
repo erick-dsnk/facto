@@ -8,7 +8,7 @@ Original screenshots are 3420 × 2224 pixels. Independent pixel measurements iso
 
 The ½ scale preserves the reference's apparent Retina component sizing. It is an explicit mapping assumption, not a measured optical mapping between the decorative lens and the native display. Normalizing the full non-square physical lens to 600 would instead produce a roughly 302 px card and 11 px caption; that different scale was not used. The slight perspective on the reference card is not reproduced as a distortion in the real HUD.
 
-Reference copies are preserved unchanged in `artifacts/glasses-ui-v4/reference/`. Their geometry and sampled RGB values are recorded in `reference-measurements.json`.
+Reference copies were kept unchanged in `artifacts/glasses-ui-v4/reference/`, a local QA folder that is not committed; the files listed under it below are in that folder too. Their geometry and sampled RGB values are recorded in `reference-measurements.json`.
 
 ## Final measured comparison
 
