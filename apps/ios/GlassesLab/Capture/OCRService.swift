@@ -1,10 +1,11 @@
 import CoreGraphics
 import Foundation
 import ImageIO
+import UniformTypeIdentifiers
 import Vision
 
-// On-device OCR for "look and check" (decision 5). The photo stays in memory, only the
-// recognised text leaves this module, and nothing here logs that text. The coordinator copies
+// On-device OCR for "look and check" (decision 5). The photo stays in memory. A separately
+// configured semantic selector may receive an upright still; nothing here logs text. The coordinator copies
 // the result, observations included, into the on-device DebugLog while it is on.
 
 /// What OCR produced for one photo. `text` holds the kept lines in reading order, one row
@@ -29,6 +30,23 @@ struct OCRResult: Equatable, Sendable {
   /// Every observation Vision returned, in Vision's order, with its confidence, including the
   /// ones the filter dropped. For the debug log; `assemble` alone leaves it empty.
   var observations: [OCRService.OCRLine] = []
+  /// All polygons share the upright original-photo coordinate system. Cropping is a
+  /// supplementary observation view and never deletes original evidence.
+  var aspect: Double = 1
+  var views: [OCRView] = []
+
+  struct OCRView: Equatable, Sendable {
+    let id: String
+    /// Row-major projective matrix mapping view-normalized coordinates to original.
+    let viewToOriginal: [Double]
+  }
+
+  var targetInput: OCRTargetInput {
+    OCRTargetInput(lines: observations.map { line in
+      OCRTargetLine(id: line.id, text: line.text, confidence: Double(line.confidence),
+                    polygon: line.originalPolygon, viewId: line.viewId)
+    }, aspect: aspect)
+  }
 
   static let empty = OCRResult(text: "", meanConfidence: 0, lineCount: 0, droppedLineCount: 0)
 
@@ -45,6 +63,7 @@ protocol TextRecognizing: AnyObject {
 enum OCRError: Error, Equatable {
   /// The bytes are not a decodable image.
   case undecodableImage
+  case selectionImageTooLarge
 }
 
 /// Apple Vision text recognition: accurate mode with language correction, English plus
@@ -81,28 +100,75 @@ final class OCRService: TextRecognizing {
     }
   }
 
-  /// A display holding text is read first, from a perspective-corrected crop; without one
-  /// the whole photo is read as before.
+  /// The full photograph is always retained as evidence. A perspective-corrected screen
+  /// is another view, with immutable IDs and a transform back into the original photo.
   private func recognizeSync(_ image: CGImage, orientation: CGImagePropertyOrientation) throws -> OCRResult {
-    let wholeLines = try recognizeLines(in: image, orientation: orientation)
-    // Rectangle detection is best effort: a failure means "no screen", not "no OCR".
+    var wholeLines = try recognizeLines(in: image, orientation: orientation)
+    for index in wholeLines.indices { wholeLines[index].id = "original-\(index)" }
     let quads = (try? ScreenDetector.detectRectangles(in: image, orientation: orientation)) ?? []
     let confident = wholeLines.filter { $0.confidence >= minimumLineConfidence }.map(\.boundingBox)
-    if let index = ScreenDetector.chooseScreen(quads: quads, lineBoxes: confident),
-       let crop = ScreenDetector.crop(image, orientation: orientation, quad: quads[index]),
-       let lines = try? recognizeLines(in: crop, orientation: .up) {
-      var result = Self.assemble(lines, minimumConfidence: minimumLineConfidence, aspect: Self.aspect(of: crop, orientation: .up))
-      if !result.isEmpty {
-        result.source = .screen
-        result.candidateCount = quads.count
-        result.observations = lines
-        return result
-      }
-    }
     var result = Self.assemble(wholeLines, minimumConfidence: minimumLineConfidence, aspect: Self.aspect(of: image, orientation: orientation))
+    result.aspect = Double(Self.aspect(of: image, orientation: orientation))
     result.candidateCount = quads.count
     result.observations = wholeLines
+    result.views = [.init(id: "original", viewToOriginal: [1, 0, 0, 0, 1, 0, 0, 0, 1])]
+    if let index = ScreenDetector.chooseScreen(quads: quads, lineBoxes: confident),
+       let crop = ScreenDetector.crop(image, orientation: orientation, quad: quads[index]),
+       var lines = try? recognizeLines(in: crop, orientation: .up) {
+      for lineIndex in lines.indices {
+        lines[lineIndex].id = "screen-\(lineIndex)"
+        lines[lineIndex].viewId = "screen"
+        lines[lineIndex].polygon = quads[index].mapFromUnit(lines[lineIndex].boxPolygon)
+      }
+      let cropped = Self.assemble(lines, minimumConfidence: minimumLineConfidence, aspect: Self.aspect(of: crop, orientation: .up))
+      if !cropped.isEmpty {
+        // Keep the existing preview text, but target selection sees both views and their
+        // original-coordinate geometry rather than trusting this crop as the whole scene.
+        result.text = cropped.text
+        result.meanConfidence = cropped.meanConfidence
+        result.lineCount = cropped.lineCount
+        result.droppedLineCount = cropped.droppedLineCount
+        result.source = .screen
+        result.observations += lines
+        result.views.append(.init(id: "screen", viewToOriginal: quads[index].unitToOriginal))
+      }
+    }
     return result
+  }
+
+  /// Remote selection sees the same upright pixels that Vision coordinates refer to.
+  /// This is called only when a remote selector has explicitly been configured.
+  /// Downsampling the whole frame preserves normalized OCR coordinates. Recognition still
+  /// uses the untouched capture; this bounded copy exists only for layout interpretation.
+  static func selectionJPEG(_ imageData: Data, maximumBytes: Int = OCRTargetRequestLimits.maximumImageBytes,
+                            maximumDimension: Int = 2_560) throws -> Data {
+    guard maximumBytes > 0, maximumDimension > 0 else { throw OCRError.selectionImageTooLarge }
+    guard let source = CGImageSourceCreateWithData(imageData as CFData, nil) else { throw OCRError.undecodableImage }
+    var dimension = maximumDimension
+    while true {
+      let options: [CFString: Any] = [
+        kCGImageSourceCreateThumbnailFromImageAlways: true,
+        kCGImageSourceCreateThumbnailWithTransform: true,
+        kCGImageSourceThumbnailMaxPixelSize: dimension,
+      ]
+      guard let upright = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else {
+        throw OCRError.undecodableImage
+      }
+      for quality in [0.9, 0.75, 0.6] {
+        let data = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil) else {
+          throw OCRError.undecodableImage
+        }
+        // Pixels are already upright, so do not carry the original EXIF transform forward.
+        CGImageDestinationAddImage(destination, upright, [kCGImageDestinationLossyCompressionQuality: quality,
+          kCGImagePropertyOrientation: CGImagePropertyOrientation.up.rawValue] as CFDictionary)
+        guard CGImageDestinationFinalize(destination) else { throw OCRError.undecodableImage }
+        if data.length <= maximumBytes { return data as Data }
+      }
+      // Do not produce a postage stamp merely to satisfy a request limit.
+      guard dimension > 640 else { throw OCRError.selectionImageTooLarge }
+      dimension = max(640, dimension * 3 / 4)
+    }
   }
 
   private func recognizeLines(in image: CGImage, orientation: CGImagePropertyOrientation) throws -> [OCRLine] {
@@ -137,6 +203,17 @@ final class OCRService: TextRecognizing {
     var text: String
     var confidence: Float
     var boundingBox: CGRect
+    /// Assigned once for the lifetime of this capture, before any filtering or grouping.
+    var id: String = ""
+    var viewId: String = "original"
+    var polygon: [OCRTargetPoint]? = nil
+
+    var boxPolygon: [OCRTargetPoint] {
+      let b = boundingBox
+      return [.init(x: b.minX, y: b.maxY), .init(x: b.maxX, y: b.maxY),
+              .init(x: b.maxX, y: b.minY), .init(x: b.minX, y: b.minY)]
+    }
+    var originalPolygon: [OCRTargetPoint] { polygon ?? boxPolygon }
   }
 
   /// Drops low-confidence and blank lines, then orders the rest by block. A block is a column

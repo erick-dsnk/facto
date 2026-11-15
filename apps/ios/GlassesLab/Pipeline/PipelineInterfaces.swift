@@ -123,6 +123,7 @@ protocol PlaybackReporting: AnyObject {
 struct BackendConfig: Equatable, Sendable {
   static let baseURLKey = "backend.baseURL"
   static let joinCodeKey = "backend.joinCode"
+  static let remoteOCRSelectionEnabledKey = "backend.remoteOCRSelectionEnabled"
   /// Set once the one-time removal of old localhost and Railway URLs has run.
   static let baseURLMigratedKey = "backend.baseURLMigrated"
   /// The hosted backend (Cloudflare Workers).
@@ -130,10 +131,13 @@ struct BackendConfig: Equatable, Sendable {
 
   var baseURL: URL
   var joinCode: String
+  /// Explicit opt-in: uploads a photo and OCR observations to the configured backend.
+  var remoteOCRSelectionEnabled: Bool
 
-  init(baseURL: URL = BackendConfig.defaultBaseURL, joinCode: String = "") {
+  init(baseURL: URL = BackendConfig.defaultBaseURL, joinCode: String = "", remoteOCRSelectionEnabled: Bool = false) {
     self.baseURL = baseURL
     self.joinCode = joinCode
+    self.remoteOCRSelectionEnabled = remoteOCRSelectionEnabled
   }
 
   static func load(from defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) -> BackendConfig {
@@ -151,7 +155,7 @@ struct BackendConfig: Equatable, Sendable {
       }
       defaults.removeObject(forKey: joinCodeKey)
     }
-    return BackendConfig(baseURL: url ?? defaultBaseURL, joinCode: joinCode ?? "")
+    return BackendConfig(baseURL: url ?? defaultBaseURL, joinCode: joinCode ?? "", remoteOCRSelectionEnabled: defaults.bool(forKey: remoteOCRSelectionEnabledKey))
   }
 
   /// `connect()` saves the URL it used, so builds before the hosted default kept localhost or
@@ -170,6 +174,7 @@ struct BackendConfig: Equatable, Sendable {
 
   func save(to defaults: UserDefaults = .standard, secrets: SecretStoring = KeychainSecretStore()) {
     defaults.set(baseURL.absoluteString, forKey: Self.baseURLKey)
+    defaults.set(remoteOCRSelectionEnabled, forKey: Self.remoteOCRSelectionEnabledKey)
     defaults.removeObject(forKey: Self.joinCodeKey)
     secrets.write(joinCode, for: Self.joinCodeKey)
   }
