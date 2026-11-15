@@ -15,26 +15,6 @@ Start with **[docs/PLAYBOOK.md](docs/PLAYBOOK.md)**.
 | `scripts/` | `bootstrap-labels.sh`, `dispatch.sh` |
 | `docs/research.md` | Research report with sources |
 
-## Self-hosted admission and privacy
-
-The API can use a self-hosted Laya admission gate while keeping Jev for evidence judgment. Within the fact-checking pipeline, Laya checks candidates before external retrieval or Jev judgment. Candidates flagged as containing private data are skipped; those flagged as personal experiences take a terminal path without search or judgment. Missing or malformed privacy scores stop processing before retrieval. Source queries use the admitted candidate's checked text and subject; Jev judgment receives the checked claim and retained evidence. These payloads exclude the original transcript and surrounding context.
-
-Enable this combination in the API environment:
-
-```dotenv
-PIPELINE_MODE=live
-DECISION_PROVIDER=jev
-ADMISSION_PROVIDER=laya
-LAYA_URL=http://127.0.0.1:8765
-LAYA_API_KEY=<separate Laya server secret>
-```
-
-Keep `JEV_API_KEY` and the retrieval credentials configured as described below. Set `LAYA_URL` to the address reachable from the API; the localhost example assumes both services run on the same host. The [Laya hosting guide](docs/jev-laya-evaluation.md) covers downloading the saved admission model, verifying it, starting an authenticated inference server and connecting the app. This configuration is opt-in and does not deploy the model automatically.
-
-Self-hosting keeps admission inputs on infrastructure you control and reduces the private content exposed to search providers and Jev. The pinned Laya inference server processes requests in memory and has no built-in request-history store. That does not cover the API's session state or host and proxy logging: the API holds input and context in memory until session deletion or expiry (five minutes by default). Keep `DEBUG_TRANSCRIPTS` off to avoid transcript logs and the optional debug feed, and configure host and proxy logs without request bodies. Audio transcription uses Deepgram **before** admission, so this gate does not prevent audio from reaching Deepgram.
-
-The privacy gate is a safeguard, not a guarantee: a classifier can miss private content, and a nonpersonal statement can still contain confidential information. Passing admission does not establish that information is publicly available. The saved fine-tune is experimental and supervises claim kind, private data and personal experience; it has not established the reliability of the entire admission contract. Admitted claims and their evidence still leave the self-hosted boundary for retrieval and Jev judgment.
-
 ## Deploy (Cloudflare)
 
 The API runs as one Cloudflare Container behind a Worker (issue #43). The Worker sends every request, HTTP and WebSocket alike, to one Durable Object named `api`, which owns the only container, because sessions live in memory. Files: `Dockerfile`, `.dockerignore`, `wrangler.jsonc`, `deploy/cloudflare/` (Worker code and a pinned `wrangler`).

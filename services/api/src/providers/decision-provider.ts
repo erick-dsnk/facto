@@ -16,7 +16,7 @@ export function selectDecisionProvider(options: {
   fetch?: typeof globalThis.fetch;
   diagnostic?: LayaDiagnostic;
 }): DecisionProviderSelection {
-  const provider = options.provider ?? 'jev';
+  const provider = options.provider?.trim() || 'jev';
   if (provider !== 'jev' && provider !== 'laya') throw new Error('DECISION_PROVIDER must be jev or laya.');
   const admissionProvider = options.admissionProvider?.trim() || provider;
   if (admissionProvider !== 'jev' && admissionProvider !== 'laya') throw new Error('ADMISSION_PROVIDER must be jev or laya.');
