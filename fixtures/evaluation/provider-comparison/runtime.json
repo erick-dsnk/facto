@@ -1,0 +1,32 @@
+{
+  "python": "3.13.12 | packaged by Anaconda, Inc. | (main, Feb 24 2026, 16:13:31) [GCC 14.3.0]",
+  "packages": {
+    "laya": "0.4.32",
+    "torch": "2.10.0",
+    "transformers": "4.57.6",
+    "safetensors": "0.7.0",
+    "huggingface_hub": "0.36.2",
+    "numpy": "2.4.2",
+    "vegaml": null,
+    "cryptography": "46.0.5",
+    "fastapi": "0.135.1",
+    "uvicorn": "0.41.0"
+  },
+  "layaSourceCommit": "af8ada066685d66b3fc0b31e6c56b96def23fe2f",
+  "checkpointRepo": "convaiinnovations/laya",
+  "checkpointRevision": "85cc74ddae6109077ebe2853a9b3077fb6606a78",
+  "device": "cuda",
+  "hardware": "NVIDIA GeForce RTX 3050 Laptop GPU 4096MiB",
+  "server": {
+    "LAYA_MAX_CONCURRENT": 1,
+    "LAYA_THREADS": 2,
+    "max_len": 512,
+    "head_max_len": 192
+  },
+  "notes": [
+    "Preloaded server; cold startup not included in request latency.",
+    "Local snapshot override pins checkpoint; /health revisions field is null for a local path.",
+    "Startup warning clamps choice:11+ temperature to0.5; cohort has maximum8options and does not exercise this bucket.",
+    "Venv includes system site packages; vegaml distribution not installed in this run (not used on decision serving path)."
+  ]
+}

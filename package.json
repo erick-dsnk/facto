@@ -17,7 +17,8 @@
     "evaluate:live:inprocess": "tsx --env-file-if-exists=.env apps/console/src/live/run.ts",
     "dev:glasses": "npm run dev --workspace=@actually/glasses",
     "build:glasses": "npm run build --workspace=@actually/glasses",
-    "check:glasses": "npm run check --workspace=@actually/glasses"
+    "check:glasses": "npm run check --workspace=@actually/glasses",
+    "evaluate:providers": "tsx --env-file-if-exists=.env apps/console/evaluate-providers.ts"
   },
   "dependencies": {
     "@fastify/websocket": "11.2.0",

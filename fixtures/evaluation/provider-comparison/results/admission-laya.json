@@ -1,0 +1,5869 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-14T19:43:11.407Z",
+  "updatedAt": "2026-11-14T19:43:34.707Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.2",
+  "cohortSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "evidenceSHA256": "31a31a93009b8bce1f3ec5b4c00cc1b0deb3c53b8ced61741006cba483b5b298",
+  "options": {
+    "providers": [
+      "laya"
+    ],
+    "modes": [
+      "admission"
+    ],
+    "repetitions": 1,
+    "deadlineMs": 10000,
+    "output": "fixtures/evaluation/provider-comparison/results/admission-laya.json"
+  },
+  "summary": [
+    {
+      "group": "laya/admission",
+      "n": 59,
+      "correct": 22,
+      "errors": 0,
+      "abstentions": 0,
+      "skipped": 45,
+      "definitive": 0,
+      "definitiveCorrect": 0,
+      "admission": {
+        "truePositive": 14,
+        "falsePositive": 0,
+        "expectedPositive": 51,
+        "precision": 1,
+        "recall": 0.27450980392156865
+      },
+      "durationMs": {
+        "p50": 335.3966499999997,
+        "p95": 1006.9430729999985
+      },
+      "askMs": {
+        "n": 59,
+        "p50": 334.26660100000026,
+        "p95": 1002.7341410000008
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 200049,
+      "errorCodes": {}
+    }
+  ],
+  "observations": [
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-01",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 440.9021990000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 377.315562,
+          "questions": 11,
+          "stateBytes": 281,
+          "inputTokens": 2896,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6785,
+                "opinion": 0.0182,
+                "prediction": 0.1749,
+                "question": 0.0584,
+                "instruction": 0.0223,
+                "other": 0.0476
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.088,
+                "named_fact": 0.1384,
+                "weather": 0.2306,
+                "calculation": 0.3133,
+                "general": 0.2296
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3119,
+                "named_speaker": 0.2867,
+                "named_outlet": 0.3102,
+                "hearsay": 0.0912
+              }
+            },
+            "span_0_source": {
+              "choice": "2",
+              "probabilities": {
+                "1": 0.2535,
+                "2": 0.6538,
+                "none": 0.0927
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1627
+            },
+            "span_0_private_life": {
+              "noul": 0.3784
+            },
+            "span_0_rumour": {
+              "noul": 0.9036
+            },
+            "span_0_future": {
+              "noul": 0.1218
+            },
+            "span_0_self_contained": {
+              "noul": 0.8986
+            },
+            "span_0_practical": {
+              "noul": 0.0135
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8169,
+                "multiple_propositions": 0.1001,
+                "unclear": 0.0831
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 296.71556799999985,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 293.50470999999993,
+          "questions": 10,
+          "stateBytes": 231,
+          "inputTokens": 2570,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8108,
+                "opinion": 0.0129,
+                "prediction": 0.0769,
+                "question": 0.0323,
+                "instruction": 0.0209,
+                "other": 0.0463
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0787,
+                "named_fact": 0.1317,
+                "weather": 0.1055,
+                "calculation": 0.5138,
+                "general": 0.1703
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.3004,
+                "named_speaker": 0.2862,
+                "named_outlet": 0.3157,
+                "hearsay": 0.0977
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1692
+            },
+            "span_0_private_life": {
+              "noul": 0.2818
+            },
+            "span_0_rumour": {
+              "noul": 0.8084
+            },
+            "span_0_future": {
+              "noul": 0.1018
+            },
+            "span_0_self_contained": {
+              "noul": 0.8442
+            },
+            "span_0_practical": {
+              "noul": 0.0586
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7001,
+                "multiple_propositions": 0.1576,
+                "unclear": 0.1423
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-03",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 297.11542800000007,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 295.0513169999999,
+          "questions": 10,
+          "stateBytes": 235,
+          "inputTokens": 2550,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.4655,
+                "opinion": 0.013,
+                "prediction": 0.3966,
+                "question": 0.041,
+                "instruction": 0.0243,
+                "other": 0.0596
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.0882,
+                "named_fact": 0.1247,
+                "weather": 0.1884,
+                "calculation": 0.2594,
+                "general": 0.3393
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.3043,
+                "named_speaker": 0.2999,
+                "named_outlet": 0.3083,
+                "hearsay": 0.0875
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.172
+            },
+            "span_0_private_life": {
+              "noul": 0.3268
+            },
+            "span_0_rumour": {
+              "noul": 0.9092
+            },
+            "span_0_future": {
+              "noul": 0.3479
+            },
+            "span_0_self_contained": {
+              "noul": 0.8289
+            },
+            "span_0_practical": {
+              "noul": 0.9316
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7004,
+                "multiple_propositions": 0.1488,
+                "unclear": 0.1508
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-04",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 326.211411,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 324.022968,
+          "questions": 11,
+          "stateBytes": 237,
+          "inputTokens": 2801,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5616,
+                "opinion": 0.0229,
+                "prediction": 0.1813,
+                "question": 0.0986,
+                "instruction": 0.0308,
+                "other": 0.1049
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1073,
+                "named_fact": 0.1702,
+                "weather": 0.2406,
+                "calculation": 0.2607,
+                "general": 0.2212
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2755,
+                "named_speaker": 0.2638,
+                "named_outlet": 0.2817,
+                "hearsay": 0.1789
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9731,
+                "none": 0.0269
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1477
+            },
+            "span_0_private_life": {
+              "noul": 0.2483
+            },
+            "span_0_rumour": {
+              "noul": 0.9326
+            },
+            "span_0_future": {
+              "noul": 0.6852
+            },
+            "span_0_self_contained": {
+              "noul": 0.8596
+            },
+            "span_0_practical": {
+              "noul": 0.0005
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.843,
+                "multiple_propositions": 0.0816,
+                "unclear": 0.0754
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-05",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 281.17793400000005,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 280.0995519999999,
+          "questions": 10,
+          "stateBytes": 175,
+          "inputTokens": 2470,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5591,
+                "opinion": 0.0172,
+                "prediction": 0.1443,
+                "question": 0.0809,
+                "instruction": 0.0507,
+                "other": 0.1477
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1585,
+                "named_fact": 0.1543,
+                "weather": 0.2427,
+                "calculation": 0.1672,
+                "general": 0.2773
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2908,
+                "named_speaker": 0.303,
+                "named_outlet": 0.2977,
+                "hearsay": 0.1085
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2031
+            },
+            "span_0_private_life": {
+              "noul": 0.2712
+            },
+            "span_0_rumour": {
+              "noul": 0.7933
+            },
+            "span_0_future": {
+              "noul": 0.174
+            },
+            "span_0_self_contained": {
+              "noul": 0.6844
+            },
+            "span_0_practical": {
+              "noul": 0.0078
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7111,
+                "multiple_propositions": 0.1695,
+                "unclear": 0.1194
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-06",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 318.8950950000003,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 317.03196800000023,
+          "questions": 10,
+          "stateBytes": 323,
+          "inputTokens": 2710,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6636,
+                "opinion": 0.019,
+                "prediction": 0.1372,
+                "question": 0.0865,
+                "instruction": 0.019,
+                "other": 0.0746
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.114,
+                "named_fact": 0.1326,
+                "weather": 0.2268,
+                "calculation": 0.2987,
+                "general": 0.2279
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2952,
+                "named_speaker": 0.2972,
+                "named_outlet": 0.2965,
+                "hearsay": 0.1112
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1704
+            },
+            "span_0_private_life": {
+              "noul": 0.2283
+            },
+            "span_0_rumour": {
+              "noul": 0.0843
+            },
+            "span_0_future": {
+              "noul": 0.0975
+            },
+            "span_0_self_contained": {
+              "noul": 0.8733
+            },
+            "span_0_practical": {
+              "noul": 0.0005
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8121,
+                "multiple_propositions": 0.096,
+                "unclear": 0.0919
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-07",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 311.1540179999997,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 309.262213,
+          "questions": 11,
+          "stateBytes": 235,
+          "inputTokens": 2736,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8363,
+                "opinion": 0.0135,
+                "prediction": 0.0349,
+                "question": 0.0349,
+                "instruction": 0.0162,
+                "other": 0.0642
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1272,
+                "named_fact": 0.2246,
+                "weather": 0.1454,
+                "calculation": 0.301,
+                "general": 0.2019
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2863,
+                "named_speaker": 0.2941,
+                "named_outlet": 0.294,
+                "hearsay": 0.1255
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9841,
+                "none": 0.0159
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.0833
+            },
+            "span_0_private_life": {
+              "noul": 0.0994
+            },
+            "span_0_rumour": {
+              "noul": 0.9497
+            },
+            "span_0_future": {
+              "noul": 0
+            },
+            "span_0_self_contained": {
+              "noul": 0.6427
+            },
+            "span_0_practical": {
+              "noul": 0
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.812,
+                "multiple_propositions": 0.1017,
+                "unclear": 0.0863
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "myth-08",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 306.735776,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 304.7078529999999,
+          "questions": 10,
+          "stateBytes": 273,
+          "inputTokens": 2670,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5876,
+                "opinion": 0.0235,
+                "prediction": 0.2132,
+                "question": 0.0806,
+                "instruction": 0.0287,
+                "other": 0.0663
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1063,
+                "named_fact": 0.1363,
+                "weather": 0.2618,
+                "calculation": 0.2653,
+                "general": 0.2302
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2907,
+                "named_speaker": 0.3121,
+                "named_outlet": 0.2959,
+                "hearsay": 0.1013
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1859
+            },
+            "span_0_private_life": {
+              "noul": 0.186
+            },
+            "span_0_rumour": {
+              "noul": 0.8811
+            },
+            "span_0_future": {
+              "noul": 0.1898
+            },
+            "span_0_self_contained": {
+              "noul": 0.8171
+            },
+            "span_0_practical": {
+              "noul": 0.0023
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7903,
+                "multiple_propositions": 0.1204,
+                "unclear": 0.0894
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 341.82499199999984,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 339.22777099999985,
+          "questions": 11,
+          "stateBytes": 350,
+          "inputTokens": 3048,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6511,
+                "opinion": 0.0259,
+                "prediction": 0.1685,
+                "question": 0.092,
+                "instruction": 0.0155,
+                "other": 0.047
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.0977,
+                "named_fact": 0.2653,
+                "weather": 0.2252,
+                "calculation": 0.1945,
+                "general": 0.2173
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3149,
+                "named_speaker": 0.2718,
+                "named_outlet": 0.3046,
+                "hearsay": 0.1088
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8815,
+                "2": 0.0941,
+                "none": 0.0244
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.191
+            },
+            "span_0_private_life": {
+              "noul": 0.5746
+            },
+            "span_0_rumour": {
+              "noul": 0.8784
+            },
+            "span_0_future": {
+              "noul": 0.1334
+            },
+            "span_0_self_contained": {
+              "noul": 0.9099
+            },
+            "span_0_practical": {
+              "noul": 0.0311
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.769,
+                "multiple_propositions": 0.1303,
+                "unclear": 0.1007
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 1075.5888180000002,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1072.376236,
+          "questions": 32,
+          "stateBytes": 423,
+          "inputTokens": 10584,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5335,
+                "opinion": 0.0446,
+                "prediction": 0.2272,
+                "question": 0.1061,
+                "instruction": 0.0169,
+                "other": 0.0718
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0581,
+                "named_fact": 0.0878,
+                "weather": 0.061,
+                "calculation": 0.7196,
+                "general": 0.0735
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3022,
+                "named_speaker": 0.2989,
+                "named_outlet": 0.3009,
+                "hearsay": 0.0981
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.172
+            },
+            "span_0_private_life": {
+              "noul": 0.1751
+            },
+            "span_0_rumour": {
+              "noul": 0.5231
+            },
+            "span_0_future": {
+              "noul": 0.067
+            },
+            "span_0_self_contained": {
+              "noul": 0.8144
+            },
+            "span_0_practical": {
+              "noul": 0.8557
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.5297,
+                "multiple_propositions": 0.3616,
+                "unclear": 0.1086
+              }
+            },
+            "span_1_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5731,
+                "opinion": 0.0437,
+                "prediction": 0.2088,
+                "question": 0.0932,
+                "instruction": 0.0172,
+                "other": 0.064
+              }
+            },
+            "span_1_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0577,
+                "named_fact": 0.0908,
+                "weather": 0.0648,
+                "calculation": 0.7055,
+                "general": 0.0812
+              }
+            },
+            "span_1_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3049,
+                "named_speaker": 0.2943,
+                "named_outlet": 0.2989,
+                "hearsay": 0.1019
+              }
+            },
+            "span_1_private_data": {
+              "noul": 0.1937
+            },
+            "span_1_private_life": {
+              "noul": 0.1862
+            },
+            "span_1_rumour": {
+              "noul": 0.3601
+            },
+            "span_1_future": {
+              "noul": 0.0742
+            },
+            "span_1_self_contained": {
+              "noul": 0.7911
+            },
+            "span_1_practical": {
+              "noul": 0.8389
+            },
+            "span_1_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.576,
+                "multiple_propositions": 0.308,
+                "unclear": 0.116
+              }
+            },
+            "span_1_preserves_scope": {
+              "noul": 0.7691
+            },
+            "span_2_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.633,
+                "opinion": 0.0477,
+                "prediction": 0.1256,
+                "question": 0.1075,
+                "instruction": 0.019,
+                "other": 0.0672
+              }
+            },
+            "span_2_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0542,
+                "named_fact": 0.0867,
+                "weather": 0.0759,
+                "calculation": 0.6984,
+                "general": 0.0848
+              }
+            },
+            "span_2_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3015,
+                "named_speaker": 0.2948,
+                "named_outlet": 0.2975,
+                "hearsay": 0.1062
+              }
+            },
+            "span_2_private_data": {
+              "noul": 0.1698
+            },
+            "span_2_private_life": {
+              "noul": 0.17
+            },
+            "span_2_rumour": {
+              "noul": 0.3303
+            },
+            "span_2_future": {
+              "noul": 0.0614
+            },
+            "span_2_self_contained": {
+              "noul": 0.8275
+            },
+            "span_2_practical": {
+              "noul": 0.8548
+            },
+            "span_2_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.556,
+                "multiple_propositions": 0.342,
+                "unclear": 0.102
+              }
+            },
+            "span_2_preserves_scope": {
+              "noul": 0.7774
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 294.7390569999998,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 293.91923300000053,
+          "questions": 10,
+          "stateBytes": 201,
+          "inputTokens": 2510,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.3867,
+                "opinion": 0.046,
+                "prediction": 0.2028,
+                "question": 0.1202,
+                "instruction": 0.0432,
+                "other": 0.2012
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1329,
+                "named_fact": 0.1271,
+                "weather": 0.208,
+                "calculation": 0.2419,
+                "general": 0.2902
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2789,
+                "named_speaker": 0.3035,
+                "named_outlet": 0.2896,
+                "hearsay": 0.128
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1482
+            },
+            "span_0_private_life": {
+              "noul": 0.1898
+            },
+            "span_0_rumour": {
+              "noul": 0.225
+            },
+            "span_0_future": {
+              "noul": 0.247
+            },
+            "span_0_self_contained": {
+              "noul": 0.721
+            },
+            "span_0_practical": {
+              "noul": 0.0882
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6673,
+                "multiple_propositions": 0.1686,
+                "unclear": 0.1641
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-04",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 350.554494,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 348.86300800000026,
+          "questions": 11,
+          "stateBytes": 348,
+          "inputTokens": 3125,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.4502,
+                "opinion": 0.0257,
+                "prediction": 0.3206,
+                "question": 0.1315,
+                "instruction": 0.0197,
+                "other": 0.0523
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1095,
+                "named_fact": 0.1307,
+                "weather": 0.1066,
+                "calculation": 0.4295,
+                "general": 0.2237
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2837,
+                "named_speaker": 0.2818,
+                "named_outlet": 0.2946,
+                "hearsay": 0.1398
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8628,
+                "2": 0.0887,
+                "3": 0.0304,
+                "none": 0.0181
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2159
+            },
+            "span_0_private_life": {
+              "noul": 0.5317
+            },
+            "span_0_rumour": {
+              "noul": 0.8577
+            },
+            "span_0_future": {
+              "noul": 0.4004
+            },
+            "span_0_self_contained": {
+              "noul": 0.7888
+            },
+            "span_0_practical": {
+              "noul": 0.518
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7044,
+                "multiple_propositions": 0.1657,
+                "unclear": 0.1298
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-05",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 330.27535400000033,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 328.6843339999996,
+          "questions": 11,
+          "stateBytes": 277,
+          "inputTokens": 2911,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "prediction",
+              "probabilities": {
+                "claim": 0.3879,
+                "opinion": 0.0117,
+                "prediction": 0.4971,
+                "question": 0.0502,
+                "instruction": 0.0144,
+                "other": 0.0388
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0855,
+                "named_fact": 0.1264,
+                "weather": 0.1345,
+                "calculation": 0.4804,
+                "general": 0.1732
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3065,
+                "named_speaker": 0.2894,
+                "named_outlet": 0.3032,
+                "hearsay": 0.1009
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9558,
+                "none": 0.0442
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2379
+            },
+            "span_0_private_life": {
+              "noul": 0.3995
+            },
+            "span_0_rumour": {
+              "noul": 0.6899
+            },
+            "span_0_future": {
+              "noul": 0.3195
+            },
+            "span_0_self_contained": {
+              "noul": 0.8666
+            },
+            "span_0_practical": {
+              "noul": 0.1034
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7474,
+                "multiple_propositions": 0.1341,
+                "unclear": 0.1185
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-06",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 294.3403509999998,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 292.9647520000008,
+          "questions": 10,
+          "stateBytes": 221,
+          "inputTokens": 2570,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "prediction",
+              "probabilities": {
+                "claim": 0.3594,
+                "opinion": 0.0128,
+                "prediction": 0.3955,
+                "question": 0.1325,
+                "instruction": 0.0166,
+                "other": 0.0832
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1111,
+                "named_fact": 0.1044,
+                "weather": 0.1979,
+                "calculation": 0.3922,
+                "general": 0.1944
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3082,
+                "named_speaker": 0.2988,
+                "named_outlet": 0.3075,
+                "hearsay": 0.0855
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.129
+            },
+            "span_0_private_life": {
+              "noul": 0.1456
+            },
+            "span_0_rumour": {
+              "noul": 0.2089
+            },
+            "span_0_future": {
+              "noul": 0.0751
+            },
+            "span_0_self_contained": {
+              "noul": 0.767
+            },
+            "span_0_practical": {
+              "noul": 0.0291
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7078,
+                "multiple_propositions": 0.1629,
+                "unclear": 0.1293
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-07",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 323.93066199999976,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 322.2338040000004,
+          "questions": 11,
+          "stateBytes": 251,
+          "inputTokens": 2823,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7279,
+                "opinion": 0.0114,
+                "prediction": 0.1112,
+                "question": 0.0807,
+                "instruction": 0.0146,
+                "other": 0.0542
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1053,
+                "named_fact": 0.2086,
+                "weather": 0.1475,
+                "calculation": 0.3444,
+                "general": 0.1943
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2837,
+                "named_speaker": 0.2843,
+                "named_outlet": 0.2888,
+                "hearsay": 0.1432
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.983,
+                "none": 0.017
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1169
+            },
+            "span_0_private_life": {
+              "noul": 0.103
+            },
+            "span_0_rumour": {
+              "noul": 0.8837
+            },
+            "span_0_future": {
+              "noul": 0.8679
+            },
+            "span_0_self_contained": {
+              "noul": 0.9303
+            },
+            "span_0_practical": {
+              "noul": 0.9405
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8439,
+                "multiple_propositions": 0.0751,
+                "unclear": 0.081
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "surprise-08",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 335.3966499999997,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 334.26660100000026,
+          "questions": 11,
+          "stateBytes": 321,
+          "inputTokens": 3012,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6779,
+                "opinion": 0.027,
+                "prediction": 0.0689,
+                "question": 0.1371,
+                "instruction": 0.0466,
+                "other": 0.0425
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.135,
+                "named_fact": 0.218,
+                "weather": 0.1314,
+                "calculation": 0.2142,
+                "general": 0.3014
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3374,
+                "named_speaker": 0.286,
+                "named_outlet": 0.277,
+                "hearsay": 0.0996
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8906,
+                "2": 0.0343,
+                "3": 0.0303,
+                "none": 0.0449
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1338
+            },
+            "span_0_private_life": {
+              "noul": 0.7377
+            },
+            "span_0_rumour": {
+              "noul": 0.3687
+            },
+            "span_0_future": {
+              "noul": 0.9493
+            },
+            "span_0_self_contained": {
+              "noul": 0.9293
+            },
+            "span_0_practical": {
+              "noul": 0.9206
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.4791,
+                "multiple_propositions": 0.3006,
+                "unclear": 0.2203
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "plain-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 331.8825049999996,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 330.3547749999998,
+          "questions": 11,
+          "stateBytes": 305,
+          "inputTokens": 2935,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6302,
+                "opinion": 0.0205,
+                "prediction": 0.182,
+                "question": 0.0767,
+                "instruction": 0.0255,
+                "other": 0.0651
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0841,
+                "named_fact": 0.1005,
+                "weather": 0.2633,
+                "calculation": 0.3883,
+                "general": 0.1637
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3123,
+                "named_speaker": 0.3018,
+                "named_outlet": 0.2961,
+                "hearsay": 0.0898
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8899,
+                "none": 0.1101
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1674
+            },
+            "span_0_private_life": {
+              "noul": 0.2065
+            },
+            "span_0_rumour": {
+              "noul": 0.7815
+            },
+            "span_0_future": {
+              "noul": 0.1492
+            },
+            "span_0_self_contained": {
+              "noul": 0.8503
+            },
+            "span_0_practical": {
+              "noul": 0.2943
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7334,
+                "multiple_propositions": 0.1407,
+                "unclear": 0.1259
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "plain-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 310.74561899999935,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 309.856624,
+          "questions": 11,
+          "stateBytes": 219,
+          "inputTokens": 2763,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7601,
+                "opinion": 0.0209,
+                "prediction": 0.0534,
+                "question": 0.0551,
+                "instruction": 0.0219,
+                "other": 0.0887
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1117,
+                "named_fact": 0.2429,
+                "weather": 0.1869,
+                "calculation": 0.2631,
+                "general": 0.1954
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2849,
+                "named_speaker": 0.2849,
+                "named_outlet": 0.3018,
+                "hearsay": 0.1283
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.7485,
+                "2": 0.234,
+                "none": 0.0175
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1289
+            },
+            "span_0_private_life": {
+              "noul": 0.7621
+            },
+            "span_0_rumour": {
+              "noul": 0.8733
+            },
+            "span_0_future": {
+              "noul": 0.0048
+            },
+            "span_0_self_contained": {
+              "noul": 0.9004
+            },
+            "span_0_practical": {
+              "noul": 0
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6297,
+                "multiple_propositions": 0.1704,
+                "unclear": 0.1999
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "plain-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 315.92607300000054,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 314.9274379999997,
+          "questions": 11,
+          "stateBytes": 241,
+          "inputTokens": 2784,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6899,
+                "opinion": 0.0237,
+                "prediction": 0.1213,
+                "question": 0.0629,
+                "instruction": 0.0319,
+                "other": 0.0702
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.0971,
+                "named_fact": 0.1582,
+                "weather": 0.2971,
+                "calculation": 0.2317,
+                "general": 0.2158
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2951,
+                "named_speaker": 0.2816,
+                "named_outlet": 0.2974,
+                "hearsay": 0.126
+              }
+            },
+            "span_0_source": {
+              "choice": "2",
+              "probabilities": {
+                "1": 0.4126,
+                "2": 0.5243,
+                "none": 0.0631
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.167
+            },
+            "span_0_private_life": {
+              "noul": 0.5293
+            },
+            "span_0_rumour": {
+              "noul": 0.9112
+            },
+            "span_0_future": {
+              "noul": 0.1174
+            },
+            "span_0_self_contained": {
+              "noul": 0.867
+            },
+            "span_0_practical": {
+              "noul": 0.0831
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6946,
+                "multiple_propositions": 0.1598,
+                "unclear": 0.1456
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "plain-04",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 316.62078700000075,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 315.3484950000002,
+          "questions": 11,
+          "stateBytes": 229,
+          "inputTokens": 2781,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7706,
+                "opinion": 0.0129,
+                "prediction": 0.0675,
+                "question": 0.0486,
+                "instruction": 0.0216,
+                "other": 0.0789
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1315,
+                "named_fact": 0.1842,
+                "weather": 0.1978,
+                "calculation": 0.3056,
+                "general": 0.181
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2684,
+                "named_speaker": 0.2648,
+                "named_outlet": 0.2812,
+                "hearsay": 0.1856
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9596,
+                "none": 0.0404
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1492
+            },
+            "span_0_private_life": {
+              "noul": 0.4951
+            },
+            "span_0_rumour": {
+              "noul": 0.9335
+            },
+            "span_0_future": {
+              "noul": 0.9777
+            },
+            "span_0_self_contained": {
+              "noul": 0.9096
+            },
+            "span_0_practical": {
+              "noul": 0.0001
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8134,
+                "multiple_propositions": 0.09,
+                "unclear": 0.0966
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "nonclaim-01",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 326.8616400000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 325.3199089999998,
+          "questions": 10,
+          "stateBytes": 265,
+          "inputTokens": 2650,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.4022,
+                "opinion": 0.1536,
+                "prediction": 0.1897,
+                "question": 0.1817,
+                "instruction": 0.019,
+                "other": 0.0537
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1115,
+                "named_fact": 0.1481,
+                "weather": 0.1985,
+                "calculation": 0.2908,
+                "general": 0.2512
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.277,
+                "named_speaker": 0.2967,
+                "named_outlet": 0.2807,
+                "hearsay": 0.1455
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.408
+            },
+            "span_0_private_life": {
+              "noul": 0.3122
+            },
+            "span_0_rumour": {
+              "noul": 0.8318
+            },
+            "span_0_future": {
+              "noul": 0.0598
+            },
+            "span_0_self_contained": {
+              "noul": 0.9245
+            },
+            "span_0_practical": {
+              "noul": 0.3766
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7544,
+                "multiple_propositions": 0.1212,
+                "unclear": 0.1244
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "nonclaim-02",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 344.7984230000002,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 342.7850839999992,
+          "questions": 11,
+          "stateBytes": 261,
+          "inputTokens": 2845,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "prediction",
+              "probabilities": {
+                "claim": 0.1156,
+                "opinion": 0.0014,
+                "prediction": 0.8743,
+                "question": 0.0029,
+                "instruction": 0.002,
+                "other": 0.0038
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1004,
+                "named_fact": 0.1117,
+                "weather": 0.2292,
+                "calculation": 0.3743,
+                "general": 0.1844
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3038,
+                "named_speaker": 0.288,
+                "named_outlet": 0.2981,
+                "hearsay": 0.1101
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8883,
+                "none": 0.1117
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1411
+            },
+            "span_0_private_life": {
+              "noul": 0.197
+            },
+            "span_0_rumour": {
+              "noul": 0.8931
+            },
+            "span_0_future": {
+              "noul": 0.8659
+            },
+            "span_0_self_contained": {
+              "noul": 0.8697
+            },
+            "span_0_practical": {
+              "noul": 0.6874
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.844,
+                "multiple_propositions": 0.0832,
+                "unclear": 0.0728
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "nonclaim-03",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 318.5950759999996,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 316.870719999999,
+          "questions": 10,
+          "stateBytes": 235,
+          "inputTokens": 2750,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "instruction",
+              "probabilities": {
+                "claim": 0.2086,
+                "opinion": 0.023,
+                "prediction": 0.2101,
+                "question": 0.2291,
+                "instruction": 0.273,
+                "other": 0.0562
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0288,
+                "named_fact": 0.0259,
+                "weather": 0.0233,
+                "calculation": 0.8864,
+                "general": 0.0356
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.3065,
+                "named_speaker": 0.312,
+                "named_outlet": 0.2985,
+                "hearsay": 0.0829
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1311
+            },
+            "span_0_private_life": {
+              "noul": 0.1278
+            },
+            "span_0_rumour": {
+              "noul": 0.1272
+            },
+            "span_0_future": {
+              "noul": 0.1401
+            },
+            "span_0_self_contained": {
+              "noul": 0.7791
+            },
+            "span_0_practical": {
+              "noul": 0.087
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6876,
+                "multiple_propositions": 0.1772,
+                "unclear": 0.1352
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "nonclaim-04",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 326.32636000000093,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 325.2512370000004,
+          "questions": 11,
+          "stateBytes": 275,
+          "inputTokens": 2845,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "instruction",
+              "probabilities": {
+                "claim": 0.3712,
+                "opinion": 0.021,
+                "prediction": 0.0532,
+                "question": 0.089,
+                "instruction": 0.4005,
+                "other": 0.0651
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1881,
+                "named_fact": 0.1134,
+                "weather": 0.1791,
+                "calculation": 0.194,
+                "general": 0.3254
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2785,
+                "named_speaker": 0.3199,
+                "named_outlet": 0.2901,
+                "hearsay": 0.1115
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9105,
+                "none": 0.0895
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1727
+            },
+            "span_0_private_life": {
+              "noul": 0.2984
+            },
+            "span_0_rumour": {
+              "noul": 0.1904
+            },
+            "span_0_future": {
+              "noul": 0.1675
+            },
+            "span_0_self_contained": {
+              "noul": 0.8384
+            },
+            "span_0_practical": {
+              "noul": 0.0951
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7049,
+                "multiple_propositions": 0.1788,
+                "unclear": 0.1163
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 405.73325399999885,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 401.9643209999995,
+          "questions": 13,
+          "stateBytes": 363,
+          "inputTokens": 3763,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7184,
+                "opinion": 0.0324,
+                "prediction": 0.0747,
+                "question": 0.0765,
+                "instruction": 0.0173,
+                "other": 0.0808
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.1181,
+                "named_fact": 0.4426,
+                "weather": 0.1171,
+                "calculation": 0.1202,
+                "general": 0.2021
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2654,
+                "named_speaker": 0.2519,
+                "named_outlet": 0.2815,
+                "hearsay": 0.2011
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9447,
+                "none": 0.0553
+              }
+            },
+            "span_0_subject": {
+              "choice": "2",
+              "probabilities": {
+                "1": 0.2859,
+                "2": 0.4515,
+                "3": 0.1098,
+                "4": 0.0489,
+                "none": 0.1039
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.1591
+            },
+            "span_0_private_data": {
+              "noul": 0.2264
+            },
+            "span_0_private_life": {
+              "noul": 0.316
+            },
+            "span_0_rumour": {
+              "noul": 0.2892
+            },
+            "span_0_future": {
+              "noul": 0.0811
+            },
+            "span_0_self_contained": {
+              "noul": 0.6728
+            },
+            "span_0_practical": {
+              "noul": 0.0004
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8016,
+                "multiple_propositions": 0.0911,
+                "unclear": 0.1073
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 386.4090649999998,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 383.8066450000006,
+          "questions": 12,
+          "stateBytes": 379,
+          "inputTokens": 3578,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5852,
+                "opinion": 0.033,
+                "prediction": 0.1941,
+                "question": 0.0748,
+                "instruction": 0.0219,
+                "other": 0.091
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.1382,
+                "named_fact": 0.294,
+                "weather": 0.1407,
+                "calculation": 0.1593,
+                "general": 0.2678
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2669,
+                "named_speaker": 0.2602,
+                "named_outlet": 0.2675,
+                "hearsay": 0.2055
+              }
+            },
+            "span_0_subject": {
+              "choice": "none",
+              "probabilities": {
+                "1": 0.1764,
+                "2": 0.1021,
+                "3": 0.0474,
+                "4": 0.0335,
+                "5": 0.1321,
+                "6": 0.1764,
+                "none": 0.3321
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.1064
+            },
+            "span_0_private_data": {
+              "noul": 0.2155
+            },
+            "span_0_private_life": {
+              "noul": 0.4272
+            },
+            "span_0_rumour": {
+              "noul": 0.8765
+            },
+            "span_0_future": {
+              "noul": 0.7493
+            },
+            "span_0_self_contained": {
+              "noul": 0.8724
+            },
+            "span_0_practical": {
+              "noul": 0.0002
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7539,
+                "multiple_propositions": 0.1138,
+                "unclear": 0.1323
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 426.1512939999993,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 422.1686890000001,
+          "questions": 13,
+          "stateBytes": 380,
+          "inputTokens": 3831,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6551,
+                "opinion": 0.0373,
+                "prediction": 0.1376,
+                "question": 0.0766,
+                "instruction": 0.0226,
+                "other": 0.0708
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1571,
+                "named_fact": 0.226,
+                "weather": 0.1867,
+                "calculation": 0.1843,
+                "general": 0.2459
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3086,
+                "named_speaker": 0.2794,
+                "named_outlet": 0.2869,
+                "hearsay": 0.1251
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.3533,
+                "2": 0.3402,
+                "none": 0.3065
+              }
+            },
+            "span_0_subject": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.323,
+                "2": 0.2091,
+                "3": 0.1152,
+                "4": 0.1191,
+                "none": 0.2336
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.0892
+            },
+            "span_0_private_data": {
+              "noul": 0.2041
+            },
+            "span_0_private_life": {
+              "noul": 0.2202
+            },
+            "span_0_rumour": {
+              "noul": 0.8338
+            },
+            "span_0_future": {
+              "noul": 0.3973
+            },
+            "span_0_self_contained": {
+              "noul": 0.7265
+            },
+            "span_0_practical": {
+              "noul": 0.1226
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.796,
+                "multiple_propositions": 0.09,
+                "unclear": 0.1139
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-04",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 434.0006020000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 430.3478809999997,
+          "questions": 13,
+          "stateBytes": 465,
+          "inputTokens": 3971,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6828,
+                "opinion": 0.0391,
+                "prediction": 0.073,
+                "question": 0.0724,
+                "instruction": 0.0216,
+                "other": 0.1112
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.2213,
+                "named_fact": 0.3263,
+                "weather": 0.1215,
+                "calculation": 0.1248,
+                "general": 0.2061
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2935,
+                "named_speaker": 0.2798,
+                "named_outlet": 0.2945,
+                "hearsay": 0.1322
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.6598,
+                "none": 0.3402
+              }
+            },
+            "span_0_subject": {
+              "choice": "3",
+              "probabilities": {
+                "1": 0.0948,
+                "2": 0.1878,
+                "3": 0.3496,
+                "4": 0.2408,
+                "none": 0.127
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.3399
+            },
+            "span_0_private_data": {
+              "noul": 0.2907
+            },
+            "span_0_private_life": {
+              "noul": 0.3501
+            },
+            "span_0_rumour": {
+              "noul": 0.6399
+            },
+            "span_0_future": {
+              "noul": 0.1881
+            },
+            "span_0_self_contained": {
+              "noul": 0.7825
+            },
+            "span_0_practical": {
+              "noul": 0.0528
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6782,
+                "multiple_propositions": 0.1342,
+                "unclear": 0.1876
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-05",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 403.8442329999998,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 400.9749269999993,
+          "questions": 13,
+          "stateBytes": 383,
+          "inputTokens": 3754,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5145,
+                "opinion": 0.0652,
+                "prediction": 0.1108,
+                "question": 0.1296,
+                "instruction": 0.0421,
+                "other": 0.1379
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.2752,
+                "named_fact": 0.336,
+                "weather": 0.088,
+                "calculation": 0.1179,
+                "general": 0.1829
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2915,
+                "named_speaker": 0.2962,
+                "named_outlet": 0.3094,
+                "hearsay": 0.1028
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8796,
+                "2": 0.0842,
+                "none": 0.0362
+              }
+            },
+            "span_0_subject": {
+              "choice": "2",
+              "probabilities": {
+                "1": 0.0874,
+                "2": 0.5136,
+                "3": 0.221,
+                "4": 0.0748,
+                "none": 0.1032
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.287
+            },
+            "span_0_private_data": {
+              "noul": 0.207
+            },
+            "span_0_private_life": {
+              "noul": 0.3148
+            },
+            "span_0_rumour": {
+              "noul": 0.4014
+            },
+            "span_0_future": {
+              "noul": 0.3998
+            },
+            "span_0_self_contained": {
+              "noul": 0.7441
+            },
+            "span_0_practical": {
+              "noul": 0.0271
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7373,
+                "multiple_propositions": 0.1174,
+                "unclear": 0.1453
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-06",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 421.00044700000035,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 418.82985799999915,
+          "questions": 13,
+          "stateBytes": 394,
+          "inputTokens": 3801,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.3535,
+                "opinion": 0.0429,
+                "prediction": 0.3302,
+                "question": 0.1599,
+                "instruction": 0.0206,
+                "other": 0.0929
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.0981,
+                "named_fact": 0.1495,
+                "weather": 0.3471,
+                "calculation": 0.2219,
+                "general": 0.1834
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2886,
+                "named_speaker": 0.2703,
+                "named_outlet": 0.305,
+                "hearsay": 0.1361
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.865,
+                "none": 0.135
+              }
+            },
+            "span_0_subject": {
+              "choice": "none",
+              "probabilities": {
+                "1": 0.284,
+                "2": 0.0199,
+                "3": 0.0377,
+                "4": 0.0727,
+                "5": 0.0209,
+                "none": 0.5648
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.1004
+            },
+            "span_0_private_data": {
+              "noul": 0.1748
+            },
+            "span_0_private_life": {
+              "noul": 0.3329
+            },
+            "span_0_rumour": {
+              "noul": 0.5293
+            },
+            "span_0_future": {
+              "noul": 0.1312
+            },
+            "span_0_self_contained": {
+              "noul": 0.7319
+            },
+            "span_0_practical": {
+              "noul": 0.1449
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.5393,
+                "multiple_propositions": 0.2049,
+                "unclear": 0.2557
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-07",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 446.60279400000036,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 444.10043099999893,
+          "questions": 13,
+          "stateBytes": 427,
+          "inputTokens": 3867,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6442,
+                "opinion": 0.0347,
+                "prediction": 0.1077,
+                "question": 0.0628,
+                "instruction": 0.0227,
+                "other": 0.1279
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.1373,
+                "named_fact": 0.4678,
+                "weather": 0.1029,
+                "calculation": 0.1104,
+                "general": 0.1816
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3133,
+                "named_speaker": 0.2595,
+                "named_outlet": 0.3071,
+                "hearsay": 0.1201
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8639,
+                "none": 0.1361
+              }
+            },
+            "span_0_subject": {
+              "choice": "4",
+              "probabilities": {
+                "1": 0.16,
+                "2": 0.1519,
+                "3": 0.1262,
+                "4": 0.4476,
+                "none": 0.1143
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.4538
+            },
+            "span_0_private_data": {
+              "noul": 0.2277
+            },
+            "span_0_private_life": {
+              "noul": 0.3289
+            },
+            "span_0_rumour": {
+              "noul": 0.6209
+            },
+            "span_0_future": {
+              "noul": 0.2185
+            },
+            "span_0_self_contained": {
+              "noul": 0.6987
+            },
+            "span_0_practical": {
+              "noul": 0.0493
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6728,
+                "multiple_propositions": 0.1386,
+                "unclear": 0.1886
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "context-08",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 444.9129379999995,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 442.14117799999985,
+          "questions": 13,
+          "stateBytes": 432,
+          "inputTokens": 3857,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7612,
+                "opinion": 0.0257,
+                "prediction": 0.0775,
+                "question": 0.0627,
+                "instruction": 0.0149,
+                "other": 0.058
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1685,
+                "named_fact": 0.2392,
+                "weather": 0.1326,
+                "calculation": 0.1475,
+                "general": 0.3122
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3057,
+                "named_speaker": 0.2851,
+                "named_outlet": 0.3017,
+                "hearsay": 0.1075
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.7303,
+                "2": 0.1972,
+                "none": 0.0725
+              }
+            },
+            "span_0_subject": {
+              "choice": "3",
+              "probabilities": {
+                "1": 0.0879,
+                "2": 0.2679,
+                "3": 0.2902,
+                "4": 0.2691,
+                "none": 0.0849
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.2253
+            },
+            "span_0_private_data": {
+              "noul": 0.1686
+            },
+            "span_0_private_life": {
+              "noul": 0.3101
+            },
+            "span_0_rumour": {
+              "noul": 0.767
+            },
+            "span_0_future": {
+              "noul": 0.2437
+            },
+            "span_0_self_contained": {
+              "noul": 0.7642
+            },
+            "span_0_practical": {
+              "noul": 0.0069
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8209,
+                "multiple_propositions": 0.0754,
+                "unclear": 0.1038
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "data-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 320.97932599999876,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 319.9949039999992,
+          "questions": 11,
+          "stateBytes": 211,
+          "inputTokens": 2758,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8695,
+                "opinion": 0.0093,
+                "prediction": 0.036,
+                "question": 0.0268,
+                "instruction": 0.0128,
+                "other": 0.0455
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1183,
+                "named_fact": 0.2262,
+                "weather": 0.1844,
+                "calculation": 0.245,
+                "general": 0.2262
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2737,
+                "named_speaker": 0.2686,
+                "named_outlet": 0.3021,
+                "hearsay": 0.1556
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9834,
+                "none": 0.0166
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1121
+            },
+            "span_0_private_life": {
+              "noul": 0.7788
+            },
+            "span_0_rumour": {
+              "noul": 0.9373
+            },
+            "span_0_future": {
+              "noul": 0.0008
+            },
+            "span_0_self_contained": {
+              "noul": 0.9126
+            },
+            "span_0_practical": {
+              "noul": 0.8817
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.8152,
+                "multiple_propositions": 0.0804,
+                "unclear": 0.1044
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "data-02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 311.592329000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 310.60251700000117,
+          "questions": 11,
+          "stateBytes": 205,
+          "inputTokens": 2741,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.9156,
+                "opinion": 0.0086,
+                "prediction": 0.0179,
+                "question": 0.0176,
+                "instruction": 0.01,
+                "other": 0.0304
+              }
+            },
+            "span_0_route": {
+              "choice": "named_fact",
+              "probabilities": {
+                "recent_event": 0.1249,
+                "named_fact": 0.4013,
+                "weather": 0.126,
+                "calculation": 0.1616,
+                "general": 0.1862
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2764,
+                "named_speaker": 0.2586,
+                "named_outlet": 0.2826,
+                "hearsay": 0.1825
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.7993,
+                "2": 0.1897,
+                "none": 0.011
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1039
+            },
+            "span_0_private_life": {
+              "noul": 0.6307
+            },
+            "span_0_rumour": {
+              "noul": 0.9283
+            },
+            "span_0_future": {
+              "noul": 0.8301
+            },
+            "span_0_self_contained": {
+              "noul": 0.8805
+            },
+            "span_0_practical": {
+              "noul": 0
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7365,
+                "multiple_propositions": 0.1253,
+                "unclear": 0.1382
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "data-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 315.5399870000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 314.51480000000083,
+          "questions": 11,
+          "stateBytes": 219,
+          "inputTokens": 2763,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7601,
+                "opinion": 0.0209,
+                "prediction": 0.0534,
+                "question": 0.0551,
+                "instruction": 0.0219,
+                "other": 0.0887
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1117,
+                "named_fact": 0.2429,
+                "weather": 0.1869,
+                "calculation": 0.2631,
+                "general": 0.1954
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2849,
+                "named_speaker": 0.2849,
+                "named_outlet": 0.3018,
+                "hearsay": 0.1283
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.7485,
+                "2": 0.234,
+                "none": 0.0175
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1289
+            },
+            "span_0_private_life": {
+              "noul": 0.7621
+            },
+            "span_0_rumour": {
+              "noul": 0.8733
+            },
+            "span_0_future": {
+              "noul": 0.0048
+            },
+            "span_0_self_contained": {
+              "noul": 0.9004
+            },
+            "span_0_practical": {
+              "noul": 0
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6297,
+                "multiple_propositions": 0.1704,
+                "unclear": 0.1999
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "data-04",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 311.4268469999988,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 310.3288530000009,
+          "questions": 11,
+          "stateBytes": 217,
+          "inputTokens": 2763,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5806,
+                "opinion": 0.0148,
+                "prediction": 0.2157,
+                "question": 0.1104,
+                "instruction": 0.0199,
+                "other": 0.0586
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.0866,
+                "named_fact": 0.0844,
+                "weather": 0.41,
+                "calculation": 0.2772,
+                "general": 0.1418
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.3057,
+                "named_speaker": 0.2835,
+                "named_outlet": 0.3101,
+                "hearsay": 0.1008
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.6477,
+                "2": 0.3128,
+                "none": 0.0395
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1581
+            },
+            "span_0_private_life": {
+              "noul": 0.2629
+            },
+            "span_0_rumour": {
+              "noul": 0.8885
+            },
+            "span_0_future": {
+              "noul": 0.2557
+            },
+            "span_0_self_contained": {
+              "noul": 0.7855
+            },
+            "span_0_practical": {
+              "noul": 0.0357
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7011,
+                "multiple_propositions": 0.1613,
+                "unclear": 0.1375
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "data-05",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 329.5717199999999,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 328.1927629999991,
+          "questions": 11,
+          "stateBytes": 235,
+          "inputTokens": 2871,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6392,
+                "opinion": 0.0248,
+                "prediction": 0.1164,
+                "question": 0.1111,
+                "instruction": 0.0339,
+                "other": 0.0746
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1126,
+                "named_fact": 0.147,
+                "weather": 0.329,
+                "calculation": 0.1868,
+                "general": 0.2246
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2916,
+                "named_speaker": 0.2516,
+                "named_outlet": 0.3041,
+                "hearsay": 0.1527
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9278,
+                "none": 0.0722
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.3013
+            },
+            "span_0_private_life": {
+              "noul": 0.5133
+            },
+            "span_0_rumour": {
+              "noul": 0.7736
+            },
+            "span_0_future": {
+              "noul": 0.1913
+            },
+            "span_0_self_contained": {
+              "noul": 0.883
+            },
+            "span_0_practical": {
+              "noul": 0.0005
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7656,
+                "multiple_propositions": 0.1224,
+                "unclear": 0.112
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "data-06",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 316.7127099999998,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 315.70039499999984,
+          "questions": 11,
+          "stateBytes": 211,
+          "inputTokens": 2786,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7348,
+                "opinion": 0.0204,
+                "prediction": 0.0941,
+                "question": 0.0793,
+                "instruction": 0.0161,
+                "other": 0.0553
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1047,
+                "named_fact": 0.1534,
+                "weather": 0.3358,
+                "calculation": 0.2579,
+                "general": 0.1481
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3113,
+                "named_speaker": 0.2759,
+                "named_outlet": 0.3093,
+                "hearsay": 0.1036
+              }
+            },
+            "span_0_source": {
+              "choice": "2",
+              "probabilities": {
+                "1": 0.1682,
+                "2": 0.8132,
+                "none": 0.0185
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1981
+            },
+            "span_0_private_life": {
+              "noul": 0.6436
+            },
+            "span_0_rumour": {
+              "noul": 0.845
+            },
+            "span_0_future": {
+              "noul": 0.1119
+            },
+            "span_0_self_contained": {
+              "noul": 0.8316
+            },
+            "span_0_practical": {
+              "noul": 0.0003
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7482,
+                "multiple_propositions": 0.1181,
+                "unclear": 0.1337
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "calc-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 294.2912959999994,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 293.31491599999936,
+          "questions": 10,
+          "stateBytes": 213,
+          "inputTokens": 2510,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.4366,
+                "opinion": 0.0471,
+                "prediction": 0.1429,
+                "question": 0.1569,
+                "instruction": 0.0373,
+                "other": 0.1792
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0541,
+                "named_fact": 0.0469,
+                "weather": 0.0748,
+                "calculation": 0.7223,
+                "general": 0.102
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2855,
+                "named_speaker": 0.3127,
+                "named_outlet": 0.2985,
+                "hearsay": 0.1033
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1584
+            },
+            "span_0_private_life": {
+              "noul": 0.3199
+            },
+            "span_0_rumour": {
+              "noul": 0.2771
+            },
+            "span_0_future": {
+              "noul": 0.0894
+            },
+            "span_0_self_contained": {
+              "noul": 0.8297
+            },
+            "span_0_practical": {
+              "noul": 0.0615
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6645,
+                "multiple_propositions": 0.1616,
+                "unclear": 0.1739
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "calc-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 289.4078590000008,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 288.51329700000133,
+          "questions": 10,
+          "stateBytes": 179,
+          "inputTokens": 2510,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.4379,
+                "opinion": 0.0413,
+                "prediction": 0.2374,
+                "question": 0.1087,
+                "instruction": 0.0573,
+                "other": 0.1175
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0117,
+                "named_fact": 0.01,
+                "weather": 0.0106,
+                "calculation": 0.9495,
+                "general": 0.0181
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2921,
+                "named_speaker": 0.325,
+                "named_outlet": 0.2954,
+                "hearsay": 0.0875
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1865
+            },
+            "span_0_private_life": {
+              "noul": 0.2731
+            },
+            "span_0_rumour": {
+              "noul": 0.1794
+            },
+            "span_0_future": {
+              "noul": 0.0859
+            },
+            "span_0_self_contained": {
+              "noul": 0.8405
+            },
+            "span_0_practical": {
+              "noul": 0.0479
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6124,
+                "multiple_propositions": 0.2281,
+                "unclear": 0.1596
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "calc-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 311.92747899999995,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 310.7898119999991,
+          "questions": 11,
+          "stateBytes": 205,
+          "inputTokens": 2717,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7603,
+                "opinion": 0.0184,
+                "prediction": 0.0721,
+                "question": 0.0704,
+                "instruction": 0.0126,
+                "other": 0.0662
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1123,
+                "named_fact": 0.1705,
+                "weather": 0.2917,
+                "calculation": 0.252,
+                "general": 0.1735
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2824,
+                "named_speaker": 0.2766,
+                "named_outlet": 0.3069,
+                "hearsay": 0.1341
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8515,
+                "2": 0.1338,
+                "none": 0.0147
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2333
+            },
+            "span_0_private_life": {
+              "noul": 0.8341
+            },
+            "span_0_rumour": {
+              "noul": 0.8429
+            },
+            "span_0_future": {
+              "noul": 0.9551
+            },
+            "span_0_self_contained": {
+              "noul": 0.9285
+            },
+            "span_0_practical": {
+              "noul": 0.9688
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7964,
+                "multiple_propositions": 0.1016,
+                "unclear": 0.102
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "calc-04",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 289.8710220000012,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 288.88593299999957,
+          "questions": 10,
+          "stateBytes": 177,
+          "inputTokens": 2490,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.3682,
+                "opinion": 0.0589,
+                "prediction": 0.2366,
+                "question": 0.1266,
+                "instruction": 0.0445,
+                "other": 0.1652
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.0179,
+                "named_fact": 0.0143,
+                "weather": 0.0155,
+                "calculation": 0.9221,
+                "general": 0.0301
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2839,
+                "named_speaker": 0.3222,
+                "named_outlet": 0.287,
+                "hearsay": 0.1069
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1596
+            },
+            "span_0_private_life": {
+              "noul": 0.2444
+            },
+            "span_0_rumour": {
+              "noul": 0.1916
+            },
+            "span_0_future": {
+              "noul": 0.0967
+            },
+            "span_0_self_contained": {
+              "noul": 0.8241
+            },
+            "span_0_practical": {
+              "noul": 0.0838
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6221,
+                "multiple_propositions": 0.2069,
+                "unclear": 0.171
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "calc-05",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 347.13001000000077,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 345.60553400000026,
+          "questions": 11,
+          "stateBytes": 233,
+          "inputTokens": 2831,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.762,
+                "opinion": 0.0204,
+                "prediction": 0.0746,
+                "question": 0.0537,
+                "instruction": 0.0381,
+                "other": 0.0513
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.0233,
+                "named_fact": 0.0231,
+                "weather": 0.7046,
+                "calculation": 0.2042,
+                "general": 0.0448
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3006,
+                "named_speaker": 0.2986,
+                "named_outlet": 0.2911,
+                "hearsay": 0.1097
+              }
+            },
+            "span_0_source": {
+              "choice": "2",
+              "probabilities": {
+                "1": 0.3777,
+                "2": 0.5682,
+                "none": 0.0541
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1862
+            },
+            "span_0_private_life": {
+              "noul": 0.2201
+            },
+            "span_0_rumour": {
+              "noul": 0.6907
+            },
+            "span_0_future": {
+              "noul": 0.099
+            },
+            "span_0_self_contained": {
+              "noul": 0.8657
+            },
+            "span_0_practical": {
+              "noul": 0.0888
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7619,
+                "multiple_propositions": 0.113,
+                "unclear": 0.1251
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "calc-06",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 312.2946090000005,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 311.1909660000001,
+          "questions": 10,
+          "stateBytes": 207,
+          "inputTokens": 2570,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.4557,
+                "opinion": 0.0322,
+                "prediction": 0.1915,
+                "question": 0.1031,
+                "instruction": 0.0483,
+                "other": 0.1693
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.085,
+                "named_fact": 0.0865,
+                "weather": 0.1828,
+                "calculation": 0.452,
+                "general": 0.1936
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2783,
+                "named_speaker": 0.2936,
+                "named_outlet": 0.2903,
+                "hearsay": 0.1377
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1945
+            },
+            "span_0_private_life": {
+              "noul": 0.3177
+            },
+            "span_0_rumour": {
+              "noul": 0.226
+            },
+            "span_0_future": {
+              "noul": 0.1751
+            },
+            "span_0_self_contained": {
+              "noul": 0.8788
+            },
+            "span_0_practical": {
+              "noul": 0.0619
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6799,
+                "multiple_propositions": 0.1643,
+                "unclear": 0.1558
+              }
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-affair",
+      "repetition": 0,
+      "expected": "speculation",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 375.29091999999946,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 374.4087530000015,
+          "questions": 12,
+          "stateBytes": 255,
+          "inputTokens": 3168,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5392,
+                "opinion": 0.0375,
+                "prediction": 0.1164,
+                "question": 0.1027,
+                "instruction": 0.0375,
+                "other": 0.1667
+              }
+            },
+            "span_0_route": {
+              "choice": "recent_event",
+              "probabilities": {
+                "recent_event": 0.3172,
+                "named_fact": 0.1797,
+                "weather": 0.1113,
+                "calculation": 0.1846,
+                "general": 0.2072
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2897,
+                "named_speaker": 0.3028,
+                "named_outlet": 0.3015,
+                "hearsay": 0.106
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9431,
+                "none": 0.0569
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.4219
+            },
+            "span_0_private_life": {
+              "noul": 0.6801
+            },
+            "span_0_rumour": {
+              "noul": 0.47
+            },
+            "span_0_future": {
+              "noul": 0.1809
+            },
+            "span_0_self_contained": {
+              "noul": 0.8215
+            },
+            "span_0_practical": {
+              "noul": 0.0678
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6503,
+                "multiple_propositions": 0.2033,
+                "unclear": 0.1464
+              }
+            },
+            "misheard": {
+              "noul": 0.8379
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-ipo",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 380.0312389999999,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 378.5220760000011,
+          "questions": 12,
+          "stateBytes": 305,
+          "inputTokens": 3336,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "prediction",
+              "probabilities": {
+                "claim": 0.368,
+                "opinion": 0.0108,
+                "prediction": 0.5656,
+                "question": 0.0201,
+                "instruction": 0.0106,
+                "other": 0.0249
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.2005,
+                "named_fact": 0.1606,
+                "weather": 0.1177,
+                "calculation": 0.303,
+                "general": 0.2182
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3104,
+                "named_speaker": 0.2989,
+                "named_outlet": 0.2895,
+                "hearsay": 0.1012
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9535,
+                "none": 0.0465
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2529
+            },
+            "span_0_private_life": {
+              "noul": 0.2206
+            },
+            "span_0_rumour": {
+              "noul": 0.7885
+            },
+            "span_0_future": {
+              "noul": 0.8528
+            },
+            "span_0_self_contained": {
+              "noul": 0.8976
+            },
+            "span_0_practical": {
+              "noul": 0.0509
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6489,
+                "multiple_propositions": 0.2037,
+                "unclear": 0.1474
+              }
+            },
+            "misheard": {
+              "noul": 0.9237
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-goldfish",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 353.33757200000036,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 352.09667799999806,
+          "questions": 12,
+          "stateBytes": 271,
+          "inputTokens": 3168,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7246,
+                "opinion": 0.0195,
+                "prediction": 0.1024,
+                "question": 0.0433,
+                "instruction": 0.0523,
+                "other": 0.0579
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1266,
+                "named_fact": 0.1347,
+                "weather": 0.1459,
+                "calculation": 0.2326,
+                "general": 0.3601
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.299,
+                "named_speaker": 0.301,
+                "named_outlet": 0.3203,
+                "hearsay": 0.0797
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9349,
+                "none": 0.0651
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1693
+            },
+            "span_0_private_life": {
+              "noul": 0.2838
+            },
+            "span_0_rumour": {
+              "noul": 0.8413
+            },
+            "span_0_future": {
+              "noul": 0.09
+            },
+            "span_0_self_contained": {
+              "noul": 0.8788
+            },
+            "span_0_practical": {
+              "noul": 0.1035
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6884,
+                "multiple_propositions": 0.1778,
+                "unclear": 0.1338
+              }
+            },
+            "misheard": {
+              "noul": 0.8553
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-great-wall",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 356.1640960000004,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 354.802928000001,
+          "questions": 12,
+          "stateBytes": 289,
+          "inputTokens": 3242,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5886,
+                "opinion": 0.0273,
+                "prediction": 0.1194,
+                "question": 0.0944,
+                "instruction": 0.0361,
+                "other": 0.1342
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1118,
+                "named_fact": 0.1211,
+                "weather": 0.2196,
+                "calculation": 0.188,
+                "general": 0.3594
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3145,
+                "named_speaker": 0.2897,
+                "named_outlet": 0.308,
+                "hearsay": 0.0878
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8754,
+                "none": 0.1246
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1596
+            },
+            "span_0_private_life": {
+              "noul": 0.2818
+            },
+            "span_0_rumour": {
+              "noul": 0.7464
+            },
+            "span_0_future": {
+              "noul": 0.1477
+            },
+            "span_0_self_contained": {
+              "noul": 0.7825
+            },
+            "span_0_practical": {
+              "noul": 0.6581
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6198,
+                "multiple_propositions": 0.2052,
+                "unclear": 0.1749
+              }
+            },
+            "misheard": {
+              "noul": 0.7613
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-helsinki",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 359.3321509999987,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 358.2541969999984,
+          "questions": 12,
+          "stateBytes": 267,
+          "inputTokens": 3219,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8491,
+                "opinion": 0.0142,
+                "prediction": 0.027,
+                "question": 0.0375,
+                "instruction": 0.0142,
+                "other": 0.058
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1181,
+                "named_fact": 0.1841,
+                "weather": 0.3163,
+                "calculation": 0.1959,
+                "general": 0.1857
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.2934,
+                "named_speaker": 0.2924,
+                "named_outlet": 0.2911,
+                "hearsay": 0.1231
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8268,
+                "2": 0.1438,
+                "none": 0.0294
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1651
+            },
+            "span_0_private_life": {
+              "noul": 0.684
+            },
+            "span_0_rumour": {
+              "noul": 0.8997
+            },
+            "span_0_future": {
+              "noul": 0.0384
+            },
+            "span_0_self_contained": {
+              "noul": 0.9004
+            },
+            "span_0_practical": {
+              "noul": 0.0492
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6356,
+                "multiple_propositions": 0.1834,
+                "unclear": 0.181
+              }
+            },
+            "misheard": {
+              "noul": 0.8577
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-eiffel-context",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 389.3929449999996,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 388.17863600000055,
+          "questions": 13,
+          "stateBytes": 264,
+          "inputTokens": 3572,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8121,
+                "opinion": 0.0192,
+                "prediction": 0.0467,
+                "question": 0.0446,
+                "instruction": 0.0175,
+                "other": 0.06
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1368,
+                "named_fact": 0.1867,
+                "weather": 0.177,
+                "calculation": 0.2058,
+                "general": 0.2936
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2953,
+                "named_speaker": 0.2702,
+                "named_outlet": 0.3333,
+                "hearsay": 0.1012
+              }
+            },
+            "span_0_subject": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.6227,
+                "2": 0.2691,
+                "none": 0.1081
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.1254
+            },
+            "span_0_private_data": {
+              "noul": 0.1759
+            },
+            "span_0_private_life": {
+              "noul": 0.2927
+            },
+            "span_0_rumour": {
+              "noul": 0.2112
+            },
+            "span_0_future": {
+              "noul": 0.2001
+            },
+            "span_0_self_contained": {
+              "noul": 0.5406
+            },
+            "span_0_practical": {
+              "noul": 0.0818
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.646,
+                "multiple_propositions": 0.1807,
+                "unclear": 0.1733
+              }
+            },
+            "misheard": {
+              "noul": 0.2523
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-nasa-moon",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 782.3305240000009,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 780.1409089999979,
+          "questions": 25,
+          "stateBytes": 356,
+          "inputTokens": 7461,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.679,
+                "opinion": 0.0326,
+                "prediction": 0.1758,
+                "question": 0.0406,
+                "instruction": 0.0186,
+                "other": 0.0534
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.2457,
+                "named_fact": 0.185,
+                "weather": 0.1535,
+                "calculation": 0.1344,
+                "general": 0.2814
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.3195,
+                "named_speaker": 0.2684,
+                "named_outlet": 0.3344,
+                "hearsay": 0.0776
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8822,
+                "2": 0.0569,
+                "none": 0.0609
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1971
+            },
+            "span_0_private_life": {
+              "noul": 0.4301
+            },
+            "span_0_rumour": {
+              "noul": 0.6102
+            },
+            "span_0_future": {
+              "noul": 0.371
+            },
+            "span_0_self_contained": {
+              "noul": 0.6041
+            },
+            "span_0_practical": {
+              "noul": 0.7599
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.5276,
+                "multiple_propositions": 0.3309,
+                "unclear": 0.1415
+              }
+            },
+            "span_1_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6307,
+                "opinion": 0.0402,
+                "prediction": 0.2036,
+                "question": 0.0421,
+                "instruction": 0.0204,
+                "other": 0.0632
+              }
+            },
+            "span_1_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.2173,
+                "named_fact": 0.1796,
+                "weather": 0.1586,
+                "calculation": 0.1346,
+                "general": 0.31
+              }
+            },
+            "span_1_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.3163,
+                "named_speaker": 0.2686,
+                "named_outlet": 0.3399,
+                "hearsay": 0.0752
+              }
+            },
+            "span_1_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.6013,
+                "none": 0.3987
+              }
+            },
+            "span_1_subject": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8769,
+                "none": 0.1231
+              }
+            },
+            "span_1_subject_private": {
+              "noul": 0.0928
+            },
+            "span_1_private_data": {
+              "noul": 0.208
+            },
+            "span_1_private_life": {
+              "noul": 0.4061
+            },
+            "span_1_rumour": {
+              "noul": 0.5108
+            },
+            "span_1_future": {
+              "noul": 0.3439
+            },
+            "span_1_self_contained": {
+              "noul": 0.5466
+            },
+            "span_1_practical": {
+              "noul": 0.7422
+            },
+            "span_1_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.4796,
+                "multiple_propositions": 0.3651,
+                "unclear": 0.1553
+              }
+            },
+            "misheard": {
+              "noul": 0.7577
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-opinion",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 359.1390700000011,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 357.55256499999814,
+          "questions": 12,
+          "stateBytes": 265,
+          "inputTokens": 3192,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6808,
+                "opinion": 0.051,
+                "prediction": 0.0502,
+                "question": 0.0834,
+                "instruction": 0.0241,
+                "other": 0.1105
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1207,
+                "named_fact": 0.1229,
+                "weather": 0.1737,
+                "calculation": 0.2207,
+                "general": 0.3621
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_speaker",
+              "probabilities": {
+                "none": 0.2971,
+                "named_speaker": 0.3071,
+                "named_outlet": 0.3011,
+                "hearsay": 0.0947
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8873,
+                "none": 0.1127
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1592
+            },
+            "span_0_private_life": {
+              "noul": 0.18
+            },
+            "span_0_rumour": {
+              "noul": 0.4852
+            },
+            "span_0_future": {
+              "noul": 0.0333
+            },
+            "span_0_self_contained": {
+              "noul": 0.8601
+            },
+            "span_0_practical": {
+              "noul": 0.0685
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.6691,
+                "multiple_propositions": 0.1855,
+                "unclear": 0.1453
+              }
+            },
+            "misheard": {
+              "noul": 0.8363
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-question",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 385.3779390000018,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 384.2635319999972,
+          "questions": 12,
+          "stateBytes": 305,
+          "inputTokens": 3345,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.5459,
+                "opinion": 0.0325,
+                "prediction": 0.0905,
+                "question": 0.2413,
+                "instruction": 0.0246,
+                "other": 0.0652
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1109,
+                "named_fact": 0.136,
+                "weather": 0.1992,
+                "calculation": 0.2379,
+                "general": 0.316
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.3025,
+                "named_speaker": 0.2972,
+                "named_outlet": 0.3032,
+                "hearsay": 0.0971
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.5022,
+                "2": 0.3201,
+                "none": 0.1777
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1956
+            },
+            "span_0_private_life": {
+              "noul": 0.6032
+            },
+            "span_0_rumour": {
+              "noul": 0.4243
+            },
+            "span_0_future": {
+              "noul": 0.1076
+            },
+            "span_0_self_contained": {
+              "noul": 0.8206
+            },
+            "span_0_practical": {
+              "noul": 0.1514
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.562,
+                "multiple_propositions": 0.2568,
+                "unclear": 0.1812
+              }
+            },
+            "misheard": {
+              "noul": 0.7924
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-prediction",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 366.76186699999744,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 365.36824400000114,
+          "questions": 11,
+          "stateBytes": 291,
+          "inputTokens": 3035,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "prediction",
+              "probabilities": {
+                "claim": 0.3897,
+                "opinion": 0.0143,
+                "prediction": 0.5143,
+                "question": 0.0242,
+                "instruction": 0.0136,
+                "other": 0.0439
+              }
+            },
+            "span_0_route": {
+              "choice": "recent_event",
+              "probabilities": {
+                "recent_event": 0.3935,
+                "named_fact": 0.2042,
+                "weather": 0.1022,
+                "calculation": 0.1748,
+                "general": 0.1253
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.2963,
+                "named_speaker": 0.2927,
+                "named_outlet": 0.2924,
+                "hearsay": 0.1186
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2939
+            },
+            "span_0_private_life": {
+              "noul": 0.3492
+            },
+            "span_0_rumour": {
+              "noul": 0.8916
+            },
+            "span_0_future": {
+              "noul": 0.8586
+            },
+            "span_0_self_contained": {
+              "noul": 0.8679
+            },
+            "span_0_practical": {
+              "noul": 0.7698
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7306,
+                "multiple_propositions": 0.1377,
+                "unclear": 0.1317
+              }
+            },
+            "misheard": {
+              "noul": 0.9105
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-misheard",
+      "repetition": 0,
+      "expected": "needs_confirmation",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 1013.6638749999984,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1011.1298999999999,
+          "questions": 27,
+          "stateBytes": 478,
+          "inputTokens": 9743,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.3557,
+                "opinion": 0.0438,
+                "prediction": 0.3214,
+                "question": 0.2099,
+                "instruction": 0.0294,
+                "other": 0.0398
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1888,
+                "named_fact": 0.1369,
+                "weather": 0.2847,
+                "calculation": 0.2368,
+                "general": 0.1529
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.287,
+                "named_speaker": 0.2873,
+                "named_outlet": 0.3044,
+                "hearsay": 0.1213
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9074,
+                "none": 0.0926
+              }
+            },
+            "span_0_subject": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.5147,
+                "none": 0.4853
+              }
+            },
+            "span_0_subject_private": {
+              "noul": 0.2362
+            },
+            "span_0_private_data": {
+              "noul": 0.8483
+            },
+            "span_0_private_life": {
+              "noul": 0.793
+            },
+            "span_0_rumour": {
+              "noul": 0.8159
+            },
+            "span_0_future": {
+              "noul": 0.7885
+            },
+            "span_0_self_contained": {
+              "noul": 0.8258
+            },
+            "span_0_practical": {
+              "noul": 0.8206
+            },
+            "span_0_claim_structure": {
+              "choice": "multiple_propositions",
+              "probabilities": {
+                "one_coherent": 0.3799,
+                "multiple_propositions": 0.4447,
+                "unclear": 0.1755
+              }
+            },
+            "span_1_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.3307,
+                "opinion": 0.0482,
+                "prediction": 0.3255,
+                "question": 0.2177,
+                "instruction": 0.0335,
+                "other": 0.0444
+              }
+            },
+            "span_1_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.2065,
+                "named_fact": 0.1173,
+                "weather": 0.296,
+                "calculation": 0.2285,
+                "general": 0.1517
+              }
+            },
+            "span_1_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2919,
+                "named_speaker": 0.2887,
+                "named_outlet": 0.2981,
+                "hearsay": 0.1213
+              }
+            },
+            "span_1_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8182,
+                "none": 0.1818
+              }
+            },
+            "span_1_subject": {
+              "choice": "none",
+              "probabilities": {
+                "1": 0.4992,
+                "none": 0.5008
+              }
+            },
+            "span_1_subject_private": {
+              "noul": 0.2612
+            },
+            "span_1_private_data": {
+              "noul": 0.7933
+            },
+            "span_1_private_life": {
+              "noul": 0.7296
+            },
+            "span_1_rumour": {
+              "noul": 0.7933
+            },
+            "span_1_future": {
+              "noul": 0.7384
+            },
+            "span_1_self_contained": {
+              "noul": 0.7937
+            },
+            "span_1_practical": {
+              "noul": 0.775
+            },
+            "span_1_claim_structure": {
+              "choice": "multiple_propositions",
+              "probabilities": {
+                "one_coherent": 0.3666,
+                "multiple_propositions": 0.4425,
+                "unclear": 0.1909
+              }
+            },
+            "misheard": {
+              "noul": 0.7898
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-attributed-recent",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 388.7354889999988,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 387.12899800000014,
+          "questions": 12,
+          "stateBytes": 319,
+          "inputTokens": 3336,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7273,
+                "opinion": 0.0202,
+                "prediction": 0.1135,
+                "question": 0.0689,
+                "instruction": 0.0135,
+                "other": 0.0566
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.2049,
+                "named_fact": 0.1598,
+                "weather": 0.1542,
+                "calculation": 0.204,
+                "general": 0.2771
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.3232,
+                "named_speaker": 0.2969,
+                "named_outlet": 0.299,
+                "hearsay": 0.081
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9697,
+                "none": 0.0303
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2503
+            },
+            "span_0_private_life": {
+              "noul": 0.279
+            },
+            "span_0_rumour": {
+              "noul": 0.8162
+            },
+            "span_0_future": {
+              "noul": 0.885
+            },
+            "span_0_self_contained": {
+              "noul": 0.9161
+            },
+            "span_0_practical": {
+              "noul": 0.0004
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7707,
+                "multiple_propositions": 0.1389,
+                "unclear": 0.0903
+              }
+            },
+            "misheard": {
+              "noul": 0.9194
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-everest",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 538.0880530000031,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 536.6934959999999,
+          "questions": 12,
+          "stateBytes": 305,
+          "inputTokens": 3265,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8434,
+                "opinion": 0.0112,
+                "prediction": 0.047,
+                "question": 0.0318,
+                "instruction": 0.0199,
+                "other": 0.0467
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0.1212,
+                "named_fact": 0.1823,
+                "weather": 0.2432,
+                "calculation": 0.1922,
+                "general": 0.2611
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.289,
+                "named_speaker": 0.2768,
+                "named_outlet": 0.2955,
+                "hearsay": 0.1387
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9537,
+                "none": 0.0463
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1883
+            },
+            "span_0_private_life": {
+              "noul": 0.4921
+            },
+            "span_0_rumour": {
+              "noul": 0.8452
+            },
+            "span_0_future": {
+              "noul": 0.0221
+            },
+            "span_0_self_contained": {
+              "noul": 0.9328
+            },
+            "span_0_practical": {
+              "noul": 0.0001
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7142,
+                "multiple_propositions": 0.1334,
+                "unclear": 0.1524
+              }
+            },
+            "misheard": {
+              "noul": 0.9134
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-sydney-capital",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 526.0426299999999,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 524.6834039999994,
+          "questions": 12,
+          "stateBytes": 267,
+          "inputTokens": 3219,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.8309,
+                "opinion": 0.0172,
+                "prediction": 0.0301,
+                "question": 0.0425,
+                "instruction": 0.0169,
+                "other": 0.0623
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1108,
+                "named_fact": 0.2081,
+                "weather": 0.2656,
+                "calculation": 0.2284,
+                "general": 0.1871
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2913,
+                "named_speaker": 0.2789,
+                "named_outlet": 0.2945,
+                "hearsay": 0.1353
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.8634,
+                "2": 0.1198,
+                "none": 0.0168
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1216
+            },
+            "span_0_private_life": {
+              "noul": 0.7638
+            },
+            "span_0_rumour": {
+              "noul": 0.867
+            },
+            "span_0_future": {
+              "noul": 0.0256
+            },
+            "span_0_self_contained": {
+              "noul": 0.8946
+            },
+            "span_0_practical": {
+              "noul": 0.9032
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.5866,
+                "multiple_propositions": 0.2044,
+                "unclear": 0.209
+              }
+            },
+            "misheard": {
+              "noul": 0.826
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "admission",
+      "id": "dev-hearsay-bulls",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 1006.9430729999985,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1002.7341410000008,
+          "questions": 21,
+          "stateBytes": 413,
+          "inputTokens": 6677,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7336,
+                "opinion": 0.0312,
+                "prediction": 0.0651,
+                "question": 0.0721,
+                "instruction": 0.0136,
+                "other": 0.0843
+              }
+            },
+            "span_0_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1138,
+                "named_fact": 0.1492,
+                "weather": 0.2195,
+                "calculation": 0.2942,
+                "general": 0.2234
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2666,
+                "named_speaker": 0.2643,
+                "named_outlet": 0.2763,
+                "hearsay": 0.1928
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.2086
+            },
+            "span_0_private_life": {
+              "noul": 0.347
+            },
+            "span_0_rumour": {
+              "noul": 0.8246
+            },
+            "span_0_future": {
+              "noul": 0.1734
+            },
+            "span_0_self_contained": {
+              "noul": 0.7482
+            },
+            "span_0_practical": {
+              "noul": 0.6204
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.4566,
+                "multiple_propositions": 0.4168,
+                "unclear": 0.1266
+              }
+            },
+            "span_1_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.7323,
+                "opinion": 0.0353,
+                "prediction": 0.0671,
+                "question": 0.064,
+                "instruction": 0.0138,
+                "other": 0.0875
+              }
+            },
+            "span_1_route": {
+              "choice": "calculation",
+              "probabilities": {
+                "recent_event": 0.1059,
+                "named_fact": 0.1593,
+                "weather": 0.2202,
+                "calculation": 0.2792,
+                "general": 0.2354
+              }
+            },
+            "span_1_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2673,
+                "named_speaker": 0.2614,
+                "named_outlet": 0.2745,
+                "hearsay": 0.1968
+              }
+            },
+            "span_1_private_data": {
+              "noul": 0.2083
+            },
+            "span_1_private_life": {
+              "noul": 0.3324
+            },
+            "span_1_rumour": {
+              "noul": 0.8135
+            },
+            "span_1_future": {
+              "noul": 0.1568
+            },
+            "span_1_self_contained": {
+              "noul": 0.6974
+            },
+            "span_1_practical": {
+              "noul": 0.6539
+            },
+            "span_1_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.4327,
+                "multiple_propositions": 0.4327,
+                "unclear": 0.1346
+              }
+            },
+            "misheard": {
+              "noul": 0.8087
+            }
+          }
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    }
+  ]
+}
