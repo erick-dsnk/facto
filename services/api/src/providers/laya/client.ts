@@ -18,7 +18,7 @@ const discardBody = (body: ReadableStream<Uint8Array> | ReadableStreamDefaultRea
 };
 
 /** Adapts Laya's local Jev-wire server to the pipeline's existing decision client contract. */
-export function createLayaClient(options: { url: string; fetch?: typeof globalThis.fetch; diagnostic?: LayaDiagnostic }): JevClient {
+export function createLayaClient(options: { url: string; apiKey?: string; fetch?: typeof globalThis.fetch; diagnostic?: LayaDiagnostic }): JevClient {
   const fetcher = options.fetch ?? globalThis.fetch;
   const endpoint = `${options.url.replace(/\/+$/, '')}/v1/systemone`;
   return {
@@ -30,7 +30,7 @@ export function createLayaClient(options: { url: string; fetch?: typeof globalTh
         try {
           response = await fetcher(endpoint, {
             method: 'POST', signal: context.signal,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...(options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : {}) },
             body: JSON.stringify({ model: 'english', state: request.state, questions: request.questions }),
           });
         } catch {
@@ -42,6 +42,7 @@ export function createLayaClient(options: { url: string; fetch?: typeof globalTh
           const retryAfter = retryAfterDelay(response.headers.get('retry-after'), context.now());
           discardBody(response.body);
           context.signal.throwIfAborted();
+          if (response.status === 401 || response.status === 403) throw new PipelineError('jev_authentication');
           if (response.status === 429) throw new RetryableProviderError('jev_rate_limited', retryAfter);
           if (response.status >= 500) throw new RetryableProviderError('jev_unavailable', retryAfter);
           throw new PipelineError('jev_unavailable');

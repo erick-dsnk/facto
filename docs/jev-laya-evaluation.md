@@ -1,8 +1,118 @@
-# Jev versus locally hosted Laya in the fc-port pipeline
+# Self-hosted Laya admission with Jev judgment
+
+The supported hybrid configuration uses the saved admission fine-tune for local admission and Jev for evidence judgment and fact-check matching. Further judgment fine-tuning and evaluation have been canceled. The earlier drop-in comparison below remains historical background; its original-checkpoint results do not measure the admission fine-tune.
+
+## Deploy the saved admission checkpoint
+
+The admission-v1 release is a complete native checkpoint, including the weights, tokenizer, configuration and fitted temperatures. It is not a LoRA adapter and needs no training or separate base-model download. Keep all files together and preserve the saved `max_len=1024`, `head_max_len=512` and calibration. Model weights SHA-256: `fc4ef651626dffe876f6241dc802b59231f978cbf6c4c3c7732eda13418304c6`.
+
+Download the [admission-v1 release](https://github.com/erick-dsnk/junction-2026/releases/tag/laya-admission-v1-20261114), including its [model card](https://github.com/erick-dsnk/junction-2026/releases/download/laya-admission-v1-20261114/MODEL_CARD.md). The archive is 777,075,409 bytes and its SHA-256 is `1d82d21cbd6bac4d32ff7a4c9df82d99ec88a8619463e10c54648c2ca60b4006`. The published GitHub asset digest matches the locally verified archive; the archive contains per-file `SHA256SUMS`, provenance and license notices. The complete native checkpoint remains usable after the RunPod worker is stopped.
+
+The 421M-parameter model was fine-tuned on ClaimBuster factuality labels, AI privacy annotations and a separately reviewed fictional sensitive/public supplement. Only `c0_kind`, `c0_private_data` and `c0_private_life` were supervised. Other admission heads, such as route, subject resolution, scope and capture quality, remain inherited behavior; full encoder updates can affect them. This fine-tuning run did not supervise judgment tasks. On the 595-row development validation, factual-claim classification was 534/595 (89.7%), private-data classification 585/593 (98.7%) and private-life classification 592/593 (99.8%). All 40 private-data and 20 private-life positives in that validation came from fictional examples. These development results do not establish end-to-end admission accuracy or real-world privacy safety.
+
+### Prepare a fresh Linux host
+
+Use Python 3.12 and a CUDA-capable NVIDIA host with a compatible driver; provision enough RAM and VRAM for the saved 1024/512 token budgets and the app's multi-head requests. A 4 GB laptop GPU previously ran out of memory on larger judgment requests. Do not assume that memory limit applies to every admission request, or advertise a measured minimum from it. CPU serving is possible with `LAYA_DEVICE=cpu`, with different unmeasured app latency.
+
+This recipe pins the native Laya source and runtime packages used in the training environment, with the FastAPI/Uvicorn versions used in the earlier server. CUDA PyTorch 2.8.0/cu129 supports Blackwell. Install downloads require internet; serving after the complete checkpoint is present runs offline. The installation intentionally skips the unused VegAML integration dependency with `--no-deps`; only native checkpoint serving is used, so do not invoke `vegaml=True`. The exact fresh-host installation is an operator recipe, distinct from the offline serving smoke recorded below.
+
+```bash
+mkdir -p "$HOME/laya-admission"
+cd "$HOME/laya-admission"
+python3.12 -m venv venv
+. venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu129
+python -m pip install transformers==4.57.6 safetensors==0.7.0 huggingface_hub==0.36.2 \
+  numpy==2.4.2 cryptography==46.0.5 tokenizers==0.22.2 requests==2.32.5 \
+  PyYAML==6.0.3 tqdm==4.67.3 packaging==26.0 filelock==3.25.0 \
+  fsspec==2026.2.0 regex==2026.2.28 fastapi==0.135.1 uvicorn==0.41.0
+git clone https://github.com/NandhaKishorM/laya source
+git -C source checkout af8ada066685d66b3fc0b31e6c56b96def23fe2f
+python -m pip install --no-deps ./source
+python -c 'import torch; assert torch.cuda.is_available(), "CUDA unavailable"; print(torch.__version__, torch.version.cuda, torch.cuda.get_device_name())'
+```
+
+Download and verify the versioned artifact before extracting it. The checksum below is pinned independently of the downloaded sidecar. The extracted directory contains the complete checkpoint at its root; `checkpoint` is the local alias used by the serving command.
+
+```bash
+cd "$HOME/laya-admission"
+curl --fail --location --retry 3 \
+  https://github.com/erick-dsnk/junction-2026/releases/download/laya-admission-v1-20261114/laya-admission-v1-20261114.tar.gz \
+  --output laya-admission-v1-20261114.tar.gz
+printf '%s  %s\n' \
+  '1d82d21cbd6bac4d32ff7a4c9df82d99ec88a8619463e10c54648c2ca60b4006' \
+  'laya-admission-v1-20261114.tar.gz' | sha256sum --check -
+tar -xzf laya-admission-v1-20261114.tar.gz
+(cd laya-admission-v1-20261114 && sha256sum --check SHA256SUMS)
+ln -s laya-admission-v1-20261114 checkpoint
+```
+
+### Serve under the English alias
+
+The app sends `model=english`. Override that alias with the extracted local checkpoint; leaving out `LAYA_EXTRA_MODELS` would select the upstream English checkpoint instead. Keep the model server on loopback when colocated with the API. Run this in a dedicated terminal or equivalent service manager with the same environment. Enter a separate Laya token; it must match the app's `LAYA_API_KEY`, and is never the Jev key. Avoid writing it in shell history or a checked-in service file.
+
+```bash
+cd "$HOME/laya-admission"
+. venv/bin/activate
+read -rsp 'Laya bearer token: ' LAYA_API_KEY
+printf '\n'
+: "${LAYA_API_KEY:?A nonempty Laya bearer token is required}"
+export LAYA_API_KEY
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1
+export LAYA_HOST=127.0.0.1 LAYA_PORT=8765 LAYA_DEVICE=cuda
+export LAYA_MODELS=english LAYA_THREADS=2 LAYA_MAX_CONCURRENT=1
+export LAYA_EXTRA_MODELS="{\"english\":\"$PWD/checkpoint\"}"
+laya-serve
+```
+
+In another terminal with the same secret supplied through its environment, check authenticated health. An unauthenticated `GET /health` can return only liveness, which does not establish model or GPU readiness. A null local revision field is expected: the release checksum identifies the checkpoint. This check must pass after startup and during service monitoring; the upstream server can fall back to CPU after an OOM.
+
+```bash
+python3 - <<'PY_HEALTH'
+import json, os, urllib.request
+r = urllib.request.Request("http://127.0.0.1:8765/health",
+    headers={"Authorization": "Bearer " + os.environ["LAYA_API_KEY"]})
+with urllib.request.urlopen(r, timeout=10) as response:
+    health = json.load(response)
+assert "english" in health["loaded"], health
+assert health["device_is_preference"] is False, health
+assert health["checkpoint_devices"]["english"].startswith("cuda"), health
+assert health["cpu_fallbacks"]["english"]["count"] == 0, health
+print(json.dumps(health, indent=2))
+PY_HEALTH
+```
+
+For intentional CPU deployment change both the server device and health assertion to `cpu`. A green liveness response after a GPU fallback is insufficient for CUDA service readiness.
+
+### Connect the app
+
+Set these on the backend (the rest of `.env.example`, including the join code, expiry and origins, still applies):
+
+```dotenv
+PIPELINE_MODE=live
+DECISION_PROVIDER=jev
+ADMISSION_PROVIDER=laya
+LAYA_URL=http://127.0.0.1:8765
+LAYA_API_KEY=<your separate Laya server bearer token>
+JEV_API_KEY=<your hosted Jev key>
+EXA_API_KEY=<your Exa key>
+DEBUG_TRANSCRIPTS=
+```
+
+Run `npm ci` and `npm start` from the application checkout. The backend sends classification requests to Laya, sends judgment and fact-check matching requests to Jev, and isolates this configuration's claim cache. Both selected providers' required configuration is validated at live startup. An empty `ADMISSION_PROVIDER` inherits `DECISION_PROVIDER` for backward compatibility; an unavailable Laya request fails through the existing provider error path without silently uploading admission text to Jev. Fixture mode still uses fixture adapters.
+
+For a separate model host, replace `LAYA_URL` with an authenticated private-network endpoint. Bind Laya only to the required private interface; firewall it to the backend and terminate TLS at your private proxy for traffic crossing hosts. Keep the token in server-side secret configuration. Do not expose the plain HTTP inference port to the public internet or place the token in a browser/client app. This documentation does not deploy an always-on paid endpoint.
+
+Local Laya admission keeps its captured-text/context decision call on infrastructure you control. Deterministic privacy checks and model privacy flags can stop a candidate before search and Jev judgment; admitted checked claims and derived subjects/queries reach external retrieval, and accepted claims plus retained evidence reach Jev. A privacy false negative can still disclose personal information, and being nonpersonal does not establish that a statement was already public. Hosted audio transcription, OCR routes, application logs, caches and infrastructure have their own data boundaries. Do not describe this as zero privacy risk or as the whole app running offline.
+
+The extracted portable artifact passed an offline CPU serving smoke with the actual pinned `laya-serve` executable: the English alias resolved to the extracted checkpoint, authenticated health reported a resident CPU model with zero fallbacks, missing/wrong bearer tokens were rejected with 401, and one authenticated three-head request returned finite native answers. An empty Hugging Face cache was used. System-call tracing observed zero outbound IPv4/IPv6 connections during startup, that request and shutdown; the fictional probe text did not appear in the server logs. The local server was stopped afterward. This was a serving-mechanics check on Python 3.13.12 / PyTorch 2.10.0, not a fresh installation of the CUDA recipe, a performance benchmark, or a full admission/pipeline accuracy evaluation. The CUDA readiness assertions above remain necessary on your chosen host.
+
+## Historical original-checkpoint evaluation
 
 Evaluation date: 14 November 2026. Experiment branch: `codex/jev-laya-eval`, based on `claude/fc-port` at `c14a232554c8a25f00f2305090a0f569f78ec70a`.
 
-**The current Laya English checkpoint is not a useful direct replacement for Jev with the existing prompts and rules.** It rejected most eligible statements at admission and abstained on every evidence judgment. Jev answered half the known true/false claims correctly and abstained on the rest in this small replay. Laya does provide a real privacy advantage for the decision calls when hosted locally, but its defaults discard substantial parts of these long Jev prompts and evidence states. This experiment measures compatibility with this pipeline, not Laya's achievable accuracy after adaptation or training.
+**The upstream English checkpoint tested in the original experiment was not a useful direct replacement for Jev with those prompts and rules.** It rejected most eligible statements at admission and abstained on every evidence judgment. Jev answered half the known true/false claims correctly and abstained on the rest in this small replay. Laya does provide a real privacy advantage for the decision calls when hosted locally, but its defaults discard substantial parts of these long Jev prompts and evidence states. This experiment measures compatibility with this pipeline, not Laya's achievable accuracy after adaptation or training.
 
 ## Main result: 20 less ambiguous public cases
 
@@ -80,7 +190,7 @@ It does not make this application fully private: live Exa queries disclose the c
 
 Jev currently provides much better useful coverage with this pipeline and no model-serving operations. Laya avoids a hosted decision API and can work offline after model acquisition, but adds GPU/CPU provisioning, model downloads, concurrency control, patching and tuning. A local model has electricity/hardware/hosting costs; it is not zero-cost simply because there is no per-call vendor bill. Exa acquisition cost above is known; Jev monetary usage was not exposed in the parsed responses, so no decision-dollar comparison is established.
 
-## Fine-tuning feasibility on this laptop
+## Historical fine-tuning feasibility on the 4 GB laptop
 
 Fine-tuning is possible in principle, but this evaluation did not train a model or measure training time. The [pinned training code](https://github.com/NandhaKishorM/laya/blob/af8ada066685d66b3fc0b31e6c56b96def23fe2f/laya/train.py) loads the checkpoint as float32 and uses AdamW. For approximately 421 million parameters, weights, gradients and two optimizer moments alone require about 6.7 GB decimal, before activations and temporary buffers. The shipped full-model training path therefore cannot fit entirely on this 4 GB GPU as configured.
 
@@ -90,9 +200,9 @@ The first work should be compact, Laya-native prompts and evidence serialization
 
 ## Validation
 
-`npm run check` passed after the experiments: lint, TypeScript and all **67 test files / 1,132 tests**. The evaluator tests cover proposition isolation, production search allowance, denominator handling, complete-request settlement and a later timeout overriding an earlier result. Artifact checks found 96 primary observations, one terminal per pipeline observation, zero admission proposition mismatches and zero acquisition errors. These local checks do not prove deployed or live microphone behavior. No commit, push, PR or merge was performed.
+`npm run check` passed after the experiments: lint, TypeScript and all **67 test files / 1,132 tests**. The evaluator tests cover proposition isolation, production search allowance, denominator handling, complete-request settlement and a later timeout overriding an earlier result. Artifact checks found 96 primary observations, one terminal per pipeline observation, zero admission proposition mismatches and zero acquisition errors. These local checks do not prove deployed or live microphone behavior. Those validation counts describe the original experiment. The current hybrid integration and its validation are recorded in PR #68.
 
-## Reproduce
+## Reproduce the historical comparison
 
 The repository adds no Node dependency. `npm ci` and `npm run check` use the existing workspace. Credentials stay in `.env`: `JEV_API_KEY`, `EXA_API_KEY` when acquiring evidence, and `LAYA_URL=http://127.0.0.1:8765` for Laya. Do not commit `.env`.
 
