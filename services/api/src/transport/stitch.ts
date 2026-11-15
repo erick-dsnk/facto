@@ -121,21 +121,21 @@ export class SentenceStitcher {
   /**
    * Checks, on its own, a chain that trailed off and got no continuation within the window ("The Eiffel Tower is in Berlin," and
    * then silence), so a held claim is never lost. A headless continuation ("from the family of zebras.") and a sentence a correction
-   * cut short stay unchecked: fragments never alert. Chains past the window are forgotten either way.
+   * cut short stay unchecked: fragments never alert. The chain stays, so a slow continuation or a late correction still joins it and
+   * re-checks the whole claim as a newer revision.
    */
   release(nowMs: number): CheckStep[] {
     const due: CheckStep[] = [];
-    this.chains = this.chains.filter(chain => {
-      if (nowMs - chain.parts.at(-1)!.atMs < this.windowMs) return true;
+    for (const chain of this.chains) {
+      if (nowMs - chain.parts.at(-1)!.atMs < this.windowMs) continue;
       const head = chain.parts[0];
       // It stands alone now: drop the trailing comma, dash or "…" it broke off on.
       const text = join(chain.parts.map(entry => entry.text)).replace(/(?:\.\.\.|[\s,;:…\-–—])+$/u, '');
-      if (!text || this.submitted.has(head.requestId) || startsLowercase(text) || chain.parts.some(entry => entry.truncated) || !this.unfinished(chain)) return false;
+      if (!text || this.submitted.has(head.requestId) || startsLowercase(text) || chain.parts.some(entry => entry.truncated) || !this.unfinished(chain)) continue;
       this.submitted.add(head.requestId);
       if (this.submitted.size > MEMORY) this.submitted.delete(this.submitted.values().next().value!);
       due.push({ action: 'check', requestId: head.requestId, segmentId: head.segmentId, text, speaker: chain.speaker, atMs: head.atMs });
-      return false;
-    });
+    }
     return due;
   }
 

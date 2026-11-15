@@ -246,7 +246,9 @@ export async function buildServer(options: ServerOptions) {
     // A held sentence that trails off is checked on its own once nothing continues it within the stitch window.
     const releaseTimers = new Set<ReturnType<typeof setTimeout>>();
     let lastConfig: AudioStart | undefined;
-    const forget = () => { transcripts.clear(); triggered.clear(); stitcher?.clear(); for (const timer of releaseTimers) clearTimeout(timer); releaseTimers.clear(); };
+    // What the recogniser reported for each held sentence, so a released claim keeps its confidence and uncertain words.
+    const heldCapture = new Map<string, { confidence: number | null; lowConfidenceWords?: LowConfidenceWord[] }>();
+    const forget = () => { transcripts.clear(); triggered.clear(); stitcher?.clear(); for (const timer of releaseTimers) clearTimeout(timer); releaseTimers.clear(); heldCapture.clear(); };
     const fail = (error: unknown) => {
       if (error instanceof PipelineError && error.code === 'audio_cancelled') return;
       if (!session.active || !store.sessions.has(session.id)) return;
@@ -274,14 +276,19 @@ export async function buildServer(options: ServerOptions) {
       if (!stitcher || !options.voice) return;
       const timer = setTimeout(() => {
         releaseTimers.delete(timer);
-        if (!lastConfig || !session.active) return;
+        // The connection closed or the session moved to a new epoch since: nothing of the old stream is checked.
+        if (!lastConfig || closed || !session.active || lastConfig.sessionEpoch !== session.epoch) return;
         for (const step of stitcher.release(now())) {
           try {
             debugFeed?.push('asr.stitch', { action: 'release', requestId: step.requestId, text: step.text }, session.id);
-            submitCheck(step, lastConfig, null);
-          } catch (error) { fail(error); }
+            const capture = heldCapture.get(step.requestId);
+            submitCheck(step, lastConfig, capture?.confidence ?? null, capture?.lowConfidenceWords);
+          } catch (error) {
+            if (error instanceof PipelineError && error.code === 'request_capacity') void bridge?.stop('request_capacity').catch(() => undefined);
+            fail(error);
+          }
         }
-      }, options.voice.stitchMs + 250);
+      }, options.voice.stitchMs + 1000);
       timer.unref?.();
       releaseTimers.add(timer);
     };
@@ -317,6 +324,8 @@ export async function buildServer(options: ServerOptions) {
         if (step.action === 'hold') {
           if (step.cancel) session.cancel(step.cancel);
           recent.record(step.requestId, step.text, step.speaker, step.atMs);
+          heldCapture.set(requestId, { confidence: event.confidence, ...(lowConfidenceWords ? { lowConfidenceWords } : {}) });
+          if (heldCapture.size > 64) heldCapture.delete(heldCapture.keys().next().value!);
           scheduleRelease();
           return;
         }
