@@ -36,6 +36,13 @@ describe('sentence stitcher', () => {
     expect(stitcher.release(20_000)).toEqual([]);
   });
 
+  it('keeps a released chain, so a slow continuation still joins it and re-checks the whole claim', () => {
+    const stitcher = new SentenceStitcher(4000);
+    expect(stitcher.add(said('1', 'The Eiffel Tower is in Berlin,', 10_000)).action).toBe('hold');
+    expect(stitcher.release(15_000)).toMatchObject([{ requestId: 'r-1', text: 'The Eiffel Tower is in Berlin' }]);
+    expect(stitcher.add(said('2', 'which is in Germany.', 13_500))).toMatchObject({ action: 'check', requestId: 'r-1', text: 'The Eiffel Tower is in Berlin which is in Germany.' });
+  });
+
   it('never releases a headless continuation or a stitched claim that was already checked', () => {
     const stitcher = new SentenceStitcher(4000);
     expect(stitcher.add(said('1', 'from the family of zebras.', 10_000)).action).toBe('hold');
