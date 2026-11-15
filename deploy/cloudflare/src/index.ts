@@ -19,6 +19,9 @@ interface Env {
   ASR_ECHO_MS?: string;
   ASR_STITCH_MS?: string;
   DEBUG_TRANSCRIPTS?: string;
+  DECISION_PROVIDER?: string;
+  ADMISSION_PROVIDER?: string;
+  LAYA_URL?: string;
   // secrets (wrangler secret put)
   JEV_API_KEY?: string;
   EXA_API_KEY?: string;
@@ -29,6 +32,7 @@ interface Env {
   DEBUG_FEED_KEY?: string;
   DEMO_JOIN_EXPIRES_AT?: string;
   ALLOWED_ORIGINS?: string;
+  LAYA_API_KEY?: string;
 }
 
 const INSTANCE_NAME = "api";
@@ -49,6 +53,10 @@ const PASSTHROUGH = [
   "ASR_ECHO_MS",
   "ASR_STITCH_MS",
   "DEBUG_TRANSCRIPTS",
+  "DECISION_PROVIDER",
+  "ADMISSION_PROVIDER",
+  "LAYA_URL",
+  "LAYA_API_KEY",
   "JEV_API_KEY",
   "EXA_API_KEY",
   "ELEVENLABS_API_KEY",
