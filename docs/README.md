@@ -16,6 +16,7 @@
 ## Evaluation and backend
 - [evaluation.md](evaluation.md): fact-checking pipeline evaluation and its limits.
 - [live-pipeline.md](live-pipeline.md): live pipeline decisions.
+- [jev-laya-evaluation.md](jev-laya-evaluation.md): fine-tuned Laya admission checkpoint, serving setup, validation limits and historical provider comparison.
 - [backend-readiness.md](backend-readiness.md): backend prototype readiness contract.
 
 ## OCR
