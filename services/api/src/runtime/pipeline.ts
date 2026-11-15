@@ -65,7 +65,7 @@ export class PipelineRuntime {
   /** Bounded sanitized diagnostics; deliberately excludes input, queries, tokens and IDs. */
   readonly metrics: RuntimeMetric[] = [];
   private readonly cache: ClaimCache;
-  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string, /** Per-request deadline. Production keeps 10 s; only a Laya evaluation run raises it. */ private readonly deadlineMs = 10_000) {
+  constructor(private adapters: RuntimeAdapters, private now: () => number = Date.now, private monotonic: () => number = () => performance.now(), private modelVersion = MODEL_VERSION as string, /** Per-request deadline. Production keeps 10 s; only a Laya evaluation run raises it. */ private readonly deadlineMs = 10_000, /** Cap on one continuation wait. Production keeps 8 s; only a raised evaluation deadline changes it. */ private readonly waitCapMs = 8_000) {
     this.cache = adapters.cache ?? sharedClaimCache;
   }
 
@@ -170,7 +170,7 @@ export class PipelineRuntime {
       if (admission.action !== 'check') {
         if (admission.action === 'wait' && !input.userInitiated && record.continuationCount < 1) {
           record.state = 'waiting'; clearTimeout(record.timer);
-          const remaining = Math.min(8_000, this.deadlineMs - (this.now() - record.acceptedAt));
+          const remaining = Math.min(this.waitCapMs, this.deadlineMs - (this.now() - record.acceptedAt));
           session.emit('claim.waiting', { admissionAction: 'wait', reasonCode: admission.reasonCode, waitExpiresAt: new Date(this.now() + remaining).toISOString() }, input);
           record.timer = setTimeout(() => {
             if (!session.current(record)) return;

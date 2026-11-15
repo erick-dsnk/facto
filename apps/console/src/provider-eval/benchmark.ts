@@ -116,17 +116,20 @@ export function settledOutcome(terminals: Pick<EventEnvelope, 'type' | 'payload'
   const mapped = labelTerminal({ type: terminal.type as 'claim.result', payload: terminal.payload });
   return { predicted: mapped.label, reasonCode: mapped.reasonCode, ...(terminal.type === 'pipeline.error' ? { error: mapped.reasonCode ?? 'pipeline_error' } : {}) };
 }
+/** Production keeps a 10 s deadline, an 8 s continuation wait cap and a 10.5 s settlement bound; a raised Laya deadline scales all three. */
+export const pipelineWaitCapMs = (deadlineMs: number): number => deadlineMs === 10_000 ? 8_000 : deadlineMs - 2_000;
+export const settlementDeadlineMs = (deadlineMs: number): number => deadlineMs + 500;
 export async function pipelineCase(provider: string, sample: CohortCase, frozen: FrozenCase, repetition: number, pack?: PromptPack, deadlineMs = 10_000): Promise<Observation> {
   const asks: AskObservation[] = []; const client = instrument(provider, asks); const classifier = createClassifier(client, pack);
   const observation: Observation = { provider, mode: 'pipeline', id: sample.id, repetition, expected: sample.expected, ambiguousLabel: 'ambiguousLabel' in sample ? sample.ambiguousLabel : undefined, alternativeExpected: 'alternativeExpected' in sample ? sample.alternativeExpected : undefined, predicted: 'error', reasonCode: null, durationMs: 0, asks, events: [] };
-  const runtime = new PipelineRuntime({ classify: async (input, context) => { const result = await classifier(input, context); observation.admission = { action: result.action, claims: result.claims.length, checkedTexts: result.claims.map(claim => claim.checkedText) }; return result; }, judge: createJudge(client, pack), ...(pack ? { verdictRules: pack.judge.policy } : {}), retrieve: async () => { throw new PipelineError('unexpected_legacy_retrieval'); }, sources: replaySources(frozen), cache: new ClaimCache() }, Date.now, () => performance.now(), provider === 'jev' ? MODEL_VERSION : 'laya-20260512', deadlineMs);
+  const runtime = new PipelineRuntime({ classify: async (input, context) => { const result = await classifier(input, context); observation.admission = { action: result.action, claims: result.claims.length, checkedTexts: result.claims.map(claim => claim.checkedText) }; return result; }, judge: createJudge(client, pack), ...(pack ? { verdictRules: pack.judge.policy } : {}), retrieve: async () => { throw new PipelineError('unexpected_legacy_retrieval'); }, sources: replaySources(frozen), cache: new ClaimCache() }, Date.now, () => performance.now(), provider === 'jev' ? MODEL_VERSION : 'laya-20260512', deadlineMs, pipelineWaitCapMs(deadlineMs));
   const session = new Session(Date.now); const requestId = randomUUID(); const input = makeInput({ text: sample.text, context: [], mode: 'typed', confidence: 1 }, session.id, requestId); const start = performance.now();
   const terminals: EventEnvelope[] = [];
   session.listeners.add(event => { if (event.requestId !== requestId) return; observation.events!.push(event.type); if (['claim.result', 'pipeline.error', 'claim.skipped', 'claim.needs_confirmation', 'check.cancelled'].includes(event.type)) terminals.push(event); });
   runtime.submit(session, input);
   // A request can emit a result for one admitted span and continue with another.
   // Wait until the complete runtime request settles before mapping its outcome.
-  const settled = await waitForRequestSettlement(() => session.requests.get(requestId)?.state === 'done' && session.running === 0);
+  const settled = await waitForRequestSettlement(() => session.requests.get(requestId)?.state === 'done' && session.running === 0, settlementDeadlineMs(deadlineMs));
   observation.durationMs = performance.now() - start;
   observation.terminalCount = terminals.length;
   Object.assign(observation, settledOutcome(terminals, settled));

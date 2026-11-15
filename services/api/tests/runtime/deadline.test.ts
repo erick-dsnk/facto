@@ -201,4 +201,17 @@ describe('injectable pipeline deadline', () => {
     const p = await hung(60_000); await vi.advanceTimersByTimeAsync(30_000); expect(p.timedOut()).toBe(false);
     await vi.advanceTimersByTimeAsync(30_100); expect(p.timedOut()).toBe(true);
   });
+
+  it.each<[number | undefined, number | undefined, number]>([[undefined, undefined, 8_000], [60_000, undefined, 8_000], [60_000, 58_000, 58_000]])('caps a continuation wait for deadline %s and cap %s', (deadline, cap, expected) => {
+    const clock = NOW, session = new Session(() => clock), events: EventEnvelope[] = [];
+    session.listeners.add(event => events.push(event));
+    const adapters = { ...fixtureAdapters(), classify: async () => ({ action: 'wait' as const, reasonCode: 'interim_capture', claims: [] }) };
+    const runtime = new PipelineRuntime(adapters, () => clock, () => 0, 'm', deadline, cap);
+    runtime.submit(session, { schemaVersion: 1, requestId: 'w', sessionId: session.id, sessionEpoch: session.epoch, revision: 1, mode: 'typed', text: 'Helsinki is the capital of Finland.', language: 'en', capturedAt: new Date(clock).toISOString(), capture: { source: 'typed_fixture', segmentId: 's', confidence: 1 }, context: [], userInitiated: false });
+    return vi.waitFor(() => {
+      const waiting = events.find(event => event.type === 'claim.waiting');
+      expect(waiting).toBeDefined();
+      expect(Date.parse((waiting!.payload as { waitExpiresAt: string }).waitExpiresAt) - clock).toBe(expected);
+    });
+  });
 });

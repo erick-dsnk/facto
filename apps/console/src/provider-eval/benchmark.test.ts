@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { replaySources, summarize, waitForRequestSettlement, settledOutcome, type FrozenCase, type Observation } from './benchmark.js';
+import { replaySources, summarize, waitForRequestSettlement, settledOutcome, pipelineWaitCapMs, settlementDeadlineMs, type FrozenCase, type Observation } from './benchmark.js';
 import { sourceQuery } from '../../../../packages/contracts/src/index.js';
 import { accepted } from './benchmark.js';
 import { AttemptBudget } from '../../../../services/api/src/runtime/budget.js';
@@ -38,6 +38,10 @@ describe('provider comparison request settlement', () => {
     const timer = setTimeout(() => { events.push('second_result'); done = true; }, 20);
     expect(await waitForRequestSettlement(() => done, 200)).toBe(true);
     clearTimeout(timer); expect(events).toEqual(['first_result', 'second_result']);
+  });
+  it('keeps production pipeline bounds and scales them for a raised Laya deadline', () => {
+    expect([pipelineWaitCapMs(10_000), settlementDeadlineMs(10_000)]).toEqual([8_000, 10_500]);
+    expect([pipelineWaitCapMs(60_000), settlementDeadlineMs(60_000)]).toEqual([58_000, 60_500]);
   });
   it('bounds a runtime which never settles', async () => {
     expect(await waitForRequestSettlement(() => false, 10)).toBe(false);
