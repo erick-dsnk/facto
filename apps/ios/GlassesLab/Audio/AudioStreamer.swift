@@ -177,7 +177,9 @@ final class AudioStreamer: PlaybackReporting {
   }
 
   private let channel: SessionChannel
-  private let source: CaptureSource
+  /// Where the audio comes from, sent in `audio.start`. Live mode sets it per glasses before
+  /// each start: the camera stream's mic on Ray-Ban Meta, the Bluetooth mic on Display glasses.
+  var source: CaptureSource
   private let clock: AudioStreamerClock
   private let reconnectGrace: TimeInterval
   private let resumesAfterReconnect: Bool

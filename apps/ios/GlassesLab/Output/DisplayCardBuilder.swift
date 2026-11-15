@@ -2,38 +2,80 @@ import Foundation
 import MWDATDisplay
 import UIKit
 
-/// The production lens uses the same native component hierarchy as the Mac-verified fixture.
-/// Every DAT send replaces the complete screen. Controls remain on the companion phone.
+// No SwiftUI import here: MWDATDisplay has its own Text, Button and Image.
+
+/// Builds the result card for the Meta Ray-Ban Display lens. The layout is Eric's native lens
+/// card (`NativeLensCardLayout`, the hierarchy verified on the Mac fixture) filled with Facto's
+/// wording: the verdict word (True, False, Misleading, Can’t verify), the stance count next to
+/// it ("3 of 3 sources disagree"), the backend's explanation and the source. Every DAT send
+/// replaces the whole screen. Repeat and Dismiss stay on the phone; the lens has no buttons.
+///
+/// The swatch helpers below draw the website's verdict colours for the phone mirror and tests.
 enum DisplayCardBuilder {
   // Retained for the companion's approximate mirror layout.
   static let padding: CGFloat = 24
   static let spacing: CGFloat = 12
+  /// Spacing inside the card and between the swatch and the verdict word.
   static let rowSpacing: CGFloat = 8
-  static let excerptPadding: CGFloat = 16
+  static let cardPadding: CGFloat = 16
+
+  /// Swatch bitmap side and corner radius, in pixels.
+  static let swatchPixels: CGFloat = 64
+  static let swatchCornerRadius: CGFloat = 14
+  /// Width of the Can’t verify ring, in pixels.
+  static let swatchRingWidth: CGFloat = 4
 
   static func build(
     _ card: ResultCard,
+    includeSwatch: Bool = true,
     onRepeat: (@Sendable () -> Void)? = nil,
     onDismiss: (@Sendable () -> Void)? = nil
   ) -> FlexBox {
     NativeLensCardLayout.build(
       capture: card.captureLabel,
       claim: card.excerpt,
-      verdict: card.kind == .supported ? "True" : card.kind == .contradicted ? "False" : card.verdictWord,
+      verdict: card.verdictWord,
       kind: card.kind,
-      detail: card.detailText ?? ResultWording.line(for: outcome(for: card.kind)),
-      publisher: card.sourceName
+      context: card.detail,
+      detail: card.detailText ?? ResultWording.lensSentence(for: card.kind),
+      publisher: card.sourceName,
+      includeDot: includeSwatch
     )
   }
 
-  private static func outcome(for kind: CardKind) -> OutputOutcome {
-    switch kind {
-    case .supported: .verdict(.supported)
-    case .contradicted: .verdict(.contradicted)
-    case .misleading: .verdict(.misleading)
-    case .unverified: .verdict(.insufficientEvidence)
-    case .needsConfirmation: .needsConfirmation(heard: false)
-    case .checkFailed: .checkFailed
+  /// The screen the lens shows for a moment after it connects.
+  static func buildReady() -> FlexBox {
+    FlexBox(direction: .column, spacing: rowSpacing) {
+      Text("facto", style: .heading)
+      Text("Ready", style: .meta, color: .secondary)
+    }
+    .padding(padding)
+  }
+
+  /// Sends `card` through `send`, with its verdict dot (an image) when `includeSwatch` is true.
+  /// If a send with the dot throws, sends the card again without any image.
+  ///
+  /// - Returns: whether later sends should still include the dot. False once a send with it
+  ///   failed and the resend without it worked.
+  @MainActor
+  static func send(
+    _ card: ResultCard,
+    includeSwatch: Bool,
+    onRepeat: (@Sendable () -> Void)?,
+    onDismiss: (@Sendable () -> Void)?,
+    using send: (FlexBox) async throws -> Void
+  ) async throws -> Bool {
+    // Not sure and Check failed have no verdict colour, so they go out without the dot.
+    guard includeSwatch, swatchImage(for: card.kind) != nil else {
+      try await send(build(card, includeSwatch: false, onRepeat: onRepeat, onDismiss: onDismiss))
+      return includeSwatch
+    }
+    do {
+      try await send(build(card, includeSwatch: true, onRepeat: onRepeat, onDismiss: onDismiss))
+      return true
+    } catch {
+      try await send(build(card, includeSwatch: false, onRepeat: onRepeat, onDismiss: onDismiss))
+      return false
     }
   }
 
@@ -48,6 +90,60 @@ enum DisplayCardBuilder {
     }
   }
 
+  // MARK: Swatches
+
+  /// The verdict swatch for the lens: 64x64 px, corner radius 14. True and False use the
+  /// lens verdict colours, Misleading is off-white and Can’t verify is a 4 px off-white ring.
+  /// Nil for Not sure and Check failed, which show an icon. Drawn once per kind.
+  static func swatchImage(for kind: CardKind) -> UIImage? {
+    swatches[kind]
+  }
+
+  private static let swatches: [CardKind: UIImage] = {
+    let kinds: [CardKind] = [.supported, .contradicted, .misleading, .unverified]
+    return Dictionary(uniqueKeysWithValues: kinds.compactMap { kind in drawSwatch(kind).map { (kind, $0) } })
+  }()
+
+  private enum SwatchStyle {
+    case fill(UIColor)
+    case ring(UIColor)
+  }
+
+  private static func swatchStyle(for kind: CardKind) -> SwatchStyle? {
+    switch kind {
+    case .supported: .fill(FactoPalette.lensTrue)
+    case .contradicted: .fill(FactoPalette.lensFalse)
+    case .misleading: .fill(FactoPalette.offWhite)
+    case .unverified: .ring(FactoPalette.offWhite)
+    case .needsConfirmation, .checkFailed: nil
+    }
+  }
+
+  private static func drawSwatch(_ kind: CardKind) -> UIImage? {
+    guard let style = swatchStyle(for: kind) else { return nil }
+    let format = UIGraphicsImageRendererFormat()
+    format.scale = 1
+    format.opaque = false
+    format.preferredRange = .standard
+    let rect = CGRect(x: 0, y: 0, width: swatchPixels, height: swatchPixels)
+    return UIGraphicsImageRenderer(size: rect.size, format: format).image { _ in
+      switch style {
+      case .fill(let color):
+        color.setFill()
+        UIBezierPath(roundedRect: rect, cornerRadius: swatchCornerRadius).fill()
+      case .ring(let color):
+        // Stroke on the centre line, inset so the whole ring stays inside the bitmap.
+        let inset = swatchRingWidth / 2
+        let path = UIBezierPath(roundedRect: rect.insetBy(dx: inset, dy: inset), cornerRadius: swatchCornerRadius - inset)
+        path.lineWidth = swatchRingWidth
+        color.setStroke()
+        path.stroke()
+      }
+    }
+  }
+
+  // MARK: Inspection
+
   /// The text of every Text node, depth first. For tests and debug logging of lengths;
   /// never log the strings themselves.
   static func textContents(of box: FlexBox) -> [String] {
@@ -58,13 +154,22 @@ enum DisplayCardBuilder {
       return []
     }
   }
+
+  /// True when the layout contains an image, i.e. a verdict swatch.
+  static func containsImage(_ box: FlexBox) -> Bool {
+    box.children.contains { child in
+      if child is Image { return true }
+      if let nested = child as? FlexBox { return containsImage(nested) }
+      return false
+    }
+  }
 }
 
 /// Shared native layout: fixture strings are supplied only by the DEBUG preview builder.
 enum NativeLensCardLayout {
   static func build(
     capture: String?, claim: String, verdict: String, kind: CardKind,
-    context: String? = nil, detail: String, publisher: String?
+    context: String? = nil, detail: String, publisher: String?, includeDot: Bool = true
   ) -> FlexBox {
     FlexBox(
       direction: .column, spacing: 16,
@@ -78,7 +183,8 @@ enum NativeLensCardLayout {
       }
       FlexBox(direction: .column, spacing: 12) {
         FlexBox(direction: .row, spacing: 8, crossAlignment: .center) {
-          Image(image: dot(for: kind), sizePreset: .icon, cornerRadius: .none)
+          // Left out after a send with an image failed, so the card still reaches the lens.
+          if includeDot { Image(image: dot(for: kind), sizePreset: .icon, cornerRadius: .none) }
           Text(verdict, style: .body)
           if let context, !context.isEmpty {
             Text(context, style: .meta, color: .secondary)
