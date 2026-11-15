@@ -5,7 +5,9 @@ import Observation
 
 // No SwiftUI import here: MWDATDisplay has its own Text, Button and Image.
 
-/// Display capability on Meta Ray-Ban Display glasses (real or simulated).
+/// Display capability on Meta Ray-Ban Display glasses (real or simulated). Its DeviceSession
+/// comes from `GlassesSession.shared`, the one session the camera also uses: on real Display
+/// glasses a second session from the app failed with "Session start failed: device unavailable".
 @Observable
 @MainActor
 final class DisplayModel {
@@ -22,10 +24,21 @@ final class DisplayModel {
   @ObservationIgnored private var recoveryTask: Task<Void, Never>?
   @ObservationIgnored private var recoveryTaskID = UUID()
   @ObservationIgnored private var selectorTask: Task<Void, Never>?
+  /// The session shared with the camera (see GlassesSession).
+  @ObservationIgnored private let glasses: GlassesSession
+  /// `session` is the DEBUG native preview's own mock session, not the shared one.
+  @ObservationIgnored private var ownsPreviewSession = false
 
-  init(defaults: UserDefaults = .standard) {
+  init(defaults: UserDefaults = .standard, glasses: GlassesSession = .shared) {
     self.defaults = defaults
+    self.glasses = glasses
     self.wantsConnection = defaults.object(forKey: "nativeDisplay.restoreConnection") as? Bool ?? true
+    // The lens follows the glasses in use: it connects when a Display pair is put on and lets
+    // go when the wearer switches to Ray-Ban Meta or folds the glasses.
+    glasses.observeKind { [weak self] _ in
+      guard let self, !self.ownsPreviewSession else { return }
+      self.recoverIfEligible()
+    }
     selectorTask = Task { [weak self] in
       guard let selector = self?.deviceSelector else { return }
       for await identifier in selector.activeDeviceStream() {
@@ -43,7 +56,7 @@ final class DisplayModel {
   }
 
   private var recoveryEligible: Bool {
-    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled
+    wantsConnection && appActive && authorized && hasEligibleDevice && !webDisplayEnabled && glasses.kind == .display
   }
 
   private func recoverIfEligible() {
@@ -96,7 +109,8 @@ final class DisplayModel {
     } else { recoverIfEligible() }
   }
 
-  /// Created once so it has already found a display-capable device when you tap Connect.
+  /// Created once so it has already found a display-capable device when you tap Connect. It
+  /// only tells recovery whether a Display pair is around; GlassesSession picks the device.
   @ObservationIgnored private let deviceSelector = AutoDeviceSelector(
     wearables: Wearables.shared, filter: { $0.supportsDisplay() }
   )
@@ -254,22 +268,47 @@ final class DisplayModel {
     scheduleRecovery()
   }
 
+  /// Joins the camera's session when it has one, or opens the shared session.
   private func attemptConnection() {
     guard !webDisplayEnabled, session == nil else { return }
     lastError = nil
+    sessionGeneration = UUID()
+    let generation = sessionGeneration
     do {
-      let newSession = try Wearables.shared.createSession(deviceSelector: deviceSelector)
-      try observeAndStart(newSession)
+      session = try glasses.acquire(
+        .display,
+        onState: { [weak self] state in
+          guard let self, self.sessionGeneration == generation else { return }
+          self.handleSession(state)
+        },
+        onError: { [weak self] message in
+          guard let self, self.sessionGeneration == generation else { return }
+          self.lastError = "Session: \(message)"
+          self.stopConnection()
+          self.scheduleRecovery()
+        }
+      )
+      handleSession(glasses.state)
     } catch {
       lastError = "Session: \(error.localizedDescription)"
       clear()
     }
   }
 
+  func disconnect() {
+    wantsConnection = false
+    defaults.set(false, forKey: "nativeDisplay.restoreConnection")
+    recoveryTask?.cancel()
+    recoveryTask = nil
+    stopConnection()
+  }
+
+  /// Starts the DEBUG native preview's own session on a mock device (never the shared one).
   private func observeAndStart(_ newSession: DeviceSession) throws {
     sessionGeneration = UUID()
     let generation = sessionGeneration
     session = newSession
+    ownsPreviewSession = true
     newSession.statePublisher.listen { [weak self] state in
       Task { @MainActor in
         guard let self, self.sessionGeneration == generation else { return }
@@ -287,20 +326,19 @@ final class DisplayModel {
     try newSession.start()
   }
 
-  func disconnect() {
-    wantsConnection = false
-    defaults.set(false, forKey: "nativeDisplay.restoreConnection")
-    recoveryTask?.cancel()
-    recoveryTask = nil
-    stopConnection()
-  }
-
+  /// Stops the display and leaves the shared session; the session itself stops only when the
+  /// camera isn't using it either. The DEBUG preview's own session is stopped directly.
   private func stopConnection() {
     let oldDisplay = display
     let oldSession = session
+    let wasPreview = ownsPreviewSession
     clear()
     if let oldDisplay { oldDisplay.stop() }
-    oldSession?.stop()
+    if wasPreview {
+      oldSession?.stop()
+    } else if oldSession != nil {
+      glasses.release(.display)
+    }
   }
 
   private func handleSession(_ state: DeviceSessionState) {
@@ -318,7 +356,7 @@ final class DisplayModel {
 
   private func attachDisplay() {
     guard !webDisplayEnabled, let session, display == nil else {
-      if webDisplayEnabled { session?.stop() }
+      if webDisplayEnabled { stopConnection() }
       return
     }
     do {
@@ -334,7 +372,8 @@ final class DisplayModel {
       newDisplay.start()
     } catch {
       lastError = "Display: \(error.localizedDescription)"
-      session.stop()
+      stopConnection()
+      scheduleRecovery()
     }
   }
 
@@ -369,6 +408,7 @@ final class DisplayModel {
     tokens.clear()
     display = nil
     session = nil
+    ownsPreviewSession = false
     sessionState = .idle
     displayState = .stopped
   }

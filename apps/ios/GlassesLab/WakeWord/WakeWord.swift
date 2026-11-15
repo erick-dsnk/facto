@@ -90,7 +90,7 @@ enum WakeWordError: Error, Equatable {
 
   var message: String {
     switch self {
-    case .microphoneDenied: "Microphone access is off for Glasses Lab in iOS Settings."
+    case .microphoneDenied: "Microphone access is off for Facto in iOS Settings."
     case .modelMissing: "The wake phrase model is missing from this build."
     case .audioUnavailable(let code): "The microphone didn't start (\(code))."
     }

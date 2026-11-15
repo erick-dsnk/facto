@@ -25,7 +25,11 @@ final class MicrophoneWakeWordListener: WakeWordListening {
 
   init(
     makeRecognizer: @escaping () throws -> WakePhraseRecognizer = {
-      WakePhraseRecognizer(wake: try SherpaKeywordDetector.wake(), command: try SherpaKeywordDetector.command())
+      WakePhraseRecognizer(
+        // "Hey Facto" and "Hey Facto, check this" both take a photo now, so there is no need
+        // to wait long for "check this" after the wake phrase.
+        wake: try SherpaKeywordDetector.wake(), command: try SherpaKeywordDetector.command(), commandWindow: 0.2
+      )
     }
   ) {
     self.makeRecognizer = makeRecognizer
@@ -81,7 +85,10 @@ final class MicrophoneWakeWordListener: WakeWordListening {
   private func startEngine() throws {
     let input = engine.inputNode
     let format = input.outputFormat(forBus: 0)
-    guard format.sampleRate > 0, format.channelCount > 0, let resampler = WakeAudioResampler(from: format) else {
+    let hardware = input.inputFormat(forBus: 0)
+    // A tap whose sample rate differs from the hardware's raises an uncatchable exception.
+    guard format.sampleRate > 0, format.channelCount > 0, format.sampleRate == hardware.sampleRate,
+      let resampler = WakeAudioResampler(from: format) else {
       throw WakeWordError.audioUnavailable(code: -1)
     }
     guard let recognizer else { throw WakeWordError.modelMissing }
@@ -108,6 +115,12 @@ final class MicrophoneWakeWordListener: WakeWordListening {
 
   private func restartAfterRouteChange() {
     guard isRunning else { return }
+    // The engine is still running on the old route. Installing a tap that doesn't match the
+    // new Bluetooth mic's format raises an Objective-C exception Swift can't catch (SIGABRT),
+    // so tear the old graph down first.
+    engine.inputNode.removeTap(onBus: 0)
+    engine.stop()
+    engine.reset()
     do {
       try startEngine()
       inputName = AVAudioSession.sharedInstance().currentRoute.inputs.first?.portName
