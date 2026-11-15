@@ -1,0 +1,1469 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-14T19:42:06.366Z",
+  "updatedAt": "2026-11-14T19:42:36.506Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.2",
+  "cohortSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "evidenceSHA256": "31a31a93009b8bce1f3ec5b4c00cc1b0deb3c53b8ced61741006cba483b5b298",
+  "options": {
+    "providers": [
+      "jev"
+    ],
+    "modes": [
+      "admission"
+    ],
+    "repetitions": 1,
+    "deadlineMs": 10000,
+    "output": "fixtures/evaluation/provider-comparison/results/admission-jev.json"
+  },
+  "summary": [
+    {
+      "group": "jev/admission",
+      "n": 59,
+      "correct": 55,
+      "errors": 0,
+      "abstentions": 0,
+      "skipped": 10,
+      "definitive": 0,
+      "definitiveCorrect": 0,
+      "admission": {
+        "truePositive": 48,
+        "falsePositive": 1,
+        "expectedPositive": 51,
+        "precision": 0.9795918367346939,
+        "recall": 0.9411764705882353
+      },
+      "durationMs": {
+        "p50": 247.7694080000001,
+        "p95": 2276.8918839999997
+      },
+      "askMs": {
+        "n": 59,
+        "p50": 246.82552100000248,
+        "p95": 2274.798161999999
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 184783,
+      "errorCodes": {}
+    }
+  ],
+  "observations": [
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-01",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 2687.140598,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 2637.039312,
+          "questions": 11,
+          "stateBytes": 281,
+          "inputTokens": 2848,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 204.14384199999995,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 201.09137499999997,
+          "questions": 10,
+          "stateBytes": 231,
+          "inputTokens": 2673,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-03",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 246.86824499999966,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 245.23010599999998,
+          "questions": 10,
+          "stateBytes": 235,
+          "inputTokens": 2669,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-04",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 1282.0523329999996,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1280.1762410000001,
+          "questions": 11,
+          "stateBytes": 237,
+          "inputTokens": 2824,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-05",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 586.5457420000002,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 585.5069819999999,
+          "questions": 10,
+          "stateBytes": 175,
+          "inputTokens": 2659,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-06",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 2276.8918839999997,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 2274.798161999999,
+          "questions": 10,
+          "stateBytes": 323,
+          "inputTokens": 2683,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-07",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 936.2100640000008,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 934.4722180000008,
+          "questions": 11,
+          "stateBytes": 235,
+          "inputTokens": 2818,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "myth-08",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 192.88929699999971,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 191.0151450000012,
+          "questions": 10,
+          "stateBytes": 273,
+          "inputTokens": 2677,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 942.5947689999994,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 940.217251,
+          "questions": 11,
+          "stateBytes": 350,
+          "inputTokens": 2865,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 621.9735669999991,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 618.1079389999995,
+          "questions": 32,
+          "stateBytes": 423,
+          "inputTokens": 7715,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 276.03691999999864,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 274.7817049999994,
+          "questions": 10,
+          "stateBytes": 201,
+          "inputTokens": 2663,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-04",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 382.4654250000003,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 380.8037889999996,
+          "questions": 11,
+          "stateBytes": 348,
+          "inputTokens": 2880,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-05",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 298.9191690000007,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 296.82589800000096,
+          "questions": 11,
+          "stateBytes": 277,
+          "inputTokens": 2835,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-06",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 311.695377,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 309.64154899999994,
+          "questions": 10,
+          "stateBytes": 221,
+          "inputTokens": 2669,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-07",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 263.7638850000003,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 261.93165299999964,
+          "questions": 11,
+          "stateBytes": 251,
+          "inputTokens": 2833,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "surprise-08",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 1335.977487,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1333.3196469999984,
+          "questions": 11,
+          "stateBytes": 321,
+          "inputTokens": 2878,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "plain-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 887.1800189999994,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 885.138570000001,
+          "questions": 11,
+          "stateBytes": 305,
+          "inputTokens": 2839,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "plain-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 466.6646700000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 463.9744580000006,
+          "questions": 11,
+          "stateBytes": 219,
+          "inputTokens": 2835,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "plain-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 268.9211919999998,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 267.37562400000024,
+          "questions": 11,
+          "stateBytes": 241,
+          "inputTokens": 2836,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "plain-04",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 315.93239299999914,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 314.00507500000094,
+          "questions": 11,
+          "stateBytes": 229,
+          "inputTokens": 2831,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "nonclaim-01",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 2279.365813999999,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 2274.871269000001,
+          "questions": 10,
+          "stateBytes": 265,
+          "inputTokens": 2675,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "nonclaim-02",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 916.8735140000026,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 912.9295500000007,
+          "questions": 11,
+          "stateBytes": 261,
+          "inputTokens": 2837,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "nonclaim-03",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 403.83745199999976,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 401.6795880000027,
+          "questions": 10,
+          "stateBytes": 235,
+          "inputTokens": 2681,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "nonclaim-04",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 286.901253,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 285.2615140000016,
+          "questions": 11,
+          "stateBytes": 275,
+          "inputTokens": 2831,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 328.02847699999984,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 323.62151900000026,
+          "questions": 13,
+          "stateBytes": 363,
+          "inputTokens": 3283,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 198.04145699999935,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 194.92380100000082,
+          "questions": 12,
+          "stateBytes": 379,
+          "inputTokens": 3165,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 791.1926309999981,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 787.7879920000014,
+          "questions": 13,
+          "stateBytes": 380,
+          "inputTokens": 3302,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-04",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 239.5932320000029,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 233.78096899999946,
+          "questions": 13,
+          "stateBytes": 465,
+          "inputTokens": 3299,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-05",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 1811.2331219999978,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1808.295341000001,
+          "questions": 13,
+          "stateBytes": 383,
+          "inputTokens": 3286,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-06",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 180.01490100000228,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 177.44616400000086,
+          "questions": 13,
+          "stateBytes": 394,
+          "inputTokens": 3284,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-07",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 244.09719600000244,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 241.6735719999997,
+          "questions": 13,
+          "stateBytes": 427,
+          "inputTokens": 3289,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "context-08",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 177.85147499999948,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 173.86942700000145,
+          "questions": 13,
+          "stateBytes": 432,
+          "inputTokens": 3303,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "data-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 242.3694039999973,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 241.31093200000032,
+          "questions": 11,
+          "stateBytes": 211,
+          "inputTokens": 2826,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "data-02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "durationMs": 202.1496299999999,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 201.1974740000005,
+          "questions": 11,
+          "stateBytes": 205,
+          "inputTokens": 2833,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "data-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 313.14999799999714,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 312.37127899999905,
+          "questions": 11,
+          "stateBytes": 219,
+          "inputTokens": 2835,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "data-04",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 196.214476000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 195.24292799999967,
+          "questions": 11,
+          "stateBytes": 217,
+          "inputTokens": 2835,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "data-05",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 174.83829400000104,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 173.56959300000017,
+          "questions": 11,
+          "stateBytes": 235,
+          "inputTokens": 2839,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "data-06",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 175.53858000000037,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 174.52025800000047,
+          "questions": 11,
+          "stateBytes": 211,
+          "inputTokens": 2833,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "calc-01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 215.7232640000002,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 214.97198500000013,
+          "questions": 10,
+          "stateBytes": 213,
+          "inputTokens": 2673,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "calc-02",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 189.17403900000136,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 188.41204199999993,
+          "questions": 10,
+          "stateBytes": 179,
+          "inputTokens": 2675,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "calc-03",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 178.68556999999782,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 177.8072030000003,
+          "questions": 11,
+          "stateBytes": 205,
+          "inputTokens": 2837,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "calc-04",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 175.99827899999946,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 175.03880600000048,
+          "questions": 10,
+          "stateBytes": 177,
+          "inputTokens": 2667,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "calc-05",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 215.82037499999933,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 214.35592699999688,
+          "questions": 11,
+          "stateBytes": 233,
+          "inputTokens": 2841,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "calc-06",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 313.22717399999965,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 312.201094,
+          "questions": 10,
+          "stateBytes": 207,
+          "inputTokens": 2675,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-affair",
+      "repetition": 0,
+      "expected": "speculation",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 300.89867199999935,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 299.85543099999995,
+          "questions": 12,
+          "stateBytes": 255,
+          "inputTokens": 3003,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-ipo",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 223.13687199999913,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 221.7752330000003,
+          "questions": 12,
+          "stateBytes": 305,
+          "inputTokens": 3016,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-goldfish",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 247.7694080000001,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 246.82552100000248,
+          "questions": 12,
+          "stateBytes": 271,
+          "inputTokens": 2999,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-great-wall",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 186.43325499999992,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 185.48818000000028,
+          "questions": 12,
+          "stateBytes": 289,
+          "inputTokens": 3007,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-helsinki",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 170.03004800000053,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 168.76561200000287,
+          "questions": 12,
+          "stateBytes": 267,
+          "inputTokens": 3017,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-eiffel-context",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 1370.2751529999987,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1368.873294000001,
+          "questions": 13,
+          "stateBytes": 264,
+          "inputTokens": 3243,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-nasa-moon",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 214.92953900000066,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 213.276339,
+          "questions": 25,
+          "stateBytes": 356,
+          "inputTokens": 5885,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-opinion",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 188.29811899999913,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 187.24302499999976,
+          "questions": 12,
+          "stateBytes": 265,
+          "inputTokens": 3005,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-question",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 222.4689019999969,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 221.4570789999998,
+          "questions": 12,
+          "stateBytes": 305,
+          "inputTokens": 3025,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-prediction",
+      "repetition": 0,
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_a_claim",
+      "durationMs": 737.2529949999989,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 735.4877459999989,
+          "questions": 11,
+          "stateBytes": 291,
+          "inputTokens": 2856,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "skip",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-misheard",
+      "repetition": 0,
+      "expected": "needs_confirmation",
+      "predicted": "needs_confirmation",
+      "reasonCode": "possibly_misheard",
+      "durationMs": 207.53561700000137,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 205.53006800000003,
+          "questions": 27,
+          "stateBytes": 478,
+          "inputTokens": 6341,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "needs_confirmation",
+        "claims": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-attributed-recent",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 192.0670480000008,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 190.6381360000014,
+          "questions": 12,
+          "stateBytes": 319,
+          "inputTokens": 3023,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-everest",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 182.5842139999986,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 181.35950599999705,
+          "questions": 12,
+          "stateBytes": 305,
+          "inputTokens": 3005,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-sydney-capital",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 171.30202799999824,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 170.26724100000138,
+          "questions": 12,
+          "stateBytes": 267,
+          "inputTokens": 3016,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "admission",
+      "id": "dev-hearsay-bulls",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "check",
+      "reasonCode": "eligible_public_claim",
+      "durationMs": 241.2432660000013,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 239.10722499999974,
+          "questions": 21,
+          "stateBytes": 413,
+          "inputTokens": 5208,
+          "outcome": "success"
+        }
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1
+      }
+    }
+  ]
+}
