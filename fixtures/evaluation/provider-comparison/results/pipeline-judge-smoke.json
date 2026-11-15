@@ -1,0 +1,2129 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-14T19:45:35.854Z",
+  "updatedAt": "2026-11-14T19:45:53.235Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.2",
+  "cohortSHA256": "a2a756ffb1302deb04a6160711b4d2b075210eaf0313ce912837d9492a1bbaff",
+  "evidenceSHA256": "8be13e18b981dcf905689a1eea5788c6479b5ff27b8b2f72583cd5e1c8f29d02",
+  "options": {
+    "providers": [
+      "jev",
+      "laya"
+    ],
+    "modes": [
+      "pipeline",
+      "judge"
+    ],
+    "limit": 2,
+    "repetitions": 1,
+    "deadlineMs": 10000,
+    "output": "fixtures/evaluation/provider-comparison/results/pipeline-judge-smoke.json"
+  },
+  "summary": [
+    {
+      "group": "jev/pipeline",
+      "n": 2,
+      "correct": 2,
+      "sensitivityCorrect": 2,
+      "unambiguous": {
+        "n": 2,
+        "correct": 2
+      },
+      "errors": 0,
+      "abstentions": 0,
+      "skipped": 0,
+      "definitive": 2,
+      "definitiveCorrect": 2,
+      "admission": {
+        "truePositive": 2,
+        "falsePositive": 0,
+        "expectedPositive": 2,
+        "precision": 1,
+        "recall": 1
+      },
+      "durationMs": {
+        "p50": 1421.9139609999997,
+        "p95": 1534.7533480000002
+      },
+      "askMs": {
+        "n": 4,
+        "p50": 460.9569630000001,
+        "p95": 1135.958776
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 32969,
+      "errorCodes": {}
+    },
+    {
+      "group": "laya/pipeline",
+      "n": 2,
+      "correct": 0,
+      "sensitivityCorrect": 0,
+      "unambiguous": {
+        "n": 2,
+        "correct": 0
+      },
+      "errors": 0,
+      "abstentions": 0,
+      "skipped": 0,
+      "definitive": 0,
+      "definitiveCorrect": 0,
+      "admission": {
+        "truePositive": 2,
+        "falsePositive": 0,
+        "expectedPositive": 2,
+        "precision": 1,
+        "recall": 1
+      },
+      "durationMs": {
+        "p50": 417.58743799999957,
+        "p95": 451.4366049999999
+      },
+      "askMs": {
+        "n": 2,
+        "p50": 414.55084499999975,
+        "p95": 449.1363329999999
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 5413,
+      "errorCodes": {}
+    },
+    {
+      "group": "jev/judge",
+      "n": 2,
+      "correct": 2,
+      "sensitivityCorrect": 2,
+      "unambiguous": {
+        "n": 2,
+        "correct": 2
+      },
+      "errors": 0,
+      "abstentions": 0,
+      "skipped": 0,
+      "definitive": 2,
+      "definitiveCorrect": 2,
+      "admission": {
+        "truePositive": 0,
+        "falsePositive": 0,
+        "expectedPositive": 2,
+        "precision": null,
+        "recall": 0
+      },
+      "durationMs": {
+        "p50": 277.78123400000004,
+        "p95": 868.0065199999999
+      },
+      "askMs": {
+        "n": 2,
+        "p50": 276.16356500000074,
+        "p95": 865.8474820000001
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 27472,
+      "errorCodes": {}
+    },
+    {
+      "group": "laya/judge",
+      "n": 2,
+      "correct": 0,
+      "sensitivityCorrect": 0,
+      "unambiguous": {
+        "n": 2,
+        "correct": 0
+      },
+      "errors": 1,
+      "abstentions": 1,
+      "skipped": 0,
+      "definitive": 0,
+      "definitiveCorrect": 0,
+      "admission": {
+        "truePositive": 0,
+        "falsePositive": 0,
+        "expectedPositive": 2,
+        "precision": null,
+        "recall": 0
+      },
+      "durationMs": {
+        "p50": 2360.1208529999994,
+        "p95": 10015.218758
+      },
+      "askMs": {
+        "n": 2,
+        "p50": 2358.501964,
+        "p95": 10014.492893000002
+      },
+      "truncatedAsks": 1,
+      "inputTokens": 17408,
+      "errorCodes": {
+        "timeout": 1
+      }
+    }
+  ],
+  "observations": [
+    {
+      "provider": "jev",
+      "mode": "pipeline",
+      "id": "P01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "durationMs": 1421.9139609999997,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 911.5983759999999,
+          "questions": 10,
+          "stateBytes": 241,
+          "inputTokens": 2671,
+          "outcome": "success",
+          "knownCostUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 1,
+                "opinion": 0,
+                "prediction": 0,
+                "question": 0,
+                "instruction": 0,
+                "other": 0
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0,
+                "named_fact": 0.1,
+                "weather": 0,
+                "calculation": 0,
+                "general": 0.9
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 1,
+                "named_speaker": 0,
+                "named_outlet": 0,
+                "hearsay": 0
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.01
+            },
+            "span_0_private_life": {
+              "noul": 0.01
+            },
+            "span_0_rumour": {
+              "noul": 0.02
+            },
+            "span_0_future": {
+              "noul": 0.01
+            },
+            "span_0_self_contained": {
+              "noul": 0.97
+            },
+            "span_0_practical": {
+              "noul": 0.14
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "stage": "judgment",
+          "durationMs": 460.9569630000001,
+          "questions": 34,
+          "stateBytes": 11010,
+          "inputTokens": 12423,
+          "outcome": "success",
+          "knownCostUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "supported",
+              "probabilities": {
+                "supported": 1,
+                "contradicted": 0,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e1",
+              "probabilities": {
+                "none": 0.08,
+                "e0": 0.28,
+                "e1": 0.5,
+                "e2": 0.03,
+                "e3": 0.03,
+                "e4": 0.08
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.89,
+                "omitted_condition": 0.1,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.99
+            },
+            "e0_scope": {
+              "noul": 0.94
+            },
+            "e0_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0,
+                "substantive_secondary": 0.05,
+                "ordinary_reference": 0.9,
+                "bare_assertion": 0.04,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.98
+            },
+            "e1_scope": {
+              "noul": 0.94
+            },
+            "e1_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.02,
+                "attributable_research": 0.01,
+                "substantive_secondary": 0.12,
+                "ordinary_reference": 0.83,
+                "bare_assertion": 0.02,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.98
+            },
+            "e2_scope": {
+              "noul": 0.94
+            },
+            "e2_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0,
+                "substantive_secondary": 0.08,
+                "ordinary_reference": 0.86,
+                "bare_assertion": 0.05,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e3_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.97
+            },
+            "e3_scope": {
+              "noul": 0.93
+            },
+            "e3_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.1,
+                "ordinary_reference": 0.4,
+                "bare_assertion": 0.46,
+                "attributed": 0.04,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e4_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.97
+            },
+            "e4_scope": {
+              "noul": 0.93
+            },
+            "e4_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.02,
+                "attributable_research": 0.01,
+                "substantive_secondary": 0.1,
+                "ordinary_reference": 0.84,
+                "bare_assertion": 0.02,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "common_origin",
+              "probabilities": {
+                "common_origin": 0.91,
+                "distinct_origins": 0.02,
+                "unclear": 0.07
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.27,
+                "unclear": 0.58
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.23,
+                "unclear": 0.62
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.11,
+                "distinct_origins": 0.31,
+                "unclear": 0.58
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.26,
+                "distinct_origins": 0.22,
+                "unclear": 0.52
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.2,
+                "distinct_origins": 0.23,
+                "unclear": 0.57
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.35,
+                "unclear": 0.5
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.28,
+                "unclear": 0.7
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.21,
+                "unclear": 0.75
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.26,
+                "unclear": 0.72
+              }
+            }
+          },
+          "verdict": "supported",
+          "verdictProbability": 1
+        }
+      ],
+      "events": [
+        "claim.detected",
+        "claim.checking",
+        "claim.sources",
+        "claim.result"
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1,
+        "checkedTexts": [
+          "Venus is the hottest planet in the solar system."
+        ]
+      },
+      "stageMs": {
+        "admission": 946.1462989999999,
+        "retrieval": 0.1676689999997052,
+        "judgment": 462.2250589999999
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "pipeline",
+      "id": "P01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "speculation",
+      "reasonCode": "private_life_not_checked",
+      "durationMs": 417.58743799999957,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 414.55084499999975,
+          "questions": 10,
+          "stateBytes": 241,
+          "inputTokens": 2590,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "serverInferenceMs": 408.19,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.604,
+                "opinion": 0.0145,
+                "prediction": 0.2789,
+                "question": 0.0343,
+                "instruction": 0.0202,
+                "other": 0.0481
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.1132,
+                "named_fact": 0.1215,
+                "weather": 0.3761,
+                "calculation": 0.2135,
+                "general": 0.1757
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2942,
+                "named_speaker": 0.2771,
+                "named_outlet": 0.2995,
+                "hearsay": 0.1292
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1832
+            },
+            "span_0_private_life": {
+              "noul": 0.6597
+            },
+            "span_0_rumour": {
+              "noul": 0.9099
+            },
+            "span_0_future": {
+              "noul": 0.0987
+            },
+            "span_0_self_contained": {
+              "noul": 0.8885
+            },
+            "span_0_practical": {
+              "noul": 0.0004
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.725,
+                "multiple_propositions": 0.1296,
+                "unclear": 0.1454
+              }
+            }
+          }
+        }
+      ],
+      "events": [
+        "claim.detected",
+        "claim.checking",
+        "claim.result"
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1,
+        "checkedTexts": [
+          "Venus is the hottest planet in the solar system."
+        ]
+      },
+      "stageMs": {
+        "admission": 416.82412999999997,
+        "retrieval": 0,
+        "judgment": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "pipeline",
+      "id": "P02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "durationMs": 1534.7533480000002,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 1135.958776,
+          "questions": 11,
+          "stateBytes": 245,
+          "inputTokens": 2826,
+          "outcome": "success",
+          "knownCostUSD": null,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 1,
+                "opinion": 0,
+                "prediction": 0,
+                "question": 0,
+                "instruction": 0,
+                "other": 0
+              }
+            },
+            "span_0_route": {
+              "choice": "general",
+              "probabilities": {
+                "recent_event": 0,
+                "named_fact": 0.07,
+                "weather": 0,
+                "calculation": 0,
+                "general": 0.93
+              }
+            },
+            "span_0_attribution": {
+              "choice": "none",
+              "probabilities": {
+                "none": 1,
+                "named_speaker": 0,
+                "named_outlet": 0,
+                "hearsay": 0
+              }
+            },
+            "span_0_source": {
+              "choice": "none",
+              "probabilities": {
+                "1": 0.01,
+                "none": 0.99
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.01
+            },
+            "span_0_private_life": {
+              "noul": 0.01
+            },
+            "span_0_rumour": {
+              "noul": 0.03
+            },
+            "span_0_future": {
+              "noul": 0.02
+            },
+            "span_0_self_contained": {
+              "noul": 0.97
+            },
+            "span_0_practical": {
+              "noul": 0.24
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 1,
+                "multiple_propositions": 0,
+                "unclear": 0
+              }
+            }
+          }
+        },
+        {
+          "stage": "judgment",
+          "durationMs": 392.981671,
+          "questions": 43,
+          "stateBytes": 12671,
+          "inputTokens": 15049,
+          "outcome": "success",
+          "knownCostUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 1,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.44,
+                "e1": 0.26,
+                "e2": 0.09,
+                "e3": 0.01,
+                "e4": 0.09,
+                "e5": 0.11
+              }
+            },
+            "misleading_reason": {
+              "choice": "exaggeration",
+              "probabilities": {
+                "none": 0.22,
+                "omitted_condition": 0.12,
+                "outdated_fact": 0,
+                "exaggeration": 0.66
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 1,
+                "health_safety": 0,
+                "disputed": 0,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.99
+            },
+            "e0_scope": {
+              "noul": 0.96
+            },
+            "e0_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0,
+                "substantive_secondary": 0.04,
+                "ordinary_reference": 0.94,
+                "bare_assertion": 0.01,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.99
+            },
+            "e1_scope": {
+              "noul": 0.96
+            },
+            "e1_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.02,
+                "attributable_research": 0.01,
+                "substantive_secondary": 0.07,
+                "ordinary_reference": 0.9,
+                "bare_assertion": 0,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.99
+            },
+            "e2_scope": {
+              "noul": 0.97
+            },
+            "e2_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.07,
+                "ordinary_reference": 0.55,
+                "bare_assertion": 0.33,
+                "attributed": 0.04,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e3_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.98
+            },
+            "e3_scope": {
+              "noul": 0.96
+            },
+            "e3_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.04,
+                "ordinary_reference": 0.94,
+                "bare_assertion": 0.02,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e4_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.98
+            },
+            "e4_scope": {
+              "noul": 0.96
+            },
+            "e4_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0.02,
+                "substantive_secondary": 0.12,
+                "ordinary_reference": 0.82,
+                "bare_assertion": 0.02,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e5_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e5_relevant": {
+              "noul": 0.98
+            },
+            "e5_scope": {
+              "noul": 0.95
+            },
+            "e5_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.63,
+                "attributable_research": 0.17,
+                "substantive_secondary": 0.12,
+                "ordinary_reference": 0.08,
+                "bare_assertion": 0,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.23,
+                "distinct_origins": 0.19,
+                "unclear": 0.58
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.18,
+                "unclear": 0.81
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.3,
+                "distinct_origins": 0.14,
+                "unclear": 0.56
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.2,
+                "distinct_origins": 0.29,
+                "unclear": 0.51
+              }
+            },
+            "e0_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.62,
+                "unclear": 0.36
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.13,
+                "unclear": 0.86
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.18,
+                "distinct_origins": 0.17,
+                "unclear": 0.65
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.09,
+                "distinct_origins": 0.38,
+                "unclear": 0.53
+              }
+            },
+            "e1_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.64,
+                "unclear": 0.33
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.12,
+                "unclear": 0.87
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.13,
+                "unclear": 0.86
+              }
+            },
+            "e2_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.27,
+                "unclear": 0.73
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.11,
+                "distinct_origins": 0.35,
+                "unclear": 0.54
+              }
+            },
+            "e3_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.16,
+                "distinct_origins": 0.5,
+                "unclear": 0.34
+              }
+            },
+            "e4_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.12,
+                "distinct_origins": 0.58,
+                "unclear": 0.3
+              }
+            }
+          },
+          "verdict": "contradicted",
+          "verdictProbability": 1
+        }
+      ],
+      "events": [
+        "claim.detected",
+        "claim.checking",
+        "claim.sources",
+        "claim.result"
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1,
+        "checkedTexts": [
+          "Mercury is the hottest planet in the solar system."
+        ]
+      },
+      "stageMs": {
+        "admission": 1137.7720379999996,
+        "retrieval": 0.12040699999988647,
+        "judgment": 393.6036290000002
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "pipeline",
+      "id": "P02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "speculation",
+      "reasonCode": "private_life_not_checked",
+      "durationMs": 451.4366049999999,
+      "asks": [
+        {
+          "stage": "admission",
+          "durationMs": 449.1363329999999,
+          "questions": 11,
+          "stateBytes": 245,
+          "inputTokens": 2823,
+          "outcome": "success",
+          "truncated": false,
+          "stateTokensDropped": 0,
+          "truncatedQuestions": 0,
+          "serverInferenceMs": 446.47,
+          "answers": {
+            "span_0_kind": {
+              "choice": "claim",
+              "probabilities": {
+                "claim": 0.6175,
+                "opinion": 0.02,
+                "prediction": 0.2374,
+                "question": 0.0548,
+                "instruction": 0.0253,
+                "other": 0.0451
+              }
+            },
+            "span_0_route": {
+              "choice": "weather",
+              "probabilities": {
+                "recent_event": 0.0873,
+                "named_fact": 0.1002,
+                "weather": 0.478,
+                "calculation": 0.1548,
+                "general": 0.1796
+              }
+            },
+            "span_0_attribution": {
+              "choice": "named_outlet",
+              "probabilities": {
+                "none": 0.2856,
+                "named_speaker": 0.2787,
+                "named_outlet": 0.3003,
+                "hearsay": 0.1354
+              }
+            },
+            "span_0_source": {
+              "choice": "1",
+              "probabilities": {
+                "1": 0.9448,
+                "none": 0.0552
+              }
+            },
+            "span_0_private_data": {
+              "noul": 0.1978
+            },
+            "span_0_private_life": {
+              "noul": 0.5197
+            },
+            "span_0_rumour": {
+              "noul": 0.8437
+            },
+            "span_0_future": {
+              "noul": 0.0884
+            },
+            "span_0_self_contained": {
+              "noul": 0.8572
+            },
+            "span_0_practical": {
+              "noul": 0.003
+            },
+            "span_0_claim_structure": {
+              "choice": "one_coherent",
+              "probabilities": {
+                "one_coherent": 0.7481,
+                "multiple_propositions": 0.129,
+                "unclear": 0.1229
+              }
+            }
+          }
+        }
+      ],
+      "events": [
+        "claim.detected",
+        "claim.checking",
+        "claim.result"
+      ],
+      "admission": {
+        "action": "check",
+        "claims": 1,
+        "checkedTexts": [
+          "Mercury is the hottest planet in the solar system."
+        ]
+      },
+      "stageMs": {
+        "admission": 450.9620609999997,
+        "retrieval": 0,
+        "judgment": 0
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "judge",
+      "id": "P01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "durationMs": 868.0065199999999,
+      "asks": [
+        {
+          "stage": "judgment",
+          "durationMs": 865.8474820000001,
+          "questions": 34,
+          "stateBytes": 11010,
+          "inputTokens": 12423,
+          "outcome": "success",
+          "knownCostUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "supported",
+              "probabilities": {
+                "supported": 1,
+                "contradicted": 0,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e1",
+              "probabilities": {
+                "none": 0.13,
+                "e0": 0.26,
+                "e1": 0.43,
+                "e2": 0.03,
+                "e3": 0.03,
+                "e4": 0.12
+              }
+            },
+            "misleading_reason": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.9,
+                "omitted_condition": 0.09,
+                "outdated_fact": 0,
+                "exaggeration": 0.01
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.99
+            },
+            "e0_scope": {
+              "noul": 0.94
+            },
+            "e0_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0,
+                "substantive_secondary": 0.04,
+                "ordinary_reference": 0.92,
+                "bare_assertion": 0.03,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.98
+            },
+            "e1_scope": {
+              "noul": 0.94
+            },
+            "e1_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.02,
+                "attributable_research": 0,
+                "substantive_secondary": 0.11,
+                "ordinary_reference": 0.86,
+                "bare_assertion": 0.01,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.99
+            },
+            "e2_scope": {
+              "noul": 0.95
+            },
+            "e2_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0,
+                "substantive_secondary": 0.08,
+                "ordinary_reference": 0.86,
+                "bare_assertion": 0.05,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e3_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.97
+            },
+            "e3_scope": {
+              "noul": 0.94
+            },
+            "e3_content_basis": {
+              "choice": "bare_assertion",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.11,
+                "ordinary_reference": 0.32,
+                "bare_assertion": 0.5,
+                "attributed": 0.06,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e4_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 1,
+                "contradicts": 0,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.98
+            },
+            "e4_scope": {
+              "noul": 0.93
+            },
+            "e4_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.02,
+                "attributable_research": 0.01,
+                "substantive_secondary": 0.1,
+                "ordinary_reference": 0.84,
+                "bare_assertion": 0.02,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "common_origin",
+              "probabilities": {
+                "common_origin": 0.94,
+                "distinct_origins": 0.01,
+                "unclear": 0.05
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.21,
+                "distinct_origins": 0.28,
+                "unclear": 0.51
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.14,
+                "distinct_origins": 0.23,
+                "unclear": 0.63
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.1,
+                "distinct_origins": 0.32,
+                "unclear": 0.58
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.22,
+                "distinct_origins": 0.28,
+                "unclear": 0.5
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.23,
+                "distinct_origins": 0.22,
+                "unclear": 0.55
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.18,
+                "distinct_origins": 0.33,
+                "unclear": 0.49
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.24,
+                "unclear": 0.72
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.04,
+                "distinct_origins": 0.27,
+                "unclear": 0.69
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.2,
+                "unclear": 0.77
+              }
+            }
+          },
+          "verdict": "supported",
+          "verdictProbability": 1
+        }
+      ],
+      "evidenceCount": 5,
+      "judgment": {
+        "modelLabel": "supported",
+        "ruleLabel": "supported",
+        "selected": [
+          "ev-46f616d3adef209f6710",
+          "ev-68996b027d20a8414a2f",
+          "ev-7643ba4f35e73a35f282",
+          "ev-8628922f4826259e72df",
+          "ev-204374ad257d656295c5"
+        ]
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "judge",
+      "id": "P01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "durationMs": 2360.1208529999994,
+      "asks": [
+        {
+          "stage": "judgment",
+          "durationMs": 2358.501964,
+          "questions": 34,
+          "stateBytes": 11010,
+          "inputTokens": 17408,
+          "outcome": "success",
+          "truncated": true,
+          "stateTokensDropped": 2527,
+          "truncatedQuestions": 34,
+          "serverInferenceMs": 2354.47,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0.1117,
+                "contradicted": 0.348,
+                "misleading": 0.3059,
+                "insufficient_evidence": 0.2344
+              }
+            },
+            "selected_evidence": {
+              "choice": "none",
+              "probabilities": {
+                "none": 0.5621,
+                "e0": 0.2362,
+                "e1": 0.0616,
+                "e2": 0.0767,
+                "e3": 0.0384,
+                "e4": 0.0251
+              }
+            },
+            "misleading_reason": {
+              "choice": "outdated_fact",
+              "probabilities": {
+                "none": 0.2374,
+                "omitted_condition": 0.1672,
+                "outdated_fact": 0.3683,
+                "exaggeration": 0.2271
+              }
+            },
+            "claim_risk": {
+              "choice": "unknown",
+              "probabilities": {
+                "ordinary": 0.2435,
+                "health_safety": 0.1291,
+                "disputed": 0.3043,
+                "unknown": 0.3231
+              }
+            },
+            "e0_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.4232,
+                "contradicts": 0.3611,
+                "unrelated": 0.2158
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.4113
+            },
+            "e0_scope": {
+              "noul": 0.469
+            },
+            "e0_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.0736,
+                "attributable_research": 0.1161,
+                "substantive_secondary": 0.2403,
+                "ordinary_reference": 0.0931,
+                "bare_assertion": 0.1828,
+                "attributed": 0.065,
+                "promotional": 0.0942,
+                "unclear": 0.1349
+              }
+            },
+            "e1_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.4292,
+                "contradicts": 0.3703,
+                "unrelated": 0.2005
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.3692
+            },
+            "e1_scope": {
+              "noul": 0.4104
+            },
+            "e1_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.0736,
+                "attributable_research": 0.1161,
+                "substantive_secondary": 0.2403,
+                "ordinary_reference": 0.0931,
+                "bare_assertion": 0.1828,
+                "attributed": 0.065,
+                "promotional": 0.0942,
+                "unclear": 0.1349
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0.3623,
+                "contradicts": 0.3971,
+                "unrelated": 0.2406
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.3919
+            },
+            "e2_scope": {
+              "noul": 0.4388
+            },
+            "e2_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.0736,
+                "attributable_research": 0.1161,
+                "substantive_secondary": 0.2403,
+                "ordinary_reference": 0.0931,
+                "bare_assertion": 0.1828,
+                "attributed": 0.065,
+                "promotional": 0.0942,
+                "unclear": 0.1349
+              }
+            },
+            "e3_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.406,
+                "contradicts": 0.391,
+                "unrelated": 0.2029
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.4047
+            },
+            "e3_scope": {
+              "noul": 0.4301
+            },
+            "e3_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.0736,
+                "attributable_research": 0.1161,
+                "substantive_secondary": 0.2403,
+                "ordinary_reference": 0.0931,
+                "bare_assertion": 0.1828,
+                "attributed": 0.065,
+                "promotional": 0.0942,
+                "unclear": 0.1349
+              }
+            },
+            "e4_stance": {
+              "choice": "supports",
+              "probabilities": {
+                "supports": 0.4177,
+                "contradicts": 0.3652,
+                "unrelated": 0.217
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.4715
+            },
+            "e4_scope": {
+              "noul": 0.4519
+            },
+            "e4_content_basis": {
+              "choice": "substantive_secondary",
+              "probabilities": {
+                "original_record": 0.0736,
+                "attributable_research": 0.1161,
+                "substantive_secondary": 0.2403,
+                "ordinary_reference": 0.0931,
+                "bare_assertion": 0.1828,
+                "attributed": 0.065,
+                "promotional": 0.0942,
+                "unclear": 0.1349
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3601,
+                "distinct_origins": 0.3756,
+                "unclear": 0.2642
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.343,
+                "distinct_origins": 0.3816,
+                "unclear": 0.2754
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3605,
+                "distinct_origins": 0.3744,
+                "unclear": 0.2651
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3511,
+                "distinct_origins": 0.3744,
+                "unclear": 0.2744
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3581,
+                "distinct_origins": 0.3861,
+                "unclear": 0.2558
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3794,
+                "distinct_origins": 0.3802,
+                "unclear": 0.2404
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3652,
+                "distinct_origins": 0.3767,
+                "unclear": 0.2582
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3635,
+                "distinct_origins": 0.3851,
+                "unclear": 0.2515
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3643,
+                "distinct_origins": 0.3749,
+                "unclear": 0.2608
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.3721,
+                "distinct_origins": 0.3737,
+                "unclear": 0.2542
+              }
+            }
+          },
+          "verdict": "contradicted",
+          "verdictProbability": 0.348
+        }
+      ],
+      "evidenceCount": 5,
+      "judgment": {
+        "modelLabel": "contradicted",
+        "ruleLabel": "insufficient_evidence",
+        "selected": []
+      }
+    },
+    {
+      "provider": "jev",
+      "mode": "judge",
+      "id": "P02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "durationMs": 277.78123400000004,
+      "asks": [
+        {
+          "stage": "judgment",
+          "durationMs": 276.16356500000074,
+          "questions": 43,
+          "stateBytes": 12671,
+          "inputTokens": 15049,
+          "outcome": "success",
+          "knownCostUSD": null,
+          "answers": {
+            "verdict": {
+              "choice": "contradicted",
+              "probabilities": {
+                "supported": 0,
+                "contradicted": 1,
+                "misleading": 0,
+                "insufficient_evidence": 0
+              }
+            },
+            "selected_evidence": {
+              "choice": "e0",
+              "probabilities": {
+                "none": 0,
+                "e0": 0.51,
+                "e1": 0.17,
+                "e2": 0.16,
+                "e3": 0.01,
+                "e4": 0.07,
+                "e5": 0.08
+              }
+            },
+            "misleading_reason": {
+              "choice": "exaggeration",
+              "probabilities": {
+                "none": 0.22,
+                "omitted_condition": 0.14,
+                "outdated_fact": 0,
+                "exaggeration": 0.64
+              }
+            },
+            "claim_risk": {
+              "choice": "ordinary",
+              "probabilities": {
+                "ordinary": 0.99,
+                "health_safety": 0,
+                "disputed": 0.01,
+                "unknown": 0
+              }
+            },
+            "e0_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e0_relevant": {
+              "noul": 0.98
+            },
+            "e0_scope": {
+              "noul": 0.96
+            },
+            "e0_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0,
+                "substantive_secondary": 0.03,
+                "ordinary_reference": 0.95,
+                "bare_assertion": 0.01,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e1_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e1_relevant": {
+              "noul": 0.99
+            },
+            "e1_scope": {
+              "noul": 0.96
+            },
+            "e1_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0.01,
+                "substantive_secondary": 0.07,
+                "ordinary_reference": 0.91,
+                "bare_assertion": 0,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e2_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e2_relevant": {
+              "noul": 0.98
+            },
+            "e2_scope": {
+              "noul": 0.97
+            },
+            "e2_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.06,
+                "ordinary_reference": 0.59,
+                "bare_assertion": 0.31,
+                "attributed": 0.03,
+                "promotional": 0,
+                "unclear": 0.01
+              }
+            },
+            "e3_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e3_relevant": {
+              "noul": 0.98
+            },
+            "e3_scope": {
+              "noul": 0.95
+            },
+            "e3_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0,
+                "attributable_research": 0,
+                "substantive_secondary": 0.04,
+                "ordinary_reference": 0.94,
+                "bare_assertion": 0.02,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e4_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e4_relevant": {
+              "noul": 0.98
+            },
+            "e4_scope": {
+              "noul": 0.95
+            },
+            "e4_content_basis": {
+              "choice": "ordinary_reference",
+              "probabilities": {
+                "original_record": 0.01,
+                "attributable_research": 0.03,
+                "substantive_secondary": 0.13,
+                "ordinary_reference": 0.81,
+                "bare_assertion": 0.01,
+                "attributed": 0.01,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e5_stance": {
+              "choice": "contradicts",
+              "probabilities": {
+                "supports": 0,
+                "contradicts": 1,
+                "unrelated": 0
+              }
+            },
+            "e5_relevant": {
+              "noul": 0.98
+            },
+            "e5_scope": {
+              "noul": 0.94
+            },
+            "e5_content_basis": {
+              "choice": "original_record",
+              "probabilities": {
+                "original_record": 0.62,
+                "attributable_research": 0.19,
+                "substantive_secondary": 0.11,
+                "ordinary_reference": 0.08,
+                "bare_assertion": 0,
+                "attributed": 0,
+                "promotional": 0,
+                "unclear": 0
+              }
+            },
+            "e0_e1_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.27,
+                "distinct_origins": 0.12,
+                "unclear": 0.61
+              }
+            },
+            "e0_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.17,
+                "unclear": 0.83
+              }
+            },
+            "e0_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.31,
+                "distinct_origins": 0.12,
+                "unclear": 0.57
+              }
+            },
+            "e0_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.13,
+                "distinct_origins": 0.32,
+                "unclear": 0.55
+              }
+            },
+            "e0_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.02,
+                "distinct_origins": 0.55,
+                "unclear": 0.43
+              }
+            },
+            "e1_e2_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.21,
+                "unclear": 0.78
+              }
+            },
+            "e1_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.2,
+                "unclear": 0.65
+              }
+            },
+            "e1_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.09,
+                "distinct_origins": 0.41,
+                "unclear": 0.5
+              }
+            },
+            "e1_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.03,
+                "distinct_origins": 0.68,
+                "unclear": 0.29
+              }
+            },
+            "e2_e3_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.1,
+                "unclear": 0.89
+              }
+            },
+            "e2_e4_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.01,
+                "distinct_origins": 0.13,
+                "unclear": 0.86
+              }
+            },
+            "e2_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0,
+                "distinct_origins": 0.21,
+                "unclear": 0.79
+              }
+            },
+            "e3_e4_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.43,
+                "unclear": 0.42
+              }
+            },
+            "e3_e5_origin": {
+              "choice": "unclear",
+              "probabilities": {
+                "common_origin": 0.13,
+                "distinct_origins": 0.42,
+                "unclear": 0.45
+              }
+            },
+            "e4_e5_origin": {
+              "choice": "distinct_origins",
+              "probabilities": {
+                "common_origin": 0.15,
+                "distinct_origins": 0.61,
+                "unclear": 0.24
+              }
+            }
+          },
+          "verdict": "contradicted",
+          "verdictProbability": 1
+        }
+      ],
+      "evidenceCount": 6,
+      "judgment": {
+        "modelLabel": "contradicted",
+        "ruleLabel": "contradicted",
+        "selected": [
+          "ev-14ee5dbf611975636fe4",
+          "ev-68996b027d20a8414a2f",
+          "ev-9c12868ca78bfe978e1b",
+          "ev-f3a01acb13dac92e4eac",
+          "ev-77db56c2f6fd8de3f79f",
+          "ev-89a0f9c0e903a074e210"
+        ]
+      }
+    },
+    {
+      "provider": "laya",
+      "mode": "judge",
+      "id": "P02",
+      "repetition": 0,
+      "expected": "false",
+      "predicted": "error",
+      "reasonCode": "timeout",
+      "durationMs": 10015.218758,
+      "asks": [
+        {
+          "stage": "judgment",
+          "durationMs": 10014.492893000002,
+          "questions": 43,
+          "stateBytes": 12671,
+          "inputTokens": 0,
+          "outcome": "timeout"
+        }
+      ],
+      "evidenceCount": 6,
+      "error": "timeout"
+    }
+  ]
+}
