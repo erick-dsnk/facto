@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-14T19:52:51.225Z",
+  "updatedAt": "2026-11-14T19:53:01.230Z",
+  "modelVersion": "jev-latest",
+  "policyVersion": "glasses-p0.2",
+  "cohortSHA256": "a2a756ffb1302deb04a6160711b4d2b075210eaf0313ce912837d9492a1bbaff",
+  "evidenceSHA256": "8be13e18b981dcf905689a1eea5788c6479b5ff27b8b2f72583cd5e1c8f29d02",
+  "options": {
+    "providers": [
+      "laya"
+    ],
+    "modes": [
+      "judge"
+    ],
+    "limit": 2,
+    "repetitions": 1,
+    "deadlineMs": 10000,
+    "layaLimits": {
+      "maxLen": 1024,
+      "headMaxLen": 512
+    },
+    "output": "fixtures/evaluation/provider-comparison/results/context-diagnostic.json"
+  },
+  "summary": [
+    {
+      "group": "laya/judge_context_diagnostic",
+      "n": 1,
+      "correct": 0,
+      "sensitivityCorrect": 0,
+      "unambiguous": {
+        "n": 1,
+        "correct": 0
+      },
+      "errors": 1,
+      "abstentions": 0,
+      "skipped": 0,
+      "definitive": 0,
+      "definitiveCorrect": 0,
+      "admission": {
+        "truePositive": 0,
+        "falsePositive": 0,
+        "expectedPositive": 1,
+        "precision": null,
+        "recall": 0
+      },
+      "durationMs": {
+        "p50": 10003.012834,
+        "p95": 10003.012834
+      },
+      "askMs": {
+        "n": 1,
+        "p50": 10001.532620000002,
+        "p95": 10001.532620000002
+      },
+      "truncatedAsks": 0,
+      "inputTokens": 0,
+      "errorCodes": {
+        "timeout": 1
+      }
+    }
+  ],
+  "observations": [
+    {
+      "provider": "laya",
+      "mode": "judge_context_diagnostic",
+      "id": "P01",
+      "repetition": 0,
+      "expected": "true",
+      "predicted": "error",
+      "reasonCode": "timeout",
+      "durationMs": 10003.012834,
+      "asks": [
+        {
+          "stage": "judgment",
+          "durationMs": 10001.532620000002,
+          "questions": 34,
+          "stateBytes": 11010,
+          "inputTokens": 0,
+          "outcome": "timeout"
+        }
+      ],
+      "evidenceCount": 5,
+      "error": "timeout"
+    }
+  ],
+  "termination": {
+    "reason": "CUDA_out_of_memory_cpu_fallback_then_timeout_drain_failed",
+    "requestedCases": 2,
+    "completedObservations": 1,
+    "stoppedAfterFirstOOM": true,
+    "health": {
+      "status": "ok",
+      "loaded": [
+        "english"
+      ],
+      "revisions": {
+        "english": null
+      },
+      "device": "cpu",
+      "device_is_preference": false,
+      "checkpoint_devices": {
+        "english": "cpu"
+      },
+      "cpu_fallbacks": {
+        "english": {
+          "count": 1,
+          "last_reason": "CUDA out of memory. Tried to allocate 176.00 MiB. GPU 0 has a total capacity of 3.68 GiB of which 164.81 MiB is free. Process 62553 has 31.35 MiB memory in use. Including non-PyTorch memory, this process has 3.46 GiB memory in use. Of the allocated memory 3.16 GiB is allocated by PyTorch, and 211.71 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)"
+        }
+      }
+    }
+  }
+}
