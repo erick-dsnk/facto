@@ -226,7 +226,8 @@ describe('evidence-sources pipeline', () => {
     expect(t.judge).not.toHaveBeenCalled();
     expect(t.results()[0]).toMatchObject({ verdict: 'speculation', reasonCode: 'private_life_not_checked', evidence: [], selectedEvidenceIds: [],
       summary: "Speculation. Claims about someone's private life aren't checked.", subject: 'Jensen Huang', usage: { jevCalls: 1, exaSearches: 0 },
-      presentation: userInitiated ? { action: 'respond', reasonCode: 'explicit_request' } : { action: 'notify', reasonCode: 'automatic_speculation' } });
+      // Overheard, it stays silent: an alert would only repeat the gossip (PR #75 review).
+      presentation: userInitiated ? { action: 'respond', reasonCode: 'explicit_request' } : { action: 'silent', reasonCode: 'private_life_not_checked' } });
     expect(t.cache.size).toBe(0);
     everyEventValid(t.events);
   });

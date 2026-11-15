@@ -26,10 +26,15 @@ export function looksUnfinished(text: string): boolean {
   return !ENDS_SENTENCE.test(trimmed) && DANGLING.has(last);
 }
 const endsSentence = (text: string) => ENDS_SENTENCE.test(text.trim()) && !TRAILS_OFF.test(text.trim());
+/** The first word is all lowercase ("from", "is"), so it continues something. "iPhone" and "eBay" open sentences of their own. */
+function startsLowercase(text: string): boolean {
+  const first = (words(text)[0] ?? '').replace(/^\P{L}+/u, '');
+  return /^\p{Ll}/u.test(first) && !/\p{Lu}/u.test(first);
+}
 /** Opens with a lowercase letter, or with a continuation word in a sentence that is not a question ("Is visible from space."). */
 function continues(text: string): boolean {
   const first = words(text)[0] ?? '';
-  if (/^\p{Ll}/u.test(first)) return true;
+  if (startsLowercase(text)) return true;
   return CONTINUES.has(bare(first)) && !/\?["'”’)\]]*$/u.test(text.trim());
 }
 /** The sentence without fillers ("uh," "Uh..."), keeping its terminal punctuation. Empty when it was only fillers. */
@@ -56,6 +61,8 @@ export type Sentence = { requestId: string; segmentId: string; text: string; spe
  *   of this sentence that a correction cut short, so it must not alert.
  * - skip: only fillers, nothing to check.
  */
+/** A sentence or stitched claim to check. */
+export type CheckStep = { action: 'check'; requestId: string; segmentId: string; text: string; speaker: number | null; atMs: number };
 export type StitchStep =
   | { action: 'check' | 'hold'; requestId: string; segmentId: string; text: string; speaker: number | null; atMs: number; cancel?: string }
   | { action: 'skip' };
@@ -102,13 +109,34 @@ export class SentenceStitcher {
     const text = join(chain.parts.map(entry => entry.text));
     if (!text) return { action: 'skip' };
     const step = { requestId: head.requestId, segmentId: head.segmentId, text, speaker: chain.speaker, atMs: head.atMs };
-    if (this.unfinished(chain) || /^\P{L}*\p{Ll}/u.test(text)) {
+    if (this.unfinished(chain) || startsLowercase(text)) {
       const cancel = this.submitted.delete(head.requestId) ? head.requestId : undefined;
       return { action: 'hold', ...step, ...(cancel ? { cancel } : {}) };
     }
     this.submitted.add(head.requestId);
     if (this.submitted.size > MEMORY) this.submitted.delete(this.submitted.values().next().value!);
     return { action: 'check', ...step };
+  }
+
+  /**
+   * Checks, on its own, a chain that trailed off and got no continuation within the window ("The Eiffel Tower is in Berlin," and
+   * then silence), so a held claim is never lost. A headless continuation ("from the family of zebras.") and a sentence a correction
+   * cut short stay unchecked: fragments never alert. Chains past the window are forgotten either way.
+   */
+  release(nowMs: number): CheckStep[] {
+    const due: CheckStep[] = [];
+    this.chains = this.chains.filter(chain => {
+      if (nowMs - chain.parts.at(-1)!.atMs < this.windowMs) return true;
+      const head = chain.parts[0];
+      // It stands alone now: drop the trailing comma, dash or "…" it broke off on.
+      const text = join(chain.parts.map(entry => entry.text)).replace(/(?:\.\.\.|[\s,;:…\-–—])+$/u, '');
+      if (!text || this.submitted.has(head.requestId) || startsLowercase(text) || chain.parts.some(entry => entry.truncated) || !this.unfinished(chain)) return false;
+      this.submitted.add(head.requestId);
+      if (this.submitted.size > MEMORY) this.submitted.delete(this.submitted.values().next().value!);
+      due.push({ action: 'check', requestId: head.requestId, segmentId: head.segmentId, text, speaker: chain.speaker, atMs: head.atMs });
+      return false;
+    });
+    return due;
   }
 
   /** A spoken trigger or anything else that ends the conversation thread: nothing joins what came before. */
