@@ -49,7 +49,7 @@ The team reports **~0.92s median pipeline latency**. This is a pipeline measurem
 
 ## Architecture
 
-Facto separates capture, evidence gathering, model decisions and presentation. A model’s answer is an input to the system; the evidence and verdict rules determine what reaches the wearer.
+Facto separates capture, evidence gathering, model decisions and presentation. A model’s answer is an input to the system; the evidence and verdict rules determine what reaches the wearer. **The currently deployed pipeline uses Jev for both model decision gates: admission (whether a statement should be checked) and judgment (what the evidence says).** Self-hosted Laya is the planned replacement for both gates.
 
 ```mermaid
 flowchart TD
@@ -65,8 +65,8 @@ flowchart TD
     J --> V[Deterministic verdict and citation rules]
     V --> P[Presentation policy]
     P --> R[Speech / display card / result history]
-    C -. Admission model .-> L[Fine-tuned Laya, self-hosted]
-    J -. Judgment model .-> M[Jev]
+    C -. Decision provider .-> M[Jev deployed at both gates / self-hosted Laya planned]
+    J -. Decision provider .-> M
 ```
 
 ### Capture and transport
@@ -94,11 +94,11 @@ Timeouts and provider failures remain operational errors, not factual verdicts. 
 
 ## Laya and privacy
 
-**Facto's admission gate runs on Laya, an open-source model we fine-tuned and host ourselves.** It decides whether a statement is a checkable public claim, and whether it touches private data or someone's private life, before anything is searched. Jev judges admitted claims against the evidence. Captured speech can contain sensitive information, so the step that sees every statement runs on infrastructure we control instead of a hosted decision service.
+**Current deployment: Jev handles both the admission and judgment gates. Laya is not used in the deployed pipeline.** We worked on fine-tuning and self-hosting Laya, an open-source model intended to take over both roles, but we could not complete the fine-tuning needed to make it more reliable than Jev. We therefore kept both gates on Jev for this deployment.
 
-The fine-tuned model is deployed on our backend, so testers using the app go through it. On development validation it scored 534/595 (89.7%) on factual-claim classification, 585/593 (98.7%) on private-data detection and 592/593 (99.8%) on private-life detection. All privacy-positive examples in that validation were fictional. These are development numbers, not a blind test or a measure of real-world privacy safety. Only those three admission heads were supervised; the other admission heads retain inherited behavior. The [model and serving guide](docs/jev-laya-evaluation.md) records the training data, limits and historical original-checkpoint comparison from [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68). The weights are published as the [admission-v1 release](https://github.com/erick-dsnk/junction-2026/releases/tag/laya-admission-v1-20261114).
+**Future direction: move both decision gates to a fully self-hosted Laya solution once its reliability is ready.** Captured statements and conversational context can contain sensitive information. Keeping admission and judgment under our control would reduce reliance on third-party model processing and the associated privacy concerns. [PR #68](https://github.com/erick-dsnk/junction-2026/pull/68) contains the self-hosted Laya provider comparison, and [issue #69](https://github.com/erick-dsnk/junction-2026/issues/69) records provider-specific prompt work. These describe development work, not the deployed provider configuration or a completed replacement for Jev.
 
-Self-hosting changes the privacy boundary for admission. It does **not** make the whole system local: evidence queries still reach retrieval services, Jev receives admitted claims and evidence, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone; enabling remote OCR selection also sends the photo and OCR boxes to the configured vision provider. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
+Self-hosting Laya would change the privacy boundary for classification and judgment. It would **not** make the whole system local: evidence queries still reach retrieval services, the speech route can use hosted transcription, and optional diagnostics can retain captured material. Apple Vision OCR runs on the phone; enabling remote OCR selection also sends the photo and OCR boxes to the configured vision provider. See the [iOS guide](apps/ios/README.md) for explicit capture controls and diagnostic-log handling.
 
 ## Repository map
 
@@ -136,7 +136,7 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000) for the console. Fixture mode uses predefined examples; it does not verify arbitrary real-world claims.
 
-For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). To run admission on the fine-tuned Laya model, as the hosted backend does, keep `DECISION_PROVIDER=jev` and set `ADMISSION_PROVIDER=laya`, `LAYA_URL` and `LAYA_API_KEY`. Start the separate model server using the [model and serving guide](docs/jev-laya-evaluation.md); `npm run dev` starts only the API. See the [deployment guide](docs/deployment.md) for hosted configuration and [`.env.example`](.env.example) for the variable reference. Keep credentials on the server and out of commits.
+For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). For an experimental setup that runs admission on the fine-tuned Laya model, keep `DECISION_PROVIDER=jev` and set `ADMISSION_PROVIDER=laya`, `LAYA_URL` and `LAYA_API_KEY`. This is not the current deployed configuration. Start the separate model server using the [model and serving guide](docs/jev-laya-evaluation.md); `npm run dev` starts only the API. See the [deployment guide](docs/deployment.md) for hosted configuration and [`.env.example`](.env.example) for the variable reference. Keep credentials on the server and out of commits.
 
 ### Run the visual previews
 
