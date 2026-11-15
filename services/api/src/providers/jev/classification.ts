@@ -8,8 +8,12 @@ import { sourceNameCandidates, subjectCandidates } from '../../input/claims/subj
 import { type JevAnswer, type JevClient, type JevQuestion, validateAnswers } from './client.js';
 
 /** Every admission threshold in one place; tune them with the live eval, never inline. */
+// Since 15 Nov the private-life rule is off (2 is above any answer): claims about anyone's relationships, health, body, gender or schooling
+// are checked like any other. privateData only blocks clear-cut private details (a home address, bank details) at 0.8, down from 0.1,
+// which also blocked "Einstein failed math in school". Contact data (phone, email) is still never searched by its own guard.
+export const PRIVACY_RULES_OFF = 2;
 export const ADMISSION_THRESHOLDS = {
-  claim: 0.2, route: 0.4, privateData: 0.1, privateLife: 0.4, rumour: 0.5, future: 0.5, misheard: 0.5, selfContained: 0.5, preservesScope: 0.85, subjectPrivate: 0.5
+  claim: 0.2, route: 0.4, privateData: 0.8, privateLife: PRIVACY_RULES_OFF, rumour: 0.5, future: 0.5, misheard: 0.5, selfContained: 0.5, preservesScope: 0.85, subjectPrivate: 0.5
 } as const;
 
 // What a candidate is, ported from the reference app's SelectionKind with the future-claim riders. Tuned wording:

@@ -238,14 +238,15 @@ describe('admission decisions', () => {
       expect(await classify(jev(() => ({ kind })), input(text, true))).toMatchObject({ action: 'skip', reasonCode: 'not_a_claim', claims: [], kind });
     });
 
-  it('A3: admits a private-life allegation as one claim that is never searched, whatever private_data says', async () => {
+  // 15 Nov: the private-life rule is off. "Hillary Clinton is a man", "Napoleon was extremely short" were silenced live.
+  it('A3: checks a private-life allegation like any other claim; only clear-cut private data still skips it', async () => {
     const text = "Jensen Huang's fourth affair.";
-    const result = await classify(jev(() => ({ kind: { claim: 0.3, other: 0.6 }, privateLife: 0.9, private: 0.9 })), input(text));
+    const result = await classify(jev(() => ({ kind: { claim: 0.3, other: 0.6 }, privateLife: 0.9, private: 0.5 })), input(text));
     expect(result.action).toBe('check');
     expect(result.claims).toHaveLength(1);
-    expect(result.claims[0]).toMatchObject({ checkedText: text, privateLife: true });
-    const below = await classify(jev(() => ({ kind: { claim: 0.3, other: 0.6 }, privateLife: 0.39, private: 0.9 })), input(text, true));
-    expect(below).toMatchObject({ action: 'skip', reasonCode: 'private_or_personal', kind: 'other' });
+    expect(result.claims[0]).toMatchObject({ checkedText: text, privateLife: false });
+    const privateData = await classify(jev(() => ({ kind: { claim: 0.3, other: 0.6 }, privateLife: 0.9, private: 0.9 })), input(text, true));
+    expect(privateData).toMatchObject({ action: 'skip', reasonCode: 'private_or_personal', kind: 'other' });
   });
 
   it.each([{}, { structure: 'multiple_propositions' as const }, { private: 0, privateLife: 0.9 }])('A4: never admits a span holding a phone number, whatever Jev says (%o)', async script => {
@@ -282,10 +283,10 @@ describe('admission decisions', () => {
     expect((await neighbour(0.9)).claims).toMatchObject([{ subject: null, subjectMissing: true }]);
     expect((await neighbour(null)).claims).toMatchObject([{ subject: null, subjectMissing: true }]);
     expect((await neighbour(0.1)).claims).toMatchObject([{ subject: 'Dave Jones', subjectMissing: false }]);
-    // The first sentence is a private-life allegation: its name never travels with the second sentence to a search.
-    const text = 'Dave Jones has cancer. He moved to Berlin.';
-    const client = jev((candidate, id) => id === 'span_0' ? { structure: 'multiple_propositions', privateLife: 0.9 }
-      : candidate.startsWith('Dave') ? { privateLife: 0.9 } : { subject: 'Dave Jones', self: 0.2 });
+    // The first sentence discloses private data: its name never travels with the second sentence to a search.
+    const text = 'Dave Jones lives at 17 Elm Street. He moved to Berlin.';
+    const client = jev((candidate, id) => id === 'span_0' ? { structure: 'multiple_propositions', private: 0.9 }
+      : candidate.startsWith('Dave') ? { private: 0.9 } : { subject: 'Dave Jones', self: 0.2 });
     const result = await classify(client, input(text, true));
     expect(result.claims.find(claim => claim.checkedText === 'He moved to Berlin.')).toMatchObject({ subject: null, subjectMissing: true });
   });
@@ -482,7 +483,7 @@ describe('admission decisions', () => {
 });
 
 describe('privacy vetoes', () => {
-  it.each([[.099, 'check'], [.10, 'skip']] as const)('keeps strict privacy admission at %s for a named public-work proposition', async (privacy, action) => {
+  it.each([[.799, 'check'], [.8, 'skip']] as const)('keeps privacy admission at %s for a named public-work proposition', async (privacy, action) => {
     const text = 'SYNTHETIC artist Asha Vale published Blue Sky in 1984.';
     const result = await classify(jev(() => ({ private: privacy })), input(text));
     expect(result.action).toBe(action);
