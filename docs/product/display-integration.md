@@ -14,7 +14,7 @@ The image runs `npm run build:glasses` during its build. The generated Vite file
 
 Configure the API's `ALLOWED_ORIGINS` with the exact origin from which the glasses UI is opened, for example `https://glasses.example.com` (scheme and host, with no path). Set it explicitly in deployed environments; the development defaults permit only localhost origins. For additional trusted web origins, use a comma-separated list of exact origins. Do not use `*`.
 
-Configure `DEMO_JOIN_CODE` and a future `DEMO_JOIN_EXPIRES_AT` in every deployment; the companion uses them to create owner sessions in fixture and live modes. Live checks also require server-side `JEV_API_KEY` and `EXA_API_KEY`; live speech recognition requires `DEEPGRAM_API_KEY`. Keep these values in the deployment secret store. See [the cloud handoff](cloud-handoff.md) for the existing API deployment workflow.
+Configure `DEMO_JOIN_CODE` and a future `DEMO_JOIN_EXPIRES_AT` in every deployment; the companion uses them to create owner sessions in fixture and live modes. Live checks also require server-side `JEV_API_KEY` and `EXA_API_KEY`; live speech recognition requires `DEEPGRAM_API_KEY`. Keep these values in the deployment secret store. See [the cloud handoff](../cloud-handoff.md) for the existing API deployment workflow.
 
 Check `/health`, then open `https://glasses.example.com/display/`. A missing build returns `display_not_built`; the Docker image builds it as part of packaging. The simulator and a regular browser can preview the display route, but simulator success does not establish compatibility on physical glasses.
 

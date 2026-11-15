@@ -158,6 +158,8 @@ npm run build:glasses  # Display UI production build
 
 Native iOS tests require Xcode; instructions live in the [iOS guide](apps/ios/README.md). For deployment, see the [deployment guide](docs/deployment.md). Evaluation results and their limits are documented in [`docs/evaluation.md`](docs/evaluation.md). Fixture tests and provider comparisons do not establish accuracy across everyday use.
 
+Documentation index: [docs/README.md](docs/README.md).
+
 Contribution and review conventions live in [`AGENTS.md`](AGENTS.md) and the [team playbook](docs/PLAYBOOK.md).
 
 ## Built at Junction 2026
