@@ -1,0 +1,15 @@
+// The landing page as a static Cloudflare Worker (assets only, no code). This file also stops wrangler from walking up
+// to the repo-root wrangler.jsonc, which is the API container's config.
+// Deploy: npm run build && npx wrangler deploy
+// Served on fact0.eu and www.fact0.eu through Worker routes (the zone is on Cloudflare; the old Namecheap parking records
+// in it are proxied, so the routes answer in front of them).
+{
+  "name": "facto-landing",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "assets": { "directory": "./dist" },
+  "routes": [
+    { "pattern": "fact0.eu/*", "zone_name": "fact0.eu" },
+    { "pattern": "www.fact0.eu/*", "zone_name": "fact0.eu" }
+  ]
+}
