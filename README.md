@@ -136,7 +136,7 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000) for the console. Fixture mode uses predefined examples; it does not verify arbitrary real-world claims.
 
-For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). See the [deployment guide](docs/deployment.md) for every variable. Keep credentials on the server and out of commits.
+For the current live backend, set `PIPELINE_MODE=live`, `JEV_API_KEY` and `EXA_API_KEY`. Add `ELEVENLABS_API_KEY` for the audio route (or `DEEPGRAM_API_KEY`, the fallback recogniser). To run admission on the fine-tuned Laya model, as the hosted backend does, set `ADMISSION_PROVIDER=laya`, `LAYA_URL` and `LAYA_API_KEY`. See the [deployment guide](docs/deployment.md) for every variable. Keep credentials on the server and out of commits.
 
 ### Run the visual previews
 
