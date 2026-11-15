@@ -9,7 +9,9 @@ The app owns glasses connection, permissions, capture, ASR assembly, playback an
 - `schemas/`: generated JSON Schema artifacts for native tooling. Regenerate with `npx tsx packages/contracts/export-schemas.ts` from the repo root. JSON Schema validates shapes; semantic constraints described in each schema are also enforced by TypeScript validation.
 - `fixtures/text-unicode.json`: exact captured input with a non-BMP emoji, private clause and public clause.
 - `fixtures/result-manual-supported.json`, `result-manual-insufficient.json`, `result-automatic-silent.json`: presenter fixtures.
-- `fixtures/events.json`, `event-waiting.json`, `event-capture-request.json`: stream fixtures.
+- `fixtures/result-manual-speculation-private.json`, `result-automatic-future-estimates.json`, `result-manual-attribution.json`, `result-manual-calculation.json`: presenter fixtures for the additions below.
+- `fixtures/events.json`, `event-waiting.json`, `event-capture-request.json`, `events-admission-outcomes.json`: stream fixtures.
+- `fixtures/text-audio-low-confidence.json`: audio input with low-confidence words.
 
 Fixture evidence excerpts are authored test data, not a recorded provider response or a measured live result. Their URLs are illustrative retained-citation fields; inspect fresh source content before using a claim in a demo. `modelVersion: fixture` labels these artifacts explicitly.
 
@@ -60,6 +62,37 @@ A session allows one stream. A newer authenticated connection replaces an older 
 Checks and results from the previous epoch are gone; resubmit an explicit check if the user still wants it. If the session token has expired or been deleted, create a new session instead.
 
 Close code `4000` arrives on the socket that was replaced. It is terminal for that socket: do not reconnect from it. A client that already abandoned the socket after a blip ignores it; otherwise another connection now holds the session, so tell the user listening moved instead of reconnecting, which would kick that connection off in turn.
+
+## Version 1 additions (fact-check port)
+
+Every addition is optional or a new enum value, so `schemaVersion` stays `1`. An older app decodes an unknown verdict as unknown and ignores fields it does not know. The constants named below live in `src/index.ts`; use them instead of copying strings.
+
+**Speculation verdict.** `claim.result` may carry `verdict: "speculation"`, decided by policy and never by a Jev label. Its `reasonCode` is one of `SPECULATION_REASONS`, and no other verdict uses those codes:
+
+| reasonCode | Meaning | `summary` (spoken and card) |
+| --- | --- | --- |
+| `unconfirmed_rumour` | A rumour, allegation or speculation that no credible source confirms or denies. It may retain evidence that does not settle it. | `Speculation. No credible source confirms this.` |
+| `private_life_not_checked` | An allegation about an identifiable person's private life (affairs, health, finances), public figures included. Never searched, so `evidence` and `selectedEvidenceIds` are empty. | `Speculation. Claims about someone's private life aren't checked.` |
+
+`supported`, `contradicted` and `misleading` still need at least one selected citation. `speculation` and `insufficient_evidence` need none.
+
+**Not a claim.** When the wearer asks (`userInitiated: true`) about an opinion, prediction, question, instruction or anything else that states no fact, the server sends `claim.skipped` with `reasonCode: not_a_claim`, `kind` (`opinion`, `prediction`, `question`, `instruction`, `other`), `summary` from `NON_CLAIM_SUMMARIES` ("That's a prediction.", "Not a checkable fact.") and `presentation.action: respond`. Nothing is searched. Overheard non-claims arrive with `presentation.action: silent`. Private or personal statements (`reasonCode: private_or_personal`) carry `kind: other`.
+
+**Misheard.** When Jev judges an audio transcript likely misheard in a way that changes the claim, an explicit request gets `claim.needs_confirmation` with `reasonCode: possibly_misheard` and `summary` from `NEEDS_CONFIRMATION_SUMMARIES` ("I'm not sure what was said."). An overheard one is skipped silently with the same reason code.
+
+**Missing subject.** An explicit request whose subject cannot be found ("It opened in 1889." with no context) gets a `claim.result` with `verdict: insufficient_evidence`, `reasonCode: subject_missing` and no evidence. An overheard one is skipped silently.
+
+**Basis label.** A definitive verdict on a claim about the future carries `basis`: `estimates` ("Based on current estimates") or `announcement` ("Officially announced"), from `BASIS_LABELS`.
+
+**Attribution label.** When the check was whether a named speaker or outlet said or reported something, the result carries `attribution: { label, source, mode }`. `label: reported` goes with `supported` and `not_said` with `contradicted`. `attributionLabel()` words it: "Politico reported this", "Kushner said this", "Not what Politico reported", "Not what Kushner said". `source` is the name as captured, at most 120 code points.
+
+**Route, subject and usage.** `claim.checking` and `claim.result` may carry `route` (`recent_event`, `named_fact`, `weather`, `calculation`, `general`) and `subject` (who or what the claim is about, or `null`). Results and admission events may carry `usage: { jevCalls, exaSearches }`: Jev calls for the whole request so far and Exa searches for this claim. These are for display and measurement, never for a decision in the app.
+
+**Evidence origin.** Evidence may carry `origin`: `web` or `news` (Exa), `fact_check`, `wikipedia`, `wikidata`, `weather` (Open-Meteo) or `calculation`. A missing `origin` means an Exa web result from an older server. Fact-check evidence also carries `rating` (`supported`, `contradicted`, `misleading`), which fixes its stance. Calculation evidence has no page: its `url` is the reserved placeholder `https://facto.invalid/calculation` (`CALCULATION_URL`), and the app must not open it. Weather evidence links the exact Open-Meteo request.
+
+**Low-confidence words.** Audio input may carry `capture.lowConfidenceWords`: at most 12 `{ text, confidence }` entries in sentence order, each text at most 64 code points. The server shows them to Jev; there is no fixed confidence gate any more.
+
+**Server seam types.** `src/index.ts` also holds the server-side seams that the backend builders share: `claimFrame()` defaults for admitted claims, `SourceQuery` and `sourceQuery()` (all a source may see: the checked text and subject, never context), `EvidenceSources`, `PROVIDER_LIMITS` and the extended `ProviderKind`. They are not wire fields.
 
 ## Unicode spans
 

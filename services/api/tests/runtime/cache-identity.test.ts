@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { codePoints, type ClaimResult, type EventEnvelope, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { codePoints, type ClaimResult, type EventEnvelope, type EvidenceSources, type PipelineAdapters, type TextInput } from '../../../../packages/contracts/src/index.js';
 import type { AssessedJudgment } from '../../src/policy/assessment.js';
+import type { RuntimeAdapters } from '../../src/runtime/adapters.js';
+import { ClaimCache } from '../../src/runtime/claim-cache.js';
 import { PipelineRuntime } from '../../src/runtime/pipeline.js';
 import { Session } from '../../src/runtime/session.js';
 
@@ -111,5 +113,58 @@ describe('exact admitted proposition identity', () => {
       { start: codePoints(first + ' | ').length, end: codePoints(first + ' | ' + second).length }]);
     expect(runtime.metrics).toHaveLength(1);
     expect(runtime.metrics[0]).toMatchObject({ jevAttempts: 3, searchAttempts: 2, state: 'done' });
+  });
+});
+
+describe('shared claim identity on the evidence-sources path (Q9)', () => {
+  beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date('2026-11-14T12:00:00Z')); });
+  afterEach(() => vi.useRealTimers());
+
+  /** Two untrusted sites take the side `verdict` names; the shared cache is passed in so sessions can share it. */
+  function sourced(cache: ClaimCache, subject: string | null, verdict: Verdict = 'supported') {
+    const searched: string[] = [];
+    const sources: EvidenceSources = {
+      gatherFree: async () => ({ evidence: [], answered: { fact_check: null, wikipedia: true, wikidata: null, weather: null, calculation: true } }),
+      searchPaid: async (query, _request, ctx) => {
+        ctx.consume('search', query.claimId); searched.push(query.text);
+        return { evidence: ['one', 'two'].map(id => ({ id, url: `https://synthetic-${id}.example/record`, title: id, publisher: null, publishedAt: null, retrievedAt: new Date(ctx.now()).toISOString(),
+          contentBasis: 'highlight' as const, excerpt: `Record ${id}.`, sourceGroup: `synthetic-${id}.example`, echoGroup: null, sourceRole: 'unknown' as const,
+          directlyAddressesClaim: false, matchesTimePlaceAndPopulation: false, stance: 'unrelated' as const, stanceProbability: null, origin: 'web' as const })), categories: ['web'] };
+      },
+      rank: (free, paid) => [...free, ...paid].slice(0, 6),
+      traits: evidence => ({ site: new URL(evidence.url).hostname, trusted: false }),
+    };
+    const adapters: RuntimeAdapters = {
+      classify: async (body, ctx) => { ctx.consume('jev'); return { action: 'check', reasonCode: 'eligible_public_claim', claims: [{ id: 'admitted', originalText: body.text, checkedText: body.text,
+        sourceSpan: { start: 0, end: codePoints(body.text).length }, subject, admission: { admissionAction: 'check', assertionStatus: 'asserted', reasonCode: 'eligible_public_claim', hasPracticalConsequence: null, matchedSelectedTopic: null } }] }; },
+      retrieve: async () => { throw new Error('legacy retrieval must not run'); },
+      judge: async (claim, evidence, ctx): Promise<AssessedJudgment> => {
+        ctx.consume('jev');
+        return { checkedText: claim.checkedText, label: verdict, probabilities: { supported: 0, contradicted: 0, misleading: 0, insufficient_evidence: 0, [verdict]: .9 },
+          evidence: evidence.map(source => ({ ...source, directlyAddressesClaim: true, matchesTimePlaceAndPopulation: true, stance: verdict === 'supported' ? 'supports' : 'contradicts', stanceProbability: .9 })),
+          selectedEvidenceIds: [], misleadingReason: null, sourceAssessments: Object.fromEntries(evidence.map(source => [source.id, { contentBasis: 'original_record', confidence: .99 }])),
+          claimRisk: { level: 'ordinary', confidence: .99 }, originAssessments: [] };
+      },
+      sources, cache,
+    };
+    const session = new Session(Date.now);
+    const events: EventEnvelope[] = [];
+    session.listeners.add(event => events.push(event));
+    return { session, runtime: new PipelineRuntime(adapters), searched, results: () => events.filter(event => event.type === 'claim.result').map(event => event.payload as ClaimResult) };
+  }
+
+  it('reuses a finished check across sessions for case and spacing variants, but not across subjects', async () => {
+    const cache = new ClaimCache();
+    const first = sourced(cache, 'SI');
+    first.runtime.submit(first.session, input(first.session, 'first', 'The SI symbol for megawatt is MW.')); await flush();
+    // The shared key is lowercased and whitespace-collapsed by design (Q9), unlike the exact legacy session key above.
+    const variant = sourced(cache, 'SI', 'contradicted');
+    variant.runtime.submit(variant.session, input(variant.session, 'variant', 'The SI  symbol for megawatt is mW.')); await flush();
+    expect(variant.searched).toEqual([]);
+    expect(variant.results()[0]).toMatchObject({ verdict: 'supported', cached: true, checkedText: 'The SI  symbol for megawatt is mW.' });
+    const otherSubject = sourced(cache, null, 'contradicted');
+    otherSubject.runtime.submit(otherSubject.session, input(otherSubject.session, 'other', 'The SI symbol for megawatt is MW.')); await flush();
+    expect(otherSubject.searched).toEqual(['The SI symbol for megawatt is MW.']);
+    expect(otherSubject.results()[0]).toMatchObject({ verdict: 'contradicted', cached: false });
   });
 });

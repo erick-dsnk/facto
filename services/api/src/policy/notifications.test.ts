@@ -31,11 +31,32 @@ describe('literal selected-topic matching', () => {
   });
 });
 
+const admitted: AdmissionMetadata = { assertionStatus: 'asserted', admissionAction: 'check', reasonCode: 'public_claim', hasPracticalConsequence: null, matchedSelectedTopic: null };
+
 describe('independent presentation policy', () => {
   for (const fixture of fixtures) it(fixture.id, () => {
     const admission: AdmissionMetadata = { assertionStatus: 'asserted', admissionAction: (fixture.admissionAction ?? 'check') as AdmissionMetadata['admissionAction'], reasonCode: 'public_claim', hasPracticalConsequence: fixture.priority ?? null, matchedSelectedTopic: fixture.topic ?? null };
     const actual = decidePresentation({ verdict: fixture.verdict as Verdict, admission }, fixture.intent as 'manual' | 'automatic' | 'repeat', { ...state, ...fixture.state }, { ...preferences, ...fixture.preferences });
     expect(actual).toEqual({ action: fixture.expected, reasonCode: fixture.reason });
+  });
+  it.each([
+    // Q2: asked always answers; overheard only False, Misleading and Speculation alert.
+    ['supported', 'manual', 'respond', 'explicit_request'],
+    ['insufficient_evidence', 'manual', 'respond', 'explicit_request'],
+    ['speculation', 'manual', 'respond', 'explicit_request'],
+    ['contradicted', 'automatic', 'notify', 'automatic_contradiction'],
+    ['misleading', 'automatic', 'notify', 'automatic_misleading'],
+    ['speculation', 'automatic', 'notify', 'automatic_speculation'],
+    ['supported', 'automatic', 'silent', 'automatic_noncontradiction'],
+    ['insufficient_evidence', 'automatic', 'silent', 'automatic_noncontradiction'],
+  ] as const)('follows the Q2 table: %s %s -> %s', (verdict, intent, action, reasonCode) => {
+    expect(decidePresentation({ verdict, admission: admitted }, intent, state, preferences)).toEqual({ action, reasonCode });
+  });
+  it.each(['misleading', 'speculation'] as const)('keeps the opt-in, mute, duplicate and admission gates for overheard %s', verdict => {
+    expect(decidePresentation({ verdict, admission: admitted }, 'automatic', state, { ...preferences, automaticNotifications: false })).toEqual({ action: 'silent', reasonCode: 'notifications_disabled' });
+    expect(decidePresentation({ verdict, admission: admitted }, 'automatic', state, { ...preferences, muted: true })).toEqual({ action: 'silent', reasonCode: 'muted' });
+    expect(decidePresentation({ verdict, admission: admitted }, 'automatic', { ...state, duplicate: true }, preferences)).toEqual({ action: 'silent', reasonCode: 'duplicate' });
+    expect(decidePresentation({ verdict }, 'automatic', state, preferences)).toEqual({ action: 'silent', reasonCode: 'unresolved_admission' });
   });
   it('fails closed without admission metadata and never mutates runtime state', () => {
     const before = structuredClone(state);

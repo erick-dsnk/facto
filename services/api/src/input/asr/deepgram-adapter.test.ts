@@ -4,7 +4,7 @@ import { type EventEnvelope } from '../../../../../packages/contracts/src/index.
 import { Session } from '../../runtime/session.js';
 import { AudioBridge } from '../../transport/audio-bridge.js';
 import { type AsrTranscript, type AudioFrame, type AudioStart } from '../../transport/audio.js';
-import { DEEPGRAM_LISTEN_URL, createDeepgramAdapter, type DeepgramSocket } from './deepgram-adapter.js';
+import { DEEPGRAM_LISTEN_URL, DEFAULT_KEYTERMS, createDeepgramAdapter, deepgramListenUrl, parseKeyterms, type DeepgramSocket } from './deepgram-adapter.js';
 
 const config: AudioStart = { type: 'audio.start', sessionEpoch: 1, streamGeneration: 3, encoding: 'pcm_s16le', sampleRateHz: 16000, channels: 1, source: 'glasses_stream_audio' };
 const apiKey = 'test-deepgram-key';
@@ -49,7 +49,8 @@ describe('Deepgram adapter', () => {
   it('opens the nova-3 diarized stream with a Token header, forwards PCM and assembles sentences', async () => {
     const state = setup(); const starting = state.begin();
     const socket = state.socket();
-    expect(socket.url).toBe(DEEPGRAM_LISTEN_URL);
+    expect(socket.url).toBe(deepgramListenUrl(DEFAULT_KEYTERMS));
+    expect(socket.url.startsWith(DEEPGRAM_LISTEN_URL)).toBe(true);
     expect(socket.url).toContain('model=nova-3'); expect(socket.url).toContain('diarize=true'); expect(socket.url).toContain('utterance_end_ms=1000');
     expect(socket.url).toContain('encoding=linear16'); expect(socket.url).toContain('sample_rate=16000'); expect(socket.url).toContain('endpointing=300');
     expect(socket.url).not.toContain(apiKey);
@@ -58,9 +59,18 @@ describe('Deepgram adapter', () => {
     await stream.write(frame(0));
     expect(socket.sent[0]).toBeInstanceOf(Uint8Array); expect((socket.sent[0] as Uint8Array).byteLength).toBe(3200);
     socket.results([['Helsinki', 0.1, 0.4, 0], ['is', 0.5, 0.6, 0], ['the', 0.7, 0.8, 0], ['capital.', 0.9, 1.2, 0], ['Paris', 1.3, 1.6, 1]], true, 0, 1.7);
-    expect(state.transcripts).toEqual([{ text: 'Helsinki is the capital.', final: true, segmentId: 'g3-1', confidence: 0.9, captureOffsetMs: 100, speaker: 0 }]);
+    expect(state.transcripts).toEqual([{ text: 'Helsinki is the capital.', final: true, segmentId: 'g3-1', confidence: 0.9, captureOffsetMs: 100, endOffsetMs: 1200, speaker: 0 }]);
     socket.emit('message', JSON.stringify({ type: 'UtteranceEnd', channel: [0, 1], last_word_end: 1.6 }), false);
     expect(state.transcripts.at(-1)).toMatchObject({ text: 'Paris', final: true, segmentId: 'g3-2', speaker: 1, captureOffsetMs: 1300 });
+    await stream.stop();
+  });
+
+  it('drops words that start inside the echo window the bridge asks for after a spoken answer', async () => {
+    const state = setup(); const transcripts: AsrTranscript[] = [];
+    const starting = state.adapter.start(config, event => transcripts.push(event), state.controller.signal, undefined, { ignoreWordsBeforeMs: 800 });
+    state.socket().emit('open'); const stream = await starting;
+    state.socket().results([['Wikipedia.', 0.1, 0.6, 0], ['Paris', 0.9, 1.2, 1], ['is', 1.3, 1.4, 1], ['big.', 1.5, 1.8, 1]], true, 0, 2);
+    expect(transcripts.filter(event => event.final).map(event => [event.text, event.captureOffsetMs])).toEqual([['Paris is big.', 900]]);
     await stream.stop();
   });
 
@@ -224,5 +234,45 @@ describe('Deepgram adapter', () => {
     state.socket().results([['Helsinki', 0.1, 0.4, 0], ['is', 0.5, 0.6, 0], ['north.', 0.7, 0.9, 0]], true, 0, 1);
     expect(JSON.stringify(state.logs)).not.toContain('Helsinki');
     state.controller.abort();
+  });
+});
+
+describe('Deepgram keyterms', () => {
+  it('starts from the defaults and adds a trimmed, case-insensitively deduplicated comma list', () => {
+    expect(parseKeyterms(undefined)).toEqual([...DEFAULT_KEYTERMS]);
+    expect(parseKeyterms('')).toEqual([...DEFAULT_KEYTERMS]);
+    expect(parseKeyterms('  Junction ,anthropic, Typesafe,,  JUNCTION, Jensen   Huang ')).toEqual([...DEFAULT_KEYTERMS, 'Junction', 'Typesafe']);
+    expect(parseKeyterms("O'Neill, AT&T, Dr. Who, Saint-Étienne, GPT 5")).toEqual([...DEFAULT_KEYTERMS, "O'Neill", 'AT&T', 'Dr. Who', 'Saint-Étienne', 'GPT 5']);
+  });
+
+  it('drops terms that are too long or carry other characters, and keeps at most 50', () => {
+    const long = 'x'.repeat(51);
+    expect(parseKeyterms(`${long}, ${'y'.repeat(50)}, a=b, <script>, x/y, ok`)).toEqual([...DEFAULT_KEYTERMS, 'y'.repeat(50), 'ok']);
+    const many = Array.from({ length: 80 }, (_, index) => `Term${index}`).join(',');
+    const parsed = parseKeyterms(many);
+    expect(parsed).toHaveLength(50);
+    expect(parsed.slice(0, DEFAULT_KEYTERMS.length)).toEqual([...DEFAULT_KEYTERMS]);
+  });
+
+  it('adds one encoded keyterm parameter per term to the listen URL', () => {
+    const url = deepgramListenUrl(['Jensen Huang', 'AT&T', "O'Neill"]);
+    expect(url).toBe(`${DEEPGRAM_LISTEN_URL}&keyterm=Jensen%20Huang&keyterm=AT%26T&keyterm=O'Neill`);
+    expect(new URL(url).searchParams.getAll('keyterm')).toEqual(['Jensen Huang', 'AT&T', "O'Neill"]);
+    expect(deepgramListenUrl([])).toBe(DEEPGRAM_LISTEN_URL);
+    expect(deepgramListenUrl(DEFAULT_KEYTERMS)).toContain('&keyterm=Jensen%20Huang&keyterm=Meta&keyterm=Ray-Ban&keyterm=OpenAI');
+  });
+
+  it('opens the keyterm URL from options, keeps the key in the header only, and lets url override everything', async () => {
+    const keyterms = parseKeyterms('Junction');
+    const state = setup({ keyterms }); const starting = state.begin();
+    expect(state.socket().url).toBe(deepgramListenUrl(keyterms));
+    expect(state.socket().url).toContain('&keyterm=Junction');
+    expect(state.socket().url).not.toContain(apiKey);
+    expect(state.socket().headers).toEqual({ Authorization: `Token ${apiKey}` });
+    state.socket().emit('open'); await starting; state.controller.abort();
+
+    const custom = setup({ keyterms, url: 'wss://example.test/listen?model=nova-3' }); const opening = custom.begin();
+    expect(custom.socket().url).toBe('wss://example.test/listen?model=nova-3');
+    custom.socket().emit('open'); await opening; custom.controller.abort();
   });
 });

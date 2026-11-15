@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PipelineError, type AcceptedClaim, type EventEnvelope, type Evidence, type Judgment, type TextInput } from '../../../../packages/contracts/src/index.js';
+import { PipelineError, PROVIDER_LIMITS, type AcceptedClaim, type EventEnvelope, type Evidence, type Judgment, type TextInput } from '../../../../packages/contracts/src/index.js';
 import type { AssessedJudgment } from '../../src/policy/assessment.js';
 import type { RuntimeAdapters } from '../../src/runtime/adapters.js';
 import { fixtureAdapters } from '../../src/runtime/fixtures.js';
@@ -64,13 +64,16 @@ describe('bounded alternate retrieval and fresh judgment', () => {
 
   it('shares continuation admission attempts and skips an unfunded optional rejudgment', async () => {
     const { adapters, session, events, runtime } = setup();
+    // The continuation's admission retries until one Jev attempt is left for its first judgment.
+    const classify = adapters.classify;
+    adapters.classify = async (input, ctx) => { if (input.revision === 2) for (let i = 0; i < PROVIDER_LIMITS.jev - 3; i++) ctx.consume('jev'); return classify(input, ctx); };
     runtime.submit(session, body(session, { text: 'It is...', userInitiated: false })); await flush();
     const original = session.requests.get('req')!;
     await vi.advanceTimersByTimeAsync(1_000);
     runtime.submit(session, body(session, { revision: 2, userInitiated: false })); await flush();
     expect(session.requests.get('req')?.budget).toBe(original.budget);
     expect(session.requests.get('req')?.acceptedAt).toBe(original.acceptedAt);
-    expect(original.budget.jev).toBe(3);
+    expect(original.budget.jev).toBe(PROVIDER_LIMITS.jev);
     expect(adapters.retrieveAlternate).not.toHaveBeenCalled();
     expect(events.at(-1)?.payload).toMatchObject({ verdict: 'insufficient_evidence' });
   });
@@ -218,7 +221,8 @@ describe('bounded alternate retrieval and fresh judgment', () => {
   it('reserves a later span initial judgment against a real retry loop and skips optional search', async () => {
     const { adapters, session, events, runtime } = setup();
     const classify = adapters.classify;
-    adapters.classify = async (input, ctx) => { const admitted = await classify(input, ctx); return { ...admitted, claims: [...admitted.claims, { ...admitted.claims[0], id: 'second', checkedText: 'Finland.', sourceSpan: { start: 27, end: 35 } }] }; };
+    // Admission retries leave two attempts: one for this claim and one reserved for the later span.
+    adapters.classify = async (input, ctx) => { for (let i = 0; i < PROVIDER_LIMITS.jev - 3; i++) ctx.consume('jev'); const admitted = await classify(input, ctx); return { ...admitted, claims: [...admitted.claims, { ...admitted.claims[0], id: 'second', checkedText: 'Finland.', sourceSpan: { start: 27, end: 35 } }] }; };
     let attempts = 0;
     adapters.judge = async (claim, evidence, ctx) => withProviderRetry(ctx, 'jev', undefined, async () => {
       attempts++;
@@ -227,7 +231,7 @@ describe('bounded alternate retrieval and fresh judgment', () => {
     });
     runtime.submit(session, body(session)); await flush();
     expect(attempts).toBe(1); // the failed first judgment cannot steal the later reserve
-    expect(runtime.metrics[0].jevAttempts).toBe(2);
+    expect(runtime.metrics[0].jevAttempts).toBe(PROVIDER_LIMITS.jev - 1);
     expect(adapters.retrieveAlternate).not.toHaveBeenCalled();
     expect(events.at(-1)?.payload).toMatchObject({ reasonCode: 'jev_unavailable' });
   });
@@ -235,7 +239,7 @@ describe('bounded alternate retrieval and fresh judgment', () => {
   it('keeps a useful first-span result when admission retry leaves one judgment, then errors before second retrieval', async () => {
     const { adapters, session, events, runtime } = setup();
     const classify = adapters.classify;
-    adapters.classify = async (input, ctx) => { ctx.consume('jev'); const admitted = await classify(input, ctx); return { ...admitted, claims: [...admitted.claims, { ...admitted.claims[0], id: 'second', checkedText: 'Finland.', sourceSpan: { start: 27, end: 35 } }] }; };
+    adapters.classify = async (input, ctx) => { for (let i = 0; i < PROVIDER_LIMITS.jev - 2; i++) ctx.consume('jev'); const admitted = await classify(input, ctx); return { ...admitted, claims: [...admitted.claims, { ...admitted.claims[0], id: 'second', checkedText: 'Finland.', sourceSpan: { start: 27, end: 35 } }] }; };
     adapters.retrieve = vi.fn(fixtureAdapters().retrieve);
     runtime.submit(session, body(session)); await flush();
     expect(events.filter(event => event.type === 'claim.result')).toHaveLength(1);
@@ -243,7 +247,7 @@ describe('bounded alternate retrieval and fresh judgment', () => {
     expect(events.at(-1)).toMatchObject({ type: 'pipeline.error', claimId: 'req-claim-1', payload: { reasonCode: 'jev_budget_exhausted' } });
     expect(adapters.retrieve).toHaveBeenCalledTimes(1);
     expect(adapters.retrieveAlternate).not.toHaveBeenCalled();
-    expect(runtime.metrics[0].jevAttempts).toBe(3);
+    expect(runtime.metrics[0].jevAttempts).toBe(PROVIDER_LIMITS.jev);
   });
 
   it('checks both uncached spans within three Jev attempts without spending optional search capacity', async () => {
@@ -289,14 +293,15 @@ describe('bounded alternate retrieval and fresh judgment', () => {
     runtime.submit(session, body(session)); await flush();
     const cached = [...session.cache.values()][0];
     cached.expiresAt = Date.now() + 1_000;
-    adapters.classify = async (input, ctx) => { const admitted = await classify(input, ctx); return { ...admitted, claims: [{ ...admitted.claims[0], checkedText: 'Finland.', sourceSpan: { start: 27, end: 35 } }, admitted.claims[0]] }; };
+    // Admission retries leave exactly one judgment for each span.
+    adapters.classify = async (input, ctx) => { for (let i = 0; i < PROVIDER_LIMITS.jev - 3; i++) ctx.consume('jev'); const admitted = await classify(input, ctx); return { ...admitted, claims: [{ ...admitted.claims[0], checkedText: 'Finland.', sourceSpan: { start: 27, end: 35 } }, admitted.claims[0]] }; };
     const retrieve = adapters.retrieve;
     adapters.retrieve = async (claim, ctx) => { await new Promise(resolve => setTimeout(resolve, 1_001)); return (await retrieve(claim, ctx)).slice(0, 1); };
     runtime.submit(session, body(session, { requestId: 'later-expiry' })); await vi.advanceTimersByTimeAsync(2_002);
     expect(events.filter(event => event.requestId === 'later-expiry' && event.type === 'claim.result')).toHaveLength(2);
     expect(events.some(event => event.requestId === 'later-expiry' && event.type === 'pipeline.error')).toBe(false);
     expect(adapters.retrieveAlternate).not.toHaveBeenCalled();
-    expect(runtime.metrics.at(-1)?.jevAttempts).toBe(3);
+    expect(runtime.metrics.at(-1)?.jevAttempts).toBe(PROVIDER_LIMITS.jev);
   });
 
   it('lets the actual Exa retry consume the second search allowance instead of starting an alternate', async () => {

@@ -1,13 +1,18 @@
+import { MAX_LOW_CONFIDENCE_WORDS, type LowConfidenceWord } from '../../../../../packages/contracts/src/index.js';
 import { type AsrTranscript } from '../../transport/audio.js';
 
 /** One recognised word. Times are seconds from the start of the audio stream. */
 export type AsrWord = { text: string; start: number; end: number; confidence: number | null; speaker: number | null };
-export type AssemblerOptions = { idPrefix?: string; maxChars?: number };
+/** `ignoreBefore` (seconds): words that start earlier are dropped, such as the tail of a spoken answer heard as listening resumes. */
+export type AssemblerOptions = { idPrefix?: string; maxChars?: number; ignoreBefore?: number };
 
 type Piece = { words: AsrWord[]; text: string; boundary: boolean };
 type Pending = { segmentId: string; text: string; endTime: number };
 
 const TRANSCRIPT_MAX_CODE_POINTS = 800;
+/** Words below this confidence are shown to Jev, which judges whether the sentence was misheard. */
+export const LOW_CONFIDENCE_BELOW = 0.75;
+const LOW_CONFIDENCE_WORD_MAX_CODE_POINTS = 64;
 const TERMINAL = /[.?!]["'”’)\]]*$/;
 const CLOSING = /["'”’)\]]+$/;
 /** Dotted initials such as "U.S.", "e.g." or "J.". */
@@ -19,6 +24,7 @@ const length = (text: string) => Array.from(text).length;
 const middle = (word: AsrWord) => (word.start + word.end) / 2;
 const join = (words: AsrWord[]) => words.map(word => word.text).join(' ');
 const offsetMs = (words: AsrWord[]) => words.length ? Math.max(0, Math.round(words[0].start * 1000)) : 0;
+const endMs = (words: AsrWord[]) => words.length ? Math.max(0, Math.round(Math.max(...words.map(word => word.end)) * 1000)) : 0;
 
 /** Most frequent diarized speaker; a tie goes to the speaker heard first. */
 export function majoritySpeaker(words: AsrWord[]): number | null {
@@ -33,6 +39,20 @@ function averageConfidence(words: AsrWord[]): number | null {
   const values = words.map(word => word.confidence).filter((value): value is number => value !== null);
   if (!values.length) return null;
   return Math.min(1, Math.max(0, values.reduce((sum, value) => sum + value, 0) / values.length));
+}
+
+/**
+ * The words the recogniser was least sure of, in sentence order: below 0.75, at most 12 (the least confident win), punctuation
+ * around a word dropped. Bare punctuation, and a word longer than 64 code points, is left out rather than cut.
+ */
+export function lowConfidenceWords(words: AsrWord[]): LowConfidenceWord[] {
+  const unsure = words.flatMap((word, index) => {
+    const text = word.text.replace(/^["'“‘([]+|[.,!?;:"'”’)\]]+$/gu, '');
+    return word.confidence !== null && word.confidence < LOW_CONFIDENCE_BELOW && /[\p{L}\p{N}]/u.test(text) && length(text) <= LOW_CONFIDENCE_WORD_MAX_CODE_POINTS
+      ? [{ index, text, confidence: word.confidence }] : [];
+  });
+  return unsure.sort((a, b) => a.confidence - b.confidence || a.index - b.index).slice(0, MAX_LOW_CONFIDENCE_WORDS)
+    .sort((a, b) => a.index - b.index).map(({ text, confidence }) => ({ text, confidence }));
 }
 
 /**
@@ -66,14 +86,40 @@ function terminal(word: AsrWord): boolean {
   return !bare.endsWith('.') || !(INITIALS.test(bare) || ABBREVIATIONS.has(bare.toLowerCase()));
 }
 
-/** Sentences end at . ? ! (optionally followed by a closing quote or bracket), except after initials and abbreviations. */
+/** A speaker change needs this many words in a row from each voice; a single word is a diarization flip. */
+const MIN_SPEAKER_RUN = 2;
+
+/**
+ * Where a new speaker takes over: the first word of each run of 2+ words from one known speaker that follows a run of 2+ words from
+ * another. Words without a speaker neither count nor break a run, and a single word labelled differently stays where it is.
+ */
+function speakerBreaks(words: AsrWord[]): Set<number> {
+  const runs: { speaker: number; start: number; size: number }[] = [];
+  words.forEach((word, index) => {
+    if (word.speaker === null) return;
+    const last = runs[runs.length - 1];
+    if (last && last.speaker === word.speaker) last.size++;
+    else runs.push({ speaker: word.speaker, start: index, size: 1 });
+  });
+  const solid = runs.filter(run => run.size >= MIN_SPEAKER_RUN);
+  const breaks = new Set<number>();
+  for (let index = 1; index < solid.length; index++) if (solid[index].speaker !== solid[index - 1].speaker) breaks.add(solid[index].start);
+  return breaks;
+}
+
+/**
+ * Sentences end at . ? ! (optionally followed by a closing quote or bracket), except after initials and abbreviations, and where the
+ * diarized speaker changes (speakerBreaks), so two people never share one sentence.
+ */
 function segment(words: AsrWord[], maxChars: number): Piece[] {
   const pieces: Piece[] = [];
+  const breaks = speakerBreaks(words);
   let current: AsrWord[] = [];
-  for (const word of words) {
+  words.forEach((word, index) => {
+    if (breaks.has(index) && current.length) { pieces.push(...cap(current, true, maxChars)); current = []; }
     current.push(word);
     if (terminal(word)) { pieces.push(...cap(current, true, maxChars)); current = []; }
-  }
+  });
   if (current.length) pieces.push(...cap(current, false, maxChars));
   return pieces;
 }
@@ -84,6 +130,7 @@ function segment(words: AsrWord[], maxChars: number): Piece[] {
  * - A punctuated sentence that is followed by more words and is unchanged in two consecutive interim
  *   results is emitted early (stable interim).
  * - Final (locked) chunks emit every punctuated sentence they contain.
+ * - A change between two known diarized speakers (2+ words each) ends a sentence too, so two people never share one claim.
  * - UtteranceEnd flushes whatever is left, punctuated or not.
  * - Run-on text is capped at ~300 characters, cut at the last comma or space.
  * - When a final chunk changes a sentence already emitted from interim results, the corrected text is
@@ -97,18 +144,27 @@ export class SentenceAssembler {
   private emittedUntil = -Infinity;
   private finalUntil = -Infinity;
   private previous = new Set<string>();
+  /** Words a correction moved past a sentence end: not yet emitted, even when their time is before emittedUntil. */
+  private carried = new Set<AsrWord>();
   private counter = 0;
   private readonly idPrefix: string;
   private readonly maxChars: number;
+  private readonly ignoreBefore: number;
 
   constructor(private readonly emit: (event: AsrTranscript) => void, options: AssemblerOptions = {}) {
     this.idPrefix = options.idPrefix ?? 's';
     this.maxChars = options.maxChars ?? 300;
+    this.ignoreBefore = options.ignoreBefore ?? 0;
   }
 
+  private audible(words: AsrWord[]): AsrWord[] { return this.ignoreBefore > 0 ? words.filter(word => word.start >= this.ignoreBefore) : words; }
+  /** Not yet covered by an emitted sentence. */
+  private fresh = (word: AsrWord) => this.carried.has(word) || middle(word) >= this.emittedUntil;
+
   /** Interim words for the audio after the last final chunk. Replaces the previous interim result. */
-  interim(words: AsrWord[]): void {
-    const candidates = [...this.locked, ...words].filter(word => middle(word) >= this.emittedUntil);
+  interim(heard: AsrWord[]): void {
+    const words = this.audible(heard);
+    const candidates = [...this.locked, ...words].filter(this.fresh);
     const pieces = segment(candidates, this.maxChars);
     const followed = pieces.slice(0, -1);
     let emitted = 0;
@@ -122,28 +178,31 @@ export class SentenceAssembler {
     const caption = join(pieces.slice(emitted).flatMap(piece => piece.words));
     if (caption && length(caption) <= TRANSCRIPT_MAX_CODE_POINTS) {
       const words = pieces.slice(emitted).flatMap(piece => piece.words);
-      this.emit({ text: caption, final: false, segmentId: this.nextId(), confidence: averageConfidence(words), captureOffsetMs: offsetMs(words), speaker: majoritySpeaker(words) });
+      this.emit({ text: caption, final: false, segmentId: this.nextId(), confidence: averageConfidence(words), captureOffsetMs: offsetMs(words), endOffsetMs: endMs(words), speaker: majoritySpeaker(words) });
     }
   }
 
   /** Words of a locked chunk; `chunkEnd` is the chunk's start plus duration in seconds. */
-  final(words: AsrWord[], chunkEnd: number): void {
+  final(heard: AsrWord[], chunkEnd: number): void {
+    const words = this.audible(heard);
     this.locked.push(...words);
     this.finalUntil = Math.max(this.finalUntil, chunkEnd, ...words.map(word => word.end));
     this.confirm(false);
     if (this.pending.length) return;
-    const pieces = segment(this.locked.filter(word => middle(word) >= this.emittedUntil), this.maxChars);
+    const pieces = segment(this.locked.filter(this.fresh), this.maxChars);
     for (const piece of pieces) if (piece.boundary) this.send(piece.words, true);
     const last = pieces[pieces.length - 1];
     this.locked = last && !last.boundary ? last.words : [];
+    this.carried = new Set(this.locked.filter(word => this.carried.has(word)));
   }
 
   /** Deepgram detected a pause after the last final word: emit everything that is left. */
   utteranceEnd(): void {
     this.confirm(true);
-    const rest = this.locked.filter(word => middle(word) >= this.emittedUntil);
+    const rest = this.locked.filter(this.fresh);
     for (const piece of segment(rest, this.maxChars)) this.send(piece.words, true);
     this.locked = [];
+    this.carried.clear();
     this.previous.clear();
   }
 
@@ -157,8 +216,15 @@ export class SentenceAssembler {
       const sentence = this.pending[0];
       const reached = this.finalUntil >= sentence.endTime;
       if (!force && !reached) return;
-      const covered = this.locked.filter(word => middle(word) < sentence.endTime);
-      this.locked = this.locked.filter(word => middle(word) >= sentence.endTime);
+      let covered = this.locked.filter(word => middle(word) < sentence.endTime);
+      // Final timings can put the first word of the next sentence inside this one's span ("…electrolytes. Red"): a sentence end
+      // closes the sentence, and the words after it stay locked for the next one.
+      const end = covered.findIndex(word => terminal(word));
+      if (end >= 0 && end < covered.length - 1) {
+        for (const word of covered.slice(end + 1)) this.carried.add(word);
+        covered = covered.slice(0, end + 1);
+      }
+      this.locked = this.locked.filter(word => !covered.includes(word));
       const text = join(covered);
       if (reached && text && text !== sentence.text) this.send(covered, false, sentence.segmentId);
       this.pending.shift();
@@ -172,7 +238,9 @@ export class SentenceAssembler {
     const text = join(words);
     if (advance) this.emittedUntil = Math.max(this.emittedUntil, words[words.length - 1].end);
     if (text && length(text) <= TRANSCRIPT_MAX_CODE_POINTS) {
-      this.emit({ text, final: true, segmentId: id, confidence: averageConfidence(words), captureOffsetMs: offsetMs(words), speaker: majoritySpeaker(words) });
+      const unsure = lowConfidenceWords(words);
+      this.emit({ text, final: true, segmentId: id, confidence: averageConfidence(words), captureOffsetMs: offsetMs(words), endOffsetMs: endMs(words), speaker: majoritySpeaker(words),
+        ...(unsure.length ? { lowConfidenceWords: unsure } : {}) });
     }
     return id;
   }

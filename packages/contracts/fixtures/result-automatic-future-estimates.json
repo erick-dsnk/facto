@@ -1,0 +1,71 @@
+{
+  "verdict": "contradicted",
+  "reasonCode": "qualifying_evidence",
+  "selectedEvidenceIds": [
+    "fixture-estimate-news",
+    "fixture-estimate-check"
+  ],
+  "summary": "The evidence I found contradicts that claim.",
+  "originalText": "Examplecorp will IPO at a 2.5 trillion dollar valuation.",
+  "checkedText": "Examplecorp will IPO at a 2.5 trillion dollar valuation.",
+  "sourceSpan": {
+    "start": 0,
+    "end": 56
+  },
+  "evidence": [
+    {
+      "id": "fixture-estimate-news",
+      "url": "https://news.example.com/markets/examplecorp-listing",
+      "title": "Examplecorp listing estimates (contract fixture)",
+      "publisher": "Example News",
+      "publishedAt": "2026-11-10",
+      "retrievedAt": "2026-11-14T10:00:01Z",
+      "contentBasis": "highlight",
+      "excerpt": "Analysts estimate that an Examplecorp listing would value the company at about 300 billion dollars.",
+      "sourceGroup": "example.com",
+      "echoGroup": null,
+      "sourceRole": "unknown",
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "stance": "contradicts",
+      "stanceProbability": 0.91,
+      "origin": "news"
+    },
+    {
+      "id": "fixture-estimate-check",
+      "url": "https://factcheck.example.org/examplecorp-valuation",
+      "title": "Examplecorp valuation claim (contract fixture)",
+      "publisher": "Example Check",
+      "publishedAt": "2026-11-12",
+      "retrievedAt": "2026-11-14T10:00:01Z",
+      "contentBasis": "highlight",
+      "excerpt": "Rated “False” by Example Check. Claim checked: Examplecorp will list at a 2.5 trillion dollar valuation.",
+      "sourceGroup": "example.org",
+      "echoGroup": null,
+      "sourceRole": "unknown",
+      "directlyAddressesClaim": true,
+      "matchesTimePlaceAndPopulation": true,
+      "stance": "contradicts",
+      "stanceProbability": 1,
+      "origin": "fact_check",
+      "rating": "contradicted"
+    }
+  ],
+  "checkedAt": "2026-11-14T10:00:02Z",
+  "expiresAt": "2026-11-14T10:01:02Z",
+  "durationMs": 3400,
+  "cached": false,
+  "policyVersion": "glasses-p0.2",
+  "modelVersion": "fixture",
+  "presentation": {
+    "action": "notify",
+    "reasonCode": "automatic_contradiction"
+  },
+  "basis": "estimates",
+  "route": "general",
+  "subject": null,
+  "usage": {
+    "jevCalls": 3,
+    "exaSearches": 1
+  }
+}
