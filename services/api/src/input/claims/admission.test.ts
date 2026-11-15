@@ -92,7 +92,7 @@ describe('exact candidate spans', () => {
   it.each([
     ['I heard that goldfish only remember three seconds.', 'goldfish only remember three seconds.'],
     ['I heard goldfish only remember three seconds.', 'goldfish only remember three seconds.'],
-    ['You heard that Anthropic will IPO next year?', 'Anthropic will IPO next year?'],
+    ['You heard that Anthropic will IPO next year?', 'Anthropic will IPO next year'],
     ['People say that bats are blind.', 'bats are blind.'],
     ['They say lightning never strikes twice.', 'lightning never strikes twice.'],
     ['Apparently, the Great Wall is visible from space.', 'the Great Wall is visible from space.'],
@@ -103,6 +103,81 @@ describe('exact candidate spans', () => {
     expect(found).toMatchObject({ contentOf: 'span_0' });
     expect(sliceSpan(text, found!.span)).toBe(content);
   });
+
+  // Live transcripts from 14 Nov that admission skipped as not_a_claim: the claim was passed on as a question.
+  it.each([
+    ['Have you heard that Anthropic added to your company?', 'Anthropic added to your company'],
+    ['You heard that Anthropic has a two year evaluation?', 'Anthropic has a two year evaluation'],
+    ['Did you know that goldfish only remember three seconds?', 'goldfish only remember three seconds'],
+    ['Did you know the Eiffel Tower opened in 1889?', 'the Eiffel Tower opened in 1889'],
+    ['Did you hear Anthropic raised another round?', 'Anthropic raised another round'],
+    ['Is it true that bats are blind?', 'bats are blind'],
+    ['Isn’t it true that lightning never strikes twice?', 'lightning never strikes twice'],
+    ['So have you guys heard that Anthropic has a two year evaluation?', 'Anthropic has a two year evaluation'],
+    ['You know that the Great Wall is visible from space?', 'the Great Wall is visible from space'],
+    // Live, 23:33:21: a casual opener before the frame.
+    ['Bro, have you heard that deep just released OPUS 5.5?', 'deep just released OPUS 5.5'],
+    ['Dude, did you know the Eiffel Tower opened in 1889?', 'the Eiffel Tower opened in 1889'],
+  ])('adds the statement without its "?" for a claim passed on as a question: %s', (text, content) => {
+    const found = generateCandidates(text).find(candidate => candidate.text === content);
+    expect(found).toMatchObject({ contentOf: 'span_0', asked: true });
+    expect(sliceSpan(text, found!.span)).toBe(content);
+  });
+
+  // More ways people pass a claim on in conversation (14 Nov): each yields the claim as its own candidate.
+  it.each([
+    ['Have you seen that Tesla stock doubled this week?', 'Tesla stock doubled this week', true, false],
+    ['Did you read that coffee causes cancer?', 'coffee causes cancer', true, false],
+    ['Did you guys see Apple bought Perplexity?', 'Apple bought Perplexity', true, false],
+    ['Do you realise the moon is moving away from Earth?', 'the moon is moving away from Earth', true, false],
+    ['Are you aware that bananas are radioactive?', 'bananas are radioactive', true, false],
+    ['Can you believe Finland has more saunas than cars?', 'Finland has more saunas than cars', true, false],
+    ['Isn’t it crazy that octopuses have three hearts?', 'octopuses have three hearts', true, false],
+    ['Is it real that Opus 5.5 came out today?', 'Opus 5.5 came out today', true, false],
+    ['Did they really announce that Meta is buying Snap?', 'Meta is buying Snap', true, false],
+    ['Opus 5.5 came out today, right?', 'Opus 5.5 came out today', true, false],
+    ['The Great Wall is visible from space, isn’t it?', 'The Great Wall is visible from space', true, false],
+    ['Bro, have you heard that DeepSeek released a new model, right?', 'DeepSeek released a new model', true, false],
+    ['I’m pretty sure the Eiffel Tower is in Berlin.', 'the Eiffel Tower is in Berlin.', false, true],
+    ['I think Einstein failed math.', 'Einstein failed math.', false, true],
+    ['I swear lightning never strikes the same place twice.', 'lightning never strikes the same place twice.', false, true],
+    ['I read that Finland is the happiest country.', 'Finland is the happiest country.', false, false],
+    ['I just saw that SpaceX caught the booster again.', 'SpaceX caught the booster again.', false, false],
+    ['My dad told me that goldfish have a three second memory.', 'goldfish have a three second memory.', false, false],
+    ['Rumour has it Apple is making a car.', 'Apple is making a car.', false, false],
+    ['Turns out the Earth is flat.', 'the Earth is flat.', false, false],
+    ['Supposedly, bulls hate the colour red.', 'bulls hate the colour red.', false, false],
+    ['Studies show that coffee makes you live longer.', 'coffee makes you live longer.', false, false],
+    ['Everyone knows that we only use 10% of our brains.', 'we only use 10% of our brains.', false, false],
+  ])('adds the claim inside a conversational frame: %s', (text, content, asked, hedged) => {
+    const found = generateCandidates(text).find(candidate => candidate.text === content);
+    expect(found, `candidates: ${JSON.stringify(generateCandidates(text).map(candidate => candidate.text))}`).toBeDefined();
+    expect(sliceSpan(text, found!.span)).toBe(content);
+    expect(found!.asked === true).toBe(asked);
+    expect(found!.hedged === true).toBe(hedged);
+  });
+
+  it.each(['Have you seen my keys?', 'Did you read about the merger?', 'Is it crazy?', 'Right?', 'Yeah, right?', 'I think so.', 'I’m pretty sure.',
+    'My dad told me.', 'Turns out.', 'Did you see what happened?'])('adds no frame content to a frame with no claim: %s', text => {
+    expect(generateCandidates(text)).toHaveLength(1);
+  });
+
+  it.each([
+    ['Apparently Anthropic has a two year evaluation.', 'Anthropic has a two year evaluation.'],
+    ['I heard that Anthropic has a two year evaluation.', 'Anthropic has a two year evaluation.'],
+    ['Yeah, I heard that bulls get angry at the colour red.', 'bulls get angry at the colour red.'],
+    ['I’ve heard that bats are blind.', 'bats are blind.'],
+  ])('adds the content of a stated hearsay frame, spoken filler included, as a statement: %s', (text, content) => {
+    const found = generateCandidates(text).find(candidate => candidate.text === content);
+    expect(found).toMatchObject({ contentOf: 'span_0' });
+    expect(found).not.toHaveProperty('asked');
+  });
+
+  it.each(['Why?', 'You know?', 'Did you know?', 'Have you heard?', 'Is it true?', 'Did you know what time it is?', 'Do you know where the station is?',
+    'Have you heard about the merger?', 'Is it true if it rains?', 'Yeah.', 'Thank you.', 'Okay.', 'I don\'t heard the Anthropic.', 'Eight pack chicken.', 'A Facto.'])(
+    'adds no frame content to a plain question, filler or a garbled fragment: %s', text => {
+      expect(generateCandidates(text)).toHaveLength(1);
+    });
 
   it('frames each sentence of a longer input and ignores a frame with nothing after it', () => {
     const text = 'The tower is tall. I heard that it opened in 1889.';
@@ -265,6 +340,81 @@ describe('admission decisions', () => {
     expect(requestOf(client).questions.span_1_preserves_scope).toBeUndefined();
     const plain = await classify(jev(), input(text, true));
     expect(plain.claims.map(claim => claim.checkedText)).toEqual([text]);
+  });
+
+  // Live transcripts from 14 Nov. Jev called each whole sentence a question attributed to nobody, so nothing was checked.
+  it.each([
+    ['Have you heard that Anthropic added to your company?', 'Anthropic added to your company'],
+    ['You heard that Anthropic has a two year evaluation?', 'Anthropic has a two year evaluation'],
+    ['Is it true that bats are blind?', 'bats are blind'],
+  ])('A10: checks an overheard claim passed on as a question as its statement: %s', async (text, content) => {
+    for (const attribution of ['none', 'hearsay'] as const) {
+      const client = jev((_candidate, id) => id === 'span_0' ? { kind: 'question', attribution, rumour: 0.7 } : {});
+      const result = await classify(client, heard(text));
+      expect(result).toMatchObject({ action: 'check', reasonCode: 'eligible_public_claim' });
+      expect(result.claims).toHaveLength(1);
+      expect(result.claims[0]).toMatchObject({ checkedText: content, attribution: null, rumour: true });
+      expect(sliceSpan(text, result.claims[0].sourceSpan)).toBe(content);
+    }
+  });
+
+  it('A10: prefers the statement when Jev also calls the whole question a claim', async () => {
+    const result = await classify(jev(), heard('Did you know that goldfish only remember three seconds?'));
+    expect(result.claims.map(claim => claim.checkedText)).toEqual(['goldfish only remember three seconds']);
+  });
+
+  it('A10: a question-framed claim with a missing referent is skipped as subject_missing when overheard', async () => {
+    const client = jev((_candidate, id) => id === 'span_0' ? { kind: 'question' } : { self: 0.2 });
+    expect(await classify(client, heard('Have you heard that Anthropic added to your company?'))).toEqual({ action: 'skip', reasonCode: 'subject_missing', claims: [] });
+  });
+
+  // Live 15 Nov: overheard statistics about a group of people were skipped as subject_missing. Jev answered completeness 0.24-0.31
+  // because the question said a statistic often lacks a location; with the group guidance it answered 0.88-0.94, and still 0.07 for
+  // "Unemployment is 7%." These reach the checker like any statistic; the evidence decides what they misstate.
+  it.each([
+    ['Black people commit 70% of crime.', 'Black people commit 70% of crime.', 0.94],
+    ['Is it true that African American people commit 70% of the crime despite being 13% of the population?', 'African American people commit 70% of the crime despite being 13% of the population', 0.91],
+  ])('A16: an overheard statistic about a group of people reaches the checker: %s', async (text, checked, self) => {
+    const client = jev(() => ({ self }));
+    const result = await classify(client, heard(text));
+    expect(result).toMatchObject({ action: 'check', reasonCode: 'eligible_public_claim' });
+    expect(result.claims.map(claim => claim.checkedText)).toEqual([checked]);
+    expect(result.claims[0]).toMatchObject({ subjectMissing: false, subject: null });
+    const completeness = requestOf(client).questions.span_0_self_contained;
+    expect(completeness.instructions).toContain('“Unemployment is 7%” lacks a location');
+    expect(completeness.instructions).toContain('A statistic or share about a named group of people, such as “Immigrants commit 60% of crimes” or “Women earn 80% of what men earn”, names what it measures and is complete without a place or period');
+    expect(completeness.instructions).toContain('A sensitive or offensive claim about a group is still complete when it names the group and the figure.');
+    // What the old wording got from Jev: still skipped when Jev answers incomplete, so the fix is the question, not a rule.
+    expect(await classify(jev(() => ({ self: 0.24 })), heard(text))).toEqual({ action: 'skip', reasonCode: 'subject_missing', claims: [] });
+  });
+
+  it('A17: skips overheard chatter in another language before Jev, and checks it when asked or photographed', async () => {
+    for (const text of ['Hey, no estoy acá de nuevo.', 'Trebuie să dăm fix la o CR coaie…']) {
+      const client = jev();
+      expect(await classify(client, heard(text))).toEqual({ action: 'skip', reasonCode: 'not_english', claims: [] });
+      expect(client.ask).not.toHaveBeenCalled();
+      const asked = jev();
+      expect(await classify(asked, heard(text, true))).toMatchObject({ action: 'check' });
+      expect(asked.ask).toHaveBeenCalledTimes(1);
+      expect(await classify(jev(), input(text, false, { mode: 'ocr', capture: { source: 'glasses_camera', segmentId: 'segment-1', confidence: 0.9, final: true } }))).toMatchObject({ action: 'check' });
+    }
+  });
+
+  it('A10: a named source Jev matched keeps its frame even when the sentence ends with "?"', async () => {
+    const text = 'According to NASA, the Moon is shrinking?';
+    const result = await classify(jev(() => ({ attribution: 'named_outlet', source: 'NASA' })), input(text, true));
+    expect(result.claims).toMatchObject([{ checkedText: text, attribution: { source: 'NASA', mode: 'reported' } }]);
+  });
+
+  it.each([['Why?', 'question'], ['You know?', 'question'], ['Yeah.', 'other'], ['Thank you.', 'other'], ['Okay.', 'other']] as const)(
+    'A10: still skips an overheard plain question or filler as not a claim: %s', async (text, kind) => {
+      const client = jev(() => ({ kind }));
+      expect(await classify(client, heard(text))).toEqual({ action: 'skip', reasonCode: 'not_a_claim', claims: [], kind });
+      expect((requestOf(client).state as { candidates: unknown[] }).candidates).toHaveLength(1);
+    });
+
+  it.each(['I don\'t heard the Anthropic.', 'Eight pack chicken.', 'A Facto.'])('A8: still holds an overheard garbled fragment Jev calls misheard: %s', async text => {
+    expect(await classify(jev(() => ({ kind: 'other' }), 0.8), heard(text))).toEqual({ action: 'skip', reasonCode: 'possibly_misheard', claims: [] });
   });
 
   it('A11: routes by the top answer at 0.4 and demotes a recent event that names an earlier year', async () => {
@@ -437,6 +587,15 @@ describe('ported question wording', () => {
     expect(kind.criteria.opinion).toContain('Value judgements phrased as predictions are opinions');
     expect(Object.keys(route.criteria)).toEqual(['recent_event', 'named_fact', 'weather', 'calculation', 'general']);
     expect(route.criteria.recent_event).toBe('Breaking news: something said, done or decided, or something that happened, within the last few weeks or happening now, such as an incident, statement, vote, result, death, deal or announcement. Not events of past months or years');
+  });
+
+  it('tells Jev that a question passing a fact on states it and a plain question does not', async () => {
+    const client = jev();
+    await classify(client, input('Did you know that bats are blind?'));
+    const kind = requestOf(client).questions.span_0_kind;
+    if (kind.type !== 'choice') throw new Error('expected a choice question');
+    expect(kind.criteria.claim).toContain('A question that passes a fact on, such as "Have you heard that…", "Did you know…" or "Is it true that…", states that fact');
+    expect(kind.criteria.question).toContain('passes no fact on, such as "Why?", "You know?"');
   });
 
   it('decides kind and route in code from Jev probabilities', () => {

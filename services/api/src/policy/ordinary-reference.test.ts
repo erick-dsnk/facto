@@ -96,14 +96,14 @@ describe('ordinary descriptive reference corroboration', () => {
     expect(decideVerdict(value).reasonCode).toBe('insufficient_independent_evidence');
   });
 
-  it.each(['health_safety', 'disputed', 'unknown', 'uncertain_ordinary', 'lexical_health'] as const)('does not expand the stronger-risk source rubric (%s)', risk => {
+  // An uncertain-but-ordinary rating no longer counts as stronger risk (15 Nov), so it is not in this list.
+  it.each(['health_safety', 'disputed', 'unknown', 'lexical_health'] as const)('does not expand the stronger-risk source rubric (%s)', risk => {
     const value = judgment();
     // Even an otherwise valid expert anchor and disclosed distinct origin cannot
     // turn the new ordinary-only reference category into a high-risk corroborator.
     value.sourceAssessments['archive-a'].contentBasis = 'original_record';
     value.originAssessments[0].relationship = 'distinct_origins';
-    if (risk === 'uncertain_ordinary') value.claimRisk.confidence = .84;
-    else if (risk === 'lexical_health') value.checkedText = 'The observatory prevents disease.';
+    if (risk === 'lexical_health') value.checkedText = 'The observatory prevents disease.';
     else value.claimRisk.level = risk;
     expect(decideVerdict(value, undefined, authority).reasonCode).toBe('insufficient_independent_evidence');
   });

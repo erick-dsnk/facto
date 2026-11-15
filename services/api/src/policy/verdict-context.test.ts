@@ -43,15 +43,27 @@ describe('decideVerdict with the ported rules and the strict gate', () => {
     expect(decideVerdict({ ...value, originAssessments: [] } as AssessedJudgment, { traits: traits(evidence), frame: frame(), checkedText: text }).verdict).toBe('insufficient_evidence');
   });
 
-  it('treats an uncertain or missing risk assessment as the strict route', () => {
+  it('treats a non-ordinary or missing risk assessment as the strict route, not a merely uncertain ordinary one', () => {
     const text = 'The bridge opened in 1889.';
     const evidence = [passage('a', 'https://a.example/x', 'supports'), passage('b', 'https://b.example/y', 'supports')];
     const context = { traits: traits(evidence), frame: frame(), checkedText: text };
     expect(decideVerdict(judgment(text, 'supported', 0.9, evidence), context).verdict).toBe('supported');
     expect(decideVerdict(judgment(text, 'supported', 0.9, evidence, { claimRisk: { level: 'unknown', confidence: 0.99 } }), context).verdict).toBe('insufficient_evidence');
-    expect(decideVerdict(judgment(text, 'supported', 0.9, evidence, { claimRisk: { level: 'ordinary', confidence: 0.8 } }), context).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment(text, 'supported', 0.9, evidence, { claimRisk: { level: 'ordinary', confidence: 0.8 } }), context).verdict).toBe('supported');
+    expect(decideVerdict(judgment(text, 'supported', 0.9, evidence, { claimRisk: { level: 'health_safety', confidence: 0.6 } }), context).verdict).toBe('insufficient_evidence');
     const { sourceAssessments: _s, claimRisk: _r, originAssessments: _o, ...bare } = judgment(text, 'supported', 0.9, evidence);
     expect(decideVerdict(bare, context).verdict).toBe('insufficient_evidence');
+  });
+
+  it('says False on a health claim when three sites contradict it, none support it and Jev is 90% sure', () => {
+    const text = 'Vitamin C cures the common cold.';
+    const three = [passage('a', 'https://a.example/x', 'contradicts'), passage('b', 'https://b.example/y', 'contradicts'), passage('c', 'https://c.example/z', 'contradicts')];
+    const risky = { claimRisk: { level: 'health_safety' as const, confidence: 0.99 } };
+    expect(decideVerdict(judgment(text, 'contradicted', 0.95, three, risky), { traits: traits(three), frame: frame(), checkedText: text }).verdict).toBe('contradicted');
+    const two = three.slice(0, 2);
+    expect(decideVerdict(judgment(text, 'contradicted', 0.95, two, risky), { traits: traits(two), frame: frame(), checkedText: text }).verdict).toBe('insufficient_evidence');
+    const backed = [...three, passage('d', 'https://d.example/w', 'supports')];
+    expect(decideVerdict(judgment(text, 'contradicted', 0.95, backed, risky), { traits: traits(backed), frame: frame(), checkedText: text }).verdict).not.toBe('contradicted');
   });
 
   it('V7: one news report settles an attributed claim, with the attribution label', () => {

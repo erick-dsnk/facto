@@ -45,16 +45,30 @@
   "vars": {
     "PIPELINE_MODE": "live",
     "TRUST_PROXY": "1",
-    // Optional comma list of extra names for Deepgram keyterm prompting, added to the built-in list
-    // (Facto, Anthropic, Nvidia, Jensen Huang, Meta, Ray-Ban, OpenAI). Empty adds nothing.
+    // Speech recognition: "elevenlabs" (Scribe v3 Live, needs ELEVENLABS_API_KEY) or "deepgram" (nova-3,
+    // needs DEEPGRAM_API_KEY). If the chosen provider's key is missing, the other provider is used when its key is set.
+    "ASR_PROVIDER": "elevenlabs",
+    // Optional comma lists of extra names for keyterm prompting, added to each provider's built-in list. Empty adds nothing.
+    // ElevenLabs (terms of at most 20 characters): Facto, Hey Facto, Anthropic, Claude, Opus, Sonnet, Haiku, DeepSeek, OpenAI,
+    // ChatGPT, Gemini, Meta, Ray-Ban, Zelensky, Donbas, NATO. Deepgram: Facto, Anthropic, Nvidia, Jensen Huang, Meta, Ray-Ban, OpenAI.
+    "ELEVENLABS_KEYTERMS": "",
     "DEEPGRAM_KEYTERMS": "",
-    // Off unless an operator turns it on for a debugging session: "1" logs every final Deepgram result
-    // with per-word confidence (what bystanders said). Never commit it as "1".
+    // Voice dimming: a final sentence more than ASR_DIM_DB below the wearer's level (or under ASR_DIM_FLOOR_DBFS) is shown but
+    // not checked, so other tables do not use up checks. "0" turns dimming off. With the debug feed on, every sentence's level is an
+    // asr.level entry. ASR_ECHO_MS: after a spoken answer, ignore words in the first this-many ms of the resumed stream ("0" = off).
+    "ASR_DIM_DB": "20",
+    "ASR_DIM_FLOOR_DBFS": "-60",
+    "ASR_ECHO_MS": "800",
+    // A sentence that trails off (comma, filler, "...", dangling "the/of/are") joins the same speaker's next sentence within this
+    // many ms and is checked as one claim; a fragment is never checked on its own. "0" stops the joining only.
+    "ASR_STITCH_MS": "4000",
+    // Off unless an operator turns it on for a debugging session: "1" logs every final ASR result
+    // with per-word confidence or logprob (what bystanders said). Never commit it as "1".
     "DEBUG_TRANSCRIPTS": ""
   }
 
   // Secrets, set with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc` from deploy/cloudflare.
   // Never put their values in this file:
-  //   JEV_API_KEY, EXA_API_KEY, DEEPGRAM_API_KEY, GOOGLE_FACTCHECK_API_KEY (optional), DEMO_JOIN_CODE,
+  //   JEV_API_KEY, EXA_API_KEY, ELEVENLABS_API_KEY, DEEPGRAM_API_KEY (fallback), GOOGLE_FACTCHECK_API_KEY (optional), DEMO_JOIN_CODE,
   //   DEMO_JOIN_EXPIRES_AT, ALLOWED_ORIGINS, DEBUG_FEED_KEY (optional, debugging only)
 }

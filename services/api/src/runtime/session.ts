@@ -25,7 +25,7 @@ export class Session {
   displayState: DisplayState | null = null;
   displayListeners = new Set<(event: EventEnvelope, state: DisplayState | null, previous: DisplayState | null) => void>();
   listeners = new Set<(event: EventEnvelope) => void>();
-  constructor(public now: () => number, lifetimeMs = 300_000) { this.expiresAt = now() + lifetimeMs; }
+  constructor(public now: () => number, lifetimeMs = SESSION_LIFETIME_MS) { this.expiresAt = now() + lifetimeMs; }
   emit(type: EventType, payload: unknown, input?: TextInput, claimId?: string) {
     const event: EventEnvelope = { schemaVersion: 1, eventId: randomUUID(), eventSeq: ++this.sequence, sessionId: this.id, sessionEpoch: this.epoch, type, serverAt: new Date(this.now()).toISOString(), payload };
     if (input) { event.requestId = input.requestId; event.revision = input.revision; }
@@ -56,6 +56,16 @@ export class Session {
     this.emit('session.ended', { reasonCode: reason, active: false });
   }
 }
+/**
+ * How long a session lives. It was 5 minutes, and on expiry the app stopped listening and tore down the glasses stream, so
+ * listening stopped every 5 minutes on its own (15 Nov). SESSION_LIFETIME_MS overrides it (1 minute to 12 hours).
+ */
+export const SESSION_LIFETIME_MS = parseLifetime(process.env.SESSION_LIFETIME_MS);
+function parseLifetime(raw: string | undefined): number {
+  const value = Number(raw);
+  return Number.isFinite(value) && value >= 60_000 && value <= 12 * 3_600_000 ? value : 2 * 3_600_000;
+}
+
 export class SessionStore {
   sessions = new Map<string, Session>();
   constructor(public now: () => number = Date.now, private readonly onDelete?: (id: string) => void) {}
