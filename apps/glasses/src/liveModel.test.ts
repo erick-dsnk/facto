@@ -8,7 +8,7 @@ const result = fixtures[1].payload as ClaimResult;
 const sessionId = 'session-fixture';
 const snapshot = (state: DisplaySnapshot['state'] = null): DisplaySnapshot => ({ schemaVersion: 1, type: 'display.snapshot', sessionId, sessionEpoch: 1, eventSeq: 0, active: true, expiresAt: '2026-11-14T10:05:00Z', state });
 const event = (type: EventEnvelope['type'], eventSeq: number, payload: unknown, overrides: Partial<EventEnvelope> = {}): EventEnvelope => ({ ...fixtures[0], type, eventSeq, payload, ...overrides });
-const checking = (seq = 1, overrides: Partial<EventEnvelope> = {}, userInitiated = true) => event('claim.checking', seq, { claimText: result.checkedText, mode: 'ocr', userInitiated }, overrides);
+const checking = (seq = 1, overrides: Partial<EventEnvelope> = {}, userInitiated = true) => event('claim.checking', seq, { admissionAction: 'check', reasonCode: 'eligible_public_claim', claimText: result.checkedText, mode: 'ocr', userInitiated }, overrides);
 const ready = () => reduceDisplay(emptyLiveModel(), snapshot(), sessionId, now);
 const source = { id: 'site-1', hostname: 'toureiffel.paris', title: 'Eiffel Tower', stage: 'found', provider: 'exa' };
 
@@ -50,7 +50,8 @@ describe('read-only display projection', () => {
   it('clears cancellation/supersession and prevents late results from returning', () => {
     for (const type of ['check.cancelled', 'claim.superseded', 'pipeline.error', 'claim.skipped'] as const) {
       const pending = reduceDisplay(ready(), checking(), sessionId, now);
-      const cleared = reduceDisplay(pending, event(type, 2, {}), sessionId, now);
+      // claim.skipped always carries its admission fields (the envelope validates them); the others carry no required payload.
+      const cleared = reduceDisplay(pending, event(type, 2, type === 'claim.skipped' ? { admissionAction: 'skip', reasonCode: 'stale_capture' } : {}), sessionId, now);
       expect(cleared.state).toBeNull();
       expect(reduceDisplay(cleared, event('claim.result', 3, result), sessionId, now).state).toBeNull();
       expect(reduceDisplay(cleared, checking(4, { revision: 2 }), sessionId, now).state?.revision).toBe(2);

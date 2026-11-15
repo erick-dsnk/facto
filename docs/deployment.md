@@ -18,7 +18,7 @@ The API runs as one Cloudflare Container behind a Worker (issue #43). The Worker
 
 ### Configuration
 
-Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `MIN_CAPTURE_CONFIDENCE=0.6` (capture confidence below this asks for confirmation; the server default is 0.8) and `DEBUG_TRANSCRIPTS` (empty, so off; `1` logs every final Deepgram result with per-word confidence as `[asr:final]` lines, which includes what bystanders said, so an operator sets it only for a debugging session). The in-memory feed at `GET /v1/debug/feed` additionally needs the secret `DEBUG_FEED_KEY` (16+ characters, sent as `x-debug-key`). The join code never opens it, without the key the route does not exist and nothing is recorded, and a session's entries are purged when it is deleted or expires. The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
+Vars in `wrangler.jsonc`, committed: `PIPELINE_MODE=live`, `TRUST_PROXY=1`, `ASR_PROVIDER=elevenlabs` (speech recognition: `elevenlabs` for ElevenLabs Scribe v3 Live or `deepgram` for Deepgram nova-3; if the chosen provider's key is missing and the other one's is set, the server uses the other one and logs a warning), `ELEVENLABS_KEYTERMS` and `DEEPGRAM_KEYTERMS` (optional comma lists of extra names for keyterm prompting, added to each provider's built-in list; empty adds nothing), `ASR_DIM_DB=20` and `ASR_DIM_FLOOR_DBFS=-60` (voice dimming: a final sentence more than 20 dB below the wearer's level, measured from the audio over its words, or under -60 dBFS, is shown but not checked; `0` turns it off; a spoken trigger is never dimmed; with the debug feed on, each sentence's level and the decision are `asr.level` entries), `ASR_ECHO_MS=800` (after a spoken answer, words in the first 800 ms of the resumed stream are ignored), `ASR_STITCH_MS=4000` (a sentence that trails off joins the same speaker's next sentence within 4 s) and `DEBUG_TRANSCRIPTS` (empty, so off; `1` logs every final ASR result with per-word confidence or logprob as `[asr:final]` lines, which includes what bystanders said, so an operator sets it only for a debugging session). `SESSION_LIFETIME_MS` (optional, default 2 hours) sets how long a session lives. The in-memory feed at `GET /v1/debug/feed` additionally needs the secret `DEBUG_FEED_KEY` (16+ characters, sent as `x-debug-key`). The join code never opens it, without the key the route does not exist and nothing is recorded, and a session's entries are purged when it is deleted or expires. The Worker also sets `HOST=0.0.0.0` and `PORT=8080` for the container.
 
 Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrangler.jsonc`. Wrangler prompts for the value. Never commit or paste values anywhere:
 
@@ -26,7 +26,8 @@ Secrets, set once each with `npx wrangler secret put <NAME> --config ../../wrang
 |---|---|
 | `JEV_API_KEY` | Jev key (live mode refuses to start without it) |
 | `EXA_API_KEY` | Exa key (same) |
-| `DEEPGRAM_API_KEY` | Deepgram key (without it `/health` shows `"asr":"not_configured"`) |
+| `ELEVENLABS_API_KEY` | ElevenLabs key for speech recognition (`ASR_PROVIDER=elevenlabs`). With neither ASR key, `/health` shows `"asr":"not_configured"` |
+| `DEEPGRAM_API_KEY` | Deepgram key, the fallback recogniser (`ASR_PROVIDER=deepgram`, or used when `ELEVENLABS_API_KEY` is missing) |
 | `DEMO_JOIN_CODE` | 8+ characters |
 | `DEMO_JOIN_EXPIRES_AT` | ISO timestamp after the demo, e.g. `2026-12-31T23:59:00Z` |
 | `ALLOWED_ORIGINS` | `https://actually-api.<account-subdomain>.workers.dev` (for the `/` console page; the iOS app sends no `Origin`) |
@@ -82,7 +83,7 @@ If a request gets Cloudflare error 1010 (Browser Integrity Check on `workers.dev
 The API runs as one Railway service in EU West. `railway.json` sets the start command (`npm start`, which runs `tsx`, now a runtime dependency), the `/health` healthcheck and a single replica, because sessions live in memory.
 
 1. Create the service from this repo and enable auto-deploy from `main`.
-2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `DEEPGRAM_API_KEY`, `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
+2. Set these variables in the Railway dashboard (never in the repo): `HOST=0.0.0.0`, `PIPELINE_MODE=live`, `JEV_API_KEY`, `EXA_API_KEY`, `ELEVENLABS_API_KEY` (and optionally `DEEPGRAM_API_KEY` as the fallback), `DEMO_JOIN_CODE` (8+ characters), `DEMO_JOIN_EXPIRES_AT` (ISO timestamp), `ALLOWED_ORIGINS`. Railway provides `PORT`. On Railway an unset `HOST` falls back to `0.0.0.0` and `TRUST_PROXY` to `1`, so the join limit counts each client address instead of the proxy's. Raise `TRUST_PROXY` only if another proxy, such as a CDN, sits in front of Railway.
 3. Leave `TLS_CERT_PATH` and `TLS_KEY_PATH` unset. Railway terminates TLS, so clients use `https://` and `wss://` on the Railway domain.
 4. Check `GET /health` on the public domain. It reports mode and provider readiness without credentials.
 

@@ -47,8 +47,9 @@ final class MicrophoneWakeWordListener: WakeWordListening {
       // allowBluetoothHFP routes input through the glasses' hands-free profile when connected.
       try session.setCategory(.playAndRecord, mode: .default, options: [.allowBluetoothHFP, .defaultToSpeaker])
       try session.setActive(true)
-      if let glasses = session.availableInputs?.first(where: { $0.portType == .bluetoothHFP }) {
-        try session.setPreferredInput(glasses)
+      let hfp = session.availableInputs?.filter { $0.portType == .bluetoothHFP } ?? []
+      if let index = GlassesHFPInput.preferredIndex(hfp.map(\.portName)) {
+        try session.setPreferredInput(hfp[index])
       }
       try startEngine()
     } catch let error as WakeWordError {

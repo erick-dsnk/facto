@@ -1169,19 +1169,20 @@ final class LiveModelTests: XCTestCase {
     XCTAssertEqual(keepAwake, [true, false], "the phone stays awake only while listening")
   }
 
-  func testShortTransportDropRequiresExplicitListeningResume() async {
+  /// A ~1.5 s socket drop (the glasses' Wi-Fi join) used to end listening until the wearer tapped Start listening again.
+  func testShortTransportDropResumesListeningByItself() async {
     let model = await listeningModel()
     let starts = camera.startedQualities.count
     backend.setState(.reconnecting(attempt: 1))
-    await waitUntil { model.listening == .stopped(.noConnection) }
+    await waitUntil { model.listening == .reconnecting }
     backend.sessionEpoch = 2
     backend.setState(.connected)
     backend.emit(LiveEvents.sessionReady(active: false, audio: true, epoch: 2))
-    await waitUntil { model.sessionActive == true }
-    XCTAssertEqual(backend.controlTypes.filter { $0 == "audio.start" }.count, 1)
-    XCTAssertEqual(camera.startedQualities.count, starts)
-    XCTAssertFalse(model.isListening)
-    XCTAssertEqual(chime.count, 0)
+    await waitUntil { self.backend.controlTypes.filter { $0 == "audio.start" }.count == 2 }
+    XCTAssertEqual(camera.startedQualities.count, starts, "the glasses stream keeps running")
+    XCTAssertTrue(model.isListening)
+    XCTAssertEqual(chime.count, 1, "a quiet chime says listening is back")
+    XCTAssertTrue(speaker.spoken.isEmpty, "no spoken stop message for a short drop")
   }
 
   func testSuspendedListeningStartupCannotResumeAfterBackgrounding() async {
@@ -1202,7 +1203,7 @@ final class LiveModelTests: XCTestCase {
     let model = await listeningModel()
     backend.setState(.reconnecting(attempt: 1))
     await waitUntil { model.status == .reconnecting(attempt: 1) }
-    clock.advance(by: 5)
+    clock.advance(by: LiveModel.listeningReconnectGrace)
     await waitUntil { model.listening == .stopped(.noConnection) }
     XCTAssertEqual(speaker.spoken.last, AudioStreamerStopReason.noConnection.spokenMessage)
   }

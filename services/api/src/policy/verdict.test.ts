@@ -259,10 +259,11 @@ describe('conservative deterministic verdict', () => {
     judgment.sourceAssessments.c = { contentBasis: 'original_record', confidence: .99 };
     expect(decideVerdict(judgment).verdict).toBe('insufficient_evidence');
   });
-  it('takes the stronger route for uncertain ordinary risk and dangerous-mixture or pregnancy wording', () => {
+  it('takes the stronger route for dangerous-mixture or pregnancy wording, but not for merely uncertain ordinary risk', () => {
     const judgment = reading();
+    // 15 Nov: unsure-but-ordinary used to go strict and silenced everyday myths with six contradicting sources.
     judgment.claimRisk.confidence = .84;
-    expect(decideVerdict(judgment).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment).verdict).not.toBe('insufficient_evidence');
     judgment.claimRisk.confidence = .99;
     for (const text of ['Mixing bleach with vinegar is harmless.', 'This supplement improves pregnancy outcomes.', 'The product improves athletic performance.']) {
       judgment.checkedText = text;
@@ -308,10 +309,10 @@ describe('conservative deterministic verdict', () => {
     judgment.evidence = [passage('a', { url: 'https://synthetic-maker.example/announcement', excerpt: 'SYNTHETIC announcement record: Synthetic Maker announced Device A on November 14, 2026, with sales planned for December.' })];
     delete judgment.sourceAssessments.b;
     judgment.originAssessments = [];
-    expect(decideVerdict(judgment, registry).verdict).toBe('supported');
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('supported');
     judgment.checkedText = 'Device A prevents disease.';
     judgment.sourceAssessments.a.contentBasis = 'promotional';
-    expect(decideVerdict(judgment, registry).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('insufficient_evidence');
   });
 });
 
@@ -327,8 +328,8 @@ describe('reviewed high-risk provenance with explicit test-only capabilities', (
   }
   it('allows a scoped reviewed expert anchor plus substantive independently originating corroborator', () => {
     const judgment = highRisk();
-    expect(decideVerdict(judgment, registry).verdict).toBe('supported');
-    expect(decideVerdict(judgment, registry).selectedEvidenceIds).toEqual(['a', 'b']);
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('supported');
+    expect(decideVerdict(judgment, undefined, registry).selectedEvidenceIds).toEqual(['a', 'b']);
     expect(decideVerdict(judgment).verdict).toBe('insufficient_evidence');
     expect(SOURCE_REGISTRY.some(rule => rule.host === registry[0].host)).toBe(false);
   });
@@ -337,35 +338,35 @@ describe('reviewed high-risk provenance with explicit test-only capabilities', (
     judgment.evidence.unshift(passage('preferred', { url: 'https://summary.example/claim', excerpt: 'SYNTHETIC brief summary of treatment observations.' }));
     judgment.sourceAssessments.preferred = { contentBasis: 'substantive_secondary', confidence: .84 };
     judgment.selectedEvidenceIds = ['preferred'];
-    expect(decideVerdict(judgment, registry).selectedEvidenceIds).toEqual(['a', 'b']);
+    expect(decideVerdict(judgment, undefined, registry).selectedEvidenceIds).toEqual(['a', 'b']);
     judgment.originAssessments[0].relationship = 'unclear';
-    expect(decideVerdict(judgment, registry).reasonCode).toBe('insufficient_independent_evidence');
+    expect(decideVerdict(judgment, undefined, registry).reasonCode).toBe('insufficient_independent_evidence');
     judgment.originAssessments[0].relationship = 'distinct_origins';
     judgment.evidence[0].stance = 'contradicts';
-    expect(decideVerdict(judgment, registry).reasonCode).toBe('conflicting_sources');
+    expect(decideVerdict(judgment, undefined, registry).reasonCode).toBe('conflicting_sources');
   });
   it('requires positively established distinct origins, not different domains or absence of a same-origin flag', () => {
     const judgment = highRisk();
     for (const originAssessments of [[], [{ evidenceIds: ['a', 'b'] as [string, string], relationship: 'unclear' as const, confidence: .99 }], [{ evidenceIds: ['a', 'b'] as [string, string], relationship: 'distinct_origins' as const, confidence: .84 }]]) {
       judgment.originAssessments = originAssessments;
-      expect(decideVerdict(judgment, registry).verdict).toBe('insufficient_evidence');
+      expect(decideVerdict(judgment, undefined, registry).verdict).toBe('insufficient_evidence');
     }
   });
   it('rejects an expert outside its exact capability, a single anchor, advertising, and a transitive shared origin', () => {
     const judgment = highRisk();
     judgment.checkedText = 'Synthetic treatment cures cancer.';
-    expect(decideVerdict(judgment, registry).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('insufficient_evidence');
     judgment.checkedText = 'Synthetic treatment reduces disease incidence.';
     judgment.sourceAssessments.b.contentBasis = 'promotional';
-    expect(decideVerdict(judgment, registry).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('insufficient_evidence');
     judgment.sourceAssessments.b.contentBasis = 'attributable_research';
     judgment.evidence.push(passage('c', { url: 'https://test-news.example/release', directlyAddressesClaim: false, excerpt: 'The two synthetic trial reports both repeat synthetic sponsor release SR-1.' }));
     judgment.originAssessments.push({ evidenceIds: ['a', 'c'], relationship: 'common_origin', confidence: .99 }, { evidenceIds: ['b', 'c'], relationship: 'common_origin', confidence: .99 });
-    expect(decideVerdict(judgment, registry).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('insufficient_evidence');
     judgment.evidence = [judgment.evidence[0]];
     delete judgment.sourceAssessments.b;
     judgment.originAssessments = [];
-    expect(decideVerdict(judgment, registry).verdict).toBe('insufficient_evidence');
+    expect(decideVerdict(judgment, undefined, registry).verdict).toBe('insufficient_evidence');
   });
 });
 

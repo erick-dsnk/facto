@@ -1,0 +1,675 @@
+{
+  "schemaVersion": 1,
+  "label": "baseline-everyday",
+  "startedAt": "2026-11-14T17:39:47.029Z",
+  "finishedAt": "2026-11-14T17:41:45.029Z",
+  "completed": true,
+  "stoppedReason": null,
+  "server": {
+    "kind": "loopback",
+    "mode": "live"
+  },
+  "sets": [
+    "everyday"
+  ],
+  "limit": null,
+  "joins": 2,
+  "licence": "HARD is the AVeriTeC held-out sample (CC BY-NC 4.0), read in place from the reference app checkout. Reports keep only ids, labels and metrics; no claim text, context, checked text or summary is stored.",
+  "metrics": {
+    "everyday": {
+      "set": "everyday",
+      "cases": 59,
+      "fourLabel": {
+        "count": 26,
+        "total": 50,
+        "share": 0.52
+      },
+      "outcome": {
+        "count": 29,
+        "total": 59,
+        "share": 0.4915254237288136
+      },
+      "wrongTrueFalse": 0,
+      "trueCalledFalse": 0,
+      "falseCalledTrue": 0,
+      "cantVerify": {
+        "count": 7,
+        "total": 51,
+        "share": 0.13725490196078433
+      },
+      "skips": {
+        "count": 18,
+        "total": 51,
+        "share": 0.35294117647058826
+      },
+      "errors": 0,
+      "latencyMs": {
+        "median": 918,
+        "p95": 5947,
+        "measured": 59
+      },
+      "exaSearchesPerCheck": null,
+      "jevCallsPerCheck": null,
+      "usageRows": 0,
+      "fieldUnsupported": 1,
+      "confusion": {
+        "false": {
+          "cant_verify": 5,
+          "needs_confirmation": 7,
+          "false": 8,
+          "not_a_claim": 2
+        },
+        "true": {
+          "needs_confirmation": 6,
+          "true": 18,
+          "cant_verify": 2,
+          "skip": 2
+        },
+        "not_a_claim": {
+          "not_a_claim": 2,
+          "needs_confirmation": 4,
+          "skip": 1
+        },
+        "speculation": {
+          "not_a_claim": 1
+        },
+        "needs_confirmation": {
+          "needs_confirmation": 1
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "set": "everyday",
+      "id": "myth-01",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 2433,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-02",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 282,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-03",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 5255,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-04",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "below_threshold",
+      "latencyMs": 3594,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-05",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1641,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-06",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 182,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-07",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 249,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "myth-08",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2154,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-01",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 183,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2150,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2708,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-04",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2542,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-05",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3034,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-06",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1556,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-07",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3432,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "surprise-08",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 5947,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "plain-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3639,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "plain-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 881,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "plain-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2512,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "plain-04",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3258,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-01",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 208,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-02",
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 260,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-03",
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 278,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "nonclaim-04",
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 279,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-01",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 270,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-02",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 271,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-03",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 273,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-04",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 171,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-05",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 211,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-06",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 189,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-07",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 186,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "context-08",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 248,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "data-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2450,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "data-02",
+      "expected": "false",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 210,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "data-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 325,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "data-04",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 1726,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "data-05",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2265,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "data-06",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 918,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "calc-01",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2869,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "calc-02",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2314,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "calc-03",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 3403,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "calc-04",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2682,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "calc-05",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2425,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "calc-06",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "no_direct_evidence",
+      "latencyMs": 6563,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-affair",
+      "expected": "speculation",
+      "predicted": "not_a_claim",
+      "reasonCode": "private_or_personal",
+      "latencyMs": 209,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-ipo",
+      "expected": "false",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 193,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-goldfish",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 6349,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-great-wall",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "conflicting_sources",
+      "latencyMs": 3964,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-helsinki",
+      "expected": "true",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 4432,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-eiffel-context",
+      "expected": "true",
+      "predicted": "needs_confirmation",
+      "reasonCode": "incomplete_or_unclear",
+      "latencyMs": 224,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-nasa-moon",
+      "expected": "true",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 287,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-opinion",
+      "expected": "not_a_claim",
+      "predicted": "not_a_claim",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 270,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-question",
+      "expected": "not_a_claim",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 266,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-prediction",
+      "expected": "not_a_claim",
+      "predicted": "needs_confirmation",
+      "reasonCode": "not_eligible_public_fact",
+      "latencyMs": 282,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-misheard",
+      "expected": "needs_confirmation",
+      "predicted": "needs_confirmation",
+      "reasonCode": "capture_uncertain",
+      "latencyMs": 12,
+      "jevCalls": null,
+      "exaSearches": null,
+      "fieldUnsupported": true
+    },
+    {
+      "set": "everyday",
+      "id": "dev-attributed-recent",
+      "expected": "true",
+      "predicted": "skip",
+      "reasonCode": "nonliteral_or_quoted",
+      "latencyMs": 180,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-everest",
+      "expected": "true",
+      "predicted": "true",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 2490,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-sydney-capital",
+      "expected": "false",
+      "predicted": "false",
+      "reasonCode": "qualifying_evidence",
+      "latencyMs": 848,
+      "jevCalls": null,
+      "exaSearches": null
+    },
+    {
+      "set": "everyday",
+      "id": "dev-hearsay-bulls",
+      "expected": "false",
+      "predicted": "cant_verify",
+      "reasonCode": "insufficient_independent_evidence",
+      "latencyMs": 4727,
+      "jevCalls": null,
+      "exaSearches": null
+    }
+  ]
+}

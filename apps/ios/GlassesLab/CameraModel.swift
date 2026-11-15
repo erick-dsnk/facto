@@ -602,9 +602,16 @@ extension CameraModel: LiveCamera {
       // Bluetooth. Grabbing a still from a running stream takes ~1 s, so photos come from a
       // stream, chosen per glasses:
       if glasses.sessionHasDisplay {
-        // Display glasses: a running stream holds back lens cards and shows a viewfinder, so
-        // the stream runs only for the photo.
-        return try await captureStillWithShortStream()
+        // Display glasses: a running stream holds back lens cards, so none is kept. Each new
+        // stream joins the glasses' Wi-Fi: iOS asked to join on every photo and the join took
+        // 7 to 16 s, often past the 15 s limit (14 Nov). Meta's photo call goes over Bluetooth
+        // instead, with no prompt (~14 s); the short stream is only the fallback.
+        do {
+          return try await captureStillWithoutStream()
+        } catch {
+          plog("photo without a stream failed (\(error)); falling back to a short stream")
+          return try await captureStillWithShortStream()
+        }
       }
       // Glasses without a display: start a quiet stream (no audio, nothing sent anywhere) and
       // keep it, so the next photo is instant too.
@@ -727,6 +734,8 @@ extension CameraModel: LiveCamera {
 
   /// Starts the device session when needed and waits up to 10 s for it.
   func ensureSessionStarted() async -> Bool {
+    // The lens may have just closed its session: joining it while it stops fails the photo.
+    if session == nil { await glasses.waitUntilStopped() }
     if session == nil { startSession() }
     for _ in 0..<100 where session != nil && sessionState != .started {
       try? await Task.sleep(for: .milliseconds(100))
