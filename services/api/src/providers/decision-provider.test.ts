@@ -27,6 +27,11 @@ describe('decision provider selection', () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
+  it('treats an empty or blank provider as unset and selects jev', () => {
+    expect(selectDecisionProvider({ mode: 'fixture', provider: '' }).provider).toBe('jev');
+    expect(selectDecisionProvider({ mode: 'fixture', provider: '  ' }).provider).toBe('jev');
+  });
+
   it('rejects unsupported provider names rather than silently choosing a backend', () => {
     expect(() => selectDecisionProvider({ mode: 'fixture', provider: 'unknown' })).toThrow('DECISION_PROVIDER must be jev or laya.');
   });
