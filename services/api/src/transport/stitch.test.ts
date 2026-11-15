@@ -33,6 +33,11 @@ describe('sentence stitcher', () => {
     expect(new SentenceStitcher(4000).add(said('1', 'in- Uh, Cyberpunk 2077 was released in, uh, 2000.', 10_000)))
       .toMatchObject({ action: 'check', requestId: 'r-1', text: 'Cyberpunk 2077 was released in, 2000.' });
     expect(new SentenceStitcher(4000).add(said('1', 'and- so- The Moon is made of cheese.', 10_000))).toMatchObject({ action: 'check', text: 'The Moon is made of cheese.' });
+    // Live 15 Nov 09:20:36: a filler before the false start, and the restarted word in lowercase.
+    expect(new SentenceStitcher(4000).add(said('1', 'Uh, hu- humans only use 10% of their brains.', 10_000)))
+      .toMatchObject({ action: 'check', text: 'Humans only use 10% of their brains.' });
+    // A filler alone is no false start: a lowercase sentence still waits as a continuation.
+    expect(new SentenceStitcher(4000).add(said('1', 'Uh, the tower is in Berlin.', 10_000)).action).toBe('hold');
     expect(new SentenceStitcher(4000).add(said('1', 'Self-driving cars never crash.', 10_000))).toMatchObject({ action: 'check', text: 'Self-driving cars never crash.' });
     expect(new SentenceStitcher(4000).add(said('1', 'from the family of zebras.', 10_000)).action).toBe('hold');
   });

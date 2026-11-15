@@ -16,7 +16,14 @@ const ENDS_SENTENCE = /[.!?]["'”’)\]]*$/u;
 const TRAILS_OFF = /(?:\.\.\.|…|[,;:\-–—])["'”’)\]]*$/u;
 /** A cut-off false start the recogniser kept before the sentence ("in- Cyberpunk 2077 was…", "and- Stai…"): lowercase words ending in a dash. */
 const FALSE_START = /^(?:\p{Ll}[\p{Ll}']*[-–—]\s+)+/u;
-const dropFalseStart = (text: string) => text.trimStart().replace(FALSE_START, '');
+const LEADING_FILLERS = new RegExp(`^(?:(?:${[...FILLERS].join('|')})[\\s,.…]+)+`, 'iu');
+/** Drops fillers and cut-off words before the restart, which then opens the sentence: "Uh, hu- humans only use…" -> "Humans only use…". */
+function dropFalseStart(text: string): string {
+  const trimmed = text.trimStart();
+  const rest = trimmed.replace(LEADING_FILLERS, '');
+  const restart = rest.replace(FALSE_START, '');
+  return restart === rest ? trimmed : restart.charAt(0).toUpperCase() + restart.slice(1);
+}
 const bare = (token: string) => token.toLowerCase().replace(/^[^\p{L}\p{N}']+|[^\p{L}\p{N}']+$/gu, '');
 const words = (text: string) => text.trim().split(/\s+/).filter(Boolean);
 
