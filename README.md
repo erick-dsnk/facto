@@ -1,12 +1,6 @@
 <div align="center">
 
-# facto
-
-### Fact-checking without the effort.
-
-One request. An answer through your Meta glasses.
-
-<img src="docs/images/hero.webp" alt="Facto in the right lens of Meta Ray-Ban Display. It heard “Goldfish only remember things for three seconds.” and answers False, 3 of 3 sources disagree, quoting Live Science." />
+<img src="docs/images/hero.webp" alt="facto: live fact-checking for Meta glasses. In the right lens of Meta Ray-Ban Display, Facto heard “Goldfish only remember things for three seconds.” and answers False, 3 of 3 sources disagree, quoting Live Science." />
 
 [Website](https://fact0.eu) · [Demo video](https://youtu.be/VF11rvTQ7kU) · [How it works](#how-it-works) · [Getting started](#getting-started) · [Architecture](#architecture) · [Laya and privacy](#laya-and-privacy)
 
