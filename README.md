@@ -6,46 +6,45 @@
 
 One request. An answer through your Meta glasses.
 
-<img src="docs/images/lens-searching.webp" alt="Facto in the right lens, searching sources for the claim that the Eiffel Tower grows up to 15 cm taller in summer" width="420" /> <img src="docs/images/lens-verdict.webp" alt="Facto in the right lens showing True, with a quote from toureiffel.paris" width="420" />
-<br />
-<img src="docs/images/glasses-listening.webp" alt="The glasses with the caption: Your glasses already hear what you hear" width="420" /> <img src="docs/images/glasses-front.webp" alt="The glasses from the front" width="420" />
+<img src="docs/images/hero.webp" alt="Facto in the right lens of Meta Ray-Ban Display. It heard “Goldfish only remember things for three seconds.” and answers False, 3 of 3 sources disagree, quoting Live Science." />
 
-**Look. Ask. Check.**
-
-[Demo video](https://youtu.be/VF11rvTQ7kU) · [Website](https://fact0.eu) · [Getting started](#getting-started) · [Architecture](#architecture) · [Laya and privacy](#laya-and-privacy) · [Development](#development)
+[Website](https://fact0.eu) · [Demo video](https://youtu.be/VF11rvTQ7kU) · [How it works](#how-it-works) · [Getting started](#getting-started) · [Architecture](#architecture) · [Laya and privacy](#laya-and-privacy)
 
 </div>
 
 ## About
 
-Facto is a live fact-checker for Meta glasses, built at Junction 2026 for the Meta challenge. When someone near you states a fact, or you ask "Facto, can you check this?" while looking at a screen or poster, Facto captures the claim, searches real sources and gives you a one-word verdict with its source: **true**, **false**, **needs context** or **unverified**. You hear it through the speakers, or see it in the right lens on Meta Ray-Ban Display.
+Facto is a live fact-checker for Meta glasses, built at Junction 2026 for the Meta challenge. You can use it two ways:
 
-It is made of a Swift iOS companion that talks to the glasses through Meta's Device Access Toolkit and reads text on the phone with Apple Vision, and a TypeScript backend. The backend decides whether a statement is worth checking, retrieves evidence with Exa, has a model judge the claim against that evidence, then applies fixed rules for citations and conflicting sources before anything reaches the wearer. When the evidence is thin, Facto says it can't verify the claim instead of guessing.
+- **It listens.** Start a listening session and Facto picks out the public claims people make around you, then checks them on its own.
+- **You ask.** Look at a phone, a screen or a poster and say “Facto, can you check this?”, or tap the check button in the app. The glasses take a photo, your iPhone reads the text and Facto checks the claim.
+
+Every answer is one word and a source: **True**, **False**, **Needs context** or **Unverified**. On Ray-Ban Meta you hear it through the speakers. On Meta Ray-Ban Display it shows up in the right lens, as in the images here. When the evidence is thin, Facto says it can't verify the claim instead of guessing.
+
+Facto is open source. If you have Meta glasses and an iPhone, [Getting started](#getting-started) walks you from a fresh clone to your first check.
 
 **[Watch the demo](https://youtu.be/VF11rvTQ7kU)**
 
-## Why facto
+## Why Facto
 
-People pass on what they believe. Others take it at face value.
+Checking a claim means pulling out your phone, typing a search and reading through results. Most people skip it and repeat what they heard. Facto runs the search for you and answers while the conversation is still going.
 
-Fact-checking takes effort. So it’s easy to skip.
+## How it works
 
-Facto brings live fact-checking to Meta glasses. Look at a claim, request a check, and let the pipeline find the evidence. No typing. No searching. No digging through results.
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/images/how-it-works-narrow.webp" />
+  <img src="docs/images/how-it-works.webp" alt="Three moments in the lens. 1: You asked, “Facto, can you check this?” 2: The claim read from a screen, “The Eiffel Tower grows up to 15 cm taller in summer.”, with Searching and two source logos. 3: A True card quoting toureiffel.paris." />
+</picture>
 
-## One request. Facto takes it from there.
+1. **Capture.** The iOS companion app talks to the glasses through Meta's Device Access Toolkit. It takes a photo with the glasses camera, or streams audio from a listening session you started.
+2. **Read.** Apple Vision pulls the text out of the photo on your iPhone. Audio goes to ElevenLabs, with Deepgram as the fallback, for a transcript.
+3. **Decide.** A model decides whether the statement is a checkable public claim. Opinions, personal experiences and half-finished sentences are skipped, or Facto waits for more speech.
+4. **Search.** Exa finds sources, and the judgment model weighs the claim against their passages.
+5. **Answer.** Fixed rules check the citations and any conflicting sources before the verdict reaches you, spoken or in the lens.
 
-| Step | What happens |
-| --- | --- |
-| **Capture** | Take a photo of the claim in front of you, or use speech from an active listening session. |
-| **Read** | Apple Vision extracts text on the phone; the audio route produces a transcript. |
-| **Check** | Identify a checkable public statement, retrieve evidence, and assess what the sources say. |
-| **Answer** | Return a short result with supporting sources, through speech or a display card. |
+The team measured a **median pipeline latency of about 0.92 s**. That covers the pipeline, not the full trip from camera to answer.
 
-**Hear the answer. See the source.** Speaker-only glasses use spoken output. Display glasses have a visual card for the claim, result and source; the repository also includes a browser-based HUD preview.
-
-The app supports an on-screen check action and a “check this” command during active listening. The intended native “Hey Meta” experience is not the same as the app’s own voice-trigger integration. Device-specific behavior and setup are documented in the [iOS guide](apps/ios/README.md) and [capability record](docs/device-capabilities.md).
-
-The team reports **~0.92s median pipeline latency**. This is a pipeline measurement, not a guarantee for the full camera-to-answer experience.
+Facto's voice command runs inside the app's own listening session, not through “Hey Meta”. The [iOS guide](apps/ios/README.md) and the [capability record](docs/device-capabilities.md) cover setup and what each pair of glasses supports. The repository also includes a browser preview of the display card in [`apps/glasses`](apps/glasses).
 
 ## Architecture
 
@@ -85,10 +84,10 @@ Exa retrieves relevant sources. The pipeline normalizes evidence and passes the 
 
 Deterministic policy then checks evidence quality, citations and conflicting sources before assigning an outcome:
 
-- **Supported:** qualifying evidence supports the claim.
-- **Contradicted:** qualifying evidence contradicts it.
-- **Misleading:** the claim needs context.
-- **Cannot verify:** the available evidence is insufficient.
+- **True** (supported): qualifying evidence supports the claim.
+- **False** (contradicted): qualifying evidence contradicts it.
+- **Needs context** (misleading): the claim needs context.
+- **Unverified** (cannot verify): the available evidence is insufficient.
 
 Timeouts and provider failures remain operational errors, not factual verdicts. Presentation policy separately decides whether to respond, notify or remain silent. **Silence does not mean a claim was verified.**
 
@@ -174,7 +173,19 @@ Contribution and review conventions live in [`AGENTS.md`](AGENTS.md) and the [te
 
 ## Built at Junction 2026
 
-Eric Tabacaru · David Vasilescu · Ciprian Nitipir
+<table align="center">
+  <tr>
+    <td align="center" width="200">
+      <a href="https://www.linkedin.com/in/eric-tabacaru/"><img src="docs/images/team/eric.webp" width="96" height="96" alt="" /><br /><b>Eric Tabacaru</b></a><br /><sub>LinkedIn</sub>
+    </td>
+    <td align="center" width="200">
+      <a href="https://www.linkedin.com/in/ciprian-nitipir-0885b6343/"><img src="docs/images/team/cip.webp" width="96" height="96" alt="" /><br /><b>Ciprian Nitipir</b></a><br /><sub>LinkedIn</sub>
+    </td>
+    <td align="center" width="200">
+      <a href="https://www.linkedin.com/in/david-vasilescu-3b8a23347/"><img src="docs/images/team/david.webp" width="96" height="96" alt="" /><br /><b>David Vasilescu</b></a><br /><sub>LinkedIn</sub>
+    </td>
+  </tr>
+</table>
 
 Concept app. Not affiliated with Meta or Ray-Ban.
 
